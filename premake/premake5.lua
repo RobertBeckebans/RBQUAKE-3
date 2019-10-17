@@ -1,7 +1,7 @@
 --
--- XreaL build configuration script
+-- RBQUAKE-3 build configuration script
 -- 
-solution "XreaL"
+solution "RBQUAKE-3"
 	configurations { "Debug", "Profile", "Release" }
 	platforms {"x32", "x64"}
 	
@@ -169,8 +169,8 @@ newoption
 --end
 
 -- main engine code
-project "XreaL"
-	targetname  "XreaL"
+project "RBQuake3"
+	targetname  "RBQuake3"
 	language    "C++"
 	kind        "WindowedApp"
 	files
@@ -452,7 +452,7 @@ project "XreaL"
 			"../code/engine/sys/sdl_input.c",
 			"../code/engine/sys/sdl_snd.c",
 			
-			"../code/engine/sys/xreal.ico",
+			"../code/engine/sys/qe3.ico",
 			"../code/engine/sys/win_resource.rc",
 		}
 		defines
@@ -580,9 +580,9 @@ project "XreaL"
 		}
 
 -- game mod code
---include "base/code/game"
---include "base/code/cgame"
---include "base/code/ui"
+include "../code/games/xreal/game"
+include "../code/games/xreal/cgame"
+include "../code/games/xreal/ui"
 
 -- tools
 --include "code/tools/xmap2"

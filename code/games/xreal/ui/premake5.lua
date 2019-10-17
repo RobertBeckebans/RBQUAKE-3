@@ -1,22 +1,22 @@
-project "base_ui"
+project "xreal-ui"
 	targetname  "ui"
-	targetdir 	"../.."
+	targetdir 	"../../../../base"
 	language    "C++"
 	kind        "SharedLib"
 	files
 	{
-		"../../../code/shared/**.c",
-		"../../../code/shared/q_shared.h",
-		"../../../code/shared/ui_public.h",
-		"../../../code/shared/tr_types.h",
-		"../../../code/shared/keycodes.h",
-		"../../../code/shared/surfaceflags.h",
+		"../../../shared/**.c",
+		"../../../shared/q_shared.h",
+		"../../../shared/ui_public.h",
+		"../../../shared/tr_types.h",
+		"../../../shared/keycodes.h",
+		"../../../shared/surfaceflags.h",
 		
 		"**.c", "**.cpp", "**.h",
 	}
 	includedirs
 	{
-		"../../../code/shared",
+		"../../../shared",
 	}
 	defines
 	{ 
@@ -54,10 +54,6 @@ project "base_ui"
 		targetprefix ""
 	
 	configuration { "linux", "x64" }
-		targetname  "uix86_64"
-		targetprefix ""
-	
-	configuration { "linux", "native" }
 		targetname  "uix86_64"
 		targetprefix ""
 	

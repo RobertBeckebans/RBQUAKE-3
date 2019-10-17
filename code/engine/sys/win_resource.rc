@@ -53,12 +53,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-#ifndef __MINGW32__
-IDI_ICON1               ICON    DISCARDABLE     "xreal.ico"
-#else
-IDI_ICON1               ICON    DISCARDABLE     "xreal.ico"
-#endif
-
+IDI_ICON1               ICON    DISCARDABLE     "qe3.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -67,7 +62,7 @@ IDI_ICON1               ICON    DISCARDABLE     "xreal.ico"
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    IDS_STRING1             "XreaL"
+    IDS_STRING1             "RBQUAKE-3"
 END
 
 #endif    // English (U.S.) resources
