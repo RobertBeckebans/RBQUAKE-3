@@ -56,14 +56,14 @@ typedef struct
 	vec3_t          points[MAX_POINTS_ON_FIXED_WINDING];	// variable sized
 } vwinding_t;
 
-vwinding_t     *NewWinding(int points);
-void            FreeWinding(vwinding_t * w);
-vwinding_t     *CopyWinding(vwinding_t * w);
+vwinding_t*     NewWinding( int points );
+void            FreeWinding( vwinding_t* w );
+vwinding_t*     CopyWinding( vwinding_t* w );
 
 
 typedef struct passage_s
 {
-	struct passage_s *next;
+	struct passage_s* next;
 	byte            cansee[1];	//all portals that can be seen through this passage
 } passage_t;
 
@@ -81,18 +81,18 @@ typedef struct
 	qboolean        removed;
 	plane_t         plane;		// normal pointing into neighbor
 	int             leaf;		// neighbor
-
+	
 	vec3_t          origin;		// for fast clip testing
 	float           radius;
-
-	vwinding_t     *winding;
+	
+	vwinding_t*     winding;
 	vstatus_t       status;
-	byte           *portalfront;	// [portals], preliminary
-	byte           *portalflood;	// [portals], intermediate
-	byte           *portalvis;	// [portals], final
-
+	byte*           portalfront;	// [portals], preliminary
+	byte*           portalflood;	// [portals], intermediate
+	byte*           portalvis;	// [portals], final
+	
 	int             nummightsee;	// bit count on portalflood for sort
-	passage_t      *passages;	// there are just as many passages as there
+	passage_t*      passages;	// there are just as many passages as there
 	// are portals in the leaf this portal leads to
 } vportal_t;
 
@@ -101,22 +101,22 @@ typedef struct leaf_s
 {
 	int             numportals;
 	int             merged;
-	vportal_t      *portals[MAX_PORTALS_ON_LEAF];
+	vportal_t*      portals[MAX_PORTALS_ON_LEAF];
 } leaf_t;
 
 
 typedef struct pstack_s
 {
 	byte            mightsee[MAX_PORTALS / 8];	// bit string
-	struct pstack_s *next;
-	leaf_t         *leaf;
-	vportal_t      *portal;		// portal exiting
-	vwinding_t     *source;
-	vwinding_t     *pass;
-
+	struct pstack_s* next;
+	leaf_t*         leaf;
+	vportal_t*      portal;		// portal exiting
+	vwinding_t*     source;
+	vwinding_t*     pass;
+	
 	vwinding_t      windings[3];	// source, pass, temp in any order
 	int             freewindings[3];
-
+	
 	plane_t         portalplane;
 	int             depth;
 #ifdef SEPERATORCACHE
@@ -127,7 +127,7 @@ typedef struct pstack_s
 
 typedef struct
 {
-	vportal_t      *base;
+	vportal_t*      base;
 	int             c_chains;
 	pstack_t        pstack_head;
 } threaddata_t;
@@ -137,34 +137,34 @@ typedef struct
 extern int      numportals;
 extern int      portalclusters;
 
-extern vportal_t *portals;
-extern leaf_t  *leafs;
+extern vportal_t* portals;
+extern leaf_t*  leafs;
 
 extern int      c_portaltest, c_portalpass, c_portalcheck;
 extern int      c_portalskip, c_leafskip;
 extern int      c_vistest, c_mighttest;
 extern int      c_chains;
 
-extern byte    *vismap, *vismap_p, *vismap_end;	// past visfile
+extern byte*    vismap, *vismap_p, *vismap_end;	// past visfile
 
 extern int      testlevel;
 
-extern byte    *uncompressed;
+extern byte*    uncompressed;
 
 extern int      leafbytes, leaflongs;
 extern int      portalbytes, portallongs;
 
 
-void            LeafFlow(int leafnum);
+void            LeafFlow( int leafnum );
 
 
-void            BasePortalVis(int portalnum);
-void            BetterPortalVis(int portalnum);
-void            PortalFlow(int portalnum);
-void            PassagePortalFlow(int portalnum);
-void            CreatePassages(int portalnum);
-void            PassageFlow(int portalnum);
+void            BasePortalVis( int portalnum );
+void            BetterPortalVis( int portalnum );
+void            PortalFlow( int portalnum );
+void            PassagePortalFlow( int portalnum );
+void            CreatePassages( int portalnum );
+void            PassageFlow( int portalnum );
 
-extern vportal_t *sorted_portals[MAX_MAP_PORTALS * 2];
+extern vportal_t* sorted_portals[MAX_MAP_PORTALS * 2];
 
-int             CountBits(byte * bits, int numbits);
+int             CountBits( byte* bits, int numbits );

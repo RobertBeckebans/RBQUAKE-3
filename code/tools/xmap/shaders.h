@@ -28,20 +28,20 @@ typedef struct shaderInfo_s
 	int             surfaceFlags;
 	int             contents;
 	int             value;
-
+	
 	char            backShader[MAX_QPATH];	// for surfaces that generate different front and back passes
 	char            flareShader[MAX_QPATH];	// for light flares
-
+	
 	float           subdivisions;	// from a "tesssize xxx"
 	float           backsplashFraction;	// floating point value, usually 0.05
 	float           backsplashDistance;	// default 16
 	float           lightSubdivide;	// default 120
 	int             lightmapSampleSize;	// lightmap sample size
-
+	
 	qboolean        hasPasses;	// false if the shader doesn't define any rendering passes
-
+	
 	qboolean        globalTexture;	// don't normalize texture repeats
-
+	
 	qboolean        twoSided;	// cull none
 	qboolean        forceSolid;	// may override clearSolid
 	qboolean        forceOpaque;	// block VIS
@@ -57,20 +57,20 @@ typedef struct shaderInfo_s
 	qboolean        forceSunLight;	// force sun light at this surface even tho we might not calculate shadows in vertex lighting
 	qboolean        notjunc;	// don't use this surface for tjunction fixing
 	float           vertexScale;	// vertex light scale
-
+	
 	qboolean        noFragment;	// don't cut surface at each bsp boundary
-
+	
 	char            editorimage[MAX_QPATH];	// use this image to generate texture coordinates
 	char            lightimage[MAX_QPATH];	// use this image to generate color / averageColor
 	vec3_t          color;		// colorNormalized
 	vec3_t          averageColor;
-
+	
 	int             width, height;
-	byte           *pixels;
-
+	byte*           pixels;
+	
 	vec3_t          sunLight;
 	vec3_t          sunDirection;
 } shaderInfo_t;
 
-void            LoadShaderInfo(void);
-shaderInfo_t   *ShaderInfoForShader(const char *shader);
+void            LoadShaderInfo( void );
+shaderInfo_t*   ShaderInfoForShader( const char* shader );

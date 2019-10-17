@@ -28,9 +28,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include <math.h>
 
 #ifdef DOUBLEVEC_T
-typedef double  vec_t;
+	typedef double  vec_t;
 #else
-typedef float   vec_t;
+	typedef float   vec_t;
 #endif
 typedef vec_t   vec2_t[3];
 typedef vec_t   vec3_t[3];
@@ -74,69 +74,69 @@ extern vec3_t   vec3_origin;
 #define VectorNegate(a, b)		((b)[0]=-(a)[0],(b)[1]=-(a)[1],(b)[2]=-(a)[2])
 #define VectorSet(v, x, y, z)	((v)[0]=(x),(v)[1]=(y),(v)[2]=(z))
 
-int             VectorCompare(const vec3_t v1, const vec3_t v2);
-void            Vec10Copy(vec_t * in, vec_t * out);
+int             VectorCompare( const vec3_t v1, const vec3_t v2 );
+void            Vec10Copy( vec_t* in, vec_t* out );
 
-vec_t           Q_rint(vec_t in);
-vec_t           _DotProduct(vec3_t v1, vec3_t v2);
-void            _VectorSubtract(vec3_t va, vec3_t vb, vec3_t out);
-void            _VectorAdd(vec3_t va, vec3_t vb, vec3_t out);
-void            _VectorCopy(vec3_t in, vec3_t out);
-void            _VectorScale(vec3_t v, vec_t scale, vec3_t out);
-void            _VectorMA(const vec3_t va, double scale, const vec3_t vb, vec3_t vc);
+vec_t           Q_rint( vec_t in );
+vec_t           _DotProduct( vec3_t v1, vec3_t v2 );
+void            _VectorSubtract( vec3_t va, vec3_t vb, vec3_t out );
+void            _VectorAdd( vec3_t va, vec3_t vb, vec3_t out );
+void            _VectorCopy( vec3_t in, vec3_t out );
+void            _VectorScale( vec3_t v, vec_t scale, vec3_t out );
+void            _VectorMA( const vec3_t va, double scale, const vec3_t vb, vec3_t vc );
 
-double          VectorLength(const vec3_t v);
+double          VectorLength( const vec3_t v );
 
-void            CrossProduct(const vec3_t v1, const vec3_t v2, vec3_t cross);
-vec_t           VectorNormalize(vec3_t v);
-vec_t           VectorNormalize2(const vec3_t in, vec3_t out);
-vec_t           ColorNormalize(const vec3_t in, vec3_t out);
-void            VectorInverse(vec3_t v);
+void            CrossProduct( const vec3_t v1, const vec3_t v2, vec3_t cross );
+vec_t           VectorNormalize( vec3_t v );
+vec_t           VectorNormalize2( const vec3_t in, vec3_t out );
+vec_t           ColorNormalize( const vec3_t in, vec3_t out );
+void            VectorInverse( vec3_t v );
 
-void            ClearBounds(vec3_t mins, vec3_t maxs);
-void            AddPointToBounds(const vec3_t v, vec3_t mins, vec3_t maxs);
-void            BoundsAdd(vec3_t mins, vec3_t maxs, const vec3_t mins2, const vec3_t maxs2);
+void            ClearBounds( vec3_t mins, vec3_t maxs );
+void            AddPointToBounds( const vec3_t v, vec3_t mins, vec3_t maxs );
+void            BoundsAdd( vec3_t mins, vec3_t maxs, const vec3_t mins2, const vec3_t maxs2 );
 
-qboolean        PlaneFromPoints(vec4_t plane, const vec3_t a, const vec3_t b, const vec3_t c, qboolean cw);
+qboolean        PlaneFromPoints( vec4_t plane, const vec3_t a, const vec3_t b, const vec3_t c, qboolean cw );
 
-void            NormalToLatLong(const vec3_t normal, byte bytes[2]);
+void            NormalToLatLong( const vec3_t normal, byte bytes[2] );
 
-int             PlaneTypeForNormal(vec3_t normal);
-void            AxisMultiply(float in1[3][3], float in2[3][3], float out[3][3]);
-void            RotatePointAroundVector(vec3_t dst, const vec3_t dir, const vec3_t point, float degrees);
+int             PlaneTypeForNormal( vec3_t normal );
+void            AxisMultiply( float in1[3][3], float in2[3][3], float out[3][3] );
+void            RotatePointAroundVector( vec3_t dst, const vec3_t dir, const vec3_t point, float degrees );
 
-void            MatrixIdentity(matrix_t m);
-void            MatrixClear(matrix_t m);
-void            MatrixCopy(const matrix_t in, matrix_t out);
-void            MatrixTranspose(const matrix_t in, matrix_t out);
+void            MatrixIdentity( matrix_t m );
+void            MatrixClear( matrix_t m );
+void            MatrixCopy( const matrix_t in, matrix_t out );
+void            MatrixTranspose( const matrix_t in, matrix_t out );
 
 // invert any m4x4 using Kramer's rule.. return qtrue if matrix is singular, else return qfalse
-float			MatrixDet(matrix_t mr);
-qboolean        MatrixInverse(matrix_t m);
-void            MatrixSetupXRotation(matrix_t m, vec_t degrees);
-void            MatrixSetupYRotation(matrix_t m, vec_t degrees);
-void            MatrixSetupZRotation(matrix_t m, vec_t degrees);
-void            MatrixSetupRotation(matrix_t m, vec_t x, vec_t y, vec_t z, vec_t degrees);
-void            MatrixSetupTranslation(matrix_t m, vec_t x, vec_t y, vec_t z);
-void            MatrixSetupScale(matrix_t m, vec_t x, vec_t y, vec_t z);
-void            MatrixMultiply(const matrix_t a, const matrix_t b, matrix_t out);
-void            MatrixMultiply2(matrix_t m, const matrix_t m2);
-void            MatrixMultiplyRotation(matrix_t m, vec_t pitch, vec_t yaw, vec_t roll);
-void            MatrixMultiplyTranslation(matrix_t m, vec_t x, vec_t y, vec_t z);
-void            MatrixMultiplyScale(matrix_t m, vec_t x, vec_t y, vec_t z);
-void            MatrixFromAngles(matrix_t m, vec_t pitch, vec_t yaw, vec_t roll);
-void            MatrixFromVectorsFLU(matrix_t m, const vec3_t forward, const vec3_t left, const vec3_t up);
-void            MatrixFromVectorsFRU(matrix_t m, const vec3_t forward, const vec3_t right, const vec3_t up);
-void            MatrixToVectorsFLU(const matrix_t m, vec3_t forward, vec3_t left, vec3_t up);
-void            MatrixToVectorsFRU(const matrix_t m, vec3_t forward, vec3_t right, vec3_t up);
+float			MatrixDet( matrix_t mr );
+qboolean        MatrixInverse( matrix_t m );
+void            MatrixSetupXRotation( matrix_t m, vec_t degrees );
+void            MatrixSetupYRotation( matrix_t m, vec_t degrees );
+void            MatrixSetupZRotation( matrix_t m, vec_t degrees );
+void            MatrixSetupRotation( matrix_t m, vec_t x, vec_t y, vec_t z, vec_t degrees );
+void            MatrixSetupTranslation( matrix_t m, vec_t x, vec_t y, vec_t z );
+void            MatrixSetupScale( matrix_t m, vec_t x, vec_t y, vec_t z );
+void            MatrixMultiply( const matrix_t a, const matrix_t b, matrix_t out );
+void            MatrixMultiply2( matrix_t m, const matrix_t m2 );
+void            MatrixMultiplyRotation( matrix_t m, vec_t pitch, vec_t yaw, vec_t roll );
+void            MatrixMultiplyTranslation( matrix_t m, vec_t x, vec_t y, vec_t z );
+void            MatrixMultiplyScale( matrix_t m, vec_t x, vec_t y, vec_t z );
+void            MatrixFromAngles( matrix_t m, vec_t pitch, vec_t yaw, vec_t roll );
+void            MatrixFromVectorsFLU( matrix_t m, const vec3_t forward, const vec3_t left, const vec3_t up );
+void            MatrixFromVectorsFRU( matrix_t m, const vec3_t forward, const vec3_t right, const vec3_t up );
+void            MatrixToVectorsFLU( const matrix_t m, vec3_t forward, vec3_t left, vec3_t up );
+void            MatrixToVectorsFRU( const matrix_t m, vec3_t forward, vec3_t right, vec3_t up );
 
-void            MatrixSetupTransform(matrix_t m, const vec3_t forward, const vec3_t left, const vec3_t up, const vec3_t origin);
-void            MatrixSetupTransformFromRotation(matrix_t m, const matrix_t rot, const vec3_t origin);
-void            MatrixAffineInverse(const matrix_t in, matrix_t out);
-void            MatrixTransformNormal(const matrix_t m, const vec3_t in, vec3_t out);
-void            MatrixTransformNormal2(const matrix_t m, vec3_t inout);
-void            MatrixTransformPoint(const matrix_t m, const vec3_t in, vec3_t out);
-void            MatrixTransformPoint2(const matrix_t m, vec3_t inout);
-void			MatrixTransformVec4(const matrix_t matrix, vec4_t vector);
+void            MatrixSetupTransform( matrix_t m, const vec3_t forward, const vec3_t left, const vec3_t up, const vec3_t origin );
+void            MatrixSetupTransformFromRotation( matrix_t m, const matrix_t rot, const vec3_t origin );
+void            MatrixAffineInverse( const matrix_t in, matrix_t out );
+void            MatrixTransformNormal( const matrix_t m, const vec3_t in, vec3_t out );
+void            MatrixTransformNormal2( const matrix_t m, vec3_t inout );
+void            MatrixTransformPoint( const matrix_t m, const vec3_t in, vec3_t out );
+void            MatrixTransformPoint2( const matrix_t m, vec3_t inout );
+void			MatrixTransformVec4( const matrix_t matrix, vec4_t vector );
 
 #endif

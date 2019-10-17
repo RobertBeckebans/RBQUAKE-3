@@ -348,13 +348,13 @@ typedef enum
 
 #ifdef HUNK_DEBUG
 #define Hunk_Alloc( size, preference )				Hunk_AllocDebug(size, preference, #size, __FILE__, __LINE__)
-void           *Hunk_AllocDebug(int size, ha_pref preference, char *label, char *file, int line);
+void*           Hunk_AllocDebug( int size, ha_pref preference, char* label, char* file, int line );
 #else
-void           *Hunk_Alloc(int size, ha_pref preference);
+void*           Hunk_Alloc( int size, ha_pref preference );
 #endif
 
-void			Com_Memcpy(void *dest, const void *src, const size_t count);
-void			Com_Memset(void *dest, const int val, const size_t count);
+void			Com_Memcpy( void* dest, const void* src, const size_t count );
+void			Com_Memset( void* dest, const int val, const size_t count );
 
 #define Com_Allocate malloc
 #define Com_Dealloc free
@@ -478,7 +478,7 @@ extern vec4_t   colorDkGrey;
 #define S_COLOR_WHITE	"^7"
 
 #define INDENT_MARKER '\v'
-void			Q_StripIndentMarker(char *string);
+void			Q_StripIndentMarker( char* string );
 
 extern const vec4_t g_color_table[8];
 
@@ -523,17 +523,17 @@ static ID_INLINE long Q_ftol(float f)
 static ID_INLINE float Q_rsqrt(float number)
 {
 	float           y;
-
+	
 #if idppc
 	float           x = 0.5f * number;
-
+	
 #ifdef __GNUC__
 	asm("frsqrte %0, %1": "=f" (y) : "f" (number));
 #else
 	y = __frsqrte(number);
 #endif
 	return y * (1.5f - (x * y * y));
-
+	
 #elif id386_3dnow && defined __GNUC__
 //#error Q_rqsrt
 	asm volatile
@@ -566,7 +566,7 @@ static ID_INLINE float Q_rsqrt(float number)
 	} t;
 	float           x2;
 	const float     threehalfs = 1.5F;
-
+	
 	x2 = number * 0.5F;
 	t.f = number;
 	t.i = 0x5f3759df - (t.i >> 1); // what the fuck?
@@ -580,12 +580,12 @@ static ID_INLINE float Q_fabs(float x)
 {
 #if idppc && defined __GNUC__
 	float           abs_x;
-
+	
  	asm("fabs %0, %1" : "=f" (abs_x) : "f" (x));
 	return abs_x;
 #else
 	floatint_t      tmp;
-
+	
 	tmp.f = x;
 	tmp.i &= 0x7FFFFFFF;
 	return tmp.f;
@@ -596,14 +596,14 @@ static ID_INLINE vec_t Q_recip(vec_t in)
 {
 #if id386_3dnow && defined __GNUC__ && 0
 	vec_t           out;
-
+	
 	femms();
 	asm volatile    ("movd		(%%eax),	%%mm0\n" "pfrcp		%%mm0,		%%mm1\n"	// (approx)
 					 "pfrcpit1	%%mm1,		%%mm0\n"	// (intermediate)
 					 "pfrcpit2	%%mm1,		%%mm0\n"	// (full 24-bit)
 					 // out = mm0[low]
 					 "movd		%%mm0,		(%%edx)\n"::"a" (&in), "d"(&out):"memory");
-
+					 
 	femms();
 	return out;
 #else
@@ -612,13 +612,13 @@ static ID_INLINE vec_t Q_recip(vec_t in)
 }
 // *INDENT-ON*
 
-byte            ClampByte(int i);
-signed char     ClampChar(int i);
-signed short    ClampShort(int i);
+byte            ClampByte( int i );
+signed char     ClampChar( int i );
+signed short    ClampShort( int i );
 
 // this isn't a real cheap function to call!
-int             DirToByte(vec3_t dir);
-void            ByteToDir(int b, vec3_t dir);
+int             DirToByte( vec3_t dir );
+void            ByteToDir( int b, vec3_t dir );
 
 #define Byte4Copy(a,b)			((b)[0]=(a)[0],(b)[1]=(a)[1],(b)[2]=(a)[2],(b)[3]=(a)[3])
 
@@ -638,13 +638,13 @@ void            ByteToDir(int b, vec3_t dir);
 #if 1
 #define VectorClear(a)			((a)[0]=(a)[1]=(a)[2]=0)
 #else
-static ID_INLINE void VectorClear(vec3_t v)
+static ID_INLINE void VectorClear( vec3_t v )
 {
 #if defined(SSEVEC3_T)
 //#error VectorClear
 	__m128          _tmp = _mm_setzero_ps();
 
-	_mm_storeu_ps(v, _tmp);
+	_mm_storeu_ps( v, _tmp );
 #else
 	out[0] = 0;
 	out[1] = 0;
@@ -658,41 +658,41 @@ static ID_INLINE void VectorClear(vec3_t v)
 #if 1
 #define VectorCopy(a,b)			((b)[0]=(a)[0],(b)[1]=(a)[1],(b)[2]=(a)[2])
 #else
-static ID_INLINE void VectorCopy(const vec3_t in, vec3_t out)
+static ID_INLINE void VectorCopy( const vec3_t in, vec3_t out )
 {
 #if id386_3dnow && defined __GNUC__ && 0
 	femms();
-	asm volatile    (			// lo                                                           | hi
-						"movq           (%%eax),        %%mm0\n"	// in[0]                                                        | in[1]
-						"movd           8(%%eax),       %%mm1\n"	// in[2]                                                        | -
-						"movq           %%mm0,          (%%edx)\n"
-						"movd           %%mm1,          8(%%edx)\n"::"a" (in), "d"(out):"memory");
+	asm volatile(	// lo                                                           | hi
+		"movq           (%%eax),        %%mm0\n"	// in[0]                                                        | in[1]
+		"movd           8(%%eax),       %%mm1\n"	// in[2]                                                        | -
+		"movq           %%mm0,          (%%edx)\n"
+		"movd           %%mm1,          8(%%edx)\n"::"a"( in ), "d"( out ):"memory" );
 	femms();
-/*
+	/*
 #elif id386_sse && defined __GNUC__
-//#error _VectorCopysse
-		asm volatile
-		(
+	//#error _VectorCopysse
+	asm volatile
+	(
 		"movups         (%%eax),        %%xmm0\n"
 		"movups         %%xmm0,         (%%edx)\n"
-	:
-	: "a"( in ), "d"( out )
-	: "memory"
-        );
-*/
+		:
+		: "a"( in ), "d"( out )
+		: "memory"
+	);
+	*/
 
 #elif defined(SSEVEC3_T)
 //#error VectorCopy
 	__m128          _tmp;
 
-	_tmp = _mm_loadu_ps(in);
-	_mm_storeu_ps(out, _tmp);
+	_tmp = _mm_loadu_ps( in );
+	_mm_storeu_ps( out, _tmp );
 #else
 	out[0] = in[0];
 	out[1] = in[1];
 	out[2] = in[2];
 #endif
-}
+	}
 #endif
 
 
@@ -700,30 +700,30 @@ static ID_INLINE void VectorCopy(const vec3_t in, vec3_t out)
 #if 0
 #define VectorAdd(a,b,c)		((c)[0]=(a)[0]+(b)[0],(c)[1]=(a)[1]+(b)[1],(c)[2]=(a)[2]+(b)[2])
 #else
-static ID_INLINE void VectorAdd(const vec3_t a, const vec3_t b, vec3_t out)
+static ID_INLINE void VectorAdd( const vec3_t a, const vec3_t b, vec3_t out )
 {
 #if id386_3dnow && defined __GNUC__ && 0
 	femms();
-	asm volatile    (			// lo                                                           | hi
-						"movq           (%%eax),        %%mm0\n"	// a[0]                                                         | a[1]
-						"movq           (%%edx),        %%mm2\n"	// b[0]                                                         | b[1]
-						"movd           8(%%eax),       %%mm1\n"	// a[2]                                                         | -
-						"movd           8(%%edx),       %%mm3\n"	// b[2]                                                         | -
-						"pfadd          %%mm2,          %%mm0\n"	// a[0]+b[0]                                            | a[1]+b[1]
-						"pfadd          %%mm3,          %%mm1\n"	// a[2]+b[2]                                            | -
-						"movq           %%mm0,          (%%ecx)\n"
-						"movd           %%mm1,          8(%%ecx)\n"::"a" (a), "d"(b), "c"(out):"memory");
+	asm volatile(	// lo                                                           | hi
+		"movq           (%%eax),        %%mm0\n"	// a[0]                                                         | a[1]
+		"movq           (%%edx),        %%mm2\n"	// b[0]                                                         | b[1]
+		"movd           8(%%eax),       %%mm1\n"	// a[2]                                                         | -
+		"movd           8(%%edx),       %%mm3\n"	// b[2]                                                         | -
+		"pfadd          %%mm2,          %%mm0\n"	// a[0]+b[0]                                            | a[1]+b[1]
+		"pfadd          %%mm3,          %%mm1\n"	// a[2]+b[2]                                            | -
+		"movq           %%mm0,          (%%ecx)\n"
+		"movd           %%mm1,          8(%%ecx)\n"::"a"( a ), "d"( b ), "c"( out ):"memory" );
 	femms();
 #elif defined(SSEVEC3_T)
 //#error VectorAdd
 	__m128          _a, _b, _out;
 
-	_a = _mm_loadu_ps(a);
-	_b = _mm_loadu_ps(b);
+	_a = _mm_loadu_ps( a );
+	_b = _mm_loadu_ps( b );
 
-	_out = _mm_add_ps(_a, _b);
+	_out = _mm_add_ps( _a, _b );
 
-	_mm_storeu_ps(out, _out);
+	_mm_storeu_ps( out, _out );
 
 #else
 	out[0] = a[0] + b[0];
@@ -738,30 +738,30 @@ static ID_INLINE void VectorAdd(const vec3_t a, const vec3_t b, vec3_t out)
 #if 0
 #define VectorSubtract(a,b,c)	((c)[0]=(a)[0]-(b)[0],(c)[1]=(a)[1]-(b)[1],(c)[2]=(a)[2]-(b)[2])
 #else
-static ID_INLINE void VectorSubtract(const vec3_t a, const vec3_t b, vec3_t out)
+static ID_INLINE void VectorSubtract( const vec3_t a, const vec3_t b, vec3_t out )
 {
 #if id386_3dnow && defined __GNUC__ && 0
 	femms();
-	asm volatile    (			// lo                                                           | hi
-						"movq           (%%eax),        %%mm0\n"	// a[0]                                                         | a[1]
-						"movq           (%%edx),        %%mm2\n"	// b[0]                                                         | b[1]
-						"movd           8(%%eax),       %%mm1\n"	// a[2]                                                         | -
-						"movd           8(%%edx),       %%mm3\n"	// b[2]                                                         | -
-						"pfsub          %%mm2,          %%mm0\n"	// a[0]-b[0]                                            | a[1]-b[1]
-						"pfsub          %%mm3,          %%mm1\n"	// a[2]-b[2]                                            | -
-						"movq           %%mm0,          (%%ecx)\n"
-						"movd           %%mm1,          8(%%ecx)\n"::"a" (a), "d"(b), "c"(out):"memory");
+	asm volatile(	// lo                                                           | hi
+		"movq           (%%eax),        %%mm0\n"	// a[0]                                                         | a[1]
+		"movq           (%%edx),        %%mm2\n"	// b[0]                                                         | b[1]
+		"movd           8(%%eax),       %%mm1\n"	// a[2]                                                         | -
+		"movd           8(%%edx),       %%mm3\n"	// b[2]                                                         | -
+		"pfsub          %%mm2,          %%mm0\n"	// a[0]-b[0]                                            | a[1]-b[1]
+		"pfsub          %%mm3,          %%mm1\n"	// a[2]-b[2]                                            | -
+		"movq           %%mm0,          (%%ecx)\n"
+		"movd           %%mm1,          8(%%ecx)\n"::"a"( a ), "d"( b ), "c"( out ):"memory" );
 	femms();
 #elif defined(SSEVEC3_T)
 //#error VectorSubtract
 	__m128          _a, _b, _out;
 
-	_a = _mm_loadu_ps(a);
-	_b = _mm_loadu_ps(b);
+	_a = _mm_loadu_ps( a );
+	_b = _mm_loadu_ps( b );
 
-	_out = _mm_sub_ps(_a, _b);
+	_out = _mm_sub_ps( _a, _b );
 
-	_mm_storeu_ps(out, _out);
+	_mm_storeu_ps( out, _out );
 #else
 	out[0] = a[0] - b[0];
 	out[1] = a[1] - b[1];
@@ -775,20 +775,20 @@ static ID_INLINE void VectorSubtract(const vec3_t a, const vec3_t b, vec3_t out)
 #if 0
 #define	VectorMA(v, s, b, o)	((o)[0]=(v)[0]+(b)[0]*(s),(o)[1]=(v)[1]+(b)[1]*(s),(o)[2]=(v)[2]+(b)[2]*(s))
 #else
-static ID_INLINE void VectorMA(const vec3_t veca, float scale, const vec3_t vecb, vec3_t vecc)
+static ID_INLINE void VectorMA( const vec3_t veca, float scale, const vec3_t vecb, vec3_t vecc )
 {
 #if defined(SSEVEC3_T)
 //#error VectorMA
 	__m128          _a, _b, _s, _c;
 
-	_a = _mm_loadu_ps(veca);
-	_b = _mm_loadu_ps(vecb);
-	_s = _mm_set1_ps(scale);
+	_a = _mm_loadu_ps( veca );
+	_b = _mm_loadu_ps( vecb );
+	_s = _mm_set1_ps( scale );
 
-	_c = _mm_mul_ps(_s, _b);
-	_c = _mm_add_ps(_a, _c);
+	_c = _mm_mul_ps( _s, _b );
+	_c = _mm_add_ps( _a, _c );
 
-	_mm_storeu_ps(vecc, _c);
+	_mm_storeu_ps( vecc, _c );
 #else
 	vecc[0] = veca[0] + scale * vecb[0];
 	vecc[1] = veca[1] + scale * vecb[1];
@@ -802,33 +802,33 @@ static ID_INLINE void VectorMA(const vec3_t veca, float scale, const vec3_t vecb
 #if 1
 #define	VectorScale(v, s, o)	((o)[0]=(v)[0]*(s),(o)[1]=(v)[1]*(s),(o)[2]=(v)[2]*(s))
 #else
-static ID_INLINE void VectorScale(const vec3_t in, vec_t scale, vec3_t out)
+static ID_INLINE void VectorScale( const vec3_t in, vec_t scale, vec3_t out )
 {
 #if id386_3dnow && defined __GNUC__ && 0
 	vec_t           out;
 
 	femms();
-	asm volatile    (			// lo                                                                   | hi
-						"movq           (%%eax),        %%mm0\n"	// in[0]                                                                | in[1]
-						"movd           8(%%eax),       %%mm1\n"	// in[2]                                                                | -
-						"movd           (%%edx),        %%mm2\n"	// scale                                                                | -
-						"punpckhdq      %%mm2,          %%mm2\n"	// scale                                                                | scale
-						"pfmul          %%mm2,          %%mm0\n"	// in[0]*scale                                                  | in[1]*scale
-						"pfmul          %%mm2,          %%mm1\n"	// in[2]*scale                                                  | -
-						"movq           %%mm0,          (%%ecx)\n"
-						"movd           %%mm1,          8(%%ecx)\n"::"a" (in), "d"(&scale), "c"(out):"memory");
+	asm volatile(	// lo                                                                   | hi
+		"movq           (%%eax),        %%mm0\n"	// in[0]                                                                | in[1]
+		"movd           8(%%eax),       %%mm1\n"	// in[2]                                                                | -
+		"movd           (%%edx),        %%mm2\n"	// scale                                                                | -
+		"punpckhdq      %%mm2,          %%mm2\n"	// scale                                                                | scale
+		"pfmul          %%mm2,          %%mm0\n"	// in[0]*scale                                                  | in[1]*scale
+		"pfmul          %%mm2,          %%mm1\n"	// in[2]*scale                                                  | -
+		"movq           %%mm0,          (%%ecx)\n"
+		"movd           %%mm1,          8(%%ecx)\n"::"a"( in ), "d"( &scale ), "c"( out ):"memory" );
 	femms();
 	return out;
 #elif defined(SSEVEC3_T)
 //#error VectorScale
 	__m128          _in, _scale, _out;
 
-	_in = _mm_loadu_ps(in);
-	_scale = _mm_set1_ps(scale);
+	_in = _mm_loadu_ps( in );
+	_scale = _mm_set1_ps( scale );
 
-	_out = _mm_mul_ps(_in, _scale);
+	_out = _mm_mul_ps( _in, _scale );
 
-	_mm_storeu_ps(out, _out);
+	_mm_storeu_ps( out, _out );
 #else
 	out[0] = in[0] * scale;
 	out[1] = in[1] * scale;
@@ -843,7 +843,7 @@ static ID_INLINE void VectorScale(const vec3_t in, vec_t scale, vec3_t out)
 #if 1
 #define DotProduct(x,y)			((x)[0]*(y)[0]+(x)[1]*(y)[1]+(x)[2]*(y)[2])
 #else
-static ID_INLINE vec_t DotProduct(const vec3_t a, const vec3_t b)
+static ID_INLINE vec_t DotProduct( const vec3_t a, const vec3_t b )
 {
 	return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 }
@@ -851,99 +851,101 @@ static ID_INLINE vec_t DotProduct(const vec3_t a, const vec3_t b)
 
 
 
-static ID_INLINE void SnapVector(vec3_t v)
+static ID_INLINE void SnapVector( vec3_t v )
 {
 #if id386 && defined(_MSC_VER)
 	int             i;
 	float           f;
-
+	
 	f = *v;
 	__asm fld       f;
 	__asm fistp     i;
-
+	
 	*v = i;
 	v++;
 	f = *v;
 	__asm fld       f;
 	__asm fistp     i;
-
+	
 	*v = i;
 	v++;
 	f = *v;
 	__asm fld       f;
 	__asm fistp     i;
-
+	
 	*v = i;
 #else
-	v[0] = (int)v[0];
-	v[1] = (int)v[1];
-	v[2] = (int)v[2];
+	v[0] = ( int )v[0];
+	v[1] = ( int )v[1];
+	v[2] = ( int )v[2];
 #endif
 }
 
-void            SnapVectorTowards(vec3_t v, vec3_t to);
+void            SnapVectorTowards( vec3_t v, vec3_t to );
 
 // just in case you do't want to use the macros
-vec_t           _DotProduct(const vec3_t a, const vec3_t b);
+vec_t           _DotProduct( const vec3_t a, const vec3_t b );
 
-unsigned        ColorBytes3(float r, float g, float b);
-unsigned        ColorBytes4(float r, float g, float b, float a);
+unsigned        ColorBytes3( float r, float g, float b );
+unsigned        ColorBytes4( float r, float g, float b, float a );
 
-float           NormalizeColor(const vec3_t in, vec3_t out);
-void            ClampColor(vec4_t color);
+float           NormalizeColor( const vec3_t in, vec3_t out );
+void            ClampColor( vec4_t color );
 
-float           RadiusFromBounds(const vec3_t mins, const vec3_t maxs);
-void            ZeroBounds(vec3_t mins, vec3_t maxs);
-void            ClearBounds(vec3_t mins, vec3_t maxs);
-void            AddPointToBounds(const vec3_t v, vec3_t mins, vec3_t maxs);
-void            BoundsAdd(vec3_t mins, vec3_t maxs, const vec3_t mins2, const vec3_t maxs2);
-qboolean        BoundsIntersect(const vec3_t mins, const vec3_t maxs, const vec3_t mins2, const vec3_t maxs2);
-qboolean        BoundsIntersectSphere(const vec3_t mins, const vec3_t maxs, const vec3_t origin, vec_t radius);
-qboolean        BoundsIntersectPoint(const vec3_t mins, const vec3_t maxs, const vec3_t origin);
+float           RadiusFromBounds( const vec3_t mins, const vec3_t maxs );
+void            ZeroBounds( vec3_t mins, vec3_t maxs );
+void            ClearBounds( vec3_t mins, vec3_t maxs );
+void            AddPointToBounds( const vec3_t v, vec3_t mins, vec3_t maxs );
+void            BoundsAdd( vec3_t mins, vec3_t maxs, const vec3_t mins2, const vec3_t maxs2 );
+qboolean        BoundsIntersect( const vec3_t mins, const vec3_t maxs, const vec3_t mins2, const vec3_t maxs2 );
+qboolean        BoundsIntersectSphere( const vec3_t mins, const vec3_t maxs, const vec3_t origin, vec_t radius );
+qboolean        BoundsIntersectPoint( const vec3_t mins, const vec3_t maxs, const vec3_t origin );
 
-static ID_INLINE void BoundsToCorners(const vec3_t mins, const vec3_t maxs, vec3_t corners[8])
+static ID_INLINE void BoundsToCorners( const vec3_t mins, const vec3_t maxs, vec3_t corners[8] )
 {
-	VectorSet(corners[0], mins[0], maxs[1], maxs[2]);
-	VectorSet(corners[1], maxs[0], maxs[1], maxs[2]);
-	VectorSet(corners[2], maxs[0], mins[1], maxs[2]);
-	VectorSet(corners[3], mins[0], mins[1], maxs[2]);
-	VectorSet(corners[4], mins[0], maxs[1], mins[2]);
-	VectorSet(corners[5], maxs[0], maxs[1], mins[2]);
-	VectorSet(corners[6], maxs[0], mins[1], mins[2]);
-	VectorSet(corners[7], mins[0], mins[1], mins[2]);
+	VectorSet( corners[0], mins[0], maxs[1], maxs[2] );
+	VectorSet( corners[1], maxs[0], maxs[1], maxs[2] );
+	VectorSet( corners[2], maxs[0], mins[1], maxs[2] );
+	VectorSet( corners[3], mins[0], mins[1], maxs[2] );
+	VectorSet( corners[4], mins[0], maxs[1], mins[2] );
+	VectorSet( corners[5], maxs[0], maxs[1], mins[2] );
+	VectorSet( corners[6], maxs[0], mins[1], mins[2] );
+	VectorSet( corners[7], mins[0], mins[1], mins[2] );
 }
 
 
-static ID_INLINE int VectorCompare(const vec3_t v1, const vec3_t v2)
+static ID_INLINE int VectorCompare( const vec3_t v1, const vec3_t v2 )
 {
-	if(v1[0] != v2[0] || v1[1] != v2[1] || v1[2] != v2[2])
+	if( v1[0] != v2[0] || v1[1] != v2[1] || v1[2] != v2[2] )
 	{
 		return 0;
 	}
 	return 1;
 }
 
-static ID_INLINE int Vector4Compare(const vec4_t v1, const vec4_t v2)
+static ID_INLINE int Vector4Compare( const vec4_t v1, const vec4_t v2 )
 {
-	if(v1[0] != v2[0] || v1[1] != v2[1] || v1[2] != v2[2] || v1[3] != v2[3])
+	if( v1[0] != v2[0] || v1[1] != v2[1] || v1[2] != v2[2] || v1[3] != v2[3] )
 	{
 		return 0;
 	}
 	return 1;
 }
 
-static ID_INLINE int VectorCompareEpsilon(const vec3_t v1, const vec3_t v2, float epsilon)
+static ID_INLINE int VectorCompareEpsilon( const vec3_t v1, const vec3_t v2, float epsilon )
 {
 	vec3_t          d;
-
-	VectorSubtract(v1, v2, d);
-	d[0] = fabs(d[0]);
-	d[1] = fabs(d[1]);
-	d[2] = fabs(d[2]);
-
-	if(d[0] > epsilon || d[1] > epsilon || d[2] > epsilon)
+	
+	VectorSubtract( v1, v2, d );
+	d[0] = fabs( d[0] );
+	d[1] = fabs( d[1] );
+	d[2] = fabs( d[2] );
+	
+	if( d[0] > epsilon || d[1] > epsilon || d[2] > epsilon )
+	{
 		return 0;
-
+	}
+	
 	return 1;
 }
 
@@ -953,7 +955,7 @@ static ID_INLINE vec_t VectorLength(const vec3_t v)
 #if id386_3dnow && defined __GNUC__ && 0
 //#error VectorLength
 	vec_t           out;
-
+	
 	femms();
 	asm volatile    (			// lo                                   | hi
 						"movq		(%%eax),	%%mm0\n"	// v[0]                                 | v[1]
@@ -972,7 +974,7 @@ static ID_INLINE vec_t VectorLength(const vec3_t v)
 						"pfmul		%%mm1,		%%mm0\n"	// sqrt(dot)
 						// out = mm0[lo]
 						"movd		%%mm0,		(%%edx)\n"::"a" (v), "d"(&out):"memory");
-
+		
 	femms();
 	return out;
 #else
@@ -987,7 +989,7 @@ static ID_INLINE vec_t VectorLengthSquared(const vec3_t v)
 #if id386_3dnow && defined __GNUC__ && 0
 //#error VectorLengthSquared
 	vec_t           out;
-
+	
 	femms();
 	asm volatile    (			// lo                               | hi
 						"movq		(%%eax),	%%mm0\n"	// v[0]                             | v[1]
@@ -1000,7 +1002,7 @@ static ID_INLINE vec_t VectorLengthSquared(const vec3_t v)
 						"pfadd		%%mm1,		%%mm0\n"	// v[0]*v[0]+v[1]*v[1]+v[2]*v[2]    | -
 						"movd		%%mm0,		(%%edx)\n"	// out = mm2[lo]
 						::"a"           (v), "d"(&out):"memory");
-
+		
 	femms();
 	return out;
 #else
@@ -1009,224 +1011,224 @@ static ID_INLINE vec_t VectorLengthSquared(const vec3_t v)
 }
 // *INDENT-ON*
 
-static ID_INLINE vec_t Distance(const vec3_t p1, const vec3_t p2)
+static ID_INLINE vec_t Distance( const vec3_t p1, const vec3_t p2 )
 {
 	vec3_t          v;
-
-	VectorSubtract(p2, p1, v);
-	return VectorLength(v);
+	
+	VectorSubtract( p2, p1, v );
+	return VectorLength( v );
 }
 
-static ID_INLINE vec_t DistanceSquared(const vec3_t p1, const vec3_t p2)
+static ID_INLINE vec_t DistanceSquared( const vec3_t p1, const vec3_t p2 )
 {
 	vec3_t          v;
-
-	VectorSubtract(p2, p1, v);
+	
+	VectorSubtract( p2, p1, v );
 	return v[0] * v[0] + v[1] * v[1] + v[2] * v[2];
 }
 
 // fast vector normalize routine that uses rsqrt approximation, nor does it return length
-static ID_INLINE void VectorNormalizeFast(vec3_t v)
+static ID_INLINE void VectorNormalizeFast( vec3_t v )
 {
 	float           lengthSquared, lengthInversed;
-
-	lengthSquared = DotProduct(v, v);
-
-	if(lengthSquared)
+	
+	lengthSquared = DotProduct( v, v );
+	
+	if( lengthSquared )
 	{
-		lengthInversed = Q_rsqrt(lengthSquared);
+		lengthInversed = Q_rsqrt( lengthSquared );
 		v[0] *= lengthInversed;
 		v[1] *= lengthInversed;
 		v[2] *= lengthInversed;
 	}
 }
 
-static ID_INLINE void VectorInverse(vec3_t v)
+static ID_INLINE void VectorInverse( vec3_t v )
 {
 	v[0] = -v[0];
 	v[1] = -v[1];
 	v[2] = -v[2];
 }
 
-static ID_INLINE void CrossProduct(const vec3_t v1, const vec3_t v2, vec3_t cross)
+static ID_INLINE void CrossProduct( const vec3_t v1, const vec3_t v2, vec3_t cross )
 {
 	cross[0] = v1[1] * v2[2] - v1[2] * v2[1];
 	cross[1] = v1[2] * v2[0] - v1[0] * v2[2];
 	cross[2] = v1[0] * v2[1] - v1[1] * v2[0];
 }
 
-static ID_INLINE void VectorLerp(const vec3_t from, const vec3_t to, float frac, vec3_t out)
+static ID_INLINE void VectorLerp( const vec3_t from, const vec3_t to, float frac, vec3_t out )
 {
-	out[0] = from[0] + ((to[0] - from[0]) * frac);
-	out[1] = from[1] + ((to[1] - from[1]) * frac);
-	out[2] = from[2] + ((to[2] - from[2]) * frac);
+	out[0] = from[0] + ( ( to[0] - from[0] ) * frac );
+	out[1] = from[1] + ( ( to[1] - from[1] ) * frac );
+	out[2] = from[2] + ( ( to[2] - from[2] ) * frac );
 }
 
-static ID_INLINE void VectorReflect(const vec3_t v, const vec3_t normal, vec3_t out)
+static ID_INLINE void VectorReflect( const vec3_t v, const vec3_t normal, vec3_t out )
 {
 	float           d;
-
-	d = 2.0 * (v[0] * normal[0] + v[1] * normal[1] + v[2] * normal[2]);
-
+	
+	d = 2.0 * ( v[0] * normal[0] + v[1] * normal[1] + v[2] * normal[2] );
+	
 	out[0] = v[0] - normal[0] * d;
 	out[1] = v[1] - normal[1] * d;
 	out[2] = v[2] - normal[2] * d;
 }
 
-vec_t           VectorNormalize(vec3_t v);	// returns vector length
-vec_t           VectorNormalize2(const vec3_t v, vec3_t out);
+vec_t           VectorNormalize( vec3_t v );	// returns vector length
+vec_t           VectorNormalize2( const vec3_t v, vec3_t out );
 
-void            VectorRotate(vec3_t in, vec3_t matrix[3], vec3_t out);
+void            VectorRotate( vec3_t in, vec3_t matrix[3], vec3_t out );
 
-int             NearestPowerOfTwo(int val);
-int             Q_log2(int val);
+int             NearestPowerOfTwo( int val );
+int             Q_log2( int val );
 
-float           Q_acos(float c);
+float           Q_acos( float c );
 
-int             Q_isnan(float x);
+int             Q_isnan( float x );
 
-int             Q_rand(int *seed);
-float           Q_random(int *seed);
-float           Q_crandom(int *seed);
+int             Q_rand( int* seed );
+float           Q_random( int* seed );
+float           Q_crandom( int* seed );
 
 #define random()	((rand () & 0x7fff) / ((float)0x7fff))
 #define crandom()	(2.0 * (random() - 0.5))
 
 
-void            AnglesToAxis(const vec3_t angles, vec3_t axis[3]);
-void            AxisToAngles(vec3_t axis[3], vec3_t angles);
-vec_t           VectorDistance(vec3_t v1, vec3_t v2);
-vec_t           VectorDistanceSquared(vec3_t v1, vec3_t v2);
+void            AnglesToAxis( const vec3_t angles, vec3_t axis[3] );
+void            AxisToAngles( vec3_t axis[3], vec3_t angles );
+vec_t           VectorDistance( vec3_t v1, vec3_t v2 );
+vec_t           VectorDistanceSquared( vec3_t v1, vec3_t v2 );
 
 
-void            AxisClear(vec3_t axis[3]);
-void            AxisCopy(vec3_t in[3], vec3_t out[3]);
+void            AxisClear( vec3_t axis[3] );
+void            AxisCopy( vec3_t in[3], vec3_t out[3] );
 
-void            SetPlaneSignbits(struct cplane_s *out);
-int             BoxOnPlaneSide(vec3_t emins, vec3_t emaxs, struct cplane_s *plane);
-int             BoxOnPlaneSide2(vec3_t mins, vec3_t maxs, vec4_t plane);
+void            SetPlaneSignbits( struct cplane_s* out );
+int             BoxOnPlaneSide( vec3_t emins, vec3_t emaxs, struct cplane_s* plane );
+int             BoxOnPlaneSide2( vec3_t mins, vec3_t maxs, vec4_t plane );
 
-float           LerpAngle(float from, float to, float frac);
-float           AngleSubtract(float a1, float a2);
-void            AnglesSubtract(vec3_t v1, vec3_t v2, vec3_t v3);
+float           LerpAngle( float from, float to, float frac );
+float           AngleSubtract( float a1, float a2 );
+void            AnglesSubtract( vec3_t v1, vec3_t v2, vec3_t v3 );
 
-float           AngleNormalize360(float angle);
-float           AngleNormalize180(float angle);
-float           AngleDelta(float angle1, float angle2);
-float           AngleBetweenVectors(const vec3_t a, const vec3_t b);
-void            AngleVectors(const vec3_t angles, vec3_t forward, vec3_t right, vec3_t up);
+float           AngleNormalize360( float angle );
+float           AngleNormalize180( float angle );
+float           AngleDelta( float angle1, float angle2 );
+float           AngleBetweenVectors( const vec3_t a, const vec3_t b );
+void            AngleVectors( const vec3_t angles, vec3_t forward, vec3_t right, vec3_t up );
 
-static ID_INLINE void AnglesToVector(const vec3_t angles, vec3_t out)
+static ID_INLINE void AnglesToVector( const vec3_t angles, vec3_t out )
 {
-	AngleVectors(angles, out, NULL, NULL);
+	AngleVectors( angles, out, NULL, NULL );
 }
 
-void            VectorToAngles(const vec3_t value1, vec3_t angles);
+void            VectorToAngles( const vec3_t value1, vec3_t angles );
 
-vec_t           PlaneNormalize(vec4_t plane);	// returns normal length
-qboolean        PlaneFromPoints(vec4_t plane, const vec3_t a, const vec3_t b, const vec3_t c, qboolean cw);
+vec_t           PlaneNormalize( vec4_t plane );	// returns normal length
+qboolean        PlaneFromPoints( vec4_t plane, const vec3_t a, const vec3_t b, const vec3_t c, qboolean cw );
 /* greebo: This calculates the intersection point of three planes.
  * Returns <0,0,0> if no intersection point could be found, otherwise returns the coordinates of the intersection point
  * (this may also be 0,0,0) */
-qboolean		PlanesGetIntersectionPoint(const vec4_t plane1, const vec4_t plane2, const vec4_t plane3, vec3_t out);
-void			PlaneIntersectRay(const vec3_t rayPos, const vec3_t rayDir, const vec4_t plane, vec3_t res);
+qboolean		PlanesGetIntersectionPoint( const vec4_t plane1, const vec4_t plane2, const vec4_t plane3, vec3_t out );
+void			PlaneIntersectRay( const vec3_t rayPos, const vec3_t rayDir, const vec4_t plane, vec3_t res );
 
-void            ProjectPointOnPlane(vec3_t dst, const vec3_t p, const vec3_t normal);
-void            RotatePointAroundVector(vec3_t dst, const vec3_t dir, const vec3_t point, float degrees);
-void            RotateAroundDirection(vec3_t axis[3], float yaw);
-void            MakeNormalVectors(const vec3_t forward, vec3_t right, vec3_t up);
+void            ProjectPointOnPlane( vec3_t dst, const vec3_t p, const vec3_t normal );
+void            RotatePointAroundVector( vec3_t dst, const vec3_t dir, const vec3_t point, float degrees );
+void            RotateAroundDirection( vec3_t axis[3], float yaw );
+void            MakeNormalVectors( const vec3_t forward, vec3_t right, vec3_t up );
 
 // perpendicular vector could be replaced by this
 
 //int   PlaneTypeForNormal (vec3_t normal);
 
-void            AxisMultiply(axis_t in1, axis_t in2, axis_t out);
-void            VectorAxisMultiply(const vec3_t p, vec3_t m[3], vec3_t out);
+void            AxisMultiply( axis_t in1, axis_t in2, axis_t out );
+void            VectorAxisMultiply( const vec3_t p, vec3_t m[3], vec3_t out );
 
-void            PerpendicularVector(vec3_t dst, const vec3_t src);
+void            PerpendicularVector( vec3_t dst, const vec3_t src );
 
-void            GetPerpendicularViewVector(const vec3_t point, const vec3_t p1, const vec3_t p2, vec3_t up);
-void            ProjectPointOntoVector(vec3_t point, vec3_t vStart, vec3_t vEnd, vec3_t vProj);
+void            GetPerpendicularViewVector( const vec3_t point, const vec3_t p1, const vec3_t p2, vec3_t up );
+void            ProjectPointOntoVector( vec3_t point, vec3_t vStart, vec3_t vEnd, vec3_t vProj );
 
-float           pointToLineDistance(const vec3_t point, const vec3_t p1, const vec3_t p2);
-float           VectorMinComponent(vec3_t v);
-float           VectorMaxComponent(vec3_t v);
+float           pointToLineDistance( const vec3_t point, const vec3_t p1, const vec3_t p2 );
+float           VectorMinComponent( vec3_t v );
+float           VectorMaxComponent( vec3_t v );
 
-vec_t           DistanceBetweenLineSegmentsSquared(const vec3_t sP0, const vec3_t sP1,
-												   const vec3_t tP0, const vec3_t tP1, float *s, float *t);
-vec_t           DistanceBetweenLineSegments(const vec3_t sP0, const vec3_t sP1,
-											const vec3_t tP0, const vec3_t tP1, float *s, float *t);
-
-
+vec_t           DistanceBetweenLineSegmentsSquared( const vec3_t sP0, const vec3_t sP1,
+		const vec3_t tP0, const vec3_t tP1, float* s, float* t );
+vec_t           DistanceBetweenLineSegments( const vec3_t sP0, const vec3_t sP1,
+		const vec3_t tP0, const vec3_t tP1, float* s, float* t );
+		
+		
 //=============================================
 
 // RB: XreaL matrix math functions required by the renderer
 
-void            MatrixIdentity(matrix_t m);
-void            MatrixClear(matrix_t m);
-void            MatrixCopy(const matrix_t in, matrix_t out);
-qboolean        MatrixCompare(const matrix_t a, const matrix_t b);
-void            MatrixTransposeIntoXMM(const matrix_t m);
-void            MatrixTranspose(const matrix_t in, matrix_t out);
+void            MatrixIdentity( matrix_t m );
+void            MatrixClear( matrix_t m );
+void            MatrixCopy( const matrix_t in, matrix_t out );
+qboolean        MatrixCompare( const matrix_t a, const matrix_t b );
+void            MatrixTransposeIntoXMM( const matrix_t m );
+void            MatrixTranspose( const matrix_t in, matrix_t out );
 
 // invert any m4x4 using Kramer's rule.. return qtrue if matrix is singular, else return qfalse
-qboolean        MatrixInverse(matrix_t m);
-void            MatrixSetupXRotation(matrix_t m, vec_t degrees);
-void            MatrixSetupYRotation(matrix_t m, vec_t degrees);
-void            MatrixSetupZRotation(matrix_t m, vec_t degrees);
-void            MatrixSetupTranslation(matrix_t m, vec_t x, vec_t y, vec_t z);
-void            MatrixSetupScale(matrix_t m, vec_t x, vec_t y, vec_t z);
-void            MatrixSetupShear(matrix_t m, vec_t x, vec_t y);
-void            MatrixMultiply(const matrix_t a, const matrix_t b, matrix_t out);
-void            MatrixMultiply2(matrix_t m, const matrix_t m2);
-void            MatrixMultiplyRotation(matrix_t m, vec_t pitch, vec_t yaw, vec_t roll);
-void            MatrixMultiplyZRotation(matrix_t m, vec_t degrees);
-void            MatrixMultiplyTranslation(matrix_t m, vec_t x, vec_t y, vec_t z);
-void            MatrixMultiplyScale(matrix_t m, vec_t x, vec_t y, vec_t z);
-void            MatrixMultiplyShear(matrix_t m, vec_t x, vec_t y);
-void            MatrixToAngles(const matrix_t m, vec3_t angles);
-void            MatrixFromAngles(matrix_t m, vec_t pitch, vec_t yaw, vec_t roll);
-void            MatrixFromVectorsFLU(matrix_t m, const vec3_t forward, const vec3_t left, const vec3_t up);
-void            MatrixFromVectorsFRU(matrix_t m, const vec3_t forward, const vec3_t right, const vec3_t up);
-void            MatrixFromQuat(matrix_t m, const quat_t q);
-void            MatrixFromPlanes(matrix_t m, const vec4_t left, const vec4_t right, const vec4_t bottom, const vec4_t top,
-								 const vec4_t near, const vec4_t far);
-void            MatrixToVectorsFLU(const matrix_t m, vec3_t forward, vec3_t left, vec3_t up);
-void            MatrixToVectorsFRU(const matrix_t m, vec3_t forward, vec3_t right, vec3_t up);
-void            MatrixSetupTransformFromVectorsFLU(matrix_t m, const vec3_t forward, const vec3_t left, const vec3_t up, const vec3_t origin);
-void            MatrixSetupTransformFromVectorsFRU(matrix_t m, const vec3_t forward, const vec3_t right, const vec3_t up, const vec3_t origin);
-void            MatrixSetupTransformFromRotation(matrix_t m, const matrix_t rot, const vec3_t origin);
-void            MatrixSetupTransformFromQuat(matrix_t m, const quat_t quat, const vec3_t origin);
-void            MatrixAffineInverse(const matrix_t in, matrix_t out);
-void            MatrixTransformNormal(const matrix_t m, const vec3_t in, vec3_t out);
-void            MatrixTransformNormal2(const matrix_t m, vec3_t inout);
-void            MatrixTransformPoint(const matrix_t m, const vec3_t in, vec3_t out);
-void            MatrixTransformPoint2(const matrix_t m, vec3_t inout);
-void            MatrixTransform4(const matrix_t m, const vec4_t in, vec4_t out);
-void            MatrixTransformPlane(const matrix_t m, const vec4_t in, vec4_t out);
-void            MatrixTransformPlane2(const matrix_t m, vec3_t inout);
-void            MatrixPerspectiveProjection(matrix_t m, vec_t left, vec_t right, vec_t bottom, vec_t top, vec_t near, vec_t far);
-void            MatrixPerspectiveProjectionLH(matrix_t m, vec_t left, vec_t right, vec_t bottom, vec_t top, vec_t near, vec_t far);
-void            MatrixPerspectiveProjectionRH(matrix_t m, vec_t left, vec_t right, vec_t bottom, vec_t top, vec_t near, vec_t far);
-void            MatrixPerspectiveProjectionFovYAspectLH(matrix_t m, vec_t fov, vec_t aspect, vec_t near, vec_t far);
-void            MatrixPerspectiveProjectionFovXYLH(matrix_t m, vec_t fovX, vec_t fovY, vec_t near, vec_t far);
-void            MatrixPerspectiveProjectionFovXYRH(matrix_t m, vec_t fovX, vec_t fovY, vec_t near, vec_t far);
-void            MatrixPerspectiveProjectionFovXYInfiniteRH(matrix_t m, vec_t fovX, vec_t fovY, vec_t near);
-void            MatrixOrthogonalProjection(matrix_t m, vec_t left, vec_t right, vec_t bottom, vec_t top, vec_t near, vec_t far);
+qboolean        MatrixInverse( matrix_t m );
+void            MatrixSetupXRotation( matrix_t m, vec_t degrees );
+void            MatrixSetupYRotation( matrix_t m, vec_t degrees );
+void            MatrixSetupZRotation( matrix_t m, vec_t degrees );
+void            MatrixSetupTranslation( matrix_t m, vec_t x, vec_t y, vec_t z );
+void            MatrixSetupScale( matrix_t m, vec_t x, vec_t y, vec_t z );
+void            MatrixSetupShear( matrix_t m, vec_t x, vec_t y );
+void            MatrixMultiply( const matrix_t a, const matrix_t b, matrix_t out );
+void            MatrixMultiply2( matrix_t m, const matrix_t m2 );
+void            MatrixMultiplyRotation( matrix_t m, vec_t pitch, vec_t yaw, vec_t roll );
+void            MatrixMultiplyZRotation( matrix_t m, vec_t degrees );
+void            MatrixMultiplyTranslation( matrix_t m, vec_t x, vec_t y, vec_t z );
+void            MatrixMultiplyScale( matrix_t m, vec_t x, vec_t y, vec_t z );
+void            MatrixMultiplyShear( matrix_t m, vec_t x, vec_t y );
+void            MatrixToAngles( const matrix_t m, vec3_t angles );
+void            MatrixFromAngles( matrix_t m, vec_t pitch, vec_t yaw, vec_t roll );
+void            MatrixFromVectorsFLU( matrix_t m, const vec3_t forward, const vec3_t left, const vec3_t up );
+void            MatrixFromVectorsFRU( matrix_t m, const vec3_t forward, const vec3_t right, const vec3_t up );
+void            MatrixFromQuat( matrix_t m, const quat_t q );
+void            MatrixFromPlanes( matrix_t m, const vec4_t left, const vec4_t right, const vec4_t bottom, const vec4_t top,
+								  const vec4_t near, const vec4_t far );
+void            MatrixToVectorsFLU( const matrix_t m, vec3_t forward, vec3_t left, vec3_t up );
+void            MatrixToVectorsFRU( const matrix_t m, vec3_t forward, vec3_t right, vec3_t up );
+void            MatrixSetupTransformFromVectorsFLU( matrix_t m, const vec3_t forward, const vec3_t left, const vec3_t up, const vec3_t origin );
+void            MatrixSetupTransformFromVectorsFRU( matrix_t m, const vec3_t forward, const vec3_t right, const vec3_t up, const vec3_t origin );
+void            MatrixSetupTransformFromRotation( matrix_t m, const matrix_t rot, const vec3_t origin );
+void            MatrixSetupTransformFromQuat( matrix_t m, const quat_t quat, const vec3_t origin );
+void            MatrixAffineInverse( const matrix_t in, matrix_t out );
+void            MatrixTransformNormal( const matrix_t m, const vec3_t in, vec3_t out );
+void            MatrixTransformNormal2( const matrix_t m, vec3_t inout );
+void            MatrixTransformPoint( const matrix_t m, const vec3_t in, vec3_t out );
+void            MatrixTransformPoint2( const matrix_t m, vec3_t inout );
+void            MatrixTransform4( const matrix_t m, const vec4_t in, vec4_t out );
+void            MatrixTransformPlane( const matrix_t m, const vec4_t in, vec4_t out );
+void            MatrixTransformPlane2( const matrix_t m, vec3_t inout );
+void            MatrixPerspectiveProjection( matrix_t m, vec_t left, vec_t right, vec_t bottom, vec_t top, vec_t near, vec_t far );
+void            MatrixPerspectiveProjectionLH( matrix_t m, vec_t left, vec_t right, vec_t bottom, vec_t top, vec_t near, vec_t far );
+void            MatrixPerspectiveProjectionRH( matrix_t m, vec_t left, vec_t right, vec_t bottom, vec_t top, vec_t near, vec_t far );
+void            MatrixPerspectiveProjectionFovYAspectLH( matrix_t m, vec_t fov, vec_t aspect, vec_t near, vec_t far );
+void            MatrixPerspectiveProjectionFovXYLH( matrix_t m, vec_t fovX, vec_t fovY, vec_t near, vec_t far );
+void            MatrixPerspectiveProjectionFovXYRH( matrix_t m, vec_t fovX, vec_t fovY, vec_t near, vec_t far );
+void            MatrixPerspectiveProjectionFovXYInfiniteRH( matrix_t m, vec_t fovX, vec_t fovY, vec_t near );
+void            MatrixOrthogonalProjection( matrix_t m, vec_t left, vec_t right, vec_t bottom, vec_t top, vec_t near, vec_t far );
 
-void			MatrixOrthogonalProjectionLH(matrix_t m, vec_t left, vec_t right, vec_t bottom, vec_t top, vec_t near, vec_t far);
-void			MatrixOrthogonalProjectionRH(matrix_t m, vec_t left, vec_t right, vec_t bottom, vec_t top, vec_t near, vec_t far);
+void			MatrixOrthogonalProjectionLH( matrix_t m, vec_t left, vec_t right, vec_t bottom, vec_t top, vec_t near, vec_t far );
+void			MatrixOrthogonalProjectionRH( matrix_t m, vec_t left, vec_t right, vec_t bottom, vec_t top, vec_t near, vec_t far );
 
-void			MatrixPlaneReflection(matrix_t m, const vec4_t plane);
+void			MatrixPlaneReflection( matrix_t m, const vec4_t plane );
 
-void            MatrixLookAtLH(matrix_t output, const vec3_t pos, const vec3_t dir, const vec3_t up);
-void            MatrixLookAtRH(matrix_t m, const vec3_t eye, const vec3_t dir, const vec3_t up);
-void            MatrixScaleTranslateToUnitCube(matrix_t m, const vec3_t mins, const vec3_t maxs);
-void            MatrixCrop(matrix_t m, const vec3_t mins, const vec3_t maxs);
+void            MatrixLookAtLH( matrix_t output, const vec3_t pos, const vec3_t dir, const vec3_t up );
+void            MatrixLookAtRH( matrix_t m, const vec3_t eye, const vec3_t dir, const vec3_t up );
+void            MatrixScaleTranslateToUnitCube( matrix_t m, const vec3_t mins, const vec3_t maxs );
+void            MatrixCrop( matrix_t m, const vec3_t mins, const vec3_t maxs );
 
-static ID_INLINE void AnglesToMatrix(const vec3_t angles, matrix_t m)
+static ID_INLINE void AnglesToMatrix( const vec3_t angles, matrix_t m )
 {
-	MatrixFromAngles(m, angles[PITCH], angles[YAW], angles[ROLL]);
+	MatrixFromAngles( m, angles[PITCH], angles[YAW], angles[ROLL] );
 }
 
 
@@ -1239,7 +1241,7 @@ static ID_INLINE void AnglesToMatrix(const vec3_t angles, matrix_t m)
 
 #define QuatCompare(a,b)	((a)[0]==(b)[0] && (a)[1]==(b)[1] && (a)[2]==(b)[2] && (a)[3]==(b)[3])
 
-static ID_INLINE void QuatClear(quat_t q)
+static ID_INLINE void QuatClear( quat_t q )
 {
 	q[0] = 0;
 	q[1] = 0;
@@ -1258,28 +1260,32 @@ static ID_INLINE int QuatCompare(const quat_t a, const quat_t b)
 }
 */
 
-static ID_INLINE void QuatCalcW(quat_t q)
+static ID_INLINE void QuatCalcW( quat_t q )
 {
 #if 1
-	vec_t           term = 1.0f - (q[0] * q[0] + q[1] * q[1] + q[2] * q[2]);
-
-	if(term < 0.0)
+	vec_t           term = 1.0f - ( q[0] * q[0] + q[1] * q[1] + q[2] * q[2] );
+	
+	if( term < 0.0 )
+	{
 		q[3] = 0.0;
+	}
 	else
-		q[3] = -sqrt(term);
+	{
+		q[3] = -sqrt( term );
+	}
 #else
-	q[3] = sqrt(fabs(1.0f - (q[0] * q[0] + q[1] * q[1] + q[2] * q[2])));
+	q[3] = sqrt( fabs( 1.0f - ( q[0] * q[0] + q[1] * q[1] + q[2] * q[2] ) ) );
 #endif
 }
 
-static ID_INLINE void QuatInverse(quat_t q)
+static ID_INLINE void QuatInverse( quat_t q )
 {
 	q[0] = -q[0];
 	q[1] = -q[1];
 	q[2] = -q[2];
 }
 
-static ID_INLINE void QuatAntipodal(quat_t q)
+static ID_INLINE void QuatAntipodal( quat_t q )
 {
 	q[0] = -q[0];
 	q[1] = -q[1];
@@ -1287,46 +1293,46 @@ static ID_INLINE void QuatAntipodal(quat_t q)
 	q[3] = -q[3];
 }
 
-static ID_INLINE vec_t QuatLength(const quat_t q)
+static ID_INLINE vec_t QuatLength( const quat_t q )
 {
-	return (vec_t) sqrt(q[0] * q[0] + q[1] * q[1] + q[2] * q[2] + q[3] * q[3]);
+	return ( vec_t ) sqrt( q[0] * q[0] + q[1] * q[1] + q[2] * q[2] + q[3] * q[3] );
 }
 
-vec_t           QuatNormalize(quat_t q);
+vec_t           QuatNormalize( quat_t q );
 
-void            QuatFromAngles(quat_t q, vec_t pitch, vec_t yaw, vec_t roll);
+void            QuatFromAngles( quat_t q, vec_t pitch, vec_t yaw, vec_t roll );
 
-static ID_INLINE void AnglesToQuat(const vec3_t angles, quat_t q)
+static ID_INLINE void AnglesToQuat( const vec3_t angles, quat_t q )
 {
-	QuatFromAngles(q, angles[PITCH], angles[YAW], angles[ROLL]);
+	QuatFromAngles( q, angles[PITCH], angles[YAW], angles[ROLL] );
 }
 
-void            QuatFromMatrix(quat_t q, const matrix_t m);
-void            QuatToVectorsFLU(const quat_t quat, vec3_t forward, vec3_t left, vec3_t up);
-void            QuatToVectorsFRU(const quat_t quat, vec3_t forward, vec3_t right, vec3_t up);
-void            QuatToAxis(const quat_t q, vec3_t axis[3]);
-void            QuatToAngles(const quat_t q, vec3_t angles);
+void            QuatFromMatrix( quat_t q, const matrix_t m );
+void            QuatToVectorsFLU( const quat_t quat, vec3_t forward, vec3_t left, vec3_t up );
+void            QuatToVectorsFRU( const quat_t quat, vec3_t forward, vec3_t right, vec3_t up );
+void            QuatToAxis( const quat_t q, vec3_t axis[3] );
+void            QuatToAngles( const quat_t q, vec3_t angles );
 
 // Quaternion multiplication, analogous to the matrix multiplication routines.
 
 // qa = rotate by qa, then qb
-void            QuatMultiply0(quat_t qa, const quat_t qb);
+void            QuatMultiply0( quat_t qa, const quat_t qb );
 
 // qc = rotate by qa, then qb
-void            QuatMultiply1(const quat_t qa, const quat_t qb, quat_t qc);
+void            QuatMultiply1( const quat_t qa, const quat_t qb, quat_t qc );
 
 // qc = rotate by qa, then by inverse of qb
-void            QuatMultiply2(const quat_t qa, const quat_t qb, quat_t qc);
+void            QuatMultiply2( const quat_t qa, const quat_t qb, quat_t qc );
 
 // qc = rotate by inverse of qa, then by qb
-void            QuatMultiply3(const quat_t qa, const quat_t qb, quat_t qc);
+void            QuatMultiply3( const quat_t qa, const quat_t qb, quat_t qc );
 
 // qc = rotate by inverse of qa, then by inverse of qb
-void            QuatMultiply4(const quat_t qa, const quat_t qb, quat_t qc);
+void            QuatMultiply4( const quat_t qa, const quat_t qb, quat_t qc );
 
 
-void            QuatSlerp(const quat_t from, const quat_t to, float frac, quat_t out);
-void            QuatTransformVector(const quat_t q, const vec3_t in, vec3_t out);
+void            QuatSlerp( const quat_t from, const quat_t to, float frac, quat_t out );
+void            QuatTransformVector( const quat_t q, const vec3_t in, vec3_t out );
 
 //=============================================
 
@@ -1336,16 +1342,16 @@ typedef struct
 	qboolean        frameMemory;
 	int             currentElements;
 	int             maxElements;	// will reallocate and move when exceeded
-	void          **elements;
+	void**          elements;
 } growList_t;
 
 // you don't need to init the growlist if you don't mind it growing and moving
 // the list as it expands
-void            Com_InitGrowList(growList_t * list, int maxElements);
-void            Com_DestroyGrowList(growList_t * list);
-int             Com_AddToGrowList(growList_t * list, void *data);
-void           *Com_GrowListElement(const growList_t * list, int index);
-int             Com_IndexForGrowListElement(const growList_t * list, const void *element);
+void            Com_InitGrowList( growList_t* list, int maxElements );
+void            Com_DestroyGrowList( growList_t* list );
+int             Com_AddToGrowList( growList_t* list, void* data );
+void*           Com_GrowListElement( const growList_t* list, int index );
+int             Com_IndexForGrowListElement( const growList_t* list, const void* element );
 
 
 //=============================================================================
@@ -1359,46 +1365,46 @@ enum
 
 enum
 {
-	MEMSTREAM_FLAGS_EOF = BIT(0),
-	MEMSTREAM_FLAGS_ERR = BIT(1),
+	MEMSTREAM_FLAGS_EOF = BIT( 0 ),
+	MEMSTREAM_FLAGS_ERR = BIT( 1 ),
 };
 
 // helper struct for reading binary file formats
 typedef struct memStream_s
 {
-	byte           *buffer;
+	byte*           buffer;
 	int				bufSize;
-	byte           *curPos;
+	byte*           curPos;
 	int             flags;
 }
 memStream_t;
 
-memStream_t    *AllocMemStream(byte *buffer, int bufSize);
-void			FreeMemStream(memStream_t * s);
-int				MemStreamRead(memStream_t *s, void *buffer, int len);
-int				MemStreamGetC(memStream_t *s);
-int				MemStreamGetLong(memStream_t * s);
-int				MemStreamGetShort(memStream_t * s);
-float			MemStreamGetFloat(memStream_t * s);
+memStream_t*    AllocMemStream( byte* buffer, int bufSize );
+void			FreeMemStream( memStream_t* s );
+int				MemStreamRead( memStream_t* s, void* buffer, int len );
+int				MemStreamGetC( memStream_t* s );
+int				MemStreamGetLong( memStream_t* s );
+int				MemStreamGetShort( memStream_t* s );
+float			MemStreamGetFloat( memStream_t* s );
 
 //=============================================
 
-float           Com_Clamp(float min, float max, float value);
+float           Com_Clamp( float min, float max, float value );
 
-char           *Com_SkipPath(char *pathname);
-const char     *Com_GetExtension(const char *name);
-void            Com_StripExtension(const char *src, char *dest, int destsize);
-void            Com_DefaultExtension(char *path, int maxSize, const char *extension);
+char*           Com_SkipPath( char* pathname );
+const char*     Com_GetExtension( const char* name );
+void            Com_StripExtension( const char* src, char* dest, int destsize );
+void            Com_DefaultExtension( char* path, int maxSize, const char* extension );
 
-int             Com_HashKey(char *string, int maxlength);
+int             Com_HashKey( char* string, int maxlength );
 
-void            Com_BeginParseSession(const char *name);
-int             Com_GetCurrentParseLine(void);
-char           *Com_Parse(char **data_p);
-char           *Com_ParseExt(char **data_p, qboolean allowLineBreak);
-int             Com_Compress(char *data_p);
-void            Com_ParseError(char *format, ...);
-void            Com_ParseWarning(char *format, ...);
+void            Com_BeginParseSession( const char* name );
+int             Com_GetCurrentParseLine( void );
+char*           Com_Parse( char** data_p );
+char*           Com_ParseExt( char** data_p, qboolean allowLineBreak );
+int             Com_Compress( char* data_p );
+void            Com_ParseError( char* format, ... );
+void            Com_ParseWarning( char* format, ... );
 
 
 #define MAX_TOKENLENGTH		1024
@@ -1423,34 +1429,34 @@ typedef struct pc_token_s
 
 // data is an in/out parm, returns a parsed out token
 
-void            Com_MatchToken(char **buf_p, char *match);
+void            Com_MatchToken( char** buf_p, char* match );
 
-void            Com_SkipBracedSection(char **program);
-void            Com_SkipRestOfLine(char **data);
+void            Com_SkipBracedSection( char** program );
+void            Com_SkipRestOfLine( char** data );
 
-void            Com_Parse1DMatrix(char **buf_p, int x, float *m, qboolean checkBrackets);
-void            Com_Parse2DMatrix(char **buf_p, int y, int x, float *m);
-void            Com_Parse3DMatrix(char **buf_p, int z, int y, int x, float *m);
-int             Com_HexStrToInt(const char *str);
+void            Com_Parse1DMatrix( char** buf_p, int x, float* m, qboolean checkBrackets );
+void            Com_Parse2DMatrix( char** buf_p, int y, int x, float* m );
+void            Com_Parse3DMatrix( char** buf_p, int z, int y, int x, float* m );
+int             Com_HexStrToInt( const char* str );
 
-void QDECL      Com_sprintf(char *dest, int size, const char *fmt, ...);
+void QDECL      Com_sprintf( char* dest, int size, const char* fmt, ... );
 
-char           *Com_SkipTokens(char *s, int numTokens, char *sep);
-char           *Com_SkipCharset(char *s, char *sep);
+char*           Com_SkipTokens( char* s, int numTokens, char* sep );
+char*           Com_SkipCharset( char* s, char* sep );
 
-qboolean        Com_CheckColorCodes(const char *s);
+qboolean        Com_CheckColorCodes( const char* s );
 
-typedef struct 
+typedef struct
 {
-  unsigned int hi;
-  unsigned int lo;
+	unsigned int hi;
+	unsigned int lo;
 } clientList_t;
 
-qboolean		Com_ClientListContains(const clientList_t *list, int clientNum);
-void			Com_ClientListAdd(clientList_t *list, int clientNum);
-void			Com_ClientListRemove(clientList_t *list, int clientNum);
-char		   *Com_ClientListString(const clientList_t *list);
-void			Com_ClientListParse(clientList_t *list, const char *s);
+qboolean		Com_ClientListContains( const clientList_t* list, int clientNum );
+void			Com_ClientListAdd( clientList_t* list, int clientNum );
+void			Com_ClientListRemove( clientList_t* list, int clientNum );
+char*		   Com_ClientListString( const clientList_t* list );
+void			Com_ClientListParse( clientList_t* list, const char* s );
 
 // mode parm for FS_FOpenFile
 typedef enum
@@ -1470,35 +1476,35 @@ typedef enum
 
 //=============================================
 
-int             Q_isprint(int c);
-int             Q_islower(int c);
-int             Q_isupper(int c);
-int             Q_isalpha(int c);
-qboolean        Q_isanumber(const char *s);
-qboolean        Q_isintegral(float f);
+int             Q_isprint( int c );
+int             Q_islower( int c );
+int             Q_isupper( int c );
+int             Q_isalpha( int c );
+qboolean        Q_isanumber( const char* s );
+qboolean        Q_isintegral( float f );
 
 // portable case insensitive compare
-int             Q_stricmp(const char *s1, const char *s2);
-int             Q_strncmp(const char *s1, const char *s2, int n);
-int             Q_stricmpn(const char *s1, const char *s2, int n);
-char           *Q_strlwr(char *s1);
-char           *Q_strupr(char *s1);
-char           *Q_strrchr(const char *string, int c);
-char           *Q_stristr(const char *s, const char *find);
+int             Q_stricmp( const char* s1, const char* s2 );
+int             Q_strncmp( const char* s1, const char* s2, int n );
+int             Q_stricmpn( const char* s1, const char* s2, int n );
+char*           Q_strlwr( char* s1 );
+char*           Q_strupr( char* s1 );
+char*           Q_strrchr( const char* string, int c );
+char*           Q_stristr( const char* s, const char* find );
 
 // buffer size safe library replacements
-void            Q_strncpyz(char *dest, const char *src, int destsize);
-void            Q_strcat(char *dest, int destsize, const char *src);
-qboolean        Q_strreplace(char *dest, int destsize, const char *find, const char *replace);
+void            Q_strncpyz( char* dest, const char* src, int destsize );
+void            Q_strcat( char* dest, int destsize, const char* src );
+qboolean        Q_strreplace( char* dest, int destsize, const char* find, const char* replace );
 
 // strlen that discounts Quake color sequences
-int             Q_PrintStrlen(const char *string);
+int             Q_PrintStrlen( const char* string );
 
 // removes color sequences from string
-char           *Q_CleanStr(char *string);
+char*           Q_CleanStr( char* string );
 
 // Count the number of char tocount encountered in string
-int             Q_CountChar(const char *string, char tocount);
+int             Q_CountChar( const char* string, char tocount );
 
 //=============================================
 
@@ -1529,32 +1535,32 @@ float	LittleFloat (const float *l);
 
 void	Swap_Init (void);
 */
-char           *QDECL va(char *format, ...) __attribute__ ((format(printf, 1, 2)));
+char*           QDECL va( char* format, ... ) __attribute__( ( format( printf, 1, 2 ) ) );
 
 #define TRUNCATE_LENGTH	64
-void            Com_TruncateLongString(char *buffer, const char *s);
+void            Com_TruncateLongString( char* buffer, const char* s );
 
 //=============================================
 
 //
 // key / value info strings
 //
-char           *Info_ValueForKey(const char *s, const char *key);
-void            Info_RemoveKey(char *s, const char *key);
-void            Info_RemoveKey_big(char *s, const char *key);
-void            Info_SetValueForKey(char *s, const char *key, const char *value);
-void            Info_SetValueForKey_Big(char *s, const char *key, const char *value);
-qboolean        Info_Validate(const char *s);
-void            Info_NextPair(const char **s, char *key, char *value);
+char*           Info_ValueForKey( const char* s, const char* key );
+void            Info_RemoveKey( char* s, const char* key );
+void            Info_RemoveKey_big( char* s, const char* key );
+void            Info_SetValueForKey( char* s, const char* key, const char* value );
+void            Info_SetValueForKey_Big( char* s, const char* key, const char* value );
+qboolean        Info_Validate( const char* s );
+void            Info_NextPair( const char** s, char* key, char* value );
 
 // this is only here so the functions in q_shared.c and bg_*.c can link
 
 #if defined(__cplusplus)
 extern "C" {
 #endif
-void QDECL      Com_Error(int level, const char *error, ...) __attribute__ ((format(printf, 2, 3)));
-void QDECL      Com_Printf(const char *msg, ...) __attribute__ ((format(printf, 1, 2)));
-void QDECL		Com_DPrintf(const char *fmt, ...) __attribute__ ((format(printf, 1, 2)));
+	void QDECL      Com_Error( int level, const char* error, ... ) __attribute__( ( format( printf, 2, 3 ) ) );
+	void QDECL      Com_Printf( const char* msg, ... ) __attribute__( ( format( printf, 1, 2 ) ) );
+	void QDECL		Com_DPrintf( const char* fmt, ... ) __attribute__( ( format( printf, 1, 2 ) ) );
 #if defined(__cplusplus)
 }
 #endif
@@ -1572,37 +1578,37 @@ default values.
 
 typedef enum cvar_flags_s
 {
-	CVAR_ARCHIVE		= BIT(0),	// set to cause it to be saved to vars.rc
-									// used for system variables, not for player
-									// specific configurations
-	CVAR_USERINFO		= BIT(1),	// sent to server on connect or change
-	CVAR_SERVERINFO		= BIT(2),	// sent in response to front end requests
-	CVAR_SYSTEMINFO		= BIT(3),	// these cvars will be duplicated on all clients
-	CVAR_INIT			= BIT(4),	// don't allow change from console at all,
-									// but can be set from the command line
-	CVAR_LATCH			= BIT(5),	// will only change when C code next does
-									// a Cvar_Get(), so it can't be changed
-									// without proper initialization.  modified
-									// will be set, even though the value hasn't
-									// changed yet
-	CVAR_ROM			= BIT(6),	// display only, cannot be set by user at all
-	CVAR_USER_CREATED	= BIT(7),	// created by a set command
-	CVAR_TEMP			= BIT(8),	// can be set even when cheats are disabled, but is not archived
-	CVAR_CHEAT			= BIT(9),	// can not be changed if cheats are disabled
-	CVAR_NORESTART		= BIT(10),	// do not clear when a cvar_restart is issued
-	CVAR_SERVER_CREATED	= BIT(11),	// cvar was created by a server the client connected to
-	CVAR_VM_CREATED		= BIT(12),	// cvar was created exclusively in one of the VMs.
-	CVAR_SHADER			= BIT(13),	// tell renderer to recompile shaders.
+	CVAR_ARCHIVE		= BIT( 0 ),	// set to cause it to be saved to vars.rc
+	// used for system variables, not for player
+	// specific configurations
+	CVAR_USERINFO		= BIT( 1 ),	// sent to server on connect or change
+	CVAR_SERVERINFO		= BIT( 2 ),	// sent in response to front end requests
+	CVAR_SYSTEMINFO		= BIT( 3 ),	// these cvars will be duplicated on all clients
+	CVAR_INIT			= BIT( 4 ),	// don't allow change from console at all,
+	// but can be set from the command line
+	CVAR_LATCH			= BIT( 5 ),	// will only change when C code next does
+	// a Cvar_Get(), so it can't be changed
+	// without proper initialization.  modified
+	// will be set, even though the value hasn't
+	// changed yet
+	CVAR_ROM			= BIT( 6 ),	// display only, cannot be set by user at all
+	CVAR_USER_CREATED	= BIT( 7 ),	// created by a set command
+	CVAR_TEMP			= BIT( 8 ),	// can be set even when cheats are disabled, but is not archived
+	CVAR_CHEAT			= BIT( 9 ),	// can not be changed if cheats are disabled
+	CVAR_NORESTART		= BIT( 10 ),	// do not clear when a cvar_restart is issued
+	CVAR_SERVER_CREATED	= BIT( 11 ),	// cvar was created by a server the client connected to
+	CVAR_VM_CREATED		= BIT( 12 ),	// cvar was created exclusively in one of the VMs.
+	CVAR_SHADER			= BIT( 13 ),	// tell renderer to recompile shaders.
 	CVAR_NONEXISTENT	= 0xFFFFFFFF // cvar doesn't exist
 } cvar_flags_t;
 
 // nothing outside the Cvar_*() functions should modify these fields!
 typedef struct cvar_s
 {
-	char           *name;
-	char           *string;
-	char           *resetString;	// cvar_restart will reset to this value
-	char           *latchedString;	// for CVAR_LATCH vars
+	char*           name;
+	char*           string;
+	char*           resetString;	// cvar_restart will reset to this value
+	char*           latchedString;	// for CVAR_LATCH vars
 	int             flags;
 	qboolean        modified;	// set each time the cvar is changed
 	int             modificationCount;	// incremented each time the cvar is changed
@@ -1612,11 +1618,11 @@ typedef struct cvar_s
 	qboolean        integral;
 	float           min;
 	float           max;
-
-	struct cvar_s  *next;
-	struct cvar_s  *prev;
-	struct cvar_s  *hashNext;
-	struct cvar_s  *hashPrev;
+	
+	struct cvar_s*  next;
+	struct cvar_s*  prev;
+	struct cvar_s*  hashNext;
+	struct cvar_s*  hashPrev;
 	int             hashIndex;
 } cvar_t;
 
@@ -1664,20 +1670,28 @@ PlaneTypeForNormal
 */
 
 //#define PlaneTypeForNormal(x) (x[0] == 1.0 ? PLANE_X : (x[1] == 1.0 ? PLANE_Y : (x[2] == 1.0 ? PLANE_Z : PLANE_NON_AXIAL) ) )
-static ID_INLINE int PlaneTypeForNormal(vec3_t normal)
+static ID_INLINE int PlaneTypeForNormal( vec3_t normal )
 {
-	if(normal[0] == 1.0)
+	if( normal[0] == 1.0 )
+	{
 		return PLANE_X;
-
-	if(normal[1] == 1.0)
+	}
+	
+	if( normal[1] == 1.0 )
+	{
 		return PLANE_Y;
-
-	if(normal[2] == 1.0)
+	}
+	
+	if( normal[2] == 1.0 )
+	{
 		return PLANE_Z;
-
-	if(normal[0] == 0.0 && normal[1] == 0.0 && normal[2] == 0.0)
+	}
+	
+	if( normal[0] == 0.0 && normal[1] == 0.0 && normal[2] == 0.0 )
+	{
 		return PLANE_NON_PLANAR;
-
+	}
+	
 	return PLANE_NON_AXIAL;
 }
 
@@ -1696,11 +1710,11 @@ typedef struct cplane_s
 typedef enum
 {
 	TT_NONE,
-
+	
 	TT_AABB,
 	TT_CAPSULE,
 	TT_BISPHERE,
-
+	
 	TT_NUM_TRACE_TYPES
 } traceType_t;
 
@@ -1855,7 +1869,7 @@ typedef struct playerState_s
 	int             bobCycle;	// for view bobbing and footstep generation
 	int             pm_flags;	// ducked, jump_held, etc
 	int             pm_time;
-
+	
 	vec3_t          origin;
 	vec3_t          velocity;
 	int             weaponTime;
@@ -1863,54 +1877,54 @@ typedef struct playerState_s
 	int             speed;
 	int             delta_angles[3];	// add to command angles to get view direction
 	// changed by spawns, rotating objects, and teleporters
-
+	
 	int             groundEntityNum;	// ENTITYNUM_NONE = in air
-
+	
 	int             legsTimer;	// don't change low priority animations until this runs out
 	int             legsAnim;	// mask off ANIM_TOGGLEBIT
-
+	
 	int             torsoTimer;	// don't change low priority animations until this runs out
 	int             torsoAnim;	// mask off ANIM_TOGGLEBIT
-
+	
 	int             movementDir;	// a number 0 to 7 that represents the relative angle
 	// of movement to the view angle (axial and diagonals)
 	// when at rest, the value will remain unchanged
 	// used to twist the legs during strafing
-
+	
 	vec3_t          grapplePoint;	// location of grapple to pull towards if PMF_GRAPPLE_PULL
-
+	
 	int             eFlags;		// copied to entityState_t->eFlags
-
+	
 	int             eventSequence;	// pmove generated events
 	int             events[MAX_PS_EVENTS];
 	int             eventParms[MAX_PS_EVENTS];
-
+	
 	int             externalEvent;	// events set on player from another source
 	int             externalEventParm;
 	int             externalEventTime;
-
+	
 	int             clientNum;	// ranges from 0 to MAX_CLIENTS-1
 	int             weapon;		// copied to entityState_t->weapon
 	int             weaponstate;
-
+	
 	vec3_t          viewangles;	// for fixed views
 	int             viewheight;
-
+	
 	// damage feedback
 	int             damageEvent;	// when it changes, latch the other parms
 	int             damageYaw;
 	int             damagePitch;
 	int             damageCount;
-
+	
 	int             stats[MAX_STATS];
 	int             persistant[MAX_PERSISTANT];	// stats that aren't cleared on death
 	int             powerups[MAX_POWERUPS];	// level.time that the powerup runs out
 	int             ammo[MAX_WEAPONS];
-
+	
 	int             generic1;
 	int             loopSound;
 	int             jumppad_ent;	// jumppad entity hit this frame
-
+	
 	// not communicated over the net at all
 	int             ping;		// server to game info for scoreboard
 	int             pmove_framecount;
@@ -1931,10 +1945,10 @@ typedef struct playerState_s
 #define	BUTTON_USE_HOLDABLE	4
 #define	BUTTON_GESTURE		8
 #define	BUTTON_WALKING		16	// walking can't just be infered from MOVE_RUN
-										// because a key pressed late in the frame will
-										// only generate a small move value for that frame
-										// walking will use different animations and
-										// won't generate footsteps
+// because a key pressed late in the frame will
+// only generate a small move value for that frame
+// walking will use different animations and
+// won't generate footsteps
 
 //#if defined(MISSIONPACK)
 #define BUTTON_AFFIRMATIVE	32
@@ -1997,43 +2011,43 @@ typedef struct entityState_s
 	int             number;		// entity index
 	int             eType;		// entityType_t
 	int             eFlags;
-
+	
 	trajectory_t    pos;		// for calculating position
 	trajectory_t    apos;		// for calculating angles
-
+	
 	int             time;
 	int             time2;
-
+	
 	vec3_t          origin;
 	vec3_t          origin2;
-
+	
 	vec3_t          angles;
 	vec3_t          angles2;
-
+	
 	int             otherEntityNum;	// shotgun sources, etc
 	int             otherEntityNum2;
-
+	
 	int             groundEntityNum;	// -1 = in air
-
+	
 	int             constantLight;	// r + (g<<8) + (b<<16) + (intensity<<24)
 	int             loopSound;	// constantly loop this sound
-
+	
 	int             modelindex;
 	int             modelindex2;
 	int             clientNum;	// 0 to (MAX_CLIENTS - 1), for players and corpses
 	int             frame;
-
+	
 	int             solid;		// for client side prediction, trap_linkentity sets this properly
-
+	
 	int             event;		// impulse events -- muzzle flashes, footsteps, etc
 	int             eventParm;
-
+	
 	// for players
 	int             powerups;	// bit flags
 	int             weapon;		// determines weapon and flash model, etc
 	int             legsAnim;	// mask off ANIM_TOGGLEBIT
 	int             torsoAnim;	// mask off ANIM_TOGGLEBIT
-
+	
 	int             generic1;
 } entityState_t;
 
@@ -2133,10 +2147,10 @@ typedef enum _flag_status
 typedef enum
 {
 	DS_NONE,
-
+	
 	DS_PLAYBACK,
 	DS_RECORDING,
-
+	
 	DS_NUM_DEMO_STATES
 } demoState_t;
 

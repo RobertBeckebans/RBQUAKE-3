@@ -47,12 +47,12 @@ QVM files
 typedef struct
 {
 	int             vmMagic;
-
+	
 	int             instructionCount;
-
+	
 	int             codeOffset;
 	int             codeLength;
-
+	
 	int             dataOffset;
 	int             dataLength;
 	int             litLength;	// ( dataLength - litLength ) should be byteswapped on load
@@ -155,22 +155,22 @@ typedef struct md3Tag_s
 typedef struct
 {
 	int             ident;		//
-
+	
 	char            name[64];	// polyset name
-
+	
 	int             flags;
 	int             numFrames;	// all surfaces in a model should have the same
-
+	
 	int             numShaders;	// all surfaces in a model should have the same
 	int             numVerts;
-
+	
 	int             numTriangles;
 	int             ofsTriangles;
-
+	
 	int             ofsShaders;	// offset from start of md3Surface_t
 	int             ofsSt;		// texture coords are common for all frames
 	int             ofsXyzNormals;	// numVerts * numFrames
-
+	
 	int             ofsEnd;		// next surface follows
 } md3Surface_t;
 
@@ -200,21 +200,21 @@ typedef struct
 {
 	int             ident;
 	int             version;
-
+	
 	char            name[64];	// model name
-
+	
 	int             flags;
-
+	
 	int             numFrames;
 	int             numTags;
 	int             numSurfaces;
-
+	
 	int             numSkins;
-
+	
 	int             ofsFrames;	// offset for first frame
 	int             ofsTags;	// numFrames * numTags
 	int             ofsSurfaces;	// first surface, others follow
-
+	
 	int             ofsEnd;		// end of file
 } md3Header_t;
 
@@ -229,7 +229,7 @@ typedef struct
 
 
 #define BSP_IDENT	(('P'<<24)+('S'<<16)+('B'<<8)+'X')
-		// little-endian "XBSP"
+// little-endian "XBSP"
 
 #define BSP_VERSION			48
 
@@ -305,7 +305,7 @@ typedef struct
 {
 	int             ident;
 	int             version;
-
+	
 	lump_t          lumps[HEADER_LUMPS];
 } dheader_t;
 
@@ -343,13 +343,13 @@ typedef struct
 {
 	int             cluster;	// -1 = opaque cluster (do I still store these?)
 	int             area;
-
+	
 	int             mins[3];	// for frustum culling
 	int             maxs[3];
-
+	
 	int             firstLeafSurface;
 	int             numLeafSurfaces;
-
+	
 	int             firstLeafBrush;
 	int             numLeafBrushes;
 } dleaf_t;
@@ -408,20 +408,20 @@ typedef struct
 	int             shaderNum;
 	int             fogNum;
 	int             surfaceType;
-
+	
 	int             firstVert;
 	int             numVerts;
-
+	
 	int             firstIndex;
 	int             numIndexes;
-
+	
 	int             lightmapNum;
 	int             lightmapX, lightmapY;
 	int             lightmapWidth, lightmapHeight;
-
+	
 	float           lightmapOrigin[3];
 	float           lightmapVecs[3][3];	// for patches, [0] and [1] are lodbounds
-
+	
 	int             patchWidth;
 	int             patchHeight;
 } dsurface_t;

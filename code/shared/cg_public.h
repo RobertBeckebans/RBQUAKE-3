@@ -41,16 +41,16 @@ typedef struct
 {
 	int             snapFlags;	// SNAPFLAG_RATE_DELAYED, etc
 	int             ping;
-
+	
 	int             serverTime;	// server time the message is valid for (in msec)
-
+	
 	byte            areamask[MAX_MAP_AREA_BYTES];	// portalarea visibility bits
-
+	
 	playerState_t   ps;			// complete information about the current player at this time
-
+	
 	int             numEntities;	// all of the entities that need to be presented
 	entityState_t   entities[MAX_ENTITIES_IN_SNAPSHOT];	// at the time of this snapshot
-
+	
 	int             numServerCommands;	// text based server commands to execute when this
 	int             serverCommandSequence;	// snapshot becomes current
 } snapshot_t;
@@ -155,14 +155,14 @@ typedef enum
 	CG_R_REMAP_SHADER,
 	CG_S_ADDREALLOOPINGSOUND,
 	CG_S_STOPLOOPINGSOUND,
-
+	
 	CG_CM_TEMPCAPSULEMODEL,
 	CG_CM_CAPSULETRACE,
 	CG_CM_TRANSFORMEDCAPSULETRACE,
 	CG_GET_ENTITY_TOKEN,
 	CG_R_ADDPOLYSTOSCENE,
 	CG_R_INPVS,
-
+	
 	// Tr3B - XreaL extensions
 	CG_R_REGISTERANIMATION,
 	CG_R_REGISTERSHADERLIGHTATTENUATION,
@@ -173,18 +173,18 @@ typedef enum
 	CG_R_BONEINDEX,
 	CG_R_ANIMNUMFRAMES,
 	CG_R_ANIMFRAMERATE,
-
+	
 	CG_CM_BISPHERETRACE,
 	CG_CM_TRANSFORMEDBISPHERETRACE,
-
+	
 	CG_GETDEMOSTATE,
 	CG_GETDEMOPOS,
 	CG_GETDEMONAME,
-
+	
 	CG_KEY_KEYNUMTOSTRINGBUF,
 	CG_KEY_GETBINDINGBUF,
 	CG_KEY_SETBINDING,
-
+	
 	CG_MEMSET,
 	CG_MEMCPY,
 	CG_STRNCPY,
@@ -197,7 +197,7 @@ typedef enum
 	CG_TESTPRINTINT,
 	CG_TESTPRINTFLOAT,
 	CG_ACOS,
-
+	
 	CG_ADDCOMMANDALIAS
 } cgameImport_t;
 
@@ -220,23 +220,23 @@ typedef enum
 	// will call CG_DrawInformation during the loading process
 	// reliableCommandSequence will be 0 on fresh loads, but higher for
 	// demos, tourney restarts, or vid_restarts
-
+	
 	CG_SHUTDOWN,
 //  void (*CG_Shutdown)( void );
 	// oportunity to flush and close any open files
-
+	
 	CG_CONSOLE_COMMAND,
 //  qboolean (*CG_ConsoleCommand)( void );
 	// a console command has been issued locally that is not recognized by the
 	// main game system.
 	// use Cmd_Argc() / Cmd_Argv() to read the command, return qfalse if the
 	// command is not known to the game
-
+	
 	CG_DRAW_ACTIVE_FRAME,
 //  void (*CG_DrawActiveFrame)( int serverTime, stereoFrame_t stereoView, qboolean demoPlayback );
 	// Generates and draws a game scene and status information at the given time.
 	// If demoPlayback is set, local movement prediction will not be enabled
-
+	
 	CG_CROSSHAIR_PLAYER,
 //  int (*CG_CrosshairPlayer)( void );
 

@@ -73,92 +73,92 @@ void CM_ShutdownBullet()
 
 #define USE_MOTIONSTATE 1
 
-extern "C" 
+extern "C"
 {
-void CM_AddWorldBrushesToDynamicsWorld(void * collisionShapesHandle, plDynamicsWorldHandle * dynamicsWorldHandle)
-{
-	btAlignedObjectArray<btCollisionShape*>* collisionShapes = reinterpret_cast<btAlignedObjectArray<btCollisionShape*>*>(collisionShapesHandle);
-	btDynamicsWorld* dynamicsWorld = reinterpret_cast< btDynamicsWorld* >(dynamicsWorldHandle);
-
-	cm.checkcount++;
-
-	for(int i = 0; i < cm.numLeafs; i++)
+	void CM_AddWorldBrushesToDynamicsWorld( void* collisionShapesHandle, plDynamicsWorldHandle* dynamicsWorldHandle )
 	{
-		const cLeaf_t* leaf = &cm.leafs[i];
-
-		for(int j = 0; j < leaf->numLeafBrushes; j++)
+		btAlignedObjectArray<btCollisionShape*>* collisionShapes = reinterpret_cast<btAlignedObjectArray<btCollisionShape*>*>( collisionShapesHandle );
+		btDynamicsWorld* dynamicsWorld = reinterpret_cast< btDynamicsWorld* >( dynamicsWorldHandle );
+		
+		cm.checkcount++;
+		
+		for( int i = 0; i < cm.numLeafs; i++ )
 		{
-			int brushnum = cm.leafbrushes[leaf->firstLeafBrush + j];
-
-			cbrush_t* brush = &cm.brushes[brushnum];
-			if(brush->checkcount == cm.checkcount)
+			const cLeaf_t* leaf = &cm.leafs[i];
+			
+			for( int j = 0; j < leaf->numLeafBrushes; j++ )
 			{
-				// already checked this brush in another leaf
-				continue;
-			}
-			brush->checkcount = cm.checkcount;
-
-			if(brush->numsides == 0)
-			{
-				// don't care about invalid brushes
-				continue;
-			}
-
-			if(!(brush->contents & CONTENTS_SOLID))
-			{
-				// don't care about non-solid brushes
-				continue;
-			}
-
-			btAlignedObjectArray<btVector3> planeEquations;
-
-			for(int k = 0; k < brush->numsides; k++)
-			{
-				const cbrushside_t* side = brush->sides + k;
-				const cplane_t* plane = side->plane;
-
-				btVector3 planeEq(plane->normal[0], plane->normal[1], plane->normal[2]);
-				planeEq[3] = -plane->dist;
-
-				planeEquations.push_back(planeEq);
-			}
-
-			btAlignedObjectArray<btVector3>	vertices;
-			btGeometryUtil::getVerticesFromPlaneEquations(planeEquations, vertices);
-
-			if(vertices.size() > 0)
-			{
-				btCollisionShape* shape = new btConvexHullShape(&(vertices[0].getX()),vertices.size());
-				collisionShapes->push_back(shape);
-
-				float mass = 0.f;
-				btTransform startTransform;
+				int brushnum = cm.leafbrushes[leaf->firstLeafBrush + j];
 				
-				startTransform.setIdentity();
-				//startTransform.setOrigin(btVector3(0,0,-10.f));
-
-
+				cbrush_t* brush = &cm.brushes[brushnum];
+				if( brush->checkcount == cm.checkcount )
+				{
+					// already checked this brush in another leaf
+					continue;
+				}
+				brush->checkcount = cm.checkcount;
+				
+				if( brush->numsides == 0 )
+				{
+					// don't care about invalid brushes
+					continue;
+				}
+				
+				if( !( brush->contents & CONTENTS_SOLID ) )
+				{
+					// don't care about non-solid brushes
+					continue;
+				}
+				
+				btAlignedObjectArray<btVector3> planeEquations;
+				
+				for( int k = 0; k < brush->numsides; k++ )
+				{
+					const cbrushside_t* side = brush->sides + k;
+					const cplane_t* plane = side->plane;
+					
+					btVector3 planeEq( plane->normal[0], plane->normal[1], plane->normal[2] );
+					planeEq[3] = -plane->dist;
+					
+					planeEquations.push_back( planeEq );
+				}
+				
+				btAlignedObjectArray<btVector3>	vertices;
+				btGeometryUtil::getVerticesFromPlaneEquations( planeEquations, vertices );
+				
+				if( vertices.size() > 0 )
+				{
+					btCollisionShape* shape = new btConvexHullShape( &( vertices[0].getX() ), vertices.size() );
+					collisionShapes->push_back( shape );
+					
+					float mass = 0.f;
+					btTransform startTransform;
+					
+					startTransform.setIdentity();
+					//startTransform.setOrigin(btVector3(0,0,-10.f));
+					
+					
 #ifdef USE_MOTIONSTATE
-				btDefaultMotionState* motionState = new btDefaultMotionState(startTransform);
-
-				btVector3 localInertia(0,0,0);
-				btRigidBody::btRigidBodyConstructionInfo cInfo(mass, motionState, shape, localInertia);
-
-				btRigidBody* body = new btRigidBody(cInfo);
-
-				// FIXME check this
-				body->setContactProcessingThreshold(BT_LARGE_FLOAT);
-
+					btDefaultMotionState* motionState = new btDefaultMotionState( startTransform );
+					
+					btVector3 localInertia( 0, 0, 0 );
+					btRigidBody::btRigidBodyConstructionInfo cInfo( mass, motionState, shape, localInertia );
+					
+					btRigidBody* body = new btRigidBody( cInfo );
+					
+					// FIXME check this
+					body->setContactProcessingThreshold( BT_LARGE_FLOAT );
+					
 #else
-				btRigidBody* body = new btRigidBody(mass, 0, shape, localInertia);
-				body->setWorldTransform(startTransform);
+					btRigidBody* body = new btRigidBody( mass, 0, shape, localInertia );
+					body->setWorldTransform( startTransform );
 #endif//
-
-				dynamicsWorld->addRigidBody(body);
+					
+					dynamicsWorld->addRigidBody( body );
+				}
+				
 			}
-
 		}
 	}
-}
-
+	
 } // extern "C"

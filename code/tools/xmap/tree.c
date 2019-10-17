@@ -25,23 +25,27 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 extern int      c_nodes;
 
-void            RemovePortalFromNode(portal_t * portal, node_t * l);
+void            RemovePortalFromNode( portal_t* portal, node_t* l );
 
-node_t         *NodeForPoint(node_t * node, vec3_t origin)
+node_t*         NodeForPoint( node_t* node, vec3_t origin )
 {
-	plane_t        *plane;
+	plane_t*        plane;
 	vec_t           d;
-
-	while(node->planenum != PLANENUM_LEAF)
+	
+	while( node->planenum != PLANENUM_LEAF )
 	{
 		plane = &mapPlanes[node->planenum];
-		d = DotProduct(origin, plane->normal) - plane->dist;
-		if(d >= 0)
+		d = DotProduct( origin, plane->normal ) - plane->dist;
+		if( d >= 0 )
+		{
 			node = node->children[0];
+		}
 		else
+		{
 			node = node->children[1];
+		}
 	}
-
+	
 	return node;
 }
 
@@ -52,26 +56,26 @@ node_t         *NodeForPoint(node_t * node, vec3_t origin)
 FreeTreePortals_r
 =============
 */
-void FreeTreePortals_r(node_t * node)
+void FreeTreePortals_r( node_t* node )
 {
-	portal_t       *p, *nextp;
+	portal_t*       p, *nextp;
 	int             s;
-
+	
 	// free children
-	if(node->planenum != PLANENUM_LEAF)
+	if( node->planenum != PLANENUM_LEAF )
 	{
-		FreeTreePortals_r(node->children[0]);
-		FreeTreePortals_r(node->children[1]);
+		FreeTreePortals_r( node->children[0] );
+		FreeTreePortals_r( node->children[1] );
 	}
-
+	
 	// free portals
-	for(p = node->portals; p; p = nextp)
+	for( p = node->portals; p; p = nextp )
 	{
-		s = (p->nodes[1] == node);
+		s = ( p->nodes[1] == node );
 		nextp = p->next[s];
-
-		RemovePortalFromNode(p, p->nodes[!s]);
-		FreePortal(p);
+		
+		RemovePortalFromNode( p, p->nodes[!s] );
+		FreePortal( p );
 	}
 	node->portals = NULL;
 }
@@ -81,25 +85,29 @@ void FreeTreePortals_r(node_t * node)
 FreeTree_r
 =============
 */
-void FreeTree_r(node_t * node)
+void FreeTree_r( node_t* node )
 {
 	// free children
-	if(node->planenum != PLANENUM_LEAF)
+	if( node->planenum != PLANENUM_LEAF )
 	{
-		FreeTree_r(node->children[0]);
-		FreeTree_r(node->children[1]);
+		FreeTree_r( node->children[0] );
+		FreeTree_r( node->children[1] );
 	}
-
+	
 	// free bspbrushes
-	FreeBrushList(node->brushlist);
-
+	FreeBrushList( node->brushlist );
+	
 	// free the node
-	if(node->volume)
-		FreeBrush(node->volume);
-
-	if(numthreads == 1)
+	if( node->volume )
+	{
+		FreeBrush( node->volume );
+	}
+	
+	if( numthreads == 1 )
+	{
 		c_nodes--;
-	free(node);
+	}
+	free( node );
 }
 
 
@@ -108,39 +116,45 @@ void FreeTree_r(node_t * node)
 FreeTree
 =============
 */
-void FreeTree(tree_t * tree)
+void FreeTree( tree_t* tree )
 {
-	FreeTreePortals_r(tree->headnode);
-	FreeTree_r(tree->headnode);
-	free(tree);
+	FreeTreePortals_r( tree->headnode );
+	FreeTree_r( tree->headnode );
+	free( tree );
 }
 
 //===============================================================
 
-void PrintTree_r(node_t * node, int depth)
+void PrintTree_r( node_t* node, int depth )
 {
 	int             i;
-	plane_t        *plane;
-	bspBrush_t     *bb;
-
-	for(i = 0; i < depth; i++)
-		Sys_Printf("  ");
-	if(node->planenum == PLANENUM_LEAF)
+	plane_t*        plane;
+	bspBrush_t*     bb;
+	
+	for( i = 0; i < depth; i++ )
 	{
-		if(!node->brushlist)
-			Sys_Printf("NULL\n");
+		Sys_Printf( "  " );
+	}
+	if( node->planenum == PLANENUM_LEAF )
+	{
+		if( !node->brushlist )
+		{
+			Sys_Printf( "NULL\n" );
+		}
 		else
 		{
-			for(bb = node->brushlist; bb; bb = bb->next)
-				Sys_Printf("%i ", bb->original->brushnum);
-			Sys_Printf("\n");
+			for( bb = node->brushlist; bb; bb = bb->next )
+			{
+				Sys_Printf( "%i ", bb->original->brushnum );
+			}
+			Sys_Printf( "\n" );
 		}
 		return;
 	}
-
+	
 	plane = &mapPlanes[node->planenum];
-	Sys_Printf("#%i (%5.2f %5.2f %5.2f):%5.2f\n", node->planenum, plane->normal[0], plane->normal[1], plane->normal[2],
-			   plane->dist);
-	PrintTree_r(node->children[0], depth + 1);
-	PrintTree_r(node->children[1], depth + 1);
+	Sys_Printf( "#%i (%5.2f %5.2f %5.2f):%5.2f\n", node->planenum, plane->normal[0], plane->normal[1], plane->normal[2],
+				plane->dist );
+	PrintTree_r( node->children[0], depth + 1 );
+	PrintTree_r( node->children[1], depth + 1 );
 }

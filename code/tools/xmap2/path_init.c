@@ -42,14 +42,14 @@ several games based on the Quake III Arena engine, in the form of "Q3Map2."
 #define MAX_BASE_PATHS	10
 #define MAX_GAME_PATHS	10
 
-char           *homePath;
+char*           homePath;
 char            installPath[MAX_OSPATH];
 
 int             numBasePaths;
-char           *basePaths[MAX_BASE_PATHS];
+char*           basePaths[MAX_BASE_PATHS];
 int             numGamePaths;
-char           *gamePaths[MAX_GAME_PATHS];
-char           *homeBasePath = NULL;
+char*           gamePaths[MAX_GAME_PATHS];
+char*           homeBasePath = NULL;
 
 
 /*
@@ -62,26 +62,26 @@ PathLokiGetHomeDir()
 gets the user's home dir (for ~/.q3a)
 */
 
-char           *LokiGetHomeDir(void)
+char*           LokiGetHomeDir( void )
 {
 #ifndef Q_UNIX
 	return NULL;
 #else
-	char           *home;
+	char*           home;
 	uid_t           id;
-	struct passwd  *pwd;
-
-
+	struct passwd*  pwd;
+	
+	
 	/* get the home environment variable */
-	home = getenv("HOME");
-	if(home == NULL)
+	home = getenv( "HOME" );
+	if( home == NULL )
 	{
 		/* do some more digging */
 		id = getuid();
 		setpwent();
-		while((pwd = getpwent()) != NULL)
+		while( ( pwd = getpwent() ) != NULL )
 		{
-			if(pwd->pw_uid == id)
+			if( pwd->pw_uid == id )
 			{
 				home = pwd->pw_dir;
 				break;
@@ -89,7 +89,7 @@ char           *LokiGetHomeDir(void)
 		}
 		endpwent();
 	}
-
+	
 	/* return it */
 	return home;
 #endif
@@ -102,80 +102,88 @@ PathLokiInitPaths()
 initializes some paths on linux/os x
 */
 
-void LokiInitPaths(char *argv0)
+void LokiInitPaths( char* argv0 )
 {
 #ifndef Q_UNIX
 	/* this is kinda crap, but hey */
-	strcpy(installPath, "../");
+	strcpy( installPath, "../" );
 #else
 	char            temp[MAX_OSPATH];
-	char           *home;
-	char           *path;
-	char           *last;
+	char*           home;
+	char*           path;
+	char*           last;
 	qboolean        found;
-
-
+	
+	
 	/* get home dir */
 	home = LokiGetHomeDir();
-	if(home == NULL)
+	if( home == NULL )
+	{
 		home = ".";
-
+	}
+	
 	/* do some path divining */
-	strcpy(temp, argv0);
-	if(strrchr(temp, '/'))
-		argv0 = strrchr(argv0, '/') + 1;
+	strcpy( temp, argv0 );
+	if( strrchr( temp, '/' ) )
+	{
+		argv0 = strrchr( argv0, '/' ) + 1;
+	}
 	else
 	{
 		/* get path environment variable */
-		path = getenv("PATH");
-
+		path = getenv( "PATH" );
+	
 		/* minor setup */
 		last[0] = path[0];
 		last[1] = '\0';
 		found = qfalse;
-
+	
 		/* go through each : segment of path */
-		while(last[0] != '\0' && found == qfalse)
+		while( last[0] != '\0' && found == qfalse )
 		{
 			/* null out temp */
 			temp[0] = '\0';
-
+	
 			/* find next chunk */
-			last = strchr(path, ':');
-			if(last == NULL)
-				last = path + strlen(path);
-
-			/* found home dir candidate */
-			if(*path == '~')
+			last = strchr( path, ':' );
+			if( last == NULL )
 			{
-				strcpy(temp, home);
+				last = path + strlen( path );
+			}
+	
+			/* found home dir candidate */
+			if( *path == '~' )
+			{
+				strcpy( temp, home );
 				path++;
 			}
-
+	
 			/* concatenate */
-			if(last > (path + 1))
+			if( last > ( path + 1 ) )
 			{
-				strncat(temp, path, (last - path));
-				strcat(temp, "/");
+				strncat( temp, path, ( last - path ) );
+				strcat( temp, "/" );
 			}
-			strcat(temp, "./");
-			strcat(temp, argv0);
-
+			strcat( temp, "./" );
+			strcat( temp, argv0 );
+	
 			/* verify the path */
-			if(access(temp, X_OK) == 0)
+			if( access( temp, X_OK ) == 0 )
+			{
 				found++;
+			}
 			path = last + 1;
 		}
 	}
-
+	
 	/* flake */
-	if(realpath(temp, installPath))
+	if( realpath( temp, installPath ) )
 	{
 		/* xmap is in "tools/" */
-		*(strrchr(installPath, '/')) = '\0';
-		*(strrchr(installPath, '/') + 1) = '\0';
+		*( strrchr( installPath, '/' ) ) = '\0';
+		*( strrchr( installPath, '/' ) + 1 ) = '\0';
 	}
-
+	
 	/* set home path */
 	homePath = home;
 #endif
@@ -188,12 +196,14 @@ CleanPath() - ydnar
 cleans a dos path \ -> /
 */
 
-void CleanPath(char *path)
+void CleanPath( char* path )
 {
-	while(*path)
+	while( *path )
 	{
-		if(*path == '\\')
+		if( *path == '\\' )
+		{
 			*path = '/';
+		}
 		path++;
 	}
 }
@@ -206,34 +216,38 @@ gets the game_t based on a -game argument
 returns NULL if no match found
 */
 
-game_t         *GetGame(char *arg)
+game_t*         GetGame( char* arg )
 {
 	int             i;
-
-
+	
+	
 	/* dummy check */
-	if(arg == NULL || arg[0] == '\0')
-		return NULL;
-
-	/* joke */
-	if(!Q_stricmp(arg, "quake1") ||
-	   !Q_stricmp(arg, "quake2") ||
-	   !Q_stricmp(arg, "unreal") ||
-	   !Q_stricmp(arg, "ut2k3") || !Q_stricmp(arg, "dn3d") || !Q_stricmp(arg, "dnf") || !Q_stricmp(arg, "hl"))
+	if( arg == NULL || arg[0] == '\0' )
 	{
-		Sys_Printf("April fools, silly rabbit!\n");
-		exit(0);
+		return NULL;
 	}
-
+	
+	/* joke */
+	if( !Q_stricmp( arg, "quake1" ) ||
+			!Q_stricmp( arg, "quake2" ) ||
+			!Q_stricmp( arg, "unreal" ) ||
+			!Q_stricmp( arg, "ut2k3" ) || !Q_stricmp( arg, "dn3d" ) || !Q_stricmp( arg, "dnf" ) || !Q_stricmp( arg, "hl" ) )
+	{
+		Sys_Printf( "April fools, silly rabbit!\n" );
+		exit( 0 );
+	}
+	
 	/* test it */
 	i = 0;
-	while(games[i].arg != NULL)
+	while( games[i].arg != NULL )
 	{
-		if(Q_stricmp(arg, games[i].arg) == 0)
+		if( Q_stricmp( arg, games[i].arg ) == 0 )
+		{
 			return &games[i];
+		}
 		i++;
 	}
-
+	
 	/* no matching game */
 	return NULL;
 }
@@ -245,16 +259,18 @@ AddBasePath() - ydnar
 adds a base path to the list
 */
 
-void AddBasePath(char *path)
+void AddBasePath( char* path )
 {
 	/* dummy check */
-	if(path == NULL || path[0] == '\0' || numBasePaths >= MAX_BASE_PATHS)
+	if( path == NULL || path[0] == '\0' || numBasePaths >= MAX_BASE_PATHS )
+	{
 		return;
-
+	}
+	
 	/* add it to the list */
-	basePaths[numBasePaths] = safe_malloc(strlen(path) + 1);
-	strcpy(basePaths[numBasePaths], path);
-	CleanPath(basePaths[numBasePaths]);
+	basePaths[numBasePaths] = safe_malloc( strlen( path ) + 1 );
+	strcpy( basePaths[numBasePaths], path );
+	CleanPath( basePaths[numBasePaths] );
 	numBasePaths++;
 }
 
@@ -265,28 +281,32 @@ AddHomeBasePath() - ydnar
 adds a base path to the beginning of the list, prefixed by ~/
 */
 
-void AddHomeBasePath(char *path)
+void AddHomeBasePath( char* path )
 {
 #ifdef Q_UNIX
 	int             i;
 	char            temp[MAX_OSPATH];
-
-
+	
+	
 	/* dummy check */
-	if(path == NULL || path[0] == '\0')
+	if( path == NULL || path[0] == '\0' )
+	{
 		return;
-
+	}
+	
 	/* make a hole */
-	for(i = (MAX_BASE_PATHS - 2); i >= 0; i--)
+	for( i = ( MAX_BASE_PATHS - 2 ); i >= 0; i-- )
+	{
 		basePaths[i + 1] = basePaths[i];
-
+	}
+	
 	/* concatenate home dir and path */
-	sprintf(temp, "%s/%s", homePath, path);
-
+	sprintf( temp, "%s/%s", homePath, path );
+	
 	/* add it to the list */
-	basePaths[0] = safe_malloc(strlen(temp) + 1);
-	strcpy(basePaths[0], temp);
-	CleanPath(basePaths[0]);
+	basePaths[0] = safe_malloc( strlen( temp ) + 1 );
+	strcpy( basePaths[0], temp );
+	CleanPath( basePaths[0] );
 	numBasePaths++;
 #endif
 }
@@ -298,16 +318,18 @@ AddGamePath() - ydnar
 adds a game path to the list
 */
 
-void AddGamePath(char *path)
+void AddGamePath( char* path )
 {
 	/* dummy check */
-	if(path == NULL || path[0] == '\0' || numGamePaths >= MAX_GAME_PATHS)
+	if( path == NULL || path[0] == '\0' || numGamePaths >= MAX_GAME_PATHS )
+	{
 		return;
-
+	}
+	
 	/* add it to the list */
-	gamePaths[numGamePaths] = safe_malloc(strlen(path) + 1);
-	strcpy(gamePaths[numGamePaths], path);
-	CleanPath(gamePaths[numGamePaths]);
+	gamePaths[numGamePaths] = safe_malloc( strlen( path ) + 1 );
+	strcpy( gamePaths[numGamePaths], path );
+	CleanPath( gamePaths[numGamePaths] );
 	numGamePaths++;
 }
 
@@ -320,149 +342,175 @@ cleaned up some of the path initialization code from bsp.c
 will remove any arguments it uses
 */
 
-void InitPaths(int *argc, char **argv)
+void InitPaths( int* argc, char** argv )
 {
 	int             i, j, k, len, len2;
 	char            temp[MAX_OSPATH];
-
-
+	
+	
 	/* note it */
-	Sys_FPrintf(SYS_VRB, "--- InitPaths ---\n");
-
+	Sys_FPrintf( SYS_VRB, "--- InitPaths ---\n" );
+	
 	/* get the install path for backup */
-	LokiInitPaths(argv[0]);
-
+	LokiInitPaths( argv[0] );
+	
 	/* set game to default (q3a) */
 	game = &games[0];
 	numBasePaths = 0;
 	numGamePaths = 0;
-
+	
 	/* parse through the arguments and extract those relevant to paths */
-	for(i = 0; i < *argc; i++)
+	for( i = 0; i < *argc; i++ )
 	{
 		/* check for null */
-		if(argv[i] == NULL)
+		if( argv[i] == NULL )
+		{
 			continue;
-
+		}
+		
 		/* -game */
-		if(strcmp(argv[i], "-game") == 0)
+		if( strcmp( argv[i], "-game" ) == 0 )
 		{
-			if(++i >= *argc)
-				Error("Out of arguments: No game specified after %s", argv[i - 1]);
+			if( ++i >= *argc )
+			{
+				Error( "Out of arguments: No game specified after %s", argv[i - 1] );
+			}
 			argv[i - 1] = NULL;
-			game = GetGame(argv[i]);
-			if(game == NULL)
+			game = GetGame( argv[i] );
+			if( game == NULL )
+			{
 				game = &games[0];
+			}
 			argv[i] = NULL;
 		}
-
+		
 		/* -fs_basepath */
-		else if(strcmp(argv[i], "-fs_basepath") == 0)
+		else if( strcmp( argv[i], "-fs_basepath" ) == 0 )
 		{
-			if(++i >= *argc)
-				Error("Out of arguments: No path specified after %s.", argv[i - 1]);
+			if( ++i >= *argc )
+			{
+				Error( "Out of arguments: No path specified after %s.", argv[i - 1] );
+			}
 			argv[i - 1] = NULL;
-			AddBasePath(argv[i]);
+			AddBasePath( argv[i] );
 			argv[i] = NULL;
 		}
-
+		
 		/* -fs_game */
-		else if(strcmp(argv[i], "-fs_game") == 0)
+		else if( strcmp( argv[i], "-fs_game" ) == 0 )
 		{
-			if(++i >= *argc)
-				Error("Out of arguments: No path specified after %s.", argv[i - 1]);
+			if( ++i >= *argc )
+			{
+				Error( "Out of arguments: No path specified after %s.", argv[i - 1] );
+			}
 			argv[i - 1] = NULL;
-			AddGamePath(argv[i]);
+			AddGamePath( argv[i] );
 			argv[i] = NULL;
 		}
-
+		
 		/* -fs_nohomebase */
-		else if(strcmp(argv[i], "-fs_homebase") == 0)
+		else if( strcmp( argv[i], "-fs_homebase" ) == 0 )
 		{
-			if(++i >= *argc)
-				Error("Out of arguments: No path specified after %s.", argv[i - 1]);
+			if( ++i >= *argc )
+			{
+				Error( "Out of arguments: No path specified after %s.", argv[i - 1] );
+			}
 			argv[i - 1] = NULL;
 			homeBasePath = argv[i];
 			argv[i] = NULL;
 		}
 	}
-
+	
 	/* remove processed arguments */
-	for(i = 0, j = 0, k = 0; i < *argc && j < *argc; i++, j++)
+	for( i = 0, j = 0, k = 0; i < *argc && j < *argc; i++, j++ )
 	{
-		for(; j < *argc && argv[j] == NULL; j++);
+		for( ; j < *argc && argv[j] == NULL; j++ );
 		argv[i] = argv[j];
-		if(argv[i] != NULL)
+		if( argv[i] != NULL )
+		{
 			k++;
+		}
 	}
 	*argc = k;
-
+	
 	/* add standard game path */
-	AddGamePath(game->gamePath);
-
+	AddGamePath( game->gamePath );
+	
 	/* if there is no base path set, figure it out */
-	if(numBasePaths == 0)
+	if( numBasePaths == 0 )
 	{
 		/* this is another crappy replacement for SetQdirFromPath() */
-		len2 = strlen(game->magic);
-		for(i = 0; i < *argc && numBasePaths == 0; i++)
+		len2 = strlen( game->magic );
+		for( i = 0; i < *argc && numBasePaths == 0; i++ )
 		{
 			/* extract the arg */
-			strcpy(temp, argv[i]);
-			CleanPath(temp);
-			len = strlen(temp);
-			Sys_FPrintf(SYS_VRB, "Searching for \"%s\" in \"%s\" (%d)...\n", game->magic, temp, i);
-
+			strcpy( temp, argv[i] );
+			CleanPath( temp );
+			len = strlen( temp );
+			Sys_FPrintf( SYS_VRB, "Searching for \"%s\" in \"%s\" (%d)...\n", game->magic, temp, i );
+			
 			/* this is slow, but only done once */
-			for(j = 0; j < (len - len2); j++)
+			for( j = 0; j < ( len - len2 ); j++ )
 			{
 				/* check for the game's magic word */
-				if(Q_strncasecmp(&temp[j], game->magic, len2) == 0)
+				if( Q_strncasecmp( &temp[j], game->magic, len2 ) == 0 )
 				{
 					/* now find the next slash and nuke everything after it */
-					while(temp[++j] != '/' && temp[j] != '\0');
+					while( temp[++j] != '/' && temp[j] != '\0' );
 					temp[j] = '\0';
-
+					
 					/* add this as a base path */
-					AddBasePath(temp);
+					AddBasePath( temp );
 					break;
 				}
 			}
 		}
-
+		
 		/* add install path */
-		if(numBasePaths == 0)
-			AddBasePath(installPath);
-
-		/* check again */
-		if(numBasePaths == 0)
-			Error("Failed to find a valid base path.");
-	}
-
-	/* this only affects unix */
-	if(homeBasePath)
-		AddHomeBasePath(homeBasePath);
-	else
-		AddHomeBasePath(game->homeBasePath);
-
-	/* initialize vfs paths */
-	if(numBasePaths > MAX_BASE_PATHS)
-		numBasePaths = MAX_BASE_PATHS;
-	if(numGamePaths > MAX_GAME_PATHS)
-		numGamePaths = MAX_GAME_PATHS;
-
-	/* walk the list of game paths */
-	for(j = 0; j < numGamePaths; j++)
-	{
-		/* walk the list of base paths */
-		for(i = 0; i < numBasePaths; i++)
+		if( numBasePaths == 0 )
 		{
-			/* create a full path and initialize it */
-			sprintf(temp, "%s/%s/", basePaths[i], gamePaths[j]);
-			vfsInitDirectory(temp);
+			AddBasePath( installPath );
+		}
+		
+		/* check again */
+		if( numBasePaths == 0 )
+		{
+			Error( "Failed to find a valid base path." );
 		}
 	}
-
+	
+	/* this only affects unix */
+	if( homeBasePath )
+	{
+		AddHomeBasePath( homeBasePath );
+	}
+	else
+	{
+		AddHomeBasePath( game->homeBasePath );
+	}
+	
+	/* initialize vfs paths */
+	if( numBasePaths > MAX_BASE_PATHS )
+	{
+		numBasePaths = MAX_BASE_PATHS;
+	}
+	if( numGamePaths > MAX_GAME_PATHS )
+	{
+		numGamePaths = MAX_GAME_PATHS;
+	}
+	
+	/* walk the list of game paths */
+	for( j = 0; j < numGamePaths; j++ )
+	{
+		/* walk the list of base paths */
+		for( i = 0; i < numBasePaths; i++ )
+		{
+			/* create a full path and initialize it */
+			sprintf( temp, "%s/%s/", basePaths[i], gamePaths[j] );
+			vfsInitDirectory( temp );
+		}
+	}
+	
 	/* done */
-	Sys_Printf("\n");
+	Sys_Printf( "\n" );
 }

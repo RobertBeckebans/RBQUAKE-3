@@ -50,76 +50,86 @@ Fur()
 runs the fur processing algorithm on a map drawsurface
 */
 
-void Fur(mapDrawSurface_t * ds)
+void Fur( mapDrawSurface_t* ds )
 {
 	int             i, j, k, numLayers;
 	float           offset, fade, a;
-	mapDrawSurface_t *fur;
-	bspDrawVert_t  *dv;
-
-
+	mapDrawSurface_t* fur;
+	bspDrawVert_t*  dv;
+	
+	
 	/* dummy check */
-	if(ds == NULL || ds->fur || ds->shaderInfo->furNumLayers < 1)
+	if( ds == NULL || ds->fur || ds->shaderInfo->furNumLayers < 1 )
+	{
 		return;
-
+	}
+	
 	/* get basic info */
 	numLayers = ds->shaderInfo->furNumLayers;
 	offset = ds->shaderInfo->furOffset;
 	fade = ds->shaderInfo->furFade * 255.0f;
-
+	
 	/* debug code */
 	//% Sys_FPrintf( SYS_VRB, "Fur():  layers: %d  offset: %f   fade: %f  %s\n",
 	//%     numLayers, offset, fade, ds->shaderInfo->shader );
-
+	
 	/* initial offset */
-	for(j = 0; j < ds->numVerts; j++)
+	for( j = 0; j < ds->numVerts; j++ )
 	{
 		/* get surface vert */
 		dv = &ds->verts[j];
-
+		
 		/* offset is scaled by original vertex alpha */
 		a = dv->lightColor[0][3] / 255.0f;
-
+		
 		/* offset it */
-		VectorMA(dv->xyz, (offset * a), dv->normal, dv->xyz);
+		VectorMA( dv->xyz, ( offset * a ), dv->normal, dv->xyz );
 	}
-
+	
 	/* wash, rinse, repeat */
-	for(i = 1; i < numLayers; i++)
+	for( i = 1; i < numLayers; i++ )
 	{
 		/* clone the surface */
-		fur = CloneSurface(ds, ds->shaderInfo);
-		if(fur == NULL)
+		fur = CloneSurface( ds, ds->shaderInfo );
+		if( fur == NULL )
+		{
 			return;
-
+		}
+		
 		/* set it to fur */
 		fur->fur = qtrue;
-
+		
 		/* walk the verts */
-		for(j = 0; j < fur->numVerts; j++)
+		for( j = 0; j < fur->numVerts; j++ )
 		{
 			/* get surface vert */
 			dv = &ds->verts[j];
-
+			
 			/* offset is scaled by original vertex alpha */
 			a = dv->lightColor[0][3] / 255.0f;
-
+			
 			/* get fur vert */
 			dv = &fur->verts[j];
-
+			
 			/* offset it */
-			VectorMA(dv->xyz, (offset * a * i), dv->normal, dv->xyz);
-
+			VectorMA( dv->xyz, ( offset * a * i ), dv->normal, dv->xyz );
+			
 			/* fade alpha */
-			for(k = 0; k < MAX_LIGHTMAPS; k++)
+			for( k = 0; k < MAX_LIGHTMAPS; k++ )
 			{
 				a = dv->lightColor[k][3] - fade;
-				if(a > 255.0f)
+				if( a > 255.0f )
+				{
 					dv->lightColor[k][3] = 255;
-				else if(a < 0)
+				}
+				else if( a < 0 )
+				{
 					dv->lightColor[k][3] = 0;
+				}
 				else
+				{
 					dv->lightColor[k][3] = a;
+				}
 			}
 		}
 	}

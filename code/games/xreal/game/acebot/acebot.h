@@ -43,7 +43,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 // node types
 enum
-{ NODE_MOVE,
+{
+	NODE_MOVE,
 	NODE_PLATFORM,
 	NODE_TRIGGER_TELEPORT,
 //  NODE_TARGET_TELEPORT,
@@ -90,74 +91,74 @@ extern node_t   nodes[MAX_NODES];
 
 
 // id Function Protos I need
-void            LookAtKiller(gentity_t * self, gentity_t * inflictor, gentity_t * attacker);
-void            ClientThink_real(gentity_t * ent);
-gentity_t      *SelectSpawnPoint(vec3_t avoidPoint, vec3_t origin, vec3_t angles, qboolean isbot);
-void            ClientUserinfoChanged(int clientNum);
-void            CopyToBodyQue(gentity_t * ent);
-char           *ClientConnect(int clientNum, qboolean firstTime, qboolean isBot);
+void            LookAtKiller( gentity_t* self, gentity_t* inflictor, gentity_t* attacker );
+void            ClientThink_real( gentity_t* ent );
+gentity_t*      SelectSpawnPoint( vec3_t avoidPoint, vec3_t origin, vec3_t angles, qboolean isbot );
+void            ClientUserinfoChanged( int clientNum );
+void            CopyToBodyQue( gentity_t* ent );
+char*           ClientConnect( int clientNum, qboolean firstTime, qboolean isBot );
 
 // acebot_ai.c protos
-void            ACEAI_StartFrame(int time);
-void            ACEAI_Think(gentity_t * self);
-void            ACEAI_CheckServerCommands(gentity_t * self);
-void            ACEAI_PickLongRangeGoal(gentity_t * self);
-void            ACEAI_PickShortRangeGoal(gentity_t * self);
-qboolean        ACEAI_FindEnemy(gentity_t * self);
-void            ACEAI_ChooseWeapon(gentity_t * self);
+void            ACEAI_StartFrame( int time );
+void            ACEAI_Think( gentity_t* self );
+void            ACEAI_CheckServerCommands( gentity_t* self );
+void            ACEAI_PickLongRangeGoal( gentity_t* self );
+void            ACEAI_PickShortRangeGoal( gentity_t* self );
+qboolean        ACEAI_FindEnemy( gentity_t* self );
+void            ACEAI_ChooseWeapon( gentity_t* self );
 
 // acebot_cmds.c protos
-qboolean        ACECM_Commands(gentity_t * ent);
+qboolean        ACECM_Commands( gentity_t* ent );
 void            ACECM_Store();
 
 // acebot_items.c protos
-void            ACEIT_PlayerAdded(gentity_t * ent);
-void            ACEIT_PlayerRemoved(gentity_t * ent);
-qboolean        ACEIT_IsVisible(gentity_t * self, vec3_t goal);
-qboolean        ACEIT_IsReachable(gentity_t * self, vec3_t goal);
-qboolean        ACEIT_ChangeWeapon(gentity_t * ent, weapon_t weapon);
-float           ACEIT_ItemNeed(gentity_t * self, gentity_t * itemEnt);
-void            ACEIT_BuildItemNodeTable(qboolean rebuild);
+void            ACEIT_PlayerAdded( gentity_t* ent );
+void            ACEIT_PlayerRemoved( gentity_t* ent );
+qboolean        ACEIT_IsVisible( gentity_t* self, vec3_t goal );
+qboolean        ACEIT_IsReachable( gentity_t* self, vec3_t goal );
+qboolean        ACEIT_ChangeWeapon( gentity_t* ent, weapon_t weapon );
+float           ACEIT_ItemNeed( gentity_t* self, gentity_t* itemEnt );
+void            ACEIT_BuildItemNodeTable( qboolean rebuild );
 
 // acebot_movement.c protos
-qboolean        ACEMV_SpecialMove(gentity_t * self);
-void            ACEMV_Move(gentity_t * self);
-void            ACEMV_Attack(gentity_t * self);
-void            ACEMV_Wander(gentity_t * self);
+qboolean        ACEMV_SpecialMove( gentity_t* self );
+void            ACEMV_Move( gentity_t* self );
+void            ACEMV_Attack( gentity_t* self );
+void            ACEMV_Wander( gentity_t* self );
 
 // acebot_nodes.c protos
-int             ACEND_FindCost(int from, int to);
-int             ACEND_FindCloseReachableNode(gentity_t * self, float range, int type);
-int             ACEND_FindClosestReachableNode(gentity_t * self, float range, int type);
-void            ACEND_SetGoal(gentity_t * self, int goal_node);
-qboolean        ACEND_FollowPath(gentity_t * self);
-void            ACEND_GrapFired(gentity_t * self);
-qboolean        ACEND_CheckForLadder(gentity_t * self);
-void            ACEND_PathMap(gentity_t * self);
-void            ACEND_InitNodes(void);
-void            ACEND_ShowNode(int node);
-void            ACEND_DrawPath(int currentNode, int goalNode);
-void            ACEND_ShowPath(gentity_t * self, int goalNode);
-int             ACEND_AddNode(gentity_t * self, int type);
-const char     *ACEND_NodeTypeToString(int type);
-void            ACEND_UpdateNodeEdge(int from, int to);
-void            ACEND_RemoveNodeEdge(gentity_t * self, int from, int to);
+int             ACEND_FindCost( int from, int to );
+int             ACEND_FindCloseReachableNode( gentity_t* self, float range, int type );
+int             ACEND_FindClosestReachableNode( gentity_t* self, float range, int type );
+void            ACEND_SetGoal( gentity_t* self, int goal_node );
+qboolean        ACEND_FollowPath( gentity_t* self );
+void            ACEND_GrapFired( gentity_t* self );
+qboolean        ACEND_CheckForLadder( gentity_t* self );
+void            ACEND_PathMap( gentity_t* self );
+void            ACEND_InitNodes( void );
+void            ACEND_ShowNode( int node );
+void            ACEND_DrawPath( int currentNode, int goalNode );
+void            ACEND_ShowPath( gentity_t* self, int goalNode );
+int             ACEND_AddNode( gentity_t* self, int type );
+const char*     ACEND_NodeTypeToString( int type );
+void            ACEND_UpdateNodeEdge( int from, int to );
+void            ACEND_RemoveNodeEdge( gentity_t* self, int from, int to );
 void            ACEND_ResolveAllPaths();
 void            ACEND_SaveNodes();
 void            ACEND_LoadNodes();
 
 // acebot_spawn.c protos
-void            ACESP_InitBots(qboolean restart);
-void            ACESP_HoldSpawn(gentity_t * self);
-void            ACESP_PutClientInServer(gentity_t * bot, qboolean respawn, int team);
-void            ACESP_Respawn(gentity_t * self);
-gentity_t      *ACESP_FindFreeClient(void);
-void            ACESP_SetName(gentity_t * bot, char *name, char *skin, char *team);
-void            ACESP_SpawnBot(char *name, float skill, char *team);
+void            ACESP_InitBots( qboolean restart );
+void            ACESP_HoldSpawn( gentity_t* self );
+void            ACESP_PutClientInServer( gentity_t* bot, qboolean respawn, int team );
+void            ACESP_Respawn( gentity_t* self );
+gentity_t*      ACESP_FindFreeClient( void );
+void            ACESP_SetName( gentity_t* bot, char* name, char* skin, char* team );
+void            ACESP_SpawnBot( char* name, float skill, char* team );
 void            ACESP_ReAddBots();
-void            ACESP_RemoveBot(char *name);
-qboolean        ACESP_BotConnect(int clientNum, qboolean restart);
-void            ACESP_SetupBotState(gentity_t * bot);
+void            ACESP_RemoveBot( char* name );
+qboolean        ACESP_BotConnect( int clientNum, qboolean restart );
+void            ACESP_SetupBotState( gentity_t* bot );
 
 
 #endif							// ACEBOT

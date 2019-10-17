@@ -25,41 +25,49 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 int             c_glfaces;
 
-int PortalVisibleSides(portal_t * p)
+int PortalVisibleSides( portal_t* p )
 {
 	int             fcon, bcon;
-
-	if(!p->onnode)
-		return 0;				// outside
-
+	
+	if( !p->onnode )
+	{
+		return 0;    // outside
+	}
+	
 	fcon = p->nodes[0]->opaque;
 	bcon = p->nodes[1]->opaque;
-
+	
 	// same contents never create a face
-	if(fcon == bcon)
+	if( fcon == bcon )
+	{
 		return 0;
-
-	if(!fcon)
+	}
+	
+	if( !fcon )
+	{
 		return 1;
-	if(!bcon)
+	}
+	if( !bcon )
+	{
 		return 2;
+	}
 	return 0;
 }
 
-void OutputWinding(winding_t * w, FILE * glview)
+void OutputWinding( winding_t* w, FILE* glview )
 {
 	static int      level = 128;
 	vec_t           light;
 	int             i;
-
-	fprintf(glview, "%i\n", w->numpoints);
+	
+	fprintf( glview, "%i\n", w->numpoints );
 	level += 28;
-	light = (level & 255) / 255.0;
-	for(i = 0; i < w->numpoints; i++)
+	light = ( level & 255 ) / 255.0;
+	for( i = 0; i < w->numpoints; i++ )
 	{
-		fprintf(glview, "%6.3f %6.3f %6.3f %6.3f %6.3f %6.3f\n", w->p[i][0], w->p[i][1], w->p[i][2], light, light, light);
+		fprintf( glview, "%6.3f %6.3f %6.3f %6.3f %6.3f %6.3f\n", w->p[i][0], w->p[i][1], w->p[i][2], light, light, light );
 	}
-	fprintf(glview, "\n");
+	fprintf( glview, "\n" );
 }
 
 /*
@@ -67,26 +75,32 @@ void OutputWinding(winding_t * w, FILE * glview)
 OutputPortal
 =============
 */
-void OutputPortal(portal_t * p, FILE * glview)
+void OutputPortal( portal_t* p, FILE* glview )
 {
-	winding_t      *w;
+	winding_t*      w;
 	int             sides;
-
-	sides = PortalVisibleSides(p);
-	if(!sides)
+	
+	sides = PortalVisibleSides( p );
+	if( !sides )
+	{
 		return;
-
+	}
+	
 	c_glfaces++;
-
+	
 	w = p->winding;
-
-	if(sides == 2)				// back side
-		w = ReverseWinding(w);
-
-	OutputWinding(w, glview);
-
-	if(sides == 2)
-		FreeWinding(w);
+	
+	if( sides == 2 )				// back side
+	{
+		w = ReverseWinding( w );
+	}
+	
+	OutputWinding( w, glview );
+	
+	if( sides == 2 )
+	{
+		FreeWinding( w );
+	}
 }
 
 /*
@@ -94,27 +108,29 @@ void OutputPortal(portal_t * p, FILE * glview)
 WriteGLView_r
 =============
 */
-void WriteGLView_r(node_t * node, FILE * glview)
+void WriteGLView_r( node_t* node, FILE* glview )
 {
-	portal_t       *p, *nextp;
-
-	if(node->planenum != PLANENUM_LEAF)
+	portal_t*       p, *nextp;
+	
+	if( node->planenum != PLANENUM_LEAF )
 	{
-		WriteGLView_r(node->children[0], glview);
-		WriteGLView_r(node->children[1], glview);
+		WriteGLView_r( node->children[0], glview );
+		WriteGLView_r( node->children[1], glview );
 		return;
 	}
-
+	
 	// write all the portals
-	for(p = node->portals; p; p = nextp)
+	for( p = node->portals; p; p = nextp )
 	{
-		if(p->nodes[0] == node)
+		if( p->nodes[0] == node )
 		{
-			OutputPortal(p, glview);
+			OutputPortal( p, glview );
 			nextp = p->next[0];
 		}
 		else
+		{
 			nextp = p->next[1];
+		}
 	}
 }
 
@@ -123,20 +139,22 @@ void WriteGLView_r(node_t * node, FILE * glview)
 WriteGLView
 =============
 */
-void WriteGLView(tree_t * tree, char *source)
+void WriteGLView( tree_t* tree, char* source )
 {
 	char            name[1024];
-	FILE           *glview;
-
+	FILE*           glview;
+	
 	c_glfaces = 0;
-	sprintf(name, "%s%s.gl", outbase, source);
-	Sys_Printf("Writing %s\n", name);
-
-	glview = fopen(name, "w");
-	if(!glview)
-		Error("Couldn't open %s", name);
-	WriteGLView_r(tree->headnode, glview);
-	fclose(glview);
-
-	Sys_Printf("%5i c_glfaces\n", c_glfaces);
+	sprintf( name, "%s%s.gl", outbase, source );
+	Sys_Printf( "Writing %s\n", name );
+	
+	glview = fopen( name, "w" );
+	if( !glview )
+	{
+		Error( "Couldn't open %s", name );
+	}
+	WriteGLView_r( tree->headnode, glview );
+	fclose( glview );
+	
+	Sys_Printf( "%5i c_glfaces\n", c_glfaces );
 }

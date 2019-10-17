@@ -34,65 +34,67 @@ memory management
 ===============================================================================
 */
 
-static sndBuffer *buffer = NULL;
-static sndBuffer *freelist = NULL;
+static sndBuffer* buffer = NULL;
+static sndBuffer* freelist = NULL;
 static int      inUse = 0;
 static int      totalInUse = 0;
 
-short          *sfxScratchBuffer = NULL;
-sfx_t          *sfxScratchPointer = NULL;
+short*          sfxScratchBuffer = NULL;
+sfx_t*          sfxScratchPointer = NULL;
 int             sfxScratchIndex = 0;
 
-void SND_free(sndBuffer * v)
+void SND_free( sndBuffer* v )
 {
-	*(sndBuffer **) v = freelist;
-	freelist = (sndBuffer *) v;
-	inUse += sizeof(sndBuffer);
+	*( sndBuffer** ) v = freelist;
+	freelist = ( sndBuffer* ) v;
+	inUse += sizeof( sndBuffer );
 }
 
-sndBuffer      *SND_malloc(void)
+sndBuffer*      SND_malloc( void )
 {
-	sndBuffer      *v;
-
-	while(!freelist)
+	sndBuffer*      v;
+	
+	while( !freelist )
 	{
 		S_FreeOldestSound();
 	}
-
-	inUse -= sizeof(sndBuffer);
-	totalInUse += sizeof(sndBuffer);
-
+	
+	inUse -= sizeof( sndBuffer );
+	totalInUse += sizeof( sndBuffer );
+	
 	v = freelist;
-	freelist = *(sndBuffer **) freelist;
+	freelist = *( sndBuffer** ) freelist;
 	v->next = NULL;
 	return v;
 }
 
-void SND_setup(void)
+void SND_setup( void )
 {
-	sndBuffer      *p, *q;
-	cvar_t         *cv;
+	sndBuffer*      p, *q;
+	cvar_t*         cv;
 	int             scs;
-
-	cv = Cvar_Get("com_soundMegs", DEF_COMSOUNDMEGS, CVAR_LATCH | CVAR_ARCHIVE);
-
-	scs = (cv->integer * 1536);
-
-	buffer = malloc(scs * sizeof(sndBuffer));
+	
+	cv = Cvar_Get( "com_soundMegs", DEF_COMSOUNDMEGS, CVAR_LATCH | CVAR_ARCHIVE );
+	
+	scs = ( cv->integer * 1536 );
+	
+	buffer = malloc( scs * sizeof( sndBuffer ) );
 	// allocate the stack based hunk allocator
-	sfxScratchBuffer = malloc(SND_CHUNK_SIZE * sizeof(short) * 4);	//Hunk_Alloc(SND_CHUNK_SIZE * sizeof(short) * 4);
+	sfxScratchBuffer = malloc( SND_CHUNK_SIZE * sizeof( short ) * 4 );	//Hunk_Alloc(SND_CHUNK_SIZE * sizeof(short) * 4);
 	sfxScratchPointer = NULL;
-
-	inUse = scs * sizeof(sndBuffer);
+	
+	inUse = scs * sizeof( sndBuffer );
 	p = buffer;;
 	q = p + scs;
-	while(--q > p)
-		*(sndBuffer **) q = q - 1;
-
-	*(sndBuffer **) q = NULL;
+	while( --q > p )
+	{
+		*( sndBuffer** ) q = q - 1;
+	}
+	
+	*( sndBuffer** ) q = NULL;
 	freelist = p + scs - 1;
-
-	Com_Printf("Sound memory manager started\n");
+	
+	Com_Printf( "Sound memory manager started\n" );
 }
 
 /*
@@ -102,7 +104,7 @@ ResampleSfx
 resample / decimate to the current source rate
 ================
 */
-static void ResampleSfx(sfx_t * sfx, int inrate, int inwidth, byte * data, qboolean compressed)
+static void ResampleSfx( sfx_t* sfx, int inrate, int inwidth, byte* data, qboolean compressed )
 {
 	int             outcount;
 	int             srcsample;
@@ -110,36 +112,36 @@ static void ResampleSfx(sfx_t * sfx, int inrate, int inwidth, byte * data, qbool
 	int             i;
 	int             sample, samplefrac, fracstep;
 	int             part;
-	sndBuffer      *chunk;
-
-	stepscale = (float)inrate / dma.speed;	// this is usually 0.5, 1, or 2
-
+	sndBuffer*      chunk;
+	
+	stepscale = ( float )inrate / dma.speed;	// this is usually 0.5, 1, or 2
+	
 	outcount = sfx->soundLength / stepscale;
 	sfx->soundLength = outcount;
-
+	
 	samplefrac = 0;
 	fracstep = stepscale * 256;
 	chunk = sfx->soundData;
-
-	for(i = 0; i < outcount; i++)
+	
+	for( i = 0; i < outcount; i++ )
 	{
 		srcsample = samplefrac >> 8;
 		samplefrac += fracstep;
-		if(inwidth == 2)
+		if( inwidth == 2 )
 		{
-			sample = (((short *)data)[srcsample]);
+			sample = ( ( ( short* )data )[srcsample] );
 		}
 		else
 		{
-			sample = (int)((unsigned char)(data[srcsample]) - 128) << 8;
+			sample = ( int )( ( unsigned char )( data[srcsample] ) - 128 ) << 8;
 		}
-		part = (i & (SND_CHUNK_SIZE - 1));
-		if(part == 0)
+		part = ( i & ( SND_CHUNK_SIZE - 1 ) );
+		if( part == 0 )
 		{
-			sndBuffer      *newchunk;
-
+			sndBuffer*      newchunk;
+			
 			newchunk = SND_malloc();
-			if(chunk == NULL)
+			if( chunk == NULL )
 			{
 				sfx->soundData = newchunk;
 			}
@@ -149,7 +151,7 @@ static void ResampleSfx(sfx_t * sfx, int inrate, int inwidth, byte * data, qbool
 			}
 			chunk = newchunk;
 		}
-
+		
 		chunk->sndChunk[part] = sample;
 	}
 }
@@ -203,48 +205,50 @@ The filename may be different than sfx->name in the case
 of a forced fallback of a player specific sound
 ==============
 */
-qboolean S_LoadSound(sfx_t * sfx)
+qboolean S_LoadSound( sfx_t* sfx )
 {
-	byte           *data;
-	short          *samples;
+	byte*           data;
+	short*          samples;
 	snd_info_t      info;
-
+	
 	// player specific sounds are never directly loaded
-	if(sfx->soundName[0] == '*')
+	if( sfx->soundName[0] == '*' )
 	{
 		return qfalse;
 	}
-
+	
 	// load it in
-	data = S_CodecLoad(sfx->soundName, &info);
-	if(!data)
+	data = S_CodecLoad( sfx->soundName, &info );
+	if( !data )
+	{
 		return qfalse;
-
-	if(info.width == 1)
-	{
-		Com_DPrintf(S_COLOR_YELLOW "WARNING: %s is a 8 bit wav file\n", sfx->soundName);
 	}
-
-	if(info.rate != 22050)
+	
+	if( info.width == 1 )
 	{
-		Com_DPrintf(S_COLOR_YELLOW "WARNING: %s is not a 22kHz wav file\n", sfx->soundName);
+		Com_DPrintf( S_COLOR_YELLOW "WARNING: %s is a 8 bit wav file\n", sfx->soundName );
 	}
-
-	samples = Hunk_AllocateTempMemory(info.samples * sizeof(short) * 2);
-
+	
+	if( info.rate != 22050 )
+	{
+		Com_DPrintf( S_COLOR_YELLOW "WARNING: %s is not a 22kHz wav file\n", sfx->soundName );
+	}
+	
+	samples = Hunk_AllocateTempMemory( info.samples * sizeof( short ) * 2 );
+	
 	sfx->lastTimeUsed = Com_Milliseconds() + 1;
-
+	
 	sfx->soundLength = info.samples;
 	sfx->soundData = NULL;
-	ResampleSfx(sfx, info.rate, info.width, data + info.dataofs, qfalse);
-
-	Hunk_FreeTempMemory(samples);
-	Z_Free(data);
-
+	ResampleSfx( sfx, info.rate, info.width, data + info.dataofs, qfalse );
+	
+	Hunk_FreeTempMemory( samples );
+	Z_Free( data );
+	
 	return qtrue;
 }
 
-void S_DisplayFreeMemory(void)
+void S_DisplayFreeMemory( void )
 {
-	Com_Printf("%d bytes free sound buffer memory, %d total used\n", inUse, totalInUse);
+	Com_Printf( "%d bytes free sound buffer memory, %d total used\n", inUse, totalInUse );
 }

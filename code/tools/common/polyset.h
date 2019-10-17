@@ -41,14 +41,14 @@ typedef struct
 {
 	char            name[100];
 	char            materialname[100];
-	triangle_t     *triangles;
+	triangle_t*     triangles;
 	int             numtriangles;
 } polyset_t;
 
-polyset_t      *Polyset_LoadSets(const char *file, int *numpolysets, int maxTrisPerSet);
-polyset_t      *Polyset_CollapseSets(polyset_t * psets, int numpolysets);
-polyset_t      *Polyset_SplitSets(polyset_t * psets, int numpolysets, int *pNumNewPolysets, int maxTris);
-void            Polyset_SnapSets(polyset_t * psets, int numpolysets);
-void            Polyset_ComputeNormals(polyset_t * psets, int numpolysets);
+polyset_t*      Polyset_LoadSets( const char* file, int* numpolysets, int maxTrisPerSet );
+polyset_t*      Polyset_CollapseSets( polyset_t* psets, int numpolysets );
+polyset_t*      Polyset_SplitSets( polyset_t* psets, int numpolysets, int* pNumNewPolysets, int maxTris );
+void            Polyset_SnapSets( polyset_t* psets, int numpolysets );
+void            Polyset_ComputeNormals( polyset_t* psets, int numpolysets );
 
 #endif

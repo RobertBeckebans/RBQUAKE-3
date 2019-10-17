@@ -22,35 +22,35 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "../renderer/tr_local.h"
 
 
-qboolean(*qwglSwapIntervalEXT) (int interval);
-void            (*qglActiveTextureARB) (GLenum texture);
+qboolean( *qwglSwapIntervalEXT )( int interval );
+void ( *qglActiveTextureARB )( GLenum texture );
 
 
-void GLimp_EndFrame(void)
+void GLimp_EndFrame( void )
 {
 }
 
-int GLimp_Init(void)
+int GLimp_Init( void )
 {
 }
 
-void GLimp_Shutdown(void)
+void GLimp_Shutdown( void )
 {
 }
 
-void GLimp_EnableLogging(qboolean enable)
+void GLimp_EnableLogging( qboolean enable )
 {
 }
 
-void GLimp_LogComment(char *comment)
+void GLimp_LogComment( char* comment )
 {
 }
 
-qboolean QGL_Init(const char *dllname)
+qboolean QGL_Init( const char* dllname )
 {
 	return qtrue;
 }
 
-void QGL_Shutdown(void)
+void QGL_Shutdown( void )
 {
 }

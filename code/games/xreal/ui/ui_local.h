@@ -34,12 +34,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //
 // ui_main.c
 //
-void            UI_Report(void);
-void            UI_Load(void);
-void            UI_LoadMenus(const char *menuFile, qboolean reset);
-int             UI_AdjustTimeByGame(int time);
-void            UI_ClearScores(void);
-void            UI_LoadArenas(void);
+void            UI_Report( void );
+void            UI_Load( void );
+void            UI_LoadMenus( const char* menuFile, qboolean reset );
+int             UI_AdjustTimeByGame( int time );
+void            UI_ClearScores( void );
+void            UI_LoadArenas( void );
 void 			UI_ServerInfo( void );
 void 			UI_UpdateNews( qboolean );
 
@@ -65,17 +65,17 @@ void UI_DrawConnectScreen( qboolean overlay );
 
 typedef struct
 {
-	const char     *mapName;
-	const char     *mapLoadName;
-	const char     *imageName;
+	const char*     mapName;
+	const char*     mapLoadName;
+	const char*     imageName;
 	int             cinematic;
 	qhandle_t       levelShot;
 } mapInfo;
 
 typedef struct serverFilter_s
 {
-	const char     *description;
-	const char     *basedir;
+	const char*     description;
+	const char*     basedir;
 } serverFilter_t;
 
 typedef struct
@@ -135,7 +135,7 @@ typedef struct
 typedef struct
 {
 	char            address[MAX_ADDRESSLENGTH];
-	char           *lines[MAX_SERVERSTATUS_LINES][4];
+	char*           lines[MAX_SERVERSTATUS_LINES][4];
 	char            text[MAX_SERVERSTATUS_TEXT];
 	char            pings[MAX_CLIENTS * 3];
 	int             numLines;
@@ -143,72 +143,72 @@ typedef struct
 
 typedef struct
 {
-  char text[MAX_NEWS_LINES][MAX_NEWS_LINEWIDTH];
-  int numLines;
-  qboolean refreshActive;
-  int refreshtime;
+	char text[MAX_NEWS_LINES][MAX_NEWS_LINEWIDTH];
+	int numLines;
+	qboolean refreshActive;
+	int refreshtime;
 } newsInfo_t;
 
 typedef struct
 {
-	const char     *modName;
-	const char     *modDescr;
+	const char*     modName;
+	const char*     modDescr;
 } modInfo_t;
 
 
 typedef struct
 {
-  int w;
-  int h;
+	int w;
+	int h;
 }
 resolution_t;
 
 typedef struct
 {
-  displayContextDef_t uiDC;
-
+	displayContextDef_t uiDC;
+	
 	int             playerCount;
 	int             myTeamCount;
-  int teamPlayerIndex;
+	int teamPlayerIndex;
 	int             playerRefresh;
 	int             playerIndex;
 	int             playerNumber;
-  int myPlayerIndex;
-  int ignoreIndex;
+	int myPlayerIndex;
+	int ignoreIndex;
 	char            playerNames[MAX_CLIENTS][MAX_NAME_LENGTH];
-  char rawPlayerNames[MAX_CLIENTS][MAX_NAME_LENGTH];
+	char rawPlayerNames[MAX_CLIENTS][MAX_NAME_LENGTH];
 	char            teamNames[MAX_CLIENTS][MAX_NAME_LENGTH];
-  char rawTeamNames[MAX_CLIENTS][MAX_NAME_LENGTH];
-  int clientNums[MAX_CLIENTS];
+	char rawTeamNames[MAX_CLIENTS][MAX_NAME_LENGTH];
+	int clientNums[MAX_CLIENTS];
 	int             teamClientNums[MAX_CLIENTS];
 	clientList_t 	ignoreList[MAX_CLIENTS];
-
+	
 	int             mapCount;
 	mapInfo         mapList[MAX_MAPS];
-
+	
 	modInfo_t       modList[MAX_MODS];
 	int             modCount;
 	int             modIndex;
-
-	const char     *demoList[MAX_DEMOS];
+	
+	const char*     demoList[MAX_DEMOS];
 	int             demoCount;
 	int             demoIndex;
-
-	const char     *movieList[MAX_MOVIES];
+	
+	const char*     movieList[MAX_MOVIES];
 	int             movieCount;
 	int             movieIndex;
 	int             previewMovie;
-
+	
 	serverStatus_t  serverStatus;
-
+	
 	// for showing the game news window
 	newsInfo_t 		newsInfo;
-
+	
 	// for the showing the status of a server
 	char            serverStatusAddress[MAX_ADDRESSLENGTH];
 	serverStatusInfo_t serverStatusInfo;
 	int             nextServerStatusRefresh;
-
+	
 	// to retrieve the status of server to find a player
 	pendingServerStatus_t pendingServerStatus;
 	char            findPlayerName[MAX_STRING_CHARS];
@@ -217,13 +217,13 @@ typedef struct
 	int             currentFoundPlayerServer;
 	int             numFoundPlayerServers;
 	int             nextFindPlayerRefresh;
-
+	
 	resolution_t  	resolutions[ MAX_RESOLUTIONS ];
 	int           	numResolutions;
 	int           	resolutionIndex;
-
+	
 	qboolean        inGameLoad;
-
+	
 	qboolean  		chatTeam;
 } uiInfo_t;
 
@@ -231,98 +231,98 @@ extern uiInfo_t uiInfo;
 
 
 qboolean 		UI_ConsoleCommand( int realTime );
-char      	   *UI_Cvar_VariableString( const char *var_name );
-void      		UI_SetColor( const float *rgba );
-void      		UI_AdjustFrom640( float *x, float *y, float *w, float *h );
+char*      	   UI_Cvar_VariableString( const char* var_name );
+void      		UI_SetColor( const float* rgba );
+void      		UI_AdjustFrom640( float* x, float* y, float* w, float* h );
 void     		UI_Refresh( int time );
 void      		UI_DrawHandlePic( float x, float y, float w, float h, qhandle_t hShader );
-void      		UI_FillRect( float x, float y, float width, float height, const float *color );
+void      		UI_FillRect( float x, float y, float width, float height, const float* color );
 
 //
 // ui_syscalls.c
 //
-void            trap_Print(const char *string);
-void            trap_Error(const char *string) __attribute__((noreturn));
-int             trap_Milliseconds(void);
-void            trap_Cvar_Register(vmCvar_t * vmCvar, const char *varName, const char *defaultValue, int flags);
-void            trap_Cvar_Update(vmCvar_t * vmCvar);
-void            trap_Cvar_Set(const char *var_name, const char *value);
-float           trap_Cvar_VariableValue(const char *var_name);
-void            trap_Cvar_VariableStringBuffer(const char *var_name, char *buffer, int bufsize);
-void            trap_Cvar_SetValue(const char *var_name, float value);
-void            trap_Cvar_Reset(const char *name);
-void            trap_Cvar_Create(const char *var_name, const char *var_value, int flags);
-void            trap_Cvar_InfoStringBuffer(int bit, char *buffer, int bufsize);
-int             trap_Argc(void);
-void            trap_Argv(int n, char *buffer, int bufferLength);
-void            trap_Cmd_ExecuteText(int exec_when, const char *text);	// don't use EXEC_NOW!
-int             trap_FS_FOpenFile(const char *qpath, fileHandle_t * f, fsMode_t mode);
-void            trap_FS_Read(void *buffer, int len, fileHandle_t f);
-void            trap_FS_Write(const void *buffer, int len, fileHandle_t f);
-void            trap_FS_FCloseFile(fileHandle_t f);
-int             trap_FS_GetFileList(const char *path, const char *extension, char *listbuf, int bufsize);
-int             trap_FS_Seek(fileHandle_t f, long offset, int origin);	// fsOrigin_t
-qhandle_t       trap_R_RegisterModel(const char *name);
-qhandle_t       trap_R_RegisterSkin(const char *name);
-qhandle_t       trap_R_RegisterShaderNoMip(const char *name);
-void            trap_R_ClearScene(void);
-void            trap_R_AddRefEntityToScene(const refEntity_t * re);
-void            trap_R_AddPolyToScene(qhandle_t hShader, int numVerts, const polyVert_t * verts);
-void            trap_R_AddLightToScene(const vec3_t org, float intensity, float r, float g, float b);
-void            trap_R_RenderScene(const refdef_t * fd);
-void            trap_R_SetColor(const float *rgba);
-void      		trap_R_SetClipRegion(const float *region);
-void            trap_R_DrawStretchPic(float x, float y, float w, float h, float s1, float t1, float s2, float t2,
-									  qhandle_t hShader);
-void            trap_R_ModelBounds(clipHandle_t model, vec3_t mins, vec3_t maxs);
-void            trap_UpdateScreen(void);
-int             trap_CM_LerpTag(orientation_t * tag, clipHandle_t mod, int startFrame, int endFrame, float frac,
-								const char *tagName);
-void            trap_S_StartLocalSound(sfxHandle_t sfx, int channelNum);
-sfxHandle_t     trap_S_RegisterSound(const char *sample);
-void            trap_Key_KeynumToStringBuf(int keynum, char *buf, int buflen);
-void            trap_Key_GetBindingBuf(int keynum, char *buf, int buflen);
-void            trap_Key_SetBinding(int keynum, const char *binding);
-qboolean        trap_Key_IsDown(int keynum);
-qboolean        trap_Key_GetOverstrikeMode(void);
-void            trap_Key_SetOverstrikeMode(qboolean state);
-void            trap_Key_ClearStates(void);
-int             trap_Key_GetCatcher(void);
-void            trap_Key_SetCatcher(int catcher);
-void            trap_GetClipboardData(char *buf, int bufsize);
-void            trap_GetClientState(uiClientState_t * state);
-void            trap_GetGlconfig(glconfig_t * glconfig);
-int             trap_GetConfigString(int index, char *buff, int buffsize);
-int             trap_LAN_GetServerCount(int source);
-void            trap_LAN_GetServerAddressString(int source, int n, char *buf, int buflen);
-void            trap_LAN_GetServerInfo(int source, int n, char *buf, int buflen);
-int             trap_LAN_GetServerPing(int source, int n);
-int             trap_LAN_GetPingQueueCount(void);
-void            trap_LAN_ClearPing(int n);
-void            trap_LAN_GetPing(int n, char *buf, int buflen, int *pingtime);
-void            trap_LAN_GetPingInfo(int n, char *buf, int buflen);
-void            trap_LAN_LoadCachedServers(void);
-void            trap_LAN_SaveCachedServers(void);
-void            trap_LAN_MarkServerVisible(int source, int n, qboolean visible);
-int             trap_LAN_ServerIsVisible(int source, int n);
-qboolean        trap_LAN_UpdateVisiblePings(int source);
-int             trap_LAN_AddServer(int source, const char *name, const char *addr);
-void            trap_LAN_RemoveServer(int source, const char *addr);
-void            trap_LAN_ResetPings(int n);
-int             trap_LAN_ServerStatus(const char *serverAddress, char *serverStatus, int maxLen);
-int             trap_LAN_CompareServers(int source, int sortKey, int sortDir, int s1, int s2);
-int             trap_MemoryRemaining(void);
-void            trap_R_RegisterFont(const char *pFontname, int pointSize, fontInfo_t * font);
-void            trap_S_StopBackgroundTrack(void);
-void            trap_S_StartBackgroundTrack(const char *intro, const char *loop);
-int             trap_CIN_PlayCinematic(const char *arg0, int xpos, int ypos, int width, int height, int bits);
-e_status        trap_CIN_StopCinematic(int handle);
-e_status        trap_CIN_RunCinematic(int handle);
-void            trap_CIN_DrawCinematic(int handle);
-void            trap_CIN_SetExtents(int handle, int x, int y, int w, int h);
-int             trap_RealTime(qtime_t * qtime);
-void            trap_R_RemapShader(const char *oldShader, const char *newShader, const char *timeOffset);
+void            trap_Print( const char* string );
+void            trap_Error( const char* string ) __attribute__( ( noreturn ) );
+int             trap_Milliseconds( void );
+void            trap_Cvar_Register( vmCvar_t* vmCvar, const char* varName, const char* defaultValue, int flags );
+void            trap_Cvar_Update( vmCvar_t* vmCvar );
+void            trap_Cvar_Set( const char* var_name, const char* value );
+float           trap_Cvar_VariableValue( const char* var_name );
+void            trap_Cvar_VariableStringBuffer( const char* var_name, char* buffer, int bufsize );
+void            trap_Cvar_SetValue( const char* var_name, float value );
+void            trap_Cvar_Reset( const char* name );
+void            trap_Cvar_Create( const char* var_name, const char* var_value, int flags );
+void            trap_Cvar_InfoStringBuffer( int bit, char* buffer, int bufsize );
+int             trap_Argc( void );
+void            trap_Argv( int n, char* buffer, int bufferLength );
+void            trap_Cmd_ExecuteText( int exec_when, const char* text );	// don't use EXEC_NOW!
+int             trap_FS_FOpenFile( const char* qpath, fileHandle_t* f, fsMode_t mode );
+void            trap_FS_Read( void* buffer, int len, fileHandle_t f );
+void            trap_FS_Write( const void* buffer, int len, fileHandle_t f );
+void            trap_FS_FCloseFile( fileHandle_t f );
+int             trap_FS_GetFileList( const char* path, const char* extension, char* listbuf, int bufsize );
+int             trap_FS_Seek( fileHandle_t f, long offset, int origin );	// fsOrigin_t
+qhandle_t       trap_R_RegisterModel( const char* name );
+qhandle_t       trap_R_RegisterSkin( const char* name );
+qhandle_t       trap_R_RegisterShaderNoMip( const char* name );
+void            trap_R_ClearScene( void );
+void            trap_R_AddRefEntityToScene( const refEntity_t* re );
+void            trap_R_AddPolyToScene( qhandle_t hShader, int numVerts, const polyVert_t* verts );
+void            trap_R_AddLightToScene( const vec3_t org, float intensity, float r, float g, float b );
+void            trap_R_RenderScene( const refdef_t* fd );
+void            trap_R_SetColor( const float* rgba );
+void      		trap_R_SetClipRegion( const float* region );
+void            trap_R_DrawStretchPic( float x, float y, float w, float h, float s1, float t1, float s2, float t2,
+									   qhandle_t hShader );
+void            trap_R_ModelBounds( clipHandle_t model, vec3_t mins, vec3_t maxs );
+void            trap_UpdateScreen( void );
+int             trap_CM_LerpTag( orientation_t* tag, clipHandle_t mod, int startFrame, int endFrame, float frac,
+								 const char* tagName );
+void            trap_S_StartLocalSound( sfxHandle_t sfx, int channelNum );
+sfxHandle_t     trap_S_RegisterSound( const char* sample );
+void            trap_Key_KeynumToStringBuf( int keynum, char* buf, int buflen );
+void            trap_Key_GetBindingBuf( int keynum, char* buf, int buflen );
+void            trap_Key_SetBinding( int keynum, const char* binding );
+qboolean        trap_Key_IsDown( int keynum );
+qboolean        trap_Key_GetOverstrikeMode( void );
+void            trap_Key_SetOverstrikeMode( qboolean state );
+void            trap_Key_ClearStates( void );
+int             trap_Key_GetCatcher( void );
+void            trap_Key_SetCatcher( int catcher );
+void            trap_GetClipboardData( char* buf, int bufsize );
+void            trap_GetClientState( uiClientState_t* state );
+void            trap_GetGlconfig( glconfig_t* glconfig );
+int             trap_GetConfigString( int index, char* buff, int buffsize );
+int             trap_LAN_GetServerCount( int source );
+void            trap_LAN_GetServerAddressString( int source, int n, char* buf, int buflen );
+void            trap_LAN_GetServerInfo( int source, int n, char* buf, int buflen );
+int             trap_LAN_GetServerPing( int source, int n );
+int             trap_LAN_GetPingQueueCount( void );
+void            trap_LAN_ClearPing( int n );
+void            trap_LAN_GetPing( int n, char* buf, int buflen, int* pingtime );
+void            trap_LAN_GetPingInfo( int n, char* buf, int buflen );
+void            trap_LAN_LoadCachedServers( void );
+void            trap_LAN_SaveCachedServers( void );
+void            trap_LAN_MarkServerVisible( int source, int n, qboolean visible );
+int             trap_LAN_ServerIsVisible( int source, int n );
+qboolean        trap_LAN_UpdateVisiblePings( int source );
+int             trap_LAN_AddServer( int source, const char* name, const char* addr );
+void            trap_LAN_RemoveServer( int source, const char* addr );
+void            trap_LAN_ResetPings( int n );
+int             trap_LAN_ServerStatus( const char* serverAddress, char* serverStatus, int maxLen );
+int             trap_LAN_CompareServers( int source, int sortKey, int sortDir, int s1, int s2 );
+int             trap_MemoryRemaining( void );
+void            trap_R_RegisterFont( const char* pFontname, int pointSize, fontInfo_t* font );
+void            trap_S_StopBackgroundTrack( void );
+void            trap_S_StartBackgroundTrack( const char* intro, const char* loop );
+int             trap_CIN_PlayCinematic( const char* arg0, int xpos, int ypos, int width, int height, int bits );
+e_status        trap_CIN_StopCinematic( int handle );
+e_status        trap_CIN_RunCinematic( int handle );
+void            trap_CIN_DrawCinematic( int handle );
+void            trap_CIN_SetExtents( int handle, int x, int y, int w, int h );
+int             trap_RealTime( qtime_t* qtime );
+void            trap_R_RemapShader( const char* oldShader, const char* newShader, const char* timeOffset );
 
-qboolean		trap_GetNews(qboolean force);
+qboolean		trap_GetNews( qboolean force );
 
 #endif

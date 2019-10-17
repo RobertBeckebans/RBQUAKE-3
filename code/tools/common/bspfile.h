@@ -75,47 +75,47 @@ extern dsurface_t drawSurfaces[MAX_MAP_DRAW_SURFS];
 extern int      numFogs;
 extern dfog_t   dfogs[MAX_MAP_FOGS];
 
-void            LoadBSPFile(const char *filename);
-void            WriteBSPFile(const char *filename);
-void            PrintBSPFileSizes(void);
+void            LoadBSPFile( const char* filename );
+void            WriteBSPFile( const char* filename );
+void            PrintBSPFileSizes( void );
 
 //===============
 
 
 typedef struct epair_s
 {
-	struct epair_s *next;
-	char           *key;
-	char           *value;
+	struct epair_s* next;
+	char*           key;
+	char*           value;
 } epair_t;
 
 typedef struct
 {
 	vec3_t          origin;
-	struct bspBrush_s *brushes;
-	struct parseMesh_s *patches;
+	struct bspBrush_s* brushes;
+	struct parseMesh_s* patches;
 	int             firstDrawSurf;
-	epair_t        *epairs;
+	epair_t*        epairs;
 } entity_t;
 
 extern int      numEntities;
 extern entity_t entities[MAX_MAP_ENTITIES];
 
-void            ParseEntities(void);
-void            UnparseEntities(void);
+void            ParseEntities( void );
+void            UnparseEntities( void );
 
-void            SetKeyValue(entity_t * ent, const char *key, const char *value);
-const char     *ValueForKey(const entity_t * ent, const char *key);
-qboolean        HasKey(const entity_t * ent, const char *key);
-void            RemoveKey(entity_t * ent, const char *key);
+void            SetKeyValue( entity_t* ent, const char* key, const char* value );
+const char*     ValueForKey( const entity_t* ent, const char* key );
+qboolean        HasKey( const entity_t* ent, const char* key );
+void            RemoveKey( entity_t* ent, const char* key );
 
 // will return "" if not present
 
-vec_t           FloatForKey(const entity_t * ent, const char *key);
-void            GetVectorForKey(const entity_t * ent, const char *key, vec3_t vec);
+vec_t           FloatForKey( const entity_t* ent, const char* key );
+void            GetVectorForKey( const entity_t* ent, const char* key, vec3_t vec );
 
-epair_t        *ParseEpair(void);
+epair_t*        ParseEpair( void );
 
-void            PrintEntity(const entity_t * ent);
+void            PrintEntity( const entity_t* ent );
 
-const char     *UniqueEntityName(const entity_t * ent, const char *suggestion);
+const char*     UniqueEntityName( const entity_t* ent, const char* suggestion );

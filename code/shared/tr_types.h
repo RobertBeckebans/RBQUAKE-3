@@ -41,12 +41,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define	RF_NOSHADOW			0x00000010	// don't add stencil shadows
 
 #define RF_LIGHTING_ORIGIN	0x00000020	// use refEntity->lightingOrigin instead of refEntity->origin
-											// for lighting.  This allows entities to sink into the floor
-											// with their origin going solid, and allows all parts of a
-											// player to get the same lighting
+// for lighting.  This allows entities to sink into the floor
+// with their origin going solid, and allows all parts of a
+// player to get the same lighting
 #define	RF_SHADOW_PLANE		0x00000040	// use refEntity->shadowPlane
 #define	RF_WRAP_FRAMES		0x00000080	// mod the model frames by the maxframes to allow continuous
-											// animation without needing to know the frame count
+// animation without needing to know the frame count
 #define RF_HILIGHT			0x00000100	// more than RF_MINLIGHT.  For when an object is "Highlighted" (looked at/training identification/etc)
 #define RF_BLINK			0x00000200	// eyes in 'blink' state
 #define RF_FORCENOLOD		0x00000400
@@ -78,7 +78,7 @@ typedef struct poly_s
 {
 	qhandle_t       hShader;
 	int             numVerts;
-	polyVert_t     *verts;
+	polyVert_t*     verts;
 } poly_t;
 
 typedef enum
@@ -93,7 +93,7 @@ typedef enum
 	RT_RAIL_RINGS,
 	RT_LIGHTNING,
 	RT_PORTALSURFACE,			// doesn't draw anything, just info for portals
-
+	
 	RT_MAX_REF_ENTITY_TYPE
 } refEntityType_t;
 
@@ -133,10 +133,10 @@ typedef enum
 typedef struct
 {
 	refSkeletonType_t type;		// skeleton has been reset
-
+	
 	short           numBones;
 	refBone_t       bones[MAX_BONES];
-
+	
 	vec3_t          bounds[2];	// bounds of all applied animations
 	vec3_t          scale;
 } refSkeleton_t;
@@ -148,63 +148,63 @@ typedef struct
 {
 	refEntityType_t reType;
 	int             renderfx;
-
+	
 	qhandle_t       hModel;		// opaque type outside refresh
-
+	
 	// most recent data
 	vec3_t          lightingOrigin;	// so multi-part models can be lit identically (RF_LIGHTING_ORIGIN)
 	float           shadowPlane;	// projection shadows go here, stencils go slightly lower
-
+	
 	vec3_t          axis[3];	// rotation vectors
 	qboolean        nonNormalizedAxes;	// axis are not normalized, i.e. they have scale
 	vec3_t          origin;		// also used as MODEL_BEAM's "from"
 	int             frame;		// also used as MODEL_BEAM's diameter
-
+	
 	// previous data for frame interpolation
 	vec3_t          oldorigin;	// also used as MODEL_BEAM's "to"
 	int             oldframe;
 	float           backlerp;	// 0.0 = current, 1.0 = old
-
+	
 	// texturing
 	int             skinNum;	// inline skin index
 	qhandle_t       customSkin;	// NULL for default skin
 	qhandle_t       customShader;	// use one image for the entire thing
-
+	
 	// misc
 	byte            shaderRGBA[4];	// colors used by rgbgen entity shaders
 	float           shaderTexCoord[2];	// texture coordinates used by tcMod entity modifiers
 	float           shaderTime;	// subtracted from refdef time to control effect start times
-
+	
 	// extra sprite information
 	float           radius;
 	float           rotation;
-
+	
 	// Ridah
 	vec3_t          fireRiseDir;
-
+	
 	// Ridah, entity fading (gibs, debris, etc)
 	int             fadeStartTime, fadeEndTime;
-
+	
 	float           hilightIntensity;	//----(SA)  added
-
+	
 	int             reFlags;
-
+	
 	int             entityNum;	// currentState.number, so we can attach rendering effects to specific entities (Zombie)
-
-
-
+	
+	
+	
 // XreaL BEGIN
 
 #if defined(USE_REFENTITY_ANIMATIONSYSTEM)
 	// extra animation information
 	refSkeleton_t   skeleton;
 #endif
-
+	
 #if defined(USE_REFENTITY_NOSHADOWID)
 	// extra light interaction information
 	short           noShadowID;
 #endif
-
+	
 // XreaL END
 
 } refEntity_t;
@@ -220,7 +220,7 @@ typedef enum
 	RL_OMNI,			// point light
 	RL_PROJ,			// spot light
 	RL_DIRECTIONAL,		// sun light
-
+	
 	RL_MAX_REF_LIGHT_TYPE
 } refLightType_t;
 
@@ -230,27 +230,27 @@ typedef struct
 //  int             lightfx;
 
 	qhandle_t       attenuationShader;
-
+	
 	vec3_t          origin;
 	quat_t          rotation;
 	vec3_t          center;
 	vec3_t          color;		// range from 0.0 to 1.0, should be color normalized
-
+	
 	float			scale;		// r_lightScale if not set
-
+	
 	// omni-directional light specific
 	vec3_t          radius;
-
+	
 	// projective light specific
 	vec3_t			projTarget;
 	vec3_t			projRight;
 	vec3_t			projUp;
 	vec3_t			projStart;
 	vec3_t			projEnd;
-
+	
 	qboolean        noShadows;
 	short           noShadowID;	// don't cast shadows of all entities with this id
-
+	
 	qboolean        inverseShadows;	// don't cast light and draw shadows by darken the scene
 	// this is useful for drawing player shadows with shadow mapping
 } refLight_t;
@@ -268,15 +268,15 @@ typedef struct
 	vec3_t          vieworg;
 	vec3_t          viewaxis[3];	// transformation matrix
 	vec3_t			blurVec;		// motion blur direction
-
+	
 	// time in milliseconds for shader effects and other time dependent rendering issues
 	int             time;
-
+	
 	int             rdflags;	// RDF_NOWORLDMODEL, etc
-
+	
 	// 1 bits will prevent the associated area from rendering at all
 	byte            areamask[MAX_MAP_AREA_BYTES];
-
+	
 	// text messages for deform text shaders
 	char            text[MAX_RENDER_STRINGS][MAX_RENDER_STRING_LENGTH];
 } refdef_t;
@@ -341,25 +341,25 @@ typedef struct
 	char            vendor_string[MAX_STRING_CHARS];
 	char            version_string[MAX_STRING_CHARS];
 	char            extensions_string[BIG_INFO_STRING];
-
+	
 	int             maxTextureSize;	// queried from GL
-
+	
 	int             colorBits, depthBits, stencilBits;
-
+	
 	glDriverType_t  driverType;
 	glHardwareType_t hardwareType;
-
+	
 	qboolean        deviceSupportsGamma;
 	textureCompression_t textureCompression;
-
+	
 	int             vidWidth, vidHeight;
 	// aspect is the screen's physical width / height, which may be different
 	// than scrWidth / scrHeight if the pixels are non-square
 	// normal screens should be 4/3, but wide aspect monitors may be 16/9
 	float           windowAspect;
-
+	
 	int             displayFrequency;
-
+	
 	// synonymous with "does rendering consume the entire screen?"
 	qboolean        isFullscreen;
 	qboolean        stereoEnabled;
@@ -370,33 +370,33 @@ typedef struct
 typedef struct
 {
 	qboolean		ARBTextureCompressionAvailable;
-
+	
 	int             maxCubeMapTextureSize;
-
+	
 	qboolean        occlusionQueryAvailable;
 	int             occlusionQueryBits;
-
+	
 	char            shadingLanguageVersion[MAX_STRING_CHARS];
-
+	
 	int             maxVertexUniforms;
 	int             maxVaryingFloats;
 	int             maxVertexAttribs;
 	qboolean        vboVertexSkinningAvailable;
 	int				maxVertexSkinningBones;
-
+	
 	qboolean		texture3DAvailable;
 	qboolean        textureNPOTAvailable;
-
+	
 	qboolean        drawBuffersAvailable;
 	qboolean		textureHalfFloatAvailable;
 	qboolean        textureFloatAvailable;
 	int             maxDrawBuffers;
-
+	
 	qboolean        vertexArrayObjectAvailable;
-
+	
 	float           maxTextureAnisotropy;
 	qboolean        textureAnisotropyAvailable;
-
+	
 	qboolean        framebufferObjectAvailable;
 	int             maxRenderbufferSize;
 	int             maxColorAttachments;
@@ -417,10 +417,10 @@ typedef struct polyBuffer_s
 	vec2_t          st[MAX_PB_VERTS];
 	byte            color[MAX_PB_VERTS][4];
 	int             numVerts;
-
+	
 	int             indicies[MAX_PB_INDICIES];
 	int             numIndicies;
-
+	
 	qhandle_t       shader;
 } polyBuffer_t;
 

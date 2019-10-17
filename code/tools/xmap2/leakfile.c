@@ -60,53 +60,57 @@ TTimo: builds a polyline xml node
 =============
 */
 #if defined(USE_XML)
-xmlNodePtr LeakFile(tree_t * tree)
+	xmlNodePtr LeakFile( tree_t* tree )
 #else
-void LeakFile(tree_t * tree)
+	void LeakFile( tree_t* tree )
 #endif
 {
 	vec3_t          mid;
-	FILE           *linefile;
+	FILE*           linefile;
 	char            filename[1024];
-	node_t         *node;
+	node_t*         node;
 	int             count;
-
+	
 #if defined(USE_XML)
 	xmlNodePtr      xml_node, point;
 #endif
-
-	if(!tree->outside_node.occupied)
+	
+	if( !tree->outside_node.occupied )
+	{
 		return NULL;
-
-	Sys_FPrintf(SYS_VRB, "--- LeakFile ---\n");
-
+	}
+	
+	Sys_FPrintf( SYS_VRB, "--- LeakFile ---\n" );
+	
 	//
 	// write the points to the file
 	//
-	sprintf(filename, "%s.lin", source);
-	linefile = fopen(filename, "w");
-	if(!linefile)
-		Error("Couldn't open %s\n", filename);
-
+	sprintf( filename, "%s.lin", source );
+	linefile = fopen( filename, "w" );
+	if( !linefile )
+	{
+		Error( "Couldn't open %s\n", filename );
+	}
+	
 #if defined(USE_XML)
-	xml_node = xmlNewNode(NULL, "polyline");
+	xml_node = xmlNewNode( NULL, "polyline" );
 #endif
-
+	
 	count = 0;
 	node = &tree->outside_node;
-	while(node->occupied > 1)
+	while( node->occupied > 1 )
 	{
 		int             next;
-		portal_t       *p, *nextportal;
-		node_t         *nextnode;
+		portal_t*       p, *nextportal;
+		node_t*         nextnode;
 		int             s;
-
+		
 		// find the best portal exit
 		next = node->occupied;
-		for(p = node->portals; p; p = p->next[!s])
+		for( p = node->portals; p; p = p->next[!s] )
 		{
-			s = (p->nodes[0] == node);
-			if(p->nodes[s]->occupied && p->nodes[s]->occupied < next)
+			s = ( p->nodes[0] == node );
+			if( p->nodes[s]->occupied && p->nodes[s]->occupied < next )
 			{
 				nextportal = p;
 				nextnode = p->nodes[s];
@@ -114,26 +118,26 @@ void LeakFile(tree_t * tree)
 			}
 		}
 		node = nextnode;
-		WindingCenter(nextportal->winding, mid);
-		fprintf(linefile, "%f %f %f\n", mid[0], mid[1], mid[2]);
+		WindingCenter( nextportal->winding, mid );
+		fprintf( linefile, "%f %f %f\n", mid[0], mid[1], mid[2] );
 #if defined(USE_XML)
-		point = xml_NodeForVec(mid);
-		xmlAddChild(xml_node, point);
+		point = xml_NodeForVec( mid );
+		xmlAddChild( xml_node, point );
 #endif
 		count++;
 	}
 	// add the occupant center
-	GetVectorForKey(node->occupant, "origin", mid);
-
-	fprintf(linefile, "%f %f %f\n", mid[0], mid[1], mid[2]);
+	GetVectorForKey( node->occupant, "origin", mid );
+	
+	fprintf( linefile, "%f %f %f\n", mid[0], mid[1], mid[2] );
 #if defined(USE_XML)
-	point = xml_NodeForVec(mid);
-	xmlAddChild(xml_node, point);
+	point = xml_NodeForVec( mid );
+	xmlAddChild( xml_node, point );
 #endif
-	Sys_FPrintf(SYS_VRB, "%9d point linefile\n", count + 1);
-
-	fclose(linefile);
-
+	Sys_FPrintf( SYS_VRB, "%9d point linefile\n", count + 1 );
+	
+	fclose( linefile );
+	
 #if defined(USE_XML)
 	return xml_node;
 #endif

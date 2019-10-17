@@ -34,13 +34,13 @@ int             c_faceLeafs;
 AllocBspFace
 ================
 */
-bspFace_t      *AllocBspFace(void)
+bspFace_t*      AllocBspFace( void )
 {
-	bspFace_t      *f;
-
-	f = malloc(sizeof(*f));
-	memset(f, 0, sizeof(*f));
-
+	bspFace_t*      f;
+	
+	f = malloc( sizeof( *f ) );
+	memset( f, 0, sizeof( *f ) );
+	
 	return f;
 }
 
@@ -49,13 +49,13 @@ bspFace_t      *AllocBspFace(void)
 FreeBspFace
 ================
 */
-void FreeBspFace(bspFace_t * f)
+void FreeBspFace( bspFace_t* f )
 {
-	if(f->w)
+	if( f->w )
 	{
-		FreeWinding(f->w);
+		FreeWinding( f->w );
 	}
-	free(f);
+	free( f );
 }
 
 
@@ -64,55 +64,57 @@ void FreeBspFace(bspFace_t * f)
 SelectSplitPlaneNum
 ================
 */
-static void SelectSplitPlaneNum(node_t * node, bspFace_t * list, int *splitPlaneNum, int *hintSplit)
+static void SelectSplitPlaneNum( node_t* node, bspFace_t* list, int* splitPlaneNum, int* hintSplit )
 {
-	bspFace_t      *split;
-	bspFace_t      *check;
-	bspFace_t      *bestSplit;
+	bspFace_t*      split;
+	bspFace_t*      check;
+	bspFace_t*      bestSplit;
 	int             splits, facing, front, back;
 	int             side;
-	plane_t        *plane;
+	plane_t*        plane;
 	int             value, bestValue;
 	int             i;
 	vec3_t          normal;
 	float           dist;
 	int             planenum;
-
+	
 	*splitPlaneNum = -1;
 	*hintSplit = qfalse;
-
+	
 	// ydnar 2002-06-24: changed this to split on z-axis as well
 	// ydnar 2002-09-21: changed blocksize to be a vector, so mappers can specify a 3 element value
-
+	
 	// if it is crossing a 1k block boundary, force a split
-	for(i = 0; i < 3; i++)
+	for( i = 0; i < 3; i++ )
 	{
-		if(blockSize[i] <= 0)
-			continue;
-
-		dist = blockSize[i] * (floor(node->mins[i] / blockSize[i]) + 1);
-		if(node->maxs[i] > dist)
+		if( blockSize[i] <= 0 )
 		{
-			VectorClear(normal);
+			continue;
+		}
+		
+		dist = blockSize[i] * ( floor( node->mins[i] / blockSize[i] ) + 1 );
+		if( node->maxs[i] > dist )
+		{
+			VectorClear( normal );
 			normal[i] = 1;
-			planenum = FindFloatPlane(normal, dist);
+			planenum = FindFloatPlane( normal, dist );
 			*splitPlaneNum = planenum;
 			return;
 		}
 	}
-
+	
 	// pick one of the face planes
 	bestValue = -99999;
 	bestSplit = list;
-
-	for(split = list; split; split = split->next)
+	
+	for( split = list; split; split = split->next )
 	{
 		split->checked = qfalse;
 	}
-
-	for(split = list; split; split = split->next)
+	
+	for( split = list; split; split = split->next )
 	{
-		if(split->checked)
+		if( split->checked )
 		{
 			continue;
 		}
@@ -121,59 +123,61 @@ static void SelectSplitPlaneNum(node_t * node, bspFace_t * list, int *splitPlane
 		facing = 0;
 		front = 0;
 		back = 0;
-		for(check = list; check; check = check->next)
+		for( check = list; check; check = check->next )
 		{
-			if(check->planenum == split->planenum)
+			if( check->planenum == split->planenum )
 			{
 				facing++;
 				check->checked = qtrue;	// won't need to test this plane again
 				continue;
 			}
-			side = WindingOnPlaneSide(check->w, plane->normal, plane->dist);
-			if(side == SIDE_CROSS)
+			side = WindingOnPlaneSide( check->w, plane->normal, plane->dist );
+			if( side == SIDE_CROSS )
 			{
 				splits++;
 			}
-			else if(side == SIDE_FRONT)
+			else if( side == SIDE_FRONT )
 			{
 				front++;
 			}
-			else if(side == SIDE_BACK)
+			else if( side == SIDE_BACK )
 			{
 				back++;
 			}
 		}
 		value = 5 * facing - 5 * splits;	// - abs(front-back);
-		if(plane->type < 3)
+		if( plane->type < 3 )
 		{
 			value += 5;			// axial is better
 		}
 		value += split->priority;	// prioritize hints higher
-
-		if(value > bestValue)
+		
+		if( value > bestValue )
 		{
 			bestValue = value;
 			bestSplit = split;
 		}
 	}
-
-	if(bestValue == -99999)
+	
+	if( bestValue == -99999 )
 	{
 		return;
 	}
-
-	if(bestSplit->hint)
+	
+	if( bestSplit->hint )
+	{
 		*hintSplit = qtrue;
-
+	}
+	
 	*splitPlaneNum = bestSplit->planenum;
 }
 
-int CountFaceList(bspFace_t * list)
+int CountFaceList( bspFace_t* list )
 {
 	int             c;
-
+	
 	c = 0;
-	for(; list; list = list->next)
+	for( ; list; list = list->next )
 	{
 		c++;
 	}
@@ -185,53 +189,53 @@ int CountFaceList(bspFace_t * list)
 BuildFaceTree_r
 ================
 */
-void BuildFaceTree_r(node_t * node, bspFace_t * list)
+void BuildFaceTree_r( node_t* node, bspFace_t* list )
 {
-	bspFace_t      *split;
-	bspFace_t      *next;
+	bspFace_t*      split;
+	bspFace_t*      next;
 	int             side;
-	plane_t        *plane;
-	bspFace_t      *newFace;
-	bspFace_t      *childLists[2];
-	winding_t      *frontWinding, *backWinding;
+	plane_t*        plane;
+	bspFace_t*      newFace;
+	bspFace_t*      childLists[2];
+	winding_t*      frontWinding, *backWinding;
 	int             i;
 	int             splitPlaneNum;
 	int             hintSplit;
-
-	i = CountFaceList(list);
-
-	SelectSplitPlaneNum(node, list, &splitPlaneNum, &hintSplit);
-
+	
+	i = CountFaceList( list );
+	
+	SelectSplitPlaneNum( node, list, &splitPlaneNum, &hintSplit );
+	
 	// if we don't have any more faces, this is a node
-	if(splitPlaneNum == -1)
+	if( splitPlaneNum == -1 )
 	{
 		node->planenum = PLANENUM_LEAF;
 		c_faceLeafs++;
 		return;
 	}
-
+	
 	// partition the list
 	node->planenum = splitPlaneNum;
 	node->hint = hintSplit;
 	plane = &mapPlanes[splitPlaneNum];
 	childLists[0] = NULL;
 	childLists[1] = NULL;
-	for(split = list; split; split = next)
+	for( split = list; split; split = next )
 	{
 		next = split->next;
-
-		if(split->planenum == node->planenum)
+		
+		if( split->planenum == node->planenum )
 		{
-			FreeBspFace(split);
+			FreeBspFace( split );
 			continue;
 		}
-
-		side = WindingOnPlaneSide(split->w, plane->normal, plane->dist);
-
-		if(side == SIDE_CROSS)
+		
+		side = WindingOnPlaneSide( split->w, plane->normal, plane->dist );
+		
+		if( side == SIDE_CROSS )
 		{
-			ClipWindingEpsilon(split->w, plane->normal, plane->dist, CLIP_EPSILON * 2, &frontWinding, &backWinding);
-			if(frontWinding)
+			ClipWindingEpsilon( split->w, plane->normal, plane->dist, CLIP_EPSILON * 2, &frontWinding, &backWinding );
+			if( frontWinding )
 			{
 				newFace = AllocBspFace();
 				newFace->w = frontWinding;
@@ -241,7 +245,7 @@ void BuildFaceTree_r(node_t * node, bspFace_t * list)
 				newFace->hint = split->hint;
 				childLists[0] = newFace;
 			}
-			if(backWinding)
+			if( backWinding )
 			{
 				newFace = AllocBspFace();
 				newFace->w = backWinding;
@@ -251,43 +255,43 @@ void BuildFaceTree_r(node_t * node, bspFace_t * list)
 				newFace->hint = split->hint;
 				childLists[1] = newFace;
 			}
-			FreeBspFace(split);
+			FreeBspFace( split );
 		}
-		else if(side == SIDE_FRONT)
+		else if( side == SIDE_FRONT )
 		{
 			split->next = childLists[0];
 			childLists[0] = split;
 		}
-		else if(side == SIDE_BACK)
+		else if( side == SIDE_BACK )
 		{
 			split->next = childLists[1];
 			childLists[1] = split;
 		}
 	}
-
-
+	
+	
 	// recursively process children
-	for(i = 0; i < 2; i++)
+	for( i = 0; i < 2; i++ )
 	{
 		node->children[i] = AllocNode();
 		node->children[i]->parent = node;
-		VectorCopy(node->mins, node->children[i]->mins);
-		VectorCopy(node->maxs, node->children[i]->maxs);
+		VectorCopy( node->mins, node->children[i]->mins );
+		VectorCopy( node->maxs, node->children[i]->maxs );
 	}
-
-	for(i = 0; i < 3; i++)
+	
+	for( i = 0; i < 3; i++ )
 	{
-		if(plane->normal[i] == 1)
+		if( plane->normal[i] == 1 )
 		{
 			node->children[0]->mins[i] = plane->dist;
 			node->children[1]->maxs[i] = plane->dist;
 			break;
 		}
 	}
-
-	for(i = 0; i < 2; i++)
+	
+	for( i = 0; i < 2; i++ )
 	{
-		BuildFaceTree_r(node->children[i], childLists[i]);
+		BuildFaceTree_r( node->children[i], childLists[i] );
 	}
 }
 
@@ -299,37 +303,37 @@ FaceBSP
 List will be freed before returning
 ================
 */
-tree_t         *FaceBSP(bspFace_t * list)
+tree_t*         FaceBSP( bspFace_t* list )
 {
-	tree_t         *tree;
-	bspFace_t      *face;
+	tree_t*         tree;
+	bspFace_t*      face;
 	int             i;
 	int             count;
-
-	Sys_FPrintf(SYS_VRB, "--- FaceBSP ---\n");
-
+	
+	Sys_FPrintf( SYS_VRB, "--- FaceBSP ---\n" );
+	
 	tree = AllocTree();
-
+	
 	count = 0;
-	for(face = list; face; face = face->next)
+	for( face = list; face; face = face->next )
 	{
 		count++;
-		for(i = 0; i < face->w->numpoints; i++)
+		for( i = 0; i < face->w->numpoints; i++ )
 		{
-			AddPointToBounds(face->w->p[i], tree->mins, tree->maxs);
+			AddPointToBounds( face->w->p[i], tree->mins, tree->maxs );
 		}
 	}
-	Sys_FPrintf(SYS_VRB, "%5i faces\n", count);
-
+	Sys_FPrintf( SYS_VRB, "%5i faces\n", count );
+	
 	tree->headnode = AllocNode();
-	VectorCopy(tree->mins, tree->headnode->mins);
-	VectorCopy(tree->maxs, tree->headnode->maxs);
+	VectorCopy( tree->mins, tree->headnode->mins );
+	VectorCopy( tree->maxs, tree->headnode->maxs );
 	c_faceLeafs = 0;
-
-	BuildFaceTree_r(tree->headnode, list);
-
-	Sys_FPrintf(SYS_VRB, "%5i leafs\n", c_faceLeafs);
-
+	
+	BuildFaceTree_r( tree->headnode, list );
+	
+	Sys_FPrintf( SYS_VRB, "%5i leafs\n", c_faceLeafs );
+	
 	return tree;
 }
 
@@ -339,14 +343,14 @@ tree_t         *FaceBSP(bspFace_t * list)
 BspFaceForPortal
 =================
 */
-bspFace_t      *BspFaceForPortal(portal_t * p)
+bspFace_t*      BspFaceForPortal( portal_t* p )
 {
-	bspFace_t      *f;
-
+	bspFace_t*      f;
+	
 	f = AllocBspFace();
-	f->w = CopyWinding(p->winding);
+	f->w = CopyWinding( p->winding );
 	f->planenum = p->onnode->planenum & ~1;
-
+	
 	return f;
 }
 
@@ -357,34 +361,34 @@ bspFace_t      *BspFaceForPortal(portal_t * p)
 MakeStructuralBspFaceList
 =================
 */
-bspFace_t      *MakeStructuralBspFaceList(bspBrush_t * list)
+bspFace_t*      MakeStructuralBspFaceList( bspBrush_t* list )
 {
-	bspBrush_t     *b;
+	bspBrush_t*     b;
 	int             i;
-	side_t         *s;
-	winding_t      *w;
-	bspFace_t      *f, *flist;
-
+	side_t*         s;
+	winding_t*      w;
+	bspFace_t*      f, *flist;
+	
 	flist = NULL;
-	for(b = list; b; b = b->next)
+	for( b = list; b; b = b->next )
 	{
-		if(b->detail)
+		if( b->detail )
 		{
 			continue;
 		}
-		for(i = 0; i < b->numsides; i++)
+		for( i = 0; i < b->numsides; i++ )
 		{
 			s = &b->sides[i];
 			w = s->winding;
-			if(!w)
+			if( !w )
 			{
 				continue;
 			}
 			f = AllocBspFace();
-			f->w = CopyWinding(w);
+			f->w = CopyWinding( w );
 			f->planenum = s->planenum & ~1;
 			f->next = flist;
-			if(s->surfaceFlags & SURF_HINT)
+			if( s->surfaceFlags & SURF_HINT )
 			{
 				//f->priority = HINT_PRIORITY;
 				f->hint = qtrue;
@@ -392,7 +396,7 @@ bspFace_t      *MakeStructuralBspFaceList(bspBrush_t * list)
 			flist = f;
 		}
 	}
-
+	
 	return flist;
 }
 
@@ -401,34 +405,34 @@ bspFace_t      *MakeStructuralBspFaceList(bspBrush_t * list)
 MakeVisibleBspFaceList
 =================
 */
-bspFace_t      *MakeVisibleBspFaceList(bspBrush_t * list)
+bspFace_t*      MakeVisibleBspFaceList( bspBrush_t* list )
 {
-	bspBrush_t     *b;
+	bspBrush_t*     b;
 	int             i;
-	side_t         *s;
-	winding_t      *w;
-	bspFace_t      *f, *flist;
-
+	side_t*         s;
+	winding_t*      w;
+	bspFace_t*      f, *flist;
+	
 	flist = NULL;
-	for(b = list; b; b = b->next)
+	for( b = list; b; b = b->next )
 	{
-		if(b->detail)
+		if( b->detail )
 		{
 			continue;
 		}
-		for(i = 0; i < b->numsides; i++)
+		for( i = 0; i < b->numsides; i++ )
 		{
 			s = &b->sides[i];
 			w = s->visibleHull;
-			if(!w)
+			if( !w )
 			{
 				continue;
 			}
 			f = AllocBspFace();
-			f->w = CopyWinding(w);
+			f->w = CopyWinding( w );
 			f->planenum = s->planenum & ~1;
 			f->next = flist;
-			if(s->surfaceFlags & SURF_HINT)
+			if( s->surfaceFlags & SURF_HINT )
 			{
 				//f->priority = HINT_PRIORITY;
 				f->hint = qtrue;
@@ -436,6 +440,6 @@ bspFace_t      *MakeVisibleBspFaceList(bspBrush_t * list)
 			flist = f;
 		}
 	}
-
+	
 	return flist;
 }

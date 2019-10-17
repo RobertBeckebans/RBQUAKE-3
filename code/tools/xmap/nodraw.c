@@ -25,18 +25,18 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 qboolean        drawFlag;
 
-void Draw_Winding(winding_t * w)
+void Draw_Winding( winding_t* w )
 {
 }
 
-void Draw_AuxWinding(winding_t * w)
+void Draw_AuxWinding( winding_t* w )
 {
 }
 
-void Draw_Scene(void (*drawFunc) (void))
+void Draw_Scene( void ( *drawFunc )( void ) )
 {
 }
 
-void Draw_Shutdown(void)
+void Draw_Shutdown( void )
 {
 }

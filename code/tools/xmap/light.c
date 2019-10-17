@@ -32,7 +32,7 @@ typedef struct
 	float           plane[4];
 	vec3_t          origin;
 	vec3_t          vectors[2];
-	shaderInfo_t   *si;
+	shaderInfo_t*   si;
 } filter_t;
 
 #define	MAX_FILTERS	1024
@@ -66,12 +66,12 @@ float           formFactorValueScale = 3;
 
 float           linearScale = 1.0 / 8000;
 
-light_t        *lights;
+light_t*        lights;
 int             numPointLights;
 int             numAreaLights;
 int             numLightMaps;
 
-FILE           *dumpFile;
+FILE*           dumpFile;
 
 int             c_visible, c_occluded;
 
@@ -96,7 +96,7 @@ vec3_t          sunLight = { 100, 100, 50 };
 
 typedef struct
 {
-	dbrush_t       *b;
+	dbrush_t*       b;
 	vec3_t          bounds[2];
 } skyBrush_t;
 
@@ -131,89 +131,89 @@ Subdivide area lights that are very large
 A light that is subdivided will never backsplash, avoiding weird pools of light near edges
 ===============
 */
-void SubdivideAreaLight(shaderInfo_t * ls, winding_t * w, vec3_t normal, float areaSubdivide, qboolean backsplash)
+void SubdivideAreaLight( shaderInfo_t* ls, winding_t* w, vec3_t normal, float areaSubdivide, qboolean backsplash )
 {
 	float           area, value, intensity;
-	light_t        *dl, *dl2;
+	light_t*        dl, *dl2;
 	vec3_t          mins, maxs;
 	int             axis;
-	winding_t      *front, *back;
+	winding_t*      front, *back;
 	vec3_t          planeNormal;
 	float           planeDist;
-
-	if(!w)
+	
+	if( !w )
 	{
 		return;
 	}
-
-	WindingBounds(w, mins, maxs);
-
+	
+	WindingBounds( w, mins, maxs );
+	
 	// check for subdivision
-	for(axis = 0; axis < 3; axis++)
+	for( axis = 0; axis < 3; axis++ )
 	{
-		if(maxs[axis] - mins[axis] > areaSubdivide)
+		if( maxs[axis] - mins[axis] > areaSubdivide )
 		{
-			VectorClear(planeNormal);
+			VectorClear( planeNormal );
 			planeNormal[axis] = 1;
-			planeDist = (maxs[axis] + mins[axis]) * 0.5;
-			ClipWindingEpsilon(w, planeNormal, planeDist, ON_EPSILON, &front, &back);
-			SubdivideAreaLight(ls, front, normal, areaSubdivide, qfalse);
-			SubdivideAreaLight(ls, back, normal, areaSubdivide, qfalse);
-			FreeWinding(w);
+			planeDist = ( maxs[axis] + mins[axis] ) * 0.5;
+			ClipWindingEpsilon( w, planeNormal, planeDist, ON_EPSILON, &front, &back );
+			SubdivideAreaLight( ls, front, normal, areaSubdivide, qfalse );
+			SubdivideAreaLight( ls, back, normal, areaSubdivide, qfalse );
+			FreeWinding( w );
 			return;
 		}
 	}
-
+	
 	// create a light from this
-	area = WindingArea(w);
-	if(area <= 0 || area > 20000000)
+	area = WindingArea( w );
+	if( area <= 0 || area > 20000000 )
 	{
 		return;
 	}
-
+	
 	numAreaLights++;
-	dl = malloc(sizeof(*dl));
-	memset(dl, 0, sizeof(*dl));
+	dl = malloc( sizeof( *dl ) );
+	memset( dl, 0, sizeof( *dl ) );
 	dl->next = lights;
 	lights = dl;
 	dl->type = emit_area;
-
-	WindingCenter(w, dl->origin);
+	
+	WindingCenter( w, dl->origin );
 	dl->w = w;
-	VectorCopy(normal, dl->normal);
-	dl->dist = DotProduct(dl->origin, normal);
-
+	VectorCopy( normal, dl->normal );
+	dl->dist = DotProduct( dl->origin, normal );
+	
 	value = ls->value;
 	intensity = value * area * areaScale;
-	VectorAdd(dl->origin, dl->normal, dl->origin);
-
-	VectorCopy(ls->color, dl->color);
-
+	VectorAdd( dl->origin, dl->normal, dl->origin );
+	
+	VectorCopy( ls->color, dl->color );
+	
 	dl->photons = intensity;
-
+	
 	// emitColor is irrespective of the area
-	VectorScale(ls->color, value * formFactorValueScale * areaScale, dl->emitColor);
-
+	VectorScale( ls->color, value * formFactorValueScale * areaScale, dl->emitColor );
+	
 	dl->si = ls;
-
-	if(ls->contents & CONTENTS_FOG)
+	
+	if( ls->contents & CONTENTS_FOG )
 	{
 		dl->twosided = qtrue;
 	}
-
+	
 	// optionally create a point backsplash light
-	if(backsplash && ls->backsplashFraction > 0)
+	if( backsplash && ls->backsplashFraction > 0 )
 	{
-		dl2 = malloc(sizeof(*dl));
-		memset(dl2, 0, sizeof(*dl2));
+		dl2 = malloc( sizeof( *dl ) );
+		memset( dl2, 0, sizeof( *dl2 ) );
 		dl2->next = lights;
 		lights = dl2;
 		dl2->type = emit_point;
-
-		VectorMA(dl->origin, ls->backsplashDistance, normal, dl2->origin);
-
-		VectorCopy(ls->color, dl2->color);
-
+		
+		VectorMA( dl->origin, ls->backsplashDistance, normal, dl2->origin );
+		
+		VectorCopy( ls->color, dl2->color );
+		
 		dl2->photons = dl->photons * ls->backsplashFraction;
 		dl2->si = ls;
 	}
@@ -225,33 +225,33 @@ void SubdivideAreaLight(shaderInfo_t * ls, winding_t * w, vec3_t normal, float a
 CountLightmaps
 ===============
 */
-void CountLightmaps(void)
+void CountLightmaps( void )
 {
 	int             count;
 	int             i;
-	dsurface_t     *ds;
-
-	Sys_FPrintf(SYS_VRB, "--- CountLightmaps ---\n");
+	dsurface_t*     ds;
+	
+	Sys_FPrintf( SYS_VRB, "--- CountLightmaps ---\n" );
 	count = 0;
-	for(i = 0; i < numDrawSurfaces; i++)
+	for( i = 0; i < numDrawSurfaces; i++ )
 	{
 		// see if this surface is light emiting
 		ds = &drawSurfaces[i];
-		if(ds->lightmapNum > count)
+		if( ds->lightmapNum > count )
 		{
 			count = ds->lightmapNum;
 		}
 	}
-
+	
 	count++;
 	numLightBytes = count * LIGHTMAP_WIDTH * LIGHTMAP_HEIGHT * 3;
-	if(numLightBytes > MAX_MAP_LIGHTING)
+	if( numLightBytes > MAX_MAP_LIGHTING )
 	{
-		Error("MAX_MAP_LIGHTING exceeded");
+		Error( "MAX_MAP_LIGHTING exceeded" );
 	}
-
-	Sys_FPrintf(SYS_VRB, "%5i drawSurfaces\n", numDrawSurfaces);
-	Sys_FPrintf(SYS_VRB, "%5i lightmaps\n", count);
+	
+	Sys_FPrintf( SYS_VRB, "%5i drawSurfaces\n", numDrawSurfaces );
+	Sys_FPrintf( SYS_VRB, "%5i lightmaps\n", count );
 }
 
 /*
@@ -261,36 +261,36 @@ CreateSurfaceLights
 This creates area lights
 ===============
 */
-void CreateSurfaceLights(void)
+void CreateSurfaceLights( void )
 {
 	int             i, j, side;
-	dsurface_t     *ds;
-	shaderInfo_t   *ls;
-	winding_t      *w;
-	cFacet_t       *f;
-	light_t        *dl;
+	dsurface_t*     ds;
+	shaderInfo_t*   ls;
+	winding_t*      w;
+	cFacet_t*       f;
+	light_t*        dl;
 	vec3_t          origin;
-	drawVert_t     *dv;
+	drawVert_t*     dv;
 	int             c_lightSurfaces;
 	float           lightSubdivide;
 	vec3_t          normal;
-
-	Sys_FPrintf(SYS_VRB, "--- CreateSurfaceLights ---\n");
+	
+	Sys_FPrintf( SYS_VRB, "--- CreateSurfaceLights ---\n" );
 	c_lightSurfaces = 0;
-
-	for(i = 0; i < numDrawSurfaces; i++)
+	
+	for( i = 0; i < numDrawSurfaces; i++ )
 	{
 		// see if this surface is light emiting
 		ds = &drawSurfaces[i];
-
-		ls = ShaderInfoForShader(dshaders[ds->shaderNum].shader);
-		if(ls->value == 0)
+		
+		ls = ShaderInfoForShader( dshaders[ds->shaderNum].shader );
+		if( ls->value == 0 )
 		{
 			continue;
 		}
-
+		
 		// determine how much we need to chop up the surface
-		if(ls->lightSubdivide)
+		if( ls->lightSubdivide )
 		{
 			lightSubdivide = ls->lightSubdivide;
 		}
@@ -298,112 +298,112 @@ void CreateSurfaceLights(void)
 		{
 			lightSubdivide = defaultLightSubdivide;
 		}
-
+		
 		c_lightSurfaces++;
-
+		
 		// an autosprite shader will become
 		// a point light instead of an area light
-		if(ls->autosprite)
+		if( ls->autosprite )
 		{
 			// autosprite geometry should only have four vertexes
-			if(surfaceTest[i])
+			if( surfaceTest[i] )
 			{
 				// curve or misc_model
 				f = surfaceTest[i]->facets;
-				if(surfaceTest[i]->numFacets != 1 || f->numBoundaries != 4)
+				if( surfaceTest[i]->numFacets != 1 || f->numBoundaries != 4 )
 				{
-					Sys_Printf("WARNING: surface at (%i %i %i) has autosprite shader but isn't a quad\n",
-							   (int)f->points[0], (int)f->points[1], (int)f->points[2]);
+					Sys_Printf( "WARNING: surface at (%i %i %i) has autosprite shader but isn't a quad\n",
+								( int )f->points[0], ( int )f->points[1], ( int )f->points[2] );
 				}
-				VectorAdd(f->points[0], f->points[1], origin);
-				VectorAdd(f->points[2], origin, origin);
-				VectorAdd(f->points[3], origin, origin);
-				VectorScale(origin, 0.25, origin);
+				VectorAdd( f->points[0], f->points[1], origin );
+				VectorAdd( f->points[2], origin, origin );
+				VectorAdd( f->points[3], origin, origin );
+				VectorScale( origin, 0.25, origin );
 			}
 			else
 			{
 				// normal polygon
 				dv = &drawVerts[ds->firstVert];
-				if(ds->numVerts != 4)
+				if( ds->numVerts != 4 )
 				{
-					Sys_Printf("WARNING: surface at (%i %i %i) has autosprite shader but %i verts\n",
-							   (int)dv->xyz[0], (int)dv->xyz[1], (int)dv->xyz[2]);
+					Sys_Printf( "WARNING: surface at (%i %i %i) has autosprite shader but %i verts\n",
+								( int )dv->xyz[0], ( int )dv->xyz[1], ( int )dv->xyz[2] );
 					continue;
 				}
-
-				VectorAdd(dv[0].xyz, dv[1].xyz, origin);
-				VectorAdd(dv[2].xyz, origin, origin);
-				VectorAdd(dv[3].xyz, origin, origin);
-				VectorScale(origin, 0.25, origin);
+				
+				VectorAdd( dv[0].xyz, dv[1].xyz, origin );
+				VectorAdd( dv[2].xyz, origin, origin );
+				VectorAdd( dv[3].xyz, origin, origin );
+				VectorScale( origin, 0.25, origin );
 			}
-
-
+			
+			
 			numPointLights++;
-			dl = malloc(sizeof(*dl));
-			memset(dl, 0, sizeof(*dl));
+			dl = malloc( sizeof( *dl ) );
+			memset( dl, 0, sizeof( *dl ) );
 			dl->next = lights;
 			lights = dl;
-
-			VectorCopy(origin, dl->origin);
-			VectorCopy(ls->color, dl->color);
+			
+			VectorCopy( origin, dl->origin );
+			VectorCopy( ls->color, dl->color );
 			dl->photons = ls->value * pointScale;
 			dl->type = emit_point;
 			continue;
 		}
-
+		
 		// possibly create for both sides of the polygon
-		for(side = 0; side <= ls->twoSided; side++)
+		for( side = 0; side <= ls->twoSided; side++ )
 		{
 			// create area lights
-			if(surfaceTest[i])
+			if( surfaceTest[i] )
 			{
 				// curve or misc_model
-				for(j = 0; j < surfaceTest[i]->numFacets; j++)
+				for( j = 0; j < surfaceTest[i]->numFacets; j++ )
 				{
 					f = surfaceTest[i]->facets + j;
-					w = AllocWinding(f->numBoundaries);
+					w = AllocWinding( f->numBoundaries );
 					w->numpoints = f->numBoundaries;
-					memcpy(w->p, f->points, f->numBoundaries * 12);
-
-					VectorCopy(f->surface, normal);
-					if(side)
+					memcpy( w->p, f->points, f->numBoundaries * 12 );
+					
+					VectorCopy( f->surface, normal );
+					if( side )
 					{
-						winding_t      *t;
-
+						winding_t*      t;
+						
 						t = w;
-						w = ReverseWinding(t);
-						FreeWinding(t);
-						VectorSubtract(vec3_origin, normal, normal);
+						w = ReverseWinding( t );
+						FreeWinding( t );
+						VectorSubtract( vec3_origin, normal, normal );
 					}
-					SubdivideAreaLight(ls, w, normal, lightSubdivide, qtrue);
+					SubdivideAreaLight( ls, w, normal, lightSubdivide, qtrue );
 				}
 			}
 			else
 			{
 				// normal polygon
-
-				w = AllocWinding(ds->numVerts);
+				
+				w = AllocWinding( ds->numVerts );
 				w->numpoints = ds->numVerts;
-				for(j = 0; j < ds->numVerts; j++)
+				for( j = 0; j < ds->numVerts; j++ )
 				{
-					VectorCopy(drawVerts[ds->firstVert + j].xyz, w->p[j]);
+					VectorCopy( drawVerts[ds->firstVert + j].xyz, w->p[j] );
 				}
-				VectorCopy(ds->lightmapVecs[2], normal);
-				if(side)
+				VectorCopy( ds->lightmapVecs[2], normal );
+				if( side )
 				{
-					winding_t      *t;
-
+					winding_t*      t;
+					
 					t = w;
-					w = ReverseWinding(t);
-					FreeWinding(t);
-					VectorSubtract(vec3_origin, normal, normal);
+					w = ReverseWinding( t );
+					FreeWinding( t );
+					VectorSubtract( vec3_origin, normal, normal );
 				}
-				SubdivideAreaLight(ls, w, normal, lightSubdivide, qtrue);
+				SubdivideAreaLight( ls, w, normal, lightSubdivide, qtrue );
 			}
 		}
 	}
-
-	Sys_Printf("%5i light emitting surfaces\n", c_lightSurfaces);
+	
+	Sys_Printf( "%5i light emitting surfaces\n", c_lightSurfaces );
 }
 
 
@@ -413,22 +413,22 @@ void CreateSurfaceLights(void)
 FindSkyBrushes
 ================
 */
-void FindSkyBrushes(void)
+void FindSkyBrushes( void )
 {
 	int             i, j;
-	dbrush_t       *b;
-	skyBrush_t     *sb;
-	shaderInfo_t   *si;
-	dbrushside_t   *s;
-
+	dbrush_t*       b;
+	skyBrush_t*     sb;
+	shaderInfo_t*   si;
+	dbrushside_t*   s;
+	
 	// find the brushes
-	for(i = 0; i < numBrushes; i++)
+	for( i = 0; i < numBrushes; i++ )
 	{
 		b = &dbrushes[i];
-		for(j = 0; j < b->numSides; j++)
+		for( j = 0; j < b->numSides; j++ )
 		{
 			s = &dbrushsides[b->firstSide + j];
-			if(dshaders[s->shaderNum].surfaceFlags & SURF_SKY)
+			if( dshaders[s->shaderNum].surfaceFlags & SURF_SKY )
 			{
 				sb = &skyBrushes[numSkyBrushes];
 				sb->b = b;
@@ -443,18 +443,18 @@ void FindSkyBrushes(void)
 			}
 		}
 	}
-
+	
 	// default
-	VectorNormalize(sunDirection);
-
+	VectorNormalize( sunDirection );
+	
 	// find the sky shader
-	for(i = 0; i < numDrawSurfaces; i++)
+	for( i = 0; i < numDrawSurfaces; i++ )
 	{
-		si = ShaderInfoForShader(dshaders[drawSurfaces[i].shaderNum].shader);
-		if(si->surfaceFlags & SURF_SKY)
+		si = ShaderInfoForShader( dshaders[drawSurfaces[i].shaderNum].shader );
+		if( si->surfaceFlags & SURF_SKY )
 		{
-			VectorCopy(si->sunLight, sunLight);
-			VectorCopy(si->sunDirection, sunDirection);
+			VectorCopy( si->sunLight, sunLight );
+			VectorCopy( si->sunDirection, sunDirection );
 			break;
 		}
 	}
@@ -473,20 +473,20 @@ void FindSkyBrushes(void)
 FindTargetEntity
 ==================
 */
-entity_t       *FindTargetEntity(const char *target)
+entity_t*       FindTargetEntity( const char* target )
 {
 	int             i;
-	const char     *n;
-
-	for(i = 0; i < numEntities; i++)
+	const char*     n;
+	
+	for( i = 0; i < numEntities; i++ )
 	{
-		n = ValueForKey(&entities[i], "name");
-		if(!strcmp(n, target))
+		n = ValueForKey( &entities[i], "name" );
+		if( !strcmp( n, target ) )
 		{
 			return &entities[i];
 		}
 	}
-
+	
 	return NULL;
 }
 
@@ -497,103 +497,113 @@ entity_t       *FindTargetEntity(const char *target)
 CreateEntityLights
 =============
 */
-void CreateEntityLights(void)
+void CreateEntityLights( void )
 {
 	int             i;
-	light_t        *dl;
-	entity_t       *e, *e2;
-	const char     *name;
-	const char     *target;
+	light_t*        dl;
+	entity_t*       e, *e2;
+	const char*     name;
+	const char*     target;
 	vec3_t          dest;
-	const char     *_color;
+	const char*     _color;
 	float           intensity;
 	int             spawnflags;
-
+	
 	//
 	// entities
 	//
-	for(i = 0; i < numEntities; i++)
+	for( i = 0; i < numEntities; i++ )
 	{
 		e = &entities[i];
-		name = ValueForKey(e, "classname");
-		if(strncmp(name, "light", 5))
+		name = ValueForKey( e, "classname" );
+		if( strncmp( name, "light", 5 ) )
+		{
 			continue;
-
+		}
+		
 		numPointLights++;
-		dl = malloc(sizeof(*dl));
-		memset(dl, 0, sizeof(*dl));
+		dl = malloc( sizeof( *dl ) );
+		memset( dl, 0, sizeof( *dl ) );
 		dl->next = lights;
 		lights = dl;
-
-		spawnflags = FloatForKey(e, "spawnflags");
-		if(spawnflags & 1)
+		
+		spawnflags = FloatForKey( e, "spawnflags" );
+		if( spawnflags & 1 )
 		{
 			dl->linearLight = qtrue;
 		}
-
-		GetVectorForKey(e, "origin", dl->origin);
-		dl->style = FloatForKey(e, "_style");
-		if(!dl->style)
-			dl->style = FloatForKey(e, "style");
-		if(dl->style < 0)
-			dl->style = 0;
-
-#if 1
-		GetVectorForKey(e, "light_radius", dl->radius);
-		intensity = VectorLength(dl->radius);
-		if(!intensity)
-#endif
-			intensity = FloatForKey(e, "light");
-		if(!intensity)
-			intensity = FloatForKey(e, "_light");
-		if(!intensity)
-			intensity = 300;
-
-		_color = ValueForKey(e, "_color");
-		if(_color && _color[0])
+		
+		GetVectorForKey( e, "origin", dl->origin );
+		dl->style = FloatForKey( e, "_style" );
+		if( !dl->style )
 		{
-			sscanf(_color, "%f %f %f", &dl->color[0], &dl->color[1], &dl->color[2]);
-			ColorNormalize(dl->color, dl->color);
+			dl->style = FloatForKey( e, "style" );
+		}
+		if( dl->style < 0 )
+		{
+			dl->style = 0;
+		}
+		
+#if 1
+		GetVectorForKey( e, "light_radius", dl->radius );
+		intensity = VectorLength( dl->radius );
+		if( !intensity )
+#endif
+			intensity = FloatForKey( e, "light" );
+		if( !intensity )
+		{
+			intensity = FloatForKey( e, "_light" );
+		}
+		if( !intensity )
+		{
+			intensity = 300;
+		}
+		
+		_color = ValueForKey( e, "_color" );
+		if( _color && _color[0] )
+		{
+			sscanf( _color, "%f %f %f", &dl->color[0], &dl->color[1], &dl->color[2] );
+			ColorNormalize( dl->color, dl->color );
 		}
 		else
 		{
 			dl->color[0] = dl->color[1] = dl->color[2] = 1.0;
 		}
-
+		
 		intensity = intensity * pointScale;
 		dl->photons = intensity;
-
+		
 		dl->type = emit_point;
-
+		
 		// lights with a target will be spotlights
-		target = ValueForKey(e, "target");
-
-		if(target[0])
+		target = ValueForKey( e, "target" );
+		
+		if( target[0] )
 		{
 			float           radius;
 			float           dist;
-
-			e2 = FindTargetEntity(target);
-			if(!e2)
+			
+			e2 = FindTargetEntity( target );
+			if( !e2 )
 			{
-				Sys_Printf("WARNING: light at (%i %i %i) has missing target\n",
-						   (int)dl->origin[0], (int)dl->origin[1], (int)dl->origin[2]);
+				Sys_Printf( "WARNING: light at (%i %i %i) has missing target\n",
+							( int )dl->origin[0], ( int )dl->origin[1], ( int )dl->origin[2] );
 			}
 			else
 			{
-				GetVectorForKey(e2, "origin", dest);
-				VectorSubtract(dest, dl->origin, dl->normal);
-				dist = VectorNormalize(dl->normal);
-				radius = FloatForKey(e, "radius");
-				if(!radius)
+				GetVectorForKey( e2, "origin", dest );
+				VectorSubtract( dest, dl->origin, dl->normal );
+				dist = VectorNormalize( dl->normal );
+				radius = FloatForKey( e, "radius" );
+				if( !radius )
 				{
 					radius = 64;
 				}
-				if(!dist)
+				if( !dist )
 				{
 					dist = 64;
 				}
-				dl->radiusByDist = (radius + 16) / dist;
+				dl->radiusByDist = ( radius + 16 ) / dist;
 				dl->type = emit_spotlight;
 			}
 		}
@@ -609,43 +619,43 @@ SetEntityOrigins
 Find the offset values for inline models
 ================
 */
-void SetEntityOrigins(void)
+void SetEntityOrigins( void )
 {
 	int             i, j;
-	entity_t       *e;
+	entity_t*       e;
 	vec3_t          origin;
-	const char     *key;
+	const char*     key;
 	int             modelnum;
-	dmodel_t       *dm;
-
-	for(i = 0; i < numEntities; i++)
+	dmodel_t*       dm;
+	
+	for( i = 0; i < numEntities; i++ )
 	{
 		e = &entities[i];
-		key = ValueForKey(e, "model");
-		if(key[0] != '*')
+		key = ValueForKey( e, "model" );
+		if( key[0] != '*' )
 		{
 			continue;
 		}
-		modelnum = atoi(key + 1);
+		modelnum = atoi( key + 1 );
 		dm = &dmodels[modelnum];
-
+		
 		// set entity surface to true for all surfaces for this model
-		for(j = 0; j < dm->numSurfaces; j++)
+		for( j = 0; j < dm->numSurfaces; j++ )
 		{
 			entitySurface[dm->firstSurface + j] = qtrue;
 		}
-
-		key = ValueForKey(e, "origin");
-		if(!key[0])
+		
+		key = ValueForKey( e, "origin" );
+		if( !key[0] )
 		{
 			continue;
 		}
-		GetVectorForKey(e, "origin", origin);
-
+		GetVectorForKey( e, "origin", origin );
+		
 		// set origin for all surfaces for this model
-		for(j = 0; j < dm->numSurfaces; j++)
+		for( j = 0; j < dm->numSurfaces; j++ )
 		{
-			VectorCopy(origin, surfaceOrigin[dm->firstSurface + j]);
+			VectorCopy( origin, surfaceOrigin[dm->firstSurface + j] );
 		}
 	}
 }
@@ -665,65 +675,65 @@ void SetEntityOrigins(void)
 PointToPolygonFormFactor
 ================
 */
-float PointToPolygonFormFactor(const vec3_t point, const vec3_t normal, const winding_t * w)
+float PointToPolygonFormFactor( const vec3_t point, const vec3_t normal, const winding_t* w )
 {
 	vec3_t          triVector, triNormal;
 	int             i, j;
 	vec3_t          dirs[MAX_POINTS_ON_WINDING];
 	float           total;
 	float           dot, angle, facing;
-
-	for(i = 0; i < w->numpoints; i++)
+	
+	for( i = 0; i < w->numpoints; i++ )
 	{
-		VectorSubtract(w->p[i], point, dirs[i]);
-		VectorNormalize(dirs[i]);
+		VectorSubtract( w->p[i], point, dirs[i] );
+		VectorNormalize( dirs[i] );
 	}
-
+	
 	// duplicate first vertex to avoid mod operation
-	VectorCopy(dirs[0], dirs[i]);
-
+	VectorCopy( dirs[0], dirs[i] );
+	
 	total = 0;
-	for(i = 0; i < w->numpoints; i++)
+	for( i = 0; i < w->numpoints; i++ )
 	{
 		j = i + 1;
-		dot = DotProduct(dirs[i], dirs[j]);
-
+		dot = DotProduct( dirs[i], dirs[j] );
+		
 		// roundoff can cause slight creep, which gives an IND from acos
-		if(dot > 1.0)
+		if( dot > 1.0 )
 		{
 			dot = 1.0;
 		}
-		else if(dot < -1.0)
+		else if( dot < -1.0 )
 		{
 			dot = -1.0;
 		}
-
-		angle = acos(dot);
-		CrossProduct(dirs[i], dirs[j], triVector);
-		if(VectorNormalize2(triVector, triNormal) < 0.0001)
+		
+		angle = acos( dot );
+		CrossProduct( dirs[i], dirs[j], triVector );
+		if( VectorNormalize2( triVector, triNormal ) < 0.0001 )
 		{
 			continue;
 		}
-		facing = DotProduct(normal, triNormal);
+		facing = DotProduct( normal, triNormal );
 		total += facing * angle;
-
-		if(total > 6.3 || total < -6.3)
+		
+		if( total > 6.3 || total < -6.3 )
 		{
 			static qboolean printed;
-
-			if(!printed)
+			
+			if( !printed )
 			{
 				printed = qtrue;
-				Sys_Printf("WARNING: bad PointToPolygonFormFactor: %f at %1.1f %1.1f %1.1f from %1.1f %1.1f %1.1f\n", total,
-						   w->p[i][0], w->p[i][1], w->p[i][2], point[0], point[1], point[2]);
+				Sys_Printf( "WARNING: bad PointToPolygonFormFactor: %f at %1.1f %1.1f %1.1f from %1.1f %1.1f %1.1f\n", total,
+							w->p[i][0], w->p[i][1], w->p[i][2], point[0], point[1], point[2] );
 			}
 			return 0;
 		}
-
+		
 	}
-
+	
 	total /= 2 * 3.141592657;	// now in the range of 0 to 1 over the entire incoming hemisphere
-
+	
 	return total;
 }
 
@@ -735,10 +745,10 @@ FilterTrace
 Returns 0 to 1.0 filter fractions for the given trace
 ================
 */
-void FilterTrace(const vec3_t start, const vec3_t end, vec3_t filter)
+void FilterTrace( const vec3_t start, const vec3_t end, vec3_t filter )
 {
 	float           d1, d2;
-	filter_t       *f;
+	filter_t*       f;
 	int             filterNum;
 	vec3_t          point;
 	float           frac;
@@ -746,91 +756,91 @@ void FilterTrace(const vec3_t start, const vec3_t end, vec3_t filter)
 	float           s, t;
 	int             u, v;
 	int             x, y;
-	byte           *pixel;
+	byte*           pixel;
 	float           radius;
 	float           len;
 	vec3_t          total;
-
+	
 	filter[0] = 1.0;
 	filter[1] = 1.0;
 	filter[2] = 1.0;
-
-	for(filterNum = 0; filterNum < numFilters; filterNum++)
+	
+	for( filterNum = 0; filterNum < numFilters; filterNum++ )
 	{
 		f = &filters[filterNum];
-
+		
 		// see if the plane is crossed
-		d1 = DotProduct(start, f->plane) - f->plane[3];
-		d2 = DotProduct(end, f->plane) - f->plane[3];
-
-		if((d1 < 0) == (d2 < 0))
+		d1 = DotProduct( start, f->plane ) - f->plane[3];
+		d2 = DotProduct( end, f->plane ) - f->plane[3];
+		
+		if( ( d1 < 0 ) == ( d2 < 0 ) )
 		{
 			continue;
 		}
-
+		
 		// calculate the crossing point
-		frac = d1 / (d1 - d2);
-
-		for(i = 0; i < 3; i++)
+		frac = d1 / ( d1 - d2 );
+		
+		for( i = 0; i < 3; i++ )
 		{
-			point[i] = start[i] + frac * (end[i] - start[i]);
+			point[i] = start[i] + frac * ( end[i] - start[i] );
 		}
-
-		VectorSubtract(point, f->origin, point);
-
-		s = DotProduct(point, f->vectors[0]);
-		t = 1.0 - DotProduct(point, f->vectors[1]);
-		if(s < 0 || s >= 1.0 || t < 0 || t >= 1.0)
+		
+		VectorSubtract( point, f->origin, point );
+		
+		s = DotProduct( point, f->vectors[0] );
+		t = 1.0 - DotProduct( point, f->vectors[1] );
+		if( s < 0 || s >= 1.0 || t < 0 || t >= 1.0 )
 		{
 			continue;
 		}
-
+		
 		// decide the filter size
 		radius = 10 * frac;
-		len = VectorLength(f->vectors[0]);
-		if(!len)
+		len = VectorLength( f->vectors[0] );
+		if( !len )
 		{
 			continue;
 		}
 		radius = radius * len * f->si->width;
-
+		
 		// look up the filter, taking multiple samples
-		VectorClear(total);
-		for(u = -1; u <= 1; u++)
+		VectorClear( total );
+		for( u = -1; u <= 1; u++ )
 		{
-			for(v = -1; v <= 1; v++)
+			for( v = -1; v <= 1; v++ )
 			{
 				x = s * f->si->width + u * radius;
-				if(x < 0)
+				if( x < 0 )
 				{
 					x = 0;
 				}
-				if(x >= f->si->width)
+				if( x >= f->si->width )
 				{
 					x = f->si->width - 1;
 				}
 				y = t * f->si->height + v * radius;
-				if(y < 0)
+				if( y < 0 )
 				{
 					y = 0;
 				}
-				if(y >= f->si->height)
+				if( y >= f->si->height )
 				{
 					y = f->si->height - 1;
 				}
-
-				pixel = f->si->pixels + (y * f->si->width + x) * 4;
+				
+				pixel = f->si->pixels + ( y * f->si->width + x ) * 4;
 				total[0] += pixel[0];
 				total[1] += pixel[1];
 				total[2] += pixel[2];
 			}
 		}
-
-		filter[0] *= total[0] / (255.0 * 9);
-		filter[1] *= total[1] / (255.0 * 9);
-		filter[2] *= total[2] / (255.0 * 9);
+		
+		filter[0] *= total[0] / ( 255.0 * 9 );
+		filter[1] *= total[1] / ( 255.0 * 9 );
+		filter[2] *= total[2] / ( 255.0 * 9 );
 	}
-
+	
 }
 
 /*
@@ -841,59 +851,59 @@ Returns an amount of light to add at the point
 ================
 */
 int             c_sunHit, c_sunMiss;
-void SunToPoint(const vec3_t origin, traceWork_t * tw, vec3_t addLight)
+void SunToPoint( const vec3_t origin, traceWork_t* tw, vec3_t addLight )
 {
 	int             i;
 	trace_t         trace;
-	skyBrush_t     *b;
+	skyBrush_t*     b;
 	vec3_t          end;
-
-	if(!numSkyBrushes)
+	
+	if( !numSkyBrushes )
 	{
-		VectorClear(addLight);
+		VectorClear( addLight );
 		return;
 	}
-
-	VectorMA(origin, MAX_WORLD_COORD * 2, sunDirection, end);
-
-	TraceLine(origin, end, &trace, qtrue, tw);
-
+	
+	VectorMA( origin, MAX_WORLD_COORD * 2, sunDirection, end );
+	
+	TraceLine( origin, end, &trace, qtrue, tw );
+	
 	// see if trace.hit is inside a sky brush
-	for(i = 0; i < numSkyBrushes; i++)
+	for( i = 0; i < numSkyBrushes; i++ )
 	{
 		b = &skyBrushes[i];
-
+		
 		// this assumes that sky brushes are axial...
-		if(trace.hit[0] < b->bounds[0][0]
-		   || trace.hit[0] > b->bounds[1][0]
-		   || trace.hit[1] < b->bounds[0][1]
-		   || trace.hit[1] > b->bounds[1][1] || trace.hit[2] < b->bounds[0][2] || trace.hit[2] > b->bounds[1][2])
+		if( trace.hit[0] < b->bounds[0][0]
+				|| trace.hit[0] > b->bounds[1][0]
+				|| trace.hit[1] < b->bounds[0][1]
+				|| trace.hit[1] > b->bounds[1][1] || trace.hit[2] < b->bounds[0][2] || trace.hit[2] > b->bounds[1][2] )
 		{
 			continue;
 		}
-
-
+		
+		
 		// trace again to get intermediate filters
-		TraceLine(origin, trace.hit, &trace, qtrue, tw);
-
+		TraceLine( origin, trace.hit, &trace, qtrue, tw );
+		
 		// we hit the sky, so add sunlight
-		if(numthreads == 1)
+		if( numthreads == 1 )
 		{
 			c_sunHit++;
 		}
 		addLight[0] = trace.filter[0] * sunLight[0];
 		addLight[1] = trace.filter[1] * sunLight[1];
 		addLight[2] = trace.filter[2] * sunLight[2];
-
+		
 		return;
 	}
-
-	if(numthreads == 1)
+	
+	if( numthreads == 1 )
 	{
 		c_sunMiss++;
 	}
-
-	VectorClear(addLight);
+	
+	VectorClear( addLight );
 }
 
 /*
@@ -901,24 +911,24 @@ void SunToPoint(const vec3_t origin, traceWork_t * tw, vec3_t addLight)
 SunToPlane
 ================
 */
-void SunToPlane(const vec3_t origin, const vec3_t normal, vec3_t color, traceWork_t * tw)
+void SunToPlane( const vec3_t origin, const vec3_t normal, vec3_t color, traceWork_t* tw )
 {
 	float           angle;
 	vec3_t          sunColor;
-
-	if(!numSkyBrushes)
+	
+	if( !numSkyBrushes )
 	{
 		return;
 	}
-
-	angle = DotProduct(normal, sunDirection);
-	if(angle <= 0)
+	
+	angle = DotProduct( normal, sunDirection );
+	if( angle <= 0 )
 	{
 		return;					// facing away
 	}
-
-	SunToPoint(origin, tw, sunColor);
-	VectorMA(color, angle, sunColor, color);
+	
+	SunToPoint( origin, tw, sunColor );
+	VectorMA( color, angle, sunColor, color );
 }
 
 /*
@@ -926,50 +936,52 @@ void SunToPlane(const vec3_t origin, const vec3_t normal, vec3_t color, traceWor
 LightingAtSample
 ================
 */
-void LightingAtSample(vec3_t origin, vec3_t normal, vec3_t color,
-					  qboolean testOcclusion, qboolean forceSunLight, traceWork_t * tw)
+void LightingAtSample( vec3_t origin, vec3_t normal, vec3_t color,
+					   qboolean testOcclusion, qboolean forceSunLight, traceWork_t* tw )
 {
-	light_t        *light;
+	light_t*        light;
 	trace_t         trace;
 	float           angle;
 	float           add = 0;
 	float           dist;
 	vec3_t          dir;
-
-	VectorCopy(ambientColor, color);
-
+	
+	VectorCopy( ambientColor, color );
+	
 	// trace to all the lights
-	for(light = lights; light; light = light->next)
+	for( light = lights; light; light = light->next )
 	{
-
+	
 		//MrE: if the light is behind the surface
-		if(DotProduct(light->origin, normal) - DotProduct(normal, origin) < 0)
+		if( DotProduct( light->origin, normal ) - DotProduct( normal, origin ) < 0 )
+		{
 			continue;
+		}
 		// testing exact PTPFF
-		if(exactPointToPolygon && light->type == emit_area)
+		if( exactPointToPolygon && light->type == emit_area )
 		{
 			float           factor;
 			float           d;
 			vec3_t          pushedOrigin;
-
+			
 			// see if the point is behind the light
-			d = DotProduct(origin, light->normal) - light->dist;
-			if(!light->twosided)
+			d = DotProduct( origin, light->normal ) - light->dist;
+			if( !light->twosided )
 			{
-				if(d < -1)
+				if( d < -1 )
 				{
 					continue;	// point is behind light
 				}
 			}
-
+			
 			// test occlusion and find light filters
 			// clip the line, tracing from the surface towards the light
-			if(!notrace && testOcclusion)
+			if( !notrace && testOcclusion )
 			{
-				TraceLine(origin, light->origin, &trace, qfalse, tw);
-
+				TraceLine( origin, light->origin, &trace, qfalse, tw );
+				
 				// other light rays must not hit anything
-				if(trace.passSolid)
+				if( trace.passSolid )
 				{
 					continue;
 				}
@@ -980,23 +992,23 @@ void LightingAtSample(vec3_t origin, vec3_t normal, vec3_t color,
 				trace.filter[1] = 1.0;
 				trace.filter[2] = 1.0;
 			}
-
+			
 			// nudge the point so that it is clearly forward of the light
 			// so that surfaces meeting a light emiter don't get black edges
-			if(d > -8 && d < 8)
+			if( d > -8 && d < 8 )
 			{
-				VectorMA(origin, (8 - d), light->normal, pushedOrigin);
+				VectorMA( origin, ( 8 - d ), light->normal, pushedOrigin );
 			}
 			else
 			{
-				VectorCopy(origin, pushedOrigin);
+				VectorCopy( origin, pushedOrigin );
 			}
-
+			
 			// calculate the contribution
-			factor = PointToPolygonFormFactor(pushedOrigin, normal, light->w);
-			if(factor <= 0)
+			factor = PointToPolygonFormFactor( pushedOrigin, normal, light->w );
+			if( factor <= 0 )
 			{
-				if(light->twosided)
+				if( light->twosided )
 				{
 					factor = -factor;
 				}
@@ -1008,35 +1020,35 @@ void LightingAtSample(vec3_t origin, vec3_t normal, vec3_t color,
 			color[0] += factor * light->emitColor[0] * trace.filter[0];
 			color[1] += factor * light->emitColor[1] * trace.filter[1];
 			color[2] += factor * light->emitColor[2] * trace.filter[2];
-
+			
 			continue;
 		}
-
+		
 		// calculate the amount of light at this sample
-		if(light->type == emit_point)
+		if( light->type == emit_point )
 		{
-			VectorSubtract(light->origin, origin, dir);
-			dist = VectorNormalize(dir);
+			VectorSubtract( light->origin, origin, dir );
+			dist = VectorNormalize( dir );
 			// clamp the distance to prevent super hot spots
-			if(dist < 16)
+			if( dist < 16 )
 			{
 				dist = 16;
 			}
-			angle = DotProduct(normal, dir);
-			if(light->linearLight)
+			angle = DotProduct( normal, dir );
+			if( light->linearLight )
 			{
 				add = angle * light->photons * linearScale - dist;
-				if(add < 0)
+				if( add < 0 )
 				{
 					add = 0;
 				}
 			}
 			else
 			{
-				add = light->photons / (dist * dist) * angle;
+				add = light->photons / ( dist * dist ) * angle;
 			}
 		}
-		else if(light->type == emit_spotlight)
+		else if( light->type == emit_spotlight )
 		{
 			float           distByNormal;
 			vec3_t          pointAtDist;
@@ -1044,89 +1056,89 @@ void LightingAtSample(vec3_t origin, vec3_t normal, vec3_t color,
 			float           sampleRadius;
 			vec3_t          distToSample;
 			float           coneScale;
-
-			VectorSubtract(light->origin, origin, dir);
-
-			distByNormal = -DotProduct(dir, light->normal);
-			if(distByNormal < 0)
+			
+			VectorSubtract( light->origin, origin, dir );
+			
+			distByNormal = -DotProduct( dir, light->normal );
+			if( distByNormal < 0 )
 			{
 				continue;
 			}
-			VectorMA(light->origin, distByNormal, light->normal, pointAtDist);
+			VectorMA( light->origin, distByNormal, light->normal, pointAtDist );
 			radiusAtDist = light->radiusByDist * distByNormal;
-
-			VectorSubtract(origin, pointAtDist, distToSample);
-			sampleRadius = VectorLength(distToSample);
-
-			if(sampleRadius >= radiusAtDist)
+			
+			VectorSubtract( origin, pointAtDist, distToSample );
+			sampleRadius = VectorLength( distToSample );
+			
+			if( sampleRadius >= radiusAtDist )
 			{
 				continue;		// outside the cone
 			}
-			if(sampleRadius <= radiusAtDist - 32)
+			if( sampleRadius <= radiusAtDist - 32 )
 			{
 				coneScale = 1.0;	// fully inside
 			}
 			else
 			{
-				coneScale = (radiusAtDist - sampleRadius) / 32.0;
+				coneScale = ( radiusAtDist - sampleRadius ) / 32.0;
 			}
-
-			dist = VectorNormalize(dir);
+			
+			dist = VectorNormalize( dir );
 			// clamp the distance to prevent super hot spots
-			if(dist < 16)
+			if( dist < 16 )
 			{
 				dist = 16;
 			}
-			angle = DotProduct(normal, dir);
-			add = light->photons / (dist * dist) * angle * coneScale;
-
+			angle = DotProduct( normal, dir );
+			add = light->photons / ( dist * dist ) * angle * coneScale;
+			
 		}
-		else if(light->type == emit_area)
+		else if( light->type == emit_area )
 		{
-			VectorSubtract(light->origin, origin, dir);
-			dist = VectorNormalize(dir);
+			VectorSubtract( light->origin, origin, dir );
+			dist = VectorNormalize( dir );
 			// clamp the distance to prevent super hot spots
-			if(dist < 16)
+			if( dist < 16 )
 			{
 				dist = 16;
 			}
-			angle = DotProduct(normal, dir);
-			if(angle <= 0)
+			angle = DotProduct( normal, dir );
+			if( angle <= 0 )
 			{
 				continue;
 			}
-			angle *= -DotProduct(light->normal, dir);
-			if(angle <= 0)
+			angle *= -DotProduct( light->normal, dir );
+			if( angle <= 0 )
 			{
 				continue;
 			}
-
-			if(light->linearLight)
+			
+			if( light->linearLight )
 			{
 				add = angle * light->photons * linearScale - dist;
-				if(add < 0)
+				if( add < 0 )
 				{
 					add = 0;
 				}
 			}
 			else
 			{
-				add = light->photons / (dist * dist) * angle;
+				add = light->photons / ( dist * dist ) * angle;
 			}
 		}
-
-		if(add <= 1.0)
+		
+		if( add <= 1.0 )
 		{
 			continue;
 		}
-
+		
 		// clip the line, tracing from the surface towards the light
-		if(!notrace && testOcclusion)
+		if( !notrace && testOcclusion )
 		{
-			TraceLine(origin, light->origin, &trace, qfalse, tw);
-
+			TraceLine( origin, light->origin, &trace, qfalse, tw );
+			
 			// other light rays must not hit anything
-			if(trace.passSolid)
+			if( trace.passSolid )
 			{
 				continue;
 			}
@@ -1137,19 +1149,19 @@ void LightingAtSample(vec3_t origin, vec3_t normal, vec3_t color,
 			trace.filter[1] = 1;
 			trace.filter[2] = 1;
 		}
-
+		
 		// add the result
 		color[0] += add * light->color[0] * trace.filter[0];
 		color[1] += add * light->color[1] * trace.filter[1];
 		color[2] += add * light->color[2] * trace.filter[2];
 	}
-
+	
 	//
 	// trace directly to the sun
 	//
-	if(testOcclusion || forceSunLight)
+	if( testOcclusion || forceSunLight )
 	{
-		SunToPlane(origin, normal, color, tw);
+		SunToPlane( origin, normal, color, tw );
 	}
 }
 
@@ -1160,19 +1172,19 @@ PrintOccluded
 For debugging
 =============
 */
-void PrintOccluded(byte occluded[LIGHTMAP_WIDTH * EXTRASCALE][LIGHTMAP_HEIGHT * EXTRASCALE], int width, int height)
+void PrintOccluded( byte occluded[LIGHTMAP_WIDTH * EXTRASCALE][LIGHTMAP_HEIGHT * EXTRASCALE], int width, int height )
 {
 	int             i, j;
-
-	Sys_Printf("\n");
-
-	for(i = 0; i < height; i++)
+	
+	Sys_Printf( "\n" );
+	
+	for( i = 0; i < height; i++ )
 	{
-		for(j = 0; j < width; j++)
+		for( j = 0; j < width; j++ )
 		{
-			Sys_Printf("%i", (int)occluded[j][i]);
+			Sys_Printf( "%i", ( int )occluded[j][i] );
 		}
-		Sys_Printf("\n");
+		Sys_Printf( "\n" );
 	}
 }
 
@@ -1185,60 +1197,62 @@ Vertex lighting will completely ignore occlusion, because
 shadows would not be resolvable anyway.
 =============
 */
-void VertexLighting(dsurface_t * ds, qboolean testOcclusion, qboolean forceSunLight, float scale, traceWork_t * tw)
+void VertexLighting( dsurface_t* ds, qboolean testOcclusion, qboolean forceSunLight, float scale, traceWork_t* tw )
 {
 	int             i, j;
-	drawVert_t     *dv;
+	drawVert_t*     dv;
 	vec3_t          sample, normal;
 	float           max;
-
-	VectorCopy(ds->lightmapVecs[2], normal);
-
+	
+	VectorCopy( ds->lightmapVecs[2], normal );
+	
 	// generate vertex lighting
-	for(i = 0; i < ds->numVerts; i++)
+	for( i = 0; i < ds->numVerts; i++ )
 	{
 		dv = &drawVerts[ds->firstVert + i];
-
-		if(ds->patchWidth)
+		
+		if( ds->patchWidth )
 		{
-			LightingAtSample(dv->xyz, dv->normal, sample, testOcclusion, forceSunLight, tw);
+			LightingAtSample( dv->xyz, dv->normal, sample, testOcclusion, forceSunLight, tw );
 		}
-		else if(ds->surfaceType == MST_TRIANGLE_SOUP)
+		else if( ds->surfaceType == MST_TRIANGLE_SOUP )
 		{
-			LightingAtSample(dv->xyz, dv->normal, sample, testOcclusion, forceSunLight, tw);
+			LightingAtSample( dv->xyz, dv->normal, sample, testOcclusion, forceSunLight, tw );
 		}
 		else
 		{
-			LightingAtSample(dv->xyz, normal, sample, testOcclusion, forceSunLight, tw);
+			LightingAtSample( dv->xyz, normal, sample, testOcclusion, forceSunLight, tw );
 		}
-
-		if(scale >= 0)
-			VectorScale(sample, scale, sample);
+		
+		if( scale >= 0 )
+		{
+			VectorScale( sample, scale, sample );
+		}
 		// clamp with color normalization
 		max = sample[0];
-		if(sample[1] > max)
+		if( sample[1] > max )
 		{
 			max = sample[1];
 		}
-		if(sample[2] > max)
+		if( sample[2] > max )
 		{
 			max = sample[2];
 		}
-		if(max > 255)
+		if( max > 255 )
 		{
-			VectorScale(sample, 255 / max, sample);
+			VectorScale( sample, 255 / max, sample );
 		}
-
+		
 		// save the sample
-		for(j = 0; j < 3; j++)
+		for( j = 0; j < 3; j++ )
 		{
-			if(sample[j] > 255)
+			if( sample[j] > 255 )
 			{
 				sample[j] = 255;
 			}
 			dv->lightColor[j] = sample[j];
 		}
-
+		
 		// Don't bother writing alpha since it will already be set to 255,
 		// plus we don't want to write over alpha generated by SetTerrainTextures
 		//dv->color[3] = 255;
@@ -1254,54 +1268,54 @@ For extra lighting, just midpoint one of the axis.
 The edges are clamped at the original edges.
 =================
 */
-mesh_t         *LinearSubdivideMesh(mesh_t * in)
+mesh_t*         LinearSubdivideMesh( mesh_t* in )
 {
 	int             i, j;
-	mesh_t         *out;
-	drawVert_t     *v1, *v2, *vout;
-
-	out = malloc(sizeof(*out));
-
+	mesh_t*         out;
+	drawVert_t*     v1, *v2, *vout;
+	
+	out = malloc( sizeof( *out ) );
+	
 	out->width = in->width * 2;
 	out->height = in->height;
-	out->verts = malloc(out->width * out->height * sizeof(*out->verts));
-	for(j = 0; j < in->height; j++)
+	out->verts = malloc( out->width * out->height * sizeof( *out->verts ) );
+	for( j = 0; j < in->height; j++ )
 	{
 		out->verts[j * out->width + 0] = in->verts[j * in->width + 0];
 		out->verts[j * out->width + out->width - 1] = in->verts[j * in->width + in->width - 1];
-		for(i = 1; i < out->width - 1; i += 2)
+		for( i = 1; i < out->width - 1; i += 2 )
 		{
-			v1 = in->verts + j * in->width + (i >> 1);
+			v1 = in->verts + j * in->width + ( i >> 1 );
 			v2 = v1 + 1;
 			vout = out->verts + j * out->width + i;
-
+			
 			vout->xyz[0] = 0.75 * v1->xyz[0] + 0.25 * v2->xyz[0];
 			vout->xyz[1] = 0.75 * v1->xyz[1] + 0.25 * v2->xyz[1];
 			vout->xyz[2] = 0.75 * v1->xyz[2] + 0.25 * v2->xyz[2];
-
+			
 			vout->normal[0] = 0.75 * v1->normal[0] + 0.25 * v2->normal[0];
 			vout->normal[1] = 0.75 * v1->normal[1] + 0.25 * v2->normal[1];
 			vout->normal[2] = 0.75 * v1->normal[2] + 0.25 * v2->normal[2];
-
-			VectorNormalize(vout->normal);
-
+			
+			VectorNormalize( vout->normal );
+			
 			vout++;
-
+			
 			vout->xyz[0] = 0.25 * v1->xyz[0] + 0.75 * v2->xyz[0];
 			vout->xyz[1] = 0.25 * v1->xyz[1] + 0.75 * v2->xyz[1];
 			vout->xyz[2] = 0.25 * v1->xyz[2] + 0.75 * v2->xyz[2];
-
+			
 			vout->normal[0] = 0.25 * v1->normal[0] + 0.75 * v2->normal[0];
 			vout->normal[1] = 0.25 * v1->normal[1] + 0.75 * v2->normal[1];
 			vout->normal[2] = 0.25 * v1->normal[2] + 0.75 * v2->normal[2];
-
-			VectorNormalize(vout->normal);
-
+			
+			VectorNormalize( vout->normal );
+			
 		}
 	}
-
-	FreeMesh(in);
-
+	
+	FreeMesh( in );
+	
 	return out;
 }
 
@@ -1310,26 +1324,26 @@ mesh_t         *LinearSubdivideMesh(mesh_t * in)
 ColorToBytes
 ==============
 */
-void ColorToBytes(const float *color, byte * colorBytes)
+void ColorToBytes( const float* color, byte* colorBytes )
 {
 	float           max;
 	vec3_t          sample;
-
-	VectorCopy(color, sample);
-
+	
+	VectorCopy( color, sample );
+	
 	// clamp with color normalization
 	max = sample[0];
-	if(sample[1] > max)
+	if( sample[1] > max )
 	{
 		max = sample[1];
 	}
-	if(sample[2] > max)
+	if( sample[2] > max )
 	{
 		max = sample[2];
 	}
-	if(max > 255)
+	if( max > 255 )
 	{
-		VectorScale(sample, 255 / max, sample);
+		VectorScale( sample, 255 / max, sample );
 	}
 	colorBytes[0] = sample[0];
 	colorBytes[1] = sample[1];
@@ -1343,9 +1357,9 @@ void ColorToBytes(const float *color, byte * colorBytes)
 TraceLtm
 =============
 */
-void TraceLtm(int num)
+void TraceLtm( int num )
 {
-	dsurface_t     *ds;
+	dsurface_t*     ds;
 	int             i, j, k;
 	int             x, y;
 	int             position, numPositions;
@@ -1356,105 +1370,112 @@ void TraceLtm(int num)
 	vec3_t          average;
 	int             count;
 	mesh_t          srcMesh, *mesh = NULL, *subdivided;
-	shaderInfo_t   *si;
-	static float    nudge[2][9] = {
+	shaderInfo_t*   si;
+	static float    nudge[2][9] =
+	{
 		{0, -1, 0, 1, -1, 1, -1, 0, 1},
 		{0, -1, -1, -1, 0, 0, 1, 1, 1}
 	};
 	int             sampleWidth, sampleHeight, ssize;
 	vec3_t          lightmapOrigin, lightmapVecs[2];
 	int             widthtable[LIGHTMAP_WIDTH], heighttable[LIGHTMAP_WIDTH];
-
+	
 	ds = &drawSurfaces[num];
-	si = ShaderInfoForShader(dshaders[ds->shaderNum].shader);
-
+	si = ShaderInfoForShader( dshaders[ds->shaderNum].shader );
+	
 	// vertex-lit triangle model
-	if(ds->surfaceType == MST_TRIANGLE_SOUP)
+	if( ds->surfaceType == MST_TRIANGLE_SOUP )
 	{
-		VertexLighting(ds, !si->noVertexShadows, si->forceSunLight, 1.0, &tw);
+		VertexLighting( ds, !si->noVertexShadows, si->forceSunLight, 1.0, &tw );
 		return;
 	}
-
-	if(ds->lightmapNum == -1)
+	
+	if( ds->lightmapNum == -1 )
 	{
 		return;					// doesn't need lighting at all
 	}
-
-	if(!novertexlighting)
+	
+	if( !novertexlighting )
 	{
 		// calculate the vertex lighting for gouraud shade mode
-		VertexLighting(ds, si->vertexShadows, si->forceSunLight, si->vertexScale, &tw);
+		VertexLighting( ds, si->vertexShadows, si->forceSunLight, si->vertexScale, &tw );
 	}
-
-	if(ds->lightmapNum < 0)
+	
+	if( ds->lightmapNum < 0 )
 	{
 		return;					// doesn't need lightmap lighting
 	}
-
-	si = ShaderInfoForShader(dshaders[ds->shaderNum].shader);
+	
+	si = ShaderInfoForShader( dshaders[ds->shaderNum].shader );
 	ssize = samplesize;
-	if(si->lightmapSampleSize)
+	if( si->lightmapSampleSize )
+	{
 		ssize = si->lightmapSampleSize;
-
-	if(si->patchShadows)
+	}
+	
+	if( si->patchShadows )
+	{
 		tw.patchshadows = qtrue;
+	}
 	else
+	{
 		tw.patchshadows = patchshadows;
-
-	if(ds->surfaceType == MST_PATCH)
+	}
+	
+	if( ds->surfaceType == MST_PATCH )
 	{
 		srcMesh.width = ds->patchWidth;
 		srcMesh.height = ds->patchHeight;
 		srcMesh.verts = drawVerts + ds->firstVert;
-		mesh = SubdivideMesh(srcMesh, 8, 999);
-		PutMeshOnCurve(*mesh);
-		MakeMeshNormals(*mesh);
-
-		subdivided = RemoveLinearMeshColumnsRows(mesh);
-		FreeMesh(mesh);
-
-		mesh = SubdivideMeshQuads(subdivided, ssize, LIGHTMAP_WIDTH, widthtable, heighttable);
-		if(mesh->width != ds->lightmapWidth || mesh->height != ds->lightmapHeight)
+		mesh = SubdivideMesh( srcMesh, 8, 999 );
+		PutMeshOnCurve( *mesh );
+		MakeMeshNormals( *mesh );
+		
+		subdivided = RemoveLinearMeshColumnsRows( mesh );
+		FreeMesh( mesh );
+		
+		mesh = SubdivideMeshQuads( subdivided, ssize, LIGHTMAP_WIDTH, widthtable, heighttable );
+		if( mesh->width != ds->lightmapWidth || mesh->height != ds->lightmapHeight )
 		{
-			Error("Mesh lightmap miscount");
+			Error( "Mesh lightmap miscount" );
 		}
-
-		if(extra)
+		
+		if( extra )
 		{
-			mesh_t         *mp;
-
+			mesh_t*         mp;
+			
 			// chop it up for more light samples (leaking memory...)
 			mp = mesh;			//CopyMesh( mesh );
-			mp = LinearSubdivideMesh(mp);
-			mp = TransposeMesh(mp);
-			mp = LinearSubdivideMesh(mp);
-			mp = TransposeMesh(mp);
-
+			mp = LinearSubdivideMesh( mp );
+			mp = TransposeMesh( mp );
+			mp = LinearSubdivideMesh( mp );
+			mp = TransposeMesh( mp );
+			
 			mesh = mp;
 		}
 	}
 	else
 	{
-		VectorCopy(ds->lightmapVecs[2], normal);
-
-		if(!extra)
+		VectorCopy( ds->lightmapVecs[2], normal );
+		
+		if( !extra )
 		{
-			VectorCopy(ds->lightmapOrigin, lightmapOrigin);
-			VectorCopy(ds->lightmapVecs[0], lightmapVecs[0]);
-			VectorCopy(ds->lightmapVecs[1], lightmapVecs[1]);
+			VectorCopy( ds->lightmapOrigin, lightmapOrigin );
+			VectorCopy( ds->lightmapVecs[0], lightmapVecs[0] );
+			VectorCopy( ds->lightmapVecs[1], lightmapVecs[1] );
 		}
 		else
 		{
 			// sample at a closer spacing for antialiasing
-			VectorCopy(ds->lightmapOrigin, lightmapOrigin);
-			VectorScale(ds->lightmapVecs[0], 0.5, lightmapVecs[0]);
-			VectorScale(ds->lightmapVecs[1], 0.5, lightmapVecs[1]);
-			VectorMA(lightmapOrigin, -0.5, lightmapVecs[0], lightmapOrigin);
-			VectorMA(lightmapOrigin, -0.5, lightmapVecs[1], lightmapOrigin);
+			VectorCopy( ds->lightmapOrigin, lightmapOrigin );
+			VectorScale( ds->lightmapVecs[0], 0.5, lightmapVecs[0] );
+			VectorScale( ds->lightmapVecs[1], 0.5, lightmapVecs[1] );
+			VectorMA( lightmapOrigin, -0.5, lightmapVecs[0], lightmapOrigin );
+			VectorMA( lightmapOrigin, -0.5, lightmapVecs[1], lightmapOrigin );
 		}
 	}
-
-	if(extra)
+	
+	if( extra )
 	{
 		sampleWidth = ds->lightmapWidth * 2;
 		sampleHeight = ds->lightmapHeight * 2;
@@ -1464,209 +1485,209 @@ void TraceLtm(int num)
 		sampleWidth = ds->lightmapWidth;
 		sampleHeight = ds->lightmapHeight;
 	}
-
-	memset(color, 0, sizeof(color));
-
+	
+	memset( color, 0, sizeof( color ) );
+	
 	// determine which samples are occluded
-	memset(occluded, 0, sizeof(occluded));
-	for(i = 0; i < sampleWidth; i++)
+	memset( occluded, 0, sizeof( occluded ) );
+	for( i = 0; i < sampleWidth; i++ )
 	{
-		for(j = 0; j < sampleHeight; j++)
+		for( j = 0; j < sampleHeight; j++ )
 		{
-
-			if(ds->patchWidth)
+		
+			if( ds->patchWidth )
 			{
 				numPositions = 9;
-				VectorCopy(mesh->verts[j * mesh->width + i].normal, normal);
+				VectorCopy( mesh->verts[j * mesh->width + i].normal, normal );
 				// VectorNormalize( normal );
 				// push off of the curve a bit
-				VectorMA(mesh->verts[j * mesh->width + i].xyz, 1, normal, base);
-
-				MakeNormalVectors(normal, lightmapVecs[0], lightmapVecs[1]);
+				VectorMA( mesh->verts[j * mesh->width + i].xyz, 1, normal, base );
+				
+				MakeNormalVectors( normal, lightmapVecs[0], lightmapVecs[1] );
 			}
 			else
 			{
 				numPositions = 9;
-				for(k = 0; k < 3; k++)
+				for( k = 0; k < 3; k++ )
 				{
 					base[k] = lightmapOrigin[k] + normal[k] + i * lightmapVecs[0][k] + j * lightmapVecs[1][k];
 				}
 			}
-			VectorAdd(base, surfaceOrigin[num], base);
-
+			VectorAdd( base, surfaceOrigin[num], base );
+			
 			// we may need to slightly nudge the sample point
 			// if directly on a wall
-			for(position = 0; position < numPositions; position++)
+			for( position = 0; position < numPositions; position++ )
 			{
 				// calculate lightmap sample position
-				for(k = 0; k < 3; k++)
+				for( k = 0; k < 3; k++ )
 				{
 					origin[k] = base[k] +
-						+(nudge[0][position] / 16) * lightmapVecs[0][k] + (nudge[1][position] / 16) * lightmapVecs[1][k];
+								+( nudge[0][position] / 16 ) * lightmapVecs[0][k] + ( nudge[1][position] / 16 ) * lightmapVecs[1][k];
 				}
-
-				if(notrace)
+				
+				if( notrace )
 				{
 					break;
 				}
-				if(!PointInSolid(origin))
+				if( !PointInSolid( origin ) )
 				{
 					break;
 				}
 			}
-
+			
 			// if none of the nudges worked, this sample is occluded
-			if(position == numPositions)
+			if( position == numPositions )
 			{
 				occluded[i][j] = qtrue;
-				if(numthreads == 1)
+				if( numthreads == 1 )
 				{
 					c_occluded++;
 				}
 				continue;
 			}
-
-			if(numthreads == 1)
+			
+			if( numthreads == 1 )
 			{
 				c_visible++;
 			}
 			occluded[i][j] = qfalse;
-			LightingAtSample(origin, normal, color[i][j], qtrue, qfalse, &tw);
+			LightingAtSample( origin, normal, color[i][j], qtrue, qfalse, &tw );
 		}
 	}
-
-	if(dump)
+	
+	if( dump )
 	{
-		PrintOccluded(occluded, sampleWidth, sampleHeight);
+		PrintOccluded( occluded, sampleWidth, sampleHeight );
 	}
-
+	
 	// calculate average values for occluded samples
-	for(i = 0; i < sampleWidth; i++)
+	for( i = 0; i < sampleWidth; i++ )
 	{
-		for(j = 0; j < sampleHeight; j++)
+		for( j = 0; j < sampleHeight; j++ )
 		{
-			if(!occluded[i][j])
+			if( !occluded[i][j] )
 			{
 				continue;
 			}
 			// scan all surrounding samples
 			count = 0;
-			VectorClear(average);
-			for(x = -1; x <= 1; x++)
+			VectorClear( average );
+			for( x = -1; x <= 1; x++ )
 			{
-				for(y = -1; y <= 1; y++)
+				for( y = -1; y <= 1; y++ )
 				{
-					if(i + x < 0 || i + x >= sampleWidth)
+					if( i + x < 0 || i + x >= sampleWidth )
 					{
 						continue;
 					}
-					if(j + y < 0 || j + y >= sampleHeight)
+					if( j + y < 0 || j + y >= sampleHeight )
 					{
 						continue;
 					}
-					if(occluded[i + x][j + y])
+					if( occluded[i + x][j + y] )
 					{
 						continue;
 					}
 					count++;
-					VectorAdd(color[i + x][j + y], average, average);
+					VectorAdd( color[i + x][j + y], average, average );
 				}
 			}
-			if(count)
+			if( count )
 			{
-				VectorScale(average, 1.0 / count, color[i][j]);
+				VectorScale( average, 1.0 / count, color[i][j] );
 			}
 		}
 	}
-
+	
 	// average together the values if we are extra sampling
-	if(ds->lightmapWidth != sampleWidth)
+	if( ds->lightmapWidth != sampleWidth )
 	{
-		for(i = 0; i < ds->lightmapWidth; i++)
+		for( i = 0; i < ds->lightmapWidth; i++ )
 		{
-			for(j = 0; j < ds->lightmapHeight; j++)
+			for( j = 0; j < ds->lightmapHeight; j++ )
 			{
-				for(k = 0; k < 3; k++)
+				for( k = 0; k < 3; k++ )
 				{
 					float           value, coverage;
-
+					
 					value = color[i * 2][j * 2][k] + color[i * 2][j * 2 + 1][k] +
-						color[i * 2 + 1][j * 2][k] + color[i * 2 + 1][j * 2 + 1][k];
+							color[i * 2 + 1][j * 2][k] + color[i * 2 + 1][j * 2 + 1][k];
 					coverage = 4;
-					if(extraWide)
+					if( extraWide )
 					{
 						// wider than box filter
-						if(i > 0)
+						if( i > 0 )
 						{
 							value += color[i * 2 - 1][j * 2][k] + color[i * 2 - 1][j * 2 + 1][k];
 							value += color[i * 2 - 2][j * 2][k] + color[i * 2 - 2][j * 2 + 1][k];
 							coverage += 4;
 						}
-						if(i < ds->lightmapWidth - 1)
+						if( i < ds->lightmapWidth - 1 )
 						{
 							value += color[i * 2 + 2][j * 2][k] + color[i * 2 + 2][j * 2 + 1][k];
 							value += color[i * 2 + 3][j * 2][k] + color[i * 2 + 3][j * 2 + 1][k];
 							coverage += 4;
 						}
-						if(j > 0)
+						if( j > 0 )
 						{
 							value += color[i * 2][j * 2 - 1][k] + color[i * 2 + 1][j * 2 - 1][k];
 							value += color[i * 2][j * 2 - 2][k] + color[i * 2 + 1][j * 2 - 2][k];
 							coverage += 4;
 						}
-						if(j < ds->lightmapHeight - 1)
+						if( j < ds->lightmapHeight - 1 )
 						{
 							value += color[i * 2][j * 2 + 2][k] + color[i * 2 + 1][j * 2 + 2][k];
 							value += color[i * 2][j * 2 + 3][k] + color[i * 2 + 1][j * 2 + 3][k];
 							coverage += 2;
 						}
 					}
-
+					
 					color[i][j][k] = value / coverage;
 				}
 			}
 		}
 	}
-
+	
 	// optionally create a debugging border around the lightmap
-	if(lightmapBorder)
+	if( lightmapBorder )
 	{
-		for(i = 0; i < ds->lightmapWidth; i++)
+		for( i = 0; i < ds->lightmapWidth; i++ )
 		{
 			color[i][0][0] = 255;
 			color[i][0][1] = 0;
 			color[i][0][2] = 0;
-
+			
 			color[i][ds->lightmapHeight - 1][0] = 255;
 			color[i][ds->lightmapHeight - 1][1] = 0;
 			color[i][ds->lightmapHeight - 1][2] = 0;
 		}
-		for(i = 0; i < ds->lightmapHeight; i++)
+		for( i = 0; i < ds->lightmapHeight; i++ )
 		{
 			color[0][i][0] = 255;
 			color[0][i][1] = 0;
 			color[0][i][2] = 0;
-
+			
 			color[ds->lightmapWidth - 1][i][0] = 255;
 			color[ds->lightmapWidth - 1][i][1] = 0;
 			color[ds->lightmapWidth - 1][i][2] = 0;
 		}
 	}
-
+	
 	// clamp the colors to bytes and store off
-	for(i = 0; i < ds->lightmapWidth; i++)
+	for( i = 0; i < ds->lightmapWidth; i++ )
 	{
-		for(j = 0; j < ds->lightmapHeight; j++)
+		for( j = 0; j < ds->lightmapHeight; j++ )
 		{
-			k = (ds->lightmapNum * LIGHTMAP_HEIGHT + ds->lightmapY + j) * LIGHTMAP_WIDTH + ds->lightmapX + i;
-
-			ColorToBytes(color[i][j], lightBytes + k * 3);
+			k = ( ds->lightmapNum * LIGHTMAP_HEIGHT + ds->lightmapY + j ) * LIGHTMAP_WIDTH + ds->lightmapX + i;
+			
+			ColorToBytes( color[i][j], lightBytes + k * 3 );
 		}
 	}
-
-	if(ds->surfaceType == MST_PATCH)
+	
+	if( ds->surfaceType == MST_PATCH )
 	{
-		FreeMesh(mesh);
+		FreeMesh( mesh );
 	}
 }
 
@@ -1683,50 +1704,50 @@ int             gridBounds[3];
 LightContributionToPoint
 ========================
 */
-qboolean LightContributionToPoint(const light_t * light, const vec3_t origin, vec3_t color, traceWork_t * tw)
+qboolean LightContributionToPoint( const light_t* light, const vec3_t origin, vec3_t color, traceWork_t* tw )
 {
 	trace_t         trace;
 	float           add;
-
+	
 	add = 0;
-
-	VectorClear(color);
-
+	
+	VectorClear( color );
+	
 	// testing exact PTPFF
-	if(exactPointToPolygon && light->type == emit_area)
+	if( exactPointToPolygon && light->type == emit_area )
 	{
 		float           factor;
 		float           d;
 		vec3_t          normal;
-
+		
 		// see if the point is behind the light
-		d = DotProduct(origin, light->normal) - light->dist;
-		if(!light->twosided)
+		d = DotProduct( origin, light->normal ) - light->dist;
+		if( !light->twosided )
 		{
-			if(d < 1)
+			if( d < 1 )
 			{
 				return qfalse;	// point is behind light
 			}
 		}
-
+		
 		// test occlusion
 		// clip the line, tracing from the surface towards the light
-		TraceLine(origin, light->origin, &trace, qfalse, tw);
-		if(trace.passSolid)
+		TraceLine( origin, light->origin, &trace, qfalse, tw );
+		if( trace.passSolid )
 		{
 			return qfalse;
 		}
-
+		
 		// calculate the contribution
-		VectorSubtract(light->origin, origin, normal);
-		if(VectorNormalize(normal) == 0)
+		VectorSubtract( light->origin, origin, normal );
+		if( VectorNormalize( normal ) == 0 )
 		{
 			return qfalse;
 		}
-		factor = PointToPolygonFormFactor(origin, normal, light->w);
-		if(factor <= 0)
+		factor = PointToPolygonFormFactor( origin, normal, light->w );
+		if( factor <= 0 )
 		{
-			if(light->twosided)
+			if( light->twosided )
 			{
 				factor = -factor;
 			}
@@ -1735,60 +1756,60 @@ qboolean LightContributionToPoint(const light_t * light, const vec3_t origin, ve
 				return qfalse;
 			}
 		}
-		VectorScale(light->emitColor, factor, color);
+		VectorScale( light->emitColor, factor, color );
 		return qtrue;
 	}
-
+	
 	// calculate the amount of light at this sample
-	if(light->type == emit_point || light->type == emit_spotlight)
+	if( light->type == emit_point || light->type == emit_spotlight )
 	{
 		vec3_t          dir;
 		float           dist;
-
-		VectorSubtract(light->origin, origin, dir);
-		dist = VectorLength(dir);
+		
+		VectorSubtract( light->origin, origin, dir );
+		dist = VectorLength( dir );
 		// clamp the distance to prevent super hot spots
-		if(dist < 16)
+		if( dist < 16 )
 		{
 			dist = 16;
 		}
-		if(light->linearLight)
+		if( light->linearLight )
 		{
 			add = light->photons * linearScale - dist;
-			if(add < 0)
+			if( add < 0 )
 			{
 				add = 0;
 			}
 		}
 		else
 		{
-			add = light->photons / (dist * dist);
+			add = light->photons / ( dist * dist );
 		}
 	}
 	else
 	{
 		return qfalse;
 	}
-
-	if(add <= 1.0)
+	
+	if( add <= 1.0 )
 	{
 		return qfalse;
 	}
-
+	
 	// clip the line, tracing from the surface towards the light
-	TraceLine(origin, light->origin, &trace, qfalse, tw);
-
+	TraceLine( origin, light->origin, &trace, qfalse, tw );
+	
 	// other light rays must not hit anything
-	if(trace.passSolid)
+	if( trace.passSolid )
 	{
 		return qfalse;
 	}
-
+	
 	// add the result
 	color[0] = add * light->color[0];
 	color[1] = add * light->color[1];
 	color[2] = add * light->color[2];
-
+	
 	return qtrue;
 }
 
@@ -1807,11 +1828,11 @@ of dynamically placed entities in the world
 =============
 */
 #define	MAX_CONTRIBUTIONS	1024
-void TraceGrid(int num)
+void TraceGrid( int num )
 {
 	int             x, y, z;
 	vec3_t          origin;
-	light_t        *light;
+	light_t*        light;
 	vec3_t          color;
 	int             mod;
 	vec3_t          directedColor;
@@ -1821,34 +1842,34 @@ void TraceGrid(int num)
 	int             i;
 	traceWork_t     tw;
 	float           addSize;
-
+	
 	mod = num;
-	z = mod / (gridBounds[0] * gridBounds[1]);
-	mod -= z * (gridBounds[0] * gridBounds[1]);
-
+	z = mod / ( gridBounds[0] * gridBounds[1] );
+	mod -= z * ( gridBounds[0] * gridBounds[1] );
+	
 	y = mod / gridBounds[0];
 	mod -= y * gridBounds[0];
-
+	
 	x = mod;
-
+	
 	origin[0] = gridMins[0] + x * gridSize[0];
 	origin[1] = gridMins[1] + y * gridSize[1];
 	origin[2] = gridMins[2] + z * gridSize[2];
-
-	if(PointInSolid(origin))
+	
+	if( PointInSolid( origin ) )
 	{
 		vec3_t          baseOrigin;
 		int             step;
-
-		VectorCopy(origin, baseOrigin);
-
+		
+		VectorCopy( origin, baseOrigin );
+		
 		// try to nudge the origin around to find a valid point
-		for(step = 9; step <= 18; step += 9)
+		for( step = 9; step <= 18; step += 9 )
 		{
-			for(i = 0; i < 8; i++)
+			for( i = 0; i < 8; i++ )
 			{
-				VectorCopy(baseOrigin, origin);
-				if(i & 1)
+				VectorCopy( baseOrigin, origin );
+				if( i & 1 )
 				{
 					origin[0] += step;
 				}
@@ -1856,7 +1877,7 @@ void TraceGrid(int num)
 				{
 					origin[0] -= step;
 				}
-				if(i & 2)
+				if( i & 2 )
 				{
 					origin[1] += step;
 				}
@@ -1864,7 +1885,7 @@ void TraceGrid(int num)
 				{
 					origin[1] -= step;
 				}
-				if(i & 4)
+				if( i & 4 )
 				{
 					origin[2] += step;
 				}
@@ -1872,108 +1893,108 @@ void TraceGrid(int num)
 				{
 					origin[2] -= step;
 				}
-
-				if(!PointInSolid(origin))
+				
+				if( !PointInSolid( origin ) )
 				{
 					break;
 				}
 			}
-			if(i != 8)
+			if( i != 8 )
 			{
 				break;
 			}
 		}
-		if(step > 18)
+		if( step > 18 )
 		{
 			// can't find a valid point at all
-			for(i = 0; i < 8; i++)
+			for( i = 0; i < 8; i++ )
 			{
 				gridData[num * 8 + i] = 0;
 			}
 			return;
 		}
 	}
-
-	VectorClear(summedDir);
-
+	
+	VectorClear( summedDir );
+	
 	// trace to all the lights
-
+	
 	// find the major light direction, and divide the
 	// total light between that along the direction and
 	// the remaining in the ambient
 	numCon = 0;
-	for(light = lights; light; light = light->next)
+	for( light = lights; light; light = light->next )
 	{
 		vec3_t          add;
 		vec3_t          dir;
 		float           addSize;
-
-		if(!LightContributionToPoint(light, origin, add, &tw))
+		
+		if( !LightContributionToPoint( light, origin, add, &tw ) )
 		{
 			continue;
 		}
-
-		VectorSubtract(light->origin, origin, dir);
-		VectorNormalize(dir);
-
-		VectorCopy(add, contributions[numCon].color);
-		VectorCopy(dir, contributions[numCon].dir);
+		
+		VectorSubtract( light->origin, origin, dir );
+		VectorNormalize( dir );
+		
+		VectorCopy( add, contributions[numCon].color );
+		VectorCopy( dir, contributions[numCon].dir );
 		numCon++;
-
-		addSize = VectorLength(add);
-		VectorMA(summedDir, addSize, dir, summedDir);
-
-		if(numCon == MAX_CONTRIBUTIONS - 1)
+		
+		addSize = VectorLength( add );
+		VectorMA( summedDir, addSize, dir, summedDir );
+		
+		if( numCon == MAX_CONTRIBUTIONS - 1 )
 		{
 			break;
 		}
 	}
-
+	
 	// trace directly to the sun
-	SunToPoint(origin, &tw, color);
-	addSize = VectorLength(color);
-	if(addSize > 0)
+	SunToPoint( origin, &tw, color );
+	addSize = VectorLength( color );
+	if( addSize > 0 )
 	{
-		VectorCopy(color, contributions[numCon].color);
-		VectorCopy(sunDirection, contributions[numCon].dir);
-		VectorMA(summedDir, addSize, sunDirection, summedDir);
+		VectorCopy( color, contributions[numCon].color );
+		VectorCopy( sunDirection, contributions[numCon].dir );
+		VectorMA( summedDir, addSize, sunDirection, summedDir );
 		numCon++;
 	}
-
+	
 	// now that we have identified the primary light direction,
 	// go back and seperate all the light into directed and ambient
-	VectorNormalize(summedDir);
-	VectorCopy(ambientColor, color);
-	VectorClear(directedColor);
-
-	for(i = 0; i < numCon; i++)
+	VectorNormalize( summedDir );
+	VectorCopy( ambientColor, color );
+	VectorClear( directedColor );
+	
+	for( i = 0; i < numCon; i++ )
 	{
 		float           d;
-
-		d = DotProduct(contributions[i].dir, summedDir);
-		if(d < 0)
+		
+		d = DotProduct( contributions[i].dir, summedDir );
+		if( d < 0 )
 		{
 			d = 0;
 		}
-
-		VectorMA(directedColor, d, contributions[i].color, directedColor);
-
+		
+		VectorMA( directedColor, d, contributions[i].color, directedColor );
+		
 		// the ambient light will be at 1/4 the value of directed light
-		d = 0.25 * (1.0 - d);
-		VectorMA(color, d, contributions[i].color, color);
+		d = 0.25 * ( 1.0 - d );
+		VectorMA( color, d, contributions[i].color, color );
 	}
-
+	
 	// now do some fudging to keep the ambient from being too low
-	VectorMA(color, 0.25, directedColor, color);
-
+	VectorMA( color, 0.25, directedColor, color );
+	
 	//
 	// save the resulting value out
 	//
-	ColorToBytes(color, gridData + num * 8);
-	ColorToBytes(directedColor, gridData + num * 8 + 3);
-
-	VectorNormalize(summedDir);
-	NormalToLatLong(summedDir, gridData + num * 8 + 6);
+	ColorToBytes( color, gridData + num * 8 );
+	ColorToBytes( directedColor, gridData + num * 8 + 3 );
+	
+	VectorNormalize( summedDir );
+	NormalToLatLong( summedDir, gridData + num * 8 + 6 );
 }
 
 
@@ -1982,22 +2003,24 @@ void TraceGrid(int num)
 SetupGrid
 =============
 */
-void SetupGrid(void)
+void SetupGrid( void )
 {
 	int             i;
 	vec3_t          maxs;
-
-	for(i = 0; i < 3; i++)
+	
+	for( i = 0; i < 3; i++ )
 	{
-		gridMins[i] = gridSize[i] * ceil(dmodels[0].mins[i] / gridSize[i]);
-		maxs[i] = gridSize[i] * floor(dmodels[0].maxs[i] / gridSize[i]);
-		gridBounds[i] = (maxs[i] - gridMins[i]) / gridSize[i] + 1;
+		gridMins[i] = gridSize[i] * ceil( dmodels[0].mins[i] / gridSize[i] );
+		maxs[i] = gridSize[i] * floor( dmodels[0].maxs[i] / gridSize[i] );
+		gridBounds[i] = ( maxs[i] - gridMins[i] ) / gridSize[i] + 1;
 	}
-
+	
 	numGridPoints = gridBounds[0] * gridBounds[1] * gridBounds[2];
-	if(numGridPoints * 8 >= MAX_MAP_LIGHTGRID)
-		Error("MAX_MAP_LIGHTGRID");
-	Sys_FPrintf(SYS_VRB, "%5i gridPoints\n", numGridPoints);
+	if( numGridPoints * 8 >= MAX_MAP_LIGHTGRID )
+	{
+		Error( "MAX_MAP_LIGHTGRID" );
+	}
+	Sys_FPrintf( SYS_VRB, "%5i gridPoints\n", numGridPoints );
 }
 
 //=============================================================================
@@ -2007,28 +2030,38 @@ void SetupGrid(void)
 RemoveLightsInSolid
 =============
 */
-void RemoveLightsInSolid(void)
+void RemoveLightsInSolid( void )
 {
-	light_t        *light, *prev;
+	light_t*        light, *prev;
 	int             numsolid = 0;
-
+	
 	prev = NULL;
-	for(light = lights; light;)
+	for( light = lights; light; )
 	{
-		if(PointInSolid(light->origin))
+		if( PointInSolid( light->origin ) )
 		{
-			if(prev)
+			if( prev )
+			{
 				prev->next = light->next;
+			}
 			else
+			{
 				lights = light->next;
-			if(light->w)
-				FreeWinding(light->w);
-			free(light);
+			}
+			if( light->w )
+			{
+				FreeWinding( light->w );
+			}
+			free( light );
 			numsolid++;
-			if(prev)
+			if( prev )
+			{
 				light = prev->next;
+			}
 			else
+			{
 				light = lights;
+			}
 		}
 		else
 		{
@@ -2036,7 +2069,7 @@ void RemoveLightsInSolid(void)
 			light = light->next;
 		}
 	}
-	Sys_Printf(" %7i lights in solid\n", numsolid);
+	Sys_Printf( " %7i lights in solid\n", numsolid );
 }
 
 /*
@@ -2044,35 +2077,35 @@ void RemoveLightsInSolid(void)
 LightWorld
 =============
 */
-void LightWorld(void)
+void LightWorld( void )
 {
 	float           f;
-
+	
 	// determine the number of grid points
 	SetupGrid();
-
+	
 	// find the optional world ambient
-	GetVectorForKey(&entities[0], "_color", ambientColor);
-	f = FloatForKey(&entities[0], "ambient");
-	VectorScale(ambientColor, f, ambientColor);
-
+	GetVectorForKey( &entities[0], "_color", ambientColor );
+	f = FloatForKey( &entities[0], "ambient" );
+	VectorScale( ambientColor, f, ambientColor );
+	
 	// create lights out of patches and lights
-	Sys_FPrintf(SYS_VRB, "--- CreateLights ---\n");
+	Sys_FPrintf( SYS_VRB, "--- CreateLights ---\n" );
 	CreateEntityLights();
-	Sys_FPrintf(SYS_VRB, "%i point lights\n", numPointLights);
-	Sys_FPrintf(SYS_VRB, "%i area lights\n", numAreaLights);
-
-	if(!nogridlighting)
+	Sys_FPrintf( SYS_VRB, "%i point lights\n", numPointLights );
+	Sys_FPrintf( SYS_VRB, "%i area lights\n", numAreaLights );
+	
+	if( !nogridlighting )
 	{
-		Sys_FPrintf(SYS_VRB, "--- TraceGrid ---\n");
-		RunThreadsOnIndividual(numGridPoints, qtrue, TraceGrid);
-		Sys_FPrintf(SYS_VRB, "%i x %i x %i = %i grid\n", gridBounds[0], gridBounds[1], gridBounds[2], numGridPoints);
+		Sys_FPrintf( SYS_VRB, "--- TraceGrid ---\n" );
+		RunThreadsOnIndividual( numGridPoints, qtrue, TraceGrid );
+		Sys_FPrintf( SYS_VRB, "%i x %i x %i = %i grid\n", gridBounds[0], gridBounds[1], gridBounds[2], numGridPoints );
 	}
-
-	Sys_FPrintf(SYS_VRB, "--- TraceLtm ---\n");
-	RunThreadsOnIndividual(numDrawSurfaces, qtrue, TraceLtm);
-	Sys_FPrintf(SYS_VRB, "%5i visible samples\n", c_visible);
-	Sys_FPrintf(SYS_VRB, "%5i occluded samples\n", c_occluded);
+	
+	Sys_FPrintf( SYS_VRB, "--- TraceLtm ---\n" );
+	RunThreadsOnIndividual( numDrawSurfaces, qtrue, TraceLtm );
+	Sys_FPrintf( SYS_VRB, "%5i visible samples\n", c_visible );
+	Sys_FPrintf( SYS_VRB, "%5i occluded samples\n", c_occluded );
 }
 
 /*
@@ -2087,101 +2120,101 @@ This will only work for flat 3*3 patches that exactly hold one copy of the textu
 ========
 */
 #define	PLANAR_PATCH_EPSILON	0.1
-void CreateFilters(void)
+void CreateFilters( void )
 {
 	int             i;
-	filter_t       *f;
-	dsurface_t     *ds;
-	shaderInfo_t   *si;
-	drawVert_t     *v1, *v2, *v3;
+	filter_t*       f;
+	dsurface_t*     ds;
+	shaderInfo_t*   si;
+	drawVert_t*     v1, *v2, *v3;
 	vec3_t          d1, d2;
 	int             vertNum;
-
+	
 	numFilters = 0;
-
+	
 	return;
-
-	for(i = 0; i < numDrawSurfaces; i++)
+	
+	for( i = 0; i < numDrawSurfaces; i++ )
 	{
 		ds = &drawSurfaces[i];
-		if(!ds->patchWidth)
+		if( !ds->patchWidth )
 		{
 			continue;
 		}
-		si = ShaderInfoForShader(dshaders[ds->shaderNum].shader);
-/*
-		if ( !(si->surfaceFlags & SURF_LIGHTFILTER) ) {
-			continue;
-		}
-*/
-
+		si = ShaderInfoForShader( dshaders[ds->shaderNum].shader );
+		/*
+				if ( !(si->surfaceFlags & SURF_LIGHTFILTER) ) {
+					continue;
+				}
+		*/
+		
 		// we have a filter patch
 		v1 = &drawVerts[ds->firstVert];
-
-		if(ds->patchWidth != 3 || ds->patchHeight != 3)
+		
+		if( ds->patchWidth != 3 || ds->patchHeight != 3 )
 		{
-			Sys_Printf("WARNING: patch at %i %i %i has SURF_LIGHTFILTER but isn't a 3 by 3\n", v1->xyz[0], v1->xyz[1],
-					   v1->xyz[2]);
+			Sys_Printf( "WARNING: patch at %i %i %i has SURF_LIGHTFILTER but isn't a 3 by 3\n", v1->xyz[0], v1->xyz[1],
+						v1->xyz[2] );
 			continue;
 		}
-
-		if(numFilters == MAX_FILTERS)
+		
+		if( numFilters == MAX_FILTERS )
 		{
-			Error("MAX_FILTERS");
+			Error( "MAX_FILTERS" );
 		}
 		f = &filters[numFilters];
 		numFilters++;
-
+		
 		v2 = &drawVerts[ds->firstVert + 2];
 		v3 = &drawVerts[ds->firstVert + 6];
-
-		VectorSubtract(v2->xyz, v1->xyz, d1);
-		VectorSubtract(v3->xyz, v1->xyz, d2);
-		VectorNormalize(d1);
-		VectorNormalize(d2);
-		CrossProduct(d1, d2, f->plane);
-		f->plane[3] = DotProduct(v1->xyz, f->plane);
-
+		
+		VectorSubtract( v2->xyz, v1->xyz, d1 );
+		VectorSubtract( v3->xyz, v1->xyz, d2 );
+		VectorNormalize( d1 );
+		VectorNormalize( d2 );
+		CrossProduct( d1, d2, f->plane );
+		f->plane[3] = DotProduct( v1->xyz, f->plane );
+		
 		// make sure all the control points are on the plane
-		for(vertNum = 0; vertNum < ds->numVerts; vertNum++)
+		for( vertNum = 0; vertNum < ds->numVerts; vertNum++ )
 		{
 			float           d;
-
-			d = DotProduct(drawVerts[ds->firstVert + vertNum].xyz, f->plane) - f->plane[3];
-			if(fabs(d) > PLANAR_PATCH_EPSILON)
+			
+			d = DotProduct( drawVerts[ds->firstVert + vertNum].xyz, f->plane ) - f->plane[3];
+			if( fabs( d ) > PLANAR_PATCH_EPSILON )
 			{
 				break;
 			}
 		}
-		if(vertNum != ds->numVerts)
+		if( vertNum != ds->numVerts )
 		{
 			numFilters--;
-			Sys_Printf("WARNING: patch at %i %i %i has SURF_LIGHTFILTER but isn't flat\n", v1->xyz[0], v1->xyz[1], v1->xyz[2]);
+			Sys_Printf( "WARNING: patch at %i %i %i has SURF_LIGHTFILTER but isn't flat\n", v1->xyz[0], v1->xyz[1], v1->xyz[2] );
 			continue;
 		}
 	}
-
+	
 	f = &filters[0];
 	numFilters = 1;
-
+	
 	f->plane[0] = 1;
 	f->plane[1] = 0;
 	f->plane[2] = 0;
 	f->plane[3] = 448;
-
+	
 	f->origin[0] = 448;
 	f->origin[1] = 192;
 	f->origin[2] = 0;
-
+	
 	f->vectors[0][0] = 0;
 	f->vectors[0][1] = -1.0 / 128;
 	f->vectors[0][2] = 0;
-
+	
 	f->vectors[1][0] = 0;
 	f->vectors[1][1] = 0;
 	f->vectors[1][2] = 1.0 / 128;
-
-	f->si = ShaderInfoForShader("textures/hell/blocks11ct");
+	
+	f->si = ShaderInfoForShader( "textures/hell/blocks11ct" );
 }
 
 /*
@@ -2189,32 +2222,34 @@ void CreateFilters(void)
 VertexLightingThread
 =============
 */
-void VertexLightingThread(int num)
+void VertexLightingThread( int num )
 {
-	dsurface_t     *ds;
+	dsurface_t*     ds;
 	traceWork_t     tw;
-	shaderInfo_t   *si;
-
+	shaderInfo_t*   si;
+	
 	ds = &drawSurfaces[num];
-
+	
 	// vertex-lit triangle model
-	if(ds->surfaceType == MST_TRIANGLE_SOUP)
+	if( ds->surfaceType == MST_TRIANGLE_SOUP )
 	{
 		return;
 	}
-
-	if(novertexlighting)
+	
+	if( novertexlighting )
+	{
 		return;
-
-	if(ds->lightmapNum == -1)
+	}
+	
+	if( ds->lightmapNum == -1 )
 	{
 		return;					// doesn't need lighting at all
 	}
-
-	si = ShaderInfoForShader(dshaders[ds->shaderNum].shader);
-
+	
+	si = ShaderInfoForShader( dshaders[ds->shaderNum].shader );
+	
 	// calculate the vertex lighting for gouraud shade mode
-	VertexLighting(ds, si->vertexShadows, si->forceSunLight, si->vertexScale, &tw);
+	VertexLighting( ds, si->vertexShadows, si->forceSunLight, si->vertexScale, &tw );
 }
 
 /*
@@ -2222,19 +2257,19 @@ void VertexLightingThread(int num)
 TriSoupLightingThread
 =============
 */
-void TriSoupLightingThread(int num)
+void TriSoupLightingThread( int num )
 {
-	dsurface_t     *ds;
+	dsurface_t*     ds;
 	traceWork_t     tw;
-	shaderInfo_t   *si;
-
+	shaderInfo_t*   si;
+	
 	ds = &drawSurfaces[num];
-	si = ShaderInfoForShader(dshaders[ds->shaderNum].shader);
-
+	si = ShaderInfoForShader( dshaders[ds->shaderNum].shader );
+	
 	// vertex-lit triangle model
-	if(ds->surfaceType == MST_TRIANGLE_SOUP)
+	if( ds->surfaceType == MST_TRIANGLE_SOUP )
 	{
-		VertexLighting(ds, !si->noVertexShadows, si->forceSunLight, 1.0, &tw);
+		VertexLighting( ds, !si->noVertexShadows, si->forceSunLight, 1.0, &tw );
 	}
 }
 
@@ -2243,30 +2278,30 @@ void TriSoupLightingThread(int num)
 GridAndVertexLighting
 =============
 */
-void GridAndVertexLighting(void)
+void GridAndVertexLighting( void )
 {
 	SetupGrid();
-
+	
 	FindSkyBrushes();
 	CreateFilters();
 	InitTrace();
 	CreateEntityLights();
 	CreateSurfaceLights();
-
-	if(!nogridlighting)
+	
+	if( !nogridlighting )
 	{
-		Sys_Printf("--- TraceGrid ---\n");
-		RunThreadsOnIndividual(numGridPoints, qtrue, TraceGrid);
+		Sys_Printf( "--- TraceGrid ---\n" );
+		RunThreadsOnIndividual( numGridPoints, qtrue, TraceGrid );
 	}
-
-	if(!novertexlighting)
+	
+	if( !novertexlighting )
 	{
-		Sys_Printf("--- Vertex Lighting ---\n");
-		RunThreadsOnIndividual(numDrawSurfaces, qtrue, VertexLightingThread);
+		Sys_Printf( "--- Vertex Lighting ---\n" );
+		RunThreadsOnIndividual( numDrawSurfaces, qtrue, VertexLightingThread );
 	}
-
-	Sys_Printf("--- Model Lighting ---\n");
-	RunThreadsOnIndividual(numDrawSurfaces, qtrue, TriSoupLightingThread);
+	
+	Sys_Printf( "--- Model Lighting ---\n" );
+	RunThreadsOnIndividual( numDrawSurfaces, qtrue, TriSoupLightingThread );
 }
 
 /*
@@ -2274,173 +2309,175 @@ void GridAndVertexLighting(void)
 LightMain
 ========
 */
-int LightMain(int argc, char **argv)
+int LightMain( int argc, char** argv )
 {
 	int             i;
 	double          start, end;
-	const char     *value;
-
-	Sys_Printf("----- Lighting ----\n");
-
+	const char*     value;
+	
+	Sys_Printf( "----- Lighting ----\n" );
+	
 	verbose = qfalse;
-
-	for(i = 1; i < argc; i++)
+	
+	for( i = 1; i < argc; i++ )
 	{
-		if(!strcmp(argv[i], "-tempname"))
+		if( !strcmp( argv[i], "-tempname" ) )
 		{
 			i++;
 		}
-		else if(!strcmp(argv[i], "-v"))
+		else if( !strcmp( argv[i], "-v" ) )
 		{
 			verbose = qtrue;
 		}
-		else if(!strcmp(argv[i], "-threads"))
+		else if( !strcmp( argv[i], "-threads" ) )
 		{
-			numthreads = atoi(argv[i + 1]);
+			numthreads = atoi( argv[i + 1] );
 			i++;
 		}
-		else if(!strcmp(argv[i], "-area"))
+		else if( !strcmp( argv[i], "-area" ) )
 		{
-			areaScale *= atof(argv[i + 1]);
-			Sys_Printf("area light scaling at %f\n", areaScale);
+			areaScale *= atof( argv[i + 1] );
+			Sys_Printf( "area light scaling at %f\n", areaScale );
 			i++;
 		}
-		else if(!strcmp(argv[i], "-point"))
+		else if( !strcmp( argv[i], "-point" ) )
 		{
-			pointScale *= atof(argv[i + 1]);
-			Sys_Printf("point light scaling at %f\n", pointScale);
+			pointScale *= atof( argv[i + 1] );
+			Sys_Printf( "point light scaling at %f\n", pointScale );
 			i++;
 		}
-		else if(!strcmp(argv[i], "-notrace"))
+		else if( !strcmp( argv[i], "-notrace" ) )
 		{
 			notrace = qtrue;
-			Sys_Printf("No occlusion tracing\n");
+			Sys_Printf( "No occlusion tracing\n" );
 		}
-		else if(!strcmp(argv[i], "-patchshadows"))
+		else if( !strcmp( argv[i], "-patchshadows" ) )
 		{
 			patchshadows = qtrue;
-			Sys_Printf("Patch shadow casting enabled\n");
+			Sys_Printf( "Patch shadow casting enabled\n" );
 		}
-		else if(!strcmp(argv[i], "-extra"))
+		else if( !strcmp( argv[i], "-extra" ) )
 		{
 			extra = qtrue;
-			Sys_Printf("Extra detail tracing\n");
+			Sys_Printf( "Extra detail tracing\n" );
 		}
-		else if(!strcmp(argv[i], "-extrawide"))
+		else if( !strcmp( argv[i], "-extrawide" ) )
 		{
 			extra = qtrue;
 			extraWide = qtrue;
-			Sys_Printf("Extra wide detail tracing\n");
+			Sys_Printf( "Extra wide detail tracing\n" );
 		}
-		else if(!strcmp(argv[i], "-samplesize"))
+		else if( !strcmp( argv[i], "-samplesize" ) )
 		{
-			samplesize = atoi(argv[i + 1]);
-			if(samplesize < 1)
+			samplesize = atoi( argv[i + 1] );
+			if( samplesize < 1 )
+			{
 				samplesize = 1;
+			}
 			i++;
-			Sys_Printf("lightmap sample size is %dx%d units\n", samplesize, samplesize);
+			Sys_Printf( "lightmap sample size is %dx%d units\n", samplesize, samplesize );
 		}
-		else if(!strcmp(argv[i], "-novertex"))
+		else if( !strcmp( argv[i], "-novertex" ) )
 		{
 			novertexlighting = qtrue;
-			Sys_Printf("no vertex lighting = true\n");
+			Sys_Printf( "no vertex lighting = true\n" );
 		}
-		else if(!strcmp(argv[i], "-nogrid"))
+		else if( !strcmp( argv[i], "-nogrid" ) )
 		{
 			nogridlighting = qtrue;
-			Sys_Printf("no grid lighting = true\n");
+			Sys_Printf( "no grid lighting = true\n" );
 		}
-		else if(!strcmp(argv[i], "-border"))
+		else if( !strcmp( argv[i], "-border" ) )
 		{
 			lightmapBorder = qtrue;
-			Sys_Printf("Adding debug border to lightmaps\n");
+			Sys_Printf( "Adding debug border to lightmaps\n" );
 		}
-		else if(!strcmp(argv[i], "-nosurf"))
+		else if( !strcmp( argv[i], "-nosurf" ) )
 		{
 			noSurfaces = qtrue;
-			Sys_Printf("Not tracing against surfaces\n");
+			Sys_Printf( "Not tracing against surfaces\n" );
 		}
-		else if(!strcmp(argv[i], "-dump"))
+		else if( !strcmp( argv[i], "-dump" ) )
 		{
 			dump = qtrue;
-			Sys_Printf("Dumping occlusion maps\n");
+			Sys_Printf( "Dumping occlusion maps\n" );
 		}
-		else if(!strcmp(argv[i], "-connect"))
+		else if( !strcmp( argv[i], "-connect" ) )
 		{
-			Broadcast_Setup(argv[++i]);
+			Broadcast_Setup( argv[++i] );
 		}
 		else
 		{
 			break;
 		}
 	}
-
-	if(i != argc - 1)
+	
+	if( i != argc - 1 )
 	{
-		Error("usage: xmap -light [-<switch> [-<switch> ...]] <mapname.bsp>\n"
-			  "\n"
-			  "Switches:\n"
-			  "   v              = verbose output\n"
-			  "   threads <X>    = set number of threads to X\n"
-			  "   area <V>       = set the area light scale to V\n"
-			  "   point <W>      = set the point light scale to W\n"
-			  "   notrace        = don't cast any shadows\n"
-			  "   patchshadows   = enable patch shadow casting\n"
-			  "   extra          = enable super sampling for anti-aliasing\n"
-			  "   extrawide      = same as extra but smoothen more\n"
-			  "   nogrid         = don't calculate light grid for dynamic model lighting\n"
-			  "   novertex       = don't calculate vertex lighting\n"
-			  "   border         = add debug border to lightmaps\n"
-			  "   samplesize <N> = set the lightmap pixel size to NxN units\n");
+		Error( "usage: xmap -light [-<switch> [-<switch> ...]] <mapname.bsp>\n"
+			   "\n"
+			   "Switches:\n"
+			   "   v              = verbose output\n"
+			   "   threads <X>    = set number of threads to X\n"
+			   "   area <V>       = set the area light scale to V\n"
+			   "   point <W>      = set the point light scale to W\n"
+			   "   notrace        = don't cast any shadows\n"
+			   "   patchshadows   = enable patch shadow casting\n"
+			   "   extra          = enable super sampling for anti-aliasing\n"
+			   "   extrawide      = same as extra but smoothen more\n"
+			   "   nogrid         = don't calculate light grid for dynamic model lighting\n"
+			   "   novertex       = don't calculate vertex lighting\n"
+			   "   border         = add debug border to lightmaps\n"
+			   "   samplesize <N> = set the lightmap pixel size to NxN units\n" );
 	}
-
+	
 	start = I_FloatTime();
-
+	
 	ThreadSetDefault();
-
-	SetQdirFromPath(argv[i]);
-
-	strcpy(source, ExpandArg(argv[i]));
-	StripExtension(source);
-	DefaultExtension(source, ".bsp");
-
+	
+	SetQdirFromPath( argv[i] );
+	
+	strcpy( source, ExpandArg( argv[i] ) );
+	StripExtension( source );
+	DefaultExtension( source, ".bsp" );
+	
 	LoadShaderInfo();
-
-	Sys_Printf("reading %s\n", source);
-
-	LoadBSPFile(source);
-
+	
+	Sys_Printf( "reading %s\n", source );
+	
+	LoadBSPFile( source );
+	
 	FindSkyBrushes();
-
+	
 	ParseEntities();
-
-	value = ValueForKey(&entities[0], "gridsize");
-	if(strlen(value))
+	
+	value = ValueForKey( &entities[0], "gridsize" );
+	if( strlen( value ) )
 	{
-		sscanf(value, "%f %f %f", &gridSize[0], &gridSize[1], &gridSize[2]);
-		Sys_Printf("grid size = {%1.1f, %1.1f, %1.1f}\n", gridSize[0], gridSize[1], gridSize[2]);
+		sscanf( value, "%f %f %f", &gridSize[0], &gridSize[1], &gridSize[2] );
+		Sys_Printf( "grid size = {%1.1f, %1.1f, %1.1f}\n", gridSize[0], gridSize[1], gridSize[2] );
 	}
-
+	
 	CreateFilters();
-
+	
 	InitTrace();
-
+	
 	SetEntityOrigins();
-
+	
 	CountLightmaps();
-
+	
 	CreateSurfaceLights();
-
+	
 	LightWorld();
-
-	Sys_Printf("writing %s\n", source);
-	WriteBSPFile(source);
-
+	
+	Sys_Printf( "writing %s\n", source );
+	WriteBSPFile( source );
+	
 	end = I_FloatTime();
-	Sys_Printf("%5.0f seconds elapsed\n", end - start);
-
+	Sys_Printf( "%5.0f seconds elapsed\n", end - start );
+	
 	// shut down connection
 	Broadcast_Shutdown();
-
+	
 	return 0;
 }

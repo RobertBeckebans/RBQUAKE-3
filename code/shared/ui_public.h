@@ -56,7 +56,7 @@ typedef enum
 	UI_FS_WRITE,
 	UI_FS_FCLOSEFILE,
 	UI_FS_GETFILELIST,
-
+	
 	UI_R_REGISTERMODEL,
 	UI_R_REGISTERANIMATION,
 	UI_R_RESETSKELETON,
@@ -65,7 +65,7 @@ typedef enum
 	UI_R_BONEINDEX,
 	UI_R_ANIMNUMFRAMES,
 	UI_R_ANIMFRAMERATE,
-
+	
 	UI_R_REGISTERSKIN,
 	UI_R_REGISTERSHADERNOMIP,
 	UI_R_CLEARSCENE,
@@ -130,9 +130,9 @@ typedef enum
 	UI_LAN_COMPARESERVERS,
 	// 1.32
 	UI_FS_SEEK,
-
+	
 	UI_GETNEWS,
-
+	
 	UI_MEMSET = 100,
 	UI_MEMCPY,
 	UI_STRNCPY,
@@ -165,7 +165,7 @@ typedef enum
 typedef enum
 {
 	UI_GETAPIVERSION = 0,		// system reserved
-
+	
 	UI_INIT,
 //  void    UI_Init( void );
 
