@@ -1,0 +1,33 @@
+This patch comes with an alternate set of cvars to configure and tweak mouse acceleration. Nothing fundamentally new but it's a bit easier to setup mouse acceleration, and it's an option offered in QUAKE LIVE which I'm contributing to the GPL'ed quake3 source already.
+
+Below is a bit of documentation I posted about the system.
+
+TTimo
+
+--
+
+I've been using an experimental mouse acceleration code for a while, and decided to make it available to everyone.
+
+Don't be too worried if you don't understand the explanations below, this is mostly intended for advanced players:
+
+To enable it, set cl_mouseAccelStyle 1 (0 is the default/legacy behavior)
+
+New style is controlled with 3 cvars:
+sensitivity
+cl_mouseAccelOffset
+cl_mouseAccel
+
+The old code (cl_mouseAccelStyle 0) can be difficult to calibrate because if you have a base sensitivity setup, as soon as you set a non zero acceleration your base sensitivity at low speeds will change as well. The other problem with style 0 is that you are stuck on a square (power of two) acceleration curve.
+
+The new code tries to solve both problems:
+
+Once you setup your sensitivity to feel comfortable and accurate enough for low mouse deltas with no acceleration (cl_mouseAccel 0), you can start increasing cl_mouseAccel and tweaking cl_mouseAccelOffset to get the amplification you want for high deltas with little effect on low mouse deltas.
+
+cl_mouseAccel is a power value. Should be >= 1, 2 will be the same power curve as style 0. The higher the value, the faster the amplification grows with the mouse delta.
+
+cl_mouseAccelOffset sets how much base mouse delta will be doubled by acceleration. The closer to zero you bring it, the more acceleration will happen at low speeds. This is also very useful if you are changing to a new mouse with higher dpi, if you go from 500 to 1000 dpi, you can divide your cl_mouseAccelOffset by two to keep the same overall 'feel' (you will likely gain in precision when you do that, but that is not related to mouse acceleration).
+
+
+Mouse acceleration is tricky to configure, and when you do you'll have to re-learn your aiming. But you will find that it's very much forth it in the long run.
+
+If you try the new acceleration code and start using it, I'd be very interested by your feedback.
