@@ -6,7 +6,7 @@
 
 ![XreaL](https://github.com/RobertBeckebans/RBQUAKE-3/raw/master/docs/xreal_scrnshot.jpg)
 
-The goal of this port was to bring Q3A up to latest technology in 2009 making it closer to Doom 3 and Quake 4 while still remaining a Quake 3 port regarding the gameplay.
+RBQUAKE-3 is based on XreaL and the goal of this port was to bring Q3A up to latest technology in 2009 making it closer to Doom 3 and Quake 4 while still remaining a Quake 3 port regarding the gameplay. Some results were:
 
 * OpenGL 3.2 renderer with all deprecated and immediate mode API OpenGL calls removed
 * Clever usage of vertex buffer objects (VBO) to speed up rendering of everything
@@ -28,7 +28,7 @@ The goal of this port was to bring Q3A up to latest technology in 2009 making it
 * Deluxe light mapping support (stores dominant light direction per texel besides color)
 
 
-Uses code from the ioquake3 project ![ioq3](https://github.com/raynorpat/xreal/raw/master/docs/ioquake3_logo.png)
+It uses code from the ioquake3 project ![ioq3](https://github.com/RobertBeckebans/RBQUAKE-3/raw/master/docs/ioquake3_logo.png)
 
 
 ## GENERAL NOTES
