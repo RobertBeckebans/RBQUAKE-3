@@ -133,7 +133,7 @@ void R_AddPolygonSurfaces( void )
 	for( i = 0, poly = tr.refdef.polys; i < tr.refdef.numPolys; i++, poly++ )
 	{
 		sh = R_GetShaderByHandle( poly->hShader );
-		R_AddDrawSurf( (void*)poly, sh, -1, poly->fogIndex );
+		R_AddDrawSurf( ( void* )poly, sh, -1, poly->fogIndex );
 	}
 }
 
@@ -157,7 +157,7 @@ void R_AddPolygonBufferSurfaces( void )
 		sh = R_GetShaderByHandle( polybuffer->pPolyBuffer->shader );
 
 		//R_AddDrawSurf((void *)polybuffer, sh, polybuffer->fogIndex, 0, 0);
-		R_AddDrawSurf( (void*)polybuffer, sh, -1, polybuffer->fogIndex );
+		R_AddDrawSurf( ( void* )polybuffer, sh, -1, polybuffer->fogIndex );
 	}
 }
 
@@ -643,8 +643,8 @@ void RE_RenderScene( const refdef_t* fd )
 		areaDiff = 0;
 		for( i = 0; i < MAX_MAP_AREA_BYTES / 4; i++ )
 		{
-			areaDiff |= ( (int*)tr.refdef.areamask )[ i ] ^ ( (int*)fd->areamask )[ i ];
-			( (int*)tr.refdef.areamask )[ i ] = ( (int*)fd->areamask )[ i ];
+			areaDiff |= ( ( int* )tr.refdef.areamask )[ i ] ^ ( ( int* )fd->areamask )[ i ];
+			( ( int* )tr.refdef.areamask )[ i ] = ( ( int* )fd->areamask )[ i ];
 		}
 
 		if( areaDiff )

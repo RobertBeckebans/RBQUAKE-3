@@ -79,11 +79,11 @@ winding_t* AllocWinding( int points )
 
 void FreeWinding( winding_t* w )
 {
-	if( *(unsigned*)w == 0xdeaddead )
+	if( *( unsigned* )w == 0xdeaddead )
 	{
 		Error( "FreeWinding: freed a freed winding" );
 	}
-	*(unsigned*)w = 0xdeaddead;
+	*( unsigned* )w = 0xdeaddead;
 
 	if( numthreads == 1 )
 	{
@@ -306,7 +306,7 @@ winding_t* CopyWinding( winding_t* w )
 	winding_t* c;
 
 	c    = AllocWinding( w->numpoints );
-	size = (int)( (winding_t*)0 )->p[ w->numpoints ];
+	size = ( int )( ( winding_t* )0 )->p[ w->numpoints ];
 	memcpy( c, w, size );
 	return c;
 }

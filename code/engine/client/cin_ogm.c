@@ -294,14 +294,14 @@ static qboolean loadAudio( void )
 	memset( &vb, 0, sizeof( vb ) );
 	vorbis_block_init( &g_ogm.vd, &vb );
 
-	while( anyDataTransferred && g_ogm.currentTime + MAX_AUDIO_PRELOAD > (int)( g_ogm.vd.granulepos * 1000 / g_ogm.vi.rate ) )
+	while( anyDataTransferred && g_ogm.currentTime + MAX_AUDIO_PRELOAD > ( int )( g_ogm.vd.granulepos * 1000 / g_ogm.vi.rate ) )
 	{
 		anyDataTransferred = qfalse;
 
 		if( ( samples = vorbis_synthesis_pcmout( &g_ogm.vd, &pcm ) ) > 0 )
 		{
 			// vorbis -> raw
-			ptr           = (short*)rawBuffer;
+			ptr           = ( short* )rawBuffer;
 			samplesNeeded = ( SIZEOF_RAWBUFF ) / ( 2 * 2 ); // (width*channel)
 			if( samples < samplesNeeded )
 			{
@@ -351,7 +351,7 @@ static qboolean loadAudio( void )
 
 	vorbis_block_clear( &vb );
 
-	if( g_ogm.currentTime + MIN_AUDIO_PRELOAD > (int)( g_ogm.vd.granulepos * 1000 / g_ogm.vi.rate ) )
+	if( g_ogm.currentTime + MIN_AUDIO_PRELOAD > ( int )( g_ogm.vd.granulepos * 1000 / g_ogm.vi.rate ) )
 	{
 		return qtrue;
 	}
@@ -400,7 +400,7 @@ static int loadVideoFrameXvid()
 				}
 
 				/* Allocate the new buffer */
-				g_ogm.outputBuffer = (unsigned char*)malloc( g_ogm.outputBufferSize * 4 ); //FIXME? should the 4 stay for BPP?
+				g_ogm.outputBuffer = ( unsigned char* )malloc( g_ogm.outputBufferSize * 4 ); //FIXME? should the 4 stay for BPP?
 				if( g_ogm.outputBuffer == NULL )
 				{
 					g_ogm.outputBufferSize = 0;
@@ -500,7 +500,7 @@ static int loadVideoFrameTheora( void )
 				}
 
 				/* Allocate the new buffer */
-				g_ogm.outputBuffer = (unsigned char*)malloc( g_ogm.outputBufferSize * 4 );
+				g_ogm.outputBuffer = ( unsigned char* )malloc( g_ogm.outputBufferSize * 4 );
 				if( g_ogm.outputBuffer == NULL )
 				{
 					g_ogm.outputBufferSize = 0;
@@ -521,7 +521,7 @@ static int loadVideoFrameTheora( void )
 			}
 			else
 			{
-				Frame_yuv_to_rgb24( g_ogm.th_yuvbuffer.y, g_ogm.th_yuvbuffer.u, g_ogm.th_yuvbuffer.v, g_ogm.th_info.width, g_ogm.th_info.height, g_ogm.th_yuvbuffer.y_stride, g_ogm.th_yuvbuffer.uv_stride, yWShift, uvWShift, yHShift, uvHShift, (unsigned int*)g_ogm.outputBuffer );
+				Frame_yuv_to_rgb24( g_ogm.th_yuvbuffer.y, g_ogm.th_yuvbuffer.u, g_ogm.th_yuvbuffer.v, g_ogm.th_info.width, g_ogm.th_info.height, g_ogm.th_yuvbuffer.y_stride, g_ogm.th_yuvbuffer.uv_stride, yWShift, uvWShift, yHShift, uvHShift, ( unsigned int* )g_ogm.outputBuffer );
 
 				/*				unsigned char*	pixelPtr = g_ogm.outputBuffer;
 								unsigned int*	pixPtr;
@@ -740,7 +740,7 @@ int Cin_OGM_Init( const char* filename )
 	{
 		if( ogg_sync_pageout( &g_ogm.oy, &og ) == 1 )
 		{
-			if( strstr( (char*)( og.body + 1 ), "vorbis" ) )
+			if( strstr( ( char* )( og.body + 1 ), "vorbis" ) )
 			{
 				//FIXME? better way to find audio stream
 				if( g_ogm.os_audio.serialno )
@@ -754,7 +754,7 @@ int Cin_OGM_Init( const char* filename )
 				}
 			}
 #ifdef USE_CIN_THEORA
-			if( strstr( (char*)( og.body + 1 ), "theora" ) )
+			if( strstr( ( char* )( og.body + 1 ), "theora" ) )
 			{
 				if( g_ogm.os_video.serialno )
 				{
@@ -769,7 +769,7 @@ int Cin_OGM_Init( const char* filename )
 			}
 #endif
 #ifdef USE_CIN_XVID
-			if( strstr( (char*)( og.body + 1 ), "video" ) )
+			if( strstr( ( char* )( og.body + 1 ), "video" ) )
 			{
 				//FIXME? better way to find video stream
 				if( g_ogm.os_video.serialno )
@@ -782,7 +782,7 @@ int Cin_OGM_Init( const char* filename )
 
 					g_ogm.videoStreamIsXvid = qtrue;
 
-					sh = (stream_header_t*)( og.body + 1 );
+					sh = ( stream_header_t* )( og.body + 1 );
 					//TODO: one solution for checking xvid and theora
 					if( !isPowerOf2( sh->sh.stream_header_video.width ) )
 					{
@@ -924,7 +924,7 @@ int Cin_OGM_Init( const char* filename )
 			return -6;
 		}
 
-		g_ogm.Vtime_unit = ( (ogg_int64_t)g_ogm.th_info.fps_denominator * 1000 * 10000 / g_ogm.th_info.fps_numerator );
+		g_ogm.Vtime_unit = ( ( ogg_int64_t )g_ogm.th_info.fps_denominator * 1000 * 10000 / g_ogm.th_info.fps_numerator );
 	}
 #endif
 
@@ -935,7 +935,7 @@ int Cin_OGM_Init( const char* filename )
 
 int nextNeededVFrame( void )
 {
-	return (int)( g_ogm.currentTime * (ogg_int64_t)10000 / g_ogm.Vtime_unit );
+	return ( int )( g_ogm.currentTime * ( ogg_int64_t )10000 / g_ogm.Vtime_unit );
 }
 
 /*
@@ -948,7 +948,7 @@ int Cin_OGM_Run( int time )
 {
 	g_ogm.currentTime = time;
 
-	while( !g_ogm.VFrameCount || time + 20 >= (int)( g_ogm.VFrameCount * g_ogm.Vtime_unit / 10000 ) )
+	while( !g_ogm.VFrameCount || time + 20 >= ( int )( g_ogm.VFrameCount * g_ogm.Vtime_unit / 10000 ) )
 	{
 		if( loadFrame() )
 		{

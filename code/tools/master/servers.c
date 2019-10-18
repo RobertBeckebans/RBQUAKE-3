@@ -62,8 +62,8 @@ Compute the hash of a server address
 */
 static unsigned int Sv_AddressHash( const struct sockaddr_in* address )
 {
-	qbyte* addr = (qbyte*)&address->sin_addr.s_addr;
-	qbyte* port = (qbyte*)&address->sin_port;
+	qbyte* addr = ( qbyte* )&address->sin_addr.s_addr;
+	qbyte* port = ( qbyte* )&address->sin_port;
 	qbyte  hash;
 
 	hash = addr[ 0 ] ^ addr[ 1 ] ^ addr[ 2 ] ^ addr[ 3 ] ^ port[ 0 ] ^ port[ 1 ];
@@ -142,7 +142,7 @@ static qboolean Sv_ResolveAddr( const char* name, struct sockaddr_in* addr )
 	memcpy( &addr->sin_addr.s_addr, host->h_addr, sizeof( addr->sin_addr.s_addr ) );
 	if( port != NULL )
 	{
-		addr->sin_port = htons( (unsigned short)atoi( port ) );
+		addr->sin_port = htons( ( unsigned short )atoi( port ) );
 	}
 
 	MsgPrint( MSG_DEBUG, "\"%s\" resolved to %s:%hu\n", name, inet_ntoa( addr->sin_addr ), ntohs( addr->sin_port ) );
@@ -525,7 +525,7 @@ server_t* Sv_GetNext( void )
 		if( crt_server == NULL )
 		{
 			// Search the hash table for the next server
-			while( crt_hash_ind < (int)( hash_table_size - 1 ) )
+			while( crt_hash_ind < ( int )( hash_table_size - 1 ) )
 			{
 				crt_hash_ind++;
 

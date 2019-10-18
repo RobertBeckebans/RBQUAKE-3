@@ -54,7 +54,7 @@ Keybinding command
 */
 static void CG_SizeUp_f( void )
 {
-	trap_Cvar_Set( "cg_viewsize", va( "%i", (int)( cg_viewsize.integer + 10 ) ) );
+	trap_Cvar_Set( "cg_viewsize", va( "%i", ( int )( cg_viewsize.integer + 10 ) ) );
 }
 
 /*
@@ -66,7 +66,7 @@ Keybinding command
 */
 static void CG_SizeDown_f( void )
 {
-	trap_Cvar_Set( "cg_viewsize", va( "%i", (int)( cg_viewsize.integer - 10 ) ) );
+	trap_Cvar_Set( "cg_viewsize", va( "%i", ( int )( cg_viewsize.integer - 10 ) ) );
 }
 
 /*
@@ -78,7 +78,7 @@ Debugging command to print the current position
 */
 static void CG_Viewpos_f( void )
 {
-	CG_Printf( "(%i %i %i) : %i\n", (int)cg.refdef.vieworg[ 0 ], (int)cg.refdef.vieworg[ 1 ], (int)cg.refdef.vieworg[ 2 ], (int)cg.refdefViewAngles[ YAW ] );
+	CG_Printf( "(%i %i %i) : %i\n", ( int )cg.refdef.vieworg[ 0 ], ( int )cg.refdef.vieworg[ 1 ], ( int )cg.refdef.vieworg[ 2 ], ( int )cg.refdefViewAngles[ YAW ] );
 }
 
 static void CG_ScoresDown_f( void )

@@ -81,7 +81,7 @@ extern "C"
 	*width  = w;
 	*height = h;
 
-	*halfImage = (unsigned short*)Com_Allocate( w * h * 3 * 6 );
+	*halfImage = ( unsigned short* )Com_Allocate( w * h * 3 * 6 );
 
 	halfbuf  = *halfImage;
 	floatbuf = hdrImage;

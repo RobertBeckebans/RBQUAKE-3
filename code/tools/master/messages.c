@@ -184,7 +184,7 @@ static void SendGetInfo( server_t* server )
 	}
 
 	strncat( msg, server->challenge, sizeof( msg ) - strlen( msg ) - 1 );
-	sendto( outSock, msg, strlen( msg ), 0, (const struct sockaddr*)&server->address, sizeof( server->address ) );
+	sendto( outSock, msg, strlen( msg ), 0, ( const struct sockaddr* )&server->address, sizeof( server->address ) );
 
 	MsgPrint( MSG_DEBUG, "%s <--- getinfo with challenge \"%s\"\n", peer_address, server->challenge );
 }
@@ -239,7 +239,7 @@ static void HandleGetServers( const char* msg, const struct sockaddr_in* addr )
 			packetind += 6;
 
 			// Send the packet to the client
-			sendto( inSock, packet, packetind, 0, (const struct sockaddr*)addr, sizeof( *addr ) );
+			sendto( inSock, packet, packetind, 0, ( const struct sockaddr* )addr, sizeof( *addr ) );
 
 			MsgPrint( MSG_DEBUG, "%s <--- getserversResponse (%u servers)\n", peer_address, numServers );
 
@@ -323,7 +323,7 @@ static void HandleGetServers( const char* msg, const struct sockaddr_in* addr )
 		// Trailing '\'
 		packet[ packetind + 6 ] = '\\';
 
-		MsgPrint( MSG_DEBUG, "  - Sending server %u.%u.%u.%u:%hu\n", (qbyte)packet[ packetind ], (qbyte)packet[ packetind + 1 ], (qbyte)packet[ packetind + 2 ], (qbyte)packet[ packetind + 3 ], sv_port );
+		MsgPrint( MSG_DEBUG, "  - Sending server %u.%u.%u.%u:%hu\n", ( qbyte )packet[ packetind ], ( qbyte )packet[ packetind + 1 ], ( qbyte )packet[ packetind + 2 ], ( qbyte )packet[ packetind + 3 ], sv_port );
 
 		packetind += 7;
 		numServers++;
@@ -468,7 +468,7 @@ static void HandleGetMotd( const char* msg, const struct sockaddr_in* addr )
 	MsgPrint( MSG_DEBUG, "%s <--- motd\n", peer_address );
 
 	// Send the packet to the client
-	sendto( inSock, packet, packetind, 0, (const struct sockaddr*)addr, sizeof( *addr ) );
+	sendto( inSock, packet, packetind, 0, ( const struct sockaddr* )addr, sizeof( *addr ) );
 }
 
 // ---------- Public functions ---------- //

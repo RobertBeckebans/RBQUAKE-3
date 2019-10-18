@@ -35,7 +35,7 @@ int PASSFLOAT( float x )
 	float floatTemp;
 
 	floatTemp = x;
-	return *(int*)&floatTemp;
+	return *( int* )&floatTemp;
 }
 
 void trap_Print( const char* string )
@@ -75,7 +75,7 @@ float trap_Cvar_VariableValue( const char* var_name )
 	int temp;
 
 	temp = syscall( UI_CVAR_VARIABLEVALUE, var_name );
-	return ( *(float*)&temp );
+	return ( *( float* )&temp );
 }
 
 void trap_Cvar_VariableStringBuffer( const char* var_name, char* buffer, int bufsize )

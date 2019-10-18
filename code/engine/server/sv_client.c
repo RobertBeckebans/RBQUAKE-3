@@ -361,7 +361,7 @@ void SV_DirectConnect( netadr_t from )
 	}
 	else
 	{
-		ip = (char*)NET_AdrToString( from );
+		ip = ( char* )NET_AdrToString( from );
 	}
 	if( ( strlen( ip ) + strlen( userinfo ) + 4 ) >= MAX_INFO_STRING )
 	{
@@ -863,7 +863,7 @@ static void SV_StopDownload_f( client_t* cl )
 {
 	if( *cl->downloadName )
 	{
-		Com_DPrintf( "clientDownload: %d : file \"%s\" aborted\n", (int)( cl - svs.clients ), cl->downloadName );
+		Com_DPrintf( "clientDownload: %d : file \"%s\" aborted\n", ( int )( cl - svs.clients ), cl->downloadName );
 	}
 
 	SV_CloseDownload( cl );
@@ -902,12 +902,12 @@ static void SV_NextDownload_f( client_t* cl )
 
 	if( block == cl->downloadClientBlock )
 	{
-		Com_DPrintf( "clientDownload: %d : client acknowledge of block %d\n", (int)( cl - svs.clients ), block );
+		Com_DPrintf( "clientDownload: %d : client acknowledge of block %d\n", ( int )( cl - svs.clients ), block );
 
 		// Find out if we are done.  A zero-length block indicates EOF
 		if( cl->downloadBlockSize[ cl->downloadClientBlock % MAX_DOWNLOAD_WINDOW ] == 0 )
 		{
-			Com_Printf( "clientDownload: %d : file \"%s\" completed\n", (int)( cl - svs.clients ), cl->downloadName );
+			Com_Printf( "clientDownload: %d : file \"%s\" completed\n", ( int )( cl - svs.clients ), cl->downloadName );
 			SV_CloseDownload( cl );
 			return;
 		}
@@ -968,7 +968,7 @@ void SV_WriteDownloadToClient( client_t* cl, msg_t* msg )
 			// cannot auto-download file
 			if( !( sv_allowDownload->integer & DLF_ENABLE ) || ( sv_allowDownload->integer & DLF_NO_UDP ) )
 			{
-				Com_Printf( "clientDownload: %d : \"%s\" download disabled", (int)( cl - svs.clients ), cl->downloadName );
+				Com_Printf( "clientDownload: %d : \"%s\" download disabled", ( int )( cl - svs.clients ), cl->downloadName );
 				if( sv_pure->integer )
 				{
 					Com_sprintf( errorMessage, sizeof( errorMessage ), "Could not download \"%s\" because autodownloading is disabled on the server.\n\n"
@@ -989,7 +989,7 @@ void SV_WriteDownloadToClient( client_t* cl, msg_t* msg )
 			{
 				// NOTE TTimo this is NOT supposed to happen unless bug in our filesystem scheme?
 				//   if the pk3 is referenced, it must have been found somewhere in the filesystem
-				Com_Printf( "clientDownload: %d : \"%s\" file not found on server\n", (int)( cl - svs.clients ), cl->downloadName );
+				Com_Printf( "clientDownload: %d : \"%s\" file not found on server\n", ( int )( cl - svs.clients ), cl->downloadName );
 				Com_sprintf( errorMessage, sizeof( errorMessage ), "File \"%s\" not found on server for autodownloading.\n", cl->downloadName );
 			}
 			MSG_WriteByte( msg, svc_download );
@@ -1007,7 +1007,7 @@ void SV_WriteDownloadToClient( client_t* cl, msg_t* msg )
 			return;
 		}
 
-		Com_Printf( "clientDownload: %d : beginning \"%s\"\n", (int)( cl - svs.clients ), cl->downloadName );
+		Com_Printf( "clientDownload: %d : beginning \"%s\"\n", ( int )( cl - svs.clients ), cl->downloadName );
 
 		// Init
 		cl->downloadCurrentBlock = cl->downloadClientBlock = cl->downloadXmitBlock = 0;
@@ -1139,7 +1139,7 @@ void SV_WriteDownloadToClient( client_t* cl, msg_t* msg )
 			MSG_WriteData( msg, cl->downloadBlocks[ curindex ], cl->downloadBlockSize[ curindex ] );
 		}
 
-		Com_DPrintf( "clientDownload: %d : writing block %d\n", (int)( cl - svs.clients ), cl->downloadXmitBlock );
+		Com_DPrintf( "clientDownload: %d : writing block %d\n", ( int )( cl - svs.clients ), cl->downloadXmitBlock );
 
 		// Move on to the next block
 		// It will get sent with next snap shot.  The rate will keep us in line.
@@ -1188,7 +1188,7 @@ void SV_WriteVoipToClient( client_t* cl, msg_t* msg )
 		MSG_WriteByte( msg, svc_extension );
 		MSG_WriteByte( msg, svc_voip );
 		MSG_WriteShort( msg, packet->sender );
-		MSG_WriteByte( msg, (byte)packet->generation );
+		MSG_WriteByte( msg, ( byte )packet->generation );
 		MSG_WriteLong( msg, packet->sequence );
 		MSG_WriteByte( msg, packet->frames );
 		MSG_WriteShort( msg, packet->len );
@@ -1539,7 +1539,7 @@ void SV_UserinfoChanged( client_t* cl )
 	}
 	else
 	{
-		ip = (char*)NET_AdrToString( cl->netchan.remoteAddress );
+		ip = ( char* )NET_AdrToString( cl->netchan.remoteAddress );
 	}
 
 	val = Info_ValueForKey( cl->userinfo, "ip" );
@@ -1899,7 +1899,7 @@ static qboolean SV_ShouldIgnoreVoipSender( const client_t* cl )
 
 static void SV_UserVoip( client_t* cl, msg_t* msg )
 {
-	const int           sender     = (int)( cl - svs.clients );
+	const int           sender     = ( int )( cl - svs.clients );
 	const int           generation = MSG_ReadByte( msg );
 	const int           sequence   = MSG_ReadLong( msg );
 	const int           frames     = MSG_ReadByte( msg );
@@ -2180,7 +2180,7 @@ void SV_ExecuteClientMessage( client_t* cl, msg_t* msg )
 	}
 	else if( c != clc_EOF )
 	{
-		Com_Printf( "WARNING: bad command byte for client %i\n", (int)( cl - svs.clients ) );
+		Com_Printf( "WARNING: bad command byte for client %i\n", ( int )( cl - svs.clients ) );
 	}
 	//  if ( msg->readcount != msg->cursize ) {
 	//      Com_Printf( "WARNING: Junk at end of packet for client %i\n", cl - svs.clients );

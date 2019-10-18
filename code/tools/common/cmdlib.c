@@ -702,7 +702,7 @@ FILE* SafeOpenRead( const char* filename )
 
 void SafeRead( FILE* f, void* buffer, int count )
 {
-	if( fread( buffer, 1, count, f ) != (size_t)count )
+	if( fread( buffer, 1, count, f ) != ( size_t )count )
 	{
 		Error( "File read failure" );
 	}
@@ -710,7 +710,7 @@ void SafeRead( FILE* f, void* buffer, int count )
 
 void SafeWrite( FILE* f, const void* buffer, int count )
 {
-	if( fwrite( buffer, 1, count, f ) != (size_t)count )
+	if( fwrite( buffer, 1, count, f ) != ( size_t )count )
 	{
 		Error( "File write failure" );
 	}
@@ -745,10 +745,10 @@ int LoadFile( const char* filename, void** bufferptr )
 	int   length;
 	void* buffer;
 
-	f                           = SafeOpenRead( filename );
-	length                      = Q_filelength( f );
-	buffer                      = safe_malloc( length + 1 );
-	( (char*)buffer )[ length ] = 0;
+	f                             = SafeOpenRead( filename );
+	length                        = Q_filelength( f );
+	buffer                        = safe_malloc( length + 1 );
+	( ( char* )buffer )[ length ] = 0;
 	SafeRead( f, buffer, length );
 	fclose( f );
 
@@ -807,9 +807,9 @@ int TryLoadFile( const char* filename, void** bufferptr )
 	{
 		return -1;
 	}
-	length                      = Q_filelength( f );
-	buffer                      = safe_malloc( length + 1 );
-	( (char*)buffer )[ length ] = 0;
+	length                        = Q_filelength( f );
+	buffer                        = safe_malloc( length + 1 );
+	( ( char* )buffer )[ length ] = 0;
 	SafeRead( f, buffer, length );
 	fclose( f );
 
@@ -1054,7 +1054,7 @@ int LittleLong( int l )
 	b3 = ( l >> 16 ) & 255;
 	b4 = ( l >> 24 ) & 255;
 
-	return ( (int)b1 << 24 ) + ( (int)b2 << 16 ) + ( (int)b3 << 8 ) + b4;
+	return ( ( int )b1 << 24 ) + ( ( int )b2 << 16 ) + ( ( int )b3 << 8 ) + b4;
 }
 
 int BigLong( int l )
@@ -1109,7 +1109,7 @@ int BigLong( int l )
 	b3 = ( l >> 16 ) & 255;
 	b4 = ( l >> 24 ) & 255;
 
-	return ( (int)b1 << 24 ) + ( (int)b2 << 16 ) + ( (int)b3 << 8 ) + b4;
+	return ( ( int )b1 << 24 ) + ( ( int )b2 << 16 ) + ( ( int )b3 << 8 ) + b4;
 }
 
 int LittleLong( int l )

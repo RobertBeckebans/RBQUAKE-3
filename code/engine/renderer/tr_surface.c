@@ -726,7 +726,7 @@ static void VectorArrayNormalize( vec4_t* normals, unsigned int count )
 	{
 		register float half       = 0.5;
 		register float one        = 1.0;
-		float*         components = (float*)normals;
+		float*         components = ( float* )normals;
 
 		// Vanilla PPC code, but since PPC has a reciprocal square root estimate instruction,
 		// runs *much* faster than calling sqrt().  We'll use a single Newton-Raphson
@@ -978,7 +978,7 @@ static void Tess_SurfaceFace( srfSurfaceFace_t* srf )
 		R_BindVBO( srf->vbo );
 		R_BindIBO( srf->ibo );
 
-		tess.multiDrawIndexes[ tess.multiDrawPrimitives ] = (glIndex_t*)BUFFER_OFFSET( srf->firstTriangle * 3 * sizeof( glIndex_t ) );
+		tess.multiDrawIndexes[ tess.multiDrawPrimitives ] = ( glIndex_t* )BUFFER_OFFSET( srf->firstTriangle * 3 * sizeof( glIndex_t ) );
 		tess.multiDrawCounts[ tess.multiDrawPrimitives ]  = srf->numTriangles * 3;
 
 		tess.multiDrawPrimitives++;
@@ -1127,7 +1127,7 @@ static void Tess_SurfaceGrid( srfGridMesh_t* srf )
 		R_BindVBO( srf->vbo );
 		R_BindIBO( srf->ibo );
 
-		tess.multiDrawIndexes[ tess.multiDrawPrimitives ] = (glIndex_t*)BUFFER_OFFSET( srf->firstTriangle * 3 * sizeof( glIndex_t ) );
+		tess.multiDrawIndexes[ tess.multiDrawPrimitives ] = ( glIndex_t* )BUFFER_OFFSET( srf->firstTriangle * 3 * sizeof( glIndex_t ) );
 		tess.multiDrawCounts[ tess.multiDrawPrimitives ]  = srf->numTriangles * 3;
 
 		tess.multiDrawPrimitives++;
@@ -1276,7 +1276,7 @@ static void Tess_SurfaceTriangles( srfTriangles_t* srf )
 		R_BindVBO( srf->vbo );
 		R_BindIBO( srf->ibo );
 
-		tess.multiDrawIndexes[ tess.multiDrawPrimitives ] = (glIndex_t*)BUFFER_OFFSET( srf->firstTriangle * 3 * sizeof( glIndex_t ) );
+		tess.multiDrawIndexes[ tess.multiDrawPrimitives ] = ( glIndex_t* )BUFFER_OFFSET( srf->firstTriangle * 3 * sizeof( glIndex_t ) );
 		tess.multiDrawCounts[ tess.multiDrawPrimitives ]  = srf->numTriangles * 3;
 
 		tess.multiDrawPrimitives++;
@@ -1853,9 +1853,9 @@ static void Tess_SurfaceMDV( mdvSurface_t* srf )
 		}
 
 #if 1
-		VectorArrayNormalize( (vec4_t*)tess.tangents[ tess.numVertexes ], numVertexes );
-		VectorArrayNormalize( (vec4_t*)tess.binormals[ tess.numVertexes ], numVertexes );
-		VectorArrayNormalize( (vec4_t*)tess.normals[ tess.numVertexes ], numVertexes );
+		VectorArrayNormalize( ( vec4_t* )tess.tangents[ tess.numVertexes ], numVertexes );
+		VectorArrayNormalize( ( vec4_t* )tess.binormals[ tess.numVertexes ], numVertexes );
+		VectorArrayNormalize( ( vec4_t* )tess.normals[ tess.numVertexes ], numVertexes );
 #else
 		for( i = 0; i < numVertexes; i++ )
 		{
@@ -2228,7 +2228,7 @@ static void Tess_SurfaceFlare( srfFlare_t* surf )
 		return;
 	}
 
-	RB_AddFlare( (void*)surf, tess.fogNum, origin, surf->color, surf->normal );
+	RB_AddFlare( ( void* )surf, tess.fogNum, origin, surf->color, surf->normal );
 }
 
 /*
@@ -2388,26 +2388,26 @@ static void Tess_SurfaceSkip( void* surf )
 
 // *INDENT-OFF*
 void ( *rb_surfaceTable[ SF_NUM_SURFACE_TYPES ] )( void* ) = {
-	(void ( * )( void* ))Tess_SurfaceBad,        // SF_BAD,
-	(void ( * )( void* ))Tess_SurfaceSkip,       // SF_SKIP,
-	(void ( * )( void* ))Tess_SurfaceFace,       // SF_FACE,
-	(void ( * )( void* ))Tess_SurfaceGrid,       // SF_GRID,
-	(void ( * )( void* ))Tess_SurfaceTriangles,  // SF_TRIANGLES,
-	(void ( * )( void* ))Tess_SurfacePolychain,  // SF_POLY,
-	(void ( * )( void* ))Tess_SurfacePolybuffer, // SF_POLYBUFFER,
-	(void ( * )( void* ))Tess_SurfaceDecal,      // SF_DECAL
-	(void ( * )( void* ))Tess_SurfaceMDV,        // SF_MDV,
+	( void ( * )( void* ) )Tess_SurfaceBad,        // SF_BAD,
+	( void ( * )( void* ) )Tess_SurfaceSkip,       // SF_SKIP,
+	( void ( * )( void* ) )Tess_SurfaceFace,       // SF_FACE,
+	( void ( * )( void* ) )Tess_SurfaceGrid,       // SF_GRID,
+	( void ( * )( void* ) )Tess_SurfaceTriangles,  // SF_TRIANGLES,
+	( void ( * )( void* ) )Tess_SurfacePolychain,  // SF_POLY,
+	( void ( * )( void* ) )Tess_SurfacePolybuffer, // SF_POLYBUFFER,
+	( void ( * )( void* ) )Tess_SurfaceDecal,      // SF_DECAL
+	( void ( * )( void* ) )Tess_SurfaceMDV,        // SF_MDV,
 #if defined( COMPAT_ET )
-	(void ( * )( void* ))Tess_MDM_SurfaceAnim, // SF_MDM,
+	( void ( * )( void* ) )Tess_MDM_SurfaceAnim, // SF_MDM,
 #endif
-	(void ( * )( void* ))Tess_SurfaceMD5, // SF_MD5,
+	( void ( * )( void* ) )Tess_SurfaceMD5, // SF_MD5,
 
-	(void ( * )( void* ))Tess_SurfaceFlare,      // SF_FLARE,
-	(void ( * )( void* ))Tess_SurfaceEntity,     // SF_ENTITY
-	(void ( * )( void* ))Tess_SurfaceVBOMesh,    // SF_VBO_MESH
-	(void ( * )( void* ))Tess_SurfaceVBOMD5Mesh, // SF_VBO_MD5MESH
+	( void ( * )( void* ) )Tess_SurfaceFlare,      // SF_FLARE,
+	( void ( * )( void* ) )Tess_SurfaceEntity,     // SF_ENTITY
+	( void ( * )( void* ) )Tess_SurfaceVBOMesh,    // SF_VBO_MESH
+	( void ( * )( void* ) )Tess_SurfaceVBOMD5Mesh, // SF_VBO_MD5MESH
 #if defined( COMPAT_ET )
-	(void ( * )( void* ))Tess_SurfaceVBOMDMMesh, // SF_VBO_MD5MESH
+	( void ( * )( void* ) )Tess_SurfaceVBOMDMMesh, // SF_VBO_MD5MESH
 #endif
-	(void ( * )( void* ))Tess_SurfaceVBOMDVMesh // SF_VBO_MDVMESH
+	( void ( * )( void* ) )Tess_SurfaceVBOMDVMesh // SF_VBO_MDVMESH
 };

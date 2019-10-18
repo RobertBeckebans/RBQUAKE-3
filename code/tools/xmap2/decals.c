@@ -64,7 +64,7 @@ dvec_t DVectorNormalize2( dvec3_t in, dvec3_t out )
 {
 	dvec_t len, ilen;
 
-	len = (dvec_t)sqrt( in[ 0 ] * in[ 0 ] + in[ 1 ] * in[ 1 ] + in[ 2 ] * in[ 2 ] );
+	len = ( dvec_t )sqrt( in[ 0 ] * in[ 0 ] + in[ 1 ] * in[ 1 ] + in[ 2 ] * in[ 2 ] );
 	if( len == 0.0 )
 	{
 		VectorClear( out );
@@ -922,7 +922,7 @@ void MakeEntityDecals( entity_t* e )
 	}
 
 	/* print time */
-	Sys_FPrintf( SYS_VRB, " (%d)\n", (int)( I_FloatTime() - start ) );
+	Sys_FPrintf( SYS_VRB, " (%d)\n", ( int )( I_FloatTime() - start ) );
 
 	/* emit some stats */
 	Sys_FPrintf( SYS_VRB, "%9d decal surfaces\n", numDecalSurfaces );

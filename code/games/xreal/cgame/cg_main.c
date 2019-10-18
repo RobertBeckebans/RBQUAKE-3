@@ -1243,7 +1243,7 @@ void CG_StartMusic( void )
 	char  parm1[ MAX_QPATH ], parm2[ MAX_QPATH ];
 
 	// start the background music
-	s = (char*)CG_ConfigString( CS_MUSIC );
+	s = ( char* )CG_ConfigString( CS_MUSIC );
 	Q_strncpyz( parm1, Com_Parse( &s ), sizeof( parm1 ) );
 	Q_strncpyz( parm2, Com_Parse( &s ), sizeof( parm2 ) );
 
@@ -1674,7 +1674,7 @@ static int CG_FeederCount( float feederID )
 
 void CG_SetScoreSelection( void* p )
 {
-	menuDef_t*     menu = (menuDef_t*)p;
+	menuDef_t*     menu = ( menuDef_t* )p;
 	playerState_t* ps   = &cg.snap->ps;
 	int            i, red, blue;
 

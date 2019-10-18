@@ -197,7 +197,7 @@ void Cbuf_Execute( void )
 		}
 
 		// find a \n or ; line break
-		text = (char*)cmd_text.data;
+		text = ( char* )cmd_text.data;
 
 		quotes = 0;
 		for( i = 0; i < cmd_text.cursize; i++ )
@@ -361,7 +361,7 @@ Cmd_Argv
 */
 char* Cmd_Argv( int arg )
 {
-	if( (unsigned)arg >= cmd_argc )
+	if( ( unsigned )arg >= cmd_argc )
 	{
 		return "";
 	}

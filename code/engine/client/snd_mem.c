@@ -45,8 +45,8 @@ int    sfxScratchIndex   = 0;
 
 void SND_free( sndBuffer* v )
 {
-	*(sndBuffer**)v = freelist;
-	freelist        = (sndBuffer*)v;
+	*( sndBuffer** )v = freelist;
+	freelist          = ( sndBuffer* )v;
 	inUse += sizeof( sndBuffer );
 }
 
@@ -63,7 +63,7 @@ sndBuffer* SND_malloc( void )
 	totalInUse += sizeof( sndBuffer );
 
 	v        = freelist;
-	freelist = *(sndBuffer**)freelist;
+	freelist = *( sndBuffer** )freelist;
 	v->next  = NULL;
 	return v;
 }
@@ -89,11 +89,11 @@ void SND_setup( void )
 	q = p + scs;
 	while( --q > p )
 	{
-		*(sndBuffer**)q = q - 1;
+		*( sndBuffer** )q = q - 1;
 	}
 
-	*(sndBuffer**)q = NULL;
-	freelist        = p + scs - 1;
+	*( sndBuffer** )q = NULL;
+	freelist          = p + scs - 1;
 
 	Com_Printf( "Sound memory manager started\n" );
 }
@@ -115,7 +115,7 @@ static void ResampleSfx( sfx_t* sfx, int inrate, int inwidth, byte* data, qboole
 	int        part;
 	sndBuffer* chunk;
 
-	stepscale = (float)inrate / dma.speed; // this is usually 0.5, 1, or 2
+	stepscale = ( float )inrate / dma.speed; // this is usually 0.5, 1, or 2
 
 	outcount         = sfx->soundLength / stepscale;
 	sfx->soundLength = outcount;
@@ -130,11 +130,11 @@ static void ResampleSfx( sfx_t* sfx, int inrate, int inwidth, byte* data, qboole
 		samplefrac += fracstep;
 		if( inwidth == 2 )
 		{
-			sample = ( ( (short*)data )[ srcsample ] );
+			sample = ( ( ( short* )data )[ srcsample ] );
 		}
 		else
 		{
-			sample = (int)( (unsigned char)( data[ srcsample ] ) - 128 ) << 8;
+			sample = ( int )( ( unsigned char )( data[ srcsample ] ) - 128 ) << 8;
 		}
 		part = ( i & ( SND_CHUNK_SIZE - 1 ) );
 		if( part == 0 )

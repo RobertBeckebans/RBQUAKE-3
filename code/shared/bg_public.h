@@ -692,7 +692,7 @@ gitem_t* BG_FindItemForWeapon( weapon_t weapon );
 gitem_t* BG_FindItemForPowerup( powerup_t pw );
 gitem_t* BG_FindItemForHoldable( holdable_t pw );
 
-#define ITEM_INDEX( x ) ( (x)-bg_itemlist )
+#define ITEM_INDEX( x ) ( ( x )-bg_itemlist )
 
 qboolean BG_CanItemBeGrabbed( int gametype, const entityState_t* ent, const playerState_t* ps );
 

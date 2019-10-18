@@ -41,7 +41,7 @@ int PASSFLOAT( float x )
 	float floatTemp;
 
 	floatTemp = x;
-	return *(int*)&floatTemp;
+	return *( int* )&floatTemp;
 }
 
 void trap_Printf( const char* fmt )
@@ -371,7 +371,7 @@ float trap_AAS_Time( void )
 	int temp;
 
 	temp = syscall( BOTLIB_AAS_TIME );
-	return ( *(float*)&temp );
+	return ( *( float* )&temp );
 }
 #endif
 
@@ -612,7 +612,7 @@ float trap_Characteristic_Float( int character, int index )
 	int temp;
 
 	temp = syscall( BOTLIB_AI_CHARACTERISTIC_FLOAT, character, index );
-	return ( *(float*)&temp );
+	return ( *( float* )&temp );
 }
 
 float trap_Characteristic_BFloat( int character, int index, float min, float max )
@@ -620,7 +620,7 @@ float trap_Characteristic_BFloat( int character, int index, float min, float max
 	int temp;
 
 	temp = syscall( BOTLIB_AI_CHARACTERISTIC_BFLOAT, character, index, PASSFLOAT( min ), PASSFLOAT( max ) );
-	return ( *(float*)&temp );
+	return ( *( float* )&temp );
 }
 
 int trap_Characteristic_Integer( int character, int index )
@@ -838,7 +838,7 @@ float trap_BotAvoidGoalTime( int goalstate, int number )
 	int temp;
 
 	temp = syscall( BOTLIB_AI_AVOID_GOAL_TIME, goalstate, number );
-	return ( *(float*)&temp );
+	return ( *( float* )&temp );
 }
 
 void trap_BotSetAvoidGoalTime( int goalstate, int number, float avoidtime )

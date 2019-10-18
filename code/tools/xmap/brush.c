@@ -58,7 +58,7 @@ bspBrush_t* AllocBrush( int numsides )
 	bspBrush_t* bb;
 	int         c;
 
-	c  = (int)&( ( (bspBrush_t*)0 )->sides[ numsides ] );
+	c  = ( int )&( ( ( bspBrush_t* )0 )->sides[ numsides ] );
 	bb = malloc( c );
 	memset( bb, 0, c );
 	if( numthreads == 1 )
@@ -119,7 +119,7 @@ bspBrush_t* CopyBrush( bspBrush_t* brush )
 	int         size;
 	int         i;
 
-	size = (int)&( ( (bspBrush_t*)0 )->sides[ brush->numsides ] );
+	size = ( int )&( ( ( bspBrush_t* )0 )->sides[ brush->numsides ] );
 
 	newbrush = AllocBrush( brush->numsides );
 	memcpy( newbrush, brush, size );
@@ -426,9 +426,9 @@ void WriteBspBrushMap( char* name, bspBrush_t* list )
 		{
 			w = BaseWindingForPlane( mapPlanes[ s->planenum ].normal, mapPlanes[ s->planenum ].dist );
 
-			fprintf( f, "( %i %i %i ) ", (int)w->p[ 0 ][ 0 ], (int)w->p[ 0 ][ 1 ], (int)w->p[ 0 ][ 2 ] );
-			fprintf( f, "( %i %i %i ) ", (int)w->p[ 1 ][ 0 ], (int)w->p[ 1 ][ 1 ], (int)w->p[ 1 ][ 2 ] );
-			fprintf( f, "( %i %i %i ) ", (int)w->p[ 2 ][ 0 ], (int)w->p[ 2 ][ 1 ], (int)w->p[ 2 ][ 2 ] );
+			fprintf( f, "( %i %i %i ) ", ( int )w->p[ 0 ][ 0 ], ( int )w->p[ 0 ][ 1 ], ( int )w->p[ 0 ][ 2 ] );
+			fprintf( f, "( %i %i %i ) ", ( int )w->p[ 1 ][ 0 ], ( int )w->p[ 1 ][ 1 ], ( int )w->p[ 1 ][ 2 ] );
+			fprintf( f, "( %i %i %i ) ", ( int )w->p[ 2 ][ 0 ], ( int )w->p[ 2 ][ 1 ], ( int )w->p[ 2 ][ 2 ] );
 
 			fprintf( f, "notexture 0 0 0 1 1\n" );
 			FreeWinding( w );

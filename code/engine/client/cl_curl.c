@@ -212,16 +212,16 @@ void CL_cURL_Cleanup( void )
 
 static int CL_cURL_CallbackProgress( void* dummy, double dltotal, double dlnow, double ultotal, double ulnow )
 {
-	clc.downloadSize = (int)dltotal;
+	clc.downloadSize = ( int )dltotal;
 	Cvar_SetValue( "cl_downloadSize", clc.downloadSize );
-	clc.downloadCount = (int)dlnow;
+	clc.downloadCount = ( int )dlnow;
 	Cvar_SetValue( "cl_downloadCount", clc.downloadCount );
 	return 0;
 }
 
 static size_t CL_cURL_CallbackWrite( void* buffer, size_t size, size_t nmemb, void* stream )
 {
-	FS_Write( buffer, size * nmemb, ( (fileHandle_t*)stream )[ 0 ] );
+	FS_Write( buffer, size * nmemb, ( ( fileHandle_t* )stream )[ 0 ] );
 	return size * nmemb;
 }
 

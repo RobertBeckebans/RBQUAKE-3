@@ -46,7 +46,7 @@ void MutexLock( mutex_t* m )
 	{
 		return;
 	}
-	crit = (CRITICAL_SECTION*)m;
+	crit = ( CRITICAL_SECTION* )m;
 	EnterCriticalSection( crit );
 }
 
@@ -58,7 +58,7 @@ void MutexUnlock( mutex_t* m )
 	{
 		return;
 	}
-	crit = (CRITICAL_SECTION*)m;
+	crit = ( CRITICAL_SECTION* )m;
 	LeaveCriticalSection( crit );
 }
 
@@ -70,9 +70,9 @@ mutex_t* MutexAlloc( void )
 	{
 		return NULL;
 	}
-	crit = (CRITICAL_SECTION*)safe_malloc( sizeof( CRITICAL_SECTION ) );
+	crit = ( CRITICAL_SECTION* )safe_malloc( sizeof( CRITICAL_SECTION ) );
 	InitializeCriticalSection( crit );
-	return (void*)crit;
+	return ( void* )crit;
 }
 
 #endif
@@ -98,7 +98,7 @@ void MutexLock( mutex_t* m )
 	{
 		return;
 	}
-	my_mutex = (pthread_mutex_t*)m;
+	my_mutex = ( pthread_mutex_t* )m;
 	pthread_mutex_lock( my_mutex );
 }
 
@@ -110,7 +110,7 @@ void MutexUnlock( mutex_t* m )
 	{
 		return;
 	}
-	my_mutex = (pthread_mutex_t*)m;
+	my_mutex = ( pthread_mutex_t* )m;
 	pthread_mutex_unlock( my_mutex );
 }
 
@@ -136,7 +136,7 @@ mutex_t* MutexAlloc( void )
 	{
 		Error( "pthread_mutex_init failed" );
 	}
-	return (void*)my_mutex;
+	return ( void* )my_mutex;
 }
 
 #endif
@@ -165,7 +165,7 @@ void MutexLock( mutex_t* m )
 	{
 		return;
 	}
-	lck = (abilock_t*)m;
+	lck = ( abilock_t* )m;
 	spin_lock( lck );
 }
 
@@ -177,7 +177,7 @@ void MutexUnlock( mutex_t* m )
 	{
 		return;
 	}
-	lck = (abilock_t*)m;
+	lck = ( abilock_t* )m;
 	release_lock( lck );
 }
 
@@ -189,9 +189,9 @@ mutex_t* MutexAlloc( void )
 	{
 		return NULL;
 	}
-	lck = (abilock_t*)safe_malloc( sizeof( abilock_t ) );
+	lck = ( abilock_t* )safe_malloc( sizeof( abilock_t ) );
 	init_lock( lck );
-	return (void*)lck;
+	return ( void* )lck;
 }
 
 #endif

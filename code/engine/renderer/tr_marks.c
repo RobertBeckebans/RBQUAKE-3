@@ -188,18 +188,18 @@ void R_BoxSurfaces_r( bspNode_t* node, vec3_t mins, vec3_t maxs, surfaceType_t**
 		else if( *( surf->data ) == SF_FACE )
 		{
 			// the face plane should go through the box
-			s = BoxOnPlaneSide( mins, maxs, &( (srfSurfaceFace_t*)surf->data )->plane );
+			s = BoxOnPlaneSide( mins, maxs, &( ( srfSurfaceFace_t* )surf->data )->plane );
 			if( s == 1 || s == 2 )
 			{
 				surf->viewCount = tr.viewCountNoReset;
 			}
-			else if( DotProduct( ( (srfSurfaceFace_t*)surf->data )->plane.normal, dir ) > -0.5 )
+			else if( DotProduct( ( ( srfSurfaceFace_t* )surf->data )->plane.normal, dir ) > -0.5 )
 			{
 				// don't add faces that make sharp angles with the projection direction
 				surf->viewCount = tr.viewCountNoReset;
 			}
 		}
-		else if( *(surfaceType_t*)( surf->data ) != SF_GRID && *(surfaceType_t*)( surf->data ) != SF_TRIANGLES )
+		else if( *( surfaceType_t* )( surf->data ) != SF_GRID && *( surfaceType_t* )( surf->data ) != SF_TRIANGLES )
 		{
 			surf->viewCount = tr.viewCountNoReset;
 		}
@@ -208,7 +208,7 @@ void R_BoxSurfaces_r( bspNode_t* node, vec3_t mins, vec3_t maxs, surfaceType_t**
 		if( surf->viewCount != tr.viewCountNoReset )
 		{
 			surf->viewCount     = tr.viewCountNoReset;
-			list[ *listlength ] = (surfaceType_t*)surf->data;
+			list[ *listlength ] = ( surfaceType_t* )surf->data;
 			( *listlength )++;
 		}
 		mark++;
@@ -357,7 +357,7 @@ int R_MarkFragments( int numPoints, const vec3_t* points, const vec3_t projectio
 	{
 		if( *surfaces[ i ] == SF_GRID )
 		{
-			cv = (srfGridMesh_t*)surfaces[ i ];
+			cv = ( srfGridMesh_t* )surfaces[ i ];
 			for( m = 0; m < cv->height - 1; m++ )
 			{
 				for( n = 0; n < cv->width - 1; n++ )
@@ -435,7 +435,7 @@ int R_MarkFragments( int numPoints, const vec3_t* points, const vec3_t projectio
 		}
 		else if( *surfaces[ i ] == SF_FACE )
 		{
-			face = (srfSurfaceFace_t*)surfaces[ i ];
+			face = ( srfSurfaceFace_t* )surfaces[ i ];
 
 			// check the normal of this face
 			if( DotProduct( face->plane.normal, projectionDir ) > -0.5 )
@@ -469,7 +469,7 @@ int R_MarkFragments( int numPoints, const vec3_t* points, const vec3_t projectio
 		}
 		else if( *surfaces[ i ] == SF_TRIANGLES && !r_noMarksOnTrisurfs->integer )
 		{
-			trisurf = (srfTriangles_t*)surfaces[ i ];
+			trisurf = ( srfTriangles_t* )surfaces[ i ];
 
 			for( k = 0, tri = trisurf->triangles; k < trisurf->numTriangles; k++, tri++ )
 			{

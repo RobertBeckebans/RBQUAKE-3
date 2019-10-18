@@ -366,7 +366,7 @@ static void S_AL_BufferLoad( sfxHandle_t sfx )
 		// We have no data to buffer, so buffer silence
 		byte dummyData[ 2 ] = { 0 };
 
-		qalBufferData( curSfx->buffer, AL_FORMAT_MONO16, (void*)dummyData, 2, 22050 );
+		qalBufferData( curSfx->buffer, AL_FORMAT_MONO16, ( void* )dummyData, 2, 22050 );
 	}
 	else
 	{
@@ -1422,8 +1422,8 @@ static void S_AL_SrcLoop( alSrcPriority_t priority, sfxHandle_t sfx, const vec3_
 			VectorClear( svelocity );
 		}
 
-		qalSourcefv( curSource->alSource, AL_POSITION, (ALfloat*)sorigin );
-		qalSourcefv( curSource->alSource, AL_VELOCITY, (ALfloat*)velocity );
+		qalSourcefv( curSource->alSource, AL_POSITION, ( ALfloat* )sorigin );
+		qalSourcefv( curSource->alSource, AL_VELOCITY, ( ALfloat* )velocity );
 	}
 }
 
@@ -1594,7 +1594,7 @@ static void S_AL_SrcUpdate( void )
 							if( master->lastTimePos >= 0 )
 							{
 								secofs = master->lastTimePos + ( Sys_Milliseconds() - master->lastSampleTime ) / 1000.0f;
-								secofs = fmodf( secofs, (float)curSfx->info.samples / curSfx->info.rate );
+								secofs = fmodf( secofs, ( float )curSfx->info.samples / curSfx->info.rate );
 
 								qalSourcef( curSource->alSource, AL_SEC_OFFSET, secofs );
 							}
@@ -1614,7 +1614,7 @@ static void S_AL_SrcUpdate( void )
 						// For unsynced loops (SRCPRI_ENTITY) just carry on playing as if the sound was never stopped
 
 						secofs = curSource->lastTimePos + ( Sys_Milliseconds() - curSource->lastSampleTime ) / 1000.0f;
-						secofs = fmodf( secofs, (float)curSfx->info.samples / curSfx->info.rate );
+						secofs = fmodf( secofs, ( float )curSfx->info.samples / curSfx->info.rate );
 						qalSourcef( curSource->alSource, AL_SEC_OFFSET, secofs );
 					}
 
@@ -1793,7 +1793,7 @@ static void S_AL_RawSamples( int stream, int samples, int rate, int width, int c
 
 	// Create a buffer, and stuff the data into it
 	qalGenBuffers( 1, &buffer );
-	qalBufferData( buffer, format, (ALvoid*)data, ( samples * width * channels ), rate );
+	qalBufferData( buffer, format, ( ALvoid* )data, ( samples * width * channels ), rate );
 
 	// Shove the data onto the streamSource
 	qalSourceQueueBuffers( streamSources[ stream ], 1, &buffer );
@@ -2062,7 +2062,7 @@ static void S_AL_MusicProcess( ALuint b )
 		// We have no data to buffer, so buffer silence
 		byte dummyData[ 2 ] = { 0 };
 
-		qalBufferData( b, AL_FORMAT_MONO16, (void*)dummyData, 2, 22050 );
+		qalBufferData( b, AL_FORMAT_MONO16, ( void* )dummyData, 2, 22050 );
 	}
 	else
 	{
@@ -2262,7 +2262,7 @@ static void S_AL_Respatialize( int entityNum, const vec3_t origin, vec3_t axis[ 
 	VectorCopy( sorigin, lastListenerOrigin );
 
 	// Set OpenAL listener paramaters
-	qalListenerfv( AL_POSITION, (ALfloat*)sorigin );
+	qalListenerfv( AL_POSITION, ( ALfloat* )sorigin );
 	qalListenerfv( AL_VELOCITY, velocity );
 	qalListenerfv( AL_ORIENTATION, orientation );
 }
@@ -2389,7 +2389,7 @@ static int S_AL_AvailableCaptureSamples( void )
 		ALint samples = 0;
 
 		qalcGetIntegerv( alCaptureDevice, ALC_CAPTURE_SAMPLES, sizeof( samples ), &samples );
-		retval = (int)samples;
+		retval = ( int )samples;
 	}
 	return retval;
 }

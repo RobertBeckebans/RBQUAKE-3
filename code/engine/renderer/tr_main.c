@@ -944,8 +944,8 @@ void R_TransformClipToWindow( const vec4_t clip, const viewParms_t* view, vec4_t
 	window[ 1 ] = view->viewportY + ( 0.5f * ( 1.0f + normalized[ 1 ] ) * view->viewportHeight );
 	window[ 2 ] = normalized[ 2 ];
 
-	window[ 0 ] = (int)( window[ 0 ] + 0.5 );
-	window[ 1 ] = (int)( window[ 1 ] + 0.5 );
+	window[ 0 ] = ( int )( window[ 0 ] + 0.5 );
+	window[ 1 ] = ( int )( window[ 1 ] + 0.5 );
 }
 
 /*
@@ -1639,7 +1639,7 @@ static void R_SetupUnprojection( void )
 	// -(float)glConfig.vidHeight / (float)tr.viewParms.viewportHeight, -1.0);
 
 	MatrixMultiplyTranslation( unprojectMatrix, -1.0, -1.0, -1.0 );
-	MatrixMultiplyScale( unprojectMatrix, 2.0 * Q_recip( (float)glConfig.vidWidth ), 2.0 * Q_recip( (float)glConfig.vidHeight ), 2.0 );
+	MatrixMultiplyScale( unprojectMatrix, 2.0 * Q_recip( ( float )glConfig.vidWidth ), 2.0 * Q_recip( ( float )glConfig.vidHeight ), 2.0 );
 }
 
 /*
@@ -1791,7 +1791,7 @@ static void R_SetupSplitFrustums( void )
 
 	for( i = 1; i <= ( r_parallelShadowSplits->integer + 1 ); i++ )
 	{
-		float si = i / (float)( r_parallelShadowSplits->integer + 1 );
+		float si = i / ( float )( r_parallelShadowSplits->integer + 1 );
 
 		zFar = 1.005f * lambda * ( tr.viewParms.zNear * powf( ratio, si ) ) + ( 1 - lambda ) * ( tr.viewParms.zNear + ( tr.viewParms.zFar - tr.viewParms.zNear ) * si );
 
@@ -1883,10 +1883,10 @@ void R_PlaneForSurface( surfaceType_t* surfType, cplane_t* plane )
 	switch( *surfType )
 	{
 		case SF_FACE:
-			*plane = ( (srfSurfaceFace_t*)surfType )->plane;
+			*plane = ( ( srfSurfaceFace_t* )surfType )->plane;
 			return;
 		case SF_TRIANGLES:
-			tri = (srfTriangles_t*)surfType;
+			tri = ( srfTriangles_t* )surfType;
 			v1  = tri->verts + tri->triangles[ 0 ].indexes[ 0 ];
 			v2  = tri->verts + tri->triangles[ 0 ].indexes[ 1 ];
 			v3  = tri->verts + tri->triangles[ 0 ].indexes[ 2 ];
@@ -1895,7 +1895,7 @@ void R_PlaneForSurface( surfaceType_t* surfType, cplane_t* plane )
 			plane->dist = plane4[ 3 ];
 			return;
 		case SF_POLY:
-			poly = (srfPoly_t*)surfType;
+			poly = ( srfPoly_t* )surfType;
 			PlaneFromPoints( plane4, poly->verts[ 0 ].xyz, poly->verts[ 1 ].xyz, poly->verts[ 2 ].xyz, qtrue );
 			VectorCopy( plane4, plane->normal );
 			plane->dist = plane4[ 3 ];
@@ -2139,7 +2139,7 @@ static qboolean SurfIsOffscreen( const drawSurf_t* drawSurf, vec4_t clipDest[ 12
 	vec4_t       clip, eye;
 	int          i;
 	unsigned int pointOr  = 0;
-	unsigned int pointAnd = (unsigned int)~0;
+	unsigned int pointAnd = ( unsigned int )~0;
 
 	if( glConfig.smpActive )
 	{
@@ -2387,12 +2387,12 @@ static int DrawSurfCompare( const void* a, const void* b )
 {
 #if 1
 	// by shader
-	if( ( (drawSurf_t*)a )->shaderNum < ( (drawSurf_t*)b )->shaderNum )
+	if( ( ( drawSurf_t* )a )->shaderNum < ( ( drawSurf_t* )b )->shaderNum )
 	{
 		return -1;
 	}
 
-	else if( ( (drawSurf_t*)a )->shaderNum > ( (drawSurf_t*)b )->shaderNum )
+	else if( ( ( drawSurf_t* )a )->shaderNum > ( ( drawSurf_t* )b )->shaderNum )
 	{
 		return 1;
 	}
@@ -2400,12 +2400,12 @@ static int DrawSurfCompare( const void* a, const void* b )
 
 #if 1
 	// by lightmap
-	if( ( (drawSurf_t*)a )->lightmapNum < ( (drawSurf_t*)b )->lightmapNum )
+	if( ( ( drawSurf_t* )a )->lightmapNum < ( ( drawSurf_t* )b )->lightmapNum )
 	{
 		return -1;
 	}
 
-	else if( ( (drawSurf_t*)a )->lightmapNum > ( (drawSurf_t*)b )->lightmapNum )
+	else if( ( ( drawSurf_t* )a )->lightmapNum > ( ( drawSurf_t* )b )->lightmapNum )
 	{
 		return 1;
 	}
@@ -2413,22 +2413,22 @@ static int DrawSurfCompare( const void* a, const void* b )
 
 #if 1
 	// by entity
-	if( ( (drawSurf_t*)a )->entity == &tr.worldEntity && ( (drawSurf_t*)b )->entity != &tr.worldEntity )
+	if( ( ( drawSurf_t* )a )->entity == &tr.worldEntity && ( ( drawSurf_t* )b )->entity != &tr.worldEntity )
 	{
 		return -1;
 	}
 
-	else if( ( (drawSurf_t*)a )->entity != &tr.worldEntity && ( (drawSurf_t*)b )->entity == &tr.worldEntity )
+	else if( ( ( drawSurf_t* )a )->entity != &tr.worldEntity && ( ( drawSurf_t* )b )->entity == &tr.worldEntity )
 	{
 		return 1;
 	}
 
-	else if( ( (drawSurf_t*)a )->entity < ( (drawSurf_t*)b )->entity )
+	else if( ( ( drawSurf_t* )a )->entity < ( ( drawSurf_t* )b )->entity )
 	{
 		return -1;
 	}
 
-	else if( ( (drawSurf_t*)a )->entity > ( (drawSurf_t*)b )->entity )
+	else if( ( ( drawSurf_t* )a )->entity > ( ( drawSurf_t* )b )->entity )
 	{
 		return 1;
 	}
@@ -2436,12 +2436,12 @@ static int DrawSurfCompare( const void* a, const void* b )
 
 #if 1
 	// by fog
-	if( ( (drawSurf_t*)a )->fogNum < ( (drawSurf_t*)b )->fogNum )
+	if( ( ( drawSurf_t* )a )->fogNum < ( ( drawSurf_t* )b )->fogNum )
 	{
 		return -1;
 	}
 
-	else if( ( (drawSurf_t*)a )->fogNum > ( (drawSurf_t*)b )->fogNum )
+	else if( ( ( drawSurf_t* )a )->fogNum > ( ( drawSurf_t* )b )->fogNum )
 	{
 		return 1;
 	}
@@ -2786,7 +2786,7 @@ void R_AddPolygonInteractions( trRefLight_t* light )
 			continue;
 		}
 
-		R_AddLightInteraction( light, (void*)poly, shader, CUBESIDE_CLIPALL, IA_LIGHTONLY );
+		R_AddLightInteraction( light, ( void* )poly, shader, CUBESIDE_CLIPALL, IA_LIGHTONLY );
 	}
 }
 
@@ -2846,7 +2846,7 @@ void R_AddLightInteractions()
 							break;
 						}
 
-						leaf = (bspNode_t*)l->data;
+						leaf = ( bspNode_t* )l->data;
 
 						//ri.Printf(PRINT_ALL, "leaf %i: visible = %i, %i\n", leaf - tr.world->nodes, leaf->visible[tr.viewCount], tr.viewCount);
 
@@ -2873,7 +2873,7 @@ void R_AddLightInteractions()
 							break;
 						}
 
-						leaf = (bspNode_t*)l->data;
+						leaf = ( bspNode_t* )l->data;
 
 						if( leaf->visCounts[ tr.visIndex ] == tr.visCounts[ tr.visIndex ] )
 						{
@@ -3081,7 +3081,7 @@ void R_AddLightBoundsToVisBounds()
 							break;
 						}
 
-						leaf = (bspNode_t*)l->data;
+						leaf = ( bspNode_t* )l->data;
 
 						//ri.Printf(PRINT_ALL, "leaf %i: visible = %i, %i\n", leaf - tr.world->nodes, leaf->visible[tr.viewCount], tr.viewCount);
 
@@ -3108,7 +3108,7 @@ void R_AddLightBoundsToVisBounds()
 							break;
 						}
 
-						leaf = (bspNode_t*)l->data;
+						leaf = ( bspNode_t* )l->data;
 
 						if( leaf->visCounts[ tr.visIndex ] == tr.visCounts[ tr.visIndex ] )
 						{

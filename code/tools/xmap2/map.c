@@ -82,7 +82,7 @@ void AddPlaneToHash( plane_t* p )
 {
 	int hash;
 
-	hash = ( PLANE_HASHES - 1 ) & (int)fabs( p->dist );
+	hash = ( PLANE_HASHES - 1 ) & ( int )fabs( p->dist );
 
 	p->hash_chain     = planehash[ hash ];
 	planehash[ hash ] = p - mapplanes + 1;
@@ -218,7 +218,7 @@ int FindFloatPlane( vec3_t innormal, vec_t dist, int numPoints, vec3_t* points )
 	/* hash the plane */
 	VectorCopy( innormal, normal );
 	SnapPlane( normal, &dist, centerofweight );
-	hash = ( PLANE_HASHES - 1 ) & (int)fabs( dist );
+	hash = ( PLANE_HASHES - 1 ) & ( int )fabs( dist );
 
 	/* search the border bins as well */
 	for( i = -1; i <= 1; i++ )
@@ -334,8 +334,8 @@ static int CompareBrushSides( const void* a, const void* b )
 {
 	side_t *sidea, *sideb;
 
-	sidea = (side_t*)a;
-	sideb = (side_t*)b;
+	sidea = ( side_t* )a;
+	sideb = ( side_t* )b;
 
 	/* move area portals to the front */
 	if( ( sidea->compileFlags & C_AREAPORTAL ) && !( sideb->compileFlags & C_AREAPORTAL ) )
@@ -1057,7 +1057,7 @@ static void ParseRawBrush( qboolean onlyLights )
 		/* bp: read the texture matrix */
 		if( g_bBrushPrimit >= BPRIMIT_NEWBRUSHES )
 		{
-			Parse2DMatrix( 2, 3, (float*)side->texMat );
+			Parse2DMatrix( 2, 3, ( float* )side->texMat );
 		}
 
 		/* read shader name */
@@ -2024,7 +2024,7 @@ static qboolean ParseMapEntity( qboolean onlyLights )
 			// add detail brushes to new func_static entity
 			while( detailBrushes )
 			{
-				b = (brush_t*)detailBrushes->data;
+				b = ( brush_t* )detailBrushes->data;
 
 				// link opaque brushes to head of list, translucent brushes to end
 				if( b->opaque || convertDetailBrushesEntity.lastBrush == NULL )
@@ -2059,7 +2059,7 @@ static qboolean ParseMapEntity( qboolean onlyLights )
 			// readd structural brushes to current entity
 			while( structuralBrushes )
 			{
-				b = (brush_t*)structuralBrushes->data;
+				b = ( brush_t* )structuralBrushes->data;
 
 				// link opaque brushes to head of list, translucent brushes to end
 				if( b->opaque || mapEnt->lastBrush == NULL )
@@ -2449,7 +2449,7 @@ void LoadMapFile( char* filename, qboolean onlyLights )
 
 		/* get brush counts */
 		numMapBrushes = CountBrushList( entities[ 0 ].brushes );
-		if( (float)c_detail / (float)numMapBrushes < 0.10f && numMapBrushes > 500 )
+		if( ( float )c_detail / ( float )numMapBrushes < 0.10f && numMapBrushes > 500 )
 		{
 			Sys_Printf( "WARNING: Over 90 percent structural map detected. Compile time may be adversely affected.\n" );
 		}

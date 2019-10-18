@@ -52,9 +52,9 @@ void GLimp_SetGamma( unsigned char red[ 256 ], unsigned char green[ 256 ], unsig
 
 	for( i = 0; i < 256; i++ )
 	{
-		table[ 0 ][ i ] = ( ( (Uint16)red[ i ] ) << 8 ) | red[ i ];
-		table[ 1 ][ i ] = ( ( (Uint16)green[ i ] ) << 8 ) | green[ i ];
-		table[ 2 ][ i ] = ( ( (Uint16)blue[ i ] ) << 8 ) | blue[ i ];
+		table[ 0 ][ i ] = ( ( ( Uint16 )red[ i ] ) << 8 ) | red[ i ];
+		table[ 1 ][ i ] = ( ( ( Uint16 )green[ i ] ) << 8 ) | green[ i ];
+		table[ 2 ][ i ] = ( ( ( Uint16 )blue[ i ] ) << 8 ) | blue[ i ];
 	}
 
 #ifdef _WIN32

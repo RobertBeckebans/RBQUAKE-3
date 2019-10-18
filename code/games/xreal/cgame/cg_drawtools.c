@@ -210,7 +210,7 @@ void CG_DrawStringExt( int x, int y, const char* string, const float* setColor, 
 		{
 			if( !forceColor )
 			{
-				memcpy( color, (float*)g_color_table[ ColorIndex( *( s + 1 ) ) ], sizeof( color ) );
+				memcpy( color, ( float* )g_color_table[ ColorIndex( *( s + 1 ) ) ], sizeof( color ) );
 				color[ 3 ] = setColor[ 3 ];
 				trap_R_SetColor( color );
 			}
@@ -659,20 +659,20 @@ static void UI_DrawBannerString2( int x, int y, const char* str, vec4_t color )
 		ch = *s & 127;
 		if( ch == ' ' )
 		{
-			ax += ( (float)PROPB_SPACE_WIDTH + (float)PROPB_GAP_WIDTH ) * cgs.screenXScale;
+			ax += ( ( float )PROPB_SPACE_WIDTH + ( float )PROPB_GAP_WIDTH ) * cgs.screenXScale;
 		}
 		else if( ch >= 'A' && ch <= 'Z' )
 		{
 			ch -= 'A';
-			fcol    = (float)propMapB[ ch ][ 0 ] / 256.0f;
-			frow    = (float)propMapB[ ch ][ 1 ] / 256.0f;
-			fwidth  = (float)propMapB[ ch ][ 2 ] / 256.0f;
-			fheight = (float)PROPB_HEIGHT / 256.0f;
-			aw      = (float)propMapB[ ch ][ 2 ] * cgs.screenXScale;
-			ah      = (float)PROPB_HEIGHT * cgs.screenYScale;
+			fcol    = ( float )propMapB[ ch ][ 0 ] / 256.0f;
+			frow    = ( float )propMapB[ ch ][ 1 ] / 256.0f;
+			fwidth  = ( float )propMapB[ ch ][ 2 ] / 256.0f;
+			fheight = ( float )PROPB_HEIGHT / 256.0f;
+			aw      = ( float )propMapB[ ch ][ 2 ] * cgs.screenXScale;
+			ah      = ( float )PROPB_HEIGHT * cgs.screenYScale;
 
 			trap_R_DrawStretchPic( ax, ay, aw, ah, fcol, frow, fcol + fwidth, frow + fheight, cgs.media.charsetPropB );
-			ax += ( aw + (float)PROPB_GAP_WIDTH * cgs.screenXScale );
+			ax += ( aw + ( float )PROPB_GAP_WIDTH * cgs.screenXScale );
 		}
 		s++;
 	}
@@ -780,16 +780,16 @@ static void UI_DrawProportionalString2( int x, int y, const char* str, vec4_t co
 		ch = *s & 127;
 		if( ch == ' ' )
 		{
-			aw = (float)PROP_SPACE_WIDTH * cgs.screenXScale * sizeScale;
+			aw = ( float )PROP_SPACE_WIDTH * cgs.screenXScale * sizeScale;
 		}
 		else if( propMap[ ch ][ 2 ] != -1 )
 		{
-			fcol    = (float)propMap[ ch ][ 0 ] / 256.0f;
-			frow    = (float)propMap[ ch ][ 1 ] / 256.0f;
-			fwidth  = (float)propMap[ ch ][ 2 ] / 256.0f;
-			fheight = (float)PROP_HEIGHT / 256.0f;
-			aw      = (float)propMap[ ch ][ 2 ] * cgs.screenXScale * sizeScale;
-			ah      = (float)PROP_HEIGHT * cgs.screenYScale * sizeScale;
+			fcol    = ( float )propMap[ ch ][ 0 ] / 256.0f;
+			frow    = ( float )propMap[ ch ][ 1 ] / 256.0f;
+			fwidth  = ( float )propMap[ ch ][ 2 ] / 256.0f;
+			fheight = ( float )PROP_HEIGHT / 256.0f;
+			aw      = ( float )propMap[ ch ][ 2 ] * cgs.screenXScale * sizeScale;
+			ah      = ( float )PROP_HEIGHT * cgs.screenYScale * sizeScale;
 
 			trap_R_DrawStretchPic( ax, ay, aw, ah, fcol, frow, fcol + fwidth, frow + fheight, charset );
 		}
@@ -798,7 +798,7 @@ static void UI_DrawProportionalString2( int x, int y, const char* str, vec4_t co
 			aw = 0;
 		}
 
-		ax += ( aw + (float)PROP_GAP_WIDTH * cgs.screenXScale * sizeScale );
+		ax += ( aw + ( float )PROP_GAP_WIDTH * cgs.screenXScale * sizeScale );
 		s++;
 	}
 

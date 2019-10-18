@@ -346,12 +346,12 @@ void R_TransformDecalProjector( decalProjector_t* in, vec3_t axis[ 3 ], vec3_t o
 	vec3_t center;
 
 	/* copy misc stuff */
-	out->shader           = in->shader;
-	*( (int*)out->color ) = *( (int*)in->color );
-	out->fadeStartTime    = in->fadeStartTime;
-	out->fadeEndTime      = in->fadeEndTime;
-	out->omnidirectional  = in->omnidirectional;
-	out->numPlanes        = in->numPlanes;
+	out->shader             = in->shader;
+	*( ( int* )out->color ) = *( ( int* )in->color );
+	out->fadeStartTime      = in->fadeStartTime;
+	out->fadeEndTime        = in->fadeEndTime;
+	out->omnidirectional    = in->omnidirectional;
+	out->numPlanes          = in->numPlanes;
 
 	/* translate bounding box and sphere (note: rotated projector bounding box will be invalid!) */
 	VectorSubtract( in->mins, origin, out->mins );
@@ -702,7 +702,7 @@ static void ProjectDecalOntoTriangles( decalProjector_t* dp, bspSurface_t* surf,
 	if( *surf->data == SF_FACE )
 	{
 		/* get surface */
-		srfSurfaceFace_t* srf = (srfSurfaceFace_t*)surf->data;
+		srfSurfaceFace_t* srf = ( srfSurfaceFace_t* )surf->data;
 
 		/* walk triangle list */
 		for( i = 0, tri = srf->triangles; i < srf->numTriangles; i++, tri++ )
@@ -719,7 +719,7 @@ static void ProjectDecalOntoTriangles( decalProjector_t* dp, bspSurface_t* surf,
 	else if( *surf->data == SF_TRIANGLES )
 	{
 		/* get surface */
-		srfTriangles_t* srf = (srfTriangles_t*)surf->data;
+		srfTriangles_t* srf = ( srfTriangles_t* )surf->data;
 
 		/* walk triangle list */
 		for( i = 0, tri = srf->triangles; i < srf->numTriangles; i++, tri++ )
@@ -748,7 +748,7 @@ static void ProjectDecalOntoGrid( decalProjector_t* dp, bspSurface_t* surf, bspM
 	vec3_t         points[ 2 ][ MAX_DECAL_VERTS ];
 
 	/* get surface */
-	srf = (srfGridMesh_t*)surf->data;
+	srf = ( srfGridMesh_t* )surf->data;
 
 	/* walk mesh rows */
 	for( y = 0; y < ( srf->height - 1 ); y++ )
@@ -800,7 +800,7 @@ void R_ProjectDecalOntoSurface( decalProjector_t* dp, bspSurface_t* surf, bspMod
 	tr.pc.c_decalTestSurfaces++;
 
 	/* get generic surface */
-	gen = (srfGeneric_t*)surf->data;
+	gen = ( srfGeneric_t* )surf->data;
 
 	/* ignore certain surfacetypes */
 	if( gen->surfaceType != SF_FACE && gen->surfaceType != SF_TRIANGLES && gen->surfaceType != SF_GRID )
@@ -883,7 +883,7 @@ void R_AddDecalSurface( decal_t* decal )
 	/* fade colors */
 	if( decal->fadeStartTime < tr.refdef.time && decal->fadeStartTime < decal->fadeEndTime )
 	{
-		fade = (float)( decal->fadeEndTime - tr.refdef.time ) / (float)( decal->fadeEndTime - decal->fadeStartTime );
+		fade = ( float )( decal->fadeEndTime - tr.refdef.time ) / ( float )( decal->fadeEndTime - decal->fadeStartTime );
 		for( i = 0; i < decal->numVerts; i++ )
 		{
 			decal->verts[ i ].modulate[ 0 ] *= fade;
@@ -908,7 +908,7 @@ void R_AddDecalSurface( decal_t* decal )
 
 	/* add surface to scene */
 	//R_AddDrawSurf((void *)srf, decal->shader, decal->fogIndex, 0, dlightMap);
-	R_AddDrawSurf( (void*)srf, decal->shader, -1, decal->fogIndex );
+	R_AddDrawSurf( ( void* )srf, decal->shader, -1, decal->fogIndex );
 	tr.pc.c_decalSurfaces++;
 
 	/* free temporary decal */

@@ -872,11 +872,11 @@ intptr_t CL_UISystemCalls( intptr_t* args )
 	switch( args[ 0 ] )
 	{
 		case UI_ERROR:
-			Com_Error( ERR_DROP, "%s", (const char*)VMA( 1 ) );
+			Com_Error( ERR_DROP, "%s", ( const char* )VMA( 1 ) );
 			return 0;
 
 		case UI_PRINT:
-			Com_Printf( "%s", (const char*)VMA( 1 ) );
+			Com_Printf( "%s", ( const char* )VMA( 1 ) );
 			return 0;
 
 		case UI_MILLISECONDS:
@@ -927,7 +927,7 @@ intptr_t CL_UISystemCalls( intptr_t* args )
 		case UI_CMD_EXECUTETEXT:
 			if( args[ 1 ] == 0 && ( !strncmp( VMA( 2 ), "snd_restart", 11 ) || !strncmp( VMA( 2 ), "vid_restart", 11 ) || !strncmp( VMA( 2 ), "quit", 5 ) ) )
 			{
-				Com_Printf( S_COLOR_YELLOW "turning EXEC_NOW '%.11s' into EXEC_INSERT\n", (const char*)VMA( 2 ) );
+				Com_Printf( S_COLOR_YELLOW "turning EXEC_NOW '%.11s' into EXEC_INSERT\n", ( const char* )VMA( 2 ) );
 				args[ 1 ] = EXEC_INSERT;
 			}
 			Cbuf_ExecuteText( args[ 1 ], VMA( 2 ) );
@@ -1220,7 +1220,7 @@ intptr_t CL_UISystemCalls( intptr_t* args )
 			return 0;
 
 		default:
-			Com_Error( ERR_DROP, "Bad UI system trap: %ld", (long int)args[ 0 ] );
+			Com_Error( ERR_DROP, "Bad UI system trap: %ld", ( long int )args[ 0 ] );
 	}
 
 	return 0;

@@ -257,18 +257,18 @@ void ColorToRGBE( const float* color, unsigned char rgbe[ 4 ] )
 	{
 #if 1
 		maxComponent = frexp( maxComponent, &e ) * 255.0 / maxComponent;
-		rgbe[ 0 ]    = (unsigned char)( sample[ 0 ] * maxComponent );
-		rgbe[ 1 ]    = (unsigned char)( sample[ 1 ] * maxComponent );
-		rgbe[ 2 ]    = (unsigned char)( sample[ 2 ] * maxComponent );
-		rgbe[ 3 ]    = (unsigned char)( e + 128 );
+		rgbe[ 0 ]    = ( unsigned char )( sample[ 0 ] * maxComponent );
+		rgbe[ 1 ]    = ( unsigned char )( sample[ 1 ] * maxComponent );
+		rgbe[ 2 ]    = ( unsigned char )( sample[ 2 ] * maxComponent );
+		rgbe[ 3 ]    = ( unsigned char )( e + 128 );
 #else
 		e = ceil( log2( maxComponent ) );
 		VectorScale( sample, 1.0 / exp2( e ), sample );
 
-		rgbe[ 0 ] = (unsigned char)( sample[ 0 ] * 255 );
-		rgbe[ 1 ] = (unsigned char)( sample[ 1 ] * 255 );
-		rgbe[ 2 ] = (unsigned char)( sample[ 2 ] * 255 );
-		rgbe[ 3 ] = (unsigned char)( e + 128 );
+		rgbe[ 0 ] = ( unsigned char )( sample[ 0 ] * 255 );
+		rgbe[ 1 ] = ( unsigned char )( sample[ 1 ] * 255 );
+		rgbe[ 2 ] = ( unsigned char )( sample[ 2 ] * 255 );
+		rgbe[ 3 ] = ( unsigned char )( e + 128 );
 #endif
 	}
 }
@@ -472,7 +472,7 @@ void SmoothNormals( void )
 	free( smoothed );
 
 	/* print time */
-	Sys_Printf( " (%i)\n", (int)( I_FloatTime() - start ) );
+	Sys_Printf( " (%i)\n", ( int )( I_FloatTime() - start ) );
 }
 
 /* -------------------------------------------------------------------------------
@@ -2122,7 +2122,7 @@ illuminates the luxels
 */
 
 #define STACK_LL_SIZE ( SUPER_LUXEL_SIZE * 64 * 64 )
-#define LIGHT_LUXEL( x, y ) ( lightLuxels + ( ( ( (y)*lm->sw ) + ( x ) ) * SUPER_LUXEL_SIZE ) )
+#define LIGHT_LUXEL( x, y ) ( lightLuxels + ( ( ( ( y )*lm->sw ) + ( x ) ) * SUPER_LUXEL_SIZE ) )
 
 void IlluminateRawLightmap( int rawLightmapNum )
 {
@@ -3503,8 +3503,8 @@ qboolean ClusterVisible( int a, int b )
 	}
 
 	/* get pvs data */
-	portalClusters = ( (int*)bspVisBytes )[ 0 ];
-	leafBytes      = ( (int*)bspVisBytes )[ 1 ];
+	portalClusters = ( ( int* )bspVisBytes )[ 0 ];
+	leafBytes      = ( ( int* )bspVisBytes )[ 1 ];
 	pvs            = bspVisBytes + VIS_HEADER_SIZE + ( a * leafBytes );
 
 	/* check */
@@ -4055,7 +4055,7 @@ void SetupEnvelopes( qboolean forGrid, qboolean fastFlag )
 
 					/* calculate spherical bounds */
 					VectorSubtract( maxs, light->origin, dir );
-					radius = (float)VectorLength( dir );
+					radius = ( float )VectorLength( dir );
 
 					/* if this radius is smaller than the envelope, then set the envelope to it */
 					if( radius < light->envelope )
@@ -4178,7 +4178,7 @@ void CreateTraceLightsForBounds( vec3_t mins, vec3_t maxs, vec3_t normal, int nu
 	VectorAdd( mins, maxs, origin );
 	VectorScale( origin, 0.5f, origin );
 	VectorSubtract( maxs, origin, dir );
-	radius = (float)VectorLength( dir );
+	radius = ( float )VectorLength( dir );
 
 	/* get length of normal vector */
 	if( normal != NULL )

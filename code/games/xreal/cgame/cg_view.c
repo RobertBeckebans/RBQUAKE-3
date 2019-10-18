@@ -956,7 +956,7 @@ static int CG_CalcFov( void )
 	int         inwater;
 	float       desiredFov;
 	const float baseAspect = 0.75f;
-	const float aspect     = (float)cg.refdef.width / (float)cg.refdef.height;
+	const float aspect     = ( float )cg.refdef.width / ( float )cg.refdef.height;
 
 	if( cg.predictedPlayerState.pm_type == PM_INTERMISSION )
 	{
@@ -1002,7 +1002,7 @@ static int CG_CalcFov( void )
 
 		if( cg.zoomed )
 		{
-			f = ( cg.time - cg.zoomTime ) / (float)ZOOM_TIME;
+			f = ( cg.time - cg.zoomTime ) / ( float )ZOOM_TIME;
 			if( f > 1.0 )
 			{
 				fov_x = zoomFov;
@@ -1014,7 +1014,7 @@ static int CG_CalcFov( void )
 		}
 		else
 		{
-			f = ( cg.time - cg.zoomTime ) / (float)ZOOM_TIME;
+			f = ( cg.time - cg.zoomTime ) / ( float )ZOOM_TIME;
 			if( f <= 1.0 )
 			{
 				fov_x = zoomFov + f * ( fov_x - zoomFov );
@@ -1416,7 +1416,7 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView, qboolean demo
 	{
 		if( cg_timescale.value < cg_timescaleFadeEnd.value )
 		{
-			cg_timescale.value += cg_timescaleFadeSpeed.value * ( (float)cg.frametime ) / 1000;
+			cg_timescale.value += cg_timescaleFadeSpeed.value * ( ( float )cg.frametime ) / 1000;
 			if( cg_timescale.value > cg_timescaleFadeEnd.value )
 			{
 				cg_timescale.value = cg_timescaleFadeEnd.value;
@@ -1424,7 +1424,7 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView, qboolean demo
 		}
 		else
 		{
-			cg_timescale.value -= cg_timescaleFadeSpeed.value * ( (float)cg.frametime ) / 1000;
+			cg_timescale.value -= cg_timescaleFadeSpeed.value * ( ( float )cg.frametime ) / 1000;
 			if( cg_timescale.value < cg_timescaleFadeEnd.value )
 			{
 				cg_timescale.value = cg_timescaleFadeEnd.value;

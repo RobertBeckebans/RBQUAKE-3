@@ -103,7 +103,7 @@ void AddPlaneToHash( plane_t* p )
 {
 	int hash;
 
-	hash = (int)fabs( p->dist ) / 8;
+	hash = ( int )fabs( p->dist ) / 8;
 	hash &= ( PLANE_HASHES - 1 );
 
 	p->hash_chain     = planehash[ hash ];
@@ -234,7 +234,7 @@ int FindFloatPlane( vec3_t normal, vec_t dist )
 	int hash, h;
 
 	SnapPlane( normal, &dist );
-	hash = (int)fabs( dist ) / 8;
+	hash = ( int )fabs( dist ) / 8;
 	hash &= ( PLANE_HASHES - 1 );
 
 	// search the border bins as well
@@ -668,7 +668,7 @@ bspBrush_t* FinishBrush( void )
 		VectorAdd( buildBrush->mins, buildBrush->maxs, origin );
 		VectorScale( origin, 0.5, origin );
 
-		sprintf( string, "%i %i %i", (int)origin[ 0 ], (int)origin[ 1 ], (int)origin[ 2 ] );
+		sprintf( string, "%i %i %i", ( int )origin[ 0 ], ( int )origin[ 1 ], ( int )origin[ 2 ] );
 		SetKeyValue( &entities[ numEntities - 1 ], "origin", string );
 
 		VectorCopy( origin, entities[ numEntities - 1 ].origin );
@@ -947,7 +947,7 @@ void ParseRawBrush()
 		if( g_bBrushPrimit >= BPRIMIT_NEWBRUSHES )
 		{
 			// read the texture matrix
-			Parse2DMatrix( 2, 3, (float*)side->texMat );
+			Parse2DMatrix( 2, 3, ( float* )side->texMat );
 		}
 		else
 		{

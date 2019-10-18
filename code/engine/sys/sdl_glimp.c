@@ -124,10 +124,10 @@ GLimp_CompareModes
 static int GLimp_CompareModes( const void* a, const void* b )
 {
 	const float ASPECT_EPSILON  = 0.001f;
-	SDL_Rect*   modeA           = (SDL_Rect*)a;
-	SDL_Rect*   modeB           = (SDL_Rect*)b;
-	float       aspectA         = (float)modeA->w / (float)modeA->h;
-	float       aspectB         = (float)modeB->w / (float)modeB->h;
+	SDL_Rect*   modeA           = ( SDL_Rect* )a;
+	SDL_Rect*   modeB           = ( SDL_Rect* )b;
+	float       aspectA         = ( float )modeA->w / ( float )modeA->h;
+	float       aspectB         = ( float )modeB->w / ( float )modeB->h;
 	int         areaA           = modeA->w * modeA->h;
 	int         areaB           = modeB->w * modeB->h;
 	float       aspectDiffA     = fabs( aspectA - displayAspect );
@@ -203,7 +203,7 @@ static void GLimp_DetectAvailableModes( void )
 	{
 		const char* newModeString = va( "%ux%u ", modes[ i ].w, modes[ i ].h );
 
-		if( strlen( newModeString ) < (int)sizeof( buf ) - strlen( buf ) )
+		if( strlen( newModeString ) < ( int )sizeof( buf ) - strlen( buf ) )
 		{
 			Q_strcat( buf, sizeof( buf ), newModeString );
 		}
@@ -245,7 +245,7 @@ static int GLimp_SetMode( int mode, qboolean fullscreen, qboolean noborder, qboo
 	}
 
 	icon = SDL_CreateRGBSurfaceFrom(
-		(void*)CLIENT_WINDOW_ICON.pixel_data,
+		( void* )CLIENT_WINDOW_ICON.pixel_data,
 		CLIENT_WINDOW_ICON.width,
 		CLIENT_WINDOW_ICON.height,
 		CLIENT_WINDOW_ICON.bytes_per_pixel * 8,
@@ -271,7 +271,7 @@ static int GLimp_SetMode( int mode, qboolean fullscreen, qboolean noborder, qboo
 
 	if( SDL_GetDesktopDisplayMode( display, &desktopMode ) == 0 )
 	{
-		displayAspect = (float)desktopMode.w / (float)desktopMode.h;
+		displayAspect = ( float )desktopMode.w / ( float )desktopMode.h;
 
 		ri.Printf( PRINT_ALL, "Display aspect: %.3f\n", displayAspect );
 	}
@@ -299,7 +299,7 @@ static int GLimp_SetMode( int mode, qboolean fullscreen, qboolean noborder, qboo
 			ri.Printf( PRINT_ALL, "Cannot determine display resolution, assuming 640x480\n" );
 		}
 
-		glConfig.windowAspect = (float)glConfig.vidWidth / (float)glConfig.vidHeight;
+		glConfig.windowAspect = ( float )glConfig.vidWidth / ( float )glConfig.vidHeight;
 	}
 	else if( !R_GetModeInfo( &glConfig.vidWidth, &glConfig.vidHeight, &glConfig.windowAspect, mode ) )
 	{
@@ -685,7 +685,7 @@ static void GLimp_InitExtensions( void )
 			}
 			*/
 
-			glConfig2.maxVertexSkinningBones     = (int)Q_bound( 0.0, ( Q_max( glConfig2.maxVertexUniforms - reservedComponents, 0 ) / 16 ), MAX_BONES );
+			glConfig2.maxVertexSkinningBones     = ( int )Q_bound( 0.0, ( Q_max( glConfig2.maxVertexUniforms - reservedComponents, 0 ) / 16 ), MAX_BONES );
 			glConfig2.vboVertexSkinningAvailable = r_vboVertexSkinning->integer && ( ( glConfig2.maxVertexSkinningBones >= 12 ) ? qtrue : qfalse );
 
 			ri.Printf( PRINT_DEVELOPER, "...using GL_ARB_vertex_shader\n" );
@@ -699,7 +699,7 @@ static void GLimp_InitExtensions( void )
 		// GL_ARB_shading_language_100
 		if( GLimp_HaveExtension( "GL_ARB_shading_language_100" ) )
 		{
-			Q_strncpyz( glConfig2.shadingLanguageVersion, (char*)glGetString( GL_SHADING_LANGUAGE_VERSION ), sizeof( glConfig2.shadingLanguageVersion ) );
+			Q_strncpyz( glConfig2.shadingLanguageVersion, ( char* )glGetString( GL_SHADING_LANGUAGE_VERSION ), sizeof( glConfig2.shadingLanguageVersion ) );
 			ri.Printf( PRINT_DEVELOPER, "...using GL_ARB_shading_language_100\n" );
 		}
 		else
@@ -1028,17 +1028,17 @@ success:
 	glConfig.deviceSupportsGamma = !r_ignorehwgamma->integer && SDL_SetWindowBrightness( SDL_window, 1.0f ) >= 0;
 
 	// get our config strings
-	Q_strncpyz( glConfig.vendor_string, (char*)glGetString( GL_VENDOR ), sizeof( glConfig.vendor_string ) );
-	Q_strncpyz( glConfig.renderer_string, (char*)glGetString( GL_RENDERER ), sizeof( glConfig.renderer_string ) );
+	Q_strncpyz( glConfig.vendor_string, ( char* )glGetString( GL_VENDOR ), sizeof( glConfig.vendor_string ) );
+	Q_strncpyz( glConfig.renderer_string, ( char* )glGetString( GL_RENDERER ), sizeof( glConfig.renderer_string ) );
 	if( *glConfig.renderer_string && glConfig.renderer_string[ strlen( glConfig.renderer_string ) - 1 ] == '\n' )
 	{
 		glConfig.renderer_string[ strlen( glConfig.renderer_string ) - 1 ] = 0;
 	}
-	Q_strncpyz( glConfig.version_string, (char*)glGetString( GL_VERSION ), sizeof( glConfig.version_string ) );
+	Q_strncpyz( glConfig.version_string, ( char* )glGetString( GL_VERSION ), sizeof( glConfig.version_string ) );
 
 	if( glConfig.driverType != GLDRV_OPENGL3 )
 	{
-		Q_strncpyz( glConfig.extensions_string, (char*)glGetString( GL_EXTENSIONS ), sizeof( glConfig.extensions_string ) );
+		Q_strncpyz( glConfig.extensions_string, ( char* )glGetString( GL_EXTENSIONS ), sizeof( glConfig.extensions_string ) );
 	}
 
 	if( Q_stristr( glConfig.renderer_string, "mesa" ) ||
@@ -1336,7 +1336,7 @@ void* GLimp_RendererSleep( void )
 			SDL_CondWait( renderCommandsEvent, smpMutex );
 		}
 
-		data = (void*)smpData;
+		data = ( void* )smpData;
 	}
 	SDL_UnlockMutex( smpMutex );
 

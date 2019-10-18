@@ -386,7 +386,7 @@ static ID_INLINE float _vmf( intptr_t x )
 {
 	floatint_t fi;
 
-	fi.i = (int)x;
+	fi.i = ( int )x;
 	return fi.f;
 }
 

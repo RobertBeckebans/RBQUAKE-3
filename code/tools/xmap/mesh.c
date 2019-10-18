@@ -683,7 +683,7 @@ mesh_t* SubdivideMeshQuads( mesh_t* in, float minLength, int maxsize, int widtht
 			}
 		}
 
-		subdivisions = (int)( maxLength / minLength );
+		subdivisions = ( int )( maxLength / minLength );
 		if( subdivisions > maxsubdivisions )
 		{
 			subdivisions = maxsubdivisions;
@@ -714,7 +714,7 @@ mesh_t* SubdivideMeshQuads( mesh_t* in, float minLength, int maxsize, int widtht
 			}
 			for( k = 1; k <= subdivisions; k++ )
 			{
-				amount = (float)k / ( subdivisions + 1 );
+				amount = ( float )k / ( subdivisions + 1 );
 				LerpDrawVertAmount( &expand[ i ][ j ], &expand[ i ][ j + subdivisions + 1 ], amount, &expand[ i ][ j + k ] );
 			}
 		}
@@ -735,7 +735,7 @@ mesh_t* SubdivideMeshQuads( mesh_t* in, float minLength, int maxsize, int widtht
 			}
 		}
 
-		subdivisions = (int)( maxLength / minLength );
+		subdivisions = ( int )( maxLength / minLength );
 		if( subdivisions > maxsubdivisions )
 		{
 			subdivisions = maxsubdivisions;
@@ -766,7 +766,7 @@ mesh_t* SubdivideMeshQuads( mesh_t* in, float minLength, int maxsize, int widtht
 			}
 			for( k = 1; k <= subdivisions; k++ )
 			{
-				amount = (float)k / ( subdivisions + 1 );
+				amount = ( float )k / ( subdivisions + 1 );
 				LerpDrawVertAmount( &expand[ j ][ i ], &expand[ j + subdivisions + 1 ][ i ], amount, &expand[ j + k ][ i ] );
 			}
 		}

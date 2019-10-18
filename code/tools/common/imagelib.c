@@ -46,7 +46,7 @@ int fgetLittleShort( FILE* f )
 	b1 = fgetc( f );
 	b2 = fgetc( f );
 
-	return (short)( b1 + b2 * 256 );
+	return ( short )( b1 + b2 * 256 );
 }
 
 int fgetLittleLong( FILE* f )
@@ -75,7 +75,7 @@ int bufLittleShort( byte* buf, int len, int* pos )
 	b2 = buf[ *pos ];
 	*pos += 1;
 
-	return (short)( b1 + b2 * 256 );
+	return ( short )( b1 + b2 * 256 );
 }
 
 int bufLittleLong( byte* buf, int len, int* pos )
@@ -142,12 +142,12 @@ typedef struct
 
 extern bmhd_t bmhd; // will be in native byte order
 
-#define FORMID ( 'F' + ( 'O' << 8 ) + ( (int)'R' << 16 ) + ( (int)'M' << 24 ) )
-#define ILBMID ( 'I' + ( 'L' << 8 ) + ( (int)'B' << 16 ) + ( (int)'M' << 24 ) )
-#define PBMID ( 'P' + ( 'B' << 8 ) + ( (int)'M' << 16 ) + ( (int)' ' << 24 ) )
-#define BMHDID ( 'B' + ( 'M' << 8 ) + ( (int)'H' << 16 ) + ( (int)'D' << 24 ) )
-#define BODYID ( 'B' + ( 'O' << 8 ) + ( (int)'D' << 16 ) + ( (int)'Y' << 24 ) )
-#define CMAPID ( 'C' + ( 'M' << 8 ) + ( (int)'A' << 16 ) + ( (int)'P' << 24 ) )
+#define FORMID ( 'F' + ( 'O' << 8 ) + ( ( int )'R' << 16 ) + ( ( int )'M' << 24 ) )
+#define ILBMID ( 'I' + ( 'L' << 8 ) + ( ( int )'B' << 16 ) + ( ( int )'M' << 24 ) )
+#define PBMID ( 'P' + ( 'B' << 8 ) + ( ( int )'M' << 16 ) + ( ( int )' ' << 24 ) )
+#define BMHDID ( 'B' + ( 'M' << 8 ) + ( ( int )'H' << 16 ) + ( ( int )'D' << 24 ) )
+#define BODYID ( 'B' + ( 'O' << 8 ) + ( ( int )'D' << 16 ) + ( ( int )'Y' << 24 ) )
+#define CMAPID ( 'C' + ( 'M' << 8 ) + ( ( int )'A' << 16 ) + ( ( int )'P' << 24 ) )
 
 bmhd_t bmhd;
 
@@ -232,23 +232,23 @@ void LoadLBM( const char* filename, byte** picture, byte** palette )
 	//
 	// load the LBM
 	//
-	LoadFile( filename, (void**)&LBMbuffer );
+	LoadFile( filename, ( void** )&LBMbuffer );
 
 	//
 	// parse the LBM header
 	//
 	LBM_P = LBMbuffer;
-	if( *(int*)LBMbuffer != LittleLong( FORMID ) )
+	if( *( int* )LBMbuffer != LittleLong( FORMID ) )
 	{
 		Error( "No FORM ID at start of file!\n" );
 	}
 
 	LBM_P += 4;
-	formlength = BigLong( *(int*)LBM_P );
+	formlength = BigLong( *( int* )LBM_P );
 	LBM_P += 4;
 	LBMEND_P = LBM_P + Align( formlength );
 
-	formtype = LittleLong( *(int*)LBM_P );
+	formtype = LittleLong( *( int* )LBM_P );
 
 	if( formtype != ILBMID && formtype != PBMID )
 		Error( "Unrecognized form type: %c%c%c%c\n", formtype & 0xff, ( formtype >> 8 ) & 0xff, ( formtype >> 16 ) & 0xff, ( formtype >> 24 ) & 0xff );
@@ -297,7 +297,7 @@ void LoadLBM( const char* filename, byte** picture, byte** palette )
 					{
 						if( bmhd.compression == cm_rle1 )
 						{
-							body_p = LBMRLEDecompress( (byte*)body_p, pic_p, bmhd.w );
+							body_p = LBMRLEDecompress( ( byte* )body_p, pic_p, bmhd.w );
 						}
 						else if( bmhd.compression == cm_none )
 						{
@@ -359,7 +359,7 @@ void WriteLBMfile( const char* filename, byte* data, int width, int height, byte
 	*lbmptr++ = 'R';
 	*lbmptr++ = 'M';
 
-	formlength = (int*)lbmptr;
+	formlength = ( int* )lbmptr;
 	lbmptr += 4; // leave space for length
 
 	*lbmptr++ = 'P';
@@ -375,22 +375,22 @@ void WriteLBMfile( const char* filename, byte* data, int width, int height, byte
 	*lbmptr++ = 'H';
 	*lbmptr++ = 'D';
 
-	bmhdlength = (int*)lbmptr;
+	bmhdlength = ( int* )lbmptr;
 	lbmptr += 4; // leave space for length
 
 	memset( &basebmhd, 0, sizeof( basebmhd ) );
-	basebmhd.w          = BigShort( (short)width );
-	basebmhd.h          = BigShort( (short)height );
+	basebmhd.w          = BigShort( ( short )width );
+	basebmhd.h          = BigShort( ( short )height );
 	basebmhd.nPlanes    = BigShort( 8 );
 	basebmhd.xAspect    = BigShort( 5 );
 	basebmhd.yAspect    = BigShort( 6 );
-	basebmhd.pageWidth  = BigShort( (short)width );
-	basebmhd.pageHeight = BigShort( (short)height );
+	basebmhd.pageWidth  = BigShort( ( short )width );
+	basebmhd.pageHeight = BigShort( ( short )height );
 
 	memcpy( lbmptr, &basebmhd, sizeof( basebmhd ) );
 	lbmptr += sizeof( basebmhd );
 
-	length      = lbmptr - (byte*)bmhdlength - 4;
+	length      = lbmptr - ( byte* )bmhdlength - 4;
 	*bmhdlength = BigLong( length );
 	if( length & 1 )
 	{
@@ -405,13 +405,13 @@ void WriteLBMfile( const char* filename, byte* data, int width, int height, byte
 	*lbmptr++ = 'A';
 	*lbmptr++ = 'P';
 
-	cmaplength = (int*)lbmptr;
+	cmaplength = ( int* )lbmptr;
 	lbmptr += 4; // leave space for length
 
 	memcpy( lbmptr, palette, 768 );
 	lbmptr += 768;
 
-	length      = lbmptr - (byte*)cmaplength - 4;
+	length      = lbmptr - ( byte* )cmaplength - 4;
 	*cmaplength = BigLong( length );
 	if( length & 1 )
 	{
@@ -426,13 +426,13 @@ void WriteLBMfile( const char* filename, byte* data, int width, int height, byte
 	*lbmptr++ = 'D';
 	*lbmptr++ = 'Y';
 
-	bodylength = (int*)lbmptr;
+	bodylength = ( int* )lbmptr;
 	lbmptr += 4; // leave space for length
 
 	memcpy( lbmptr, data, width * height );
 	lbmptr += width * height;
 
-	length      = lbmptr - (byte*)bodylength - 4;
+	length      = lbmptr - ( byte* )bodylength - 4;
 	*bodylength = BigLong( length );
 	if( length & 1 )
 	{
@@ -442,7 +442,7 @@ void WriteLBMfile( const char* filename, byte* data, int width, int height, byte
 	//
 	// done
 	//
-	length      = lbmptr - (byte*)formlength - 4;
+	length      = lbmptr - ( byte* )formlength - 4;
 	*formlength = BigLong( length );
 	if( length & 1 )
 	{
@@ -511,14 +511,14 @@ void LoadPCX( const char* filename, byte** pic, byte** palette, int* width, int*
 	byte * out, *pix;
 
 	/* load the file */
-	len = vfsLoadFile( filename, (void**)&raw, 0 );
+	len = vfsLoadFile( filename, ( void** )&raw, 0 );
 	if( len == -1 )
 	{
 		Error( "LoadPCX: Couldn't read %s", filename );
 	}
 
 	/* parse the PCX file */
-	pcx = (pcx_t*)raw;
+	pcx = ( pcx_t* )raw;
 	raw = &pcx->data;
 
 	pcx->xmin           = LittleShort( pcx->xmin );
@@ -538,7 +538,7 @@ void LoadPCX( const char* filename, byte** pic, byte** palette, int* width, int*
 	if( palette )
 	{
 		*palette = safe_malloc( 768 );
-		memcpy( *palette, (byte*)pcx + len - 768, 768 );
+		memcpy( *palette, ( byte* )pcx + len - 768, 768 );
 	}
 
 	if( width )
@@ -594,7 +594,7 @@ void LoadPCX( const char* filename, byte** pic, byte** palette, int* width, int*
 	}
 
 	/* validity check */
-	if( raw - (byte*)pcx > len )
+	if( raw - ( byte* )pcx > len )
 	{
 		Error( "PCX file %s was malformed", filename );
 	}
@@ -621,12 +621,12 @@ void WritePCXfile( const char* filename, byte* data, int width, int height, byte
 	pcx->bits_per_pixel = 8;    // 256 color
 	pcx->xmin           = 0;
 	pcx->ymin           = 0;
-	pcx->xmax           = LittleShort( (short)( width - 1 ) );
-	pcx->ymax           = LittleShort( (short)( height - 1 ) );
-	pcx->hres           = LittleShort( (short)width );
-	pcx->vres           = LittleShort( (short)height );
+	pcx->xmax           = LittleShort( ( short )( width - 1 ) );
+	pcx->ymax           = LittleShort( ( short )( height - 1 ) );
+	pcx->hres           = LittleShort( ( short )width );
+	pcx->vres           = LittleShort( ( short )height );
 	pcx->color_planes   = 1; // chunky image
-	pcx->bytes_per_line = LittleShort( (short)width );
+	pcx->bytes_per_line = LittleShort( ( short )width );
 	pcx->palette_type   = LittleShort( 1 ); // not a grey scale
 
 	// pack the image
@@ -656,7 +656,7 @@ void WritePCXfile( const char* filename, byte* data, int width, int height, byte
 	}
 
 	// write output file
-	length = pack - (byte*)pcx;
+	length = pack - ( byte* )pcx;
 	SaveFile( filename, pcx, length );
 
 	free( pcx );
@@ -739,7 +739,7 @@ void LoadBMP( const char* filename, byte** pic, byte** palette, int* width, int*
 	byte*    in;
 	int      len, pos = 0;
 
-	len = vfsLoadFile( filename, (void**)&in, 0 );
+	len = vfsLoadFile( filename, ( void** )&in, 0 );
 	if( len == -1 )
 	{
 		Error( "Couldn't read %s", filename );
@@ -978,18 +978,18 @@ void LoadTGABuffer( byte* buffer, byte** pic, int* width, int* height )
 	targa_header.colormap_type = *buf_p++;
 	targa_header.image_type    = *buf_p++;
 
-	targa_header.colormap_index = LittleShort( *(short*)buf_p );
+	targa_header.colormap_index = LittleShort( *( short* )buf_p );
 	buf_p += 2;
-	targa_header.colormap_length = LittleShort( *(short*)buf_p );
+	targa_header.colormap_length = LittleShort( *( short* )buf_p );
 	buf_p += 2;
 	targa_header.colormap_size = *buf_p++;
-	targa_header.x_origin      = LittleShort( *(short*)buf_p );
+	targa_header.x_origin      = LittleShort( *( short* )buf_p );
 	buf_p += 2;
-	targa_header.y_origin = LittleShort( *(short*)buf_p );
+	targa_header.y_origin = LittleShort( *( short* )buf_p );
 	buf_p += 2;
-	targa_header.width = LittleShort( *(short*)buf_p );
+	targa_header.width = LittleShort( *( short* )buf_p );
 	buf_p += 2;
-	targa_header.height = LittleShort( *(short*)buf_p );
+	targa_header.height = LittleShort( *( short* )buf_p );
 	buf_p += 2;
 	targa_header.pixel_size = *buf_p++;
 	targa_header.attributes = *buf_p++;
@@ -1209,7 +1209,7 @@ void LoadTGA( const char* name, byte** pixels, int* width, int* height )
 	//
 	// load the file
 	//
-	nLen = vfsLoadFile( (char*)name, (void**)&buffer, 0 );
+	nLen = vfsLoadFile( ( char* )name, ( void** )&buffer, 0 );
 	if( nLen == -1 )
 	{
 		Error( "Couldn't read %s", name );
@@ -1284,7 +1284,7 @@ void Load32BitImage( const char* name, unsigned** pixels, int* width, int* heigh
 	ExtractFileExtension( name, ext );
 	if( !Q_stricmp( ext, "tga" ) )
 	{
-		LoadTGA( name, (byte**)pixels, width, height );
+		LoadTGA( name, ( byte** )pixels, width, height );
 	}
 	else
 	{
@@ -1295,7 +1295,7 @@ void Load32BitImage( const char* name, unsigned** pixels, int* width, int* heigh
 		}
 		size     = *width * *height;
 		pixels32 = safe_malloc( size * 4 );
-		*pixels  = (unsigned*)pixels32;
+		*pixels  = ( unsigned* )pixels32;
 		for( i = 0; i < size; i++ )
 		{
 			v                     = pixels8[ i ];
@@ -1402,7 +1402,7 @@ void LoadJPGBuffer( const char* filename, byte* fbuffer, int fbufferSize, byte**
 
 	/* Step 3: read file parameters with jpeg_read_header() */
 
-	(void)jpeg_read_header( &cinfo, TRUE );
+	( void )jpeg_read_header( &cinfo, TRUE );
 	/* We can ignore the return value from jpeg_read_header since
 	 *   (a) suspension is not possible with the stdio data source, and
 	 *   (b) we passed TRUE to reject a tables-only JPEG file as an error.
@@ -1419,7 +1419,7 @@ void LoadJPGBuffer( const char* filename, byte* fbuffer, int fbufferSize, byte**
 
 	/* Step 5: Start decompressor */
 
-	(void)jpeg_start_decompress( &cinfo );
+	( void )jpeg_start_decompress( &cinfo );
 	/* We can ignore the return value since suspension is not possible
 	 * with the stdio data source.
 	 */
@@ -1457,7 +1457,7 @@ void LoadJPGBuffer( const char* filename, byte* fbuffer, int fbufferSize, byte**
 		 */
 		bbuf   = ( ( out + ( row_stride * cinfo.output_scanline ) ) );
 		buffer = &bbuf;
-		(void)jpeg_read_scanlines( &cinfo, buffer, 1 );
+		( void )jpeg_read_scanlines( &cinfo, buffer, 1 );
 	}
 
 	// If we are processing an 8-bit JPEG (greyscale), we'll have to convert
@@ -1503,7 +1503,7 @@ void LoadJPGBuffer( const char* filename, byte* fbuffer, int fbufferSize, byte**
 
 	/* Step 7: Finish decompression */
 
-	(void)jpeg_finish_decompress( &cinfo );
+	( void )jpeg_finish_decompress( &cinfo );
 	/* We can ignore the return value since suspension is not possible
 	 * with the stdio data source.
 	 */
@@ -1541,7 +1541,7 @@ static void png_read_data( png_structp png, png_bytep data, png_size_t length )
 
 	// raynorpat: msvc is gay
 #if _MSC_VER
-	(byte*)png->io_ptr += length;
+	( byte* )png->io_ptr += length;
 #else
 	png->io_ptr += length;
 #endif
@@ -1582,7 +1582,7 @@ void LoadPNGBuffer( byte* data, byte** pic, int* width, int* height )
 	}
 
 	//png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-	png = png_create_read_struct( PNG_LIBPNG_VER_STRING, (png_voidp)NULL, png_user_error_fn, png_user_warning_fn );
+	png = png_create_read_struct( PNG_LIBPNG_VER_STRING, ( png_voidp )NULL, png_user_error_fn, png_user_warning_fn );
 
 	if( !png )
 	{
@@ -1597,7 +1597,7 @@ void LoadPNGBuffer( byte* data, byte** pic, int* width, int* height )
 	{
 		Sys_FPrintf( SYS_WRN, "LoadPNGBuffer: png_create_info_struct() failed\n" );
 		//free(data);
-		png_destroy_read_struct( &png, (png_infopp)NULL, (png_infopp)NULL );
+		png_destroy_read_struct( &png, ( png_infopp )NULL, ( png_infopp )NULL );
 		return;
 	}
 
@@ -1611,7 +1611,7 @@ void LoadPNGBuffer( byte* data, byte** pic, int* width, int* height )
 		// if we get here, we had a problem reading the file
 		Sys_FPrintf( SYS_WRN, "LoadPNGBuffer: first exception handler called\n" );
 		//free(data);
-		png_destroy_read_struct( &png, (png_infopp)&info, (png_infopp)NULL );
+		png_destroy_read_struct( &png, ( png_infopp )&info, ( png_infopp )NULL );
 		return;
 	}
 
@@ -1625,7 +1625,7 @@ void LoadPNGBuffer( byte* data, byte** pic, int* width, int* height )
 	png_read_info( png, info );
 
 	// get picture info
-	png_get_IHDR( png, info, (png_uint_32*)&w, (png_uint_32*)&h, &bit_depth, &color_type, NULL, NULL, NULL );
+	png_get_IHDR( png, info, ( png_uint_32* )&w, ( png_uint_32* )&h, &bit_depth, &color_type, NULL, NULL, NULL );
 
 	// tell libpng to strip 16 bit/color files down to 8 bits/color
 	png_set_strip_16( png );
@@ -1671,9 +1671,9 @@ void LoadPNGBuffer( byte* data, byte** pic, int* width, int* height )
 	// allocate the memory to hold the image
 	*width  = w;
 	*height = h;
-	*pic = out = (byte*)safe_malloc( w * h * 4 );
+	*pic = out = ( byte* )safe_malloc( w * h * 4 );
 
-	row_pointers = (png_bytep*)safe_malloc( sizeof( png_bytep ) * h );
+	row_pointers = ( png_bytep* )safe_malloc( sizeof( png_bytep ) * h );
 
 	// set a new exception handler
 	if( setjmp( png_jmpbuf( png ) ) )
@@ -1681,7 +1681,7 @@ void LoadPNGBuffer( byte* data, byte** pic, int* width, int* height )
 		Sys_FPrintf( SYS_WRN, "LoadPNGBuffer: second exception handler called\n" );
 		free( row_pointers );
 		//free(data);
-		png_destroy_read_struct( &png, (png_infopp)&info, (png_infopp)NULL );
+		png_destroy_read_struct( &png, ( png_infopp )&info, ( png_infopp )NULL );
 		return;
 	}
 
@@ -1699,7 +1699,7 @@ void LoadPNGBuffer( byte* data, byte** pic, int* width, int* height )
 	png_read_end( png, info );
 
 	// clean up after the read, and free any memory allocated
-	png_destroy_read_struct( &png, &info, (png_infopp)NULL );
+	png_destroy_read_struct( &png, &info, ( png_infopp )NULL );
 
 	free( row_pointers );
 	//free(data);
@@ -1720,7 +1720,7 @@ static void png_write_data( png_structp png, png_bytep data, png_size_t length )
 
 	// raynorpat: msvc is gay
 #if _MSC_VER
-	(byte*)png->io_ptr += length;
+	( byte* )png->io_ptr += length;
 #else
 	png->io_ptr += length;
 #endif
@@ -1753,7 +1753,7 @@ void WritePNG( const char* name, const byte* pic, int width, int height, qboolea
 	info = png_create_info_struct( png );
 	if( !info )
 	{
-		png_destroy_write_struct( &png, (png_infopp)NULL );
+		png_destroy_write_struct( &png, ( png_infopp )NULL );
 		return;
 	}
 

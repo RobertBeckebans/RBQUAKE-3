@@ -275,10 +275,10 @@ static glyphInfo_t* RE_ConstructGlyphInfo( unsigned char* imageOut, int* xOut, i
 
 		glyph.imageHeight = scaledHeight;
 		glyph.imageWidth  = scaledWidth;
-		glyph.s           = (float)*xOut / FONT_SIZE;
-		glyph.t           = (float)*yOut / FONT_SIZE;
-		glyph.s2          = glyph.s + (float)scaledWidth / FONT_SIZE;
-		glyph.t2          = glyph.t + (float)scaledHeight / FONT_SIZE;
+		glyph.s           = ( float )*xOut / FONT_SIZE;
+		glyph.t           = ( float )*yOut / FONT_SIZE;
+		glyph.s2          = glyph.s + ( float )scaledWidth / FONT_SIZE;
+		glyph.t2          = glyph.t + ( float )scaledHeight / FONT_SIZE;
 
 		*xOut += scaledWidth + 1;
 	}
@@ -459,7 +459,7 @@ void RE_RegisterFont( const char* fontName, int pointSize, fontInfo_t* font )
 	maxHeight = 0;
 	for( i = GLYPH_START; i < GLYPH_END; i++ )
 	{
-		glyph = RE_ConstructGlyphInfo( out, &xOut, &yOut, &maxHeight, face, (unsigned char)i, qtrue );
+		glyph = RE_ConstructGlyphInfo( out, &xOut, &yOut, &maxHeight, face, ( unsigned char )i, qtrue );
 	}
 	//ri.Printf(PRINT_WARNING, "RE_RegisterFont: max glyph height for font %s is %i\n", strippedName, maxHeight);
 
@@ -471,7 +471,7 @@ void RE_RegisterFont( const char* fontName, int pointSize, fontInfo_t* font )
 
 	while( i <= GLYPH_END )
 	{
-		glyph = RE_ConstructGlyphInfo( out, &xOut, &yOut, &maxHeight, face, (unsigned char)i, qfalse );
+		glyph = RE_ConstructGlyphInfo( out, &xOut, &yOut, &maxHeight, face, ( unsigned char )i, qfalse );
 
 		if( xOut == -1 || yOut == -1 || i == GLYPH_END )
 		{
@@ -507,7 +507,7 @@ void RE_RegisterFont( const char* fontName, int pointSize, fontInfo_t* font )
 				imageBuff[ left++ ] = 255;
 				imageBuff[ left++ ] = 255;
 
-				imageBuff[ left++ ] = ( (float)out[ k ] * max );
+				imageBuff[ left++ ] = ( ( float )out[ k ] * max );
 			}
 
 			Com_sprintf( fileName, sizeof( fileName ), "%s_%i_%i.png", strippedName, imageNumber++, pointSize );

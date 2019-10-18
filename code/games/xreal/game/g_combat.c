@@ -183,7 +183,7 @@ void TossClientCubes( gentity_t* self )
 		item = BG_FindItem( "Blue Cube" );
 	}
 
-	angles[ YAW ]   = (float)( level.time % 360 );
+	angles[ YAW ]   = ( float )( level.time % 360 );
 	angles[ PITCH ] = 0; // always forward
 	angles[ ROLL ]  = 0;
 
@@ -1046,7 +1046,7 @@ void G_Damage( gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_
 
 		mass = 200;
 
-		VectorScale( dir, g_knockback.value * (float)knockback / mass, kvel );
+		VectorScale( dir, g_knockback.value * ( float )knockback / mass, kvel );
 		VectorAdd( targ->client->ps.velocity, kvel, targ->client->ps.velocity );
 
 		// set the timer so that the other client can't cancel
@@ -1433,7 +1433,7 @@ qboolean G_RadiusDamage( vec3_t origin, gentity_t* attacker, float damage, float
 			// push the center of mass higher than the origin so players
 			// get knocked into the air more
 			dir[ 2 ] += 24;
-			G_Damage( ent, NULL, attacker, dir, origin, (int)points, DAMAGE_RADIUS, mod );
+			G_Damage( ent, NULL, attacker, dir, origin, ( int )points, DAMAGE_RADIUS, mod );
 		}
 	}
 

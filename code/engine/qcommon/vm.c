@@ -179,7 +179,7 @@ void* VM_ArgPtr( intptr_t intValue )
 		return NULL;
 	}
 
-	return (void*)( currentVM->dataBase + intValue );
+	return ( void* )( currentVM->dataBase + intValue );
 }
 
 void* VM_ExplicitArgPtr( vm_t* vm, intptr_t intValue )
@@ -195,7 +195,7 @@ void* VM_ExplicitArgPtr( vm_t* vm, intptr_t intValue )
 		return NULL;
 	}
 
-	return (void*)( vm->dataBase + intValue );
+	return ( void* )( vm->dataBase + intValue );
 }
 
 /*

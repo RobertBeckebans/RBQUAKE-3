@@ -78,7 +78,7 @@ size_t S_OGG_Callback_read( void* ptr, size_t size, size_t nmemb, void* datasour
 	}
 
 	// we use a snd_stream_t in the generic pointer to pass around
-	stream = (snd_stream_t*)datasource;
+	stream = ( snd_stream_t* )datasource;
 
 	// FS_Read does not support multi-byte elements
 	byteSize = nmemb * size;
@@ -116,7 +116,7 @@ int S_OGG_Callback_seek( void* datasource, ogg_int64_t offset, int whence )
 	}
 
 	// snd_stream_t in the generic pointer
-	stream = (snd_stream_t*)datasource;
+	stream = ( snd_stream_t* )datasource;
 
 	// we must map the whence to its Q3 counterpart
 	switch( whence )
@@ -124,7 +124,7 @@ int S_OGG_Callback_seek( void* datasource, ogg_int64_t offset, int whence )
 		case SEEK_SET:
 		{
 			// set the file position in the actual file with the Q3 function
-			retVal = FS_Seek( stream->file, (long)offset, FS_SEEK_SET );
+			retVal = FS_Seek( stream->file, ( long )offset, FS_SEEK_SET );
 
 			// something has gone wrong, so we return here
 			if( retVal < 0 )
@@ -133,14 +133,14 @@ int S_OGG_Callback_seek( void* datasource, ogg_int64_t offset, int whence )
 			}
 
 			// keep track of file position
-			stream->pos = (int)offset;
+			stream->pos = ( int )offset;
 			break;
 		}
 
 		case SEEK_CUR:
 		{
 			// set the file position in the actual file with the Q3 function
-			retVal = FS_Seek( stream->file, (long)offset, FS_SEEK_CUR );
+			retVal = FS_Seek( stream->file, ( long )offset, FS_SEEK_CUR );
 
 			// something has gone wrong, so we return here
 			if( retVal < 0 )
@@ -149,7 +149,7 @@ int S_OGG_Callback_seek( void* datasource, ogg_int64_t offset, int whence )
 			}
 
 			// keep track of file position
-			stream->pos += (int)offset;
+			stream->pos += ( int )offset;
 			break;
 		}
 
@@ -159,7 +159,7 @@ int S_OGG_Callback_seek( void* datasource, ogg_int64_t offset, int whence )
 			// so we use the file length and FS_SEEK_SET
 
 			// set the file position in the actual file with the Q3 function
-			retVal = FS_Seek( stream->file, (long)stream->length + (long)offset, FS_SEEK_SET );
+			retVal = FS_Seek( stream->file, ( long )stream->length + ( long )offset, FS_SEEK_SET );
 
 			// something has gone wrong, so we return here
 			if( retVal < 0 )
@@ -168,7 +168,7 @@ int S_OGG_Callback_seek( void* datasource, ogg_int64_t offset, int whence )
 			}
 
 			// keep track of file position
-			stream->pos = stream->length + (int)offset;
+			stream->pos = stream->length + ( int )offset;
 			break;
 		}
 
@@ -207,9 +207,9 @@ long S_OGG_Callback_tell( void* datasource )
 	}
 
 	// snd_stream_t in the generic pointer
-	stream = (snd_stream_t*)datasource;
+	stream = ( snd_stream_t* )datasource;
 
-	return (long)FS_FTell( stream->file );
+	return ( long )FS_FTell( stream->file );
 }
 
 // the callback structure
@@ -339,7 +339,7 @@ void S_OGG_CodecCloseStream( snd_stream_t* stream )
 	}
 
 	// let the OGG codec cleanup its stuff
-	ov_clear( (OggVorbis_File*)stream->ptr );
+	ov_clear( ( OggVorbis_File* )stream->ptr );
 
 	// free the OGG codec control struct
 	Z_Free( stream->ptr );
@@ -388,7 +388,7 @@ int S_OGG_CodecReadStream( snd_stream_t* stream, int bytes, void* buffer )
 	while( -1 )
 	{
 		// read some bytes from the OGG codec
-		c = ov_read( (OggVorbis_File*)stream->ptr, bufPtr, bytesLeft, IsBigEndian, OGG_SAMPLEWIDTH, 1, &BS );
+		c = ov_read( ( OggVorbis_File* )stream->ptr, bufPtr, bytesLeft, IsBigEndian, OGG_SAMPLEWIDTH, 1, &BS );
 
 		// no more bytes are left
 		if( c <= 0 )

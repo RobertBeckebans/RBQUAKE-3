@@ -279,8 +279,8 @@ static int QDECL SV_QsortEntityNumbers( const void* a, const void* b )
 {
 	int *ea, *eb;
 
-	ea = (int*)a;
-	eb = (int*)b;
+	ea = ( int* )a;
+	eb = ( int* )b;
 
 	if( *ea == *eb )
 	{
@@ -482,7 +482,7 @@ static void SV_AddEntitiesVisibleFromPoint( vec3_t origin, clientSnapshot_t* fra
 				vec3_t dir;
 
 				VectorSubtract( ent->s.origin, origin, dir );
-				if( VectorLengthSquared( dir ) > (float)ent->s.generic1 * ent->s.generic1 )
+				if( VectorLengthSquared( dir ) > ( float )ent->s.generic1 * ent->s.generic1 )
 				{
 					continue;
 				}
@@ -570,7 +570,7 @@ static void SV_BuildClientSnapshot( client_t* client )
 	// all of them to make it a mask vector, which is what the renderer wants
 	for( i = 0; i < MAX_MAP_AREA_BYTES / 4; i++ )
 	{
-		( (int*)frame->areabits )[ i ] = ( (int*)frame->areabits )[ i ] ^ -1;
+		( ( int* )frame->areabits )[ i ] = ( ( int* )frame->areabits )[ i ] ^ -1;
 	}
 
 	// copy the entity states out

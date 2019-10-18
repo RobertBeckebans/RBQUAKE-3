@@ -885,7 +885,7 @@ void Z_ClearZone( memzone_t* zone, int size )
 
 	// set the entire zone to one free block
 
-	zone->blocklist.next = zone->blocklist.prev = block = (memblock_t*)( (byte*)zone + sizeof( memzone_t ) );
+	zone->blocklist.next = zone->blocklist.prev = block = ( memblock_t* )( ( byte* )zone + sizeof( memzone_t ) );
 	zone->blocklist.tag                                 = 1; // in use block
 	zone->blocklist.id                                  = 0;
 	zone->blocklist.size                                = 0;
@@ -934,7 +934,7 @@ void Z_Free( void* ptr )
 		Com_Error( ERR_DROP, "Z_Free: NULL pointer" );
 	}
 
-	block = (memblock_t*)( (byte*)ptr - sizeof( memblock_t ) );
+	block = ( memblock_t* )( ( byte* )ptr - sizeof( memblock_t ) );
 	if( block->id != ZONEID )
 	{
 		Com_Error( ERR_FATAL, "Z_Free: freed a pointer without ZONEID" );
@@ -950,7 +950,7 @@ void Z_Free( void* ptr )
 	}
 
 	// check the memory trash tester
-	if( *(int*)( (byte*)block + block->size - 4 ) != ZONEID )
+	if( *( int* )( ( byte* )block + block->size - 4 ) != ZONEID )
 	{
 		Com_Error( ERR_FATAL, "Z_Free: memory block wrote past end" );
 	}
@@ -1028,7 +1028,7 @@ void Z_FreeTags( int tag )
 		if( zone->rover->tag == tag )
 		{
 			count++;
-			Z_Free( (void*)( zone->rover + 1 ) );
+			Z_Free( ( void* )( zone->rover + 1 ) );
 			continue;
 		}
 		zone->rover = zone->rover->next;
@@ -1105,7 +1105,7 @@ void* Z_TagMalloc( int size, int tag )
 	if( extra > MINFRAGMENT )
 	{
 		// there will be a free fragment after the allocated block
-		new             = (memblock_t*)( (byte*)base + size );
+		new             = ( memblock_t* )( ( byte* )base + size );
 		new->size       = extra;
 		new->tag        = 0; // free block
 		new->prev       = base;
@@ -1131,9 +1131,9 @@ void* Z_TagMalloc( int size, int tag )
 #endif
 
 	// marker for memory trash testing
-	*(int*)( (byte*)base + base->size - 4 ) = ZONEID;
+	*( int* )( ( byte* )base + base->size - 4 ) = ZONEID;
 
-	return (void*)( (byte*)base + sizeof( memblock_t ) );
+	return ( void* )( ( byte* )base + sizeof( memblock_t ) );
 }
 
 /*
@@ -1189,7 +1189,7 @@ void Z_CheckHeap( void )
 		{
 			break; // all blocks have been hit
 		}
-		if( (byte*)block + block->size != (byte*)block->next )
+		if( ( byte* )block + block->size != ( byte* )block->next )
 		{
 			Com_Error( ERR_FATAL, "Z_CheckHeap: block size does not touch the next block\n" );
 		}
@@ -1231,7 +1231,7 @@ void Z_LogZoneHeap( memzone_t* zone, char* name )
 		if( block->tag )
 		{
 #ifdef ZONE_DEBUG
-			ptr = ( (char*)block ) + sizeof( memblock_t );
+			ptr = ( ( char* )block ) + sizeof( memblock_t );
 			j   = 0;
 			for( i = 0; i < 20 && i < block->d.allocSize; i++ )
 			{
@@ -1311,13 +1311,13 @@ char* CopyString( const char* in )
 
 	if( !in[ 0 ] )
 	{
-		return ( (char*)&emptystring ) + sizeof( memblock_t );
+		return ( ( char* )&emptystring ) + sizeof( memblock_t );
 	}
 	else if( !in[ 1 ] )
 	{
 		if( in[ 0 ] >= '0' && in[ 0 ] <= '9' )
 		{
-			return ( (char*)&numberstring[ in[ 0 ] - '0' ] ) + sizeof( memblock_t );
+			return ( ( char* )&numberstring[ in[ 0 ] - '0' ] ) + sizeof( memblock_t );
 		}
 	}
 	out = S_Malloc( strlen( in ) + 1 );
@@ -1418,7 +1418,7 @@ void Com_Meminfo_f( void )
 	{
 		if( Cmd_Argc() != 1 )
 		{
-			Com_Printf( "block:%p    size:%7i    tag:%3i\n", (void*)block, block->size, block->tag );
+			Com_Printf( "block:%p    size:%7i    tag:%3i\n", ( void* )block, block->size, block->tag );
 		}
 		if( block->tag )
 		{
@@ -1438,7 +1438,7 @@ void Com_Meminfo_f( void )
 		{
 			break; // all blocks have been hit
 		}
-		if( (byte*)block + block->size != (byte*)block->next )
+		if( ( byte* )block + block->size != ( byte* )block->next )
 		{
 			Com_Printf( "ERROR: block size does not touch the next block\n" );
 		}
@@ -1530,7 +1530,7 @@ void Com_TouchMemory( void )
 	for( i = 0; i < j; i += 64 )
 	{
 		// only need to touch each page
-		sum += ( (int*)s_hunkData )[ i ];
+		sum += ( ( int* )s_hunkData )[ i ];
 	}
 
 	i = ( s_hunkTotal - hunk_high.permanent ) >> 2;
@@ -1538,7 +1538,7 @@ void Com_TouchMemory( void )
 	for( ; i < j; i += 64 )
 	{
 		// only need to touch each page
-		sum += ( (int*)s_hunkData )[ i ];
+		sum += ( ( int* )s_hunkData )[ i ];
 	}
 
 	for( block = mainzone->blocklist.next;; block = block->next )
@@ -1549,7 +1549,7 @@ void Com_TouchMemory( void )
 			for( i = 0; i < j; i += 64 )
 			{
 				// only need to touch each page
-				sum += ( (int*)block )[ i ];
+				sum += ( ( int* )block )[ i ];
 			}
 		}
 		if( block->next == &mainzone->blocklist )
@@ -1574,7 +1574,7 @@ void Com_InitSmallZoneMemory( void )
 	smallzone        = calloc( s_smallZoneTotal, 1 );
 	if( !smallzone )
 	{
-		Com_Error( ERR_FATAL, "Small zone data failed to allocate %1.1f megs", (float)s_smallZoneTotal / ( 1024 * 1024 ) );
+		Com_Error( ERR_FATAL, "Small zone data failed to allocate %1.1f megs", ( float )s_smallZoneTotal / ( 1024 * 1024 ) );
 	}
 	Z_ClearZone( smallzone, s_smallZoneTotal );
 
@@ -1753,7 +1753,7 @@ void Com_InitHunkMemory( void )
 		Com_Error( ERR_FATAL, "Hunk data failed to allocate %i megs", s_hunkTotal / ( 1024 * 1024 ) );
 	}
 	// cacheline align
-	s_hunkData = (byte*)( ( (intptr_t)s_hunkData + 31 ) & ~31 );
+	s_hunkData = ( byte* )( ( ( intptr_t )s_hunkData + 31 ) & ~31 );
 	Hunk_Clear();
 
 	Cmd_AddCommand( "meminfo", Com_Meminfo_f );
@@ -1938,13 +1938,13 @@ void* Hunk_Alloc( int size, ha_pref preference )
 
 	if( hunk_permanent == &hunk_low )
 	{
-		buf = (void*)( s_hunkData + hunk_permanent->permanent );
+		buf = ( void* )( s_hunkData + hunk_permanent->permanent );
 		hunk_permanent->permanent += size;
 	}
 	else
 	{
 		hunk_permanent->permanent += size;
-		buf = (void*)( s_hunkData + s_hunkTotal - hunk_permanent->permanent );
+		buf = ( void* )( s_hunkData + s_hunkTotal - hunk_permanent->permanent );
 	}
 
 	hunk_permanent->temp = hunk_permanent->permanent;
@@ -1955,14 +1955,14 @@ void* Hunk_Alloc( int size, ha_pref preference )
 	{
 		hunkblock_t* block;
 
-		block        = (hunkblock_t*)buf;
+		block        = ( hunkblock_t* )buf;
 		block->size  = size - sizeof( hunkblock_t );
 		block->file  = file;
 		block->label = label;
 		block->line  = line;
 		block->next  = hunkblocks;
 		hunkblocks   = block;
-		buf          = ( (byte*)buf ) + sizeof( hunkblock_t );
+		buf          = ( ( byte* )buf ) + sizeof( hunkblock_t );
 	}
 #endif
 	return buf;
@@ -2006,13 +2006,13 @@ void* Hunk_AllocateTempMemory( int size )
 
 	if( hunk_temp == &hunk_low )
 	{
-		buf = (void*)( s_hunkData + hunk_temp->temp );
+		buf = ( void* )( s_hunkData + hunk_temp->temp );
 		hunk_temp->temp += size;
 	}
 	else
 	{
 		hunk_temp->temp += size;
-		buf = (void*)( s_hunkData + s_hunkTotal - hunk_temp->temp );
+		buf = ( void* )( s_hunkData + s_hunkTotal - hunk_temp->temp );
 	}
 
 	if( hunk_temp->temp > hunk_temp->tempHighwater )
@@ -2020,8 +2020,8 @@ void* Hunk_AllocateTempMemory( int size )
 		hunk_temp->tempHighwater = hunk_temp->temp;
 	}
 
-	hdr = (hunkHeader_t*)buf;
-	buf = (void*)( hdr + 1 );
+	hdr = ( hunkHeader_t* )buf;
+	buf = ( void* )( hdr + 1 );
 
 	hdr->magic = HUNK_MAGIC;
 	hdr->size  = size;
@@ -2049,7 +2049,7 @@ void Hunk_FreeTempMemory( void* buf )
 		return;
 	}
 
-	hdr = ( (hunkHeader_t*)buf ) - 1;
+	hdr = ( ( hunkHeader_t* )buf ) - 1;
 	if( hdr->magic != HUNK_MAGIC )
 	{
 		Com_Error( ERR_FATAL, "Hunk_FreeTempMemory: bad magic" );
@@ -2061,7 +2061,7 @@ void Hunk_FreeTempMemory( void* buf )
 	// otherwise the memory will stay around until Hunk_ClearTempMemory
 	if( hunk_temp == &hunk_low )
 	{
-		if( hdr == (void*)( s_hunkData + hunk_temp->temp - hdr->size ) )
+		if( hdr == ( void* )( s_hunkData + hunk_temp->temp - hdr->size ) )
 		{
 			hunk_temp->temp -= hdr->size;
 		}
@@ -2072,7 +2072,7 @@ void Hunk_FreeTempMemory( void* buf )
 	}
 	else
 	{
-		if( hdr == (void*)( s_hunkData + s_hunkTotal - hunk_temp->temp ) )
+		if( hdr == ( void* )( s_hunkData + s_hunkTotal - hunk_temp->temp ) )
 		{
 			hunk_temp->temp -= hdr->size;
 		}
@@ -2127,11 +2127,11 @@ void Hunk_Trash( void )
 
 	if( hunk_permanent == &hunk_low )
 	{
-		buf = (void*)( s_hunkData + hunk_permanent->permanent );
+		buf = ( void* )( s_hunkData + hunk_permanent->permanent );
 	}
 	else
 	{
-		buf = (void*)( s_hunkData + s_hunkTotal - hunk_permanent->permanent );
+		buf = ( void* )( s_hunkData + s_hunkTotal - hunk_permanent->permanent );
 	}
 	length = hunk_permanent->permanent;
 
@@ -2530,7 +2530,7 @@ int Com_EventLoop( void )
 				CL_JoystickEvent( ev.evValue, ev.evValue2, ev.evTime );
 				break;
 			case SE_CONSOLE:
-				Cbuf_AddText( (char*)ev.evPtr );
+				Cbuf_AddText( ( char* )ev.evPtr );
 				Cbuf_AddText( "\n" );
 				break;
 			case SE_PACKET:
@@ -2547,19 +2547,19 @@ int Com_EventLoop( void )
 					}
 				}
 
-				evFrom      = *(netadr_t*)ev.evPtr;
+				evFrom      = *( netadr_t* )ev.evPtr;
 				buf.cursize = ev.evPtrLength - sizeof( evFrom );
 
 				// we must copy the contents of the message out, because
 				// the event buffers are only large enough to hold the
 				// exact payload, but channel messages need to be large
 				// enough to hold fragment reassembly
-				if( (unsigned)buf.cursize > buf.maxsize )
+				if( ( unsigned )buf.cursize > buf.maxsize )
 				{
 					Com_Printf( "Com_EventLoop: oversize packet\n" );
 					continue;
 				}
-				Com_Memcpy( buf.data, (byte*)( (netadr_t*)ev.evPtr + 1 ), buf.cursize );
+				Com_Memcpy( buf.data, ( byte* )( ( netadr_t* )ev.evPtr + 1 ), buf.cursize );
 				if( com_sv_running->integer )
 				{
 					Com_RunAndTimeServerPacket( &evFrom, &buf );
@@ -2668,7 +2668,7 @@ A way to force a bus error for development reasons
 */
 static void Com_Crash_f( void )
 {
-	*(int*)0 = 0x12345678;
+	*( int* )0 = 0x12345678;
 }
 
 /*
@@ -3206,8 +3206,8 @@ static int MediaNameCompare( const void* a, const void* b )
 	int               c1, c2;
 	copyrightEntry_t *e1, *e2;
 
-	e1 = (copyrightEntry_t*)*(void**)a;
-	e2 = (copyrightEntry_t*)*(void**)b;
+	e1 = ( copyrightEntry_t* )*( void** )a;
+	e2 = ( copyrightEntry_t* )*( void** )b;
 
 	s1 = e1->mediaName;
 	s2 = e2->mediaName;
@@ -3284,7 +3284,7 @@ static void Com_GenerateMediaTXT_f( void )
 	Com_sprintf( fileName, sizeof( fileName ), "PROPERTIES.txt" );
 	Com_Printf( "reading '%s' ...\n", fileName );
 
-	FS_ReadFile( fileName, (void**)&buf );
+	FS_ReadFile( fileName, ( void** )&buf );
 	if( !buf )
 	{
 		Com_Printf( "couldn't load '%s'\n", fileName );
@@ -3576,7 +3576,7 @@ static void Com_GenerateCorePK3_f( void )
 	Com_sprintf( fileName, sizeof( fileName ), "PROPERTIES.txt" );
 	Com_Printf( "reading '%s' ...\n", fileName );
 
-	FS_ReadFile( fileName, (void**)&buf );
+	FS_ReadFile( fileName, ( void** )&buf );
 	if( !buf )
 	{
 		Com_Printf( "couldn't load '%s'\n", fileName );
@@ -3702,7 +3702,7 @@ static void Com_InitRand( void )
 {
 	unsigned int seed;
 
-	if( Sys_RandomBytes( (byte*)&seed, sizeof( seed ) ) )
+	if( Sys_RandomBytes( ( byte* )&seed, sizeof( seed ) ) )
 	{
 		srand( seed );
 	}
@@ -3877,7 +3877,7 @@ void Com_Init( char* commandLine )
 	}
 
 	// Pick a random port value
-	Com_RandomBytes( (byte*)&qport, sizeof( int ) );
+	Com_RandomBytes( ( byte* )&qport, sizeof( int ) );
 	Netchan_Init( qport & 0xffff );
 
 	VM_Init();
@@ -4644,6 +4644,6 @@ void Com_RandomBytes( byte* string, int len )
 	Com_Printf( "Com_RandomBytes: using weak randomization\n" );
 	for( i = 0; i < len; i++ )
 	{
-		string[ i ] = (unsigned char)( rand() % 255 );
+		string[ i ] = ( unsigned char )( rand() % 255 );
 	}
 }

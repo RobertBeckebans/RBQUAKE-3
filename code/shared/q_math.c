@@ -75,7 +75,7 @@ int Q_rand( int* seed )
 
 float Q_random( int* seed )
 {
-	return ( Q_rand( seed ) & 0xffff ) / (float)0x10000;
+	return ( Q_rand( seed ) & 0xffff ) / ( float )0x10000;
 }
 
 float Q_crandom( int* seed )
@@ -164,9 +164,9 @@ unsigned ColorBytes3( float r, float g, float b )
 {
 	unsigned i;
 
-	( (byte*)&i )[ 0 ] = r * 255;
-	( (byte*)&i )[ 1 ] = g * 255;
-	( (byte*)&i )[ 2 ] = b * 255;
+	( ( byte* )&i )[ 0 ] = r * 255;
+	( ( byte* )&i )[ 1 ] = g * 255;
+	( ( byte* )&i )[ 2 ] = b * 255;
 
 	return i;
 }
@@ -175,10 +175,10 @@ unsigned ColorBytes4( float r, float g, float b, float a )
 {
 	unsigned i;
 
-	( (byte*)&i )[ 0 ] = r * 255;
-	( (byte*)&i )[ 1 ] = g * 255;
-	( (byte*)&i )[ 2 ] = b * 255;
-	( (byte*)&i )[ 3 ] = a * 255;
+	( ( byte* )&i )[ 0 ] = r * 255;
+	( ( byte* )&i )[ 1 ] = g * 255;
+	( ( byte* )&i )[ 2 ] = b * 255;
+	( ( byte* )&i )[ 3 ] = a * 255;
 
 	return i;
 }
@@ -462,11 +462,11 @@ float Q_acos( float c )
 
 	if( angle > M_PI )
 	{
-		return (float)M_PI;
+		return ( float )M_PI;
 	}
 	else if( angle < -M_PI )
 	{
-		return (float)M_PI;
+		return ( float )M_PI;
 	}
 	return angle;
 }
@@ -489,7 +489,7 @@ int Q_isnan( float x )
 	t.i &= 0x7FFFFFFF;
 	t.i = 0x7F800000 - t.i;
 
-	return (int)( (unsigned int)t.i >> 31 );
+	return ( int )( ( unsigned int )t.i >> 31 );
 }
 
 void VectorToAngles( const vec3_t value1, vec3_t angles )
@@ -752,7 +752,7 @@ returns angle normalized to the range [0 <= angle < 360]
 */
 float AngleNormalize360( float angle )
 {
-	return ( 360.0 / 65536 ) * ( (int)( angle * ( 65536 / 360.0 ) ) & 65535 );
+	return ( 360.0 / 65536 ) * ( ( int )( angle * ( 65536 / 360.0 ) ) & 65535 );
 }
 
 /*
@@ -1355,11 +1355,11 @@ void SnapVectorTowards( vec3_t v, vec3_t to )
 	{
 		if( to[ i ] <= v[ i ] )
 		{
-			v[ i ] = (int)v[ i ];
+			v[ i ] = ( int )v[ i ];
 		}
 		else
 		{
-			v[ i ] = (int)v[ i ] + 1;
+			v[ i ] = ( int )v[ i ] + 1;
 		}
 	}
 }
@@ -1811,7 +1811,7 @@ Return the smallest distance between two line segments
 */
 vec_t DistanceBetweenLineSegments( const vec3_t sP0, const vec3_t sP1, const vec3_t tP0, const vec3_t tP1, float* s, float* t )
 {
-	return (vec_t)sqrt( DistanceBetweenLineSegmentsSquared( sP0, sP1, tP0, tP1, s, t ) );
+	return ( vec_t )sqrt( DistanceBetweenLineSegmentsSquared( sP0, sP1, tP0, tP1, s, t ) );
 }
 
 vec_t VectorDistance( vec3_t v1, vec3_t v2 )

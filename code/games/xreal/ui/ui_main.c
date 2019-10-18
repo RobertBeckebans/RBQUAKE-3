@@ -416,8 +416,8 @@ UI_SortServerStatusInfo
 
 static int UI_SortServerStatusCompare( const void* a, const void* b )
 {
-	const char** la = (const char**)a;
-	const char** lb = (const char**)b;
+	const char** la = ( const char** )a;
+	const char** lb = ( const char** )b;
 
 	return strcmp( la[ 0 ], lb[ 0 ] );
 }
@@ -1070,7 +1070,7 @@ static void UI_StopServerRefresh( void )
 		Com_Printf( "%d servers not listed due to packet loss, invalid info,"
 					" or pings higher than %d\n",
 			count - uiInfo.serverStatus.numDisplayServers,
-			(int)trap_Cvar_VariableValue( "cl_maxPing" ) );
+			( int )trap_Cvar_VariableValue( "cl_maxPing" ) );
 	}
 }
 
@@ -2094,7 +2094,7 @@ UI_ServersQsortCompare
 */
 static int QDECL UI_ServersQsortCompare( const void* arg1, const void* arg2 )
 {
-	return trap_LAN_CompareServers( ui_netSource.integer, uiInfo.serverStatus.sortKey, uiInfo.serverStatus.sortDir, *(int*)arg1, *(int*)arg2 );
+	return trap_LAN_CompareServers( ui_netSource.integer, uiInfo.serverStatus.sortKey, uiInfo.serverStatus.sortDir, *( int* )arg1, *( int* )arg2 );
 }
 
 /*
@@ -2632,11 +2632,11 @@ static void UI_LoadDemos( void )
 	char* demoname;
 	int   i, len;
 
-	Com_sprintf( demoExt, sizeof( demoExt ), "dm_%d", (int)trap_Cvar_VariableValue( "protocol" ) );
+	Com_sprintf( demoExt, sizeof( demoExt ), "dm_%d", ( int )trap_Cvar_VariableValue( "protocol" ) );
 
 	uiInfo.demoCount = trap_FS_GetFileList( "demos", demoExt, demolist, 4096 );
 
-	Com_sprintf( demoExt, sizeof( demoExt ), ".dm_%d", (int)trap_Cvar_VariableValue( "protocol" ) );
+	Com_sprintf( demoExt, sizeof( demoExt ), ".dm_%d", ( int )trap_Cvar_VariableValue( "protocol" ) );
 
 	if( uiInfo.demoCount )
 	{
@@ -3804,8 +3804,8 @@ static const char* UI_FeederItemText( int feederID, int index, int column, qhand
 			return resolution;
 		}
 
-		w = (int)trap_Cvar_VariableValue( "r_width" );
-		h = (int)trap_Cvar_VariableValue( "r_height" );
+		w = ( int )trap_Cvar_VariableValue( "r_width" );
+		h = ( int )trap_Cvar_VariableValue( "r_height" );
 		Com_sprintf( resolution, sizeof( resolution ), "Custom (%dx%d)", w, h );
 
 		return resolution;
@@ -4248,7 +4248,7 @@ void UI_MouseEvent( int dx, int dy )
 	}
 }
 
-#define Q_rint( x ) ( ( x ) < 0 ? ( (int)( (x)-0.5f ) ) : ( (int)( ( x ) + 0.5f ) ) )
+#define Q_rint( x ) ( ( x ) < 0 ? ( ( int )( ( x )-0.5f ) ) : ( ( int )( ( x ) + 0.5f ) ) )
 
 /*
 =================
@@ -4257,8 +4257,8 @@ UI_MousePosition
 */
 int UI_MousePosition( void )
 {
-	return (int)Q_rint( uiInfo.uiDC.cursorx ) |
-		(int)Q_rint( uiInfo.uiDC.cursory ) << 16;
+	return ( int )Q_rint( uiInfo.uiDC.cursorx ) |
+		( int )Q_rint( uiInfo.uiDC.cursory ) << 16;
 }
 
 /*
@@ -4495,7 +4495,7 @@ static void UI_DisplayDownloadInfo( const char* downloadName, float centerPoint,
 
 	if( downloadSize > 0 )
 	{
-		s = va( "%s (%d%%)", downloadName, (int)( (float)downloadCount * 100.0f / downloadSize ) );
+		s = va( "%s (%d%%)", downloadName, ( int )( ( float )downloadCount * 100.0f / downloadSize ) );
 	}
 	else
 	{

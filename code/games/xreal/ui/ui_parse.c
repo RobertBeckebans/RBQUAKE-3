@@ -334,7 +334,7 @@ static void Parse_CreatePunctuationTable( script_t* script, punctuation_t* punct
 	//get memory for the table
 	if( !script->punctuationtable )
 	{
-		script->punctuationtable = (punctuation_t**)Z_Malloc( 256 * sizeof( punctuation_t* ) );
+		script->punctuationtable = ( punctuation_t** )Z_Malloc( 256 * sizeof( punctuation_t* ) );
 	}
 	Com_Memset( script->punctuationtable, 0, 256 * sizeof( punctuation_t* ) );
 	//add the punctuations in the list to the punctuation table
@@ -343,7 +343,7 @@ static void Parse_CreatePunctuationTable( script_t* script, punctuation_t* punct
 		newp  = &punctuations[ i ];
 		lastp = NULL;
 		//sort the punctuations in this table entry on length (longer punctuations first)
-		for( p = script->punctuationtable[ (unsigned int)newp->p[ 0 ] ]; p; p = p->next )
+		for( p = script->punctuationtable[ ( unsigned int )newp->p[ 0 ] ]; p; p = p->next )
 		{
 			if( strlen( p->p ) < strlen( newp->p ) )
 			{
@@ -354,7 +354,7 @@ static void Parse_CreatePunctuationTable( script_t* script, punctuation_t* punct
 				}
 				else
 				{
-					script->punctuationtable[ (unsigned int)newp->p[ 0 ] ] = newp;
+					script->punctuationtable[ ( unsigned int )newp->p[ 0 ] ] = newp;
 				}
 				break;
 			}
@@ -369,7 +369,7 @@ static void Parse_CreatePunctuationTable( script_t* script, punctuation_t* punct
 			}
 			else
 			{
-				script->punctuationtable[ (unsigned int)newp->p[ 0 ] ] = newp;
+				script->punctuationtable[ ( unsigned int )newp->p[ 0 ] ] = newp;
 			}
 		}
 	}
@@ -794,16 +794,16 @@ static void Parse_NumberValue( char* string, int subtype, unsigned long int* int
 			}
 			if( dotfound )
 			{
-				*floatvalue = *floatvalue + (double)( *string - '0' ) / (double)dotfound;
+				*floatvalue = *floatvalue + ( double )( *string - '0' ) / ( double )dotfound;
 				dotfound *= 10;
 			}
 			else
 			{
-				*floatvalue = *floatvalue * 10.0 + (double)( *string - '0' );
+				*floatvalue = *floatvalue * 10.0 + ( double )( *string - '0' );
 			}
 			string++;
 		}
-		*intvalue = (unsigned long)*floatvalue;
+		*intvalue = ( unsigned long )*floatvalue;
 	}
 	else if( subtype & TT_DECIMAL )
 	{
@@ -992,7 +992,7 @@ static int Parse_ReadPunctuation( script_t* script, token_t* token )
 	char*          p;
 	punctuation_t* punc;
 
-	for( punc = script->punctuationtable[ (unsigned int)*script->script_p ]; punc; punc = punc->next )
+	for( punc = script->punctuationtable[ ( unsigned int )*script->script_p ]; punc; punc = punc->next )
 	{
 		p   = punc->p;
 		len = strlen( p );
@@ -1175,10 +1175,10 @@ static script_t* Parse_LoadScriptFile( const char* filename )
 	buffer = Z_Malloc( sizeof( script_t ) + length + 1 );
 	Com_Memset( buffer, 0, sizeof( script_t ) + length + 1 );
 
-	script = (script_t*)buffer;
+	script = ( script_t* )buffer;
 	Com_Memset( script, 0, sizeof( script_t ) );
 	strcpy( script->filename, filename );
-	script->buffer           = (char*)buffer + sizeof( script_t );
+	script->buffer           = ( char* )buffer + sizeof( script_t );
 	script->buffer[ length ] = 0;
 	script->length           = length;
 	//pointer in script buffer
@@ -1215,10 +1215,10 @@ static script_t* Parse_LoadScriptMemory( char* ptr, int length, char* name )
 	buffer = Z_Malloc( sizeof( script_t ) + length + 1 );
 	Com_Memset( buffer, 0, sizeof( script_t ) + length + 1 );
 
-	script = (script_t*)buffer;
+	script = ( script_t* )buffer;
 	Com_Memset( script, 0, sizeof( script_t ) );
 	strcpy( script->filename, name );
-	script->buffer           = (char*)buffer + sizeof( script_t );
+	script->buffer           = ( char* )buffer + sizeof( script_t );
 	script->buffer[ length ] = 0;
 	script->length           = length;
 	//pointer in script buffer
@@ -1295,7 +1295,7 @@ static void Parse_PushIndent( source_t* source, int type, int skip )
 {
 	indent_t* indent;
 
-	indent         = (indent_t*)Z_Malloc( sizeof( indent_t ) );
+	indent         = ( indent_t* )Z_Malloc( sizeof( indent_t ) );
 	indent->type   = type;
 	indent->script = source->scriptstack;
 	indent->skip   = ( skip != 0 );
@@ -1367,7 +1367,7 @@ static token_t* Parse_CopyToken( token_t* token )
 	token_t* t;
 
 	//  t = (token_t *) malloc(sizeof(token_t));
-	t = (token_t*)Z_Malloc( sizeof( token_t ) );
+	t = ( token_t* )Z_Malloc( sizeof( token_t ) );
 	//  t = freetokens;
 	if( !t )
 	{
@@ -2255,7 +2255,7 @@ static int Parse_EvaluateTokens( source_t* source, token_t* tokens, signed long 
 				AllocValue( v );
 				if( negativevalue )
 				{
-					v->intvalue   = -(signed int)t->intvalue;
+					v->intvalue   = -( signed int )t->intvalue;
 					v->floatvalue = -t->floatvalue;
 				}
 				else
@@ -3312,7 +3312,7 @@ static int Parse_DollarDirective_evalfloat( source_t* source )
 	sprintf( token.string, "%1.2f", fabs( value ) );
 	token.type       = TT_NUMBER;
 	token.subtype    = TT_FLOAT | TT_LONG | TT_DECIMAL;
-	token.intvalue   = (unsigned long)value;
+	token.intvalue   = ( unsigned long )value;
 	token.floatvalue = value;
 	Parse_UnreadSourceToken( source, &token );
 	if( value < 0 )
@@ -3527,9 +3527,9 @@ static int Parse_Directive_define( source_t* source )
 		define = Parse_FindHashedDefine( source->definehash, token.string );
 	}
 	//allocate define
-	define = (define_t*)Z_Malloc( sizeof( define_t ) + strlen( token.string ) + 1 );
+	define = ( define_t* )Z_Malloc( sizeof( define_t ) + strlen( token.string ) + 1 );
 	Com_Memset( define, 0, sizeof( define_t ) );
-	define->name = (char*)define + sizeof( define_t );
+	define->name = ( char* )define + sizeof( define_t );
 	strcpy( define->name, token.string );
 	//add the define to the source
 	Parse_AddDefineToHash( define, source->definehash );
@@ -4045,9 +4045,9 @@ static define_t* Parse_CopyDefine( source_t* source, define_t* define )
 	define_t* newdefine;
 	token_t * token, *newtoken, *lasttoken;
 
-	newdefine = (define_t*)Z_Malloc( sizeof( define_t ) + strlen( define->name ) + 1 );
+	newdefine = ( define_t* )Z_Malloc( sizeof( define_t ) + strlen( define->name ) + 1 );
 	//copy the define name
-	newdefine->name = (char*)newdefine + sizeof( define_t );
+	newdefine->name = ( char* )newdefine + sizeof( define_t );
 	strcpy( newdefine->name, define->name );
 	newdefine->flags    = define->flags;
 	newdefine->builtin  = define->builtin;
@@ -4124,7 +4124,7 @@ static source_t* Parse_LoadSourceFile( const char* filename )
 
 	script->next = NULL;
 
-	source = (source_t*)Z_Malloc( sizeof( source_t ) );
+	source = ( source_t* )Z_Malloc( sizeof( source_t ) );
 	Com_Memset( source, 0, sizeof( source_t ) );
 
 	strncpy( source->filename, filename, MAX_QPATH );

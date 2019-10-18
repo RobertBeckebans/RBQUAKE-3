@@ -675,7 +675,7 @@ void InitTrace( void )
 {
 	// 32 byte align the structs
 	tnodes  = malloc( ( MAX_TNODES + 1 ) * sizeof( tnode_t ) );
-	tnodes  = (tnode_t*)( ( (int)tnodes + 31 ) & ~31 );
+	tnodes  = ( tnode_t* )( ( ( int )tnodes + 31 ) & ~31 );
 	tnode_p = tnodes;
 
 	MakeTnode( 0 );

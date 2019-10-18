@@ -43,7 +43,7 @@ void LoadTGA( const char* name, byte** pic, int* width, int* height, byte alphaB
 	//
 	// load the file
 	//
-	ri.FS_ReadFile( (char*)name, (void**)&buffer );
+	ri.FS_ReadFile( ( char* )name, ( void** )&buffer );
 	if( !buffer )
 	{
 		return;
@@ -55,18 +55,18 @@ void LoadTGA( const char* name, byte** pic, int* width, int* height, byte alphaB
 	targa_header.colormap_type = *buf_p++;
 	targa_header.image_type    = *buf_p++;
 
-	targa_header.colormap_index = LittleShort( *(short*)buf_p );
+	targa_header.colormap_index = LittleShort( *( short* )buf_p );
 	buf_p += 2;
-	targa_header.colormap_length = LittleShort( *(short*)buf_p );
+	targa_header.colormap_length = LittleShort( *( short* )buf_p );
 	buf_p += 2;
 	targa_header.colormap_size = *buf_p++;
-	targa_header.x_origin      = LittleShort( *(short*)buf_p );
+	targa_header.x_origin      = LittleShort( *( short* )buf_p );
 	buf_p += 2;
-	targa_header.y_origin = LittleShort( *(short*)buf_p );
+	targa_header.y_origin = LittleShort( *( short* )buf_p );
 	buf_p += 2;
-	targa_header.width = LittleShort( *(short*)buf_p );
+	targa_header.width = LittleShort( *( short* )buf_p );
 	buf_p += 2;
-	targa_header.height = LittleShort( *(short*)buf_p );
+	targa_header.height = LittleShort( *( short* )buf_p );
 	buf_p += 2;
 	targa_header.pixel_size = *buf_p++;
 	targa_header.attributes = *buf_p++;
@@ -298,7 +298,7 @@ void LoadTGA( const char* name, byte** pic, int* width, int* height, byte alphaB
 
 		//ri.Printf(PRINT_WARNING, "WARNING: '%s' TGA file header declares top-down image, flipping\n", name);
 
-		flip = (unsigned char*)malloc( columns * 4 );
+		flip = ( unsigned char* )malloc( columns * 4 );
 		for( row = 0; row < rows / 2; row++ )
 		{
 			src = targa_rgba + row * 4 * columns;

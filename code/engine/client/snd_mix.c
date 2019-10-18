@@ -128,7 +128,7 @@ void S_TransferStereo16( unsigned long* pbuf, int endtime )
 	int lpos;
 	int ls_paintedtime;
 
-	snd_p          = (int*)paintbuffer;
+	snd_p          = ( int* )paintbuffer;
 	ls_paintedtime = s_paintedtime;
 
 	while( ls_paintedtime < endtime )
@@ -136,7 +136,7 @@ void S_TransferStereo16( unsigned long* pbuf, int endtime )
 		// handle recirculating buffer issues
 		lpos = ls_paintedtime & ( ( dma.samples >> 1 ) - 1 );
 
-		snd_out = (short*)pbuf + ( lpos << 1 );
+		snd_out = ( short* )pbuf + ( lpos << 1 );
 
 		snd_linear_count = ( dma.samples >> 1 ) - lpos;
 		if( ls_paintedtime + snd_linear_count > endtime )
@@ -154,7 +154,7 @@ void S_TransferStereo16( unsigned long* pbuf, int endtime )
 
 		if( CL_VideoRecording() )
 		{
-			CL_WriteAVIAudioFrame( (byte*)snd_out, snd_linear_count << 1 );
+			CL_WriteAVIAudioFrame( ( byte* )snd_out, snd_linear_count << 1 );
 		}
 	}
 }
@@ -175,7 +175,7 @@ void S_TransferPaintBuffer( int endtime )
 	int            val;
 	unsigned long* pbuf;
 
-	pbuf = (unsigned long*)dma.buffer;
+	pbuf = ( unsigned long* )dma.buffer;
 
 	if( s_testsound->integer )
 	{
@@ -198,7 +198,7 @@ void S_TransferPaintBuffer( int endtime )
 	else
 	{
 		// general case
-		p        = (int*)paintbuffer;
+		p        = ( int* )paintbuffer;
 		count    = ( endtime - s_paintedtime ) * dma.channels;
 		out_mask = dma.samples - 1;
 		out_idx  = s_paintedtime * dma.channels & out_mask;
@@ -206,7 +206,7 @@ void S_TransferPaintBuffer( int endtime )
 
 		if( dma.samplebits == 16 )
 		{
-			short* out = (short*)pbuf;
+			short* out = ( short* )pbuf;
 
 			while( count-- )
 			{
@@ -226,7 +226,7 @@ void S_TransferPaintBuffer( int endtime )
 		}
 		else if( dma.samplebits == 8 )
 		{
-			unsigned char* out = (unsigned char*)pbuf;
+			unsigned char* out = ( unsigned char* )pbuf;
 
 			while( count-- )
 			{
@@ -290,24 +290,24 @@ static void S_PaintChannelFrom16_altivec( channel_t* ch, const sfx_t* sc, int co
 		vector unsigned int volume_shift;
 		int                 vectorCount, samplesLeft, chunkSamplesLeft;
 
-		leftvol                      = ch->leftvol * snd_vol;
-		rightvol                     = ch->rightvol * snd_vol;
-		samples                      = chunk->sndChunk;
-		( (short*)&volume_vec )[ 0 ] = leftvol;
-		( (short*)&volume_vec )[ 1 ] = leftvol;
-		( (short*)&volume_vec )[ 4 ] = leftvol;
-		( (short*)&volume_vec )[ 5 ] = leftvol;
-		( (short*)&volume_vec )[ 2 ] = rightvol;
-		( (short*)&volume_vec )[ 3 ] = rightvol;
-		( (short*)&volume_vec )[ 6 ] = rightvol;
-		( (short*)&volume_vec )[ 7 ] = rightvol;
-		volume_shift                 = vec_splat_u32( 8 );
-		i                            = 0;
+		leftvol                        = ch->leftvol * snd_vol;
+		rightvol                       = ch->rightvol * snd_vol;
+		samples                        = chunk->sndChunk;
+		( ( short* )&volume_vec )[ 0 ] = leftvol;
+		( ( short* )&volume_vec )[ 1 ] = leftvol;
+		( ( short* )&volume_vec )[ 4 ] = leftvol;
+		( ( short* )&volume_vec )[ 5 ] = leftvol;
+		( ( short* )&volume_vec )[ 2 ] = rightvol;
+		( ( short* )&volume_vec )[ 3 ] = rightvol;
+		( ( short* )&volume_vec )[ 6 ] = rightvol;
+		( ( short* )&volume_vec )[ 7 ] = rightvol;
+		volume_shift                   = vec_splat_u32( 8 );
+		i                              = 0;
 
 		while( i < count )
 		{
 			/* Try to align destination to 16-byte boundary */
-			while( i < count && ( ( (unsigned long)&samp[ i ] & 0x1f ) || ( ( count - i ) < 8 ) || ( ( SND_CHUNK_SIZE - sampleOffset ) < 8 ) ) )
+			while( i < count && ( ( ( unsigned long )&samp[ i ] & 0x1f ) || ( ( count - i ) < 8 ) || ( ( SND_CHUNK_SIZE - sampleOffset ) < 8 ) ) )
 			{
 				data = samples[ sampleOffset++ ];
 				samp[ i ].left += ( data * leftvol ) >> 8;
@@ -350,17 +350,17 @@ static void S_PaintChannelFrom16_altivec( channel_t* ch, const sfx_t* sc, int co
 				loadPermute0 = vec_perm( tmp, tmp, samplePermute0 );
 				loadPermute1 = vec_perm( tmp, tmp, samplePermute1 );
 
-				s0 = *(vector short*)&samples[ sampleOffset ];
+				s0 = *( vector short* )&samples[ sampleOffset ];
 				while( vectorCount )
 				{
 					/* Load up source (16-bit) sample data */
-					s1 = *(vector short*)&samples[ sampleOffset + 7 ];
+					s1 = *( vector short* )&samples[ sampleOffset + 7 ];
 
 					/* Load up destination sample data */
-					d0 = *(vector signed int*)&samp[ i ];
-					d1 = *(vector signed int*)&samp[ i + 2 ];
-					d2 = *(vector signed int*)&samp[ i + 4 ];
-					d3 = *(vector signed int*)&samp[ i + 6 ];
+					d0 = *( vector signed int* )&samp[ i ];
+					d1 = *( vector signed int* )&samp[ i + 2 ];
+					d2 = *( vector signed int* )&samp[ i + 4 ];
+					d3 = *( vector signed int* )&samp[ i + 6 ];
 
 					sampleData0 = vec_perm( s0, s1, loadPermute0 );
 					sampleData1 = vec_perm( s0, s1, loadPermute1 );
@@ -384,10 +384,10 @@ static void S_PaintChannelFrom16_altivec( channel_t* ch, const sfx_t* sc, int co
 					d3 = vec_add( merge1, d3 );
 
 					/* Store destination sample data */
-					*(vector signed int*)&samp[ i ]     = d0;
-					*(vector signed int*)&samp[ i + 2 ] = d1;
-					*(vector signed int*)&samp[ i + 4 ] = d2;
-					*(vector signed int*)&samp[ i + 6 ] = d3;
+					*( vector signed int* )&samp[ i ]     = d0;
+					*( vector signed int* )&samp[ i + 2 ] = d1;
+					*( vector signed int* )&samp[ i + 4 ] = d2;
+					*( vector signed int* )&samp[ i + 6 ] = d3;
 
 					i += 8;
 					vectorCount--;

@@ -132,7 +132,7 @@ byte* LoadAlphaMap( int* num_layers, int* alphawidth, int* alphaheight )
 	ExtractFileExtension( alphamapname, ext );
 	if( !Q_stricmp( ext, "tga" ) )
 	{
-		Load32BitImage( ExpandGamePath( alphamapname ), (unsigned**)&alphamap32, &width, &height );
+		Load32BitImage( ExpandGamePath( alphamapname ), ( unsigned** )&alphamap32, &width, &height );
 
 		size     = width * height;
 		alphamap = malloc( size );
@@ -1249,8 +1249,8 @@ void ParseTerrain( void )
 		{
 			// get height
 			GetToken( qtrue );
-			t.map[ index ].xyz[ 0 ] = t.origin[ 0 ] + t.scale_x * (float)j;
-			t.map[ index ].xyz[ 1 ] = t.origin[ 1 ] + t.scale_y * (float)i;
+			t.map[ index ].xyz[ 0 ] = t.origin[ 0 ] + t.scale_x * ( float )j;
+			t.map[ index ].xyz[ 1 ] = t.origin[ 1 ] + t.scale_y * ( float )i;
 			t.map[ index ].xyz[ 2 ] = t.origin[ 2 ] + atof( token );
 
 			Terrain_ParseFace( &t.map[ index ].tri );
@@ -1319,13 +1319,13 @@ void ParseTerrain( void )
 		{
 			Terrain_GetTriangles( &t, x, y, verts );
 
-			x1 = ( (float)x / (float)( t.width - 1 ) ) * surfwidth;
+			x1 = ( ( float )x / ( float )( t.width - 1 ) ) * surfwidth;
 			if( x1 >= surfwidth )
 			{
 				x1 = surfwidth - 1;
 			}
 
-			y1 = ( (float)y / (float)( t.height - 1 ) ) * surfheight;
+			y1 = ( ( float )y / ( float )( t.height - 1 ) ) * surfheight;
 			if( y1 >= surfheight )
 			{
 				y1 = surfheight - 1;

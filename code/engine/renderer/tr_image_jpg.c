@@ -104,7 +104,7 @@ void LoadJPG( const char* filename, unsigned char** pic, int* width, int* height
 	 * requires it in order to read binary files.
 	 */
 
-	len = ri.FS_ReadFile( (char*)filename, &fbuffer.v );
+	len = ri.FS_ReadFile( ( char* )filename, &fbuffer.v );
 	if( !fbuffer.b || len < 0 )
 	{
 		return;
@@ -130,7 +130,7 @@ void LoadJPG( const char* filename, unsigned char** pic, int* width, int* height
 
 	/* Step 3: read file parameters with jpeg_read_header() */
 
-	(void)jpeg_read_header( &cinfo, TRUE );
+	( void )jpeg_read_header( &cinfo, TRUE );
 	/* We can ignore the return value from jpeg_read_header since
 	 *   (a) suspension is not possible with the stdio data source, and
 	 *   (b) we passed TRUE to reject a tables-only JPEG file as an error.
@@ -147,7 +147,7 @@ void LoadJPG( const char* filename, unsigned char** pic, int* width, int* height
 
 	/* Step 5: Start decompressor */
 
-	(void)jpeg_start_decompress( &cinfo );
+	( void )jpeg_start_decompress( &cinfo );
 	/* We can ignore the return value since suspension is not possible
 	 * with the stdio data source.
 	 */
@@ -193,7 +193,7 @@ void LoadJPG( const char* filename, unsigned char** pic, int* width, int* height
 		 */
 		buf    = ( ( out + ( row_stride * cinfo.output_scanline ) ) );
 		buffer = &buf;
-		(void)jpeg_read_scanlines( &cinfo, buffer, 1 );
+		( void )jpeg_read_scanlines( &cinfo, buffer, 1 );
 	}
 
 	buf = out;
@@ -265,7 +265,7 @@ typedef my_destination_mgr* my_dest_ptr;
 
 static void init_destination( j_compress_ptr cinfo )
 {
-	my_dest_ptr dest = (my_dest_ptr)cinfo->dest;
+	my_dest_ptr dest = ( my_dest_ptr )cinfo->dest;
 
 	dest->pub.next_output_byte = dest->outfile;
 	dest->pub.free_in_buffer   = dest->size;
@@ -296,7 +296,7 @@ static void init_destination( j_compress_ptr cinfo )
 
 static boolean empty_output_buffer( j_compress_ptr cinfo )
 {
-	my_dest_ptr dest = (my_dest_ptr)cinfo->dest;
+	my_dest_ptr dest = ( my_dest_ptr )cinfo->dest;
 
 	jpeg_destroy_compress( cinfo );
 
@@ -338,10 +338,10 @@ static void jpegDest( j_compress_ptr cinfo, byte* outfile, int size )
 	if( cinfo->dest == NULL )
 	{
 		/* first time for this JPEG object? */
-		cinfo->dest = (struct jpeg_destination_mgr*)( *cinfo->mem->alloc_small )( (j_common_ptr)cinfo, JPOOL_PERMANENT, sizeof( my_destination_mgr ) );
+		cinfo->dest = ( struct jpeg_destination_mgr* )( *cinfo->mem->alloc_small )( ( j_common_ptr )cinfo, JPOOL_PERMANENT, sizeof( my_destination_mgr ) );
 	}
 
-	dest                          = (my_dest_ptr)cinfo->dest;
+	dest                          = ( my_dest_ptr )cinfo->dest;
 	dest->pub.init_destination    = init_destination;
 	dest->pub.empty_output_buffer = empty_output_buffer;
 	dest->pub.term_destination    = term_destination;
@@ -407,13 +407,13 @@ int SaveJPGToBuffer( byte* buffer, size_t bufSize, int quality, int image_width,
 		 * more than one scanline at a time if that's more convenient.
 		 */
 		row_pointer[ 0 ] = &image_buffer[ ( ( cinfo.image_height - 1 ) * row_stride ) - cinfo.next_scanline * row_stride ];
-		(void)jpeg_write_scanlines( &cinfo, row_pointer, 1 );
+		( void )jpeg_write_scanlines( &cinfo, row_pointer, 1 );
 	}
 
 	/* Step 6: Finish compression */
 	jpeg_finish_compress( &cinfo );
 
-	dest     = (my_dest_ptr)cinfo.dest;
+	dest     = ( my_dest_ptr )cinfo.dest;
 	outcount = dest->size - dest->pub.free_in_buffer;
 
 	/* Step 7: release JPEG compression object */

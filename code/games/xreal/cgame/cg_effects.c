@@ -50,7 +50,7 @@ void CG_BubbleTrail( vec3_t start, vec3_t end, float spacing )
 	len = VectorNormalize( vec );
 
 	// advance a random amount first
-	i = rand() % (int)spacing;
+	i = rand() % ( int )spacing;
 	VectorMA( move, i, vec, move );
 
 	VectorScale( vec, spacing, vec );

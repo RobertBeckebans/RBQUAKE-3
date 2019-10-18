@@ -348,7 +348,7 @@ static long FS_HashFileName( const char* fname, int hashSize )
 		{
 			letter = '/'; // damn path names
 		}
-		hash += (long)( letter ) * ( i + 119 );
+		hash += ( long )( letter ) * ( i + 119 );
 		i++;
 	}
 	hash = ( hash ^ ( hash >> 10 ) ^ ( hash >> 20 ) );
@@ -1604,7 +1604,7 @@ int FS_Read( void* buffer, int len, fileHandle_t f )
 		return 0;
 	}
 
-	buf = (byte*)buffer;
+	buf = ( byte* )buffer;
 	fs_readCount += len;
 
 	if( fsh[ f ].zipFile == qfalse )
@@ -1671,7 +1671,7 @@ int FS_Write( const void* buffer, int len, fileHandle_t h )
 	}
 
 	f   = FS_FileForHandle( h );
-	buf = (byte*)buffer;
+	buf = ( byte* )buffer;
 
 	remaining = len;
 	tries     = 0;
@@ -2139,7 +2139,7 @@ static pack_t* FS_LoadZipFile( const char* zipfile, const char* basename )
 	}
 
 	buildBuffer                           = Z_Malloc( ( gi.number_entry * sizeof( fileInPack_t ) ) + len );
-	namePtr                               = ( (char*)buildBuffer ) + gi.number_entry * sizeof( fileInPack_t );
+	namePtr                               = ( ( char* )buildBuffer ) + gi.number_entry * sizeof( fileInPack_t );
 	fs_headerLongs                        = Z_Malloc( ( gi.number_entry + 1 ) * sizeof( int ) );
 	fs_headerLongs[ fs_numHeaderLongs++ ] = LittleLong( fs_checksumFeed );
 
@@ -2155,7 +2155,7 @@ static pack_t* FS_LoadZipFile( const char* zipfile, const char* basename )
 
 	pack            = Z_Malloc( sizeof( pack_t ) + i * sizeof( fileInPack_t* ) );
 	pack->hashSize  = i;
-	pack->hashTable = (fileInPack_t**)( ( (char*)pack ) + sizeof( pack_t ) );
+	pack->hashTable = ( fileInPack_t** )( ( ( char* )pack ) + sizeof( pack_t ) );
 	for( i = 0; i < pack->hashSize; i++ )
 	{
 		pack->hashTable[ i ] = NULL;
@@ -3066,8 +3066,8 @@ static int QDECL paksort( const void* a, const void* b )
 {
 	char *aa, *bb;
 
-	aa = *(char**)a;
-	bb = *(char**)b;
+	aa = *( char** )a;
+	bb = *( char** )b;
 
 	return FS_PathCmp( aa, bb );
 }

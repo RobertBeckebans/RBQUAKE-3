@@ -142,7 +142,7 @@ static int AddTraceInfo( traceInfo_t* ti )
 			memcpy( temp, traceInfos, numTraceInfos * sizeof( *traceInfos ) );
 			free( traceInfos );
 		}
-		traceInfos = (traceInfo_t*)temp;
+		traceInfos = ( traceInfo_t* )temp;
 	}
 
 	/* add the info */
@@ -223,7 +223,7 @@ static int AddTraceWinding( traceWinding_t* tw )
 				memcpy( temp, traceWindings, numTraceWindings * sizeof( *traceWindings ) );
 				free( traceWindings );
 			}
-			traceWindings = (traceWinding_t*)temp;
+			traceWindings = ( traceWinding_t* )temp;
 		}
 	}
 
@@ -270,7 +270,7 @@ static int AddTraceTriangle( traceTriangle_t* tt )
 				memcpy( temp, traceTriangles, numTraceTriangles * sizeof( *traceTriangles ) );
 				free( traceTriangles );
 			}
-			traceTriangles = (traceTriangle_t*)temp;
+			traceTriangles = ( traceTriangle_t* )temp;
 		}
 	}
 
@@ -327,7 +327,7 @@ static int AddItemToTraceNode( traceNode_t* node, int num )
 			memcpy( temp, node->items, node->numItems * sizeof( *node->items ) );
 			free( node->items );
 		}
-		node->items = (int*)temp;
+		node->items = ( int* )temp;
 	}
 
 	/* add the poly */
@@ -1340,7 +1340,7 @@ static void PopulateTraceNodes( void )
 			/* external model */
 			default:
 				frame = IntForKey( e, "_frame" );
-				model = LoadModel( (char*)value, frame );
+				model = LoadModel( ( char* )value, frame );
 				if( model == NULL )
 				{
 					continue;
@@ -1372,7 +1372,7 @@ static void PopulateTraceNodes( void )
 			/* external model */
 			default:
 				frame = IntForKey( e, "_frame2" );
-				model = LoadModel( (char*)value, frame );
+				model = LoadModel( ( char* )value, frame );
 				if( model == NULL )
 				{
 					continue;
@@ -1428,10 +1428,10 @@ void SetupTraceNodes( void )
 
 	/* emit some stats */
 	//% Sys_FPrintf( SYS_VRB, "%9d original triangles\n", numOriginalTriangles );
-	Sys_FPrintf( SYS_VRB, "%9d trace windings (%.2fMB)\n", numTraceWindings, (float)( numTraceWindings * sizeof( *traceWindings ) ) / ( 1024.0f * 1024.0f ) );
-	Sys_FPrintf( SYS_VRB, "%9d trace triangles (%.2fMB)\n", numTraceTriangles, (float)( numTraceTriangles * sizeof( *traceTriangles ) ) / ( 1024.0f * 1024.0f ) );
-	Sys_FPrintf( SYS_VRB, "%9d trace nodes (%.2fMB)\n", numTraceNodes, (float)( numTraceNodes * sizeof( *traceNodes ) ) / ( 1024.0f * 1024.0f ) );
-	Sys_FPrintf( SYS_VRB, "%9d leaf nodes (%.2fMB)\n", numTraceLeafNodes, (float)( numTraceLeafNodes * sizeof( *traceNodes ) ) / ( 1024.0f * 1024.0f ) );
+	Sys_FPrintf( SYS_VRB, "%9d trace windings (%.2fMB)\n", numTraceWindings, ( float )( numTraceWindings * sizeof( *traceWindings ) ) / ( 1024.0f * 1024.0f ) );
+	Sys_FPrintf( SYS_VRB, "%9d trace triangles (%.2fMB)\n", numTraceTriangles, ( float )( numTraceTriangles * sizeof( *traceTriangles ) ) / ( 1024.0f * 1024.0f ) );
+	Sys_FPrintf( SYS_VRB, "%9d trace nodes (%.2fMB)\n", numTraceNodes, ( float )( numTraceNodes * sizeof( *traceNodes ) ) / ( 1024.0f * 1024.0f ) );
+	Sys_FPrintf( SYS_VRB, "%9d leaf nodes (%.2fMB)\n", numTraceLeafNodes, ( float )( numTraceLeafNodes * sizeof( *traceNodes ) ) / ( 1024.0f * 1024.0f ) );
 	//% Sys_FPrintf( SYS_VRB, "%9d average triangles per leaf node\n", numTraceTriangles / numTraceLeafNodes );
 	Sys_FPrintf( SYS_VRB, "%9d average windings per leaf node\n", numTraceWindings / ( numTraceLeafNodes + 1 ) );
 	Sys_FPrintf( SYS_VRB, "%9d max trace depth\n", maxTraceDepth );

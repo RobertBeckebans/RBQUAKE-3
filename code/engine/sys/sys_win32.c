@@ -164,7 +164,7 @@ qboolean Sys_RandomBytes( byte* string, int len )
 		return qfalse;
 	}
 
-	if( !CryptGenRandom( prov, len, (BYTE*)string ) )
+	if( !CryptGenRandom( prov, len, ( BYTE* )string ) )
 	{
 		CryptReleaseContext( prov, 0 );
 		return qfalse;
@@ -648,7 +648,7 @@ void Sys_ErrorDialog( const char* error )
 		char*   clipMemory;
 
 		memoryHandle = GlobalAlloc( GMEM_MOVEABLE | GMEM_DDESHARE, CON_LogSize() + 1 );
-		clipMemory   = (char*)GlobalLock( memoryHandle );
+		clipMemory   = ( char* )GlobalLock( memoryHandle );
 
 		if( clipMemory )
 		{

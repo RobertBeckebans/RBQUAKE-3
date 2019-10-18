@@ -110,7 +110,7 @@ void R_AddBrushModelInteractions( trRefEntity_t* ent, trRefLight_t* light )
 				continue;
 			}
 
-			R_AddLightInteraction( light, (void*)vboSurface, shader, cubeSideBits, iaType );
+			R_AddLightInteraction( light, ( void* )vboSurface, shader, cubeSideBits, iaType );
 			tr.pc.c_dlightSurfaces++;
 		}
 	}
@@ -1217,12 +1217,12 @@ static int InteractionCompare( const void* a, const void* b )
 {
 #if 1
 	// shader first
-	if( ( (interaction_t*)a )->surfaceShader < ( (interaction_t*)b )->surfaceShader )
+	if( ( ( interaction_t* )a )->surfaceShader < ( ( interaction_t* )b )->surfaceShader )
 	{
 		return -1;
 	}
 
-	else if( ( (interaction_t*)a )->surfaceShader > ( (interaction_t*)b )->surfaceShader )
+	else if( ( ( interaction_t* )a )->surfaceShader > ( ( interaction_t* )b )->surfaceShader )
 	{
 		return 1;
 	}
@@ -1230,22 +1230,22 @@ static int InteractionCompare( const void* a, const void* b )
 
 #if 1
 	// then entity
-	if( ( (interaction_t*)a )->entity == &tr.worldEntity && ( (interaction_t*)b )->entity != &tr.worldEntity )
+	if( ( ( interaction_t* )a )->entity == &tr.worldEntity && ( ( interaction_t* )b )->entity != &tr.worldEntity )
 	{
 		return -1;
 	}
 
-	else if( ( (interaction_t*)a )->entity != &tr.worldEntity && ( (interaction_t*)b )->entity == &tr.worldEntity )
+	else if( ( ( interaction_t* )a )->entity != &tr.worldEntity && ( ( interaction_t* )b )->entity == &tr.worldEntity )
 	{
 		return 1;
 	}
 
-	else if( ( (interaction_t*)a )->entity < ( (interaction_t*)b )->entity )
+	else if( ( ( interaction_t* )a )->entity < ( ( interaction_t* )b )->entity )
 	{
 		return -1;
 	}
 
-	else if( ( (interaction_t*)a )->entity > ( (interaction_t*)b )->entity )
+	else if( ( ( interaction_t* )a )->entity > ( ( interaction_t* )b )->entity )
 	{
 		return 1;
 	}
@@ -1330,22 +1330,22 @@ static void R_AddPointToLightScissor( trRefLight_t* light, const vec3_t world )
 
 	if( window[ 0 ] > light->scissor.coords[ 2 ] )
 	{
-		light->scissor.coords[ 2 ] = (int)window[ 0 ];
+		light->scissor.coords[ 2 ] = ( int )window[ 0 ];
 	}
 
 	if( window[ 0 ] < light->scissor.coords[ 0 ] )
 	{
-		light->scissor.coords[ 0 ] = (int)window[ 0 ];
+		light->scissor.coords[ 0 ] = ( int )window[ 0 ];
 	}
 
 	if( window[ 1 ] > light->scissor.coords[ 3 ] )
 	{
-		light->scissor.coords[ 3 ] = (int)window[ 1 ];
+		light->scissor.coords[ 3 ] = ( int )window[ 1 ];
 	}
 
 	if( window[ 1 ] < light->scissor.coords[ 1 ] )
 	{
-		light->scissor.coords[ 1 ] = (int)window[ 1 ];
+		light->scissor.coords[ 1 ] = ( int )window[ 1 ];
 	}
 }
 

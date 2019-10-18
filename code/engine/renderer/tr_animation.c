@@ -762,17 +762,17 @@ qhandle_t RE_RegisterAnimation( const char* name )
 	R_SyncRenderThread();
 
 	// load and parse the .md5anim file
-	bufferLen = ri.FS_ReadFile( name, (void**)&buffer );
+	bufferLen = ri.FS_ReadFile( name, ( void** )&buffer );
 	if( !buffer )
 	{
 		return 0;
 	}
 
-	if( !Q_stricmpn( (const char*)buffer, "MD5Version", 10 ) )
+	if( !Q_stricmpn( ( const char* )buffer, "MD5Version", 10 ) )
 	{
 		loaded = R_LoadMD5Anim( anim, buffer, bufferLen, name );
 	}
-	else if( !Q_stricmpn( (const char*)buffer, "ANIMHEAD", 8 ) )
+	else if( !Q_stricmpn( ( const char* )buffer, "ANIMHEAD", 8 ) )
 	{
 		loaded = R_LoadPSA( anim, buffer, bufferLen, name );
 	}
@@ -970,7 +970,7 @@ void R_AddMD5Surfaces( trRefEntity_t* ent )
 			// don't add third_person objects if not viewing through a portal
 			if( !personalModel )
 			{
-				R_AddDrawSurf( (void*)surface, shader, -1, fogNum );
+				R_AddDrawSurf( ( void* )surface, shader, -1, fogNum );
 			}
 		}
 	}
@@ -1021,7 +1021,7 @@ void R_AddMD5Surfaces( trRefEntity_t* ent )
 			// don't add third_person objects if not viewing through a portal
 			if( !personalModel )
 			{
-				R_AddDrawSurf( (void*)vboSurface, shader, -1, fogNum );
+				R_AddDrawSurf( ( void* )vboSurface, shader, -1, fogNum );
 			}
 		}
 	}
@@ -1147,7 +1147,7 @@ void R_AddMD5Interactions( trRefEntity_t* ent, trRefLight_t* light )
 			// don't add third_person objects if not viewing through a portal
 			if( !personalModel )
 			{
-				R_AddLightInteraction( light, (void*)surface, shader, cubeSideBits, iaType );
+				R_AddLightInteraction( light, ( void* )surface, shader, cubeSideBits, iaType );
 				tr.pc.c_dlightSurfaces++;
 			}
 		}
@@ -1203,7 +1203,7 @@ void R_AddMD5Interactions( trRefEntity_t* ent, trRefLight_t* light )
 			// don't add third_person objects if not viewing through a portal
 			if( !personalModel )
 			{
-				R_AddLightInteraction( light, (void*)vboSurface, shader, cubeSideBits, iaType );
+				R_AddLightInteraction( light, ( void* )vboSurface, shader, cubeSideBits, iaType );
 				tr.pc.c_dlightSurfaces++;
 			}
 		}
@@ -1394,22 +1394,22 @@ int RE_BuildSkeleton( refSkeleton_t* skel, qhandle_t hAnim, int startFrame, int 
 			// update quaternion rotation bits
 			if( channel->componentsBits & COMPONENT_BIT_QX )
 			{
-				( (vec_t*)oldQuat )[ 0 ] = oldFrame->components[ channel->componentsOffset + componentsApplied ];
-				( (vec_t*)newQuat )[ 0 ] = newFrame->components[ channel->componentsOffset + componentsApplied ];
+				( ( vec_t* )oldQuat )[ 0 ] = oldFrame->components[ channel->componentsOffset + componentsApplied ];
+				( ( vec_t* )newQuat )[ 0 ] = newFrame->components[ channel->componentsOffset + componentsApplied ];
 				componentsApplied++;
 			}
 
 			if( channel->componentsBits & COMPONENT_BIT_QY )
 			{
-				( (vec_t*)oldQuat )[ 1 ] = oldFrame->components[ channel->componentsOffset + componentsApplied ];
-				( (vec_t*)newQuat )[ 1 ] = newFrame->components[ channel->componentsOffset + componentsApplied ];
+				( ( vec_t* )oldQuat )[ 1 ] = oldFrame->components[ channel->componentsOffset + componentsApplied ];
+				( ( vec_t* )newQuat )[ 1 ] = newFrame->components[ channel->componentsOffset + componentsApplied ];
 				componentsApplied++;
 			}
 
 			if( channel->componentsBits & COMPONENT_BIT_QZ )
 			{
-				( (vec_t*)oldQuat )[ 2 ] = oldFrame->components[ channel->componentsOffset + componentsApplied ];
-				( (vec_t*)newQuat )[ 2 ] = newFrame->components[ channel->componentsOffset + componentsApplied ];
+				( ( vec_t* )oldQuat )[ 2 ] = oldFrame->components[ channel->componentsOffset + componentsApplied ];
+				( ( vec_t* )newQuat )[ 2 ] = newFrame->components[ channel->componentsOffset + componentsApplied ];
 			}
 
 			QuatCalcW( oldQuat );

@@ -60,7 +60,7 @@ static md3Header_t* MD3_Load( const char* mod_name )
 	int             len;
 
 	sprintf( filename, "%s%s", gamedir, mod_name );
-	len = TryLoadFile( filename, (void**)&md3 );
+	len = TryLoadFile( filename, ( void** )&md3 );
 
 	if( len <= 0 )
 	{
@@ -95,7 +95,7 @@ static md3Header_t* MD3_Load( const char* mod_name )
 	// we don't need to swap tags in the renderer, they aren't used
 
 	// swap all the frames
-	frame = (md3Frame_t*)( (byte*)md3 + md3->ofsFrames );
+	frame = ( md3Frame_t* )( ( byte* )md3 + md3->ofsFrames );
 	for( i = 0; i < md3->numFrames; i++, frame++ )
 	{
 		frame->radius = LittleFloat( frame->radius );
@@ -108,7 +108,7 @@ static md3Header_t* MD3_Load( const char* mod_name )
 	}
 
 	// swap all the surfaces
-	surf = (md3Surface_t*)( (byte*)md3 + md3->ofsSurfaces );
+	surf = ( md3Surface_t* )( ( byte* )md3 + md3->ofsSurfaces );
 	for( i = 0; i < md3->numSurfaces; i++ )
 	{
 		LL( surf->ident );
@@ -136,7 +136,7 @@ static md3Header_t* MD3_Load( const char* mod_name )
 		}
 
 		// swap all the triangles
-		tri = (md3Triangle_t*)( (byte*)surf + surf->ofsTriangles );
+		tri = ( md3Triangle_t* )( ( byte* )surf + surf->ofsTriangles );
 		for( j = 0; j < surf->numTriangles; j++, tri++ )
 		{
 			LL( tri->indexes[ 0 ] );
@@ -145,7 +145,7 @@ static md3Header_t* MD3_Load( const char* mod_name )
 		}
 
 		// swap all the ST
-		st = (md3St_t*)( (byte*)surf + surf->ofsSt );
+		st = ( md3St_t* )( ( byte* )surf + surf->ofsSt );
 		for( j = 0; j < surf->numVerts; j++, st++ )
 		{
 			st->st[ 0 ] = LittleFloat( st->st[ 0 ] );
@@ -153,7 +153,7 @@ static md3Header_t* MD3_Load( const char* mod_name )
 		}
 
 		// swap all the XyzNormals
-		xyz = (md3XyzNormal_t*)( (byte*)surf + surf->ofsXyzNormals );
+		xyz = ( md3XyzNormal_t* )( ( byte* )surf + surf->ofsXyzNormals );
 		for( j = 0; j < surf->numVerts * surf->numFrames; j++, xyz++ )
 		{
 			xyz->xyz[ 0 ] = LittleShort( xyz->xyz[ 0 ] );
@@ -164,7 +164,7 @@ static md3Header_t* MD3_Load( const char* mod_name )
 		}
 
 		// find the next surface
-		surf = (md3Surface_t*)( (byte*)surf + surf->ofsEnd );
+		surf = ( md3Surface_t* )( ( byte* )surf + surf->ofsEnd );
 	}
 
 	return md3;
@@ -238,14 +238,14 @@ static void InsertMD3Model( const char* modelName, const matrix_t transform )
 
 	// expand, translate, and rotate the vertexes
 	// swap all the surfaces
-	surf = (md3Surface_t*)( (byte*)md3 + md3->ofsSurfaces );
+	surf = ( md3Surface_t* )( ( byte* )md3 + md3->ofsSurfaces );
 	for( i = 0; i < md3->numSurfaces; i++ )
 	{
 		// allocate a surface
 		out            = AllocDrawSurf();
 		out->miscModel = qtrue;
 
-		shader = (md3Shader_t*)( (byte*)surf + surf->ofsShaders );
+		shader = ( md3Shader_t* )( ( byte* )surf + surf->ofsShaders );
 
 		out->shaderInfo = ShaderInfoForShader( shader->name );
 
@@ -260,7 +260,7 @@ static void InsertMD3Model( const char* modelName, const matrix_t transform )
 
 		// emit the indexes
 		c_triangleIndexes += surf->numTriangles * 3;
-		tri = (md3Triangle_t*)( (byte*)surf + surf->ofsTriangles );
+		tri = ( md3Triangle_t* )( ( byte* )surf + surf->ofsTriangles );
 		for( j = 0; j < surf->numTriangles; j++, tri++ )
 		{
 			out->indexes[ j * 3 + 0 ] = tri->indexes[ 0 ];
@@ -269,8 +269,8 @@ static void InsertMD3Model( const char* modelName, const matrix_t transform )
 		}
 
 		// emit the vertexes
-		st  = (md3St_t*)( (byte*)surf + surf->ofsSt );
-		xyz = (md3XyzNormal_t*)( (byte*)surf + surf->ofsXyzNormals );
+		st  = ( md3St_t* )( ( byte* )surf + surf->ofsSt );
+		xyz = ( md3XyzNormal_t* )( ( byte* )surf + surf->ofsXyzNormals );
 
 		c_triangleVertexes += surf->numVerts;
 		for( j = 0; j < surf->numVerts; j++, st++, xyz++ )
@@ -316,7 +316,7 @@ static void InsertMD3Model( const char* modelName, const matrix_t transform )
 		}
 
 		// find the next surface
-		surf = (md3Surface_t*)( (byte*)surf + surf->ofsEnd );
+		surf = ( md3Surface_t* )( ( byte* )surf + surf->ofsEnd );
 	}
 }
 
@@ -851,7 +851,7 @@ void AddTriangleModel( entity_t* entity, qboolean applyTransform )
 	model     = ValueForKey( entity, "model" );
 	if( !model[ 0 ] )
 	{
-		Sys_Printf( "WARNING: '%s' at %i %i %i without a model key\n", classname, (int)origin[ 0 ], (int)origin[ 1 ], (int)origin[ 2 ] );
+		Sys_Printf( "WARNING: '%s' at %i %i %i without a model key\n", classname, ( int )origin[ 0 ], ( int )origin[ 1 ], ( int )origin[ 2 ] );
 		return;
 	}
 

@@ -1078,7 +1078,7 @@ static void CG_SetWeaponLerpFrameAnimation( weaponInfo_t* wi, lerpFrame_t* lf, i
 
 	if( shouldTime != wouldTime && shouldTime > 0 )
 	{
-		lf->animationScale = (float)wouldTime / shouldTime;
+		lf->animationScale = ( float )wouldTime / shouldTime;
 	}
 	else
 	{
@@ -1266,7 +1266,7 @@ static void CG_RunWeaponLerpFrame( weaponInfo_t* wi, lerpFrame_t* lf, int weapon
 	}
 	else
 	{
-		lf->backlerp = 1.0 - (float)( cg.time - lf->oldFrameTime ) / ( lf->frameTime - lf->oldFrameTime );
+		lf->backlerp = 1.0 - ( float )( cg.time - lf->oldFrameTime ) / ( lf->frameTime - lf->oldFrameTime );
 	}
 
 	// blend old and current animation
@@ -1610,7 +1610,7 @@ static float CG_MachinegunSpinAngle( centity_t* cent )
 			delta = COAST_TIME;
 		}
 
-		speed = 0.5 * ( SPIN_SPEED + (float)( COAST_TIME - delta ) / COAST_TIME );
+		speed = 0.5 * ( SPIN_SPEED + ( float )( COAST_TIME - delta ) / COAST_TIME );
 		angle = cent->pe.barrelAngle + delta * speed;
 	}
 
@@ -1995,7 +1995,7 @@ void CG_AddViewWeapon( playerState_t* ps )
 		{
 			float f;
 
-			f                   = (float)cg.predictedPlayerState.weaponTime / 1500;
+			f                   = ( float )cg.predictedPlayerState.weaponTime / 1500;
 			gun.shaderRGBA[ 1 ] = 0;
 			gun.shaderRGBA[ 0 ] = gun.shaderRGBA[ 2 ] = 255 * ( 1.0 - f );
 		}
@@ -2465,7 +2465,7 @@ static void CG_AddBulletParticles( vec3_t origin, vec3_t dir, int speed, int dur
 	for( i = 0; i < count; i++ )
 	{
 		VectorSet( velocity, dir[ 0 ] + crandom() * randScale, dir[ 1 ] + crandom() * randScale, dir[ 2 ] + crandom() * randScale );
-		VectorScale( velocity, (float)speed, velocity );
+		VectorScale( velocity, ( float )speed, velocity );
 
 		VectorCopy( origin, pos );
 		VectorMA( pos, 2 + random() * 4, dir, pos );
@@ -2488,7 +2488,7 @@ static void CG_AddSparks( vec3_t origin, vec3_t dir, int speed, int duration, in
 	for( i = 0; i < count; i++ )
 	{
 		VectorSet( velocity, dir[ 0 ] + crandom() * randScale, dir[ 1 ] + crandom() * randScale, dir[ 2 ] + crandom() * randScale );
-		VectorScale( velocity, (float)speed, velocity );
+		VectorScale( velocity, ( float )speed, velocity );
 
 		VectorCopy( origin, pos );
 		VectorMA( pos, 2 + random() * 4, dir, pos );

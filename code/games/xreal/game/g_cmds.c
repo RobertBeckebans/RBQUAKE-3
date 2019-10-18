@@ -1940,7 +1940,7 @@ void Cmd_LuaBinaryFunction_f( gentity_t* ent )
 	y = atoi( arg );
 
 	G_RunLuaFunction( function, "dd>d", x, y, &z );
-	trap_SendServerCommand( ent - g_entities, va( "print \"result: %i\n\"", (int)z ) );
+	trap_SendServerCommand( ent - g_entities, va( "print \"result: %i\n\"", ( int )z ) );
 }
 
 /*

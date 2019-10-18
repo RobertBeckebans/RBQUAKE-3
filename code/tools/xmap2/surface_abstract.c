@@ -394,7 +394,7 @@ qboolean CalcSurfaceTextureRange( mapDrawSurface_t* ds )
 	{
 		for( j = 0; j < 2; j++ )
 		{
-			v = ( (float)ds->verts[ i ].st[ j ] + ds->bias[ j ] ) * size[ j ];
+			v = ( ( float )ds->verts[ i ].st[ j ] + ds->bias[ j ] ) * size[ j ];
 			if( v < ds->texMins[ j ] )
 			{
 				ds->texMins[ j ] = v;
@@ -690,7 +690,7 @@ void ClassifySurfaces( int numSurfs, mapDrawSurface_t* ds )
 
 		if( ds->lightmapScale > 0.0f ) /* apply surface lightmap scaling factor */
 		{
-			ds->sampleSize    = ds->lightmapScale * (float)ds->sampleSize;
+			ds->sampleSize    = ds->lightmapScale * ( float )ds->sampleSize;
 			ds->lightmapScale = 0; /* applied */
 		}
 
@@ -1584,7 +1584,7 @@ void SubdivideFaceSurfaces( entity_t* e, tree_t* tree )
 			subdivisions = ceil( subdivisions / 2 ) * 2;
 			for( j = 1; j < 8; j++ )
 			{
-				s2 = ceil( (float)texRange / j );
+				s2 = ceil( ( float )texRange / j );
 				if( fabs( subdivisions - s2 ) <= 4.0 )
 				{
 					subdivisions = s2;
@@ -3403,7 +3403,7 @@ int AddSurfaceModelsToTriangle_r( mapDrawSurface_t* ds, surfaceModel_t* model, b
 			}
 
 			/* insert the model */
-			InsertModel( (char*)model->model, 0, transform, temp, NULL, ds->celShader, ds->entityNum, ds->castShadows, ds->recvShadows, 0, ds->lightmapScale, 0, 0 );
+			InsertModel( ( char* )model->model, 0, transform, temp, NULL, ds->celShader, ds->entityNum, ds->castShadows, ds->recvShadows, 0, ds->lightmapScale, 0, 0 );
 
 			/* return to sender */
 			return 1;

@@ -49,7 +49,7 @@ void CG_PositionEntityOnTag( refEntity_t* entity, const refEntity_t* parent, qha
 	}
 
 	// had to cast away the const to avoid compiler problems...
-	AxisMultiply( lerped.axis, ( (refEntity_t*)parent )->axis, entity->axis );
+	AxisMultiply( lerped.axis, ( ( refEntity_t* )parent )->axis, entity->axis );
 	entity->backlerp = parent->backlerp;
 }
 
@@ -79,7 +79,7 @@ void CG_PositionRotatedEntityOnTag( refEntity_t* entity, const refEntity_t* pare
 
 	// had to cast away the const to avoid compiler problems...
 	AxisMultiply( entity->axis, lerped.axis, tempAxis );
-	AxisMultiply( tempAxis, ( (refEntity_t*)parent )->axis, entity->axis );
+	AxisMultiply( tempAxis, ( ( refEntity_t* )parent )->axis, entity->axis );
 }
 
 /*
@@ -116,7 +116,7 @@ qboolean CG_PositionRotatedEntityOnBone( refEntity_t* entity, const refEntity_t*
 
 	// had to cast away the const to avoid compiler problems...
 	AxisMultiply( entity->axis, lerped.axis, tempAxis );
-	AxisMultiply( tempAxis, ( (refEntity_t*)parent )->axis, entity->axis );
+	AxisMultiply( tempAxis, ( ( refEntity_t* )parent )->axis, entity->axis );
 
 	return qtrue;
 }
@@ -425,7 +425,7 @@ static void CG_Item( centity_t* cent )
 	msec = cg.time - cent->miscTime;
 	if( msec >= 0 && msec < ITEM_SCALEUP_TIME )
 	{
-		frac = (float)msec / ITEM_SCALEUP_TIME;
+		frac = ( float )msec / ITEM_SCALEUP_TIME;
 		VectorScale( ent.axis[ 0 ], frac, ent.axis[ 0 ] );
 		VectorScale( ent.axis[ 1 ], frac, ent.axis[ 1 ] );
 		VectorScale( ent.axis[ 2 ], frac, ent.axis[ 2 ] );
@@ -910,7 +910,7 @@ static void CG_AI_Node( centity_t* cent )
 
 	for( i = 0; i < numdigits; i++ )
 	{
-		VectorMA( origin, (float)( ( (float)numdigits / 2 ) - i ) * numberSize, vec, ent.origin );
+		VectorMA( origin, ( float )( ( ( float )numdigits / 2 ) - i ) * numberSize, vec, ent.origin );
 		ent.customShader = cgs.media.numberShaders[ digits[ numdigits - 1 - i ] ];
 		trap_R_AddRefEntityToScene( &ent );
 	}
@@ -1141,7 +1141,7 @@ static void CG_TeamBase( centity_t* cent )
 			//
 			if( t > h )
 			{
-				c = (float)( t - h ) / h;
+				c = ( float )( t - h ) / h;
 				if( c > 1 )
 				{
 					c = 1;
@@ -1170,7 +1170,7 @@ static void CG_TeamBase( centity_t* cent )
 					cent->muzzleFlashTime = 1;
 				}
 				VectorCopy( cent->currentState.angles, angles );
-				angles[ YAW ] += (float)16 * acos( 1 - c ) * 180 / M_PI;
+				angles[ YAW ] += ( float )16 * acos( 1 - c ) * 180 / M_PI;
 
 				AnglesToAxis( angles, model.axis );
 
@@ -1332,7 +1332,7 @@ void CG_AddPacketEntities( void )
 		}
 		else
 		{
-			cg.frameInterpolation = (float)( cg.time - cg.snap->serverTime ) / delta;
+			cg.frameInterpolation = ( float )( cg.time - cg.snap->serverTime ) / delta;
 		}
 	}
 	else

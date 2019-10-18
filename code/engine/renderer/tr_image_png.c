@@ -66,7 +66,7 @@ void LoadPNG( const char* name, byte** pic, int* width, int* height, byte alphaB
 	int         size;
 
 	// load png
-	size = ri.FS_ReadFile( name, (void**)&data );
+	size = ri.FS_ReadFile( name, ( void** )&data );
 
 	if( !data )
 	{
@@ -74,7 +74,7 @@ void LoadPNG( const char* name, byte** pic, int* width, int* height, byte alphaB
 	}
 
 	//png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-	png = png_create_read_struct( PNG_LIBPNG_VER_STRING, (png_voidp)NULL, png_user_error_fn, png_user_warning_fn );
+	png = png_create_read_struct( PNG_LIBPNG_VER_STRING, ( png_voidp )NULL, png_user_error_fn, png_user_warning_fn );
 
 	if( !png )
 	{
@@ -89,7 +89,7 @@ void LoadPNG( const char* name, byte** pic, int* width, int* height, byte alphaB
 	{
 		ri.Printf( PRINT_WARNING, "LoadPNG: png_create_info_struct() failed for (%s)\n", name );
 		ri.FS_FreeFile( data );
-		png_destroy_read_struct( &png, (png_infopp)NULL, (png_infopp)NULL );
+		png_destroy_read_struct( &png, ( png_infopp )NULL, ( png_infopp )NULL );
 		return;
 	}
 
@@ -103,7 +103,7 @@ void LoadPNG( const char* name, byte** pic, int* width, int* height, byte alphaB
 		// if we get here, we had a problem reading the file
 		ri.Printf( PRINT_WARNING, "LoadPNG: first exception handler called for (%s)\n", name );
 		ri.FS_FreeFile( data );
-		png_destroy_read_struct( &png, (png_infopp)&info, (png_infopp)NULL );
+		png_destroy_read_struct( &png, ( png_infopp )&info, ( png_infopp )NULL );
 		return;
 	}
 
@@ -117,7 +117,7 @@ void LoadPNG( const char* name, byte** pic, int* width, int* height, byte alphaB
 	png_read_info( png, info );
 
 	// get picture info
-	png_get_IHDR( png, info, (png_uint_32*)&w, (png_uint_32*)&h, &bit_depth, &color_type, NULL, NULL, NULL );
+	png_get_IHDR( png, info, ( png_uint_32* )&w, ( png_uint_32* )&h, &bit_depth, &color_type, NULL, NULL, NULL );
 
 	// tell libpng to strip 16 bit/color files down to 8 bits/color
 	png_set_strip_16( png );
@@ -163,9 +163,9 @@ void LoadPNG( const char* name, byte** pic, int* width, int* height, byte alphaB
 	// allocate the memory to hold the image
 	*width  = w;
 	*height = h;
-	*pic = out = (byte*)ri.Z_Malloc( w * h * 4 );
+	*pic = out = ( byte* )ri.Z_Malloc( w * h * 4 );
 
-	row_pointers = (png_bytep*)ri.Hunk_AllocateTempMemory( sizeof( png_bytep ) * h );
+	row_pointers = ( png_bytep* )ri.Hunk_AllocateTempMemory( sizeof( png_bytep ) * h );
 
 	// set a new exception handler
 	if( setjmp( png_jmpbuf( png ) ) )
@@ -173,7 +173,7 @@ void LoadPNG( const char* name, byte** pic, int* width, int* height, byte alphaB
 		ri.Printf( PRINT_WARNING, "LoadPNG: second exception handler called for (%s)\n", name );
 		ri.Hunk_FreeTempMemory( row_pointers );
 		ri.FS_FreeFile( data );
-		png_destroy_read_struct( &png, (png_infopp)&info, (png_infopp)NULL );
+		png_destroy_read_struct( &png, ( png_infopp )&info, ( png_infopp )NULL );
 		return;
 	}
 
@@ -191,7 +191,7 @@ void LoadPNG( const char* name, byte** pic, int* width, int* height, byte alphaB
 	png_read_end( png, info );
 
 	// clean up after the read, and free any memory allocated
-	png_destroy_read_struct( &png, &info, (png_infopp)NULL );
+	png_destroy_read_struct( &png, &info, ( png_infopp )NULL );
 
 	ri.Hunk_FreeTempMemory( row_pointers );
 	ri.FS_FreeFile( data );
@@ -239,7 +239,7 @@ void SavePNG( const char* name, const byte* pic, int width, int height, int numB
 	info = png_create_info_struct( png );
 	if( !info )
 	{
-		png_destroy_write_struct( &png, (png_infopp)NULL );
+		png_destroy_write_struct( &png, ( png_infopp )NULL );
 		return;
 	}
 
@@ -286,7 +286,7 @@ void SavePNG( const char* name, const byte* pic, int width, int height, int numB
 	}
 
 	row_stride = width * numBytes;
-	row        = (byte*)pic + ( height - 1 ) * row_stride;
+	row        = ( byte* )pic + ( height - 1 ) * row_stride;
 
 	if( flip )
 	{

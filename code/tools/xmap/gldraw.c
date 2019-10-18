@@ -47,7 +47,7 @@ static void Reshape( int width, int height )
 	glViewport( 0, 0, width, height );
 
 	// set up projection matrix
-	screenaspect = (float)width / (float)height;
+	screenaspect = ( float )width / ( float )height;
 
 	glMatrixMode( GL_PROJECTION );
 	glLoadIdentity();
@@ -111,13 +111,13 @@ static void Draw_BeginScene( void )
 
 		SDL_WM_SetCaption( "XMap", "xmap" );
 
-		glString = (char*)glGetString( GL_VENDOR );
+		glString = ( char* )glGetString( GL_VENDOR );
 		Sys_FPrintf( SYS_VRB, "GL_VENDOR: %s\n", glString );
 
-		glString = (char*)glGetString( GL_RENDERER );
+		glString = ( char* )glGetString( GL_RENDERER );
 		Sys_FPrintf( SYS_VRB, "GL_RENDERER: %s\n", glString );
 
-		glString = (char*)glGetString( GL_VERSION );
+		glString = ( char* )glGetString( GL_VERSION );
 		Sys_FPrintf( SYS_VRB, "GL_VERSION: %s\n", glString );
 
 		//SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);

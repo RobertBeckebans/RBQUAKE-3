@@ -2329,7 +2329,7 @@ void LoadShaderInfo( void )
 			/* test limit */
 			if( j >= MAX_SHADER_FILES )
 			{
-				Error( "MAX_SHADER_FILES (%d) reached, trim your shaderlist.txt!", (int)MAX_SHADER_FILES );
+				Error( "MAX_SHADER_FILES (%d) reached, trim your shaderlist.txt!", ( int )MAX_SHADER_FILES );
 			}
 
 			/* new shader file */

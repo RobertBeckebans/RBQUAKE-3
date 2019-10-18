@@ -132,7 +132,7 @@ static void S_ByteSwapRawSamples( int samples, int width, int s_channels, const 
 	}
 	for( i = 0; i < samples; i++ )
 	{
-		( (short*)data )[ i ] = LittleShort( ( (short*)data )[ i ] );
+		( ( short* )data )[ i ] = LittleShort( ( ( short* )data )[ i ] );
 	}
 }
 
@@ -240,7 +240,7 @@ void* S_WAV_CodecLoad( const char* filename, snd_info_t* info )
 
 	// Read, byteswap
 	FS_Read( buffer, info->size, file );
-	S_ByteSwapRawSamples( info->samples, info->width, info->channels, (byte*)buffer );
+	S_ByteSwapRawSamples( info->samples, info->width, info->channels, ( byte* )buffer );
 
 	// Close and return
 	FS_FCloseFile( file );

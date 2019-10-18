@@ -30,7 +30,7 @@ qboolean G_SpawnString( const char* key, const char* defaultString, char** out )
 
 	if( !level.spawning )
 	{
-		*out = (char*)defaultString;
+		*out = ( char* )defaultString;
 		//      G_Error( "G_SpawnString() called while not spawning" );
 	}
 
@@ -43,7 +43,7 @@ qboolean G_SpawnString( const char* key, const char* defaultString, char** out )
 		}
 	}
 
-	*out = (char*)defaultString;
+	*out = ( char* )defaultString;
 	return qfalse;
 }
 
@@ -435,34 +435,34 @@ void G_ParseField( const char* key, const char* value, gentity_t* ent )
 		if( !Q_stricmp( f->name, key ) )
 		{
 			// found it
-			b = (byte*)ent;
+			b = ( byte* )ent;
 
 			switch( f->type )
 			{
 				case F_LSTRING:
-					*(char**)( b + f->ofs ) = G_NewString( value );
+					*( char** )( b + f->ofs ) = G_NewString( value );
 					break;
 
 				case F_VECTOR:
 					sscanf( value, "%f %f %f", &vec[ 0 ], &vec[ 1 ], &vec[ 2 ] );
-					( (float*)( b + f->ofs ) )[ 0 ] = vec[ 0 ];
-					( (float*)( b + f->ofs ) )[ 1 ] = vec[ 1 ];
-					( (float*)( b + f->ofs ) )[ 2 ] = vec[ 2 ];
+					( ( float* )( b + f->ofs ) )[ 0 ] = vec[ 0 ];
+					( ( float* )( b + f->ofs ) )[ 1 ] = vec[ 1 ];
+					( ( float* )( b + f->ofs ) )[ 2 ] = vec[ 2 ];
 					break;
 
 				case F_INT:
-					*(int*)( b + f->ofs ) = atoi( value );
+					*( int* )( b + f->ofs ) = atoi( value );
 					break;
 
 				case F_FLOAT:
-					*(float*)( b + f->ofs ) = atof( value );
+					*( float* )( b + f->ofs ) = atof( value );
 					break;
 
 				case F_ANGLEHACK:
-					v                               = atof( value );
-					( (float*)( b + f->ofs ) )[ 0 ] = 0;
-					( (float*)( b + f->ofs ) )[ 1 ] = v;
-					( (float*)( b + f->ofs ) )[ 2 ] = 0;
+					v                                 = atof( value );
+					( ( float* )( b + f->ofs ) )[ 0 ] = 0;
+					( ( float* )( b + f->ofs ) )[ 1 ] = v;
+					( ( float* )( b + f->ofs ) )[ 2 ] = 0;
 					break;
 
 				case F_MOVEDIRHACK:
@@ -473,9 +473,9 @@ void G_ParseField( const char* key, const char* value, gentity_t* ent )
 
 					G_SetMovedir( angles, vec );
 
-					( (float*)( b + f->ofs ) )[ 0 ] = vec[ 0 ];
-					( (float*)( b + f->ofs ) )[ 1 ] = vec[ 1 ];
-					( (float*)( b + f->ofs ) )[ 2 ] = vec[ 2 ];
+					( ( float* )( b + f->ofs ) )[ 0 ] = vec[ 0 ];
+					( ( float* )( b + f->ofs ) )[ 1 ] = vec[ 1 ];
+					( ( float* )( b + f->ofs ) )[ 2 ] = vec[ 2 ];
 					break;
 
 				case F_ROTATIONHACK:
@@ -485,7 +485,7 @@ void G_ParseField( const char* key, const char* value, gentity_t* ent )
 							&rotation[ 4], &rotation[ 5], &rotation[ 6],
 							&rotation[ 8], &rotation[ 9], &rotation[10] );
 #else
-					p = (char*)value;
+					p = ( char* )value;
 					for( i = 0; i < 9; i++ )
 					{
 						token         = Com_Parse( &p );
@@ -493,9 +493,9 @@ void G_ParseField( const char* key, const char* value, gentity_t* ent )
 					}
 #endif
 					MatrixToAngles( rotation, vec );
-					( (float*)( b + f->ofs ) )[ 0 ] = vec[ 0 ];
-					( (float*)( b + f->ofs ) )[ 1 ] = vec[ 1 ];
-					( (float*)( b + f->ofs ) )[ 2 ] = vec[ 2 ];
+					( ( float* )( b + f->ofs ) )[ 0 ] = vec[ 0 ];
+					( ( float* )( b + f->ofs ) )[ 1 ] = vec[ 1 ];
+					( ( float* )( b + f->ofs ) )[ 2 ] = vec[ 2 ];
 					break;
 
 				default:

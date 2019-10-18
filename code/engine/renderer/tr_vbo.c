@@ -172,7 +172,7 @@ VBO_t* R_CreateVBO2( const char* name, int numVertexes, srfVert_t* verts, unsign
 		}
 		tmp[ 3 ] = 1;
 
-		memcpy( data + dataOfs, (vec_t*)tmp, sizeof( vec4_t ) );
+		memcpy( data + dataOfs, ( vec_t* )tmp, sizeof( vec4_t ) );
 		dataOfs += sizeof( vec4_t );
 	}
 
@@ -189,7 +189,7 @@ VBO_t* R_CreateVBO2( const char* name, int numVertexes, srfVert_t* verts, unsign
 			tmp[ 2 ] = 0;
 			tmp[ 3 ] = 1;
 
-			memcpy( data + dataOfs, (vec_t*)tmp, sizeof( vec4_t ) );
+			memcpy( data + dataOfs, ( vec_t* )tmp, sizeof( vec4_t ) );
 			dataOfs += sizeof( vec4_t );
 		}
 	}
@@ -207,7 +207,7 @@ VBO_t* R_CreateVBO2( const char* name, int numVertexes, srfVert_t* verts, unsign
 			tmp[ 2 ] = 0;
 			tmp[ 3 ] = 1;
 
-			memcpy( data + dataOfs, (vec_t*)tmp, sizeof( vec4_t ) );
+			memcpy( data + dataOfs, ( vec_t* )tmp, sizeof( vec4_t ) );
 			dataOfs += sizeof( vec4_t );
 		}
 	}
@@ -224,7 +224,7 @@ VBO_t* R_CreateVBO2( const char* name, int numVertexes, srfVert_t* verts, unsign
 			}
 			tmp[ 3 ] = 1;
 
-			memcpy( data + dataOfs, (vec_t*)tmp, sizeof( vec4_t ) );
+			memcpy( data + dataOfs, ( vec_t* )tmp, sizeof( vec4_t ) );
 			dataOfs += sizeof( vec4_t );
 		}
 	}
@@ -241,7 +241,7 @@ VBO_t* R_CreateVBO2( const char* name, int numVertexes, srfVert_t* verts, unsign
 			}
 			tmp[ 3 ] = 1;
 
-			memcpy( data + dataOfs, (vec_t*)tmp, sizeof( vec4_t ) );
+			memcpy( data + dataOfs, ( vec_t* )tmp, sizeof( vec4_t ) );
 			dataOfs += sizeof( vec4_t );
 		}
 	}
@@ -258,7 +258,7 @@ VBO_t* R_CreateVBO2( const char* name, int numVertexes, srfVert_t* verts, unsign
 			}
 			tmp[ 3 ] = 1;
 
-			memcpy( data + dataOfs, (vec_t*)tmp, sizeof( vec4_t ) );
+			memcpy( data + dataOfs, ( vec_t* )tmp, sizeof( vec4_t ) );
 			dataOfs += sizeof( vec4_t );
 		}
 	}
@@ -274,7 +274,7 @@ VBO_t* R_CreateVBO2( const char* name, int numVertexes, srfVert_t* verts, unsign
 				tmp[ j ] = verts[ i ].lightColor[ j ];
 			}
 
-			memcpy( data + dataOfs, (vec_t*)tmp, sizeof( vec4_t ) );
+			memcpy( data + dataOfs, ( vec_t* )tmp, sizeof( vec4_t ) );
 			dataOfs += sizeof( vec4_t );
 		}
 	}
@@ -291,7 +291,7 @@ VBO_t* R_CreateVBO2( const char* name, int numVertexes, srfVert_t* verts, unsign
 				tmp[ j ] = verts[ i ].paintColor[ j ];
 			}
 
-			memcpy( data + dataOfs, (vec_t*)tmp, sizeof( vec4_t ) );
+			memcpy( data + dataOfs, ( vec_t* )tmp, sizeof( vec4_t ) );
 			dataOfs += sizeof( vec4_t );
 		}
 	}
@@ -308,7 +308,7 @@ VBO_t* R_CreateVBO2( const char* name, int numVertexes, srfVert_t* verts, unsign
 			}
 			tmp[ 3 ] = 1;
 
-			memcpy( data + dataOfs, (vec_t*)tmp, sizeof( vec4_t ) );
+			memcpy( data + dataOfs, ( vec_t* )tmp, sizeof( vec4_t ) );
 			dataOfs += sizeof( vec4_t );
 		}
 	}
@@ -683,7 +683,7 @@ void R_ShutdownVBOs( void )
 
 	for( i = 0; i < tr.vbos.currentElements; i++ )
 	{
-		vbo = (VBO_t*)Com_GrowListElement( &tr.vbos, i );
+		vbo = ( VBO_t* )Com_GrowListElement( &tr.vbos, i );
 
 		if( vbo->vertexesVBO )
 		{
@@ -693,7 +693,7 @@ void R_ShutdownVBOs( void )
 
 	for( i = 0; i < tr.ibos.currentElements; i++ )
 	{
-		ibo = (IBO_t*)Com_GrowListElement( &tr.ibos, i );
+		ibo = ( IBO_t* )Com_GrowListElement( &tr.ibos, i );
 
 		if( ibo->indexesVBO )
 		{
@@ -712,7 +712,7 @@ void R_ShutdownVBOs( void )
 			{
 				srfVBOMesh_t* vboSurf;
 
-				vboSurf = (srfVBOMesh_t*)Com_GrowListElement( &tr.world->clusterVBOSurfaces[ j ], i );
+				vboSurf = ( srfVBOMesh_t* )Com_GrowListElement( &tr.world->clusterVBOSurfaces[ j ], i );
 				ibo     = vboSurf->ibo;
 
 				if( ibo->indexesVBO )
@@ -749,7 +749,7 @@ void R_VBOList_f( void )
 
 	for( i = 0; i < tr.vbos.currentElements; i++ )
 	{
-		vbo = (VBO_t*)Com_GrowListElement( &tr.vbos, i );
+		vbo = ( VBO_t* )Com_GrowListElement( &tr.vbos, i );
 
 		ri.Printf( PRINT_ALL, "%d.%02d MB %s\n", vbo->vertexesSize / ( 1024 * 1024 ), ( vbo->vertexesSize % ( 1024 * 1024 ) ) * 100 / ( 1024 * 1024 ), vbo->name );
 
@@ -769,7 +769,7 @@ void R_VBOList_f( void )
 			{
 				srfVBOMesh_t* vboSurf;
 
-				vboSurf = (srfVBOMesh_t*)Com_GrowListElement( &tr.world->clusterVBOSurfaces[ j ], i );
+				vboSurf = ( srfVBOMesh_t* )Com_GrowListElement( &tr.world->clusterVBOSurfaces[ j ], i );
 				ibo     = vboSurf->ibo;
 
 				ri.Printf( PRINT_ALL, "%d.%02d MB %s\n", ibo->indexesSize / ( 1024 * 1024 ), ( ibo->indexesSize % ( 1024 * 1024 ) ) * 100 / ( 1024 * 1024 ), ibo->name );
@@ -783,7 +783,7 @@ void R_VBOList_f( void )
 
 	for( i = 0; i < tr.ibos.currentElements; i++ )
 	{
-		ibo = (IBO_t*)Com_GrowListElement( &tr.ibos, i );
+		ibo = ( IBO_t* )Com_GrowListElement( &tr.ibos, i );
 
 		ri.Printf( PRINT_ALL, "%d.%02d MB %s\n", ibo->indexesSize / ( 1024 * 1024 ), ( ibo->indexesSize % ( 1024 * 1024 ) ) * 100 / ( 1024 * 1024 ), ibo->name );
 

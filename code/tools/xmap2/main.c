@@ -41,7 +41,7 @@ returns a pseudorandom number between 0 and 1
 
 vec_t Random( void )
 {
-	return (vec_t)rand() / RAND_MAX;
+	return ( vec_t )rand() / RAND_MAX;
 }
 
 /*
@@ -199,15 +199,15 @@ static void MiniMapRandomlySupersampled( int y )
 {
 	int    x, i;
 	float* p    = &minimap.data1f[ y * minimap.width ];
-	float  ymin = minimap.mins[ 1 ] + minimap.size[ 1 ] * ( y / (float)minimap.height );
-	float  dx   = minimap.size[ 0 ] / (float)minimap.width;
-	float  dy   = minimap.size[ 1 ] / (float)minimap.height;
+	float  ymin = minimap.mins[ 1 ] + minimap.size[ 1 ] * ( y / ( float )minimap.height );
+	float  dx   = minimap.size[ 0 ] / ( float )minimap.width;
+	float  dy   = minimap.size[ 1 ] / ( float )minimap.height;
 	float  uv[ 2 ];
 	float  thisval;
 
 	for( x = 0; x < minimap.width; ++x )
 	{
-		float xmin = minimap.mins[ 0 ] + minimap.size[ 0 ] * ( x / (float)minimap.width );
+		float xmin = minimap.mins[ 0 ] + minimap.size[ 0 ] * ( x / ( float )minimap.width );
 		float val  = 0;
 
 		for( i = 0; i < minimap.samples; ++i )
@@ -227,13 +227,13 @@ static void MiniMapSupersampled( int y )
 {
 	int    x, i;
 	float* p    = &minimap.data1f[ y * minimap.width ];
-	float  ymin = minimap.mins[ 1 ] + minimap.size[ 1 ] * ( y / (float)minimap.height );
-	float  dx   = minimap.size[ 0 ] / (float)minimap.width;
-	float  dy   = minimap.size[ 1 ] / (float)minimap.height;
+	float  ymin = minimap.mins[ 1 ] + minimap.size[ 1 ] * ( y / ( float )minimap.height );
+	float  dx   = minimap.size[ 0 ] / ( float )minimap.width;
+	float  dy   = minimap.size[ 1 ] / ( float )minimap.height;
 
 	for( x = 0; x < minimap.width; ++x )
 	{
-		float xmin = minimap.mins[ 0 ] + minimap.size[ 0 ] * ( x / (float)minimap.width );
+		float xmin = minimap.mins[ 0 ] + minimap.size[ 0 ] * ( x / ( float )minimap.width );
 		float val  = 0;
 
 		for( i = 0; i < minimap.samples; ++i )
@@ -252,11 +252,11 @@ static void MiniMapNoSupersampling( int y )
 {
 	int    x;
 	float* p    = &minimap.data1f[ y * minimap.width ];
-	float  ymin = minimap.mins[ 1 ] + minimap.size[ 1 ] * ( ( y + 0.5 ) / (float)minimap.height );
+	float  ymin = minimap.mins[ 1 ] + minimap.size[ 1 ] * ( ( y + 0.5 ) / ( float )minimap.height );
 
 	for( x = 0; x < minimap.width; ++x )
 	{
-		float xmin = minimap.mins[ 0 ] + minimap.size[ 0 ] * ( ( x + 0.5 ) / (float)minimap.width );
+		float xmin = minimap.mins[ 0 ] + minimap.size[ 0 ] * ( ( x + 0.5 ) / ( float )minimap.width );
 
 		*p++ = MiniMapSample( xmin, ymin ) / minimap.size[ 2 ];
 	}
@@ -922,7 +922,7 @@ int AnalyzeBSP( int argc, char** argv )
 	Sys_Printf( "Loading %s\n", source );
 
 	/* load the file */
-	size = LoadFile( source, (void**)&header );
+	size = LoadFile( source, ( void** )&header );
 	if( size == 0 || header == NULL )
 	{
 		Sys_Printf( "Unable to load %s.\n", source );
@@ -956,10 +956,10 @@ int AnalyzeBSP( int argc, char** argv )
 		}
 
 		/* extract data */
-		lump      = (byte*)header + offset;
-		lumpInt   = LittleLong( (int)*( (int*)lump ) );
-		lumpFloat = LittleFloat( (float)*( (float*)lump ) );
-		memcpy( lumpString, (char*)lump, ( length < 1024 ? length : 1024 ) );
+		lump      = ( byte* )header + offset;
+		lumpInt   = LittleLong( ( int )*( ( int* )lump ) );
+		lumpFloat = LittleFloat( ( float )*( ( float* )lump ) );
+		memcpy( lumpString, ( char* )lump, ( length < 1024 ? length : 1024 ) );
 		lumpString[ 1024 ] = '\0';
 
 		/* print basic lump info */
@@ -1617,11 +1617,11 @@ void WriteMapFileDoom3( char* filename )
 					texMat[ 0 ][ 1 ] = ST[ 2 ][ 3 ] - texMat[ 0 ][ 2 ];
 					texMat[ 1 ][ 1 ] = ST[ 2 ][ 4 ] - texMat[ 1 ][ 2 ];
 
-					Write2DMatrix( f, 2, 3, (float*)texMat );
+					Write2DMatrix( f, 2, 3, ( float* )texMat );
 				}
 				else
 				{
-					Write2DMatrix( f, 2, 3, (float*)side->texMat );
+					Write2DMatrix( f, 2, 3, ( float* )side->texMat );
 				}
 
 				si = side->shaderInfo;
@@ -1665,10 +1665,10 @@ void WriteMapFileDoom3( char* filename )
 
 			// write patch dimensions
 			if( pm->patchDef3 )
-				fprintf( f, "( %i %i %i %i %i %i %i )\n", (int)pm->info[ 0 ], (int)pm->info[ 1 ], (int)pm->info[ 2 ], (int)pm->info[ 3 ], (int)pm->info[ 4 ], (int)pm->info[ 5 ], (int)pm->info[ 6 ] );
+				fprintf( f, "( %i %i %i %i %i %i %i )\n", ( int )pm->info[ 0 ], ( int )pm->info[ 1 ], ( int )pm->info[ 2 ], ( int )pm->info[ 3 ], ( int )pm->info[ 4 ], ( int )pm->info[ 5 ], ( int )pm->info[ 6 ] );
 			else
 
-				fprintf( f, "( %i %i %i %i %i )\n", (int)pm->info[ 0 ], (int)pm->info[ 1 ], (int)pm->info[ 2 ], (int)pm->info[ 3 ], (int)pm->info[ 4 ] );
+				fprintf( f, "( %i %i %i %i %i )\n", ( int )pm->info[ 0 ], ( int )pm->info[ 1 ], ( int )pm->info[ 2 ], ( int )pm->info[ 3 ], ( int )pm->info[ 4 ] );
 
 			fprintf( f, "(\n" );
 			for( k = 0; k < pm->mesh.width; k++ )

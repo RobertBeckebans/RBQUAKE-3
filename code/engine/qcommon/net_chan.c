@@ -455,7 +455,7 @@ qboolean Netchan_Process( netchan_t* chan, msg_t* msg )
 		// copy the full message over the partial fragment
 
 		// make sure the sequence number is still there
-		*(int*)msg->data = LittleLong( sequence );
+		*( int* )msg->data = LittleLong( sequence );
 
 		Com_Memcpy( msg->data + 4, chan->fragmentBuffer, chan->fragmentLength );
 		msg->cursize         = chan->fragmentLength + 4;
@@ -574,7 +574,7 @@ static void NET_QueuePacket( int length, const void* data, netadr_t to, int offs
 	Com_Memcpy( new->data, data, length );
 	new->length  = length;
 	new->to      = to;
-	new->release = Sys_Milliseconds() + (int)( (float)offset / com_timescale->value );
+	new->release = Sys_Milliseconds() + ( int )( ( float )offset / com_timescale->value );
 	new->next    = NULL;
 
 	if( !packetQueue )
@@ -616,7 +616,7 @@ void NET_FlushPacketQueue( void )
 void NET_SendPacket( netsrc_t sock, int length, const void* data, netadr_t to )
 {
 	// sequenced packets are shown in netchan, so just show oob
-	if( showpackets->integer && *(int*)data == -1 )
+	if( showpackets->integer && *( int* )data == -1 )
 	{
 		Com_Printf( "send packet %4i\n", length );
 	}
@@ -775,7 +775,7 @@ int NET_StringToAdr( const char* s, netadr_t* a, netadrtype_t family )
 
 	if( port )
 	{
-		a->port = BigShort( (short)atoi( port ) );
+		a->port = BigShort( ( short )atoi( port ) );
 		return 1;
 	}
 	else

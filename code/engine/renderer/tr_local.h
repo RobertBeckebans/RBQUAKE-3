@@ -58,7 +58,7 @@ extern "C"
 typedef unsigned short glIndex_t;
 #endif
 
-#define BUFFER_OFFSET( i ) ( (char*)NULL + ( i ) )
+#define BUFFER_OFFSET( i ) ( ( char* )NULL + ( i ) )
 
 // everything that is needed by the backend needs
 // to be double buffered to allow it to run in
@@ -221,7 +221,7 @@ static ID_INLINE void InsertLinkBefore(link_t *l, link_t *sentinel)
 	{
 		link_t* l;
 
-		l = (link_t*)Com_Allocate( sizeof( *l ) );
+		l = ( link_t* )Com_Allocate( sizeof( *l ) );
 		InitLink( l, data );
 
 		InsertLink( l, sentinel );
@@ -275,7 +275,7 @@ static ID_INLINE void InsertLinkBefore(link_t *l, link_t *sentinel)
 	{
 		link_t* l;
 
-		l = (link_t*)Com_Allocate( sizeof( *l ) );
+		l = ( link_t* )Com_Allocate( sizeof( *l ) );
 		InitLink( l, data );
 
 		InsertLink( l, sentinel );
@@ -1501,7 +1501,7 @@ enum
 		vec2_t t_TexScale;
 	} shaderProgram_t;
 
-#define SHADER_PROGRAM_T_OFS( x ) ( ( size_t ) & ( ( (shaderProgram_t*)0 )->x ) )
+#define SHADER_PROGRAM_T_OFS( x ) ( ( size_t ) & ( ( ( shaderProgram_t* )0 )->x ) )
 
 //
 // Tr3B: these are fire wall functions to avoid expensive redundant glUniform* calls

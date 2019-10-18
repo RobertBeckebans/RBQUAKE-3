@@ -164,9 +164,9 @@ void xml_Select( char* msg, int entitynum, int brushnum, qboolean bError )
 	sprintf( buf, "Entity %i, Brush %i: %s", entitynum, brushnum, msg );
 	node = xmlNewNode( NULL, "select" );
 	xmlNodeSetContent( node, buf );
-	level[ 0 ] = (int)'0' + ( bError ? SYS_ERR : SYS_WRN );
+	level[ 0 ] = ( int )'0' + ( bError ? SYS_ERR : SYS_WRN );
 	level[ 1 ] = 0;
-	xmlSetProp( node, "level", (char*)&level );
+	xmlSetProp( node, "level", ( char* )&level );
 	// a 'select' information
 	sprintf( buf, "%i %i", entitynum, brushnum );
 	select = xmlNewNode( NULL, "brush" );
@@ -193,9 +193,9 @@ void xml_Point( char* msg, vec3_t pt )
 
 	node = xmlNewNode( NULL, "pointmsg" );
 	xmlNodeSetContent( node, msg );
-	level[ 0 ] = (int)'0' + SYS_ERR;
+	level[ 0 ] = ( int )'0' + SYS_ERR;
 	level[ 1 ] = 0;
-	xmlSetProp( node, "level", (char*)&level );
+	xmlSetProp( node, "level", ( char* )&level );
 	// a 'point' node
 	sprintf( buf, "%g %g %g", pt[ 0 ], pt[ 1 ], pt[ 2 ] );
 	point = xmlNewNode( NULL, "point" );
@@ -218,9 +218,9 @@ void xml_Winding( char* msg, vec3_t p[], int numpoints, qboolean die )
 
 	node = xmlNewNode( NULL, "windingmsg" );
 	xmlNodeSetContent( node, msg );
-	level[ 0 ] = (int)'0' + SYS_ERR;
+	level[ 0 ] = ( int )'0' + SYS_ERR;
 	level[ 1 ] = 0;
-	xmlSetProp( node, "level", (char*)&level );
+	xmlSetProp( node, "level", ( char* )&level );
 	// a 'winding' node
 	sprintf( buf, "%i ", numpoints );
 	for( i = 0; i < numpoints; i++ )
@@ -258,7 +258,7 @@ void Broadcast_Setup( const char* dest )
 	char      sMsg[ 1024 ];
 
 	Net_Setup();
-	Net_StringToAddress( (char*)dest, &address );
+	Net_StringToAddress( ( char* )dest, &address );
 	brdcst_socket = Net_Connect( &address, 0 );
 	if( brdcst_socket )
 	{
@@ -323,9 +323,9 @@ void FPrintf( int flag, char* buf )
 		xmlNodeSetContent( node, utf8 );
 		g_free( utf8 );
 	}
-	level[ 0 ] = (int)'0' + flag;
+	level[ 0 ] = ( int )'0' + flag;
 	level[ 1 ] = 0;
-	xmlSetProp( node, "level", (char*)&level );
+	xmlSetProp( node, "level", ( char* )&level );
 
 	xml_SendNode( node );
 #endif

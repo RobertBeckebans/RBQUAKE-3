@@ -92,7 +92,7 @@ vwinding_t* NewWinding( int points )
 		Error( "NewWinding: %i points", points );
 	}
 
-	size = (int)( (vwinding_t*)0 )->points[ points ];
+	size = ( int )( ( vwinding_t* )0 )->points[ points ];
 	w    = malloc( size );
 	memset( w, 0, size );
 
@@ -109,7 +109,7 @@ void prl( leaf_t* l )
 	{
 		p  = l->portals[ i ];
 		pl = p->plane;
-		Sys_Printf( "portal %4i to leaf %4i : %7.1f : (%4.1f, %4.1f, %4.1f)\n", (int)( p - portals ), p->leaf, pl.dist, pl.normal[ 0 ], pl.normal[ 1 ], pl.normal[ 2 ] );
+		Sys_Printf( "portal %4i to leaf %4i : %7.1f : (%4.1f, %4.1f, %4.1f)\n", ( int )( p - portals ), p->leaf, pl.dist, pl.normal[ 0 ], pl.normal[ 1 ], pl.normal[ 2 ] );
 	}
 }
 
@@ -125,11 +125,11 @@ the earlier information.
 */
 int PComp( const void* a, const void* b )
 {
-	if( ( *(vportal_t**)a )->nummightsee == ( *(vportal_t**)b )->nummightsee )
+	if( ( *( vportal_t** )a )->nummightsee == ( *( vportal_t** )b )->nummightsee )
 	{
 		return 0;
 	}
-	if( ( *(vportal_t**)a )->nummightsee < ( *(vportal_t**)b )->nummightsee )
+	if( ( *( vportal_t** )a )->nummightsee < ( *( vportal_t** )b )->nummightsee )
 	{
 		return -1;
 	}
@@ -234,7 +234,7 @@ void ClusterMerge( int leafnum )
 
 		for( j = 0; j < portallongs; j++ )
 		{
-			( (long*)portalvector )[ j ] |= ( (long*)p->portalvis )[ j ];
+			( ( long* )portalvector )[ j ] |= ( ( long* )p->portalvis )[ j ];
 		}
 
 		pnum = p - portals;
@@ -991,8 +991,8 @@ void LoadPortals( char* name )
 
 	numVisBytes = VIS_HEADER_SIZE + portalclusters * leafbytes;
 
-	( (int*)visBytes )[ 0 ] = portalclusters;
-	( (int*)visBytes )[ 1 ] = leafbytes;
+	( ( int* )visBytes )[ 0 ] = portalclusters;
+	( ( int* )visBytes )[ 1 ] = leafbytes;
 
 	for( i = 0, p = portals; i < numportals; i++ )
 	{
@@ -1004,7 +1004,7 @@ void LoadPortals( char* name )
 		{
 			Error( "LoadPortals: portal %i has too many points", i );
 		}
-		if( (unsigned)leafnums[ 0 ] > portalclusters || (unsigned)leafnums[ 1 ] > portalclusters )
+		if( ( unsigned )leafnums[ 0 ] > portalclusters || ( unsigned )leafnums[ 1 ] > portalclusters )
 		{
 			Error( "LoadPortals: reading portal %i", i );
 		}
@@ -1181,11 +1181,11 @@ void CalcPHS( void )
 				{
 					Error( "Bad bit in PVS" ); // pad bits should be 0
 				}
-				src  = (long*)( visBytes + index * leafbytes );
-				dest = (long*)uncompressed;
+				src  = ( long* )( visBytes + index * leafbytes );
+				dest = ( long* )uncompressed;
 				for( l = 0; l < leaflongs; l++ )
 				{
-					( (long*)uncompressed )[ l ] |= src[ l ];
+					( ( long* )uncompressed )[ l ] |= src[ l ];
 				}
 			}
 		}

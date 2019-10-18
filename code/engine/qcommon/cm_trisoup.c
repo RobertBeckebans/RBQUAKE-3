@@ -125,7 +125,7 @@ static long CM_GenerateHashValue( vec4_t plane )
 {
 	long hash;
 
-	hash = (int)fabs( plane[ 3 ] ) / 8;
+	hash = ( int )fabs( plane[ 3 ] ) / 8;
 	hash &= ( PLANE_HASHES - 1 );
 
 	return hash;

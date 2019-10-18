@@ -600,7 +600,7 @@ tree_t* FaceBSP( face_t* list, qboolean drawDebug )
 
 	Sys_FPrintf( SYS_VRB, "%9d nodes\n", c_faceNodes );
 	Sys_FPrintf( SYS_VRB, "%9d leafs\n", c_faceLeafs );
-	Sys_FPrintf( SYS_VRB, "%9d depth\n", (int)( logf( c_faceNodes ) / logf( 2 ) ) );
+	Sys_FPrintf( SYS_VRB, "%9d depth\n", ( int )( logf( c_faceNodes ) / logf( 2 ) ) );
 
 	return tree;
 }

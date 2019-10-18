@@ -74,7 +74,7 @@ callback for picomodel.lib
 
 void PicoLoadFileFunc( char* name, byte** buffer, int* bufSize )
 {
-	*bufSize = vfsLoadFile( (const char*)name, (void**)buffer, 0 );
+	*bufSize = vfsLoadFile( ( const char* )name, ( void** )buffer, 0 );
 }
 
 /*
@@ -159,7 +159,7 @@ picoModel_t* LoadModel( char* name, int frame )
 	}
 
 	/* attempt to parse model */
-	*pm = PicoLoadModel( (char*)name, frame );
+	*pm = PicoLoadModel( ( char* )name, frame );
 
 	/* if loading failed, make a bogus model to silence the rest of the warnings */
 	if( *pm == NULL )
@@ -897,7 +897,7 @@ void AddTriangleModel( entity_t* e )
 	}
 
 	/* insert the model */
-	InsertModel( (char*)model, frame, transform, rotation, remap, celShader, mapEntityNum, castShadows, recvShadows, spawnFlags, lightmapScale, lightmapSampleSize, shadeAngle );
+	InsertModel( ( char* )model, frame, transform, rotation, remap, celShader, mapEntityNum, castShadows, recvShadows, spawnFlags, lightmapScale, lightmapSampleSize, shadeAngle );
 
 	/* free shader remappings */
 	while( remap != NULL )
@@ -997,7 +997,7 @@ void AddTriangleModels( entity_t* e )
 		model = ValueForKey( e2, "model" );
 		if( model[ 0 ] == '\0' )
 		{
-			Sys_Printf( "WARNING: misc_model at %i %i %i without a model key\n", (int)origin[ 0 ], (int)origin[ 1 ], (int)origin[ 2 ] );
+			Sys_Printf( "WARNING: misc_model at %i %i %i without a model key\n", ( int )origin[ 0 ], ( int )origin[ 1 ], ( int )origin[ 2 ] );
 			continue;
 		}
 
@@ -1204,7 +1204,7 @@ void AddTriangleModels( entity_t* e )
 		}
 
 		/* insert the model */
-		InsertModel( (char*)model, frame, transform, rotation, remap, celShader, mapEntityNum, castShadows, recvShadows, spawnFlags, lightmapScale, lightmapSampleSize, shadeAngle );
+		InsertModel( ( char* )model, frame, transform, rotation, remap, celShader, mapEntityNum, castShadows, recvShadows, spawnFlags, lightmapScale, lightmapSampleSize, shadeAngle );
 
 		/* free shader remappings */
 		while( remap != NULL )

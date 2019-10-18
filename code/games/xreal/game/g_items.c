@@ -149,7 +149,7 @@ int Pickup_PersistantPowerup( gentity_t* ent, gentity_t* other )
 			{
 				handicap = 100.0f;
 			}
-			max = (int)( 2 * handicap );
+			max = ( int )( 2 * handicap );
 
 			other->health                              = max;
 			other->client->ps.stats[ STAT_HEALTH ]     = max;

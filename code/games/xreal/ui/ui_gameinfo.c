@@ -141,8 +141,8 @@ UI_MapNameCompare
 */
 static int UI_MapNameCompare( const void* a, const void* b )
 {
-	mapInfo* A = (mapInfo*)a;
-	mapInfo* B = (mapInfo*)b;
+	mapInfo* A = ( mapInfo* )a;
+	mapInfo* B = ( mapInfo* )b;
 
 	return Q_stricmp( A->mapName, B->mapName );
 }

@@ -46,7 +46,7 @@ int SV_NumForGentity( sharedEntity_t* ent )
 {
 	int num;
 
-	num = ( (byte*)ent - (byte*)sv.gentities ) / sv.gentitySize;
+	num = ( ( byte* )ent - ( byte* )sv.gentities ) / sv.gentitySize;
 
 	return num;
 }
@@ -55,7 +55,7 @@ sharedEntity_t* SV_GentityNum( int num )
 {
 	sharedEntity_t* ent;
 
-	ent = (sharedEntity_t*)( (byte*)sv.gentities + sv.gentitySize * ( num ) );
+	ent = ( sharedEntity_t* )( ( byte* )sv.gentities + sv.gentitySize * ( num ) );
 
 	return ent;
 }
@@ -64,7 +64,7 @@ playerState_t* SV_GameClientNum( int num )
 {
 	playerState_t* ps;
 
-	ps = (playerState_t*)( (byte*)sv.gameClients + sv.gameClientSize * ( num ) );
+	ps = ( playerState_t* )( ( byte* )sv.gameClients + sv.gameClientSize * ( num ) );
 
 	return ps;
 }
@@ -328,10 +328,10 @@ intptr_t SV_GameSystemCalls( intptr_t* args )
 	switch( args[ 0 ] )
 	{
 		case G_PRINT:
-			Com_Printf( "%s", (const char*)VMA( 1 ) );
+			Com_Printf( "%s", ( const char* )VMA( 1 ) );
 			return 0;
 		case G_ERROR:
-			Com_Error( ERR_DROP, "%s", (const char*)VMA( 1 ) );
+			Com_Error( ERR_DROP, "%s", ( const char* )VMA( 1 ) );
 			return 0;
 		case G_MILLISECONDS:
 			return Sys_Milliseconds();
@@ -342,10 +342,10 @@ intptr_t SV_GameSystemCalls( intptr_t* args )
 			Cvar_Update( VMA( 1 ) );
 			return 0;
 		case G_CVAR_SET:
-			Cvar_Set( (const char*)VMA( 1 ), (const char*)VMA( 2 ) );
+			Cvar_Set( ( const char* )VMA( 1 ), ( const char* )VMA( 2 ) );
 			return 0;
 		case G_CVAR_VARIABLE_INTEGER_VALUE:
-			return Cvar_VariableIntegerValue( (const char*)VMA( 1 ) );
+			return Cvar_VariableIntegerValue( ( const char* )VMA( 1 ) );
 		case G_CVAR_VARIABLE_STRING_BUFFER:
 			Cvar_VariableStringBuffer( VMA( 1 ), VMA( 2 ), args[ 3 ] );
 			return 0;
@@ -888,7 +888,7 @@ intptr_t SV_GameSystemCalls( intptr_t* args )
 			return FloatAsInt( ceil( VMF( 1 ) ) );
 
 		default:
-			Com_Error( ERR_DROP, "Bad game system trap: %ld", (long int)args[ 0 ] );
+			Com_Error( ERR_DROP, "Bad game system trap: %ld", ( long int )args[ 0 ] );
 	}
 	return 0;
 }

@@ -308,9 +308,9 @@ void CreateSurfaceLights( void )
 				if( surfaceTest[ i ]->numFacets != 1 || f->numBoundaries != 4 )
 				{
 					Sys_Printf( "WARNING: surface at (%i %i %i) has autosprite shader but isn't a quad\n",
-						(int)f->points[ 0 ],
-						(int)f->points[ 1 ],
-						(int)f->points[ 2 ] );
+						( int )f->points[ 0 ],
+						( int )f->points[ 1 ],
+						( int )f->points[ 2 ] );
 				}
 				VectorAdd( f->points[ 0 ], f->points[ 1 ], origin );
 				VectorAdd( f->points[ 2 ], origin, origin );
@@ -324,9 +324,9 @@ void CreateSurfaceLights( void )
 				if( ds->numVerts != 4 )
 				{
 					Sys_Printf( "WARNING: surface at (%i %i %i) has autosprite shader but %i verts\n",
-						(int)dv->xyz[ 0 ],
-						(int)dv->xyz[ 1 ],
-						(int)dv->xyz[ 2 ] );
+						( int )dv->xyz[ 0 ],
+						( int )dv->xyz[ 1 ],
+						( int )dv->xyz[ 2 ] );
 					continue;
 				}
 
@@ -581,9 +581,9 @@ void CreateEntityLights( void )
 			if( !e2 )
 			{
 				Sys_Printf( "WARNING: light at (%i %i %i) has missing target\n",
-					(int)dl->origin[ 0 ],
-					(int)dl->origin[ 1 ],
-					(int)dl->origin[ 2 ] );
+					( int )dl->origin[ 0 ],
+					( int )dl->origin[ 1 ],
+					( int )dl->origin[ 2 ] );
 			}
 			else
 			{
@@ -1166,7 +1166,7 @@ void PrintOccluded( byte occluded[ LIGHTMAP_WIDTH * EXTRASCALE ][ LIGHTMAP_HEIGH
 	{
 		for( j = 0; j < width; j++ )
 		{
-			Sys_Printf( "%i", (int)occluded[ j ][ i ] );
+			Sys_Printf( "%i", ( int )occluded[ j ][ i ] );
 		}
 		Sys_Printf( "\n" );
 	}

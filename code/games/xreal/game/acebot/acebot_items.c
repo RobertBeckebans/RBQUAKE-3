@@ -235,7 +235,7 @@ float ACEIT_ItemNeed( gentity_t* self, gentity_t* itemEnt )
 					return 0.0f;
 				}
 
-				return 1.0f - (float)self->health / ( self->client->ps.stats[ STAT_MAX_HEALTH ] * 2 ); // worse off, higher priority;
+				return 1.0f - ( float )self->health / ( self->client->ps.stats[ STAT_MAX_HEALTH ] * 2 ); // worse off, higher priority;
 			}
 
 			if( self->client->ps.stats[ STAT_HEALTH ] >= self->client->ps.stats[ STAT_MAX_HEALTH ] )
@@ -243,7 +243,7 @@ float ACEIT_ItemNeed( gentity_t* self, gentity_t* itemEnt )
 				return 0.0f;
 			}
 
-			return 1.0f - (float)self->health / 100.0f; // worse off, higher priority
+			return 1.0f - ( float )self->health / 100.0f; // worse off, higher priority
 		}
 
 		case IT_POWERUP:
@@ -510,11 +510,11 @@ void ACEIT_BuildItemNodeTable( qboolean rebuild )
 			}
 		}
 
-#if 0 //defined(_DEBUG)
-		//if(item_index == INVALID)
-		//  fprintf(pOut, "Rejected item: %s node: %d pos: %f %f %f\n", ent->item->classname, ent->node,
-		//          ent->s.origin[0], ent->s.origin[1], ent->s.origin[2]);
-		//else
+#if 0 //defined(_DEBUG)                                                                                \
+	  //if(item_index == INVALID)                                                                      \
+	  //  fprintf(pOut, "Rejected item: %s node: %d pos: %f %f %f\n", ent->item->classname, ent->node, \
+	  //          ent->s.origin[0], ent->s.origin[1], ent->s.origin[2]);                               \
+	  //else
 		if( ent->item )
 		{
 			G_Printf( "accepted item: %s node: %d pos: %f %f %f\n", ent->item->classname, ent->node, ent->s.origin[0],

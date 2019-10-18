@@ -90,7 +90,7 @@ long GenerateImageHashValue( const char* fname )
 			letter = '/'; // damn path names
 		}
 
-		hash += (long)( letter ) * ( i + 119 );
+		hash += ( long )( letter ) * ( i + 119 );
 		i++;
 	}
 	hash &= ( IMAGE_FILE_HASH_SIZE - 1 );
@@ -424,17 +424,17 @@ static void ResampleTexture( unsigned* in, int inwidth, int inheight, unsigned* 
 	{
 		for( y = 0; y < outheight; y++, out += outwidth )
 		{
-			inrow  = in + inwidth * (int)( ( y + 0.25 ) * inheight / outheight );
-			inrow2 = in + inwidth * (int)( ( y + 0.75 ) * inheight / outheight );
+			inrow  = in + inwidth * ( int )( ( y + 0.25 ) * inheight / outheight );
+			inrow2 = in + inwidth * ( int )( ( y + 0.75 ) * inheight / outheight );
 
 			//frac = fracstep >> 1;
 
 			for( x = 0; x < outwidth; x++ )
 			{
-				pix1 = (byte*)inrow + p1[ x ];
-				pix2 = (byte*)inrow + p2[ x ];
-				pix3 = (byte*)inrow2 + p1[ x ];
-				pix4 = (byte*)inrow2 + p2[ x ];
+				pix1 = ( byte* )inrow + p1[ x ];
+				pix2 = ( byte* )inrow + p2[ x ];
+				pix3 = ( byte* )inrow2 + p1[ x ];
+				pix4 = ( byte* )inrow2 + p2[ x ];
 
 				n[ 0 ] = ( pix1[ 0 ] * inv127 - 1.0 );
 				n[ 1 ] = ( pix1[ 1 ] * inv127 - 1.0 );
@@ -461,10 +461,10 @@ static void ResampleTexture( unsigned* in, int inwidth, int inheight, unsigned* 
 					VectorSet( n, 0, 0, 1 );
 				}
 
-				( (byte*)( out + x ) )[ 0 ] = ( byte )( 128 + 127 * n[ 0 ] );
-				( (byte*)( out + x ) )[ 1 ] = ( byte )( 128 + 127 * n[ 1 ] );
-				( (byte*)( out + x ) )[ 2 ] = ( byte )( 128 + 127 * n[ 2 ] );
-				( (byte*)( out + x ) )[ 3 ] = ( byte )( 128 + 127 * 1.0 );
+				( ( byte* )( out + x ) )[ 0 ] = ( byte )( 128 + 127 * n[ 0 ] );
+				( ( byte* )( out + x ) )[ 1 ] = ( byte )( 128 + 127 * n[ 1 ] );
+				( ( byte* )( out + x ) )[ 2 ] = ( byte )( 128 + 127 * n[ 2 ] );
+				( ( byte* )( out + x ) )[ 3 ] = ( byte )( 128 + 127 * 1.0 );
 			}
 		}
 	}
@@ -472,22 +472,22 @@ static void ResampleTexture( unsigned* in, int inwidth, int inheight, unsigned* 
 	{
 		for( y = 0; y < outheight; y++, out += outwidth )
 		{
-			inrow  = in + inwidth * (int)( ( y + 0.25 ) * inheight / outheight );
-			inrow2 = in + inwidth * (int)( ( y + 0.75 ) * inheight / outheight );
+			inrow  = in + inwidth * ( int )( ( y + 0.25 ) * inheight / outheight );
+			inrow2 = in + inwidth * ( int )( ( y + 0.75 ) * inheight / outheight );
 
 			//frac = fracstep >> 1;
 
 			for( x = 0; x < outwidth; x++ )
 			{
-				pix1 = (byte*)inrow + p1[ x ];
-				pix2 = (byte*)inrow + p2[ x ];
-				pix3 = (byte*)inrow2 + p1[ x ];
-				pix4 = (byte*)inrow2 + p2[ x ];
+				pix1 = ( byte* )inrow + p1[ x ];
+				pix2 = ( byte* )inrow + p2[ x ];
+				pix3 = ( byte* )inrow2 + p1[ x ];
+				pix4 = ( byte* )inrow2 + p2[ x ];
 
-				( (byte*)( out + x ) )[ 0 ] = ( pix1[ 0 ] + pix2[ 0 ] + pix3[ 0 ] + pix4[ 0 ] ) >> 2;
-				( (byte*)( out + x ) )[ 1 ] = ( pix1[ 1 ] + pix2[ 1 ] + pix3[ 1 ] + pix4[ 1 ] ) >> 2;
-				( (byte*)( out + x ) )[ 2 ] = ( pix1[ 2 ] + pix2[ 2 ] + pix3[ 2 ] + pix4[ 2 ] ) >> 2;
-				( (byte*)( out + x ) )[ 3 ] = ( pix1[ 3 ] + pix2[ 3 ] + pix3[ 3 ] + pix4[ 3 ] ) >> 2;
+				( ( byte* )( out + x ) )[ 0 ] = ( pix1[ 0 ] + pix2[ 0 ] + pix3[ 0 ] + pix4[ 0 ] ) >> 2;
+				( ( byte* )( out + x ) )[ 1 ] = ( pix1[ 1 ] + pix2[ 1 ] + pix3[ 1 ] + pix4[ 1 ] ) >> 2;
+				( ( byte* )( out + x ) )[ 2 ] = ( pix1[ 2 ] + pix2[ 2 ] + pix3[ 2 ] + pix4[ 2 ] ) >> 2;
+				( ( byte* )( out + x ) )[ 3 ] = ( pix1[ 3 ] + pix2[ 3 ] + pix3[ 3 ] + pix4[ 3 ] ) >> 2;
 			}
 		}
 	}
@@ -510,7 +510,7 @@ void R_LightScaleTexture( unsigned* in, int inwidth, int inheight, qboolean only
 			int   i, c;
 			byte* p;
 
-			p = (byte*)in;
+			p = ( byte* )in;
 
 			c = inwidth * inheight;
 			for( i = 0; i < c; i++, p += 4 )
@@ -526,7 +526,7 @@ void R_LightScaleTexture( unsigned* in, int inwidth, int inheight, qboolean only
 		int   i, c;
 		byte* p;
 
-		p = (byte*)in;
+		p = ( byte* )in;
 
 		c = inwidth * inheight;
 
@@ -583,26 +583,26 @@ static void R_MipMap2( unsigned* in, int inWidth, int inHeight )
 	{
 		for( j = 0; j < outWidth; j++ )
 		{
-			outpix = (byte*)( temp + i * outWidth + j );
+			outpix = ( byte* )( temp + i * outWidth + j );
 			for( k = 0; k < 4; k++ )
 			{
 				total =
-					1 * ( (byte*)&in[ ( ( i * 2 - 1 ) & inHeightMask ) * inWidth + ( ( j * 2 - 1 ) & inWidthMask ) ] )[ k ] +
-					2 * ( (byte*)&in[ ( ( i * 2 - 1 ) & inHeightMask ) * inWidth + ( ( j * 2 ) & inWidthMask ) ] )[ k ] +
-					2 * ( (byte*)&in[ ( ( i * 2 - 1 ) & inHeightMask ) * inWidth + ( ( j * 2 + 1 ) & inWidthMask ) ] )[ k ] +
-					1 * ( (byte*)&in[ ( ( i * 2 - 1 ) & inHeightMask ) * inWidth + ( ( j * 2 + 2 ) & inWidthMask ) ] )[ k ] +
-					2 * ( (byte*)&in[ ( ( i * 2 ) & inHeightMask ) * inWidth + ( ( j * 2 - 1 ) & inWidthMask ) ] )[ k ] +
-					4 * ( (byte*)&in[ ( ( i * 2 ) & inHeightMask ) * inWidth + ( ( j * 2 ) & inWidthMask ) ] )[ k ] +
-					4 * ( (byte*)&in[ ( ( i * 2 ) & inHeightMask ) * inWidth + ( ( j * 2 + 1 ) & inWidthMask ) ] )[ k ] +
-					2 * ( (byte*)&in[ ( ( i * 2 ) & inHeightMask ) * inWidth + ( ( j * 2 + 2 ) & inWidthMask ) ] )[ k ] +
-					2 * ( (byte*)&in[ ( ( i * 2 + 1 ) & inHeightMask ) * inWidth + ( ( j * 2 - 1 ) & inWidthMask ) ] )[ k ] +
-					4 * ( (byte*)&in[ ( ( i * 2 + 1 ) & inHeightMask ) * inWidth + ( ( j * 2 ) & inWidthMask ) ] )[ k ] +
-					4 * ( (byte*)&in[ ( ( i * 2 + 1 ) & inHeightMask ) * inWidth + ( ( j * 2 + 1 ) & inWidthMask ) ] )[ k ] +
-					2 * ( (byte*)&in[ ( ( i * 2 + 1 ) & inHeightMask ) * inWidth + ( ( j * 2 + 2 ) & inWidthMask ) ] )[ k ] +
-					1 * ( (byte*)&in[ ( ( i * 2 + 2 ) & inHeightMask ) * inWidth + ( ( j * 2 - 1 ) & inWidthMask ) ] )[ k ] +
-					2 * ( (byte*)&in[ ( ( i * 2 + 2 ) & inHeightMask ) * inWidth + ( ( j * 2 ) & inWidthMask ) ] )[ k ] +
-					2 * ( (byte*)&in[ ( ( i * 2 + 2 ) & inHeightMask ) * inWidth + ( ( j * 2 + 1 ) & inWidthMask ) ] )[ k ] +
-					1 * ( (byte*)&in[ ( ( i * 2 + 2 ) & inHeightMask ) * inWidth + ( ( j * 2 + 2 ) & inWidthMask ) ] )[ k ];
+					1 * ( ( byte* )&in[ ( ( i * 2 - 1 ) & inHeightMask ) * inWidth + ( ( j * 2 - 1 ) & inWidthMask ) ] )[ k ] +
+					2 * ( ( byte* )&in[ ( ( i * 2 - 1 ) & inHeightMask ) * inWidth + ( ( j * 2 ) & inWidthMask ) ] )[ k ] +
+					2 * ( ( byte* )&in[ ( ( i * 2 - 1 ) & inHeightMask ) * inWidth + ( ( j * 2 + 1 ) & inWidthMask ) ] )[ k ] +
+					1 * ( ( byte* )&in[ ( ( i * 2 - 1 ) & inHeightMask ) * inWidth + ( ( j * 2 + 2 ) & inWidthMask ) ] )[ k ] +
+					2 * ( ( byte* )&in[ ( ( i * 2 ) & inHeightMask ) * inWidth + ( ( j * 2 - 1 ) & inWidthMask ) ] )[ k ] +
+					4 * ( ( byte* )&in[ ( ( i * 2 ) & inHeightMask ) * inWidth + ( ( j * 2 ) & inWidthMask ) ] )[ k ] +
+					4 * ( ( byte* )&in[ ( ( i * 2 ) & inHeightMask ) * inWidth + ( ( j * 2 + 1 ) & inWidthMask ) ] )[ k ] +
+					2 * ( ( byte* )&in[ ( ( i * 2 ) & inHeightMask ) * inWidth + ( ( j * 2 + 2 ) & inWidthMask ) ] )[ k ] +
+					2 * ( ( byte* )&in[ ( ( i * 2 + 1 ) & inHeightMask ) * inWidth + ( ( j * 2 - 1 ) & inWidthMask ) ] )[ k ] +
+					4 * ( ( byte* )&in[ ( ( i * 2 + 1 ) & inHeightMask ) * inWidth + ( ( j * 2 ) & inWidthMask ) ] )[ k ] +
+					4 * ( ( byte* )&in[ ( ( i * 2 + 1 ) & inHeightMask ) * inWidth + ( ( j * 2 + 1 ) & inWidthMask ) ] )[ k ] +
+					2 * ( ( byte* )&in[ ( ( i * 2 + 1 ) & inHeightMask ) * inWidth + ( ( j * 2 + 2 ) & inWidthMask ) ] )[ k ] +
+					1 * ( ( byte* )&in[ ( ( i * 2 + 2 ) & inHeightMask ) * inWidth + ( ( j * 2 - 1 ) & inWidthMask ) ] )[ k ] +
+					2 * ( ( byte* )&in[ ( ( i * 2 + 2 ) & inHeightMask ) * inWidth + ( ( j * 2 ) & inWidthMask ) ] )[ k ] +
+					2 * ( ( byte* )&in[ ( ( i * 2 + 2 ) & inHeightMask ) * inWidth + ( ( j * 2 + 1 ) & inWidthMask ) ] )[ k ] +
+					1 * ( ( byte* )&in[ ( ( i * 2 + 2 ) & inHeightMask ) * inWidth + ( ( j * 2 + 2 ) & inWidthMask ) ] )[ k ];
 				outpix[ k ] = total / 36;
 			}
 		}
@@ -627,7 +627,7 @@ static void R_MipMap( byte* in, int width, int height )
 
 	if( !r_simpleMipMaps->integer )
 	{
-		R_MipMap2( (unsigned*)in, width, height );
+		R_MipMap2( ( unsigned* )in, width, height );
 		return;
 	}
 
@@ -814,7 +814,7 @@ static void R_HeightMapToNormalMap( byte* in, int width, int height, float scale
 			*out++ = ( byte )( 128 + 127 * n[ 2 ] );
 
 			// put in no height as displacement map by default
-			*out++ = (byte)0; //(Q_bound(0, c * 255.0 / 3.0, 255));
+			*out++ = ( byte )0; //(Q_bound(0, c * 255.0 / 3.0, 255));
 		}
 	}
 }
@@ -967,7 +967,7 @@ static void R_MakeAlpha( byte* in, int width, int height )
 			out[ 4 * ( y * width + x ) + 0 ] = 255;
 			out[ 4 * ( y * width + x ) + 1 ] = 255;
 			out[ 4 * ( y * width + x ) + 2 ] = 255;
-			out[ 4 * ( y * width + x ) + 3 ] = (byte)avg;
+			out[ 4 * ( y * width + x ) + 3 ] = ( byte )avg;
 		}
 	}
 }
@@ -1282,12 +1282,12 @@ void R_UploadImage( const byte** dataArray, int numData, image_t* image )
 		}
 		else
 		{
-			ResampleTexture( (unsigned*)data, image->width, image->height, (unsigned*)scaledBuffer, scaledWidth, scaledHeight, ( image->bits & IF_NORMALMAP ) );
+			ResampleTexture( ( unsigned* )data, image->width, image->height, ( unsigned* )scaledBuffer, scaledWidth, scaledHeight, ( image->bits & IF_NORMALMAP ) );
 		}
 
 		if( !( image->bits & ( IF_NORMALMAP | IF_RGBA16F | IF_RGBA32F | IF_LA16F | IF_LA32F ) ) )
 		{
-			R_LightScaleTexture( (unsigned*)scaledBuffer, scaledWidth, scaledHeight, ( image->filterType == FT_DEFAULT ) );
+			R_LightScaleTexture( ( unsigned* )scaledBuffer, scaledWidth, scaledHeight, ( image->filterType == FT_DEFAULT ) );
 		}
 
 		image->uploadWidth = scaledWidth;
@@ -2232,7 +2232,7 @@ image_t* R_FindImageFile( const char* imageName, int bits, filterType_t filterTy
 	}
 #endif
 
-	image = R_CreateImage( (char*)buffer, pic, width, height, bits, filterType, wrapType );
+	image = R_CreateImage( ( char* )buffer, pic, width, height, bits, filterType, wrapType );
 	ri.Free( pic );
 	return image;
 }
@@ -2595,7 +2595,7 @@ tryQuakeSuffices:
 	}
 
 createCubeImage:
-	image = R_CreateCubeImage( (char*)buffer, (const byte**)pic, width, height, bits, filterType, wrapType );
+	image = R_CreateCubeImage( ( char* )buffer, ( const byte** )pic, width, height, bits, filterType, wrapType );
 
 skipCubeImage:
 	for( i = 0; i < 6; i++ )
@@ -2623,7 +2623,7 @@ void R_InitFogTable( void )
 
 	for( i = 0; i < FOG_TABLE_SIZE; i++ )
 	{
-		d = pow( (float)i / ( FOG_TABLE_SIZE - 1 ), exp );
+		d = pow( ( float )i / ( FOG_TABLE_SIZE - 1 ), exp );
 
 		tr.fogTable[ i ] = d;
 	}
@@ -2664,7 +2664,7 @@ float R_FogFactor( float s, float t )
 		s = 1.0;
 	}
 
-	d = tr.fogTable[ (int)( s * ( FOG_TABLE_SIZE - 1 ) ) ];
+	d = tr.fogTable[ ( int )( s * ( FOG_TABLE_SIZE - 1 ) ) ];
 
 	return d;
 }
@@ -2702,7 +2702,7 @@ static void R_CreateFogImage( void )
 	// standard openGL clamping doesn't really do what we want -- it includes
 	// the border color at the edges.  OpenGL 1.2 has clamp-to-edge, which does
 	// what we want.
-	tr.fogImage = R_CreateImage( "_fog", (byte*)data, FOG_S, FOG_T, IF_NOPICMIP, FT_LINEAR, WT_CLAMP );
+	tr.fogImage = R_CreateImage( "_fog", ( byte* )data, FOG_S, FOG_T, IF_NOPICMIP, FT_LINEAR, WT_CLAMP );
 	ri.Hunk_FreeTempMemory( data );
 
 	borderColor[ 0 ] = 1.0;
@@ -2737,7 +2737,7 @@ static void R_CreateDefaultImage( void )
 		data[ x ][ DEFAULT_SIZE - 1 ][ 0 ] =
 			data[ x ][ DEFAULT_SIZE - 1 ][ 1 ] = data[ x ][ DEFAULT_SIZE - 1 ][ 2 ] = data[ x ][ DEFAULT_SIZE - 1 ][ 3 ] = 255;
 	}
-	tr.defaultImage = R_CreateImage( "_default", (byte*)data, DEFAULT_SIZE, DEFAULT_SIZE, IF_NOPICMIP, FT_DEFAULT, WT_REPEAT );
+	tr.defaultImage = R_CreateImage( "_default", ( byte* )data, DEFAULT_SIZE, DEFAULT_SIZE, IF_NOPICMIP, FT_DEFAULT, WT_REPEAT );
 }
 
 static void R_CreateRandomNormalsImage( void )
@@ -2768,7 +2768,7 @@ static void R_CreateRandomNormalsImage( void )
 			data[ y ][ x ][ 3 ] = 255;
 		}
 	}
-	tr.randomNormalsImage = R_CreateImage( "_randomNormals", (byte*)data, DEFAULT_SIZE, DEFAULT_SIZE, IF_NOPICMIP, FT_DEFAULT, WT_REPEAT );
+	tr.randomNormalsImage = R_CreateImage( "_randomNormals", ( byte* )data, DEFAULT_SIZE, DEFAULT_SIZE, IF_NOPICMIP, FT_DEFAULT, WT_REPEAT );
 }
 
 static void R_CreateNoFalloffImage( void )
@@ -2777,7 +2777,7 @@ static void R_CreateNoFalloffImage( void )
 
 	// we use a solid white image instead of disabling texturing
 	Com_Memset( data, 255, sizeof( data ) );
-	tr.noFalloffImage = R_CreateImage( "_noFalloff", (byte*)data, 8, 8, IF_NOPICMIP, FT_LINEAR, WT_EDGE_CLAMP );
+	tr.noFalloffImage = R_CreateImage( "_noFalloff", ( byte* )data, 8, 8, IF_NOPICMIP, FT_LINEAR, WT_EDGE_CLAMP );
 }
 
 #define ATTENUATION_XY_SIZE 128
@@ -2810,7 +2810,7 @@ static void R_CreateAttenuationXYImage( void )
 		}
 	}
 	tr.attenuationXYImage =
-		R_CreateImage( "_attenuationXY", (byte*)data, ATTENUATION_XY_SIZE, ATTENUATION_XY_SIZE, IF_NOPICMIP, FT_LINEAR, WT_CLAMP );
+		R_CreateImage( "_attenuationXY", ( byte* )data, ATTENUATION_XY_SIZE, ATTENUATION_XY_SIZE, IF_NOPICMIP, FT_LINEAR, WT_CLAMP );
 }
 
 static void R_CreateContrastRenderFBOImage( void )
@@ -3317,41 +3317,41 @@ static void R_CreateShadowCubeFBOImage( void )
 		{
 			if( r_shadows->integer == SHADOWING_ESM32 )
 			{
-				tr.shadowCubeFBOImage[ j ] = R_CreateCubeImage( va( "_shadowCubeFBO%d", j ), (const byte**)data, width, height, IF_NOPICMIP | IF_ALPHA32F, ( r_shadowMapLinearFilter->integer ? FT_LINEAR : FT_NEAREST ), WT_EDGE_CLAMP );
+				tr.shadowCubeFBOImage[ j ] = R_CreateCubeImage( va( "_shadowCubeFBO%d", j ), ( const byte** )data, width, height, IF_NOPICMIP | IF_ALPHA32F, ( r_shadowMapLinearFilter->integer ? FT_LINEAR : FT_NEAREST ), WT_EDGE_CLAMP );
 			}
 			else if( r_shadows->integer == SHADOWING_VSM32 )
 			{
-				tr.shadowCubeFBOImage[ j ] = R_CreateCubeImage( va( "_shadowCubeFBO%d", j ), (const byte**)data, width, height, IF_NOPICMIP | IF_LA32F, ( r_shadowMapLinearFilter->integer ? FT_LINEAR : FT_NEAREST ), WT_EDGE_CLAMP );
+				tr.shadowCubeFBOImage[ j ] = R_CreateCubeImage( va( "_shadowCubeFBO%d", j ), ( const byte** )data, width, height, IF_NOPICMIP | IF_LA32F, ( r_shadowMapLinearFilter->integer ? FT_LINEAR : FT_NEAREST ), WT_EDGE_CLAMP );
 			}
 			else if( r_shadows->integer == SHADOWING_EVSM32 )
 			{
 				if( r_evsmPostProcess->integer )
 				{
-					tr.shadowCubeFBOImage[ j ] = R_CreateCubeImage( va( "_shadowCubeFBO%d", j ), (const byte**)data, width, height, IF_NOPICMIP | IF_ALPHA32F, ( r_shadowMapLinearFilter->integer ? FT_LINEAR : FT_NEAREST ), WT_EDGE_CLAMP );
+					tr.shadowCubeFBOImage[ j ] = R_CreateCubeImage( va( "_shadowCubeFBO%d", j ), ( const byte** )data, width, height, IF_NOPICMIP | IF_ALPHA32F, ( r_shadowMapLinearFilter->integer ? FT_LINEAR : FT_NEAREST ), WT_EDGE_CLAMP );
 				}
 				else
 				{
-					tr.shadowCubeFBOImage[ j ] = R_CreateCubeImage( va( "_shadowCubeFBO%d", j ), (const byte**)data, width, height, IF_NOPICMIP | IF_RGBA32F, ( r_shadowMapLinearFilter->integer ? FT_LINEAR : FT_NEAREST ), WT_EDGE_CLAMP );
+					tr.shadowCubeFBOImage[ j ] = R_CreateCubeImage( va( "_shadowCubeFBO%d", j ), ( const byte** )data, width, height, IF_NOPICMIP | IF_RGBA32F, ( r_shadowMapLinearFilter->integer ? FT_LINEAR : FT_NEAREST ), WT_EDGE_CLAMP );
 				}
 			}
 			else
 			{
-				tr.shadowCubeFBOImage[ j ] = R_CreateCubeImage( va( "_shadowCubeFBO%d", j ), (const byte**)data, width, height, IF_NOPICMIP | IF_RGBA16F, ( r_shadowMapLinearFilter->integer ? FT_LINEAR : FT_NEAREST ), WT_EDGE_CLAMP );
+				tr.shadowCubeFBOImage[ j ] = R_CreateCubeImage( va( "_shadowCubeFBO%d", j ), ( const byte** )data, width, height, IF_NOPICMIP | IF_RGBA16F, ( r_shadowMapLinearFilter->integer ? FT_LINEAR : FT_NEAREST ), WT_EDGE_CLAMP );
 			}
 		}
 		else
 		{
 			if( r_shadows->integer == SHADOWING_VSM16 )
 			{
-				tr.shadowCubeFBOImage[ j ] = R_CreateCubeImage( va( "_shadowCubeFBO%d", j ), (const byte**)data, width, height, IF_NOPICMIP | IF_ALPHA16F, ( r_shadowMapLinearFilter->integer ? FT_LINEAR : FT_NEAREST ), WT_EDGE_CLAMP );
+				tr.shadowCubeFBOImage[ j ] = R_CreateCubeImage( va( "_shadowCubeFBO%d", j ), ( const byte** )data, width, height, IF_NOPICMIP | IF_ALPHA16F, ( r_shadowMapLinearFilter->integer ? FT_LINEAR : FT_NEAREST ), WT_EDGE_CLAMP );
 			}
 			else if( r_shadows->integer == SHADOWING_VSM16 )
 			{
-				tr.shadowCubeFBOImage[ j ] = R_CreateCubeImage( va( "_shadowCubeFBO%d", j ), (const byte**)data, width, height, IF_NOPICMIP | IF_LA16F, ( r_shadowMapLinearFilter->integer ? FT_LINEAR : FT_NEAREST ), WT_EDGE_CLAMP );
+				tr.shadowCubeFBOImage[ j ] = R_CreateCubeImage( va( "_shadowCubeFBO%d", j ), ( const byte** )data, width, height, IF_NOPICMIP | IF_LA16F, ( r_shadowMapLinearFilter->integer ? FT_LINEAR : FT_NEAREST ), WT_EDGE_CLAMP );
 			}
 			else
 			{
-				tr.shadowCubeFBOImage[ j ] = R_CreateCubeImage( va( "_shadowCubeFBO%d", j ), (const byte**)data, width, height, IF_NOPICMIP | IF_RGBA16F, ( r_shadowMapLinearFilter->integer ? FT_LINEAR : FT_NEAREST ), WT_EDGE_CLAMP );
+				tr.shadowCubeFBOImage[ j ] = R_CreateCubeImage( va( "_shadowCubeFBO%d", j ), ( const byte** )data, width, height, IF_NOPICMIP | IF_RGBA16F, ( r_shadowMapLinearFilter->integer ? FT_LINEAR : FT_NEAREST ), WT_EDGE_CLAMP );
 			}
 		}
 
@@ -3379,8 +3379,8 @@ static void R_CreateBlackCubeImage( void )
 		Com_Memset( data[ i ], 0, width * height * 4 );
 	}
 
-	tr.blackCubeImage = R_CreateCubeImage( "_blackCube", (const byte**)data, width, height, IF_NOPICMIP, FT_LINEAR, WT_EDGE_CLAMP );
-	tr.autoCubeImage  = R_CreateCubeImage( "_autoCube", (const byte**)data, width, height, IF_NOPICMIP, FT_LINEAR, WT_EDGE_CLAMP );
+	tr.blackCubeImage = R_CreateCubeImage( "_blackCube", ( const byte** )data, width, height, IF_NOPICMIP, FT_LINEAR, WT_EDGE_CLAMP );
+	tr.autoCubeImage  = R_CreateCubeImage( "_autoCube", ( const byte** )data, width, height, IF_NOPICMIP, FT_LINEAR, WT_EDGE_CLAMP );
 
 	for( i = 5; i >= 0; i-- )
 	{
@@ -3405,7 +3405,7 @@ static void R_CreateWhiteCubeImage( void )
 		Com_Memset( data[ i ], 0xFF, width * height * 4 );
 	}
 
-	tr.whiteCubeImage = R_CreateCubeImage( "_whiteCube", (const byte**)data, width, height, IF_NOPICMIP, FT_LINEAR, WT_EDGE_CLAMP );
+	tr.whiteCubeImage = R_CreateCubeImage( "_whiteCube", ( const byte** )data, width, height, IF_NOPICMIP, FT_LINEAR, WT_EDGE_CLAMP );
 
 	for( i = 5; i >= 0; i-- )
 	{
@@ -3431,11 +3431,11 @@ void R_CreateBuiltinImages( void )
 
 	// we use a solid white image instead of disabling texturing
 	Com_Memset( data, 255, sizeof( data ) );
-	tr.whiteImage = R_CreateImage( "_white", (byte*)data, 8, 8, IF_NOPICMIP, FT_LINEAR, WT_REPEAT );
+	tr.whiteImage = R_CreateImage( "_white", ( byte* )data, 8, 8, IF_NOPICMIP, FT_LINEAR, WT_REPEAT );
 
 	// we use a solid black image instead of disabling texturing
 	Com_Memset( data, 0, sizeof( data ) );
-	tr.blackImage = R_CreateImage( "_black", (byte*)data, 8, 8, IF_NOPICMIP, FT_LINEAR, WT_REPEAT );
+	tr.blackImage = R_CreateImage( "_black", ( byte* )data, 8, 8, IF_NOPICMIP, FT_LINEAR, WT_REPEAT );
 
 	// red
 	for( x = 0; x < DEFAULT_SIZE; x++ )
@@ -3448,7 +3448,7 @@ void R_CreateBuiltinImages( void )
 			data[ y ][ x ][ 3 ] = 255;
 		}
 	}
-	tr.redImage = R_CreateImage( "_red", (byte*)data, 8, 8, IF_NOPICMIP, FT_LINEAR, WT_REPEAT );
+	tr.redImage = R_CreateImage( "_red", ( byte* )data, 8, 8, IF_NOPICMIP, FT_LINEAR, WT_REPEAT );
 
 	// green
 	for( x = 0; x < DEFAULT_SIZE; x++ )
@@ -3461,7 +3461,7 @@ void R_CreateBuiltinImages( void )
 			data[ y ][ x ][ 3 ] = 255;
 		}
 	}
-	tr.greenImage = R_CreateImage( "_green", (byte*)data, 8, 8, IF_NOPICMIP, FT_LINEAR, WT_REPEAT );
+	tr.greenImage = R_CreateImage( "_green", ( byte* )data, 8, 8, IF_NOPICMIP, FT_LINEAR, WT_REPEAT );
 
 	// blue
 	for( x = 0; x < DEFAULT_SIZE; x++ )
@@ -3474,7 +3474,7 @@ void R_CreateBuiltinImages( void )
 			data[ y ][ x ][ 3 ] = 255;
 		}
 	}
-	tr.blueImage = R_CreateImage( "_blue", (byte*)data, 8, 8, IF_NOPICMIP, FT_LINEAR, WT_REPEAT );
+	tr.blueImage = R_CreateImage( "_blue", ( byte* )data, 8, 8, IF_NOPICMIP, FT_LINEAR, WT_REPEAT );
 
 	// generate a default normalmap with a zero heightmap
 	for( x = 0; x < DEFAULT_SIZE; x++ )
@@ -3487,12 +3487,12 @@ void R_CreateBuiltinImages( void )
 			data[ y ][ x ][ 3 ] = 0;
 		}
 	}
-	tr.flatImage = R_CreateImage( "_flat", (byte*)data, 8, 8, IF_NOPICMIP | IF_NORMALMAP, FT_LINEAR, WT_REPEAT );
+	tr.flatImage = R_CreateImage( "_flat", ( byte* )data, 8, 8, IF_NOPICMIP | IF_NORMALMAP, FT_LINEAR, WT_REPEAT );
 
 	for( x = 0; x < 32; x++ )
 	{
 		// scratchimage is usually used for cinematic drawing
-		tr.scratchImage[ x ] = R_CreateImage( "_scratch", (byte*)data, DEFAULT_SIZE, DEFAULT_SIZE, IF_NONE, FT_LINEAR, WT_CLAMP );
+		tr.scratchImage[ x ] = R_CreateImage( "_scratch", ( byte* )data, DEFAULT_SIZE, DEFAULT_SIZE, IF_NONE, FT_LINEAR, WT_CLAMP );
 	}
 
 	out = &data[ 0 ][ 0 ][ 0 ];
@@ -3500,7 +3500,7 @@ void R_CreateBuiltinImages( void )
 	{
 		for( x = 0; x < DEFAULT_SIZE; x++, out += 4 )
 		{
-			s = ( ( (float)x + 0.5f ) * ( 2.0f / DEFAULT_SIZE ) - 1.0f );
+			s = ( ( ( float )x + 0.5f ) * ( 2.0f / DEFAULT_SIZE ) - 1.0f );
 
 			s = Q_fabs( s ) - ( 1.0f / DEFAULT_SIZE );
 
@@ -3516,7 +3516,7 @@ void R_CreateBuiltinImages( void )
 	}
 
 	tr.quadraticImage =
-		R_CreateImage( "_quadratic", (byte*)data, DEFAULT_SIZE, DEFAULT_SIZE, IF_NOPICMIP | IF_NOCOMPRESSION, FT_LINEAR, WT_CLAMP );
+		R_CreateImage( "_quadratic", ( byte* )data, DEFAULT_SIZE, DEFAULT_SIZE, IF_NOPICMIP | IF_NOCOMPRESSION, FT_LINEAR, WT_CLAMP );
 
 	R_CreateRandomNormalsImage();
 	R_CreateFogImage();

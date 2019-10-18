@@ -74,8 +74,8 @@ static int CompareTrianglesByMaterialIndex( const void* a, const void* b )
 {
 	axTriangle_t *t1, *t2;
 
-	t1 = (axTriangle_t*)a;
-	t2 = (axTriangle_t*)b;
+	t1 = ( axTriangle_t* )a;
+	t2 = ( axTriangle_t* )b;
 
 	if( t1->materialIndex < t2->materialIndex )
 	{
@@ -988,7 +988,7 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 
 	for( i = 0; i < md5->numVBOSurfaces; i++ )
 	{
-		md5->vboSurfaces[ i ] = (srfVBOMD5Mesh_t*)Com_GrowListElement( &vboSurfaces, i );
+		md5->vboSurfaces[ i ] = ( srfVBOMD5Mesh_t* )Com_GrowListElement( &vboSurfaces, i );
 	}
 
 	Com_DestroyGrowList( &vboSurfaces );

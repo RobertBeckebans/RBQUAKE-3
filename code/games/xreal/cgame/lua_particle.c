@@ -354,7 +354,7 @@ lua_Particle* lua_getparticle( lua_State* L, int argNum )
 
 	ud = luaL_checkudata( L, argNum, "cgame.particle" );
 	luaL_argcheck( L, ud != NULL, argNum, "`particle' expected" );
-	return (lua_Particle*)ud;
+	return ( lua_Particle* )ud;
 }
 
 #endif

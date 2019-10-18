@@ -222,9 +222,9 @@ void ProcessWorldModel( void )
 		leaknode = xmlNewNode( NULL, "message" );
 		xmlNodeSetContent( leaknode, "MAP LEAKED\n" );
 		xmlAddChild( leaknode, polyline );
-		level[ 0 ] = (int)'0' + SYS_ERR;
+		level[ 0 ] = ( int )'0' + SYS_ERR;
 		level[ 1 ] = 0;
-		xmlSetProp( leaknode, "level", (char*)&level );
+		xmlSetProp( leaknode, "level", ( char* )&level );
 		xml_SendNode( leaknode );
 
 		if( leaktest )

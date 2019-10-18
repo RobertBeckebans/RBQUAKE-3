@@ -136,9 +136,9 @@ static void SNDDMA_PrintAudiospec( const char* str, const SDL_AudioSpec* spec )
 		Com_Printf( "  Format:   " S_COLOR_RED "UNKNOWN\n" );
 	}
 
-	Com_Printf( "  Freq:     %d\n", (int)spec->freq );
-	Com_Printf( "  Samples:  %d\n", (int)spec->samples );
-	Com_Printf( "  Channels: %d\n", (int)spec->channels );
+	Com_Printf( "  Freq:     %d\n", ( int )spec->freq );
+	Com_Printf( "  Samples:  %d\n", ( int )spec->samples );
+	Com_Printf( "  Channels: %d\n", ( int )spec->channels );
 }
 
 /*
@@ -184,13 +184,13 @@ qboolean SNDDMA_Init( void )
 	memset( &desired, '\0', sizeof( desired ) );
 	memset( &obtained, '\0', sizeof( obtained ) );
 
-	tmp = ( (int)s_sdlBits->value );
+	tmp = ( ( int )s_sdlBits->value );
 	if( ( tmp != 16 ) && ( tmp != 8 ) )
 	{
 		tmp = 16;
 	}
 
-	desired.freq = (int)s_sdlSpeed->value;
+	desired.freq = ( int )s_sdlSpeed->value;
 	if( !desired.freq )
 	{
 		desired.freq = 22050;
@@ -224,7 +224,7 @@ qboolean SNDDMA_Init( void )
 		}
 	}
 
-	desired.channels = (int)s_sdlChannels->value;
+	desired.channels = ( int )s_sdlChannels->value;
 	desired.callback = SNDDMA_AudioCallback;
 
 	if( SDL_OpenAudio( &desired, &obtained ) == -1 )

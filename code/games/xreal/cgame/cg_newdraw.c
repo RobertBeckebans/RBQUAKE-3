@@ -322,7 +322,7 @@ static void CG_DrawPlayerHead( rectDef_t* rect, qboolean draw2D )
 
 	if( cg.damageTime && cg.time - cg.damageTime < DAMAGE_TIME )
 	{
-		frac = (float)( cg.time - cg.damageTime ) / DAMAGE_TIME;
+		frac = ( float )( cg.time - cg.damageTime ) / DAMAGE_TIME;
 		size = rect->w * 1.25 * ( 1.5 - frac * 0.5 );
 
 		stretch = size - rect->w * 1.25;
@@ -360,7 +360,7 @@ static void CG_DrawPlayerHead( rectDef_t* rect, qboolean draw2D )
 		cg.headStartTime = cg.time;
 	}
 
-	frac            = ( cg.time - cg.headStartTime ) / (float)( cg.headEndTime - cg.headStartTime );
+	frac            = ( cg.time - cg.headStartTime ) / ( float )( cg.headEndTime - cg.headStartTime );
 	frac            = frac * frac * ( 3 - 2 * frac );
 	angles[ YAW ]   = cg.headStartYaw + ( cg.headEndYaw - cg.headStartYaw ) * frac;
 	angles[ PITCH ] = cg.headStartPitch + ( cg.headEndPitch - cg.headStartPitch ) * frac;
@@ -1085,8 +1085,8 @@ static void CG_DrawAreaPowerUp( rectDef_t* rect, int align, float special, float
 			{
 				vec4_t modulate;
 
-				f = (float)( t - cg.time ) / POWERUP_BLINK_TIME;
-				f -= (int)f;
+				f = ( float )( t - cg.time ) / POWERUP_BLINK_TIME;
+				f -= ( int )f;
 				modulate[ 0 ] = modulate[ 1 ] = modulate[ 2 ] = modulate[ 3 ] = f;
 				trap_R_SetColor( modulate );
 			}
@@ -1546,10 +1546,10 @@ static void CG_Text_Paint_Limit( float* maxX, float x, float y, float scale, vec
 		count = 0;
 		while( s && *s && count < len )
 		{
-			glyph = &font->glyphs[ (int)*s ]; // TTimo: FIXME: getting nasty warnings without the cast, hopefully this doesn't break the VM build
+			glyph = &font->glyphs[ ( int )*s ]; // TTimo: FIXME: getting nasty warnings without the cast, hopefully this doesn't break the VM build
 			if( Q_IsColorString( s ) )
 			{
-				memcpy( newColor, (float*)g_color_table[ ColorIndex( *( s + 1 ) ) ], sizeof( newColor ) );
+				memcpy( newColor, ( float* )g_color_table[ ColorIndex( *( s + 1 ) ) ], sizeof( newColor ) );
 				newColor[ 3 ] = color[ 3 ];
 				trap_R_SetColor( newColor );
 				s += 2;
@@ -1835,7 +1835,7 @@ void CG_DrawMedal( int ownerDraw, rectDef_t* rect, float scale, vec4_t color, qh
 		{
 			if( ownerDraw == CG_ACCURACY )
 			{
-				text = va( "%i%%", (int)value );
+				text = va( "%i%%", ( int )value );
 				if( value > 50 )
 				{
 					color[ 3 ] = 1.0;
@@ -1843,7 +1843,7 @@ void CG_DrawMedal( int ownerDraw, rectDef_t* rect, float scale, vec4_t color, qh
 			}
 			else
 			{
-				text       = va( "%i", (int)value );
+				text       = va( "%i", ( int )value );
 				color[ 3 ] = 1.0;
 			}
 		}

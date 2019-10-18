@@ -102,7 +102,7 @@ int ParseVertexL( FILE* input )
 
 	fread( &tshort, sizeof( tshort ), 1, input );
 	bytesread += sizeof( tshort );
-	numverts = (int)tshort;
+	numverts = ( int )tshort;
 
 	if( numverts > MAXVERTS )
 	{
@@ -151,7 +151,7 @@ int ParseFaceL1( FILE* input )
 
 	fread( &tshort, sizeof( tshort ), 1, input );
 	bytesread += sizeof( tshort );
-	numtris = (int)tshort;
+	numtris = ( int )tshort;
 
 	if( numtris > MAXTRIANGLES )
 	{
@@ -169,7 +169,7 @@ int ParseFaceL1( FILE* input )
 
 			fread( &tshort, sizeof( tshort ), 1, input );
 			bytesread += sizeof( tshort );
-			tris[ i ].v[ j ] = (int)tshort;
+			tris[ i ].v[ j ] = ( int )tshort;
 		}
 	}
 

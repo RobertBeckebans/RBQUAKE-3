@@ -64,7 +64,7 @@ static void CL_Netchan_Encode( msg_t* msg )
 	msg->bit       = sbit;
 	msg->readcount = srdc;
 
-	string = (byte*)clc.serverCommands[ reliableAcknowledge & ( MAX_RELIABLE_COMMANDS - 1 ) ];
+	string = ( byte* )clc.serverCommands[ reliableAcknowledge & ( MAX_RELIABLE_COMMANDS - 1 ) ];
 	index  = 0;
 	//
 	key = ( clc.challenge ^ serverId ^ messageAcknowledge ) & 0xFF;
@@ -116,10 +116,10 @@ static void CL_Netchan_Decode( msg_t* msg )
 	msg->bit       = sbit;
 	msg->readcount = srdc;
 
-	string = (byte*)clc.reliableCommands[ reliableAcknowledge & ( MAX_RELIABLE_COMMANDS - 1 ) ];
+	string = ( byte* )clc.reliableCommands[ reliableAcknowledge & ( MAX_RELIABLE_COMMANDS - 1 ) ];
 	index  = 0;
 	// xor the client challenge with the netchan sequence number (need something that changes every message)
-	key = clc.challenge ^ LittleLong( *(unsigned*)msg->data );
+	key = clc.challenge ^ LittleLong( *( unsigned* )msg->data );
 	for( i = msg->readcount + CL_DECODE_START; i < msg->cursize; i++ )
 	{
 		// modify the key with the last sent and with this message acknowledged client command

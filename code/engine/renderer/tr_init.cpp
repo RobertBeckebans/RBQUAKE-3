@@ -316,7 +316,7 @@ glstate_t glState;
 	{
 		if( shouldBeIntegral )
 		{
-			if( (int)cv->value != cv->integer )
+			if( ( int )cv->value != cv->integer )
 			{
 				ri.Printf( PRINT_WARNING, "WARNING: cvar '%s' must be integral (%f)\n", cv->name, cv->value );
 				ri.Cvar_Set( cv->name, va( "%d", cv->integer ) );
@@ -525,7 +525,7 @@ GL_CheckErrors
 		if( mode == -2 )
 		{
 			// Must set width and height to display size before calling this function!
-			*windowAspect = (float)*width / *height;
+			*windowAspect = ( float )*width / *height;
 		}
 		else if( mode == -1 )
 		{
@@ -539,7 +539,7 @@ GL_CheckErrors
 
 			*width        = vm->width;
 			*height       = vm->height;
-			*windowAspect = (float)vm->width / ( vm->height * vm->pixelAspect );
+			*windowAspect = ( float )vm->width / ( vm->height * vm->pixelAspect );
 		}
 
 		return qtrue;
@@ -603,9 +603,9 @@ The returned buffer must be freed with ri.Hunk_FreeTempMemory().
 	paddedLineLen = PAD( lineLen, packAlign );
 
 	// Allocate a few more bytes so that we can choose an alignment we like
-	buffer = (byte*)ri.Hunk_AllocateTempMemory( offset + ( paddedLineLen * height ) + packAlign );
+	buffer = ( byte* )ri.Hunk_AllocateTempMemory( offset + ( paddedLineLen * height ) + packAlign );
 
-	pixels = (byte*)PADP( buffer + offset, packAlign );
+	pixels = ( byte* )PADP( buffer + offset, packAlign );
 	glReadPixels( x, y, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixels );
 
 	// Drop alignment and line padding bytes
@@ -706,7 +706,7 @@ RB_TakeScreenshotCmd
 	{
 		const screenshotCommand_t* cmd;
 
-		cmd = (const screenshotCommand_t*)data;
+		cmd = ( const screenshotCommand_t* )data;
 
 		switch( cmd->format )
 		{
@@ -723,7 +723,7 @@ RB_TakeScreenshotCmd
 				break;
 		}
 
-		return (const void*)( cmd + 1 );
+		return ( const void* )( cmd + 1 );
 	}
 
 	/*
@@ -737,7 +737,7 @@ R_TakeScreenshot
 		screenshotCommand_t* cmd;
 		int                  lastNumber;
 
-		cmd = (screenshotCommand_t*)R_GetCommandBuffer( sizeof( *cmd ) );
+		cmd = ( screenshotCommand_t* )R_GetCommandBuffer( sizeof( *cmd ) );
 		if( !cmd )
 		{
 			return;
@@ -1046,7 +1046,7 @@ RB_TakeVideoFrameCmd
 		int                        frameSize;
 		int                        i;
 
-		cmd = (const videoFrameCommand_t*)data;
+		cmd = ( const videoFrameCommand_t* )data;
 
 		// RB: it is possible to we still have a videoFrameCommand_t but we already stopped
 		// video recording
@@ -1080,7 +1080,7 @@ RB_TakeVideoFrameCmd
 			}
 		}
 
-		return (const void*)( cmd + 1 );
+		return ( const void* )( cmd + 1 );
 	}
 
 	//============================================================================
@@ -1717,7 +1717,7 @@ R_Init
 		Com_Memset( &backEnd, 0, sizeof( backEnd ) );
 		Com_Memset( &tess, 0, sizeof( tess ) );
 
-		if( (intptr_t)tess.xyz & 15 )
+		if( ( intptr_t )tess.xyz & 15 )
 		{
 			Com_Printf( "WARNING: tess.xyz not 16 byte aligned\n" );
 		}
@@ -1725,16 +1725,16 @@ R_Init
 		// init function tables
 		for( i = 0; i < FUNCTABLE_SIZE; i++ )
 		{
-			tr.sinTable[ i ]             = sin( DEG2RAD( i * 360.0f / ( (float)( FUNCTABLE_SIZE - 1 ) ) ) );
+			tr.sinTable[ i ]             = sin( DEG2RAD( i * 360.0f / ( ( float )( FUNCTABLE_SIZE - 1 ) ) ) );
 			tr.squareTable[ i ]          = ( i < FUNCTABLE_SIZE / 2 ) ? 1.0f : -1.0f;
-			tr.sawToothTable[ i ]        = (float)i / FUNCTABLE_SIZE;
+			tr.sawToothTable[ i ]        = ( float )i / FUNCTABLE_SIZE;
 			tr.inverseSawToothTable[ i ] = 1.0f - tr.sawToothTable[ i ];
 
 			if( i < FUNCTABLE_SIZE / 2 )
 			{
 				if( i < FUNCTABLE_SIZE / 4 )
 				{
-					tr.triangleTable[ i ] = (float)i / ( FUNCTABLE_SIZE / 4 );
+					tr.triangleTable[ i ] = ( float )i / ( FUNCTABLE_SIZE / 4 );
 				}
 				else
 				{
@@ -1753,17 +1753,17 @@ R_Init
 
 		R_Register();
 
-		backEndData[ 0 ]              = (backEndData_t*)ri.Hunk_Alloc( sizeof( *backEndData[ 0 ] ), h_low );
-		backEndData[ 0 ]->polys       = (srfPoly_t*)ri.Hunk_Alloc( r_maxPolys->integer * sizeof( srfPoly_t ), h_low );
-		backEndData[ 0 ]->polyVerts   = (polyVert_t*)ri.Hunk_Alloc( r_maxPolyVerts->integer * sizeof( polyVert_t ), h_low );
-		backEndData[ 0 ]->polybuffers = (srfPolyBuffer_t*)ri.Hunk_Alloc( r_maxPolys->integer * sizeof( srfPolyBuffer_t ), h_low );
+		backEndData[ 0 ]              = ( backEndData_t* )ri.Hunk_Alloc( sizeof( *backEndData[ 0 ] ), h_low );
+		backEndData[ 0 ]->polys       = ( srfPoly_t* )ri.Hunk_Alloc( r_maxPolys->integer * sizeof( srfPoly_t ), h_low );
+		backEndData[ 0 ]->polyVerts   = ( polyVert_t* )ri.Hunk_Alloc( r_maxPolyVerts->integer * sizeof( polyVert_t ), h_low );
+		backEndData[ 0 ]->polybuffers = ( srfPolyBuffer_t* )ri.Hunk_Alloc( r_maxPolys->integer * sizeof( srfPolyBuffer_t ), h_low );
 
 		if( r_smp->integer )
 		{
-			backEndData[ 1 ]              = (backEndData_t*)ri.Hunk_Alloc( sizeof( *backEndData[ 1 ] ), h_low );
-			backEndData[ 1 ]->polys       = (srfPoly_t*)ri.Hunk_Alloc( r_maxPolys->integer * sizeof( srfPoly_t ), h_low );
-			backEndData[ 1 ]->polyVerts   = (polyVert_t*)ri.Hunk_Alloc( r_maxPolyVerts->integer * sizeof( polyVert_t ), h_low );
-			backEndData[ 1 ]->polybuffers = (srfPolyBuffer_t*)ri.Hunk_Alloc( r_maxPolys->integer * sizeof( srfPolyBuffer_t ), h_low );
+			backEndData[ 1 ]              = ( backEndData_t* )ri.Hunk_Alloc( sizeof( *backEndData[ 1 ] ), h_low );
+			backEndData[ 1 ]->polys       = ( srfPoly_t* )ri.Hunk_Alloc( r_maxPolys->integer * sizeof( srfPoly_t ), h_low );
+			backEndData[ 1 ]->polyVerts   = ( polyVert_t* )ri.Hunk_Alloc( r_maxPolyVerts->integer * sizeof( polyVert_t ), h_low );
+			backEndData[ 1 ]->polybuffers = ( srfPolyBuffer_t* )ri.Hunk_Alloc( r_maxPolys->integer * sizeof( srfPolyBuffer_t ), h_low );
 		}
 		else
 		{
@@ -1824,7 +1824,7 @@ R_Init
 			// Look for 'NVIDIA PerfHUD' adapter
 			// If it is present, override default settings
 			IDXGIFactory* pDXGIFactory;
-			hr = CreateDXGIFactory( __uuidof( IDXGIFactory ), (void**)&pDXGIFactory );
+			hr = CreateDXGIFactory( __uuidof( IDXGIFactory ), ( void** )&pDXGIFactory );
 
 			// Search for a PerfHUD adapter.
 			UINT          nAdapter        = 0;
@@ -1889,7 +1889,7 @@ R_Init
 			}
 
 			// create a render target view
-			hr = dx.swapChain->GetBuffer( 0, __uuidof( ID3D10Texture2D ), (LPVOID*)&backBuffer );
+			hr = dx.swapChain->GetBuffer( 0, __uuidof( ID3D10Texture2D ), ( LPVOID* )&backBuffer );
 			if( FAILED( hr ) )
 			{
 				ri.Error( ERR_FATAL, "R_Init: Failed to get a D3D10 back buffer" );

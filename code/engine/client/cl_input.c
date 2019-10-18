@@ -209,7 +209,7 @@ float CL_KeyState( kbutton_t* key )
 	}
 #endif
 
-	val = (float)msec / frame_msec;
+	val = ( float )msec / frame_msec;
 	if( val < 0 )
 	{
 		val = 0;
@@ -641,26 +641,26 @@ void CL_JoystickMove( usercmd_t* cmd )
 	if( !in_strafe.active )
 	{
 		cl.viewangles[ YAW ] += anglespeed * j_yaw->value * cl.joystickAxis[ j_yaw_axis->integer ];
-		cmd->rightmove = ClampChar( cmd->rightmove + (int)( j_side->value * cl.joystickAxis[ j_side_axis->integer ] ) );
+		cmd->rightmove = ClampChar( cmd->rightmove + ( int )( j_side->value * cl.joystickAxis[ j_side_axis->integer ] ) );
 	}
 	else
 	{
 		cl.viewangles[ YAW ] += anglespeed * j_side->value * cl.joystickAxis[ j_side_axis->integer ];
-		cmd->rightmove = ClampChar( cmd->rightmove + (int)( j_yaw->value * cl.joystickAxis[ j_yaw_axis->integer ] ) );
+		cmd->rightmove = ClampChar( cmd->rightmove + ( int )( j_yaw->value * cl.joystickAxis[ j_yaw_axis->integer ] ) );
 	}
 
 	if( in_mlooking )
 	{
 		cl.viewangles[ PITCH ] += anglespeed * j_forward->value * cl.joystickAxis[ j_forward_axis->integer ];
-		cmd->forwardmove = ClampChar( cmd->forwardmove + (int)( j_pitch->value * cl.joystickAxis[ j_pitch_axis->integer ] ) );
+		cmd->forwardmove = ClampChar( cmd->forwardmove + ( int )( j_pitch->value * cl.joystickAxis[ j_pitch_axis->integer ] ) );
 	}
 	else
 	{
 		cl.viewangles[ PITCH ] += anglespeed * j_pitch->value * cl.joystickAxis[ j_pitch_axis->integer ];
-		cmd->forwardmove = ClampChar( cmd->forwardmove + (int)( j_forward->value * cl.joystickAxis[ j_forward_axis->integer ] ) );
+		cmd->forwardmove = ClampChar( cmd->forwardmove + ( int )( j_forward->value * cl.joystickAxis[ j_forward_axis->integer ] ) );
 	}
 
-	cmd->upmove = ClampChar( cmd->upmove + (int)( j_up->value * cl.joystickAxis[ j_up_axis->integer ] ) );
+	cmd->upmove = ClampChar( cmd->upmove + ( int )( j_up->value * cl.joystickAxis[ j_up_axis->integer ] ) );
 }
 
 /*
@@ -701,7 +701,7 @@ void CL_MouseMove( usercmd_t* cmd )
 			float accelSensitivity;
 			float rate;
 
-			rate = sqrt( mx * mx + my * my ) / (float)frame_msec;
+			rate = sqrt( mx * mx + my * my ) / ( float )frame_msec;
 
 			accelSensitivity = cl_sensitivity->value + rate * cl_mouseAccel->value;
 			mx *= accelSensitivity;
@@ -722,8 +722,8 @@ void CL_MouseMove( usercmd_t* cmd )
 			// cl_mouseAccelOffset is the rate for which the acceleration will have doubled the non accelerated amplification
 			// NOTE: decouple the config cvars for independent acceleration setup along X and Y?
 
-			rate[ 0 ]  = fabs( mx ) / (float)frame_msec;
-			rate[ 1 ]  = fabs( my ) / (float)frame_msec;
+			rate[ 0 ]  = fabs( mx ) / ( float )frame_msec;
+			rate[ 1 ]  = fabs( my ) / ( float )frame_msec;
 			power[ 0 ] = powf( rate[ 0 ] / cl_mouseAccelOffset->value, cl_mouseAccel->value );
 			power[ 1 ] = powf( rate[ 1 ] / cl_mouseAccelOffset->value, cl_mouseAccel->value );
 

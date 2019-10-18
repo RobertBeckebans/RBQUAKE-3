@@ -92,7 +92,7 @@ brush_t* AllocBrush( int numSides )
 	{
 		Error( "AllocBrush called with numsides = %d", numSides );
 	}
-	c  = ( size_t ) & ( ( (brush_t*)0 )->sides[ numSides ] );
+	c  = ( size_t ) & ( ( ( brush_t* )0 )->sides[ numSides ] );
 	bb = safe_malloc( c );
 	memset( bb, 0, c );
 	if( numthreads == 1 )
@@ -114,7 +114,7 @@ void FreeBrush( brush_t* b )
 	int i;
 
 	/* error check */
-	if( *( (unsigned int*)b ) == 0xFEFEFEFE )
+	if( *( ( unsigned int* )b ) == 0xFEFEFEFE )
 	{
 		Sys_FPrintf( SYS_VRB, "WARNING: Attempt to free an already freed brush!\n" );
 		return;
@@ -128,8 +128,8 @@ void FreeBrush( brush_t* b )
 		}
 
 	/* ydnar: overwrite it */
-	memset( b, 0xFE, ( size_t ) & ( ( (brush_t*)0 )->sides[ b->numsides ] ) );
-	*( (unsigned int*)b ) = 0xFEFEFEFE;
+	memset( b, 0xFE, ( size_t ) & ( ( ( brush_t* )0 )->sides[ b->numsides ] ) );
+	*( ( unsigned int* )b ) = 0xFEFEFEFE;
 
 	/* free it */
 	free( b );
@@ -168,7 +168,7 @@ brush_t* CopyBrush( brush_t* brush )
 	int      i;
 
 	/* copy brush */
-	size     = ( size_t ) & ( ( (brush_t*)0 )->sides[ brush->numsides ] );
+	size     = ( size_t ) & ( ( ( brush_t* )0 )->sides[ brush->numsides ] );
 	newBrush = AllocBrush( brush->numsides );
 	memcpy( newBrush, brush, size );
 
@@ -417,11 +417,11 @@ brush_t* BrushFromBounds( vec3_t mins, vec3_t maxs )
 		VectorClear( normal );
 		normal[ i ]            = 1;
 		dist                   = maxs[ i ];
-		b->sides[ i ].planenum = FindFloatPlane( normal, dist, 1, (vec3_t*)&maxs );
+		b->sides[ i ].planenum = FindFloatPlane( normal, dist, 1, ( vec3_t* )&maxs );
 
 		normal[ i ]                = -1;
 		dist                       = -mins[ i ];
-		b->sides[ 3 + i ].planenum = FindFloatPlane( normal, dist, 1, (vec3_t*)&mins );
+		b->sides[ 3 + i ].planenum = FindFloatPlane( normal, dist, 1, ( vec3_t* )&mins );
 	}
 
 	CreateBrushWindings( b );
@@ -516,9 +516,9 @@ void WriteBSPBrushMap( char* name, brush_t* list )
 		{
 			w = BaseWindingForPlane( mapplanes[ s->planenum ].normal, mapplanes[ s->planenum ].dist );
 
-			fprintf( f, "( %i %i %i ) ", (int)w->p[ 0 ][ 0 ], (int)w->p[ 0 ][ 1 ], (int)w->p[ 0 ][ 2 ] );
-			fprintf( f, "( %i %i %i ) ", (int)w->p[ 1 ][ 0 ], (int)w->p[ 1 ][ 1 ], (int)w->p[ 1 ][ 2 ] );
-			fprintf( f, "( %i %i %i ) ", (int)w->p[ 2 ][ 0 ], (int)w->p[ 2 ][ 1 ], (int)w->p[ 2 ][ 2 ] );
+			fprintf( f, "( %i %i %i ) ", ( int )w->p[ 0 ][ 0 ], ( int )w->p[ 0 ][ 1 ], ( int )w->p[ 0 ][ 2 ] );
+			fprintf( f, "( %i %i %i ) ", ( int )w->p[ 1 ][ 0 ], ( int )w->p[ 1 ][ 1 ], ( int )w->p[ 1 ][ 2 ] );
+			fprintf( f, "( %i %i %i ) ", ( int )w->p[ 2 ][ 0 ], ( int )w->p[ 2 ][ 1 ], ( int )w->p[ 2 ][ 2 ] );
 
 			fprintf( f, "notexture 0 0 0 1 1\n" );
 			FreeWinding( w );

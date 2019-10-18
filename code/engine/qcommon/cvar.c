@@ -53,7 +53,7 @@ static long generateHashValue( const char* fname )
 	while( fname[ i ] != '\0' )
 	{
 		letter = tolower( fname[ i ] );
-		hash += (long)( letter ) * ( i + 119 );
+		hash += ( long )( letter ) * ( i + 119 );
 		i++;
 	}
 	hash &= ( FILE_HASH_SIZE - 1 );
@@ -251,7 +251,7 @@ static const char* Cvar_Validate( cvar_t* var, const char* value, qboolean warn 
 					Com_Printf( "WARNING: cvar '%s' must be integral", var->name );
 				}
 
-				valuef  = (int)valuef;
+				valuef  = ( int )valuef;
 				changed = qtrue;
 			}
 		}
@@ -282,7 +282,7 @@ static const char* Cvar_Validate( cvar_t* var, const char* value, qboolean warn 
 
 			if( Q_isintegral( var->min ) )
 			{
-				Com_Printf( " out of range (min %d)", (int)var->min );
+				Com_Printf( " out of range (min %d)", ( int )var->min );
 			}
 			else
 			{
@@ -308,7 +308,7 @@ static const char* Cvar_Validate( cvar_t* var, const char* value, qboolean warn 
 
 			if( Q_isintegral( var->max ) )
 			{
-				Com_Printf( " out of range (max %d)", (int)var->max );
+				Com_Printf( " out of range (max %d)", ( int )var->max );
 			}
 			else
 			{
@@ -324,11 +324,11 @@ static const char* Cvar_Validate( cvar_t* var, const char* value, qboolean warn 
 	{
 		if( Q_isintegral( valuef ) )
 		{
-			Com_sprintf( s, sizeof( s ), "%d", (int)valuef );
+			Com_sprintf( s, sizeof( s ), "%d", ( int )valuef );
 
 			if( warn )
 			{
-				Com_Printf( ", setting to %d\n", (int)valuef );
+				Com_Printf( ", setting to %d\n", ( int )valuef );
 			}
 		}
 		else
@@ -727,9 +727,9 @@ void Cvar_SetValue( const char* var_name, float value )
 {
 	char val[ 32 ];
 
-	if( value == (int)value )
+	if( value == ( int )value )
 	{
-		Com_sprintf( val, sizeof( val ), "%i", (int)value );
+		Com_sprintf( val, sizeof( val ), "%i", ( int )value );
 	}
 	else
 	{
@@ -1393,7 +1393,7 @@ void Cvar_Update( vmCvar_t* vmCvar )
 
 	assert( vmCvar );
 
-	if( (unsigned)vmCvar->handle >= cvar_numIndexes )
+	if( ( unsigned )vmCvar->handle >= cvar_numIndexes )
 	{
 		Com_Error( ERR_DROP, "Cvar_Update: handle out of range" );
 	}

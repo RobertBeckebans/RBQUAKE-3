@@ -232,7 +232,7 @@ intptr_t vmMain( int command, int arg0, int arg1, int arg2, int arg3, int arg4, 
 			G_ShutdownGame( arg0 );
 			return 0;
 		case GAME_CLIENT_CONNECT:
-			return (intptr_t)ClientConnect( arg0, arg1, arg2 );
+			return ( intptr_t )ClientConnect( arg0, arg1, arg2 );
 		case GAME_CLIENT_THINK:
 			ClientThink( arg0 );
 			return 0;
@@ -845,8 +845,8 @@ int QDECL SortRanks( const void* a, const void* b )
 {
 	gclient_t *ca, *cb;
 
-	ca = &level.clients[ *(int*)a ];
-	cb = &level.clients[ *(int*)b ];
+	ca = &level.clients[ *( int* )a ];
+	cb = &level.clients[ *( int* )b ];
 
 	// sort special clients last
 	if( ca->sess.spectatorState == SPECTATOR_SCOREBOARD || ca->sess.spectatorClient < 0 )

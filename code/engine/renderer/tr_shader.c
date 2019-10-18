@@ -88,7 +88,7 @@ static long generateHashValue( const char* fname, const int size )
 			letter = '/'; // damn path names
 		}
 
-		hash += (long)( letter ) * ( i + 119 );
+		hash += ( long )( letter ) * ( i + 119 );
 		i++;
 	}
 	hash = ( hash ^ ( hash >> 10 ) ^ ( hash >> 20 ) );
@@ -486,7 +486,7 @@ static char* ParseExpressionElement( char** data_p )
 			else if( c == '\"' || !c )
 			{
 				token[ len ] = 0;
-				*data_p      = (char*)data;
+				*data_p      = ( char* )data;
 				return token;
 			}
 
@@ -557,7 +557,7 @@ static char* ParseExpressionElement( char** data_p )
 		}
 		token[ len ] = 0;
 
-		*data_p = (char*)data;
+		*data_p = ( char* )data;
 		return token;
 	}
 
@@ -582,7 +582,7 @@ static char* ParseExpressionElement( char** data_p )
 		}
 		token[ len ] = 0;
 
-		*data_p = (char*)data;
+		*data_p = ( char* )data;
 		return token;
 	}
 
@@ -606,7 +606,7 @@ static char* ParseExpressionElement( char** data_p )
 			memcpy( token, *punc, l );
 			token[ l ] = 0;
 			data += l;
-			*data_p = (char*)data;
+			*data_p = ( char* )data;
 			return token;
 		}
 	}
@@ -615,7 +615,7 @@ static char* ParseExpressionElement( char** data_p )
 	token[ 0 ] = *data;
 	token[ 1 ] = 0;
 	data++;
-	*data_p = (char*)data;
+	*data_p = ( char* )data;
 
 	return token;
 }
@@ -3482,7 +3482,7 @@ static char* CreateShaderByGuide( const char* guideName, char* shaderText )
 				// adjust name by guide parameters if necessary
 				for( i = 0; i < numGuideParms; i++ )
 				{
-					if( ( p = Q_stristr( name, (const char*)guideParms ) ) )
+					if( ( p = Q_stristr( name, ( const char* )guideParms ) ) )
 					{
 						//ri.Printf(PRINT_ALL, "guide parameter '%s' = '%s'\n", guideParms[i], shaderParms[i]);
 
@@ -4619,20 +4619,20 @@ static void FixRenderCommandList( int newShader )
 
 		while( 1 )
 		{
-			switch( *(const int*)curCmd )
+			switch( *( const int* )curCmd )
 			{
 				case RC_SET_COLOR:
 				{
-					const setColorCommand_t* sc_cmd = (const setColorCommand_t*)curCmd;
+					const setColorCommand_t* sc_cmd = ( const setColorCommand_t* )curCmd;
 
-					curCmd = (const void*)( sc_cmd + 1 );
+					curCmd = ( const void* )( sc_cmd + 1 );
 					break;
 				}
 				case RC_STRETCH_PIC:
 				{
-					const stretchPicCommand_t* sp_cmd = (const stretchPicCommand_t*)curCmd;
+					const stretchPicCommand_t* sp_cmd = ( const stretchPicCommand_t* )curCmd;
 
-					curCmd = (const void*)( sp_cmd + 1 );
+					curCmd = ( const void* )( sp_cmd + 1 );
 					break;
 				}
 				case RC_DRAW_VIEW:
@@ -4640,7 +4640,7 @@ static void FixRenderCommandList( int newShader )
 					int         i;
 					drawSurf_t* drawSurf;
 
-					const drawViewCommand_t* dv_cmd = (const drawViewCommand_t*)curCmd;
+					const drawViewCommand_t* dv_cmd = ( const drawViewCommand_t* )curCmd;
 
 					for( i = 0, drawSurf = dv_cmd->viewParms.drawSurfs; i < dv_cmd->viewParms.numDrawSurfs; i++, drawSurf++ )
 					{
@@ -4649,21 +4649,21 @@ static void FixRenderCommandList( int newShader )
 							drawSurf->shaderNum++;
 						}
 					}
-					curCmd = (const void*)( dv_cmd + 1 );
+					curCmd = ( const void* )( dv_cmd + 1 );
 					break;
 				}
 				case RC_DRAW_BUFFER:
 				{
-					const drawBufferCommand_t* db_cmd = (const drawBufferCommand_t*)curCmd;
+					const drawBufferCommand_t* db_cmd = ( const drawBufferCommand_t* )curCmd;
 
-					curCmd = (const void*)( db_cmd + 1 );
+					curCmd = ( const void* )( db_cmd + 1 );
 					break;
 				}
 				case RC_SWAP_BUFFERS:
 				{
-					const swapBuffersCommand_t* sb_cmd = (const swapBuffersCommand_t*)curCmd;
+					const swapBuffersCommand_t* sb_cmd = ( const swapBuffersCommand_t* )curCmd;
 
-					curCmd = (const void*)( sb_cmd + 1 );
+					curCmd = ( const void* )( sb_cmd + 1 );
 					break;
 				}
 				case RC_END_OF_LIST:
@@ -5176,7 +5176,7 @@ qboolean RE_LoadDynamicShader( const char* shadername, const char* shadertext )
 	}
 
 	//create a new shader
-	dptr = (dynamicshader_t*)ri.Z_Malloc( sizeof( *dptr ) );
+	dptr = ( dynamicshader_t* )ri.Z_Malloc( sizeof( *dptr ) );
 	if( !dptr )
 	{
 		Com_Error( ERR_FATAL, "Couldn't allocate struct for dynamic shader %s\n", shadername );
@@ -6037,7 +6037,7 @@ static void ScanAndLoadGuideFiles( void )
 		Com_sprintf( filename, sizeof( filename ), "guides/%s", guideFiles[ i ] );
 
 		ri.Printf( PRINT_DEVELOPER, "...loading '%s'\n", filename );
-		sum += ri.FS_ReadFile( filename, (void**)&buffers[ i ] );
+		sum += ri.FS_ReadFile( filename, ( void** )&buffers[ i ] );
 		if( !buffers[ i ] )
 		{
 			ri.Error( ERR_DROP, "Couldn't load %s", filename );
@@ -6135,8 +6135,8 @@ static void ScanAndLoadGuideFiles( void )
 
 	for( i = 0; i < MAX_GUIDETEXT_HASH; i++ )
 	{
-		guideTextHashTable[ i ] = (char**)hashMem;
-		hashMem                 = ( (char*)hashMem ) + ( ( guideTextHashTableSizes[ i ] + 1 ) * sizeof( char* ) );
+		guideTextHashTable[ i ] = ( char** )hashMem;
+		hashMem                 = ( ( char* )hashMem ) + ( ( guideTextHashTableSizes[ i ] + 1 ) * sizeof( char* ) );
 	}
 
 	Com_Memset( guideTextHashTableSizes, 0, sizeof( guideTextHashTableSizes ) );
@@ -6285,7 +6285,7 @@ static void ScanAndLoadShaderFiles( void )
 #endif
 
 		ri.Printf( PRINT_DEVELOPER, "...loading '%s'\n", filename );
-		sum += ri.FS_ReadFile( filename, (void**)&buffers[ i ] );
+		sum += ri.FS_ReadFile( filename, ( void** )&buffers[ i ] );
 		if( !buffers[ i ] )
 		{
 			ri.Error( ERR_DROP, "Couldn't load %s", filename );
@@ -6400,8 +6400,8 @@ static void ScanAndLoadShaderFiles( void )
 
 	for( i = 0; i < MAX_SHADERTEXT_HASH; i++ )
 	{
-		shaderTextHashTable[ i ] = (char**)hashMem;
-		hashMem                  = ( (char*)hashMem ) + ( ( shaderTextHashTableSizes[ i ] + 1 ) * sizeof( char* ) );
+		shaderTextHashTable[ i ] = ( char** )hashMem;
+		hashMem                  = ( ( char* )hashMem ) + ( ( shaderTextHashTableSizes[ i ] + 1 ) * sizeof( char* ) );
 	}
 
 	Com_Memset( shaderTextHashTableSizes, 0, sizeof( shaderTextHashTableSizes ) );

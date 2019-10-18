@@ -197,10 +197,10 @@ typedef unsigned __int8  uint8_t;
 	typedef int fileHandle_t;
 	typedef int clipHandle_t;
 
-#define PAD( base, alignment ) ( ( ( base ) + (alignment)-1 ) & ~( (alignment)-1 ) )
+#define PAD( base, alignment ) ( ( ( base ) + ( alignment )-1 ) & ~( ( alignment )-1 ) )
 #define PADLEN( base, alignment ) ( PAD( ( base ), ( alignment ) ) - ( base ) )
 
-#define PADP( base, alignment ) ( (void*)PAD( ( intptr_t )( base ), ( alignment ) ) )
+#define PADP( base, alignment ) ( ( void* )PAD( ( intptr_t )( base ), ( alignment ) ) )
 
 #if defined( _MSC_VER )
 #define ALIGN( x ) __declspec( align( x ) );
@@ -221,7 +221,7 @@ typedef unsigned __int8  uint8_t;
 #endif
 
 #ifndef NULL
-#define NULL ( (void*)0 )
+#define NULL ( ( void* )0 )
 #endif
 
 #define STRING( s ) #s
@@ -490,8 +490,8 @@ typedef vec_t            vec4_t[ 4 ];
 	v[ 2 ] = b;                   \
 	v[ 3 ] = a
 
-#define DEG2RAD( a ) ( ( (a)*M_PI ) / 180.0F )
-#define RAD2DEG( a ) ( ( (a)*180.0f ) / M_PI )
+#define DEG2RAD( a ) ( ( ( a )*M_PI ) / 180.0F )
+#define RAD2DEG( a ) ( ( ( a )*180.0f ) / M_PI )
 
 #define Q_max( a, b ) ( ( a ) > ( b ) ? ( a ) : ( b ) )
 #define Q_min( a, b ) ( ( a ) < ( b ) ? ( a ) : ( b ) )
@@ -508,7 +508,7 @@ typedef vec_t            vec4_t[ 4 ];
 
 #define nanmask ( 255 << 23 )
 
-#define IS_NAN( x ) ( ( ( *(int*)&x ) & nanmask ) == nanmask )
+#define IS_NAN( x ) ( ( ( *( int* )&x ) & nanmask ) == nanmask )
 
 	// *INDENT-OFF*
 
@@ -518,7 +518,7 @@ typedef vec_t            vec4_t[ 4 ];
 		static int                            tmp;
 		__asm fld f __asm fistp tmp __asm mov eax, tmp
 #else
-    return (long)f;
+    return ( long )f;
 #endif
 	}
 
@@ -607,8 +607,8 @@ typedef vec_t            vec4_t[ 4 ];
 		femms();
 		asm volatile( "movd		(%%eax),	%%mm0\n"
 					  "pfrcp		%%mm0,		%%mm1\n" // (approx)
-					  "pfrcpit1	%%mm1,		%%mm0\n" // (intermediate)
-					  "pfrcpit2	%%mm1,		%%mm0\n" // (full 24-bit)
+					  "pfrcpit1	%%mm1,		%%mm0\n"     // (intermediate)
+					  "pfrcpit2	%%mm1,		%%mm0\n"     // (full 24-bit)
 					  // out = mm0[low]
 					  "movd		%%mm0,		(%%edx)\n" ::"a"( &in ),
 					  "d"( &out )
@@ -617,7 +617,7 @@ typedef vec_t            vec4_t[ 4 ];
 		femms();
 		return out;
 #else
-    return ( (float)( 1.0f / ( in ) ) );
+    return ( ( float )( 1.0f / ( in ) ) );
 #endif
 	}
 	// *INDENT-ON*
@@ -881,9 +881,9 @@ static ID_INLINE vec_t DotProduct( const vec3_t a, const vec3_t b )
 
 		*v = i;
 #else
-	v[ 0 ] = (int)v[ 0 ];
-	v[ 1 ] = (int)v[ 1 ];
-	v[ 2 ] = (int)v[ 2 ];
+	v[ 0 ] = ( int )v[ 0 ];
+	v[ 1 ] = ( int )v[ 1 ];
+	v[ 2 ] = ( int )v[ 2 ];
 #endif
 	}
 
@@ -985,7 +985,7 @@ static ID_INLINE vec_t DotProduct( const vec3_t a, const vec3_t b )
 		femms();
 		return out;
 #else
-	return (vec_t)sqrt( v[ 0 ] * v[ 0 ] + v[ 1 ] * v[ 1 ] + v[ 2 ] * v[ 2 ] );
+	return ( vec_t )sqrt( v[ 0 ] * v[ 0 ] + v[ 1 ] * v[ 1 ] + v[ 2 ] * v[ 2 ] );
 #endif
 	}
 	// *INDENT-ON*
@@ -1100,7 +1100,7 @@ static ID_INLINE vec_t DotProduct( const vec3_t a, const vec3_t b )
 	float Q_random( int* seed );
 	float Q_crandom( int* seed );
 
-#define random() ( ( rand() & 0x7fff ) / ( (float)0x7fff ) )
+#define random() ( ( rand() & 0x7fff ) / ( ( float )0x7fff ) )
 #define crandom() ( 2.0 * ( random() - 0.5 ) )
 
 	void  AnglesToAxis( const vec3_t angles, vec3_t axis[ 3 ] );
@@ -1297,7 +1297,7 @@ static ID_INLINE int QuatCompare(const quat_t a, const quat_t b)
 
 	static ID_INLINE vec_t QuatLength( const quat_t q )
 	{
-		return (vec_t)sqrt( q[ 0 ] * q[ 0 ] + q[ 1 ] * q[ 1 ] + q[ 2 ] * q[ 2 ] + q[ 3 ] * q[ 3 ] );
+		return ( vec_t )sqrt( q[ 0 ] * q[ 0 ] + q[ 1 ] * q[ 1 ] + q[ 2 ] * q[ 2 ] + q[ 3 ] * q[ 3 ] );
 	}
 
 	vec_t QuatNormalize( quat_t q );
@@ -1776,7 +1776,7 @@ PlaneTypeForNormal
 ========================================================================
 */
 
-#define ANGLE2SHORT( x ) ( (int)( (x)*65536 / 360 ) & 65535 )
+#define ANGLE2SHORT( x ) ( ( int )( ( x )*65536 / 360 ) & 65535 )
 #define SHORT2ANGLE( x ) ( ( x ) * ( 360.0 / 65536 ) )
 
 #define SNAPFLAG_RATE_DELAYED 1

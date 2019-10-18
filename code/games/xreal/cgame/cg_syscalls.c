@@ -41,7 +41,7 @@ int PASSFLOAT( float x )
 	float floatTemp;
 
 	floatTemp = x;
-	return *(int*)&floatTemp;
+	return *( int* )&floatTemp;
 }
 
 void trap_Print( const char* fmt )

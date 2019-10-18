@@ -120,7 +120,7 @@ static void SubdivideFoliageTriangle_r( mapDrawSurface_t* ds, foliage_t* foliage
 			}
 			else
 			{
-				alpha = ( (float)tri[ 0 ]->lightColor[ 0 ][ 3 ] + (float)tri[ 1 ]->lightColor[ 0 ][ 3 ] + (float)tri[ 2 ]->lightColor[ 0 ][ 3 ] ) / 765.0f;
+				alpha = ( ( float )tri[ 0 ]->lightColor[ 0 ][ 3 ] + ( float )tri[ 1 ]->lightColor[ 0 ][ 3 ] + ( float )tri[ 2 ]->lightColor[ 0 ][ 3 ] ) / 765.0f;
 				if( foliage->inverseAlpha == 1 )
 				{
 					alpha = 1.0f - alpha;

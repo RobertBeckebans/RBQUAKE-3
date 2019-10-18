@@ -342,7 +342,7 @@ void LoadSurfaceExtraFile( const char* path )
 	StripExtension( srfPath );
 	strcat( srfPath, ".srf" );
 	Sys_Printf( "Loading %s\n", srfPath );
-	size = LoadFile( srfPath, (void**)&buffer );
+	size = LoadFile( srfPath, ( void** )&buffer );
 	if( size <= 0 )
 	{
 		Sys_Printf( "WARNING: Unable to find surface file %s, using defaults.\n", srfPath );

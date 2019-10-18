@@ -180,9 +180,9 @@ void S_Base_SoundList( void )
 
 void S_ChannelFree( channel_t* v )
 {
-	v->thesfx       = NULL;
-	*(channel_t**)v = freelist;
-	freelist        = (channel_t*)v;
+	v->thesfx         = NULL;
+	*( channel_t** )v = freelist;
+	freelist          = ( channel_t* )v;
 }
 
 channel_t* S_ChannelMalloc( void )
@@ -194,7 +194,7 @@ channel_t* S_ChannelMalloc( void )
 		return NULL;
 	}
 	v            = freelist;
-	freelist     = *(channel_t**)freelist;
+	freelist     = *( channel_t** )freelist;
 	v->allocTime = Com_Milliseconds();
 	return v;
 }
@@ -211,11 +211,11 @@ void S_ChannelSetup( void )
 	q = p + MAX_CHANNELS;
 	while( --q > p )
 	{
-		*(channel_t**)q = q - 1;
+		*( channel_t** )q = q - 1;
 	}
 
-	*(channel_t**)q = NULL;
-	freelist        = p + MAX_CHANNELS - 1;
+	*( channel_t** )q = NULL;
+	freelist          = p + MAX_CHANNELS - 1;
 	//Com_DPrintf("Channel memory manager started\n");
 }
 
@@ -247,7 +247,7 @@ static long S_HashSFXName( const char* name )
 		{
 			letter = '/'; // damn path names
 		}
-		hash += (long)( letter ) * ( i + 119 );
+		hash += ( long )( letter ) * ( i + 119 );
 		i++;
 	}
 	hash &= ( LOOP_HASH - 1 );
@@ -1020,7 +1020,7 @@ void S_ByteSwapRawSamples( int samples, int width, int s_channels, const byte* d
 	}
 	for( i = 0; i < samples; i++ )
 	{
-		( (short*)data )[ i ] = LittleShort( ( (short*)data )[ i ] );
+		( ( short* )data )[ i ] = LittleShort( ( ( short* )data )[ i ] );
 	}
 }
 
@@ -1065,7 +1065,7 @@ void S_Base_RawSamples( int stream, int samples, int rate, int width, int s_chan
 		s_rawend[ stream ] = s_soundtime;
 	}
 
-	scale = (float)rate / dma.speed;
+	scale = ( float )rate / dma.speed;
 
 	//Com_Printf ("%i < %i < %i\n", s_soundtime, s_paintedtime, s_rawend[stream]);
 	if( s_channels == 2 && width == 2 )
@@ -1077,8 +1077,8 @@ void S_Base_RawSamples( int stream, int samples, int rate, int width, int s_chan
 			{
 				dst = s_rawend[ stream ] & ( MAX_RAW_SAMPLES - 1 );
 				s_rawend[ stream ]++;
-				rawsamples[ dst ].left  = ( (short*)data )[ i * 2 ] * intVolume;
-				rawsamples[ dst ].right = ( (short*)data )[ i * 2 + 1 ] * intVolume;
+				rawsamples[ dst ].left  = ( ( short* )data )[ i * 2 ] * intVolume;
+				rawsamples[ dst ].right = ( ( short* )data )[ i * 2 + 1 ] * intVolume;
 			}
 		}
 		else
@@ -1092,8 +1092,8 @@ void S_Base_RawSamples( int stream, int samples, int rate, int width, int s_chan
 				}
 				dst = s_rawend[ stream ] & ( MAX_RAW_SAMPLES - 1 );
 				s_rawend[ stream ]++;
-				rawsamples[ dst ].left  = ( (short*)data )[ src * 2 ] * intVolume;
-				rawsamples[ dst ].right = ( (short*)data )[ src * 2 + 1 ] * intVolume;
+				rawsamples[ dst ].left  = ( ( short* )data )[ src * 2 ] * intVolume;
+				rawsamples[ dst ].right = ( ( short* )data )[ src * 2 + 1 ] * intVolume;
 			}
 		}
 	}
@@ -1108,8 +1108,8 @@ void S_Base_RawSamples( int stream, int samples, int rate, int width, int s_chan
 			}
 			dst = s_rawend[ stream ] & ( MAX_RAW_SAMPLES - 1 );
 			s_rawend[ stream ]++;
-			rawsamples[ dst ].left  = ( (short*)data )[ src ] * intVolume;
-			rawsamples[ dst ].right = ( (short*)data )[ src ] * intVolume;
+			rawsamples[ dst ].left  = ( ( short* )data )[ src ] * intVolume;
+			rawsamples[ dst ].right = ( ( short* )data )[ src ] * intVolume;
 		}
 	}
 	else if( s_channels == 2 && width == 1 )
@@ -1125,8 +1125,8 @@ void S_Base_RawSamples( int stream, int samples, int rate, int width, int s_chan
 			}
 			dst = s_rawend[ stream ] & ( MAX_RAW_SAMPLES - 1 );
 			s_rawend[ stream ]++;
-			rawsamples[ dst ].left  = ( (char*)data )[ src * 2 ] * intVolume;
-			rawsamples[ dst ].right = ( (char*)data )[ src * 2 + 1 ] * intVolume;
+			rawsamples[ dst ].left  = ( ( char* )data )[ src * 2 ] * intVolume;
+			rawsamples[ dst ].right = ( ( char* )data )[ src * 2 + 1 ] * intVolume;
 		}
 	}
 	else if( s_channels == 1 && width == 1 )
@@ -1142,8 +1142,8 @@ void S_Base_RawSamples( int stream, int samples, int rate, int width, int s_chan
 			}
 			dst = s_rawend[ stream ] & ( MAX_RAW_SAMPLES - 1 );
 			s_rawend[ stream ]++;
-			rawsamples[ dst ].left  = ( ( (byte*)data )[ src ] - 128 ) * intVolume;
-			rawsamples[ dst ].right = ( ( (byte*)data )[ src ] - 128 ) * intVolume;
+			rawsamples[ dst ].left  = ( ( ( byte* )data )[ src ] - 128 ) * intVolume;
+			rawsamples[ dst ].right = ( ( ( byte* )data )[ src ] - 128 ) * intVolume;
 		}
 	}
 
@@ -1326,7 +1326,7 @@ void S_GetSoundtime( void )
 
 	if( CL_VideoRecording() )
 	{
-		s_soundtime += (int)ceil( dma.speed / cl_aviFrameRate->value );
+		s_soundtime += ( int )ceil( dma.speed / cl_aviFrameRate->value );
 		return;
 	}
 

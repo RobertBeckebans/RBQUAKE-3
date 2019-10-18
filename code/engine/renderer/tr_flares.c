@@ -268,7 +268,7 @@ void RB_AddLightFlares( void )
 			j = 0;
 		}
 
-		RB_AddFlare( (void*)l, j, l->l.origin, l->l.color, NULL );
+		RB_AddFlare( ( void* )l, j, l->l.origin, l->l.color, NULL );
 	}
 }
 

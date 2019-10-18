@@ -181,7 +181,7 @@ void SwapBSPFile( void )
 	int i, j;
 
 	/* models */
-	SwapBlock( (int*)bspModels, numBSPModels * sizeof( bspModels[ 0 ] ) );
+	SwapBlock( ( int* )bspModels, numBSPModels * sizeof( bspModels[ 0 ] ) );
 
 	/* shaders (don't swap the name) */
 	for( i = 0; i < numBSPShaders; i++ )
@@ -191,29 +191,29 @@ void SwapBSPFile( void )
 	}
 
 	/* planes */
-	SwapBlock( (int*)bspPlanes, numBSPPlanes * sizeof( bspPlanes[ 0 ] ) );
+	SwapBlock( ( int* )bspPlanes, numBSPPlanes * sizeof( bspPlanes[ 0 ] ) );
 
 	/* nodes */
-	SwapBlock( (int*)bspNodes, numBSPNodes * sizeof( bspNodes[ 0 ] ) );
+	SwapBlock( ( int* )bspNodes, numBSPNodes * sizeof( bspNodes[ 0 ] ) );
 
 	/* leafs */
-	SwapBlock( (int*)bspLeafs, numBSPLeafs * sizeof( bspLeafs[ 0 ] ) );
+	SwapBlock( ( int* )bspLeafs, numBSPLeafs * sizeof( bspLeafs[ 0 ] ) );
 
 	/* leaffaces */
-	SwapBlock( (int*)bspLeafSurfaces, numBSPLeafSurfaces * sizeof( bspLeafSurfaces[ 0 ] ) );
+	SwapBlock( ( int* )bspLeafSurfaces, numBSPLeafSurfaces * sizeof( bspLeafSurfaces[ 0 ] ) );
 
 	/* leafbrushes */
-	SwapBlock( (int*)bspLeafBrushes, numBSPLeafBrushes * sizeof( bspLeafBrushes[ 0 ] ) );
+	SwapBlock( ( int* )bspLeafBrushes, numBSPLeafBrushes * sizeof( bspLeafBrushes[ 0 ] ) );
 
 	// brushes
-	SwapBlock( (int*)bspBrushes, numBSPBrushes * sizeof( bspBrushes[ 0 ] ) );
+	SwapBlock( ( int* )bspBrushes, numBSPBrushes * sizeof( bspBrushes[ 0 ] ) );
 
 	// brushsides
-	SwapBlock( (int*)bspBrushSides, numBSPBrushSides * sizeof( bspBrushSides[ 0 ] ) );
+	SwapBlock( ( int* )bspBrushSides, numBSPBrushSides * sizeof( bspBrushSides[ 0 ] ) );
 
 	// vis
-	( (int*)&bspVisBytes )[ 0 ] = LittleLong( ( (int*)&bspVisBytes )[ 0 ] );
-	( (int*)&bspVisBytes )[ 1 ] = LittleLong( ( (int*)&bspVisBytes )[ 1 ] );
+	( ( int* )&bspVisBytes )[ 0 ] = LittleLong( ( ( int* )&bspVisBytes )[ 0 ] );
+	( ( int* )&bspVisBytes )[ 1 ] = LittleLong( ( ( int* )&bspVisBytes )[ 1 ] );
 
 	/* drawverts (don't swap colors) */
 	for( i = 0; i < numBSPDrawVerts; i++ )
@@ -234,11 +234,11 @@ void SwapBSPFile( void )
 	}
 
 	/* drawindexes */
-	SwapBlock( (int*)bspDrawIndexes, numBSPDrawIndexes * sizeof( bspDrawIndexes[ 0 ] ) );
+	SwapBlock( ( int* )bspDrawIndexes, numBSPDrawIndexes * sizeof( bspDrawIndexes[ 0 ] ) );
 
 	/* drawsurfs */
 	/* note: rbsp files (and hence q3map2 abstract bsp) have byte lightstyles index arrays, this follows sof2map convention */
-	SwapBlock( (int*)bspDrawSurfaces, numBSPDrawSurfaces * sizeof( bspDrawSurfaces[ 0 ] ) );
+	SwapBlock( ( int* )bspDrawSurfaces, numBSPDrawSurfaces * sizeof( bspDrawSurfaces[ 0 ] ) );
 
 	/* fogs */
 	for( i = 0; i < numBSPFogs; i++ )
@@ -280,7 +280,7 @@ returns a pointer to the specified lump
 
 void* GetLump( bspHeader_t* header, int lump )
 {
-	return (void*)( (byte*)header + header->lumps[ lump ].offset );
+	return ( void* )( ( byte* )header + header->lumps[ lump ].offset );
 }
 
 /*
@@ -315,7 +315,7 @@ int CopyLump( bspHeader_t* header, int lump, void* dest, int size )
 	}
 
 	/* copy block of memory and return */
-	memcpy( dest, (byte*)header + offset, length );
+	memcpy( dest, ( byte* )header + offset, length );
 	return length / size;
 }
 
@@ -381,7 +381,7 @@ void WriteBSPFile( const char* filename )
 
 	/* make fake temp name so existing bsp file isn't damaged in case write process fails */
 	time( &tm );
-	sprintf( tempname, "%s.%08X", filename, (int)tm );
+	sprintf( tempname, "%s.%08X", filename, ( int )tm );
 
 	/* byteswap, write the bsp, then swap back so it can be manipulated further */
 	SwapBSPFile();
@@ -410,28 +410,28 @@ void PrintBSPFileSizes( void )
 	Sys_Printf( "Abstracted BSP file components (*actual sizes may differ)\n" );
 
 	/* print various and sundry bits */
-	Sys_Printf( "%9d models        %9d\n", numBSPModels, (int)( numBSPModels * sizeof( bspModel_t ) ) );
-	Sys_Printf( "%9d shaders       %9d\n", numBSPShaders, (int)( numBSPShaders * sizeof( bspShader_t ) ) );
-	Sys_Printf( "%9d brushes       %9d\n", numBSPBrushes, (int)( numBSPBrushes * sizeof( bspBrush_t ) ) );
-	Sys_Printf( "%9d brushsides    %9d *\n", numBSPBrushSides, (int)( numBSPBrushSides * sizeof( bspBrushSide_t ) ) );
-	Sys_Printf( "%9d fogs          %9d\n", numBSPFogs, (int)( numBSPFogs * sizeof( bspFog_t ) ) );
-	Sys_Printf( "%9d planes        %9d\n", numBSPPlanes, (int)( numBSPPlanes * sizeof( bspPlane_t ) ) );
+	Sys_Printf( "%9d models        %9d\n", numBSPModels, ( int )( numBSPModels * sizeof( bspModel_t ) ) );
+	Sys_Printf( "%9d shaders       %9d\n", numBSPShaders, ( int )( numBSPShaders * sizeof( bspShader_t ) ) );
+	Sys_Printf( "%9d brushes       %9d\n", numBSPBrushes, ( int )( numBSPBrushes * sizeof( bspBrush_t ) ) );
+	Sys_Printf( "%9d brushsides    %9d *\n", numBSPBrushSides, ( int )( numBSPBrushSides * sizeof( bspBrushSide_t ) ) );
+	Sys_Printf( "%9d fogs          %9d\n", numBSPFogs, ( int )( numBSPFogs * sizeof( bspFog_t ) ) );
+	Sys_Printf( "%9d planes        %9d\n", numBSPPlanes, ( int )( numBSPPlanes * sizeof( bspPlane_t ) ) );
 	Sys_Printf( "%9d entdata       %9d\n", numEntities, bspEntDataSize );
 	Sys_Printf( "\n" );
 
-	Sys_Printf( "%9d nodes         %9d\n", numBSPNodes, (int)( numBSPNodes * sizeof( bspNode_t ) ) );
-	Sys_Printf( "%9d leafs         %9d\n", numBSPLeafs, (int)( numBSPLeafs * sizeof( bspLeaf_t ) ) );
-	Sys_Printf( "%9d leafsurfaces  %9d\n", numBSPLeafSurfaces, (int)( numBSPLeafSurfaces * sizeof( *bspLeafSurfaces ) ) );
-	Sys_Printf( "%9d leafbrushes   %9d\n", numBSPLeafBrushes, (int)( numBSPLeafBrushes * sizeof( *bspLeafBrushes ) ) );
+	Sys_Printf( "%9d nodes         %9d\n", numBSPNodes, ( int )( numBSPNodes * sizeof( bspNode_t ) ) );
+	Sys_Printf( "%9d leafs         %9d\n", numBSPLeafs, ( int )( numBSPLeafs * sizeof( bspLeaf_t ) ) );
+	Sys_Printf( "%9d leafsurfaces  %9d\n", numBSPLeafSurfaces, ( int )( numBSPLeafSurfaces * sizeof( *bspLeafSurfaces ) ) );
+	Sys_Printf( "%9d leafbrushes   %9d\n", numBSPLeafBrushes, ( int )( numBSPLeafBrushes * sizeof( *bspLeafBrushes ) ) );
 	Sys_Printf( "\n" );
 
-	Sys_Printf( "%9d drawsurfaces  %9d *\n", numBSPDrawSurfaces, (int)( numBSPDrawSurfaces * sizeof( *bspDrawSurfaces ) ) );
-	Sys_Printf( "%9d drawverts     %9d *\n", numBSPDrawVerts, (int)( numBSPDrawVerts * sizeof( *bspDrawVerts ) ) );
-	Sys_Printf( "%9d drawindexes   %9d\n", numBSPDrawIndexes, (int)( numBSPDrawIndexes * sizeof( *bspDrawIndexes ) ) );
+	Sys_Printf( "%9d drawsurfaces  %9d *\n", numBSPDrawSurfaces, ( int )( numBSPDrawSurfaces * sizeof( *bspDrawSurfaces ) ) );
+	Sys_Printf( "%9d drawverts     %9d *\n", numBSPDrawVerts, ( int )( numBSPDrawVerts * sizeof( *bspDrawVerts ) ) );
+	Sys_Printf( "%9d drawindexes   %9d\n", numBSPDrawIndexes, ( int )( numBSPDrawIndexes * sizeof( *bspDrawIndexes ) ) );
 	Sys_Printf( "\n" );
 
 	Sys_Printf( "%9d lightmaps     %9d\n", numBSPLightBytes / ( game->lightmapSize * game->lightmapSize * 3 ), numBSPLightBytes );
-	Sys_Printf( "%9d lightgrid     %9d *\n", numBSPGridPoints, (int)( numBSPGridPoints * sizeof( *bspGridPoints ) ) );
+	Sys_Printf( "%9d lightgrid     %9d *\n", numBSPGridPoints, ( int )( numBSPGridPoints * sizeof( *bspGridPoints ) ) );
 	Sys_Printf( "          visibility    %9d\n", numBSPVisBytes );
 }
 
@@ -596,7 +596,7 @@ void InjectCommandLine( char** argv, int beginArgs, int endArgs )
 		}
 		inpos = argv[ i ];
 		while( outpos != sentinel && *inpos )
-			if( *inpos != '\\' && *inpos != '"' && *inpos != ';' && (unsigned char)*inpos >= ' ' )
+			if( *inpos != '\\' && *inpos != '"' && *inpos != ';' && ( unsigned char )*inpos >= ' ' )
 			{
 				*outpos++ = *inpos++;
 			}

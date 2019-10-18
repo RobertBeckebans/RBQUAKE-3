@@ -235,7 +235,7 @@ int SCR_Text_Width( const char* text, float scale, int limit, const fontInfo_t* 
 			}
 			else
 			{
-				glyph = &font->glyphs[ (int)*s ];
+				glyph = &font->glyphs[ ( int )*s ];
 				out += glyph->xSkip;
 				s++;
 				count++;
@@ -276,7 +276,7 @@ int SCR_Text_Height( const char* text, float scale, int limit, const fontInfo_t*
 			}
 			else
 			{
-				glyph = &font->glyphs[ (int)*s ];
+				glyph = &font->glyphs[ ( int )*s ];
 				if( max < glyph->height )
 				{
 					max = glyph->height;
@@ -360,11 +360,11 @@ void SCR_Text_Paint( float x, float y, float scale, const vec4_t color, const ch
 		count = 0;
 		while( s && *s && count < len )
 		{
-			glyph = &font->glyphs[ (int)*s ];
+			glyph = &font->glyphs[ ( int )*s ];
 
 			if( Q_IsColorString( s ) )
 			{
-				memcpy( newColor, (float*)g_color_table[ ColorIndex( *( s + 1 ) ) ], sizeof( newColor ) );
+				memcpy( newColor, ( float* )g_color_table[ ColorIndex( *( s + 1 ) ) ], sizeof( newColor ) );
 				newColor[ 3 ] = color[ 3 ];
 				re.SetColor( newColor );
 				s += 2;
@@ -625,7 +625,7 @@ void SCR_DrawVoipMeter( void )
 		return; // client has VoIP support disabled.
 	}
 
-	limit = (int)( clc.voipPower * 10.0f );
+	limit = ( int )( clc.voipPower * 10.0f );
 	if( limit > 10 )
 	{
 		limit = 10;
@@ -705,9 +705,9 @@ void SCR_DrawDebugGraph( void )
 
 		if( v < 0 )
 		{
-			v += cl_graphheight->integer * ( 1 + (int)( -v / cl_graphheight->integer ) );
+			v += cl_graphheight->integer * ( 1 + ( int )( -v / cl_graphheight->integer ) );
 		}
-		h = (int)v % cl_graphheight->integer;
+		h = ( int )v % cl_graphheight->integer;
 		re.DrawStretchPic( x + w - 1 - a, y - h, 1, h, 0, 0, 0, 0, cls.whiteShader );
 	}
 }

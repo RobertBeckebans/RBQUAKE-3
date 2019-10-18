@@ -113,7 +113,7 @@ static char* CommaParse( char** data_p )
 			if( c == '\"' || !c )
 			{
 				com_token[ len ] = 0;
-				*data_p          = (char*)data;
+				*data_p          = ( char* )data;
 				return com_token;
 			}
 			if( len < MAX_TOKEN_CHARS )
@@ -143,7 +143,7 @@ static char* CommaParse( char** data_p )
 	}
 	com_token[ len ] = 0;
 
-	*data_p = (char*)data;
+	*data_p = ( char* )data;
 	return com_token;
 }
 
@@ -159,7 +159,7 @@ qboolean RE_GetSkinModel( qhandle_t skinid, const char* type, char* name )
 	skin_t* skin;
 
 	skin = tr.skins[ skinid ];
-	hash = Com_HashKey( (char*)type, strlen( type ) );
+	hash = Com_HashKey( ( char* )type, strlen( type ) );
 
 	for( i = 0; i < skin->numModels; i++ )
 	{
@@ -324,7 +324,7 @@ qhandle_t RE_RegisterSkin( const char* name )
 #endif
 
 	// load and parse the skin file
-	ri.FS_ReadFile( name, (void**)&text );
+	ri.FS_ReadFile( name, ( void** )&text );
 	if( !text )
 	{
 		return 0;

@@ -35,7 +35,7 @@ char* S_FileExtension( const char* fni )
 {
 	// we should search from the ending to the last '/'
 
-	char* fn   = (char*)fni + strlen( fni ) - 1;
+	char* fn   = ( char* )fni + strlen( fni ) - 1;
 	char* eptr = NULL;
 
 	while( *fn != '/' && fn != fni )

@@ -127,10 +127,10 @@ GLimp_CompareModes
 static int GLimp_CompareModes( const void* a, const void* b )
 {
 	const float ASPECT_EPSILON  = 0.001f;
-	SDL_Rect*   modeA           = *(SDL_Rect**)a;
-	SDL_Rect*   modeB           = *(SDL_Rect**)b;
-	float       aspectDiffA     = fabs( ( (float)modeA->w / (float)modeA->h ) - displayAspect );
-	float       aspectDiffB     = fabs( ( (float)modeB->w / (float)modeB->h ) - displayAspect );
+	SDL_Rect*   modeA           = *( SDL_Rect** )a;
+	SDL_Rect*   modeB           = *( SDL_Rect** )b;
+	float       aspectDiffA     = fabs( ( ( float )modeA->w / ( float )modeA->h ) - displayAspect );
+	float       aspectDiffB     = fabs( ( ( float )modeB->w / ( float )modeB->h ) - displayAspect );
 	float       aspectDiffsDiff = aspectDiffA - aspectDiffB;
 
 	if( aspectDiffsDiff > ASPECT_EPSILON )
@@ -174,7 +174,7 @@ static void GLimp_DetectAvailableModes( void )
 		return;
 	}
 
-	if( modes == (SDL_Rect**)-1 )
+	if( modes == ( SDL_Rect** )-1 )
 	{
 		ri.Printf( PRINT_ALL, "Display supports any resolution\n" );
 		return; // can set any resolution
@@ -192,7 +192,7 @@ static void GLimp_DetectAvailableModes( void )
 	{
 		const char* newModeString = va( "%ux%u ", modes[ i ]->w, modes[ i ]->h );
 
-		if( strlen( newModeString ) < (int)sizeof( buf ) - strlen( buf ) )
+		if( strlen( newModeString ) < ( int )sizeof( buf ) - strlen( buf ) )
 		{
 			Q_strcat( buf, sizeof( buf ), newModeString );
 		}
@@ -237,7 +237,7 @@ static int GLimp_SetMode( int mode, qboolean fullscreen )
 		// by assuming (relatively safely) that it is set at or close to
 		// the display's native aspect ratio
 		videoInfo     = SDL_GetVideoInfo();
-		displayAspect = (float)videoInfo->current_w / (float)videoInfo->current_h;
+		displayAspect = ( float )videoInfo->current_w / ( float )videoInfo->current_h;
 #endif
 
 		ri.Printf( PRINT_ALL, "Estimated display aspect: %.3f\n", displayAspect );
@@ -370,7 +370,7 @@ static int GLimp_SetMode( int mode, qboolean fullscreen )
 
 #ifdef USE_ICON
 		{
-			SDL_Surface* icon = SDL_CreateRGBSurfaceFrom( (void*)CLIENT_WINDOW_ICON.pixel_data,
+			SDL_Surface* icon = SDL_CreateRGBSurfaceFrom( ( void* )CLIENT_WINDOW_ICON.pixel_data,
 				CLIENT_WINDOW_ICON.width,
 				CLIENT_WINDOW_ICON.height,
 				CLIENT_WINDOW_ICON.bytes_per_pixel * 8,

@@ -290,7 +290,7 @@ void CG_AddFragment( localEntity_t* le )
 			VectorCopy( le->refEntity.origin, le->refEntity.lightingOrigin );
 			le->refEntity.renderfx |= RF_LIGHTING_ORIGIN;
 			oldZ = le->refEntity.origin[ 2 ];
-			le->refEntity.origin[ 2 ] -= 16 * ( 1.0 - (float)t / SINK_TIME );
+			le->refEntity.origin[ 2 ] -= 16 * ( 1.0 - ( float )t / SINK_TIME );
 			trap_R_AddRefEntityToScene( &le->refEntity );
 			le->refEntity.origin[ 2 ] = oldZ;
 		}
@@ -424,7 +424,7 @@ static void CG_AddMoveScaleFade( localEntity_t* le )
 	if( le->fadeInTime > le->startTime && cg.time < le->fadeInTime )
 	{
 		// fade / grow time
-		c = 1.0 - (float)( le->fadeInTime - cg.time ) / ( le->fadeInTime - le->startTime );
+		c = 1.0 - ( float )( le->fadeInTime - cg.time ) / ( le->fadeInTime - le->startTime );
 	}
 	else
 	{
@@ -551,7 +551,7 @@ static void CG_AddExplosion( localEntity_t* ex )
 	{
 		float light;
 
-		light = (float)( cg.time - ex->startTime ) / ( ex->endTime - ex->startTime );
+		light = ( float )( cg.time - ex->startTime ) / ( ex->endTime - ex->startTime );
 		if( light < 0.5 )
 		{
 			light = 1.0;
@@ -577,7 +577,7 @@ static void CG_AddSpriteExplosion( localEntity_t* le )
 
 	re = le->refEntity;
 
-	c = ( le->endTime - cg.time ) / (float)( le->endTime - le->startTime );
+	c = ( le->endTime - cg.time ) / ( float )( le->endTime - le->startTime );
 	if( c > 1 )
 	{
 		c = 1.0; // can happen during connection problems
@@ -598,7 +598,7 @@ static void CG_AddSpriteExplosion( localEntity_t* le )
 	{
 		float light;
 
-		light = (float)( cg.time - le->startTime ) / ( le->endTime - le->startTime );
+		light = ( float )( cg.time - le->startTime ) / ( le->endTime - le->startTime );
 		if( light < 0.5 )
 		{
 			light = 1.0;
@@ -647,7 +647,7 @@ void CG_AddKamikaze( localEntity_t* le )
 		shockwave.shaderTime = re->shaderTime;
 		VectorCopy( re->origin, shockwave.origin );
 
-		c = (float)( t - KAMI_SHOCKWAVE_STARTTIME ) / (float)( KAMI_SHOCKWAVE_ENDTIME - KAMI_SHOCKWAVE_STARTTIME );
+		c = ( float )( t - KAMI_SHOCKWAVE_STARTTIME ) / ( float )( KAMI_SHOCKWAVE_ENDTIME - KAMI_SHOCKWAVE_STARTTIME );
 		VectorScale( axis[ 0 ], c * KAMI_SHOCKWAVE_MAXRADIUS / KAMI_SHOCKWAVEMODEL_RADIUS, shockwave.axis[ 0 ] );
 		VectorScale( axis[ 1 ], c * KAMI_SHOCKWAVE_MAXRADIUS / KAMI_SHOCKWAVEMODEL_RADIUS, shockwave.axis[ 1 ] );
 		VectorScale( axis[ 2 ], c * KAMI_SHOCKWAVE_MAXRADIUS / KAMI_SHOCKWAVEMODEL_RADIUS, shockwave.axis[ 2 ] );
@@ -655,7 +655,7 @@ void CG_AddKamikaze( localEntity_t* le )
 
 		if( t > KAMI_SHOCKWAVEFADE_STARTTIME )
 		{
-			c = (float)( t - KAMI_SHOCKWAVEFADE_STARTTIME ) / (float)( KAMI_SHOCKWAVE_ENDTIME - KAMI_SHOCKWAVEFADE_STARTTIME );
+			c = ( float )( t - KAMI_SHOCKWAVEFADE_STARTTIME ) / ( float )( KAMI_SHOCKWAVE_ENDTIME - KAMI_SHOCKWAVEFADE_STARTTIME );
 		}
 		else
 		{
@@ -682,7 +682,7 @@ void CG_AddKamikaze( localEntity_t* le )
 
 		if( t < KAMI_IMPLODE_STARTTIME )
 		{
-			c = (float)( t - KAMI_EXPLODE_STARTTIME ) / (float)( KAMI_IMPLODE_STARTTIME - KAMI_EXPLODE_STARTTIME );
+			c = ( float )( t - KAMI_EXPLODE_STARTTIME ) / ( float )( KAMI_IMPLODE_STARTTIME - KAMI_EXPLODE_STARTTIME );
 		}
 		else
 		{
@@ -692,7 +692,7 @@ void CG_AddKamikaze( localEntity_t* le )
 				trap_S_StartLocalSound( cgs.media.kamikazeImplodeSound, CHAN_AUTO );
 				le->leFlags |= LEF_SOUND2;
 			}
-			c = (float)( KAMI_IMPLODE_ENDTIME - t ) / (float)( KAMI_IMPLODE_ENDTIME - KAMI_IMPLODE_STARTTIME );
+			c = ( float )( KAMI_IMPLODE_ENDTIME - t ) / ( float )( KAMI_IMPLODE_ENDTIME - KAMI_IMPLODE_STARTTIME );
 		}
 		VectorScale( axis[ 0 ], c * KAMI_BOOMSPHERE_MAXRADIUS / KAMI_BOOMSPHEREMODEL_RADIUS, re->axis[ 0 ] );
 		VectorScale( axis[ 1 ], c * KAMI_BOOMSPHERE_MAXRADIUS / KAMI_BOOMSPHEREMODEL_RADIUS, re->axis[ 1 ] );
@@ -724,7 +724,7 @@ void CG_AddKamikaze( localEntity_t* le )
 		test[ 2 ] = le->angles.trBase[ 2 ];
 		AnglesToAxis( test, axis );
 
-		c = (float)( t - KAMI_SHOCKWAVE2_STARTTIME ) / (float)( KAMI_SHOCKWAVE2_ENDTIME - KAMI_SHOCKWAVE2_STARTTIME );
+		c = ( float )( t - KAMI_SHOCKWAVE2_STARTTIME ) / ( float )( KAMI_SHOCKWAVE2_ENDTIME - KAMI_SHOCKWAVE2_STARTTIME );
 		VectorScale( axis[ 0 ], c * KAMI_SHOCKWAVE2_MAXRADIUS / KAMI_SHOCKWAVEMODEL_RADIUS, shockwave.axis[ 0 ] );
 		VectorScale( axis[ 1 ], c * KAMI_SHOCKWAVE2_MAXRADIUS / KAMI_SHOCKWAVEMODEL_RADIUS, shockwave.axis[ 1 ] );
 		VectorScale( axis[ 2 ], c * KAMI_SHOCKWAVE2_MAXRADIUS / KAMI_SHOCKWAVEMODEL_RADIUS, shockwave.axis[ 2 ] );
@@ -732,7 +732,7 @@ void CG_AddKamikaze( localEntity_t* le )
 
 		if( t > KAMI_SHOCKWAVE2FADE_STARTTIME )
 		{
-			c = (float)( t - KAMI_SHOCKWAVE2FADE_STARTTIME ) / (float)( KAMI_SHOCKWAVE2_ENDTIME - KAMI_SHOCKWAVE2FADE_STARTTIME );
+			c = ( float )( t - KAMI_SHOCKWAVE2FADE_STARTTIME ) / ( float )( KAMI_SHOCKWAVE2_ENDTIME - KAMI_SHOCKWAVE2FADE_STARTTIME );
 		}
 		else
 		{
@@ -770,9 +770,9 @@ void CG_AddInvulnerabilityJuiced( localEntity_t* le )
 	t = cg.time - le->startTime;
 	if( t > 3000 )
 	{
-		le->refEntity.axis[ 0 ][ 0 ] = (float)1.0 + 0.3 * ( t - 3000 ) / 2000;
-		le->refEntity.axis[ 1 ][ 1 ] = (float)1.0 + 0.3 * ( t - 3000 ) / 2000;
-		le->refEntity.axis[ 2 ][ 2 ] = (float)0.7 + 0.3 * ( 2000 - ( t - 3000 ) ) / 2000;
+		le->refEntity.axis[ 0 ][ 0 ] = ( float )1.0 + 0.3 * ( t - 3000 ) / 2000;
+		le->refEntity.axis[ 1 ][ 1 ] = ( float )1.0 + 0.3 * ( t - 3000 ) / 2000;
+		le->refEntity.axis[ 2 ][ 2 ] = ( float )0.7 + 0.3 * ( 2000 - ( t - 3000 ) ) / 2000;
 	}
 	if( t > 5000 )
 	{
@@ -899,7 +899,7 @@ void CG_AddScorePlum( localEntity_t* le )
 
 	for( i = 0; i < numdigits; i++ )
 	{
-		VectorMA( origin, (float)( ( (float)numdigits / 2 ) - i ) * NUMBER_SIZE, vec, re->origin );
+		VectorMA( origin, ( float )( ( ( float )numdigits / 2 ) - i ) * NUMBER_SIZE, vec, re->origin );
 		re->customShader = cgs.media.numberShaders[ digits[ numdigits - 1 - i ] ];
 		trap_R_AddRefEntityToScene( re );
 	}

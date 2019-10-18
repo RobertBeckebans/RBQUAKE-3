@@ -316,15 +316,15 @@ float RB_EvalExpression( const expression_t* exp, float defaultValue )
 				value1 = GetOpValue( &ops[ numOps - 1 ] );
 				numOps--;
 
-				table = tr.shaderTables[ (int)op.value ];
+				table = tr.shaderTables[ ( int )op.value ];
 
 				numValues = table->numValues;
 
 				index = value1 * numValues;     // float index into the table?s elements
 				lerp  = index - floor( index ); // being inbetween two elements of the table
 
-				oldIndex = (int)index;
-				newIndex = (int)index + 1;
+				oldIndex = ( int )index;
+				newIndex = ( int )index + 1;
 
 				if( table->clamp )
 				{
@@ -420,7 +420,7 @@ float RB_EvalExpression( const expression_t* exp, float defaultValue )
 						break;
 
 					case OP_MOD:
-						value = (float)( (int)value1 % (int)value2 );
+						value = ( float )( ( int )value1 % ( int )value2 );
 						break;
 
 					case OP_MUL:
@@ -475,8 +475,8 @@ void RB_CalcDeformVertexes( deformStage_t* ds )
 	int    i;
 	vec3_t offset;
 	float  scale;
-	float* xyz    = (float*)tess.xyz;
-	float* normal = (float*)tess.normals;
+	float* xyz    = ( float* )tess.xyz;
+	float* normal = ( float* )tess.normals;
 	float* table;
 
 #if defined( COMPAT_ET )
@@ -585,8 +585,8 @@ void RB_CalcDeformNormals( deformStage_t* ds )
 {
 	int    i;
 	float  scale;
-	float* xyz    = (float*)tess.xyz;
-	float* normal = (float*)tess.normals;
+	float* xyz    = ( float* )tess.xyz;
+	float* normal = ( float* )tess.normals;
 
 	for( i = 0; i < tess.numVertexes; i++, xyz += 4, normal += 4 )
 	{
@@ -615,9 +615,9 @@ RB_CalcBulgeVertexes
 void RB_CalcBulgeVertexes( deformStage_t* ds )
 {
 	int          i;
-	const float* st     = (const float*)tess.texCoords[ 0 ];
-	float*       xyz    = (float*)tess.xyz;
-	float*       normal = (float*)tess.normals;
+	const float* st     = ( const float* )tess.texCoords[ 0 ];
+	float*       xyz    = ( float* )tess.xyz;
+	float*       normal = ( float* )tess.normals;
 	float        now;
 
 	now = backEnd.refdef.time * ds->bulgeSpeed * 0.001f;
@@ -627,7 +627,7 @@ void RB_CalcBulgeVertexes( deformStage_t* ds )
 		int   off;
 		float scale;
 
-		off = (float)( FUNCTABLE_SIZE / ( M_PI * 2 ) ) * ( st[ 0 ] * ds->bulgeWidth + now );
+		off = ( float )( FUNCTABLE_SIZE / ( M_PI * 2 ) ) * ( st[ 0 ] * ds->bulgeWidth + now );
 
 		scale = tr.sinTable[ off & FUNCTABLE_MASK ] * ds->bulgeHeight;
 
@@ -658,7 +658,7 @@ void RB_CalcMoveVertexes( deformStage_t* ds )
 
 	VectorScale( ds->moveVector, scale, offset );
 
-	xyz = (float*)tess.xyz;
+	xyz = ( float* )tess.xyz;
 	for( i = 0; i < tess.numVertexes; i++, xyz += 4 )
 	{
 		VectorAdd( xyz, offset, xyz );

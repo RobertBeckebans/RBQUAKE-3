@@ -236,9 +236,9 @@ qboolean RadSampleImage( byte* pixels, int width, int height, float st[ 2 ], flo
 	}
 
 	/* get offsets */
-	x = ( (float)width * sto[ 0 ] ) + 0.5f;
+	x = ( ( float )width * sto[ 0 ] ) + 0.5f;
 	x %= width;
-	y = ( (float)height * sto[ 1 ] ) + 0.5f;
+	y = ( ( float )height * sto[ 1 ] ) + 0.5f;
 	y %= height;
 
 	/* get pixel */
@@ -348,8 +348,8 @@ static void RadSample( int lightmapNum, bspDrawSurface_t* ds, rawLightmap_t* lm,
 						}
 
 						/* get lightmap xy coords */
-						x = lightmap[ 0 ] / (float)superSample;
-						y = lightmap[ 1 ] / (float)superSample;
+						x = lightmap[ 0 ] / ( float )superSample;
+						y = lightmap[ 1 ] / ( float )superSample;
 						if( x < 0 )
 						{
 							x = 0;
@@ -801,7 +801,7 @@ void RadLightForPatch( int num, int lightmapNum, rawLightmap_t* lm, shaderInfo_t
 					/* fix colors */
 					for( i = 0; i < MAX_LIGHTMAPS; i++ )
 					{
-						radVertexLuxel = RAD_VERTEX_LUXEL( i, ds->firstVert + (int)dv[ v ]->lightColor[ 0 ][ 0 ] );
+						radVertexLuxel = RAD_VERTEX_LUXEL( i, ds->firstVert + ( int )dv[ v ]->lightColor[ 0 ][ 0 ] );
 						VectorCopy( radVertexLuxel, rw.verts[ v ].color[ i ] );
 						rw.verts[ v ].color[ i ][ 3 ] = dv[ v ]->lightColor[ i ][ 3 ];
 					}
@@ -831,7 +831,7 @@ void RadLightForPatch( int num, int lightmapNum, rawLightmap_t* lm, shaderInfo_t
 						/* fix colors */
 						for( i = 0; i < MAX_LIGHTMAPS; i++ )
 						{
-							radVertexLuxel = RAD_VERTEX_LUXEL( i, ds->firstVert + (int)dv[ v ]->lightColor[ 0 ][ 0 ] );
+							radVertexLuxel = RAD_VERTEX_LUXEL( i, ds->firstVert + ( int )dv[ v ]->lightColor[ 0 ][ 0 ] );
 							VectorCopy( radVertexLuxel, rw.verts[ v ].color[ i ] );
 							rw.verts[ v ].color[ i ][ 3 ] = dv[ v ]->lightColor[ i ][ 3 ];
 						}
@@ -968,7 +968,7 @@ void RadCreateDiffuseLights( void )
 					"\"origin\" \"%.0f %.0f %.0f\"\n"
 					"\"_color\" \"%.3f %.3f %.3f\"\n"
 					"}\n",
-					(int)light->add,
+					( int )light->add,
 					light->origin[ 0 ],
 					light->origin[ 1 ],
 					light->origin[ 2 ],

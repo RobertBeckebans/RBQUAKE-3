@@ -68,11 +68,11 @@ winding_t* AllocWinding( int points )
 
 void FreeWinding( winding_t* w )
 {
-	if( *(unsigned*)w == 0xdeaddead )
+	if( *( unsigned* )w == 0xdeaddead )
 	{
 		Com_Error( ERR_FATAL, "FreeWinding: freed a freed winding" );
 	}
-	*(unsigned*)w = 0xdeaddead;
+	*( unsigned* )w = 0xdeaddead;
 
 	c_active_windings--;
 	Z_Free( w );
@@ -289,7 +289,7 @@ winding_t* CopyWinding( winding_t* w )
 	winding_t*    c;
 
 	c    = AllocWinding( w->numpoints );
-	size = (long)( (winding_t*)0 )->p[ w->numpoints ];
+	size = ( long )( ( winding_t* )0 )->p[ w->numpoints ];
 	Com_Memcpy( c, w, size );
 	return c;
 }

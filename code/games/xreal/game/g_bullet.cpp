@@ -88,7 +88,7 @@ public:
 			_dynamicsWorld->getDispatchInfo().m_useContinuous = false;
 		}
 
-		trap_Bullet_AddWorldBrushesToDynamicsWorld( &_collisionShapes, (plDynamicsWorldHandle*)_dynamicsWorld );
+		trap_Bullet_AddWorldBrushesToDynamicsWorld( &_collisionShapes, ( plDynamicsWorldHandle* )_dynamicsWorld );
 	}
 
 	~BulletPhysics()
@@ -172,7 +172,7 @@ public:
 			btRigidBody* body = btRigidBody::upcast( obj );
 			if( body && body->getMotionState() )
 			{
-				gentity_t* ent = (gentity_t*)body->getUserPointer();
+				gentity_t* ent = ( gentity_t* )body->getUserPointer();
 				if( ent != NULL && ent->physics != NULL )
 				{
 					ent->physics( ent );
@@ -211,7 +211,7 @@ extern "C"
 
 	static void G_PhysicsBox_Physics( gentity_t* ent )
 	{
-		btCollisionObject* obj  = (btCollisionObject*)ent->physicsRigidBody;
+		btCollisionObject* obj  = ( btCollisionObject* )ent->physicsRigidBody;
 		btRigidBody*       body = btRigidBody::upcast( obj );
 
 		if( body && body->getMotionState() )
@@ -260,7 +260,7 @@ extern "C"
 
 	static void G_PhysicsBox_Think( gentity_t* ent )
 	{
-		btCollisionObject* obj = (btCollisionObject*)ent->physicsRigidBody;
+		btCollisionObject* obj = ( btCollisionObject* )ent->physicsRigidBody;
 
 		btRigidBody* body = btRigidBody::upcast( obj );
 		if( body && body->getMotionState() )
@@ -327,7 +327,7 @@ extern "C"
 
 		body->setUserPointer( ent );
 		//ent->physicsCollisionShape = (plCollisionShapeHandle*) boxShape;
-		ent->physicsRigidBody = (plRigidBodyHandle*)body;
+		ent->physicsRigidBody = ( plRigidBodyHandle* )body;
 	}
 
 	static void G_ShootBox( const vec3_t start, const vec3_t dir )

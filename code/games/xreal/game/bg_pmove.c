@@ -341,7 +341,7 @@ static float PM_CmdScale( usercmd_t* cmd )
 	}
 
 	total = sqrt( cmd->forwardmove * cmd->forwardmove + cmd->rightmove * cmd->rightmove + cmd->upmove * cmd->upmove );
-	scale = (float)pm->ps->speed * max / ( 127.0 * total );
+	scale = ( float )pm->ps->speed * max / ( 127.0 * total );
 
 	return scale;
 }
@@ -1181,9 +1181,9 @@ static int PM_CorrectAllSolid( trace_t* trace )
 			for( k = -1; k <= 1; k++ )
 			{
 				VectorCopy( pm->ps->origin, point );
-				point[ 0 ] += (float)i;
-				point[ 1 ] += (float)j;
-				point[ 2 ] += (float)k;
+				point[ 0 ] += ( float )i;
+				point[ 1 ] += ( float )j;
+				point[ 2 ] += ( float )k;
 				pm->trace( trace, point, pm->mins, pm->maxs, point, pm->ps->clientNum, pm->tracemask );
 				if( !trace->allsolid )
 				{
@@ -1590,7 +1590,7 @@ static void PM_Footsteps( void )
 
 	// check for footstep / splash sounds
 	old              = pm->ps->bobCycle;
-	pm->ps->bobCycle = (int)( old + bobmove * pml.msec ) & 255;
+	pm->ps->bobCycle = ( int )( old + bobmove * pml.msec ) & 255;
 
 	// if we just crossed a cycle boundary, play an apropriate footstep event
 	if( ( ( old + 64 ) ^ ( pm->ps->bobCycle + 64 ) ) & 128 )

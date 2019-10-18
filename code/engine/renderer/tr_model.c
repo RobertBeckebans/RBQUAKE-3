@@ -155,12 +155,12 @@ qhandle_t RE_RegisterModel( const char* name )
 		// try loading skeletal file
 
 		loaded    = qfalse;
-		bufferLen = ri.FS_ReadFile( name, (void**)&buffer );
+		bufferLen = ri.FS_ReadFile( name, ( void** )&buffer );
 		if( buffer )
 		{
 			loadmodel = mod;
 
-			ident = LittleLong( *(unsigned*)buffer );
+			ident = LittleLong( *( unsigned* )buffer );
 #if defined( COMPAT_ET )
 #if 0
 			if( ident == MDS_IDENT )
@@ -180,11 +180,11 @@ qhandle_t RE_RegisterModel( const char* name )
 #endif
 
 #if defined( USE_REFENTITY_ANIMATIONSYSTEM )
-			if( !Q_stricmpn( (const char*)buffer, "MD5Version", 10 ) )
+			if( !Q_stricmpn( ( const char* )buffer, "MD5Version", 10 ) )
 			{
 				loaded = R_LoadMD5( mod, buffer, bufferLen, name );
 			}
-			else if( !Q_stricmpn( (const char*)buffer, PSK_IDENTSTRING, PSK_IDENTLEN ) )
+			else if( !Q_stricmpn( ( const char* )buffer, PSK_IDENTSTRING, PSK_IDENTLEN ) )
 			{
 				loaded = R_LoadPSK( mod, buffer, bufferLen, name );
 			}
@@ -221,12 +221,12 @@ qhandle_t RE_RegisterModel( const char* name )
 		}
 
 		filename[ strlen( filename ) - 1 ] = 'c'; // try MDC first
-		ri.FS_ReadFile( filename, (void**)&buffer );
+		ri.FS_ReadFile( filename, ( void** )&buffer );
 
 		if( !buffer )
 		{
 			filename[ strlen( filename ) - 1 ] = '3'; // try MD3 second
-			ri.FS_ReadFile( filename, (void**)&buffer );
+			ri.FS_ReadFile( filename, ( void** )&buffer );
 			if( !buffer )
 			{
 				continue;
@@ -235,7 +235,7 @@ qhandle_t RE_RegisterModel( const char* name )
 
 		loadmodel = mod;
 
-		ident = LittleLong( *(unsigned*)buffer );
+		ident = LittleLong( *( unsigned* )buffer );
 
 		if( ident == MD3_IDENT )
 		{
@@ -337,7 +337,7 @@ static qboolean R_LoadMDX( model_t* mod, void* buffer, const char* mod_name )
 	int            size;
 	int            frameSize;
 
-	pinmodel = (mdxHeader_t*)buffer;
+	pinmodel = ( mdxHeader_t* )buffer;
 
 	version = LittleLong( pinmodel->version );
 	if( version != MDX_VERSION )
@@ -365,10 +365,10 @@ static qboolean R_LoadMDX( model_t* mod, void* buffer, const char* mod_name )
 	if( LittleLong( 1 ) != 1 )
 	{
 		// swap all the frames
-		frameSize = (int)( sizeof( mdxBoneFrameCompressed_t ) ) * mdx->numBones;
+		frameSize = ( int )( sizeof( mdxBoneFrameCompressed_t ) ) * mdx->numBones;
 		for( i = 0; i < mdx->numFrames; i++ )
 		{
-			frame         = (mdxFrame_t*)( (byte*)mdx + mdx->ofsFrames + i * frameSize + i * sizeof( mdxFrame_t ) );
+			frame         = ( mdxFrame_t* )( ( byte* )mdx + mdx->ofsFrames + i * frameSize + i * sizeof( mdxFrame_t ) );
 			frame->radius = LittleFloat( frame->radius );
 			for( j = 0; j < 3; j++ )
 			{
@@ -378,17 +378,17 @@ static qboolean R_LoadMDX( model_t* mod, void* buffer, const char* mod_name )
 				frame->parentOffset[ j ] = LittleFloat( frame->parentOffset[ j ] );
 			}
 
-			bframe = (short*)( (byte*)mdx + mdx->ofsFrames + i * frameSize + ( ( i + 1 ) * sizeof( mdxFrame_t ) ) );
+			bframe = ( short* )( ( byte* )mdx + mdx->ofsFrames + i * frameSize + ( ( i + 1 ) * sizeof( mdxFrame_t ) ) );
 			for( j = 0; j < mdx->numBones * sizeof( mdxBoneFrameCompressed_t ) / sizeof( short ); j++ )
 			{
-				( (short*)bframe )[ j ] = LittleShort( ( (short*)bframe )[ j ] );
+				( ( short* )bframe )[ j ] = LittleShort( ( ( short* )bframe )[ j ] );
 			}
 		}
 
 		// swap all the bones
 		for( i = 0; i < mdx->numBones; i++ )
 		{
-			bi = (mdxBoneInfo_t*)( (byte*)mdx + mdx->ofsBones + i * sizeof( mdxBoneInfo_t ) );
+			bi = ( mdxBoneInfo_t* )( ( byte* )mdx + mdx->ofsBones + i * sizeof( mdxBoneInfo_t ) );
 			LL( bi->parent );
 			bi->torsoWeight = LittleFloat( bi->torsoWeight );
 			bi->parentDist  = LittleFloat( bi->parentDist );

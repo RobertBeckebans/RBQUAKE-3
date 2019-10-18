@@ -366,7 +366,7 @@ qboolean CL_OpenAVIForWriting( const char* fileName )
 	Q_strncpyz( afd.fileName, fileName, MAX_QPATH );
 
 	afd.frameRate   = cl_aviFrameRate->integer;
-	afd.framePeriod = (int)( 1000000.0f / afd.frameRate );
+	afd.framePeriod = ( int )( 1000000.0f / afd.frameRate );
 	afd.width       = cls.glconfig.vidWidth;
 	afd.height      = cls.glconfig.vidHeight;
 
@@ -566,7 +566,7 @@ void CL_WriteAVIAudioFrame( const byte* pcmBuffer, int size )
 	bytesInBuffer += size;
 
 	// Only write if we have a frame's worth of audio
-	if( bytesInBuffer >= (int)ceil( (float)afd.a.rate / (float)afd.frameRate ) * afd.a.sampleSize )
+	if( bytesInBuffer >= ( int )ceil( ( float )afd.a.rate / ( float )afd.frameRate ) * afd.a.sampleSize )
 	{
 		int  chunkOffset  = afd.fileSize - afd.moviOffset - 8;
 		int  chunkSize    = 8 + bytesInBuffer;

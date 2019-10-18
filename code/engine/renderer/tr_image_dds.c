@@ -188,9 +188,9 @@ typedef struct
 
 #ifndef MAKEFOURCC
 
-#define MAKEFOURCC( ch0, ch1, ch2, ch3 )                                   \
-	( (unsigned int)(char)( ch0 ) | ( (unsigned int)(char)( ch1 ) << 8 ) | \
-		( (unsigned int)(char)( ch2 ) << 16 ) | ( (unsigned int)(char)( ch3 ) << 24 ) )
+#define MAKEFOURCC( ch0, ch1, ch2, ch3 )                                           \
+	( ( unsigned int )( char )( ch0 ) | ( ( unsigned int )( char )( ch1 ) << 8 ) | \
+		( ( unsigned int )( char )( ch2 ) << 16 ) | ( ( unsigned int )( char )( ch3 ) << 24 ) )
 
 #endif
 
@@ -243,7 +243,7 @@ static void R_DecodeS3TCBlock( byte out[ 4 ][ 4 ][ 4 ], int bx, int by, int form
 			return;
 	}
 
-	block_base = (byte*)image_base + blocksize * ( ( ( iw + 3 ) / 4 ) * ( by / 4 ) + bx / 4 );
+	block_base = ( byte* )image_base + blocksize * ( ( ( iw + 3 ) / 4 ) * ( by / 4 ) + bx / 4 );
 
 	switch( format )
 	{
@@ -260,8 +260,8 @@ static void R_DecodeS3TCBlock( byte out[ 4 ][ 4 ][ 4 ], int bx, int by, int form
 			break;
 	}
 
-	c0 = (uint16_t)color_base[ 0 ] | ( (uint16_t)color_base[ 1 ] << 8 );
-	c1 = (uint16_t)color_base[ 2 ] | ( (uint16_t)color_base[ 3 ] << 8 );
+	c0 = ( uint16_t )color_base[ 0 ] | ( ( uint16_t )color_base[ 1 ] << 8 );
+	c1 = ( uint16_t )color_base[ 2 ] | ( ( uint16_t )color_base[ 3 ] << 8 );
 
 	UnpackRGB565( rgba[ 0 ], c0 );
 	UnpackRGB565( rgba[ 1 ], c1 );
@@ -586,15 +586,15 @@ image_t* R_LoadDDSImageData( void* pImageData, const char* name, int bits, filte
 	}
 	*/
 
-	buff = (byte*)pImageData;
+	buff = ( byte* )pImageData;
 
-	if( strncmp( (const char*)buff, "DDS ", 4 ) != 0 )
+	if( strncmp( ( const char* )buff, "DDS ", 4 ) != 0 )
 	{
 		ri.Printf( PRINT_WARNING, "R_LoadDDSImage: invalid dds header \"%s\"\n", name );
 		goto ret_error;
 	}
 
-	ddsd = (DDSURFACEDESC2_t*)( buff + 4 );
+	ddsd = ( DDSURFACEDESC2_t* )( buff + 4 );
 
 	//Byte Swapping for the DDS headers.
 	//beware: we ignore some of the shorts.
@@ -604,7 +604,7 @@ image_t* R_LoadDDSImageData( void* pImageData, const char* name, int bits, filte
 		int* field;
 		for( i = 0; i < sizeof( DDSURFACEDESC2_t ) / sizeof( int ); i++ )
 		{
-			field      = (int*)ddsd;
+			field      = ( int* )ddsd;
 			field[ i ] = LittleLong( field[ i ] );
 		}
 	}
@@ -1201,7 +1201,7 @@ image_t* R_LoadDDSImage( const char* name, int bits, filterType_t filterType, wr
 	}
 	*/
 
-	len = ri.FS_ReadFile( name, (void**)&buff );
+	len = ri.FS_ReadFile( name, ( void** )&buff );
 	if( !buff )
 	{
 		return 0;

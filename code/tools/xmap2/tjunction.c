@@ -157,8 +157,8 @@ int AddEdge( vec3_t v1, vec3_t v2, qboolean createNonAxial )
 		if( fabs( dir[ 0 ] + dir[ 1 ] + dir[ 2 ] ) != 1.0 )
 		{
 			AUTOEXPAND_BY_REALLOC( originalEdges, numOriginalEdges, allocatedOriginalEdges, 1024 );
-			originalEdges[ numOriginalEdges ].dv[ 0 ] = (bspDrawVert_t*)v1;
-			originalEdges[ numOriginalEdges ].dv[ 1 ] = (bspDrawVert_t*)v2;
+			originalEdges[ numOriginalEdges ].dv[ 0 ] = ( bspDrawVert_t* )v1;
+			originalEdges[ numOriginalEdges ].dv[ 1 ] = ( bspDrawVert_t* )v2;
 			originalEdges[ numOriginalEdges ].length  = d;
 			numOriginalEdges++;
 			return -1;
@@ -367,7 +367,7 @@ void FixSurfaceJunctions( mapDrawSurface_t* ds )
 		v1 = &ds->verts[ i ];
 		v2 = &ds->verts[ ( i + 1 ) % ds->numVerts ];
 
-		j = (int)ds->verts[ i ].lightmap[ 0 ][ 0 ];
+		j = ( int )ds->verts[ i ].lightmap[ 0 ][ 0 ];
 		if( j == -1 )
 		{
 			continue; // degenerate edge
@@ -432,7 +432,7 @@ void FixSurfaceJunctions( mapDrawSurface_t* ds )
 				{
 					for( j = 0; j < 4; j++ )
 					{
-						c                                      = (float)v1->lightColor[ k ][ j ] + frac * ( (float)v2->lightColor[ k ][ j ] - (float)v1->lightColor[ k ][ j ] );
+						c                                      = ( float )v1->lightColor[ k ][ j ] + frac * ( ( float )v2->lightColor[ k ][ j ] - ( float )v1->lightColor[ k ][ j ] );
 						verts[ numVerts ].lightColor[ k ][ j ] = ( c < 255.0f ? c : 255.0f );
 					}
 				}
@@ -625,8 +625,8 @@ int EdgeCompare( const void* elem1, const void* elem2 )
 {
 	float d1, d2;
 
-	d1 = ( (originalEdge_t*)elem1 )->length;
-	d2 = ( (originalEdge_t*)elem2 )->length;
+	d1 = ( ( originalEdge_t* )elem1 )->length;
+	d2 = ( ( originalEdge_t* )elem2 )->length;
 
 	if( d1 < d2 )
 	{

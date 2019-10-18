@@ -61,7 +61,7 @@ void AddScriptToStack( const char* filename, int index )
 
 	strcpy( script->filename, ExpandPath( filename ) );
 
-	size = vfsLoadFile( script->filename, (void**)&script->buffer, index );
+	size = vfsLoadFile( script->filename, ( void** )&script->buffer, index );
 
 	if( size == -1 )
 	{
@@ -528,9 +528,9 @@ void Write1DMatrix( FILE* f, int x, vec_t* m )
 	fprintf( f, " ( " );
 	for( i = 0; i < x; i++ )
 	{
-		if( m[ i ] == (int)m[ i ] )
+		if( m[ i ] == ( int )m[ i ] )
 		{
-			fprintf( f, "%i ", (int)m[ i ] );
+			fprintf( f, "%i ", ( int )m[ i ] );
 		}
 		else
 		{

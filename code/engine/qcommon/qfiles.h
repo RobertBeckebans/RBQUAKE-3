@@ -269,7 +269,7 @@ MDC file format
 typedef struct
 {
 	unsigned int ofsVec; // offset direction from the last base frame
-	//  unsigned short  ofsVec;
+						 //  unsigned short  ofsVec;
 } mdcXyzCompressed_t;
 
 typedef struct

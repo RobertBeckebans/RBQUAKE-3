@@ -485,8 +485,8 @@ void RecursiveLeafFlow( int leafnum, threaddata_t* thread, pstack_t* prevstack )
 	stack.numseperators[ 1 ] = 0;
 #endif
 
-	might = (long*)stack.mightsee;
-	vis   = (long*)thread->base->portalvis;
+	might = ( long* )stack.mightsee;
+	vis   = ( long* )thread->base->portalvis;
 
 	// check all portals for flowing into other leafs
 	for( i = 0; i < leaf->numportals; i++ )
@@ -525,15 +525,15 @@ void RecursiveLeafFlow( int leafnum, threaddata_t* thread, pstack_t* prevstack )
 		// if the portal can't see anything we haven't allready seen, skip it
 		if( p->status == stat_done )
 		{
-			test = (long*)p->portalvis;
+			test = ( long* )p->portalvis;
 		}
 		else
 		{
-			test = (long*)p->portalflood;
+			test = ( long* )p->portalflood;
 		}
 
 		more      = 0;
-		prevmight = (long*)prevstack->mightsee;
+		prevmight = ( long* )prevstack->mightsee;
 		for( j = 0; j < portallongs; j++ )
 		{
 			might[ j ] = prevmight[ j ] & test[ j ];
@@ -738,7 +738,7 @@ void PortalFlow( int portalnum )
 	data.pstack_head.depth       = 0;
 	for( i = 0; i < portallongs; i++ )
 	{
-		( (long*)data.pstack_head.mightsee )[ i ] = ( (long*)p->portalflood )[ i ];
+		( ( long* )data.pstack_head.mightsee )[ i ] = ( ( long* )p->portalflood )[ i ];
 	}
 
 	RecursiveLeafFlow( p->leaf, &data, &data.pstack_head );
@@ -747,7 +747,7 @@ void PortalFlow( int portalnum )
 
 	c_can = CountBits( p->portalvis, numportals * 2 );
 
-	Sys_FPrintf( SYS_VRB, "portal:%4i  mightsee:%4i  cansee:%4i (%i chains)\n", (int)( p - portals ), c_might, c_can, data.c_chains );
+	Sys_FPrintf( SYS_VRB, "portal:%4i  mightsee:%4i  cansee:%4i (%i chains)\n", ( int )( p - portals ), c_might, c_can, data.c_chains );
 }
 
 /*
@@ -772,7 +772,7 @@ void RecursivePassageFlow( vportal_t* portal, threaddata_t* thread, pstack_t* pr
 	stack.next  = NULL;
 	stack.depth = prevstack->depth + 1;
 
-	vis = (long*)thread->base->portalvis;
+	vis = ( long* )thread->base->portalvis;
 
 	passage     = portal->passages;
 	nextpassage = passage;
@@ -795,17 +795,17 @@ void RecursivePassageFlow( vportal_t* portal, threaddata_t* thread, pstack_t* pr
 		// mark the portal as visible
 		thread->base->portalvis[ pnum >> 3 ] |= ( 1 << ( pnum & 7 ) );
 
-		prevmight = (long*)prevstack->mightsee;
-		cansee    = (long*)passage->cansee;
-		might     = (long*)stack.mightsee;
+		prevmight = ( long* )prevstack->mightsee;
+		cansee    = ( long* )passage->cansee;
+		might     = ( long* )stack.mightsee;
 		memcpy( might, prevmight, portalbytes );
 		if( p->status == stat_done )
 		{
-			portalvis = (long*)p->portalvis;
+			portalvis = ( long* )p->portalvis;
 		}
 		else
 		{
-			portalvis = (long*)p->portalflood;
+			portalvis = ( long* )p->portalflood;
 		}
 		more = 0;
 		for( j = 0; j < portallongs; j++ )
@@ -874,7 +874,7 @@ void PassageFlow( int portalnum )
 	data.pstack_head.depth       = 0;
 	for( i = 0; i < portallongs; i++ )
 	{
-		( (long*)data.pstack_head.mightsee )[ i ] = ( (long*)p->portalflood )[ i ];
+		( ( long* )data.pstack_head.mightsee )[ i ] = ( ( long* )p->portalflood )[ i ];
 	}
 
 	RecursivePassageFlow( p, &data, &data.pstack_head );
@@ -922,7 +922,7 @@ void RecursivePassagePortalFlow( vportal_t* portal, threaddata_t* thread, pstack
 	stack.numseperators[ 1 ] = 0;
 #endif
 
-	vis = (long*)thread->base->portalvis;
+	vis = ( long* )thread->base->portalvis;
 
 	passage     = portal->passages;
 	nextpassage = passage;
@@ -942,17 +942,17 @@ void RecursivePassagePortalFlow( vportal_t* portal, threaddata_t* thread, pstack
 			continue; // can't possibly see it
 		}
 
-		prevmight = (long*)prevstack->mightsee;
-		cansee    = (long*)passage->cansee;
-		might     = (long*)stack.mightsee;
+		prevmight = ( long* )prevstack->mightsee;
+		cansee    = ( long* )passage->cansee;
+		might     = ( long* )stack.mightsee;
 		memcpy( might, prevmight, portalbytes );
 		if( p->status == stat_done )
 		{
-			portalvis = (long*)p->portalvis;
+			portalvis = ( long* )p->portalvis;
 		}
 		else
 		{
-			portalvis = (long*)p->portalflood;
+			portalvis = ( long* )p->portalflood;
 		}
 		more = 0;
 		for( j = 0; j < portallongs; j++ )
@@ -1167,7 +1167,7 @@ void PassagePortalFlow( int portalnum )
 	data.pstack_head.depth       = 0;
 	for( i = 0; i < portallongs; i++ )
 	{
-		( (long*)data.pstack_head.mightsee )[ i ] = ( (long*)p->portalflood )[ i ];
+		( ( long* )data.pstack_head.mightsee )[ i ] = ( ( long* )p->portalflood )[ i ];
 	}
 
 	RecursivePassagePortalFlow( p, &data, &data.pstack_head );
@@ -1498,7 +1498,7 @@ void CreatePassages( int portalnum )
 			continue;
 		}
 
-		passage = (passage_t*)safe_malloc( sizeof( passage_t ) + portalbytes );
+		passage = ( passage_t* )safe_malloc( sizeof( passage_t ) + portalbytes );
 		memset( passage, 0, sizeof( passage_t ) + portalbytes );
 		numseperators = AddSeperators( portal->winding, target->winding, qfalse, seperators, MAX_SEPERATORS * 2 );
 		numseperators +=
@@ -1568,7 +1568,7 @@ void CreatePassages( int portalnum )
 			//% memcpy( &in, p->winding, (int)((fixedWinding_t *)0)->points[p->winding->numpoints] );
 			if( p->winding->numpoints <= MAX_POINTS_ON_FIXED_WINDING )
 			{
-				memcpy( &in, p->winding, ( size_t ) & ( ( (fixedWinding_t*)0 )->points[ p->winding->numpoints ] ) );
+				memcpy( &in, p->winding, ( size_t ) & ( ( ( fixedWinding_t* )0 )->points[ p->winding->numpoints ] ) );
 			}
 			else
 			{
@@ -1867,8 +1867,8 @@ void RecursiveLeafBitFlow( int leafnum, byte* mightsee, byte* cansee )
 		more = 0;
 		for( j = 0; j < portallongs; j++ )
 		{
-			( (long*)newmight )[ j ] = ( (long*)mightsee )[ j ] & ( (long*)p->portalflood )[ j ];
-			more |= ( (long*)newmight )[ j ] & ~( (long*)cansee )[ j ];
+			( ( long* )newmight )[ j ] = ( ( long* )mightsee )[ j ] & ( ( long* )p->portalflood )[ j ];
+			more |= ( ( long* )newmight )[ j ] & ~( ( long* )cansee )[ j ];
 		}
 
 		if( !more )

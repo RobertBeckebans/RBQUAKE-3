@@ -127,8 +127,8 @@ static qboolean StringToFilter( char* s, ipFilter_t* f )
 		s++;
 	}
 
-	f->mask    = *(unsigned*)m;
-	f->compare = *(unsigned*)b;
+	f->mask    = *( unsigned* )m;
+	f->compare = *( unsigned* )b;
 
 	return qtrue;
 }
@@ -154,9 +154,9 @@ static void UpdateIPBans( void )
 			continue;
 		}
 
-		*(unsigned*)b = ipFilters[ i ].compare;
-		*(unsigned*)m = ipFilters[ i ].mask;
-		*ip           = 0;
+		*( unsigned* )b = ipFilters[ i ].compare;
+		*( unsigned* )m = ipFilters[ i ].mask;
+		*ip             = 0;
 		for( j = 0; j < 4; j++ )
 		{
 			if( m[ j ] != 255 )
@@ -212,7 +212,7 @@ qboolean G_FilterPacket( char* from )
 		i++, p++;
 	}
 
-	in = *(unsigned*)m;
+	in = *( unsigned* )m;
 
 	for( i = 0; i < numIPFilters; i++ )
 		if( ( in & ipFilters[ i ].mask ) == ipFilters[ i ].compare )

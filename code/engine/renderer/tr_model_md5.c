@@ -55,7 +55,7 @@ qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modN
 	int numBoneReferences;
 	int boneReferences[ MAX_BONES ];
 
-	buf_p = (char*)buffer;
+	buf_p = ( char* )buffer;
 
 	// skip MD5Version indent string
 	Com_ParseExt( &buf_p, qfalse );
@@ -721,7 +721,7 @@ qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modN
 
 	for( i = 0; i < md5->numVBOSurfaces; i++ )
 	{
-		md5->vboSurfaces[ i ] = (srfVBOMD5Mesh_t*)Com_GrowListElement( &vboSurfaces, i );
+		md5->vboSurfaces[ i ] = ( srfVBOMD5Mesh_t* )Com_GrowListElement( &vboSurfaces, i );
 	}
 
 	Com_DestroyGrowList( &vboSurfaces );

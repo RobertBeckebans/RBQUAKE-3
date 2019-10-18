@@ -255,19 +255,19 @@ constants
 #define BSP_DELUXEL_SIZE 3
 #define SUPER_FLOODLIGHT_SIZE 4
 
-#define VERTEX_LUXEL( s, v ) ( vertexLuxels[ s ] + ( (v)*VERTEX_LUXEL_SIZE ) )
-#define RAD_VERTEX_LUXEL( s, v ) ( radVertexLuxels[ s ] + ( (v)*VERTEX_LUXEL_SIZE ) )
-#define VERTEX_DELUXEL( s, v ) ( vertexDeluxels[ s ] + ( (v)*VERTEX_DELUXEL_SIZE ) )
-#define BSP_LUXEL( s, x, y ) ( lm->bspLuxels[ s ] + ( ( ( (y)*lm->w ) + ( x ) ) * BSP_LUXEL_SIZE ) )
-#define RAD_LUXEL( s, x, y ) ( lm->radLuxels[ s ] + ( ( ( (y)*lm->w ) + ( x ) ) * RAD_LUXEL_SIZE ) )
-#define SUPER_LUXEL( s, x, y ) ( lm->superLuxels[ s ] + ( ( ( (y)*lm->sw ) + ( x ) ) * SUPER_LUXEL_SIZE ) )
-#define SUPER_DELUXEL( x, y ) ( lm->superDeluxels + ( ( ( (y)*lm->sw ) + ( x ) ) * SUPER_DELUXEL_SIZE ) )
-#define BSP_DELUXEL( x, y ) ( lm->bspDeluxels + ( ( ( (y)*lm->w ) + ( x ) ) * BSP_DELUXEL_SIZE ) )
-#define SUPER_CLUSTER( x, y ) ( lm->superClusters + ( ( (y)*lm->sw ) + ( x ) ) )
-#define SUPER_ORIGIN( x, y ) ( lm->superOrigins + ( ( ( (y)*lm->sw ) + ( x ) ) * SUPER_ORIGIN_SIZE ) )
-#define SUPER_NORMAL( x, y ) ( lm->superNormals + ( ( ( (y)*lm->sw ) + ( x ) ) * SUPER_NORMAL_SIZE ) )
-#define SUPER_DIRT( x, y ) ( lm->superNormals + ( ( ( (y)*lm->sw ) + ( x ) ) * SUPER_NORMAL_SIZE ) + 3 ) /* stash dirtyness in normal[ 3 ] */
-#define SUPER_FLOODLIGHT( x, y ) ( lm->superFloodLight + ( ( ( (y)*lm->sw ) + ( x ) ) * SUPER_FLOODLIGHT_SIZE ) )
+#define VERTEX_LUXEL( s, v ) ( vertexLuxels[ s ] + ( ( v )*VERTEX_LUXEL_SIZE ) )
+#define RAD_VERTEX_LUXEL( s, v ) ( radVertexLuxels[ s ] + ( ( v )*VERTEX_LUXEL_SIZE ) )
+#define VERTEX_DELUXEL( s, v ) ( vertexDeluxels[ s ] + ( ( v )*VERTEX_DELUXEL_SIZE ) )
+#define BSP_LUXEL( s, x, y ) ( lm->bspLuxels[ s ] + ( ( ( ( y )*lm->w ) + ( x ) ) * BSP_LUXEL_SIZE ) )
+#define RAD_LUXEL( s, x, y ) ( lm->radLuxels[ s ] + ( ( ( ( y )*lm->w ) + ( x ) ) * RAD_LUXEL_SIZE ) )
+#define SUPER_LUXEL( s, x, y ) ( lm->superLuxels[ s ] + ( ( ( ( y )*lm->sw ) + ( x ) ) * SUPER_LUXEL_SIZE ) )
+#define SUPER_DELUXEL( x, y ) ( lm->superDeluxels + ( ( ( ( y )*lm->sw ) + ( x ) ) * SUPER_DELUXEL_SIZE ) )
+#define BSP_DELUXEL( x, y ) ( lm->bspDeluxels + ( ( ( ( y )*lm->w ) + ( x ) ) * BSP_DELUXEL_SIZE ) )
+#define SUPER_CLUSTER( x, y ) ( lm->superClusters + ( ( ( y )*lm->sw ) + ( x ) ) )
+#define SUPER_ORIGIN( x, y ) ( lm->superOrigins + ( ( ( ( y )*lm->sw ) + ( x ) ) * SUPER_ORIGIN_SIZE ) )
+#define SUPER_NORMAL( x, y ) ( lm->superNormals + ( ( ( ( y )*lm->sw ) + ( x ) ) * SUPER_NORMAL_SIZE ) )
+#define SUPER_DIRT( x, y ) ( lm->superNormals + ( ( ( ( y )*lm->sw ) + ( x ) ) * SUPER_NORMAL_SIZE ) + 3 ) /* stash dirtyness in normal[ 3 ] */
+#define SUPER_FLOODLIGHT( x, y ) ( lm->superFloodLight + ( ( ( ( y )*lm->sw ) + ( x ) ) * SUPER_FLOODLIGHT_SIZE ) )
 
 #define RGBTOGRAY( v ) ( ( v )[ 0 ] * 0.3f + ( v )[ 1 ] * 0.59f + ( v )[ 2 ] * 0.11f )
 #define RGBTOLUMINANCE( v ) ( ( v )[ 0 ] * 0.2125f + ( v )[ 1 ] * 0.7154f + ( v )[ 2 ] * 0.0721f )

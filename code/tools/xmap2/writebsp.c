@@ -159,7 +159,7 @@ void EmitLeaf( node_t* node )
 	for( b = node->brushlist; b; b = b->next )
 	{
 		/* something is corrupting brushes */
-		if( (size_t)b < 256 )
+		if( ( size_t )b < 256 )
 		{
 			Sys_Printf( "WARNING: Node brush list corrupted (0x%08X)\n", b );
 			break;

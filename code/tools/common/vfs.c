@@ -154,7 +154,7 @@ static void vfsInitPakFile( const char* filename )
 			break;
 		}
 
-		file       = (VFS_PAKFILE*)safe_malloc( sizeof( VFS_PAKFILE ) );
+		file       = ( VFS_PAKFILE* )safe_malloc( sizeof( VFS_PAKFILE ) );
 		g_pakFiles = g_slist_append( g_pakFiles, file );
 
 		vfsFixDOSName( filename_inzip );
@@ -254,13 +254,13 @@ void vfsShutdown()
 {
 	while( g_unzFiles )
 	{
-		unzClose( (unzFile)g_unzFiles->data );
+		unzClose( ( unzFile )g_unzFiles->data );
 		g_unzFiles = g_slist_remove( g_unzFiles, g_unzFiles->data );
 	}
 
 	while( g_pakFiles )
 	{
-		VFS_PAKFILE* file = (VFS_PAKFILE*)g_pakFiles->data;
+		VFS_PAKFILE* file = ( VFS_PAKFILE* )g_pakFiles->data;
 
 		free( file->name );
 		free( file );
@@ -281,7 +281,7 @@ int vfsGetFileCount( const char* filename )
 
 	for( lst = g_pakFiles; lst != NULL; lst = g_slist_next( lst ) )
 	{
-		VFS_PAKFILE* file = (VFS_PAKFILE*)lst->data;
+		VFS_PAKFILE* file = ( VFS_PAKFILE* )lst->data;
 
 		if( strcmp( file->name, fixed ) == 0 )
 		{
@@ -335,7 +335,7 @@ int vfsLoadFile( const char* filename, void** bufferptr, int index )
 		fclose( f );
 
 		// we need to end the buffer with a 0
-		( (char*)( *bufferptr ) )[ len ] = 0;
+		( ( char* )( *bufferptr ) )[ len ] = 0;
 
 		return len;
 	}
@@ -376,7 +376,7 @@ int vfsLoadFile( const char* filename, void** bufferptr, int index )
 				fclose( f );
 
 				// we need to end the buffer with a 0
-				( (char*)( *bufferptr ) )[ len ] = 0;
+				( ( char* )( *bufferptr ) )[ len ] = 0;
 
 				return len;
 			}
@@ -387,7 +387,7 @@ int vfsLoadFile( const char* filename, void** bufferptr, int index )
 
 	for( lst = g_pakFiles; lst != NULL; lst = g_slist_next( lst ) )
 	{
-		VFS_PAKFILE* file = (VFS_PAKFILE*)lst->data;
+		VFS_PAKFILE* file = ( VFS_PAKFILE* )lst->data;
 
 		if( strcmp( file->name, fixed ) != 0 )
 		{
@@ -405,7 +405,7 @@ int vfsLoadFile( const char* filename, void** bufferptr, int index )
 
 			*bufferptr = safe_malloc( file->size + 1 );
 			// we need to end the buffer with a 0
-			( (char*)( *bufferptr ) )[ file->size ] = 0;
+			( ( char* )( *bufferptr ) )[ file->size ] = 0;
 
 			i = unzReadCurrentFile( file->zipfile, *bufferptr, file->size );
 			unzCloseCurrentFile( file->zipfile );

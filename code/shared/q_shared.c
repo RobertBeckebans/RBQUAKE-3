@@ -284,7 +284,7 @@ void Com_Memset( void* dest, const int val, const size_t count )
 	fillval = fillval | ( fillval << 8 );
 	fillval = fillval | ( fillval << 16 ); // fill dword with 8-bit pattern
 
-	_copyDWord( (unsigned int*)( dest ), fillval, count / 4 );
+	_copyDWord( ( unsigned int* )( dest ), fillval, count / 4 );
 
 	__asm__ __volatile__( "     		// padding of 0-3 bytes \
 		//mov		ecx,count \
@@ -371,7 +371,7 @@ void Com_InitGrowList( growList_t* list, int maxElements )
 {
 	list->maxElements     = maxElements;
 	list->currentElements = 0;
-	list->elements        = (void**)Com_Allocate( list->maxElements * sizeof( void* ) );
+	list->elements        = ( void** )Com_Allocate( list->maxElements * sizeof( void* ) );
 }
 
 void Com_DestroyGrowList( growList_t* list )
@@ -409,7 +409,7 @@ int Com_AddToGrowList( growList_t* list, void* data )
 
 	//  Com_DPrintf("Resizing growlist to %i maxElements\n", list->maxElements);
 
-	list->elements = (void**)Com_Allocate( list->maxElements * sizeof( void* ) );
+	list->elements = ( void** )Com_Allocate( list->maxElements * sizeof( void* ) );
 
 	if( !list->elements )
 	{
@@ -687,7 +687,7 @@ int Com_HashKey( char* string, int maxlength )
 		if( letter == PATH_SEP )
 			letter = '/'; // damn path names
 
-		hash += (long)( letter ) * ( i + 119 );
+		hash += ( long )( letter ) * ( i + 119 );
 		i++;
 	}
 	hash = ( hash ^ ( hash >> 10 ) ^ ( hash >> 20 ) );
@@ -747,7 +747,7 @@ int LongSwap( int l )
 	b3 = ( l >> 16 ) & 255;
 	b4 = ( l >> 24 ) & 255;
 
-	return ( (int)b1 << 24 ) + ( (int)b2 << 16 ) + ( (int)b3 << 8 ) + b4;
+	return ( ( int )b1 << 24 ) + ( ( int )b2 << 16 ) + ( ( int )b3 << 8 ) + b4;
 }
 
 int LongNoSwap( int l )
@@ -1064,7 +1064,7 @@ char* Com_ParseExt( char** data_p, qboolean allowLineBreaks )
 			else if( c == '\"' || !c )
 			{
 				com_token[ len ] = 0;
-				*data_p          = (char*)data;
+				*data_p          = ( char* )data;
 				return com_token;
 			}
 			else if( *data == '\n' )
@@ -1140,7 +1140,7 @@ char* Com_ParseExt( char** data_p, qboolean allowLineBreaks )
 		}
 		com_token[ len ] = 0;
 
-		*data_p = (char*)data;
+		*data_p = ( char* )data;
 		return com_token;
 	}
 
@@ -1183,7 +1183,7 @@ char* Com_ParseExt( char** data_p, qboolean allowLineBreaks )
 		}
 		com_token[ len ] = 0;
 
-		*data_p = (char*)data;
+		*data_p = ( char* )data;
 		return com_token;
 	}
 
@@ -1207,7 +1207,7 @@ char* Com_ParseExt( char** data_p, qboolean allowLineBreaks )
 			Com_Memcpy( com_token, *punc, l );
 			com_token[ l ] = 0;
 			data += l;
-			*data_p = (char*)data;
+			*data_p = ( char* )data;
 			return com_token;
 		}
 	}
@@ -1216,7 +1216,7 @@ char* Com_ParseExt( char** data_p, qboolean allowLineBreaks )
 	com_token[ 0 ] = *data;
 	com_token[ 1 ] = 0;
 	data++;
-	*data_p = (char*)data;
+	*data_p = ( char* )data;
 
 	return com_token;
 }
@@ -1438,9 +1438,9 @@ char* Q_strrchr( const char* string, int c )
 {
 	char  cc = c;
 	char* s;
-	char* sp = (char*)0;
+	char* sp = ( char* )0;
 
-	s = (char*)string;
+	s = ( char* )string;
 
 	while( *s )
 	{
@@ -1475,7 +1475,7 @@ qboolean Q_isanumber( const char* s )
 
 qboolean Q_isintegral( float f )
 {
-	return (int)f == f;
+	return ( int )f == f;
 }
 
 /*
@@ -1657,7 +1657,7 @@ char* Q_stristr( const char* s, const char* find )
 		} while( Q_stricmpn( s, find, len ) != 0 );
 		s--;
 	}
-	return (char*)s;
+	return ( char* )s;
 }
 
 /*

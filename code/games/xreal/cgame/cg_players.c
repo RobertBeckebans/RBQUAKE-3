@@ -1296,7 +1296,7 @@ static void CG_RunPlayerLerpFrame( clientInfo_t* ci, lerpFrame_t* lf, int newAni
 	}
 	else
 	{
-		lf->backlerp = 1.0 - (float)( cg.time - lf->oldFrameTime ) / ( lf->frameTime - lf->oldFrameTime );
+		lf->backlerp = 1.0 - ( float )( cg.time - lf->oldFrameTime ) / ( lf->frameTime - lf->oldFrameTime );
 	}
 
 	// blend old and current animation
@@ -1479,7 +1479,7 @@ void CG_AddPainTwitch( centity_t* cent, vec3_t torsoAngles )
 		return;
 	}
 
-	f = 1.0 - (float)t / PAIN_TWITCH_TIME;
+	f = 1.0 - ( float )t / PAIN_TWITCH_TIME;
 
 	if( cent->pe.painDirection )
 	{
@@ -3001,7 +3001,7 @@ void CG_Player( centity_t* cent )
 			angle = ( ( cg.time / 7 ) & 255 ) * ( M_PI * 2 ) / 255;
 			if( angle > M_PI * 2 )
 			{
-				angle -= (float)M_PI * 2;
+				angle -= ( float )M_PI * 2;
 			}
 
 			dir[ 0 ] = sin( angle ) * 20;
@@ -3062,7 +3062,7 @@ void CG_Player( centity_t* cent )
 			angle = ( ( cg.time / 4 ) & 255 ) * ( M_PI * 2 ) / 255 + M_PI;
 			if( angle > M_PI * 2 )
 			{
-				angle -= (float)M_PI * 2;
+				angle -= ( float )M_PI * 2;
 			}
 
 			dir[ 0 ] = sin( angle ) * 20;
@@ -3097,7 +3097,7 @@ void CG_Player( centity_t* cent )
 			angle = ( ( cg.time / 3 ) & 255 ) * ( M_PI * 2 ) / 255 + 0.5 * M_PI;
 			if( angle > M_PI * 2 )
 			{
-				angle -= (float)M_PI * 2;
+				angle -= ( float )M_PI * 2;
 			}
 
 			dir[ 0 ] = sin( angle ) * 20;
@@ -3180,11 +3180,11 @@ void CG_Player( centity_t* cent )
 
 		if( cg.time - ci->invulnerabilityStartTime < 250 )
 		{
-			c = (float)( cg.time - ci->invulnerabilityStartTime ) / 250;
+			c = ( float )( cg.time - ci->invulnerabilityStartTime ) / 250;
 		}
 		else if( cg.time - ci->invulnerabilityStopTime < 250 )
 		{
-			c = (float)( 250 - ( cg.time - ci->invulnerabilityStopTime ) ) / 250;
+			c = ( float )( 250 - ( cg.time - ci->invulnerabilityStopTime ) ) / 250;
 		}
 		else
 		{
@@ -3208,11 +3208,11 @@ void CG_Player( centity_t* cent )
 		VectorClear( angles );
 		AnglesToAxis( angles, powerup.axis );
 		VectorCopy( cent->lerpOrigin, powerup.origin );
-		powerup.origin[ 2 ] += -24 + (float)t * 80 / 500;
+		powerup.origin[ 2 ] += -24 + ( float )t * 80 / 500;
 
 		if( t > 400 )
 		{
-			c                       = (float)( t - 1000 ) * 0xff / 100;
+			c                       = ( float )( t - 1000 ) * 0xff / 100;
 			powerup.shaderRGBA[ 0 ] = 0xff - c;
 			powerup.shaderRGBA[ 1 ] = 0xff - c;
 			powerup.shaderRGBA[ 2 ] = 0xff - c;

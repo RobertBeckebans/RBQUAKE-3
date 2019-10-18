@@ -389,7 +389,7 @@ void Tess_DrawElements()
 	{
 		if( tess.multiDrawPrimitives )
 		{
-			glMultiDrawElements( GL_TRIANGLES, tess.multiDrawCounts, GL_INDEX_TYPE, (const GLvoid**)tess.multiDrawIndexes, tess.multiDrawPrimitives );
+			glMultiDrawElements( GL_TRIANGLES, tess.multiDrawCounts, GL_INDEX_TYPE, ( const GLvoid** )tess.multiDrawIndexes, tess.multiDrawPrimitives );
 
 			backEnd.pc.c_multiDrawElements++;
 			backEnd.pc.c_multiDrawPrimitives += tess.multiDrawPrimitives;
@@ -450,7 +450,7 @@ static void BindLightMap()
 #if defined( COMPAT_Q3A )
 		lightmap = tr.fatLightmap;
 #else
-		lightmap = (image_t*)Com_GrowListElement( &tr.lightmaps, tess.lightmapNum );
+		lightmap = ( image_t* )Com_GrowListElement( &tr.lightmaps, tess.lightmapNum );
 #endif
 	}
 	else
@@ -478,7 +478,7 @@ static void BindDeluxeMap()
 
 	if( tess.lightmapNum >= 0 && tess.lightmapNum < tr.deluxemaps.currentElements )
 	{
-		deluxemap = (image_t*)Com_GrowListElement( &tr.deluxemaps, tess.lightmapNum );
+		deluxemap = ( image_t* )Com_GrowListElement( &tr.deluxemaps, tess.lightmapNum );
 	}
 	else
 	{

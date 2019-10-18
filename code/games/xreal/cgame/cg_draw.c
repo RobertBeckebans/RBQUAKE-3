@@ -85,7 +85,7 @@ int CG_Text_Width( const char* text, float scale, int limit )
 			}
 			else
 			{
-				glyph = &font->glyphs[ (int)*s ]; // TTimo: FIXME: getting nasty warnings without the cast, hopefully this doesn't break the VM build
+				glyph = &font->glyphs[ ( int )*s ]; // TTimo: FIXME: getting nasty warnings without the cast, hopefully this doesn't break the VM build
 				out += glyph->xSkip;
 				s++;
 				count++;
@@ -134,7 +134,7 @@ int CG_Text_Height( const char* text, float scale, int limit )
 			}
 			else
 			{
-				glyph = &font->glyphs[ (int)*s ]; // TTimo: FIXME: getting nasty warnings without the cast, hopefully this doesn't break the VM build
+				glyph = &font->glyphs[ ( int )*s ]; // TTimo: FIXME: getting nasty warnings without the cast, hopefully this doesn't break the VM build
 				if( max < glyph->height )
 				{
 					max = glyph->height;
@@ -190,7 +190,7 @@ void CG_Text_Paint( float x, float y, float scale, vec4_t color, const char* tex
 		count = 0;
 		while( s && *s && count < len )
 		{
-			glyph = &font->glyphs[ (int)*s ]; // TTimo: FIXME: getting nasty warnings without the cast, hopefully this doesn't break the VM build
+			glyph = &font->glyphs[ ( int )*s ]; // TTimo: FIXME: getting nasty warnings without the cast, hopefully this doesn't break the VM build
 			//int yadj = Assets.textFont.glyphs[text[i]].bottom + Assets.textFont.glyphs[text[i]].top;
 			//float yadj = scale * (Assets.textFont.glyphs[text[i]].imageHeight - Assets.textFont.glyphs[text[i]].height);
 			if( Q_IsColorString( s ) )
@@ -617,7 +617,7 @@ static void CG_DrawStatusBarHead( float x )
 
 	if( cg.damageTime && cg.time - cg.damageTime < DAMAGE_TIME )
 	{
-		frac = (float)( cg.time - cg.damageTime ) / DAMAGE_TIME;
+		frac = ( float )( cg.time - cg.damageTime ) / DAMAGE_TIME;
 		size = ICON_SIZE * 1.25 * ( 1.5 - frac * 0.5 );
 
 		stretch = size - ICON_SIZE * 1.25;
@@ -655,7 +655,7 @@ static void CG_DrawStatusBarHead( float x )
 		cg.headStartTime = cg.time;
 	}
 
-	frac            = ( cg.time - cg.headStartTime ) / (float)( cg.headEndTime - cg.headStartTime );
+	frac            = ( cg.time - cg.headStartTime ) / ( float )( cg.headEndTime - cg.headStartTime );
 	frac            = frac * frac * ( 3 - 2 * frac );
 	angles[ YAW ]   = cg.headStartYaw + ( cg.headEndYaw - cg.headStartYaw ) * frac;
 	angles[ PITCH ] = cg.headStartPitch + ( cg.headEndPitch - cg.headStartPitch ) * frac;
@@ -1538,15 +1538,15 @@ static float CG_DrawPowerups( float y )
 			{
 				vec4_t modulate;
 
-				f = (float)( t - cg.time ) / POWERUP_BLINK_TIME;
-				f -= (int)f;
+				f = ( float )( t - cg.time ) / POWERUP_BLINK_TIME;
+				f -= ( int )f;
 				modulate[ 0 ] = modulate[ 1 ] = modulate[ 2 ] = modulate[ 3 ] = f;
 				trap_R_SetColor( modulate );
 			}
 
 			if( cg.powerupActive == sorted[ i ] && cg.time - cg.powerupTime < PULSE_TIME )
 			{
-				f    = 1.0 - ( ( (float)cg.time - cg.powerupTime ) / PULSE_TIME );
+				f    = 1.0 - ( ( ( float )cg.time - cg.powerupTime ) / PULSE_TIME );
 				size = ICON_SIZE * ( 1.0 + ( PULSE_SCALE - 1.0 ) * f );
 			}
 			else
@@ -2149,7 +2149,7 @@ static void CG_DrawCenterString( void )
 
 		x = ( SCREEN_WIDTH - w ) / 2;
 
-		CG_DrawStringExt( x, y, linebuffer, color, qfalse, qtrue, cg.centerPrintCharWidth, (int)( cg.centerPrintCharWidth * 1.5 ), 0 );
+		CG_DrawStringExt( x, y, linebuffer, color, qfalse, qtrue, cg.centerPrintCharWidth, ( int )( cg.centerPrintCharWidth * 1.5 ), 0 );
 
 		y += cg.centerPrintCharWidth * 1.5;
 #endif
@@ -2694,7 +2694,7 @@ static void CG_DrawProxWarning( void )
 	}
 
 	w = CG_DrawStrlen( s ) * BIGCHAR_WIDTH;
-	CG_DrawBigStringColor( 320 - w / 2, 64 + BIGCHAR_HEIGHT, s, (float*)g_color_table[ ColorIndex( COLOR_RED ) ] );
+	CG_DrawBigStringColor( 320 - w / 2, 64 + BIGCHAR_HEIGHT, s, ( float* )g_color_table[ ColorIndex( COLOR_RED ) ] );
 }
 #endif
 
@@ -2768,7 +2768,7 @@ static void CG_DrawWarmup( void )
 			{
 				cw = GIANT_WIDTH;
 			}
-			CG_DrawStringExt( 320 - w * cw / 2, 20, s, colorWhite, qfalse, qtrue, cw, (int)( cw * 1.5f ), 0 );
+			CG_DrawStringExt( 320 - w * cw / 2, 20, s, colorWhite, qfalse, qtrue, cw, ( int )( cw * 1.5f ), 0 );
 #endif
 		}
 	}
@@ -2817,7 +2817,7 @@ static void CG_DrawWarmup( void )
 		{
 			cw = GIANT_WIDTH;
 		}
-		CG_DrawStringExt( 320 - w * cw / 2, 25, s, colorWhite, qfalse, qtrue, cw, (int)( cw * 1.1f ), 0 );
+		CG_DrawStringExt( 320 - w * cw / 2, 25, s, colorWhite, qfalse, qtrue, cw, ( int )( cw * 1.1f ), 0 );
 #endif
 	}
 
@@ -2884,7 +2884,7 @@ static void CG_DrawWarmup( void )
 	}
 
 	w = CG_DrawStrlen( s );
-	CG_DrawStringExt( 320 - w * cw / 2, 70, s, colorWhite, qfalse, qtrue, cw, (int)( cw * 1.5 ), 0 );
+	CG_DrawStringExt( 320 - w * cw / 2, 70, s, colorWhite, qfalse, qtrue, cw, ( int )( cw * 1.5 ), 0 );
 #endif
 }
 

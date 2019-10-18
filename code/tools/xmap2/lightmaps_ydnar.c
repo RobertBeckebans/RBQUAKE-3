@@ -295,7 +295,7 @@ int ImportLightmapsMain( int argc, char** argv )
 		sprintf( filename, "%s/lightmap_%04d.tga", dirname, i );
 		Sys_Printf( "Loading %s\n", filename );
 		buffer = NULL;
-		len    = vfsLoadFile( filename, (void*)&buffer, -1 );
+		len    = vfsLoadFile( filename, ( void* )&buffer, -1 );
 		if( len < 0 )
 		{
 			Sys_Printf( "WARNING: Unable to load image %s\n", filename );
@@ -360,8 +360,8 @@ static int CompareLightSurface( const void* a, const void* b )
 	shaderInfo_t *asi, *bsi;
 
 	/* get shaders */
-	asi = surfaceInfos[ *( (int*)a ) ].si;
-	bsi = surfaceInfos[ *( (int*)b ) ].si;
+	asi = surfaceInfos[ *( ( int* )a ) ].si;
+	bsi = surfaceInfos[ *( ( int* )b ) ].si;
 
 	/* dummy check */
 	if( asi == NULL )
@@ -632,7 +632,7 @@ qboolean AddPatchToRawLightmap( int num, rawLightmap_t* lm )
 	{
 		lm->w = lm->customWidth;
 	}
-	sBasis = (float)( lm->w - 1 ) / (float)( ds->patchWidth - 1 );
+	sBasis = ( float )( lm->w - 1 ) / ( float )( ds->patchWidth - 1 );
 
 	/* determine lightmap height */
 	length = 0;
@@ -649,7 +649,7 @@ qboolean AddPatchToRawLightmap( int num, rawLightmap_t* lm )
 	{
 		lm->h = lm->customHeight;
 	}
-	tBasis = (float)( lm->h - 1 ) / (float)( ds->patchHeight - 1 );
+	tBasis = ( float )( lm->h - 1 ) / ( float )( ds->patchHeight - 1 );
 
 	/* free the temporary mesh */
 	FreeMesh( mesh );
@@ -818,7 +818,7 @@ qboolean AddSurfaceToRawLightmap( int num, rawLightmap_t* lm )
 			info->maxs[ 1 ],
 			info->maxs[ 2 ],
 			lm->sampleSize,
-			(int)sampleSize );
+			( int )sampleSize );
 	}
 
 	/* set actual sample size */
@@ -898,7 +898,7 @@ qboolean AddSurfaceToRawLightmap( int num, rawLightmap_t* lm )
 			verts[ i ].lightmap[ 0 ][ 0 ] = s * superSample;
 			verts[ i ].lightmap[ 0 ][ 1 ] = t * superSample;
 
-			if( s > (float)lm->w || t > (float)lm->h )
+			if( s > ( float )lm->w || t > ( float )lm->h )
 			{
 				Sys_FPrintf( SYS_VRB, "WARNING: Lightmap texture coords out of range: S %1.4f > %3d || T %1.4f > %3d\n", s, lm->w, t, lm->h );
 			}
@@ -990,8 +990,8 @@ static int CompareSurfaceInfo( const void* a, const void* b )
 	int            i;
 
 	/* get surface info */
-	aInfo = &surfaceInfos[ *( (int*)a ) ];
-	bInfo = &surfaceInfos[ *( (int*)b ) ];
+	aInfo = &surfaceInfos[ *( ( int* )a ) ];
+	bInfo = &surfaceInfos[ *( ( int* )b ) ];
 
 	/* model first */
 	if( aInfo->modelindex < bInfo->modelindex )
@@ -1553,7 +1553,7 @@ void StitchSurfaceLightmaps( void )
 	}
 
 	/* emit statistics */
-	Sys_Printf( " (%i)\n", (int)( I_FloatTime() - start ) );
+	Sys_Printf( " (%i)\n", ( int )( I_FloatTime() - start ) );
 	Sys_FPrintf( SYS_VRB, "%9d luxels stitched\n", numStitched );
 }
 
@@ -2573,8 +2573,8 @@ static int CompareRawLightmap( const void* a, const void* b )
 	int            i, min, diff;
 
 	/* get lightmaps */
-	alm = &rawLightmaps[ *( (int*)a ) ];
-	blm = &rawLightmaps[ *( (int*)b ) ];
+	alm = &rawLightmaps[ *( ( int* )a ) ];
+	blm = &rawLightmaps[ *( ( int* )b ) ];
 
 	/* get min number of surfaces */
 	min = ( alm->numLightSurfaces < blm->numLightSurfaces ? alm->numLightSurfaces : blm->numLightSurfaces );
@@ -3563,8 +3563,8 @@ void StoreSurfaceLightmaps( void )
 				}
 
 				/* calc lightmap origin in texture space */
-				lmx = (float)lm->lightmapX[ lightmapNum ] / (float)olm->customWidth;
-				lmy = (float)lm->lightmapY[ lightmapNum ] / (float)olm->customHeight;
+				lmx = ( float )lm->lightmapX[ lightmapNum ] / ( float )olm->customWidth;
+				lmy = ( float )lm->lightmapY[ lightmapNum ] / ( float )olm->customHeight;
 
 				/* calc lightmap st coords */
 				dv  = &bspDrawVerts[ ds->firstVert ];
@@ -3573,8 +3573,8 @@ void StoreSurfaceLightmaps( void )
 				{
 					if( lm->solid[ lightmapNum ] )
 					{
-						dv[ j ].lightmap[ lightmapNum ][ 0 ] = lmx + ( 0.5f / (float)olm->customWidth );
-						dv[ j ].lightmap[ lightmapNum ][ 1 ] = lmy + ( 0.5f / (float)olm->customWidth );
+						dv[ j ].lightmap[ lightmapNum ][ 0 ] = lmx + ( 0.5f / ( float )olm->customWidth );
+						dv[ j ].lightmap[ lightmapNum ][ 1 ] = lmy + ( 0.5f / ( float )olm->customWidth );
 					}
 					else
 					{
@@ -3685,7 +3685,7 @@ void StoreSurfaceLightmaps( void )
 				if( rgbGenValues[ style ] == NULL )
 				{
 					sprintf( key, "_style%drgbgen", style );
-					rgbGenValues[ style ] = (char*)ValueForKey( &entities[ 0 ], key );
+					rgbGenValues[ style ] = ( char* )ValueForKey( &entities[ 0 ], key );
 					if( rgbGenValues[ style ][ 0 ] == '\0' )
 					{
 						rgbGenValues[ style ] = "wave noise 0.5 1 0 5.37";
@@ -3705,7 +3705,7 @@ void StoreSurfaceLightmaps( void )
 				if( alphaGenValues[ style ] == NULL )
 				{
 					sprintf( key, "_style%dalphagen", style );
-					alphaGenValues[ style ] = (char*)ValueForKey( &entities[ 0 ], key );
+					alphaGenValues[ style ] = ( char* )ValueForKey( &entities[ 0 ], key );
 				}
 				if( alphaGenValues[ style ][ 0 ] != '\0' )
 				{
@@ -3809,7 +3809,7 @@ void StoreSurfaceLightmaps( void )
 
 	/* calc num stored */
 	numStored  = numBSPLightBytes / 3;
-	efficiency = ( numStored <= 0 ) ? 0 : (float)numUsed / (float)numStored;
+	efficiency = ( numStored <= 0 ) ? 0 : ( float )numUsed / ( float )numStored;
 
 	/* print stats */
 	Sys_Printf( "%9d luxels used\n", numUsed );

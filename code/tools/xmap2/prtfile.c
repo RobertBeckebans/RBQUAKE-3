@@ -52,7 +52,7 @@ void WriteFloat( FILE* f, vec_t v )
 {
 	if( fabs( v - Q_rint( v ) ) < 0.001 )
 	{
-		fprintf( f, "%i ", (int)Q_rint( v ) );
+		fprintf( f, "%i ", ( int )Q_rint( v ) );
 	}
 	else
 	{

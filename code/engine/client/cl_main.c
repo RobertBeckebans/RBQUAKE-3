@@ -460,7 +460,7 @@ static void CL_CaptureVoip( void )
 			// !!! FIXME:  updates faster than 4Hz?
 
 			samples -= samples % clc.speexFrameSize;
-			S_Capture( samples, (byte*)sampbuffer ); // grab from audio card.
+			S_Capture( samples, ( byte* )sampbuffer ); // grab from audio card.
 
 			// this will probably generate multiple speex packets each time.
 			while( samples > 0 )
@@ -474,21 +474,21 @@ static void CL_CaptureVoip( void )
 				// check the "power" of this packet...
 				for( i = 0; i < clc.speexFrameSize; i++ )
 				{
-					const float flsamp = (float)sampptr[ i ];
+					const float flsamp = ( float )sampptr[ i ];
 					const float s      = fabs( flsamp );
 
 					voipPower += s * s;
-					sampptr[ i ] = ( int16_t )( (flsamp)*audioMult );
+					sampptr[ i ] = ( int16_t )( ( flsamp )*audioMult );
 				}
 
 				// encode raw audio samples into Speex data...
 				speex_bits_reset( &clc.speexEncoderBits );
 				speex_encode_int( clc.speexEncoder, sampptr, &clc.speexEncoderBits );
 				bytes = speex_bits_write( &clc.speexEncoderBits,
-					(char*)&clc.voipOutgoingData[ wpos + 1 ],
+					( char* )&clc.voipOutgoingData[ wpos + 1 ],
 					sizeof( clc.voipOutgoingData ) - ( wpos + 1 ) );
 				assert( ( bytes > 0 ) && ( bytes < 256 ) );
-				clc.voipOutgoingData[ wpos ] = (byte)bytes;
+				clc.voipOutgoingData[ wpos ] = ( byte )bytes;
 				wpos += bytes + 1;
 
 				// look at the data for the next packet...
@@ -497,7 +497,7 @@ static void CL_CaptureVoip( void )
 				speexFrames++;
 			}
 
-			clc.voipPower = ( voipPower / ( 32768.0f * 32768.0f * ( (float)( clc.speexFrameSize * speexFrames ) ) ) ) * 100.0f;
+			clc.voipPower = ( voipPower / ( 32768.0f * 32768.0f * ( ( float )( clc.speexFrameSize * speexFrames ) ) ) ) * 100.0f;
 
 			if( ( useVad ) && ( clc.voipPower < cl_voipVADThreshold->value ) )
 			{
@@ -912,7 +912,7 @@ void CL_DemoCompleted( void )
 		{
 			// Millisecond times are frame durations:
 			// minimum/average/maximum/std deviation
-			Com_sprintf( buffer, sizeof( buffer ), "%i frames %3.1f seconds %3.1f fps %d.0/%.1f/%d.0/%.1f ms\n", clc.timeDemoFrames, time / 1000.0, clc.timeDemoFrames * 1000.0 / time, clc.timeDemoMinDuration, time / (float)clc.timeDemoFrames, clc.timeDemoMaxDuration, CL_DemoFrameDurationSDev() );
+			Com_sprintf( buffer, sizeof( buffer ), "%i frames %3.1f seconds %3.1f fps %d.0/%.1f/%d.0/%.1f ms\n", clc.timeDemoFrames, time / 1000.0, clc.timeDemoFrames * 1000.0 / time, clc.timeDemoMinDuration, time / ( float )clc.timeDemoFrames, clc.timeDemoMaxDuration, CL_DemoFrameDurationSDev() );
 			Com_Printf( "%s", buffer );
 
 			// Write a log of all the frame durations
@@ -2487,7 +2487,7 @@ void CL_CheckForResend( void )
 			data[ 10 + i ] = 0;
 
 			// NOTE TTimo don't forget to set the right data length!
-			NET_OutOfBandData( NS_CLIENT, clc.serverAddress, (byte*)&data[ 0 ], i + 10 );
+			NET_OutOfBandData( NS_CLIENT, clc.serverAddress, ( byte* )&data[ 0 ], i + 10 );
 			// the most current userinfo has been sent, so watch for any
 			// newer changes to userinfo variables
 			cvar_modifiedFlags &= ~CVAR_USERINFO;
@@ -2885,7 +2885,7 @@ void CL_PacketEvent( netadr_t from, msg_t* msg )
 
 	clc.lastPacketTime = cls.realtime;
 
-	if( msg->cursize >= 4 && *(int*)msg->data == -1 )
+	if( msg->cursize >= 4 && *( int* )msg->data == -1 )
 	{
 		CL_ConnectionlessPacket( from, msg );
 		return;
@@ -2923,7 +2923,7 @@ void CL_PacketEvent( netadr_t from, msg_t* msg )
 	// track the last message received so it can be returned in
 	// client messages, allowing the server to detect a dropped
 	// gamestate
-	clc.serverMessageSequence = LittleLong( *(int*)msg->data );
+	clc.serverMessageSequence = LittleLong( *( int* )msg->data );
 
 	clc.lastPacketTime = cls.realtime;
 	CL_ParseServerMessage( msg );
@@ -3079,7 +3079,7 @@ void CL_Frame( int msec )
 			CL_TakeVideoFrame();
 
 			// fixed time for next frame'
-			msec = (int)ceil( ( 1000.0f / cl_aviFrameRate->value ) * com_timescale->value );
+			msec = ( int )ceil( ( 1000.0f / cl_aviFrameRate->value ) * com_timescale->value );
 			if( msec == 0 )
 			{
 				msec = 1;
@@ -4335,7 +4335,7 @@ void CL_LocalServers_f( void )
 		// can nicely run multiple servers
 		for( j = 0; j < NUM_SERVER_PORTS; j++ )
 		{
-			to.port = BigShort( (short)( PORT_SERVER + j ) );
+			to.port = BigShort( ( short )( PORT_SERVER + j ) );
 
 			to.type = NA_BROADCAST;
 			NET_SendPacket( NS_CLIENT, strlen( message ), message, to );

@@ -215,7 +215,7 @@ std::string GLShader::BuildGPUShaderText( const char* mainShaderName,
 
 	std::string libsBuffer; // all libs concatenated
 
-	char** libs = (char**)&libShaderNames;
+	char** libs = ( char** )&libShaderNames;
 
 	std::string shaderText;
 
@@ -244,7 +244,7 @@ std::string GLShader::BuildGPUShaderText( const char* mainShaderName,
 			ri.Printf( PRINT_DEVELOPER, "...loading vertex shader '%s'\n", filename );
 		}
 
-		libSize = ri.FS_ReadFile( filename, (void**)&libBuffer );
+		libSize = ri.FS_ReadFile( filename, ( void** )&libBuffer );
 
 		if( !libBuffer )
 		{
@@ -269,7 +269,7 @@ std::string GLShader::BuildGPUShaderText( const char* mainShaderName,
 		ri.Printf( PRINT_DEVELOPER, "...loading fragment main() shader '%s'\n", filename );
 	}
 
-	mainSize = ri.FS_ReadFile( filename, (void**)&mainBuffer );
+	mainSize = ri.FS_ReadFile( filename, ( void** )&mainBuffer );
 
 	if( !mainBuffer )
 	{
@@ -331,13 +331,13 @@ std::string GLShader::BuildGPUShaderText( const char* mainShaderName,
 														  "#define GF_INVERSE_SAWTOOTH %1.1f\n"
 														  "#define GF_NOISE %1.1f\n"
 														  "#endif\n",
-														  (float)GF_NONE,
-														  (float)GF_SIN,
-														  (float)GF_SQUARE,
-														  (float)GF_TRIANGLE,
-														  (float)GF_SAWTOOTH,
-														  (float)GF_INVERSE_SAWTOOTH,
-														  (float)GF_NOISE ) );
+														  ( float )GF_NONE,
+														  ( float )GF_SIN,
+														  ( float )GF_SQUARE,
+														  ( float )GF_TRIANGLE,
+														  ( float )GF_SAWTOOTH,
+														  ( float )GF_INVERSE_SAWTOOTH,
+														  ( float )GF_NOISE ) );
 
 		/*
 		Q_strcat(bufferExtra, sizeof(bufferExtra),
@@ -390,8 +390,8 @@ std::string GLShader::BuildGPUShaderText( const char* mainShaderName,
 														  ATEST_LT_128,
 														  ATEST_GE_128 ) );
 
-		fbufWidthScale  = Q_recip( (float)glConfig.vidWidth );
-		fbufHeightScale = Q_recip( (float)glConfig.vidHeight );
+		fbufWidthScale  = Q_recip( ( float )glConfig.vidWidth );
+		fbufHeightScale = Q_recip( ( float )glConfig.vidHeight );
 		Q_strcat( bufferExtra, sizeof( bufferExtra ), va( "#ifndef r_FBufScale\n#define r_FBufScale vec2(%f, %f)\n#endif\n", fbufWidthScale, fbufHeightScale ) );
 
 		if( glConfig2.textureNPOTAvailable )
@@ -401,8 +401,8 @@ std::string GLShader::BuildGPUShaderText( const char* mainShaderName,
 		}
 		else
 		{
-			npotWidthScale  = (float)glConfig.vidWidth / (float)NearestPowerOfTwo( glConfig.vidWidth );
-			npotHeightScale = (float)glConfig.vidHeight / (float)NearestPowerOfTwo( glConfig.vidHeight );
+			npotWidthScale  = ( float )glConfig.vidWidth / ( float )NearestPowerOfTwo( glConfig.vidWidth );
+			npotHeightScale = ( float )glConfig.vidHeight / ( float )NearestPowerOfTwo( glConfig.vidHeight );
 		}
 
 		Q_strcat( bufferExtra, sizeof( bufferExtra ), va( "#ifndef r_NPOTScale\n#define r_NPOTScale vec2(%f, %f)\n#endif\n", npotWidthScale, npotHeightScale ) );
@@ -642,7 +642,7 @@ std::string GLShader::BuildGPUShaderText( const char* mainShaderName,
 
 		//ri.Printf(PRINT_ALL, "GLSL extra: %s\n", bufferExtra);
 
-		bufferFinal = (char*)ri.Hunk_AllocateTempMemory( sizeFinal );
+		bufferFinal = ( char* )ri.Hunk_AllocateTempMemory( sizeFinal );
 
 		strcpy( bufferFinal, bufferExtra );
 
@@ -721,7 +721,7 @@ bool GLShader::LoadShaderBinary()
 		return false;
 	}
 
-	binaryptr = (byte*)binary;
+	binaryptr = ( byte* )binary;
 
 	// Get the shader header from the file
 	memcpy( &shaderHeader, binaryptr, sizeof( shaderHeader ) );
@@ -766,7 +766,7 @@ bool GLShader::LoadShaderBinary()
 			shaderProgram->program = glCreateProgram();
 			shaderProgram->attribs = _vertexAttribsRequired; // | _vertexAttribsOptional;
 
-			glProgramBinary( shaderProgram->program, programHeader.binaryFormat, (void*)binaryptr, programHeader.binaryLength );
+			glProgramBinary( shaderProgram->program, programHeader.binaryFormat, ( void* )binaryptr, programHeader.binaryLength );
 
 			glGetProgramiv( shaderProgram->program, GL_LINK_STATUS, &success );
 
@@ -838,11 +838,11 @@ void GLShader::SaveShaderBinary()
 	}
 
 	// Alloate space for the binary, and the number of permutations
-	binaryptr = binary = (byte*)ri.Hunk_AllocateTempMemory( binarySize );
+	binaryptr = binary = ( byte* )ri.Hunk_AllocateTempMemory( binarySize );
 
 	shaderHeader.version = GL_SHADER_VERSION;
 
-	memcpy( (void*)binaryptr, &shaderHeader, sizeof( shaderHeader ) );
+	memcpy( ( void* )binaryptr, &shaderHeader, sizeof( shaderHeader ) );
 
 	binaryptr += sizeof( shaderHeader );
 
@@ -858,9 +858,9 @@ void GLShader::SaveShaderBinary()
 			continue;
 		}
 
-		glGetProgramBinary( program, binarySize - ( programBinary - binary ), &programHeader.binaryLength, &programHeader.binaryFormat, (GLvoid*)programBinary );
+		glGetProgramBinary( program, binarySize - ( programBinary - binary ), &programHeader.binaryLength, &programHeader.binaryFormat, ( GLvoid* )programBinary );
 
-		memcpy( (void*)binaryptr, &programHeader, sizeof( programHeader ) );
+		memcpy( ( void* )binaryptr, &programHeader, sizeof( programHeader ) );
 
 		binaryptr += sizeof( programHeader ) + programHeader.binaryLength;
 	}
@@ -916,7 +916,7 @@ void GLShader::CompileAndLinkGPUShaderProgram( shaderProgram_t* program,
 	if( !compileMacros.empty() )
 	{
 		const char* compileMacros_ = compileMacros.c_str();
-		char**      compileMacrosP = (char**)&compileMacros_;
+		char**      compileMacrosP = ( char** )&compileMacros_;
 		char*       token;
 
 		while( 1 )
@@ -972,7 +972,7 @@ void GLShader::CompilePermutations()
 	{
 		if( ( i + 1 ) >= nextTicCount )
 		{
-			size_t ticsNeeded = ( size_t )( ( (double)( i + 1 ) / numPermutations ) * 50.0 );
+			size_t ticsNeeded = ( size_t )( ( ( double )( i + 1 ) / numPermutations ) * 50.0 );
 
 			do
 			{
@@ -1039,7 +1039,7 @@ void GLShader::CompilePermutations()
 	SelectProgram();
 
 	int endTime = ri.Milliseconds();
-	ri.Printf( PRINT_DEVELOPER, "...compiled %i %s shader permutations in %5.2f seconds\n", (int)numCompiled, this->GetName().c_str(), ( endTime - startTime ) / 1000.0 );
+	ri.Printf( PRINT_DEVELOPER, "...compiled %i %s shader permutations in %5.2f seconds\n", ( int )numCompiled, this->GetName().c_str(), ( endTime - startTime ) / 1000.0 );
 }
 
 void GLShader::CompileGPUShader( GLuint program, const char* programName, const char* shaderText, int shaderTextSize, GLenum shaderType ) const
@@ -1048,7 +1048,7 @@ void GLShader::CompileGPUShader( GLuint program, const char* programName, const 
 
 	GL_CheckErrors();
 
-	glShaderSource( shader, 1, (const GLchar**)&shaderText, &shaderTextSize );
+	glShaderSource( shader, 1, ( const GLchar** )&shaderText, &shaderTextSize );
 
 	// compile shader
 	glCompileShader( shader );
@@ -1099,7 +1099,7 @@ void GLShader::PrintShaderSource( GLuint object ) const
 
 	glGetShaderiv( object, GL_SHADER_SOURCE_LENGTH, &maxLength );
 
-	msg = (char*)ri.Hunk_AllocateTempMemory( maxLength );
+	msg = ( char* )ri.Hunk_AllocateTempMemory( maxLength );
 
 	glGetShaderSource( object, maxLength, &maxLength, msg );
 
@@ -1135,7 +1135,7 @@ void GLShader::PrintInfoLog( GLuint object, bool developerOnly ) const
 		return;
 	}
 
-	msg = (char*)ri.Hunk_AllocateTempMemory( maxLength );
+	msg = ( char* )ri.Hunk_AllocateTempMemory( maxLength );
 
 	if( glIsShader( object ) )
 	{

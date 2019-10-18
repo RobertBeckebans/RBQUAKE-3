@@ -150,8 +150,8 @@ int AddEdge( vec3_t v1, vec3_t v2, qboolean createNonAxial )
 			{
 				Error( "MAX_ORIGINAL_EDGES" );
 			}
-			originalEdges[ numOriginalEdges ].dv[ 0 ] = (drawVert_t*)v1;
-			originalEdges[ numOriginalEdges ].dv[ 1 ] = (drawVert_t*)v2;
+			originalEdges[ numOriginalEdges ].dv[ 0 ] = ( drawVert_t* )v1;
+			originalEdges[ numOriginalEdges ].dv[ 1 ] = ( drawVert_t* )v2;
 			originalEdges[ numOriginalEdges ].length  = d;
 			numOriginalEdges++;
 			return -1;
@@ -363,7 +363,7 @@ void FixSurfaceJunctions( drawSurface_t* ds )
 		v1 = &ds->verts[ i ];
 		v2 = &ds->verts[ ( i + 1 ) % ds->numVerts ];
 
-		j = (int)ds->verts[ i ].lightmap[ 0 ];
+		j = ( int )ds->verts[ i ].lightmap[ 0 ];
 		if( j == -1 )
 		{
 			continue; // degenerate edge
@@ -516,8 +516,8 @@ int EdgeCompare( const void* elem1, const void* elem2 )
 {
 	float d1, d2;
 
-	d1 = ( (originalEdge_t*)elem1 )->length;
-	d2 = ( (originalEdge_t*)elem2 )->length;
+	d1 = ( ( originalEdge_t* )elem1 )->length;
+	d2 = ( ( originalEdge_t* )elem2 )->length;
 
 	if( d1 < d2 )
 	{

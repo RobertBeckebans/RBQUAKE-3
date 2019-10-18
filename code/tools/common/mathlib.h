@@ -50,8 +50,8 @@ typedef vec_t matrix_t[ 16 ];
 #define SIDE_CROSS -2
 
 #define Q_PI 3.14159265358979323846
-#define DEG2RAD( a ) ( ( (a)*Q_PI ) / 180.0F )
-#define RAD2DEG( a ) ( ( (a)*180.0f ) / Q_PI )
+#define DEG2RAD( a ) ( ( ( a )*Q_PI ) / 180.0F )
+#define RAD2DEG( a ) ( ( ( a )*180.0f ) / Q_PI )
 
 extern vec3_t vec3_origin;
 

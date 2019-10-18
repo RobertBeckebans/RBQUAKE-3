@@ -140,7 +140,7 @@ static byte* LoadImageFile( char* filename )
 
 	if( FileExists( filename ) )
 	{
-		LoadFileBlock( filename, (void**)&buffer );
+		LoadFileBlock( filename, ( void** )&buffer );
 	}
 
 	if( buffer == NULL )
@@ -152,7 +152,7 @@ static byte* LoadImageFile( char* filename )
 
 		if( FileExists( filename ) )
 		{
-			LoadFileBlock( filename, (void**)&buffer );
+			LoadFileBlock( filename, ( void** )&buffer );
 		}
 	}
 	return buffer;

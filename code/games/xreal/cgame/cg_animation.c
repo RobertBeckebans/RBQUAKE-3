@@ -242,7 +242,7 @@ void CG_RunLerpFrame( lerpFrame_t* lf, animation_t* anims, int animsNum, int new
 	}
 	else
 	{
-		lf->backlerp = 1.0 - (float)( cg.time - lf->oldFrameTime ) / ( lf->frameTime - lf->oldFrameTime );
+		lf->backlerp = 1.0 - ( float )( cg.time - lf->oldFrameTime ) / ( lf->frameTime - lf->oldFrameTime );
 	}
 
 	// blend old and current animation

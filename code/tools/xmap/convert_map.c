@@ -81,7 +81,7 @@ static void WriteMapFile( char* filename )
 				fprintf( f, "( %f %f %f %f ) ", plane->normal[ 0 ], plane->normal[ 1 ], plane->normal[ 2 ], -plane->dist );
 
 				// write texture matrix
-				Write2DMatrix( f, 2, 3, (float*)side->texMat );
+				Write2DMatrix( f, 2, 3, ( float* )side->texMat );
 
 				si = side->shaderInfo;
 				fprintf( f, " \"%s\"", si->shader );
@@ -123,10 +123,10 @@ static void WriteMapFile( char* filename )
 
 			// write patch dimensions
 			if( pm->patchDef3 )
-				fprintf( f, "( %i %i %i %i %i %i %i )\n", (int)pm->info[ 0 ], (int)pm->info[ 1 ], (int)pm->info[ 2 ], (int)pm->info[ 3 ], (int)pm->info[ 4 ], (int)pm->info[ 5 ], (int)pm->info[ 6 ] );
+				fprintf( f, "( %i %i %i %i %i %i %i )\n", ( int )pm->info[ 0 ], ( int )pm->info[ 1 ], ( int )pm->info[ 2 ], ( int )pm->info[ 3 ], ( int )pm->info[ 4 ], ( int )pm->info[ 5 ], ( int )pm->info[ 6 ] );
 			else
 
-				fprintf( f, "( %i %i %i %i %i )\n", (int)pm->info[ 0 ], (int)pm->info[ 1 ], (int)pm->info[ 2 ], (int)pm->info[ 3 ], (int)pm->info[ 4 ] );
+				fprintf( f, "( %i %i %i %i %i )\n", ( int )pm->info[ 0 ], ( int )pm->info[ 1 ], ( int )pm->info[ 2 ], ( int )pm->info[ 3 ], ( int )pm->info[ 4 ] );
 
 			fprintf( f, "(\n" );
 			for( k = 0; k < pm->mesh.width; k++ )

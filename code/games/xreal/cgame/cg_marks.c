@@ -176,7 +176,7 @@ void CG_ImpactMark( qhandle_t markShader, const vec3_t origin, const vec3_t dir,
 
 	// get the fragments
 	VectorScale( dir, -20, projection );
-	numFragments = trap_CM_MarkFragments( 4, (void*)originalPoints, projection, MAX_MARK_POINTS, markPoints[ 0 ], MAX_MARK_FRAGMENTS, markFragments );
+	numFragments = trap_CM_MarkFragments( 4, ( void* )originalPoints, projection, MAX_MARK_POINTS, markPoints[ 0 ], MAX_MARK_FRAGMENTS, markFragments );
 
 	colors[ 0 ] = red * 255;
 	colors[ 1 ] = green * 255;
@@ -202,9 +202,9 @@ void CG_ImpactMark( qhandle_t markShader, const vec3_t origin, const vec3_t dir,
 			VectorCopy( markPoints[ mf->firstPoint + j ], v->xyz );
 
 			VectorSubtract( v->xyz, origin, delta );
-			v->st[ 0 ]         = 0.5 + DotProduct( delta, axis[ 1 ] ) * texCoordScale;
-			v->st[ 1 ]         = 0.5 + DotProduct( delta, axis[ 2 ] ) * texCoordScale;
-			*(int*)v->modulate = *(int*)colors;
+			v->st[ 0 ]           = 0.5 + DotProduct( delta, axis[ 1 ] ) * texCoordScale;
+			v->st[ 1 ]           = 0.5 + DotProduct( delta, axis[ 2 ] ) * texCoordScale;
+			*( int* )v->modulate = *( int* )colors;
 		}
 
 		// if it is a temporary (shadow) mark, add it immediately and forget about it

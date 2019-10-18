@@ -83,10 +83,10 @@ static void CopyBrushSidesLump( ibspHeader_t* header )
 	bspBrushSide_t*  out;
 
 	/* get count */
-	numBSPBrushSides = GetLumpElements( (bspHeader_t*)header, LUMP_BRUSHSIDES, sizeof( *in ) );
+	numBSPBrushSides = GetLumpElements( ( bspHeader_t* )header, LUMP_BRUSHSIDES, sizeof( *in ) );
 
 	/* copy */
-	in = GetLump( (bspHeader_t*)header, LUMP_BRUSHSIDES );
+	in = GetLump( ( bspHeader_t* )header, LUMP_BRUSHSIDES );
 	for( i = 0; i < numBSPBrushSides; i++ )
 	{
 		AUTOEXPAND_BY_REALLOC( bspBrushSides, i, allocatedBSPBrushSides, 1024 );
@@ -121,7 +121,7 @@ static void AddBrushSidesLump( FILE* file, ibspHeader_t* header )
 	}
 
 	/* write lump */
-	AddLump( file, (bspHeader_t*)header, LUMP_BRUSHSIDES, buffer, size );
+	AddLump( file, ( bspHeader_t* )header, LUMP_BRUSHSIDES, buffer, size );
 
 	/* free buffer */
 	free( buffer );
@@ -158,11 +158,11 @@ static void CopyDrawSurfacesLump( ibspHeader_t* header )
 	bspDrawSurface_t*  out;
 
 	/* get count */
-	numBSPDrawSurfaces = GetLumpElements( (bspHeader_t*)header, LUMP_SURFACES, sizeof( *in ) );
+	numBSPDrawSurfaces = GetLumpElements( ( bspHeader_t* )header, LUMP_SURFACES, sizeof( *in ) );
 	SetDrawSurfaces( numBSPDrawSurfaces );
 
 	/* copy */
-	in  = GetLump( (bspHeader_t*)header, LUMP_SURFACES );
+	in  = GetLump( ( bspHeader_t* )header, LUMP_SURFACES );
 	out = bspDrawSurfaces;
 	for( i = 0; i < numBSPDrawSurfaces; i++ )
 	{
@@ -248,7 +248,7 @@ static void AddDrawSurfacesLump( FILE* file, ibspHeader_t* header )
 	}
 
 	/* write lump */
-	AddLump( file, (bspHeader_t*)header, LUMP_SURFACES, buffer, size );
+	AddLump( file, ( bspHeader_t* )header, LUMP_SURFACES, buffer, size );
 
 	/* free buffer */
 	free( buffer );
@@ -271,11 +271,11 @@ static void CopyDrawVertsLump( ibspHeader_t* header )
 	bspDrawVert_t*  out;
 
 	/* get count */
-	numBSPDrawVerts = GetLumpElements( (bspHeader_t*)header, LUMP_DRAWVERTS, sizeof( *in ) );
+	numBSPDrawVerts = GetLumpElements( ( bspHeader_t* )header, LUMP_DRAWVERTS, sizeof( *in ) );
 	SetDrawVerts( numBSPDrawVerts );
 
 	/* copy */
-	in  = GetLump( (bspHeader_t*)header, LUMP_DRAWVERTS );
+	in  = GetLump( ( bspHeader_t* )header, LUMP_DRAWVERTS );
 	out = bspDrawVerts;
 	for( i = 0; i < numBSPDrawVerts; i++ )
 	{
@@ -333,7 +333,7 @@ static void AddDrawVertsLump( FILE* file, ibspHeader_t* header )
 	}
 
 	/* write lump */
-	AddLump( file, (bspHeader_t*)header, LUMP_DRAWVERTS, buffer, size );
+	AddLump( file, ( bspHeader_t* )header, LUMP_DRAWVERTS, buffer, size );
 
 	/* free buffer */
 	free( buffer );
@@ -354,14 +354,14 @@ static void CopyLightGridLumps( ibspHeader_t* header )
 	bspGridPoint_t*  out;
 
 	/* get count */
-	numBSPGridPoints = GetLumpElements( (bspHeader_t*)header, LUMP_LIGHTGRID, sizeof( *in ) );
+	numBSPGridPoints = GetLumpElements( ( bspHeader_t* )header, LUMP_LIGHTGRID, sizeof( *in ) );
 
 	/* allocate buffer */
 	bspGridPoints = safe_malloc( numBSPGridPoints * sizeof( *bspGridPoints ) );
 	memset( bspGridPoints, 0, numBSPGridPoints * sizeof( *bspGridPoints ) );
 
 	/* copy */
-	in  = GetLump( (bspHeader_t*)header, LUMP_LIGHTGRID );
+	in  = GetLump( ( bspHeader_t* )header, LUMP_LIGHTGRID );
 	out = bspGridPoints;
 	for( i = 0; i < numBSPGridPoints; i++ )
 	{
@@ -413,7 +413,7 @@ static void AddLightGridLumps( FILE* file, ibspHeader_t* header )
 	}
 
 	/* write lumps */
-	AddLump( file, (bspHeader_t*)header, LUMP_LIGHTGRID, buffer, ( numBSPGridPoints * sizeof( *out ) ) );
+	AddLump( file, ( bspHeader_t* )header, LUMP_LIGHTGRID, buffer, ( numBSPGridPoints * sizeof( *out ) ) );
 
 	/* free buffer (ydnar 2002-10-22: [bug 641] thanks Rap70r! */
 	free( buffer );
@@ -429,13 +429,13 @@ void LoadIBSPFile( const char* filename )
 	ibspHeader_t* header;
 
 	/* load the file header */
-	LoadFile( filename, (void**)&header );
+	LoadFile( filename, ( void** )&header );
 
 	/* swap the header (except the first 4 bytes) */
-	SwapBlock( (int*)( (byte*)header + sizeof( int ) ), sizeof( *header ) - sizeof( int ) );
+	SwapBlock( ( int* )( ( byte* )header + sizeof( int ) ), sizeof( *header ) - sizeof( int ) );
 
 	/* make sure it matches the format we're trying to load */
-	if( force == qfalse && *( (int*)header->ident ) != *( (int*)game->bspIdent ) )
+	if( force == qfalse && *( ( int* )header->ident ) != *( ( int* )game->bspIdent ) )
 	{
 		Error( "%s is not a %s file", filename, game->bspIdent );
 	}
@@ -446,27 +446,27 @@ void LoadIBSPFile( const char* filename )
 
 	/* load/convert lumps */
 	numBSPShaders =
-		CopyLump_Allocate( (bspHeader_t*)header, LUMP_SHADERS, (void**)&bspShaders, sizeof( bspShader_t ), &allocatedBSPShaders );
+		CopyLump_Allocate( ( bspHeader_t* )header, LUMP_SHADERS, ( void** )&bspShaders, sizeof( bspShader_t ), &allocatedBSPShaders );
 
 	numBSPModels =
-		CopyLump_Allocate( (bspHeader_t*)header, LUMP_MODELS, (void**)&bspModels, sizeof( bspModel_t ), &allocatedBSPModels );
+		CopyLump_Allocate( ( bspHeader_t* )header, LUMP_MODELS, ( void** )&bspModels, sizeof( bspModel_t ), &allocatedBSPModels );
 
 	numBSPPlanes =
-		CopyLump_Allocate( (bspHeader_t*)header, LUMP_PLANES, (void**)&bspPlanes, sizeof( bspPlane_t ), &allocatedBSPPlanes );
+		CopyLump_Allocate( ( bspHeader_t* )header, LUMP_PLANES, ( void** )&bspPlanes, sizeof( bspPlane_t ), &allocatedBSPPlanes );
 
-	numBSPLeafs = CopyLump( (bspHeader_t*)header, LUMP_LEAFS, bspLeafs, sizeof( bspLeaf_t ) );
+	numBSPLeafs = CopyLump( ( bspHeader_t* )header, LUMP_LEAFS, bspLeafs, sizeof( bspLeaf_t ) );
 
 	numBSPNodes =
-		CopyLump_Allocate( (bspHeader_t*)header, LUMP_NODES, (void**)&bspNodes, sizeof( bspNode_t ), &allocatedBSPNodes );
+		CopyLump_Allocate( ( bspHeader_t* )header, LUMP_NODES, ( void** )&bspNodes, sizeof( bspNode_t ), &allocatedBSPNodes );
 
 	numBSPLeafSurfaces =
-		CopyLump_Allocate( (bspHeader_t*)header, LUMP_LEAFSURFACES, (void**)&bspLeafSurfaces, sizeof( bspLeafSurfaces[ 0 ] ), &allocatedBSPLeafSurfaces );
+		CopyLump_Allocate( ( bspHeader_t* )header, LUMP_LEAFSURFACES, ( void** )&bspLeafSurfaces, sizeof( bspLeafSurfaces[ 0 ] ), &allocatedBSPLeafSurfaces );
 
 	numBSPLeafBrushes =
-		CopyLump_Allocate( (bspHeader_t*)header, LUMP_LEAFBRUSHES, (void**)&bspLeafBrushes, sizeof( bspLeafBrushes[ 0 ] ), &allocatedBSPLeafBrushes );
+		CopyLump_Allocate( ( bspHeader_t* )header, LUMP_LEAFBRUSHES, ( void** )&bspLeafBrushes, sizeof( bspLeafBrushes[ 0 ] ), &allocatedBSPLeafBrushes );
 
 	numBSPBrushes =
-		CopyLump_Allocate( (bspHeader_t*)header, LUMP_BRUSHES, (void**)&bspBrushes, sizeof( bspBrush_t ), &allocatedBSPLeafBrushes );
+		CopyLump_Allocate( ( bspHeader_t* )header, LUMP_BRUSHES, ( void** )&bspBrushes, sizeof( bspBrush_t ), &allocatedBSPLeafBrushes );
 
 	CopyBrushSidesLump( header );
 
@@ -474,24 +474,24 @@ void LoadIBSPFile( const char* filename )
 
 	CopyDrawSurfacesLump( header );
 
-	numBSPFogs = CopyLump( (bspHeader_t*)header, LUMP_FOGS, bspFogs, sizeof( bspFog_t ) );
+	numBSPFogs = CopyLump( ( bspHeader_t* )header, LUMP_FOGS, bspFogs, sizeof( bspFog_t ) );
 
-	numBSPDrawIndexes = CopyLump( (bspHeader_t*)header, LUMP_DRAWINDEXES, bspDrawIndexes, sizeof( bspDrawIndexes[ 0 ] ) );
+	numBSPDrawIndexes = CopyLump( ( bspHeader_t* )header, LUMP_DRAWINDEXES, bspDrawIndexes, sizeof( bspDrawIndexes[ 0 ] ) );
 
-	numBSPVisBytes = CopyLump( (bspHeader_t*)header, LUMP_VISIBILITY, bspVisBytes, 1 );
+	numBSPVisBytes = CopyLump( ( bspHeader_t* )header, LUMP_VISIBILITY, bspVisBytes, 1 );
 
-	numBSPLightBytes = GetLumpElements( (bspHeader_t*)header, LUMP_LIGHTMAPS, 1 );
+	numBSPLightBytes = GetLumpElements( ( bspHeader_t* )header, LUMP_LIGHTMAPS, 1 );
 	bspLightBytes    = safe_malloc( numBSPLightBytes );
-	CopyLump( (bspHeader_t*)header, LUMP_LIGHTMAPS, bspLightBytes, 1 );
+	CopyLump( ( bspHeader_t* )header, LUMP_LIGHTMAPS, bspLightBytes, 1 );
 
-	bspEntDataSize = CopyLump_Allocate( (bspHeader_t*)header, LUMP_ENTITIES, (void**)&bspEntData, 1, &allocatedBSPEntData );
+	bspEntDataSize = CopyLump_Allocate( ( bspHeader_t* )header, LUMP_ENTITIES, ( void** )&bspEntData, 1, &allocatedBSPEntData );
 
 	CopyLightGridLumps( header );
 
 	/* advertisements */
 	if( header->version == 47 ) // quake live's bsp version
 	{
-		numBSPAds = CopyLump( (bspHeader_t*)header, LUMP_ADVERTISEMENTS, bspAds, sizeof( bspAdvertisement_t ) );
+		numBSPAds = CopyLump( ( bspHeader_t* )header, LUMP_ADVERTISEMENTS, bspAds, sizeof( bspAdvertisement_t ) );
 	}
 	else
 	{
@@ -522,43 +522,43 @@ void WriteIBSPFile( const char* filename )
 	//% Swapfile();
 
 	/* set up header */
-	*( (int*)(bspHeader_t*)header->ident ) = *( (int*)game->bspIdent );
-	header->version                        = LittleLong( game->bspVersion );
+	*( ( int* )( bspHeader_t* )header->ident ) = *( ( int* )game->bspIdent );
+	header->version                            = LittleLong( game->bspVersion );
 
 	/* write initial header */
 	file = SafeOpenWrite( filename );
-	SafeWrite( file, (bspHeader_t*)header, sizeof( *header ) ); /* overwritten later */
+	SafeWrite( file, ( bspHeader_t* )header, sizeof( *header ) ); /* overwritten later */
 
 	/* add marker lump */
 	time( &t );
 	sprintf( marker, "I LOVE MY XMAP2 %s on %s)", Q3MAP_VERSION, asctime( localtime( &t ) ) );
-	AddLump( file, (bspHeader_t*)header, 0, marker, strlen( marker ) + 1 );
+	AddLump( file, ( bspHeader_t* )header, 0, marker, strlen( marker ) + 1 );
 
 	/* add lumps */
-	AddLump( file, (bspHeader_t*)header, LUMP_SHADERS, bspShaders, numBSPShaders * sizeof( bspShader_t ) );
-	AddLump( file, (bspHeader_t*)header, LUMP_PLANES, bspPlanes, numBSPPlanes * sizeof( bspPlane_t ) );
-	AddLump( file, (bspHeader_t*)header, LUMP_LEAFS, bspLeafs, numBSPLeafs * sizeof( bspLeaf_t ) );
-	AddLump( file, (bspHeader_t*)header, LUMP_NODES, bspNodes, numBSPNodes * sizeof( bspNode_t ) );
-	AddLump( file, (bspHeader_t*)header, LUMP_BRUSHES, bspBrushes, numBSPBrushes * sizeof( bspBrush_t ) );
+	AddLump( file, ( bspHeader_t* )header, LUMP_SHADERS, bspShaders, numBSPShaders * sizeof( bspShader_t ) );
+	AddLump( file, ( bspHeader_t* )header, LUMP_PLANES, bspPlanes, numBSPPlanes * sizeof( bspPlane_t ) );
+	AddLump( file, ( bspHeader_t* )header, LUMP_LEAFS, bspLeafs, numBSPLeafs * sizeof( bspLeaf_t ) );
+	AddLump( file, ( bspHeader_t* )header, LUMP_NODES, bspNodes, numBSPNodes * sizeof( bspNode_t ) );
+	AddLump( file, ( bspHeader_t* )header, LUMP_BRUSHES, bspBrushes, numBSPBrushes * sizeof( bspBrush_t ) );
 	AddBrushSidesLump( file, header );
-	AddLump( file, (bspHeader_t*)header, LUMP_LEAFSURFACES, bspLeafSurfaces, numBSPLeafSurfaces * sizeof( bspLeafSurfaces[ 0 ] ) );
-	AddLump( file, (bspHeader_t*)header, LUMP_LEAFBRUSHES, bspLeafBrushes, numBSPLeafBrushes * sizeof( bspLeafBrushes[ 0 ] ) );
-	AddLump( file, (bspHeader_t*)header, LUMP_MODELS, bspModels, numBSPModels * sizeof( bspModel_t ) );
+	AddLump( file, ( bspHeader_t* )header, LUMP_LEAFSURFACES, bspLeafSurfaces, numBSPLeafSurfaces * sizeof( bspLeafSurfaces[ 0 ] ) );
+	AddLump( file, ( bspHeader_t* )header, LUMP_LEAFBRUSHES, bspLeafBrushes, numBSPLeafBrushes * sizeof( bspLeafBrushes[ 0 ] ) );
+	AddLump( file, ( bspHeader_t* )header, LUMP_MODELS, bspModels, numBSPModels * sizeof( bspModel_t ) );
 	AddDrawVertsLump( file, header );
 	AddDrawSurfacesLump( file, header );
-	AddLump( file, (bspHeader_t*)header, LUMP_VISIBILITY, bspVisBytes, numBSPVisBytes );
-	AddLump( file, (bspHeader_t*)header, LUMP_LIGHTMAPS, bspLightBytes, numBSPLightBytes );
+	AddLump( file, ( bspHeader_t* )header, LUMP_VISIBILITY, bspVisBytes, numBSPVisBytes );
+	AddLump( file, ( bspHeader_t* )header, LUMP_LIGHTMAPS, bspLightBytes, numBSPLightBytes );
 	AddLightGridLumps( file, header );
-	AddLump( file, (bspHeader_t*)header, LUMP_ENTITIES, bspEntData, bspEntDataSize );
-	AddLump( file, (bspHeader_t*)header, LUMP_FOGS, bspFogs, numBSPFogs * sizeof( bspFog_t ) );
-	AddLump( file, (bspHeader_t*)header, LUMP_DRAWINDEXES, bspDrawIndexes, numBSPDrawIndexes * sizeof( bspDrawIndexes[ 0 ] ) );
+	AddLump( file, ( bspHeader_t* )header, LUMP_ENTITIES, bspEntData, bspEntDataSize );
+	AddLump( file, ( bspHeader_t* )header, LUMP_FOGS, bspFogs, numBSPFogs * sizeof( bspFog_t ) );
+	AddLump( file, ( bspHeader_t* )header, LUMP_DRAWINDEXES, bspDrawIndexes, numBSPDrawIndexes * sizeof( bspDrawIndexes[ 0 ] ) );
 
 	/* advertisements */
-	AddLump( file, (bspHeader_t*)header, LUMP_ADVERTISEMENTS, bspAds, numBSPAds * sizeof( bspAdvertisement_t ) );
+	AddLump( file, ( bspHeader_t* )header, LUMP_ADVERTISEMENTS, bspAds, numBSPAds * sizeof( bspAdvertisement_t ) );
 
 	/* emit bsp size */
 	size = ftell( file );
-	Sys_Printf( "Wrote %.1f MB (%d bytes)\n", (float)size / ( 1024 * 1024 ), size );
+	Sys_Printf( "Wrote %.1f MB (%d bytes)\n", ( float )size / ( 1024 * 1024 ), size );
 
 	/* write the completed header */
 	fseek( file, 0, SEEK_SET );

@@ -205,9 +205,9 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) )
 				//0,     // DWORD cbStack,
 				/* ydnar: cranking stack size to eliminate radiosity crash with 1MB stack on win32 */
 				( 4096 * 1024 ),
-				(LPTHREAD_START_ROUTINE)func, // LPTHREAD_START_ROUTINE lpStartAddr,
-				(LPVOID)i,                    // LPVOID lpvThreadParm,
-				0,                            //   DWORD fdwCreate,
+				( LPTHREAD_START_ROUTINE )func, // LPTHREAD_START_ROUTINE lpStartAddr,
+				( LPVOID )i,                    // LPVOID lpvThreadParm,
+				0,                              //   DWORD fdwCreate,
 				&threadid[ i ] );
 		}
 
@@ -323,7 +323,7 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) )
 
 	for( i = 0; i < numthreads; i++ )
 	{
-		if( pthread_create( &work_threads[ i ], attrib, (pthread_startroutine_t)func, (pthread_addr_t)i ) == -1 )
+		if( pthread_create( &work_threads[ i ], attrib, ( pthread_startroutine_t )func, ( pthread_addr_t )i ) == -1 )
 		{
 			Error( "pthread_create failed" );
 		}
@@ -414,7 +414,7 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) )
 
 	for( i = 0; i < numthreads - 1; i++ )
 	{
-		pid[ i ] = sprocsp( (void ( * )( void*, size_t ))func, PR_SALL, (void*)i, NULL, 0x200000 ); // 2 meg stacks
+		pid[ i ] = sprocsp( ( void ( * )( void*, size_t ) )func, PR_SALL, ( void* )i, NULL, 0x200000 ); // 2 meg stacks
 		if( pid[ i ] == -1 )
 		{
 			perror( "sproc" );
@@ -488,7 +488,7 @@ void ThreadLock( void )
 	}
 
 	pthread_mutex_lock( &pt_mutex->a_mutex );
-	if( pthread_equal( pthread_self(), (pthread_t)&pt_mutex->owner ) )
+	if( pthread_equal( pthread_self(), ( pthread_t )&pt_mutex->owner ) )
 	{
 		pt_mutex->lock++;
 	}
@@ -496,7 +496,7 @@ void ThreadLock( void )
 	{
 		if( ( !pt_mutex->owner ) && ( pt_mutex->lock == 0 ) )
 		{
-			pt_mutex->owner = (pthread_t*)pthread_self();
+			pt_mutex->owner = ( pthread_t* )pthread_self();
 			pt_mutex->lock  = 1;
 		}
 		else
@@ -506,7 +506,7 @@ void ThreadLock( void )
 				pthread_cond_wait( &pt_mutex->cond, &pt_mutex->a_mutex );
 				if( ( !pt_mutex->owner ) && ( pt_mutex->lock == 0 ) )
 				{
-					pt_mutex->owner = (pthread_t*)pthread_self();
+					pt_mutex->owner = ( pthread_t* )pthread_self();
 					pt_mutex->lock  = 1;
 					break;
 				}
@@ -602,14 +602,14 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) )
 		for( i = 0; i < numthreads; i++ )
 		{
 			/* Default pthread attributes: joinable & non-realtime scheduling */
-			if( pthread_create( &work_threads[ i ], NULL, (void*)func, (void*)i ) != 0 )
+			if( pthread_create( &work_threads[ i ], NULL, ( void* )func, ( void* )i ) != 0 )
 			{
 				Error( "pthread_create failed" );
 			}
 		}
 		for( i = 0; i < numthreads; i++ )
 		{
-			if( pthread_join( work_threads[ i ], (void**)&status ) != 0 )
+			if( pthread_join( work_threads[ i ], ( void** )&status ) != 0 )
 			{
 				Error( "pthread_join failed" );
 			}

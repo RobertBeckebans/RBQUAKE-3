@@ -133,7 +133,7 @@ void R_IssueRenderCommands( qboolean runPerformanceCounters )
 	cmdList = &backEndData[ tr.smpFrame ]->commands;
 	assert( cmdList ); // bk001205
 	// add an end-of-list command
-	*(int*)( cmdList->cmds + cmdList->used ) = RC_END_OF_LIST;
+	*( int* )( cmdList->cmds + cmdList->used ) = RC_END_OF_LIST;
 
 	// clear it out, in case this is a sync and not a buffer flip
 	cmdList->used = 0;
@@ -566,11 +566,11 @@ void RE_BeginFrame( stereoFrame_t stereoFrame )
 	{
 		if( stereoFrame == STEREO_LEFT )
 		{
-			cmd->buffer = (int)GL_BACK_LEFT;
+			cmd->buffer = ( int )GL_BACK_LEFT;
 		}
 		else if( stereoFrame == STEREO_RIGHT )
 		{
-			cmd->buffer = (int)GL_BACK_RIGHT;
+			cmd->buffer = ( int )GL_BACK_RIGHT;
 		}
 		else
 		{
@@ -585,11 +585,11 @@ void RE_BeginFrame( stereoFrame_t stereoFrame )
 		}
 		if( !Q_stricmp( r_drawBuffer->string, "GL_FRONT" ) )
 		{
-			cmd->buffer = (int)GL_FRONT;
+			cmd->buffer = ( int )GL_FRONT;
 		}
 		else
 		{
-			cmd->buffer = (int)GL_BACK;
+			cmd->buffer = ( int )GL_BACK;
 		}
 	}
 #endif

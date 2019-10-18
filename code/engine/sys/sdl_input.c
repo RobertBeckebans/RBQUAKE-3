@@ -250,7 +250,7 @@ static keyNum_t IN_TranslateSDLToQ3Key( SDL_Keysym* keysym, qboolean down )
 	if( keysym->sym >= SDLK_SPACE && keysym->sym < SDLK_DELETE )
 	{
 		// These happen to match the ASCII chars
-		key = (int)keysym->sym;
+		key = ( int )keysym->sym;
 	}
 	else
 	{
@@ -756,7 +756,7 @@ static void IN_JoyMove( void )
 		}
 		for( i = 0; i < total; i++ )
 		{
-			( (Uint8*)&hats )[ i ] = SDL_JoystickGetHat( stick, i );
+			( ( Uint8* )&hats )[ i ] = SDL_JoystickGetHat( stick, i );
 		}
 	}
 
@@ -765,10 +765,10 @@ static void IN_JoyMove( void )
 	{
 		for( i = 0; i < 4; i++ )
 		{
-			if( ( (Uint8*)&hats )[ i ] != ( (Uint8*)&stick_state.oldhats )[ i ] )
+			if( ( ( Uint8* )&hats )[ i ] != ( ( Uint8* )&stick_state.oldhats )[ i ] )
 			{
 				// release event
-				switch( ( (Uint8*)&stick_state.oldhats )[ i ] )
+				switch( ( ( Uint8* )&stick_state.oldhats )[ i ] )
 				{
 					case SDL_HAT_UP:
 						Com_QueueEvent( 0, SE_KEY, hat_keys[ 4 * i + 0 ], qfalse, 0, NULL );
@@ -802,7 +802,7 @@ static void IN_JoyMove( void )
 						break;
 				}
 				// press event
-				switch( ( (Uint8*)&hats )[ i ] )
+				switch( ( ( Uint8* )&hats )[ i ] )
 				{
 					case SDL_HAT_UP:
 						Com_QueueEvent( 0, SE_KEY, hat_keys[ 4 * i + 0 ], qtrue, 0, NULL );
@@ -855,7 +855,7 @@ static void IN_JoyMove( void )
 			for( i = 0; i < total; i++ )
 			{
 				Sint16 axis = SDL_JoystickGetAxis( stick, i );
-				float  f    = ( (float)abs( axis ) ) / 32767.0f;
+				float  f    = ( ( float )abs( axis ) ) / 32767.0f;
 
 				if( f < in_joystickThreshold->value )
 				{
@@ -878,7 +878,7 @@ static void IN_JoyMove( void )
 			for( i = 0; i < total; i++ )
 			{
 				Sint16 axis = SDL_JoystickGetAxis( stick, i );
-				float  f    = ( (float)axis ) / 32767.0f;
+				float  f    = ( ( float )axis ) / 32767.0f;
 				if( f < -in_joystickThreshold->value )
 				{
 					axes |= ( 1 << ( i * 2 ) );
@@ -984,7 +984,7 @@ static void IN_ProcessEvents( void )
 						}
 						else
 						{
-							Com_DPrintf( "Unrecognised UTF-8 lead byte: 0x%x\n", (unsigned int)*c );
+							Com_DPrintf( "Unrecognised UTF-8 lead byte: 0x%x\n", ( unsigned int )*c );
 							c++;
 						}
 
@@ -1167,7 +1167,7 @@ void IN_Init( void* windowData )
 		return;
 	}
 
-	SDL_window = (SDL_Window*)windowData;
+	SDL_window = ( SDL_Window* )windowData;
 
 	Com_DPrintf( "\n------- Input Initialization -------\n" );
 

@@ -211,7 +211,7 @@ endwhile:
 				{
 					G_Printf( "G_RunLuaFunction: wrong result type\n" );
 				}
-				*va_arg( vl, int* ) = (int)lua_tonumber( L, nres );
+				*va_arg( vl, int* ) = ( int )lua_tonumber( L, nres );
 
 				break;
 

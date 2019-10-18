@@ -737,7 +737,7 @@ void MakeEntityMetaTriangles( entity_t* e )
 	/* print time */
 	if( ( numMapDrawSurfs - e->firstDrawSurf ) )
 	{
-		Sys_FPrintf( SYS_VRB, " (%d)\n", (int)( I_FloatTime() - start ) );
+		Sys_FPrintf( SYS_VRB, " (%d)\n", ( int )( I_FloatTime() - start ) );
 	}
 
 	/* emit some stats */
@@ -1039,7 +1039,7 @@ void FixMetaTJunctions( void )
 	}
 
 	/* print time */
-	Sys_FPrintf( SYS_VRB, " (%d)\n", (int)( I_FloatTime() - start ) );
+	Sys_FPrintf( SYS_VRB, " (%d)\n", ( int )( I_FloatTime() - start ) );
 
 	/* emit some stats */
 	Sys_FPrintf( SYS_VRB, "%9d T-junctions added\n", numTJuncs );
@@ -1239,7 +1239,7 @@ void SmoothMetaTriangles( void )
 	free( smoothed );
 
 	/* print time */
-	Sys_FPrintf( SYS_VRB, " (%d)\n", (int)( I_FloatTime() - start ) );
+	Sys_FPrintf( SYS_VRB, " (%d)\n", ( int )( I_FloatTime() - start ) );
 
 	/* emit some stats */
 	Sys_FPrintf( SYS_VRB, "%9d smoothed vertexes\n", numSmoothed );
@@ -1712,21 +1712,21 @@ static int CompareMetaTriangles( const void* a, const void* b )
 	vec3_t aMins, bMins;
 
 	/* shader first */
-	if( ( (metaTriangle_t*)a )->si < ( (metaTriangle_t*)b )->si )
+	if( ( ( metaTriangle_t* )a )->si < ( ( metaTriangle_t* )b )->si )
 	{
 		return 1;
 	}
-	else if( ( (metaTriangle_t*)a )->si > ( (metaTriangle_t*)b )->si )
+	else if( ( ( metaTriangle_t* )a )->si > ( ( metaTriangle_t* )b )->si )
 	{
 		return -1;
 	}
 
 	/* then fog */
-	else if( ( (metaTriangle_t*)a )->fogNum < ( (metaTriangle_t*)b )->fogNum )
+	else if( ( ( metaTriangle_t* )a )->fogNum < ( ( metaTriangle_t* )b )->fogNum )
 	{
 		return 1;
 	}
-	else if( ( (metaTriangle_t*)a )->fogNum > ( (metaTriangle_t*)b )->fogNum )
+	else if( ( ( metaTriangle_t* )a )->fogNum > ( ( metaTriangle_t* )b )->fogNum )
 	{
 		return -1;
 	}
@@ -1778,8 +1778,8 @@ static int CompareMetaTriangles( const void* a, const void* b )
 	VectorSet( bMins, 999999, 999999, 999999 );
 	for( i = 0; i < 3; i++ )
 	{
-		av = ( (metaTriangle_t*)a )->indexes[ i ];
-		bv = ( (metaTriangle_t*)b )->indexes[ i ];
+		av = ( ( metaTriangle_t* )a )->indexes[ i ];
+		bv = ( ( metaTriangle_t* )b )->indexes[ i ];
 		for( j = 0; j < 3; j++ )
 		{
 			if( metaVerts[ av ].xyz[ j ] < aMins[ j ] )
@@ -1873,7 +1873,7 @@ void MergeMetaTriangles( void )
 	/* print time */
 	if( i )
 	{
-		Sys_FPrintf( SYS_VRB, " (%d)\n", (int)( I_FloatTime() - start ) );
+		Sys_FPrintf( SYS_VRB, " (%d)\n", ( int )( I_FloatTime() - start ) );
 	}
 
 	/* emit some stats */

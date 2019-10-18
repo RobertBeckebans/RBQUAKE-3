@@ -1805,14 +1805,14 @@ static int MergeInteractionBounds( const matrix_t lightViewProjectionMatrix, int
 
 		if( *surface == SF_FACE || *surface == SF_GRID || *surface == SF_TRIANGLES )
 		{
-			srfGeneric_t* gen = (srfGeneric_t*)surface;
+			srfGeneric_t* gen = ( srfGeneric_t* )surface;
 
 			VectorCopy( gen->bounds[ 0 ], worldBounds[ 0 ] );
 			VectorCopy( gen->bounds[ 1 ], worldBounds[ 1 ] );
 		}
 		else if( *surface == SF_VBO_MESH )
 		{
-			srfVBOMesh_t* srf = (srfVBOMesh_t*)surface;
+			srfVBOMesh_t* srf = ( srfVBOMesh_t* )surface;
 
 			//ri.Printf(PRINT_ALL, "merging vbo mesh bounds\n");
 
@@ -7442,7 +7442,7 @@ static void IssueLightMultiOcclusionQueries( link_t* multiQueue, link_t* individ
 		return;
 	}
 
-	multiQueryLight = (trRefLight_t*)QueueFront( multiQueue )->data;
+	multiQueryLight = ( trRefLight_t* )QueueFront( multiQueue )->data;
 
 	if( tr.numUsedOcclusionQueryObjects < ( MAX_OCCLUSION_QUERIES - 1 ) )
 	{
@@ -7465,7 +7465,7 @@ static void IssueLightMultiOcclusionQueries( link_t* multiQueue, link_t* individ
 		//ri.Printf(PRINT_ALL, "rendering nodes:[");
 		for( l = multiQueue->prev; l != multiQueue; l = l->prev )
 		{
-			light = (trRefLight_t*)l->data;
+			light = ( trRefLight_t* )l->data;
 
 			//ri.Printf(PRINT_ALL, "%i, ", light - backEnd.refdef.lights);
 
@@ -7494,7 +7494,7 @@ static void IssueLightMultiOcclusionQueries( link_t* multiQueue, link_t* individ
 	DeQueue( multiQueue );
 	while( !QueueEmpty( multiQueue ) )
 	{
-		light = (trRefLight_t*)DeQueue( multiQueue );
+		light = ( trRefLight_t* )DeQueue( multiQueue );
 		EnQueue( &multiQueryLight->multiQuery, light );
 	}
 
@@ -7518,7 +7518,7 @@ static qboolean LightOcclusionResultAvailable( trRefLight_t* light )
 			GL_CheckErrors();
 		}
 
-		return (qboolean)available;
+		return ( qboolean )available;
 	}
 
 	return qtrue;
@@ -7572,7 +7572,7 @@ static void GetLightOcclusionQueryResult( trRefLight_t* light )
 	sentinel = &light->multiQuery;
 	for( l = sentinel->prev; l != sentinel; l = l->prev )
 	{
-		light = (trRefLight_t*)l->data;
+		light = ( trRefLight_t* )l->data;
 
 		light->occlusionQuerySamples = ocSamples;
 	}
@@ -7583,8 +7583,8 @@ static int LightCompare( const void* a, const void* b )
 	trRefLight_t *l1, *l2;
 	float         d1, d2;
 
-	l1 = (trRefLight_t*)*(void**)a;
-	l2 = (trRefLight_t*)*(void**)b;
+	l1 = ( trRefLight_t* )*( void** )a;
+	l2 = ( trRefLight_t* )*( void** )b;
 
 	d1 = DistanceSquared( backEnd.viewParms.orientation.origin, l1->l.origin );
 	d2 = DistanceSquared( backEnd.viewParms.orientation.origin, l2->l.origin );
@@ -7704,7 +7704,7 @@ void RB_RenderLightOcclusionQueries()
 
 		for( i = 0; i < invisibleList.currentElements; i++ )
 		{
-			light = (trRefLight_t*)Com_GrowListElement( &invisibleList, i );
+			light = ( trRefLight_t* )Com_GrowListElement( &invisibleList, i );
 
 			EnQueue( &invisibleQueue, light );
 
@@ -7739,9 +7739,9 @@ void RB_RenderLightOcclusionQueries()
 
 		while( !QueueEmpty( &occlusionQueryQueue ) )
 		{
-			if( LightOcclusionResultAvailable( (trRefLight_t*)QueueFront( &occlusionQueryQueue )->data ) )
+			if( LightOcclusionResultAvailable( ( trRefLight_t* )QueueFront( &occlusionQueryQueue )->data ) )
 			{
-				light = (trRefLight_t*)DeQueue( &occlusionQueryQueue );
+				light = ( trRefLight_t* )DeQueue( &occlusionQueryQueue );
 
 				// wait if result not available
 				GetLightOcclusionQueryResult( light );
@@ -7758,7 +7758,7 @@ void RB_RenderLightOcclusionQueries()
 
 						while( !QueueEmpty( &multiQueryLight->multiQuery ) )
 						{
-							light = (trRefLight_t*)DeQueue( &multiQueryLight->multiQuery );
+							light = ( trRefLight_t* )DeQueue( &multiQueryLight->multiQuery );
 
 							IssueLightOcclusionQuery( &occlusionQueryQueue, light, qtrue );
 						}
@@ -7773,7 +7773,7 @@ void RB_RenderLightOcclusionQueries()
 						multiQueryLight = light;
 						while( !QueueEmpty( &multiQueryLight->multiQuery ) )
 						{
-							light = (trRefLight_t*)DeQueue( &multiQueryLight->multiQuery );
+							light = ( trRefLight_t* )DeQueue( &multiQueryLight->multiQuery );
 
 							backEnd.pc.c_occlusionQueriesLightsCulled++;
 							backEnd.pc.c_occlusionQueriesSaved++;
@@ -8038,7 +8038,7 @@ static void IssueEntityMultiOcclusionQueries( link_t* multiQueue, link_t* indivi
 		return;
 	}
 
-	multiQueryEntity = (trRefEntity_t*)QueueFront( multiQueue )->data;
+	multiQueryEntity = ( trRefEntity_t* )QueueFront( multiQueue )->data;
 
 	if( tr.numUsedOcclusionQueryObjects < ( MAX_OCCLUSION_QUERIES - 1 ) )
 	{
@@ -8061,7 +8061,7 @@ static void IssueEntityMultiOcclusionQueries( link_t* multiQueue, link_t* indivi
 		//ri.Printf(PRINT_ALL, "rendering nodes:[");
 		for( l = multiQueue->prev; l != multiQueue; l = l->prev )
 		{
-			entity = (trRefEntity_t*)l->data;
+			entity = ( trRefEntity_t* )l->data;
 
 			//ri.Printf(PRINT_ALL, "%i, ", light - backEnd.refdef.lights);
 
@@ -8090,7 +8090,7 @@ static void IssueEntityMultiOcclusionQueries( link_t* multiQueue, link_t* indivi
 	DeQueue( multiQueue );
 	while( !QueueEmpty( multiQueue ) )
 	{
-		entity = (trRefEntity_t*)DeQueue( multiQueue );
+		entity = ( trRefEntity_t* )DeQueue( multiQueue );
 		EnQueue( &multiQueryEntity->multiQuery, entity );
 	}
 
@@ -8114,7 +8114,7 @@ static qboolean EntityOcclusionResultAvailable( trRefEntity_t* entity )
 			GL_CheckErrors();
 		}
 
-		return (qboolean)available;
+		return ( qboolean )available;
 	}
 
 	return qtrue;
@@ -8161,7 +8161,7 @@ static void GetEntityOcclusionQueryResult( trRefEntity_t* entity )
 	sentinel = &entity->multiQuery;
 	for( l = sentinel->prev; l != sentinel; l = l->prev )
 	{
-		entity = (trRefEntity_t*)l->data;
+		entity = ( trRefEntity_t* )l->data;
 
 		entity->occlusionQuerySamples = ocSamples;
 	}
@@ -8172,8 +8172,8 @@ static int EntityCompare( const void* a, const void* b )
 	trRefEntity_t *e1, *e2;
 	float          d1, d2;
 
-	e1 = (trRefEntity_t*)*(void**)a;
-	e2 = (trRefEntity_t*)*(void**)b;
+	e1 = ( trRefEntity_t* )*( void** )a;
+	e2 = ( trRefEntity_t* )*( void** )b;
 
 	d1 = DistanceSquared( backEnd.viewParms.orientation.origin, e1->e.origin );
 	d2 = DistanceSquared( backEnd.viewParms.orientation.origin, e2->e.origin );
@@ -8283,7 +8283,7 @@ void RB_RenderEntityOcclusionQueries()
 
 		for( i = 0; i < invisibleList.currentElements; i++ )
 		{
-			entity = (trRefEntity_t*)Com_GrowListElement( &invisibleList, i );
+			entity = ( trRefEntity_t* )Com_GrowListElement( &invisibleList, i );
 
 			EnQueue( &invisibleQueue, entity );
 
@@ -8318,9 +8318,9 @@ void RB_RenderEntityOcclusionQueries()
 
 		while( !QueueEmpty( &occlusionQueryQueue ) )
 		{
-			if( EntityOcclusionResultAvailable( (trRefEntity_t*)QueueFront( &occlusionQueryQueue )->data ) )
+			if( EntityOcclusionResultAvailable( ( trRefEntity_t* )QueueFront( &occlusionQueryQueue )->data ) )
 			{
-				entity = (trRefEntity_t*)DeQueue( &occlusionQueryQueue );
+				entity = ( trRefEntity_t* )DeQueue( &occlusionQueryQueue );
 
 				// wait if result not available
 				GetEntityOcclusionQueryResult( entity );
@@ -8337,7 +8337,7 @@ void RB_RenderEntityOcclusionQueries()
 
 						while( !QueueEmpty( &multiQueryEntity->multiQuery ) )
 						{
-							entity = (trRefEntity_t*)DeQueue( &multiQueryEntity->multiQuery );
+							entity = ( trRefEntity_t* )DeQueue( &multiQueryEntity->multiQuery );
 
 							IssueEntityOcclusionQuery( &occlusionQueryQueue, entity, qtrue );
 						}
@@ -8352,7 +8352,7 @@ void RB_RenderEntityOcclusionQueries()
 						multiQueryEntity = entity;
 						while( !QueueEmpty( &multiQueryEntity->multiQuery ) )
 						{
-							entity = (trRefEntity_t*)DeQueue( &multiQueryEntity->multiQuery );
+							entity = ( trRefEntity_t* )DeQueue( &multiQueryEntity->multiQuery );
 
 							backEnd.pc.c_occlusionQueriesEntitiesCulled++;
 							backEnd.pc.c_occlusionQueriesSaved++;
@@ -9067,7 +9067,7 @@ static void RB_RenderDebugUtils()
 			{
 				srfGeneric_t* gen;
 
-				gen = (srfGeneric_t*)surface;
+				gen = ( srfGeneric_t* )surface;
 
 				if( *surface == SF_FACE )
 				{
@@ -9092,7 +9092,7 @@ static void RB_RenderDebugUtils()
 			}
 			else if( *surface == SF_VBO_MESH )
 			{
-				srfVBOMesh_t* srf = (srfVBOMesh_t*)surface;
+				srfVBOMesh_t* srf = ( srfVBOMesh_t* )surface;
 				Tess_AddCube( vec3_origin, srf->bounds[ 0 ], srf->bounds[ 1 ], lightColor );
 			}
 			else if( *surface == SF_MDV )
@@ -9580,7 +9580,7 @@ static void RB_RenderDebugUtils()
 
 		for( j = 0; j < tr.cubeProbes.currentElements; j++ )
 		{
-			cubeProbe = (cubemapProbe_t*)Com_GrowListElement( &tr.cubeProbes, j );
+			cubeProbe = ( cubemapProbe_t* )Com_GrowListElement( &tr.cubeProbes, j );
 
 			// bind u_ColorMap
 			GL_SelectTexture( 0 );
@@ -9952,7 +9952,7 @@ static void RB_RenderDebugUtils()
 			sentinel = &tr.traversalStack;
 			for( l = sentinel->next; l != sentinel; l = l->next )
 			{
-				node = (bspNode_t*)l->data;
+				node = ( bspNode_t* )l->data;
 
 				if( !r_dynamicBspOcclusionCulling->integer )
 				{
@@ -11119,14 +11119,14 @@ const void* RB_SetColor( const void* data )
 
 	GLimp_LogComment( "--- RB_SetColor ---\n" );
 
-	cmd = (const setColorCommand_t*)data;
+	cmd = ( const setColorCommand_t* )data;
 
 	backEnd.color2D[ 0 ] = cmd->color[ 0 ];
 	backEnd.color2D[ 1 ] = cmd->color[ 1 ];
 	backEnd.color2D[ 2 ] = cmd->color[ 2 ];
 	backEnd.color2D[ 3 ] = cmd->color[ 3 ];
 
-	return (const void*)( cmd + 1 );
+	return ( const void* )( cmd + 1 );
 }
 
 /*
@@ -11143,7 +11143,7 @@ const void* RB_StretchPic( const void* data )
 
 	GLimp_LogComment( "--- RB_StretchPic ---\n" );
 
-	cmd = (const stretchPicCommand_t*)data;
+	cmd = ( const stretchPicCommand_t* )data;
 
 	if( !backEnd.projection2D )
 	{
@@ -11223,7 +11223,7 @@ const void* RB_StretchPic( const void* data )
 	tess.texCoords[ numVerts + 3 ][ 2 ] = 0;
 	tess.texCoords[ numVerts + 3 ][ 3 ] = 1;
 
-	return (const void*)( cmd + 1 );
+	return ( const void* )( cmd + 1 );
 }
 
 const void* RB_Draw2dPolys( const void* data )
@@ -11232,7 +11232,7 @@ const void* RB_Draw2dPolys( const void* data )
 	shader_t*              shader;
 	int                    i;
 
-	cmd = (const poly2dCommand_t*)data;
+	cmd = ( const poly2dCommand_t* )data;
 
 	if( !backEnd.projection2D )
 	{
@@ -11277,7 +11277,7 @@ const void* RB_Draw2dPolys( const void* data )
 		tess.numVertexes++;
 	}
 
-	return (const void*)( cmd + 1 );
+	return ( const void* )( cmd + 1 );
 }
 
 // NERVE - SMF
@@ -11294,7 +11294,7 @@ const void* RB_RotatedPic( const void* data )
 	float                      angle;
 	float                      pi2 = M_PI * 2;
 
-	cmd = (const stretchPicCommand_t*)data;
+	cmd = ( const stretchPicCommand_t* )data;
 
 	if( !backEnd.projection2D )
 	{
@@ -11367,7 +11367,7 @@ const void* RB_RotatedPic( const void* data )
 	tess.texCoords[ numVerts + 3 ][ 0 ] = cmd->s1;
 	tess.texCoords[ numVerts + 3 ][ 1 ] = cmd->t2;
 
-	return (const void*)( cmd + 1 );
+	return ( const void* )( cmd + 1 );
 }
 
 // -NERVE - SMF
@@ -11384,7 +11384,7 @@ const void* RB_StretchPicGradient( const void* data )
 	int                        numVerts, numIndexes;
 	int                        i;
 
-	cmd = (const stretchPicCommand_t*)data;
+	cmd = ( const stretchPicCommand_t* )data;
 
 	if( !backEnd.projection2D )
 	{
@@ -11467,7 +11467,7 @@ const void* RB_StretchPicGradient( const void* data )
 	tess.texCoords[ numVerts + 3 ][ 0 ] = cmd->s1;
 	tess.texCoords[ numVerts + 3 ][ 1 ] = cmd->t2;
 
-	return (const void*)( cmd + 1 );
+	return ( const void* )( cmd + 1 );
 }
 
 /*
@@ -11487,14 +11487,14 @@ const void* RB_DrawView( const void* data )
 		Tess_End();
 	}
 
-	cmd = (const drawViewCommand_t*)data;
+	cmd = ( const drawViewCommand_t* )data;
 
 	backEnd.refdef    = cmd->refdef;
 	backEnd.viewParms = cmd->viewParms;
 
 	RB_RenderView();
 
-	return (const void*)( cmd + 1 );
+	return ( const void* )( cmd + 1 );
 }
 
 /*
@@ -11508,7 +11508,7 @@ const void* RB_DrawBuffer( const void* data )
 
 	GLimp_LogComment( "--- RB_DrawBuffer ---\n" );
 
-	cmd = (const drawBufferCommand_t*)data;
+	cmd = ( const drawBufferCommand_t* )data;
 
 	GL_DrawBuffer( cmd->buffer );
 
@@ -11520,7 +11520,7 @@ const void* RB_DrawBuffer( const void* data )
 		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	}
 
-	return (const void*)( cmd + 1 );
+	return ( const void* )( cmd + 1 );
 }
 
 /*
@@ -11573,7 +11573,7 @@ void RB_ShowImages( void )
 
 	for( i = 0; i < tr.images.currentElements; i++ )
 	{
-		image = (image_t*)Com_GrowListElement( &tr.images, i );
+		image = ( image_t* )Com_GrowListElement( &tr.images, i );
 
 		/*
 		   if(image->bits & (IF_RGBA16F | IF_RGBA32F | IF_LA16F | IF_LA32F))
@@ -11648,7 +11648,7 @@ const void* RB_SwapBuffers( const void* data )
 		RB_ShowImages();
 	}
 
-	cmd = (const swapBuffersCommand_t*)data;
+	cmd = ( const swapBuffersCommand_t* )data;
 
 	// we measure overdraw by reading back the stencil buffer and
 	// counting up the number of increments that have happened
@@ -11658,7 +11658,7 @@ const void* RB_SwapBuffers( const void* data )
 		long           sum = 0;
 		unsigned char* stencilReadback;
 
-		stencilReadback = (unsigned char*)ri.Hunk_AllocateTempMemory( glConfig.vidWidth * glConfig.vidHeight );
+		stencilReadback = ( unsigned char* )ri.Hunk_AllocateTempMemory( glConfig.vidWidth * glConfig.vidHeight );
 		glReadPixels( 0, 0, glConfig.vidWidth, glConfig.vidHeight, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, stencilReadback );
 
 		for( i = 0; i < glConfig.vidWidth * glConfig.vidHeight; i++ )
@@ -11687,7 +11687,7 @@ const void* RB_SwapBuffers( const void* data )
 	glState.finishCalled = qfalse;
 #endif
 
-	return (const void*)( cmd + 1 );
+	return ( const void* )( cmd + 1 );
 }
 
 //bani
@@ -11702,7 +11702,7 @@ const void* RB_RenderToTexture( const void* data )
 
 	//  ri.Printf( PRINT_ALL, "RB_RenderToTexture\n" );
 
-	cmd = (const renderToTextureCommand_t*)data;
+	cmd = ( const renderToTextureCommand_t* )data;
 
 	GL_Bind( cmd->image );
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_LINEAR );
@@ -11710,7 +11710,7 @@ const void* RB_RenderToTexture( const void* data )
 	glCopyTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, cmd->x, cmd->y, cmd->w, cmd->h, 0 );
 	//  glCopyTexSubImage2D( GL_TEXTURE_2D, 0, 0, 0, cmd->x, cmd->y, cmd->w, cmd->h );
 
-	return (const void*)( cmd + 1 );
+	return ( const void* )( cmd + 1 );
 }
 
 //bani
@@ -11725,11 +11725,11 @@ const void* RB_Finish( const void* data )
 
 	//  ri.Printf( PRINT_ALL, "RB_Finish\n" );
 
-	cmd = (const renderFinishCommand_t*)data;
+	cmd = ( const renderFinishCommand_t* )data;
 
 	glFinish();
 
-	return (const void*)( cmd + 1 );
+	return ( const void* )( cmd + 1 );
 }
 
 /*
@@ -11759,7 +11759,7 @@ void RB_ExecuteRenderCommands( const void* data )
 
 	while( 1 )
 	{
-		switch( *(const int*)data )
+		switch( *( const int* )data )
 		{
 			case RC_SET_COLOR:
 				data = RB_SetColor( data );

@@ -981,7 +981,7 @@ void CG_AddParticles( void )
 					// reflect the velocity on the trace plane
 					hitTime = cg.time - cg.frametime + cg.frametime * trace.fraction;
 
-					time = ( (float)hitTime - p->time ) * 0.001;
+					time = ( ( float )hitTime - p->time ) * 0.001;
 
 					VectorSet( vel, p->vel[ 0 ], p->vel[ 1 ], p->vel[ 2 ] + p->accel[ 2 ] * time * grav );
 					VectorReflect( vel, trace.plane.normal, p->vel );
@@ -1399,7 +1399,7 @@ int CG_NewParticleArea( int num )
 	int    numparticles;
 	int    snum;
 
-	str = (char*)CG_ConfigString( num );
+	str = ( char* )CG_ConfigString( num );
 	if( !str[ 0 ] )
 	{
 		return ( 0 );
@@ -1561,7 +1561,7 @@ void CG_Particle_OilParticle( qhandle_t pshader, centity_t* cent )
 	time  = cg.time;
 	time2 = cg.time + cent->currentState.time;
 
-	ratio = (float)1 - ( (float)time / (float)time2 );
+	ratio = ( float )1 - ( ( float )time / ( float )time2 );
 
 	if( !pshader )
 	{

@@ -292,13 +292,13 @@ void AllocateLightmapForSurface( drawSurface_t* ds )
 
 	if( w > LIGHTMAP_WIDTH )
 	{
-		VectorScale( vecs[ 0 ], (float)LIGHTMAP_WIDTH / w, vecs[ 0 ] );
+		VectorScale( vecs[ 0 ], ( float )LIGHTMAP_WIDTH / w, vecs[ 0 ] );
 		w = LIGHTMAP_WIDTH;
 	}
 
 	if( h > LIGHTMAP_HEIGHT )
 	{
-		VectorScale( vecs[ 1 ], (float)LIGHTMAP_HEIGHT / h, vecs[ 1 ] );
+		VectorScale( vecs[ 1 ], ( float )LIGHTMAP_HEIGHT / h, vecs[ 1 ] );
 		h = LIGHTMAP_HEIGHT;
 	}
 

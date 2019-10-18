@@ -228,7 +228,7 @@ struct uicmd
 // despite what lcc thinks, we do not get cmdcmp here
 static int commandComp( const void* a, const void* b )
 {
-	return Q_stricmp( (const char*)a, ( (commandDef_t*)b )->name );
+	return Q_stricmp( ( const char* )a, ( ( commandDef_t* )b )->name );
 }
 
 /*

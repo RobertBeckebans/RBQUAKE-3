@@ -1137,14 +1137,14 @@ static void KamikazeDamage( gentity_t* self )
 	{
 		// shockwave push back
 		t = self->count - KAMI_SHOCKWAVE_STARTTIME;
-		KamikazeShockWave( self->s.pos.trBase, self->activator, 25, 400, (int)(float)t * KAMI_SHOCKWAVE_MAXRADIUS / ( KAMI_SHOCKWAVE_ENDTIME - KAMI_SHOCKWAVE_STARTTIME ) );
+		KamikazeShockWave( self->s.pos.trBase, self->activator, 25, 400, ( int )( float )t * KAMI_SHOCKWAVE_MAXRADIUS / ( KAMI_SHOCKWAVE_ENDTIME - KAMI_SHOCKWAVE_STARTTIME ) );
 	}
 	//
 	if( self->count >= KAMI_EXPLODE_STARTTIME )
 	{
 		// do our damage
 		t = self->count - KAMI_EXPLODE_STARTTIME;
-		KamikazeRadiusDamage( self->s.pos.trBase, self->activator, 400, (int)(float)t * KAMI_BOOMSPHERE_MAXRADIUS / ( KAMI_IMPLODE_STARTTIME - KAMI_EXPLODE_STARTTIME ) );
+		KamikazeRadiusDamage( self->s.pos.trBase, self->activator, 400, ( int )( float )t * KAMI_BOOMSPHERE_MAXRADIUS / ( KAMI_IMPLODE_STARTTIME - KAMI_EXPLODE_STARTTIME ) );
 	}
 
 	// either cycle or kill self

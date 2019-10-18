@@ -167,7 +167,7 @@ static int entity_SetClassName( lua_State* L )
 	//	char           *classname;
 
 	lent               = lua_getentity( L, 1 );
-	lent->e->classname = (char*)luaL_checkstring( L, 2 );
+	lent->e->classname = ( char* )luaL_checkstring( L, 2 );
 
 	//	lent->e->classname = classname;
 
@@ -273,5 +273,5 @@ lua_Entity* lua_getentity( lua_State* L, int argNum )
 
 	ud = luaL_checkudata( L, argNum, "game.entity" );
 	luaL_argcheck( L, ud != NULL, argNum, "`entity' expected" );
-	return (lua_Entity*)ud;
+	return ( lua_Entity* )ud;
 }

@@ -124,7 +124,7 @@ static void PrintPacket( const char* packet, size_t length )
 		{
 			MsgPrint( MSG_NOPRINT, "\"" );
 		}
-		else if( c >= 32 && (qbyte)c <= 127 )
+		else if( c >= 32 && ( qbyte )c <= 127 )
 		{
 			MsgPrint( MSG_NOPRINT, "%c", c );
 		}
@@ -532,7 +532,7 @@ static qboolean SecureInit( void )
 	}
 
 	address.sin_port = htons( master_port );
-	if( bind( inSock, (struct sockaddr*)&address, sizeof( address ) ) != 0 )
+	if( bind( inSock, ( struct sockaddr* )&address, sizeof( address ) ) != 0 )
 	{
 		MsgPrint( MSG_ERROR, "ERROR: socket binding failed (%s)\n", strerror( errno ) );
 #ifdef WIN32
@@ -548,7 +548,7 @@ static qboolean SecureInit( void )
 	// to confuse NAT UDP "connection" tracking and thus delist servers
 	// hidden by NAT
 	address.sin_port = htons( master_port + 1 );
-	if( bind( outSock, (struct sockaddr*)&address, sizeof( address ) ) != 0 )
+	if( bind( outSock, ( struct sockaddr* )&address, sizeof( address ) ) != 0 )
 	{
 		MsgPrint( MSG_ERROR, "ERROR: socket binding failed (%s)\n", strerror( errno ) );
 #ifdef WIN32
@@ -809,7 +809,7 @@ int main( int argc, const char* argv[] )
 
 		// Get the next valid message
 		addrlen  = sizeof( address );
-		nb_bytes = recvfrom( sock, packet, sizeof( packet ) - 1, 0, (struct sockaddr*)&address, &addrlen );
+		nb_bytes = recvfrom( sock, packet, sizeof( packet ) - 1, 0, ( struct sockaddr* )&address, &addrlen );
 		if( nb_bytes <= 0 )
 		{
 			MsgPrint( MSG_WARNING, "WARNING: \"recvfrom\" returned %d\n", nb_bytes );
@@ -842,7 +842,7 @@ int main( int argc, const char* argv[] )
 			MsgPrint( MSG_WARNING, "WARNING: rejected packet from %s (size = %d bytes)\n", peer_address, nb_bytes );
 			continue;
 		}
-		if( *( (unsigned int*)packet ) != 0xFFFFFFFF )
+		if( *( ( unsigned int* )packet ) != 0xFFFFFFFF )
 		{
 			MsgPrint( MSG_WARNING, "WARNING: rejected packet from %s (invalid header)\n", peer_address );
 			continue;

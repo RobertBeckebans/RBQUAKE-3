@@ -533,7 +533,7 @@ void SV_SpawnServer( char* server, qboolean killBots )
 	Cvar_Set( "cl_paused", "0" );
 
 	// get a new checksum feed and restart the file system
-	sv.checksumFeed = ( ( (int)rand() << 16 ) ^ rand() ) ^ Com_Milliseconds();
+	sv.checksumFeed = ( ( ( int )rand() << 16 ) ^ rand() ) ^ Com_Milliseconds();
 	FS_Restart( sv.checksumFeed );
 
 	CM_LoadMap( va( "maps/%s.bsp", server ), qfalse, &checksum );

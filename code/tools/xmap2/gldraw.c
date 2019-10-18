@@ -52,7 +52,7 @@ static void Reshape( int width, int height )
 	glViewport( 0, 0, width, height );
 
 	// set up projection matrix
-	screenaspect = (float)width / (float)height;
+	screenaspect = ( float )width / ( float )height;
 
 	glMatrixMode( GL_PROJECTION );
 	glLoadIdentity();
@@ -106,13 +106,13 @@ static void Draw_BeginScene( void )
 
 		SDL_GL_SetSwapInterval( 1 );
 
-		glString = (char*)glGetString( GL_VENDOR );
+		glString = ( char* )glGetString( GL_VENDOR );
 		Sys_FPrintf( SYS_VRB, "GL_VENDOR: %s\n", glString );
 
-		glString = (char*)glGetString( GL_RENDERER );
+		glString = ( char* )glGetString( GL_RENDERER );
 		Sys_FPrintf( SYS_VRB, "GL_RENDERER: %s\n", glString );
 
-		glString = (char*)glGetString( GL_VERSION );
+		glString = ( char* )glGetString( GL_VERSION );
 		Sys_FPrintf( SYS_VRB, "GL_VERSION: %s\n", glString );
 
 		drawInit = qtrue;

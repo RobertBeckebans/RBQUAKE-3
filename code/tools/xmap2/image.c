@@ -401,7 +401,7 @@ image_t* ImageLoad( const char* filename )
 	/* attempt to load tga */
 	StripExtension( name );
 	strcat( name, ".tga" );
-	size = vfsLoadFile( (const char*)name, (void**)&buffer, 0 );
+	size = vfsLoadFile( ( const char* )name, ( void** )&buffer, 0 );
 	if( size > 0 )
 	{
 		LoadTGABuffer( buffer, &image->pixels, &image->width, &image->height );
@@ -412,7 +412,7 @@ image_t* ImageLoad( const char* filename )
 		/* attempt to load png */
 		StripExtension( name );
 		strcat( name, ".png" );
-		size = vfsLoadFile( (const char*)name, (void**)&buffer, 0 );
+		size = vfsLoadFile( ( const char* )name, ( void** )&buffer, 0 );
 		if( size > 0 )
 		{
 			LoadPNGBuffer( buffer, &image->pixels, &image->width, &image->height );
@@ -423,10 +423,10 @@ image_t* ImageLoad( const char* filename )
 			/* attempt to load jpg */
 			StripExtension( name );
 			strcat( name, ".jpg" );
-			size = vfsLoadFile( (const char*)name, (void**)&buffer, 0 );
+			size = vfsLoadFile( ( const char* )name, ( void** )&buffer, 0 );
 			if( size > 0 )
 			{
-				LoadJPGBuffer( (const char*)name, buffer, size, &image->pixels, &image->width, &image->height );
+				LoadJPGBuffer( ( const char* )name, buffer, size, &image->pixels, &image->width, &image->height );
 				if( image->pixels == NULL )
 				{
 					Sys_Printf( "WARNING: LoadJPGBuffer: '%s'\n", image->name );

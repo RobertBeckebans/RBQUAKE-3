@@ -361,7 +361,7 @@ static int vector_ToString( lua_State* L )
 	vec_t* vec;
 
 	vec = lua_getvector( L, 1 );
-	lua_pushstring( L, va( "(%i %i %i)", (int)vec[ 0 ], (int)vec[ 1 ], (int)vec[ 2 ] ) );
+	lua_pushstring( L, va( "(%i %i %i)", ( int )vec[ 0 ], ( int )vec[ 1 ], ( int )vec[ 2 ] ) );
 
 	return 1;
 }
@@ -435,7 +435,7 @@ vec_t* lua_getvector( lua_State* L, int argNum )
 
 	ud = luaL_checkudata( L, argNum, "vector" );
 	luaL_argcheck( L, ud != NULL, argNum, "`vector' expected" );
-	return (vec_t*)ud;
+	return ( vec_t* )ud;
 }
 
 int lua_isvector( lua_State* L, int idx )

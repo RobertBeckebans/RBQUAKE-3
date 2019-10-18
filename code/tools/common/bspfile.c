@@ -114,7 +114,7 @@ void SwapBSPFile( void )
 	int i;
 
 	// models
-	SwapBlock( (int*)dmodels, numModels * sizeof( dmodels[ 0 ] ) );
+	SwapBlock( ( int* )dmodels, numModels * sizeof( dmodels[ 0 ] ) );
 
 	// shaders (don't swap the name)
 	for( i = 0; i < numShaders; i++ )
@@ -124,29 +124,29 @@ void SwapBSPFile( void )
 	}
 
 	// planes
-	SwapBlock( (int*)dplanes, numPlanes * sizeof( dplanes[ 0 ] ) );
+	SwapBlock( ( int* )dplanes, numPlanes * sizeof( dplanes[ 0 ] ) );
 
 	// nodes
-	SwapBlock( (int*)dnodes, numNodes * sizeof( dnodes[ 0 ] ) );
+	SwapBlock( ( int* )dnodes, numNodes * sizeof( dnodes[ 0 ] ) );
 
 	// leafs
-	SwapBlock( (int*)dleafs, numLeafs * sizeof( dleafs[ 0 ] ) );
+	SwapBlock( ( int* )dleafs, numLeafs * sizeof( dleafs[ 0 ] ) );
 
 	// leaffaces
-	SwapBlock( (int*)dleafsurfaces, numLeafSurfaces * sizeof( dleafsurfaces[ 0 ] ) );
+	SwapBlock( ( int* )dleafsurfaces, numLeafSurfaces * sizeof( dleafsurfaces[ 0 ] ) );
 
 	// leafbrushes
-	SwapBlock( (int*)dleafbrushes, numLeafBrushes * sizeof( dleafbrushes[ 0 ] ) );
+	SwapBlock( ( int* )dleafbrushes, numLeafBrushes * sizeof( dleafbrushes[ 0 ] ) );
 
 	// brushes
-	SwapBlock( (int*)dbrushes, numBrushes * sizeof( dbrushes[ 0 ] ) );
+	SwapBlock( ( int* )dbrushes, numBrushes * sizeof( dbrushes[ 0 ] ) );
 
 	// brushsides
-	SwapBlock( (int*)dbrushsides, numBrushSides * sizeof( dbrushsides[ 0 ] ) );
+	SwapBlock( ( int* )dbrushsides, numBrushSides * sizeof( dbrushsides[ 0 ] ) );
 
 	// vis
-	( (int*)&visBytes )[ 0 ] = LittleLong( ( (int*)&visBytes )[ 0 ] );
-	( (int*)&visBytes )[ 1 ] = LittleLong( ( (int*)&visBytes )[ 1 ] );
+	( ( int* )&visBytes )[ 0 ] = LittleLong( ( ( int* )&visBytes )[ 0 ] );
+	( ( int* )&visBytes )[ 1 ] = LittleLong( ( ( int* )&visBytes )[ 1 ] );
 
 	// drawverts
 	for( i = 0; i < numDrawVerts; i++ )
@@ -181,10 +181,10 @@ void SwapBSPFile( void )
 	}
 
 	// drawindexes
-	SwapBlock( (int*)drawIndexes, numDrawIndexes * sizeof( drawIndexes[ 0 ] ) );
+	SwapBlock( ( int* )drawIndexes, numDrawIndexes * sizeof( drawIndexes[ 0 ] ) );
 
 	// drawsurfs
-	SwapBlock( (int*)drawSurfaces, numDrawSurfaces * sizeof( drawSurfaces[ 0 ] ) );
+	SwapBlock( ( int* )drawSurfaces, numDrawSurfaces * sizeof( drawSurfaces[ 0 ] ) );
 
 	// fogs
 	for( i = 0; i < numFogs; i++ )
@@ -216,7 +216,7 @@ int CopyLump( dheader_t* header, int lump, void* dest, int size )
 		Error( "LoadBSPFile: odd lump size" );
 	}
 
-	memcpy( dest, (byte*)header + ofs, length );
+	memcpy( dest, ( byte* )header + ofs, length );
 
 	return length / size;
 }
@@ -231,10 +231,10 @@ void LoadBSPFile( const char* filename )
 	dheader_t* header;
 
 	// load the file header
-	LoadFile( filename, (void**)&header );
+	LoadFile( filename, ( void** )&header );
 
 	// swap the header
-	SwapBlock( (int*)header, sizeof( *header ) );
+	SwapBlock( ( int* )header, sizeof( *header ) );
 
 	if( header->ident != BSP_IDENT )
 	{
@@ -351,23 +351,23 @@ void PrintBSPFileSizes( void )
 		ParseEntities();
 	}
 
-	Sys_Printf( "%6i models       %7i\n", numModels, (int)( numModels * sizeof( dmodel_t ) ) );
-	Sys_Printf( "%6i shaders      %7i\n", numShaders, (int)( numShaders * sizeof( dshader_t ) ) );
-	Sys_Printf( "%6i brushes      %7i\n", numBrushes, (int)( numBrushes * sizeof( dbrush_t ) ) );
-	Sys_Printf( "%6i brushsides   %7i\n", numBrushSides, (int)( numBrushSides * sizeof( dbrushside_t ) ) );
-	Sys_Printf( "%6i fogs         %7i\n", numFogs, (int)( numFogs * sizeof( dfog_t ) ) );
-	Sys_Printf( "%6i planes       %7i\n", numPlanes, (int)( numPlanes * sizeof( dplane_t ) ) );
+	Sys_Printf( "%6i models       %7i\n", numModels, ( int )( numModels * sizeof( dmodel_t ) ) );
+	Sys_Printf( "%6i shaders      %7i\n", numShaders, ( int )( numShaders * sizeof( dshader_t ) ) );
+	Sys_Printf( "%6i brushes      %7i\n", numBrushes, ( int )( numBrushes * sizeof( dbrush_t ) ) );
+	Sys_Printf( "%6i brushsides   %7i\n", numBrushSides, ( int )( numBrushSides * sizeof( dbrushside_t ) ) );
+	Sys_Printf( "%6i fogs         %7i\n", numFogs, ( int )( numFogs * sizeof( dfog_t ) ) );
+	Sys_Printf( "%6i planes       %7i\n", numPlanes, ( int )( numPlanes * sizeof( dplane_t ) ) );
 	Sys_Printf( "%6i entdata      %7i\n", numEntities, entDataSize );
 
 	Sys_Printf( "\n" );
 
-	Sys_Printf( "%6i nodes        %7i\n", numNodes, (int)( numNodes * sizeof( dnode_t ) ) );
-	Sys_Printf( "%6i leafs        %7i\n", numLeafs, (int)( numLeafs * sizeof( dleaf_t ) ) );
-	Sys_Printf( "%6i leafsurfaces %7i\n", numLeafSurfaces, (int)( numLeafSurfaces * sizeof( dleafsurfaces[ 0 ] ) ) );
-	Sys_Printf( "%6i leafbrushes  %7i\n", numLeafBrushes, (int)( numLeafBrushes * sizeof( dleafbrushes[ 0 ] ) ) );
-	Sys_Printf( "%6i drawverts    %7i\n", numDrawVerts, (int)( numDrawVerts * sizeof( drawVerts[ 0 ] ) ) );
-	Sys_Printf( "%6i drawindexes  %7i\n", numDrawIndexes, (int)( numDrawIndexes * sizeof( drawIndexes[ 0 ] ) ) );
-	Sys_Printf( "%6i drawsurfaces %7i\n", numDrawSurfaces, (int)( numDrawSurfaces * sizeof( drawSurfaces[ 0 ] ) ) );
+	Sys_Printf( "%6i nodes        %7i\n", numNodes, ( int )( numNodes * sizeof( dnode_t ) ) );
+	Sys_Printf( "%6i leafs        %7i\n", numLeafs, ( int )( numLeafs * sizeof( dleaf_t ) ) );
+	Sys_Printf( "%6i leafsurfaces %7i\n", numLeafSurfaces, ( int )( numLeafSurfaces * sizeof( dleafsurfaces[ 0 ] ) ) );
+	Sys_Printf( "%6i leafbrushes  %7i\n", numLeafBrushes, ( int )( numLeafBrushes * sizeof( dleafbrushes[ 0 ] ) ) );
+	Sys_Printf( "%6i drawverts    %7i\n", numDrawVerts, ( int )( numDrawVerts * sizeof( drawVerts[ 0 ] ) ) );
+	Sys_Printf( "%6i drawindexes  %7i\n", numDrawIndexes, ( int )( numDrawIndexes * sizeof( drawIndexes[ 0 ] ) ) );
+	Sys_Printf( "%6i drawsurfaces %7i\n", numDrawSurfaces, ( int )( numDrawSurfaces * sizeof( drawSurfaces[ 0 ] ) ) );
 
 	Sys_Printf( "%6i lightmaps    %7i\n", numLightBytes / ( LIGHTMAP_WIDTH * LIGHTMAP_HEIGHT * 3 ), numLightBytes );
 	Sys_Printf( "       visibility   %7i\n", numVisBytes );

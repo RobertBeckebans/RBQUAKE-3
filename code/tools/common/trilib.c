@@ -67,7 +67,7 @@ static void ByteSwapTri( tf_triangle* tri )
 
 	for( i = 0; i < sizeof( tf_triangle ) / 4; i++ )
 	{
-		( (int*)tri )[ i ] = BigLong( ( (int*)tri )[ i ] );
+		( ( int* )tri )[ i ] = BigLong( ( ( int* )tri )[ i ] );
 	}
 }
 
@@ -117,11 +117,11 @@ void TRI_LoadPolysets( const char* filename, polyset_t** ppPSET, int* numpsets )
 	int         exitpattern;
 	float       t;
 
-	t                                     = -FLOAT_START;
-	*( (unsigned char*)&exitpattern + 0 ) = *( (unsigned char*)&t + 3 );
-	*( (unsigned char*)&exitpattern + 1 ) = *( (unsigned char*)&t + 2 );
-	*( (unsigned char*)&exitpattern + 2 ) = *( (unsigned char*)&t + 1 );
-	*( (unsigned char*)&exitpattern + 3 ) = *( (unsigned char*)&t + 0 );
+	t                                       = -FLOAT_START;
+	*( ( unsigned char* )&exitpattern + 0 ) = *( ( unsigned char* )&t + 3 );
+	*( ( unsigned char* )&exitpattern + 1 ) = *( ( unsigned char* )&t + 2 );
+	*( ( unsigned char* )&exitpattern + 2 ) = *( ( unsigned char* )&t + 1 );
+	*( ( unsigned char* )&exitpattern + 3 ) = *( ( unsigned char* )&t + 0 );
 
 	if( ( input = fopen( filename, "rb" ) ) == 0 )
 	{
@@ -147,8 +147,8 @@ void TRI_LoadPolysets( const char* filename, polyset_t** ppPSET, int* numpsets )
 		{
 			break;
 		}
-		*(int*)&start = BigLong( *(int*)&start );
-		if( *(int*)&start != exitpattern )
+		*( int* )&start = BigLong( *( int* )&start );
+		if( *( int* )&start != exitpattern )
 		{
 			if( start == FLOAT_START )
 			{

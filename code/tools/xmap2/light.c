@@ -483,9 +483,9 @@ void CreateEntityLights( void )
 			if( e2 == NULL )
 			{
 				Sys_Printf( "WARNING: light at (%i %i %i) has missing target\n",
-					(int)light->origin[ 0 ],
-					(int)light->origin[ 1 ],
-					(int)light->origin[ 2 ] );
+					( int )light->origin[ 0 ],
+					( int )light->origin[ 1 ],
+					( int )light->origin[ 2 ] );
 			}
 			else
 			{
@@ -1991,7 +1991,7 @@ void SetupGrid( void )
 	if( !VectorCompare( gridSize, oldGridSize ) )
 	{
 		sprintf( temp, "%.0f %.0f %.0f", gridSize[ 0 ], gridSize[ 1 ], gridSize[ 2 ] );
-		SetKeyValue( &entities[ 0 ], "gridsize", (const char*)temp );
+		SetKeyValue( &entities[ 0 ], "gridsize", ( const char* )temp );
 		Sys_FPrintf( SYS_VRB, "Storing adjusted grid size\n" );
 	}
 
@@ -1999,8 +1999,8 @@ void SetupGrid( void )
 	numBSPGridPoints = numRawGridPoints;
 	rawGridSize      = numRawGridPoints * sizeof( *rawGridPoints );
 	bspGridSize      = numBSPGridPoints * sizeof( *bspGridPoints );
-	Sys_Printf( "%9u x %u B = rawGridSize = (%.2fMB)\n", numRawGridPoints, sizeof( *rawGridPoints ), (float)rawGridSize / ( 1024.0f * 1024.0f ) );
-	Sys_Printf( "%9u x %u B = bspGridSize = (%.2fMB)\n", numBSPGridPoints, sizeof( *bspGridPoints ), (float)bspGridSize / ( 1024.0f * 1024.0f ) );
+	Sys_Printf( "%9u x %u B = rawGridSize = (%.2fMB)\n", numRawGridPoints, sizeof( *rawGridPoints ), ( float )rawGridSize / ( 1024.0f * 1024.0f ) );
+	Sys_Printf( "%9u x %u B = bspGridSize = (%.2fMB)\n", numBSPGridPoints, sizeof( *bspGridPoints ), ( float )bspGridSize / ( 1024.0f * 1024.0f ) );
 
 	/* allocate lightgrid */
 	rawGridPoints = safe_malloc( rawGridSize );

@@ -60,7 +60,7 @@ fixedWinding_t* NewFixedWinding( int points )
 		Error( "NewWinding: %i points", points );
 	}
 
-	size = (int)( ( size_t )( (fixedWinding_t*)0 )->points[ points ] );
+	size = ( int )( ( size_t )( ( fixedWinding_t* )0 )->points[ points ] );
 	w    = safe_malloc( size );
 	memset( w, 0, size );
 
@@ -77,7 +77,7 @@ void prl( leaf_t* l )
 	{
 		p  = l->portals[ i ];
 		pl = p->plane;
-		Sys_Printf( "portal %4i to leaf %4i : %7.1f : (%4.1f, %4.1f, %4.1f)\n", (int)( p - portals ), p->leaf, pl.dist, pl.normal[ 0 ], pl.normal[ 1 ], pl.normal[ 2 ] );
+		Sys_Printf( "portal %4i to leaf %4i : %7.1f : (%4.1f, %4.1f, %4.1f)\n", ( int )( p - portals ), p->leaf, pl.dist, pl.normal[ 0 ], pl.normal[ 1 ], pl.normal[ 2 ] );
 	}
 }
 
@@ -93,11 +93,11 @@ the earlier information.
 */
 int PComp( const void* a, const void* b )
 {
-	if( ( *(vportal_t**)a )->nummightsee == ( *(vportal_t**)b )->nummightsee )
+	if( ( *( vportal_t** )a )->nummightsee == ( *( vportal_t** )b )->nummightsee )
 	{
 		return 0;
 	}
-	if( ( *(vportal_t**)a )->nummightsee < ( *(vportal_t**)b )->nummightsee )
+	if( ( *( vportal_t** )a )->nummightsee < ( *( vportal_t** )b )->nummightsee )
 	{
 		return -1;
 	}
@@ -200,7 +200,7 @@ void       ClusterMerge( int leafnum )
 		}
 		for( j = 0; j < portallongs; j++ )
 		{
-			( (long*)portalvector )[ j ] |= ( (long*)p->portalvis )[ j ];
+			( ( long* )portalvector )[ j ] |= ( ( long* )p->portalvis )[ j ];
 		}
 		pnum = p - portals;
 		portalvector[ pnum >> 3 ] |= 1 << ( pnum & 7 );
@@ -387,8 +387,8 @@ void CalcVis( void )
 				Sys_FPrintf( SYS_VRB, "%4i clusters have exactly %4i visible clusters\n", clustersizehistogram[ i ], i );
 			}
 			/* cast is to prevent integer overflow */
-			totalvis += ( (double)i ) * ( (double)clustersizehistogram[ i ] );
-			totalvis2 += ( (double)i ) * ( (double)i ) * ( (double)clustersizehistogram[ i ] );
+			totalvis += ( ( double )i ) * ( ( double )clustersizehistogram[ i ] );
+			totalvis2 += ( ( double )i ) * ( ( double )i ) * ( ( double )clustersizehistogram[ i ] );
 
 			if( minvis < 0 )
 			{
@@ -404,8 +404,8 @@ void CalcVis( void )
 	Sys_Printf( "Total visible clusters: %.0f\n", totalvis );
 	Sys_Printf( "Average clusters visible: %.2f (%.3f%%/total)\n", mu, mu / portalclusters * 100.0 );
 	Sys_Printf( "  Standard deviation: %.2f (%.3f%%/total, %.3f%%/avg)\n", sigma, sigma / portalclusters * 100.0, sigma / mu * 100.0 );
-	Sys_Printf( "  Minimum: %i (%.3f%%/total, %.3f%%/avg)\n", minvis, minvis / (double)portalclusters * 100.0, minvis / mu * 100.0 );
-	Sys_Printf( "  Maximum: %i (%.3f%%/total, %.3f%%/avg)\n", maxvis, maxvis / (double)portalclusters * 100.0, maxvis / mu * 100.0 );
+	Sys_Printf( "  Minimum: %i (%.3f%%/total, %.3f%%/avg)\n", minvis, minvis / ( double )portalclusters * 100.0, minvis / mu * 100.0 );
+	Sys_Printf( "  Maximum: %i (%.3f%%/total, %.3f%%/avg)\n", maxvis, maxvis / ( double )portalclusters * 100.0, maxvis / mu * 100.0 );
 }
 
 /*
@@ -1034,8 +1034,8 @@ void LoadPortals( char* name )
 		Error( "MAX_MAP_VISIBILITY exceeded" );
 	}
 
-	( (int*)bspVisBytes )[ 0 ] = portalclusters;
-	( (int*)bspVisBytes )[ 1 ] = leafbytes;
+	( ( int* )bspVisBytes )[ 0 ] = portalclusters;
+	( ( int* )bspVisBytes )[ 1 ] = leafbytes;
 
 	for( i = 0, p = portals; i < numportals; i++ )
 	{
@@ -1047,7 +1047,7 @@ void LoadPortals( char* name )
 		{
 			Error( "LoadPortals: portal %i has too many points", i );
 		}
-		if( (unsigned)leafnums[ 0 ] > portalclusters || (unsigned)leafnums[ 1 ] > portalclusters )
+		if( ( unsigned )leafnums[ 0 ] > portalclusters || ( unsigned )leafnums[ 1 ] > portalclusters )
 		{
 			Error( "LoadPortals: reading portal %i", i );
 		}
