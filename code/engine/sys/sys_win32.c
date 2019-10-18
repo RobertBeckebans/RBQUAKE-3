@@ -40,10 +40,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include <float.h>
 
 // Used to determine where to store user-specific files
-static char     homePath[MAX_OSPATH] = { 0 };
+static char homePath[ MAX_OSPATH ] = { 0 };
 
 #ifndef DEDICATED
-	static UINT timerResolution = 0;
+static UINT timerResolution = 0;
 #endif
 
 /*
@@ -54,24 +54,24 @@ Set FPU control word to default value
 */
 
 #ifndef _RC_CHOP
-	// mingw doesn't seem to have these defined :(
-	
-	#define _MCW_EM	0x0008001fU
-	#define _MCW_RC	0x00000300U
-	#define _MCW_PC	0x00030000U
-	#define _RC_NEAR      0x00000000U
-	#define _PC_53	0x00010000U
-	
-	unsigned int _controlfp( unsigned int new, unsigned int mask );
+// mingw doesn't seem to have these defined :(
+
+#define _MCW_EM 0x0008001fU
+#define _MCW_RC 0x00000300U
+#define _MCW_PC 0x00030000U
+#define _RC_NEAR 0x00000000U
+#define _PC_53 0x00010000U
+
+unsigned int _controlfp( unsigned int new, unsigned int mask );
 #endif
 
-#define FPUCWMASK1 (_MCW_RC | _MCW_EM)
-#define FPUCW (_RC_NEAR | _MCW_EM | _PC_53)
+#define FPUCWMASK1 ( _MCW_RC | _MCW_EM )
+#define FPUCW ( _RC_NEAR | _MCW_EM | _PC_53 )
 
 #if idx64
-	#define FPUCWMASK	(FPUCWMASK1)
+#define FPUCWMASK ( FPUCWMASK1 )
 #else
-	#define FPUCWMASK	(FPUCWMASK1 | _MCW_PC)
+#define FPUCWMASK ( FPUCWMASK1 | _MCW_PC )
 #endif
 
 void Sys_SetFloatEnv( void )
@@ -84,18 +84,18 @@ void Sys_SetFloatEnv( void )
 Sys_DefaultHomePath
 ================
 */
-char*           Sys_DefaultHomePath( void )
+char* Sys_DefaultHomePath( void )
 {
-	TCHAR           szPath[MAX_PATH];
-	FARPROC         qSHGetFolderPath;
-	HMODULE         shfolder = LoadLibrary( "shfolder.dll" );
-	
+	TCHAR   szPath[ MAX_PATH ];
+	FARPROC qSHGetFolderPath;
+	HMODULE shfolder = LoadLibrary( "shfolder.dll" );
+
 	if( shfolder == NULL )
 	{
 		Com_Printf( "Unable to load SHFolder.dll\n" );
 		return NULL;
 	}
-	
+
 	if( !*homePath && com_homepath )
 	{
 		qSHGetFolderPath = GetProcAddress( shfolder, "SHGetFolderPathA" );
@@ -105,17 +105,17 @@ char*           Sys_DefaultHomePath( void )
 			FreeLibrary( shfolder );
 			return NULL;
 		}
-		
+
 		if( !SUCCEEDED( qSHGetFolderPath( NULL, CSIDL_APPDATA, NULL, 0, szPath ) ) )
 		{
 			Com_Printf( "Unable to detect CSIDL_APPDATA\n" );
 			FreeLibrary( shfolder );
 			return NULL;
 		}
-		
+
 		Com_sprintf( homePath, sizeof( homePath ), "%s%c", szPath, PATH_SEP );
-		
-		if( com_homepath->string[0] )
+
+		if( com_homepath->string[ 0 ] )
 		{
 			Q_strcat( homePath, sizeof( homePath ), com_homepath->string );
 		}
@@ -124,7 +124,7 @@ char*           Sys_DefaultHomePath( void )
 			Q_strcat( homePath, sizeof( homePath ), HOMEPATH_NAME_WIN );
 		}
 	}
-	
+
 	FreeLibrary( shfolder );
 	return homePath;
 }
@@ -134,19 +134,19 @@ char*           Sys_DefaultHomePath( void )
 Sys_Milliseconds
 ================
 */
-int             sys_timeBase;
+int sys_timeBase;
 int Sys_Milliseconds( void )
 {
 	int             sys_curtime;
 	static qboolean initialized = qfalse;
-	
+
 	if( !initialized )
 	{
 		sys_timeBase = timeGetTime();
-		initialized = qtrue;
+		initialized  = qtrue;
 	}
 	sys_curtime = timeGetTime() - sys_timeBase;
-	
+
 	return sys_curtime;
 }
 
@@ -157,15 +157,14 @@ Sys_RandomBytes
 */
 qboolean Sys_RandomBytes( byte* string, int len )
 {
-	HCRYPTPROV      prov;
-	
+	HCRYPTPROV prov;
+
 	if( !CryptAcquireContext( &prov, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT ) )
 	{
-	
 		return qfalse;
 	}
-	
-	if( !CryptGenRandom( prov, len, ( BYTE* ) string ) )
+
+	if( !CryptGenRandom( prov, len, (BYTE*)string ) )
 	{
 		CryptReleaseContext( prov, 0 );
 		return qfalse;
@@ -179,21 +178,21 @@ qboolean Sys_RandomBytes( byte* string, int len )
 Sys_GetCurrentUser
 ================
 */
-char*           Sys_GetCurrentUser( void )
+char* Sys_GetCurrentUser( void )
 {
-	static char     s_userName[1024];
-	unsigned long   size = sizeof( s_userName );
-	
+	static char   s_userName[ 1024 ];
+	unsigned long size = sizeof( s_userName );
+
 	if( !GetUserName( s_userName, &size ) )
 	{
 		strcpy( s_userName, "player" );
 	}
-	
-	if( !s_userName[0] )
+
+	if( !s_userName[ 0 ] )
 	{
 		strcpy( s_userName, "player" );
 	}
-	
+
 	return s_userName;
 }
 
@@ -202,15 +201,15 @@ char*           Sys_GetCurrentUser( void )
 Sys_GetClipboardData
 ================
 */
-char*           Sys_GetClipboardData( void )
+char* Sys_GetClipboardData( void )
 {
-	char*           data = NULL;
-	char*           cliptext;
-	
+	char* data = NULL;
+	char* cliptext;
+
 	if( OpenClipboard( NULL ) != 0 )
 	{
-		HANDLE          hClipboardData;
-		
+		HANDLE hClipboardData;
+
 		if( ( hClipboardData = GetClipboardData( CF_TEXT ) ) != 0 )
 		{
 			if( ( cliptext = GlobalLock( hClipboardData ) ) != 0 )
@@ -218,7 +217,7 @@ char*           Sys_GetClipboardData( void )
 				data = Z_Malloc( GlobalSize( hClipboardData ) + 1 );
 				Q_strncpyz( data, cliptext, GlobalSize( hClipboardData ) );
 				GlobalUnlock( hClipboardData );
-				
+
 				strtok( data, "\n\r\b" );
 			}
 		}
@@ -227,7 +226,7 @@ char*           Sys_GetClipboardData( void )
 	return data;
 }
 
-#define MEM_THRESHOLD 96*1024*1024
+#define MEM_THRESHOLD 96 * 1024 * 1024
 
 /*
 ==================
@@ -236,7 +235,7 @@ Sys_LowPhysicalMemory
 */
 qboolean Sys_LowPhysicalMemory( void )
 {
-	MEMORYSTATUS    stat;
+	MEMORYSTATUS stat;
 	GlobalMemoryStatus( &stat );
 	return ( stat.dwTotalPhys <= MEM_THRESHOLD ) ? qtrue : qfalse;
 }
@@ -246,34 +245,34 @@ qboolean Sys_LowPhysicalMemory( void )
 Sys_Basename
 ==============
 */
-const char*     Sys_Basename( char* path )
+const char* Sys_Basename( char* path )
 {
-	static char     base[MAX_OSPATH] = { 0 };
-	int             length;
-	
+	static char base[ MAX_OSPATH ] = { 0 };
+	int         length;
+
 	length = strlen( path ) - 1;
-	
+
 	// Skip trailing slashes
-	while( length > 0 && path[length] == '\\' )
+	while( length > 0 && path[ length ] == '\\' )
 	{
 		length--;
 	}
-	
-	while( length > 0 && path[length - 1] != '\\' )
+
+	while( length > 0 && path[ length - 1 ] != '\\' )
 	{
 		length--;
 	}
-	
-	Q_strncpyz( base, &path[length], sizeof( base ) );
-	
+
+	Q_strncpyz( base, &path[ length ], sizeof( base ) );
+
 	length = strlen( base ) - 1;
-	
+
 	// Strip trailing slashes
-	while( length > 0 && base[length] == '\\' )
+	while( length > 0 && base[ length ] == '\\' )
 	{
-		base[length--] = '\0';
+		base[ length-- ] = '\0';
 	}
-	
+
 	return base;
 }
 
@@ -282,21 +281,21 @@ const char*     Sys_Basename( char* path )
 Sys_Dirname
 ==============
 */
-const char*     Sys_Dirname( char* path )
+const char* Sys_Dirname( char* path )
 {
-	static char     dir[MAX_OSPATH] = { 0 };
-	int             length;
-	
+	static char dir[ MAX_OSPATH ] = { 0 };
+	int         length;
+
 	Q_strncpyz( dir, path, sizeof( dir ) );
 	length = strlen( dir ) - 1;
-	
-	while( length > 0 && dir[length] != '\\' )
+
+	while( length > 0 && dir[ length ] != '\\' )
 	{
 		length--;
 	}
-	
-	dir[length] = '\0';
-	
+
+	dir[ length ] = '\0';
+
 	return dir;
 }
 
@@ -324,7 +323,7 @@ qboolean Sys_Mkdir( const char* path )
 			return qfalse;
 		}
 	}
-	
+
 	return qtrue;
 }
 
@@ -344,13 +343,13 @@ FILE* Sys_Mkfifo( const char* ospath )
 Sys_Cwd
 ==============
 */
-char*           Sys_Cwd( void )
+char* Sys_Cwd( void )
 {
-	static char     cwd[MAX_OSPATH];
-	
+	static char cwd[ MAX_OSPATH ];
+
 	_getcwd( cwd, sizeof( cwd ) - 1 );
-	cwd[MAX_OSPATH - 1] = 0;
-	
+	cwd[ MAX_OSPATH - 1 ] = 0;
+
 	return cwd;
 }
 
@@ -371,16 +370,16 @@ Sys_ListFilteredFiles
 */
 void Sys_ListFilteredFiles( const char* basedir, char* subdirs, char* filter, char** list, int* numfiles )
 {
-	char            search[MAX_OSPATH], newsubdirs[MAX_OSPATH];
-	char            filename[MAX_OSPATH];
-	intptr_t        findhandle;
+	char               search[ MAX_OSPATH ], newsubdirs[ MAX_OSPATH ];
+	char               filename[ MAX_OSPATH ];
+	intptr_t           findhandle;
 	struct _finddata_t findinfo;
-	
+
 	if( *numfiles >= MAX_FOUND_FILES - 1 )
 	{
 		return;
 	}
-	
+
 	if( strlen( subdirs ) )
 	{
 		Com_sprintf( search, sizeof( search ), "%s\\%s\\*", basedir, subdirs );
@@ -389,13 +388,13 @@ void Sys_ListFilteredFiles( const char* basedir, char* subdirs, char* filter, ch
 	{
 		Com_sprintf( search, sizeof( search ), "%s\\*", basedir );
 	}
-	
+
 	findhandle = _findfirst( search, &findinfo );
 	if( findhandle == -1 )
 	{
 		return;
 	}
-	
+
 	do
 	{
 		if( findinfo.attrib & _A_SUBDIR )
@@ -422,11 +421,10 @@ void Sys_ListFilteredFiles( const char* basedir, char* subdirs, char* filter, ch
 		{
 			continue;
 		}
-		list[*numfiles] = CopyString( filename );
+		list[ *numfiles ] = CopyString( filename );
 		( *numfiles )++;
-	}
-	while( _findnext( findhandle, &findinfo ) != -1 );
-	
+	} while( _findnext( findhandle, &findinfo ) != -1 );
+
 	_findclose( findhandle );
 }
 
@@ -437,23 +435,23 @@ strgtr
 */
 static qboolean strgtr( const char* s0, const char* s1 )
 {
-	int             l0, l1, i;
-	
+	int l0, l1, i;
+
 	l0 = strlen( s0 );
 	l1 = strlen( s1 );
-	
+
 	if( l1 < l0 )
 	{
 		l0 = l1;
 	}
-	
+
 	for( i = 0; i < l0; i++ )
 	{
-		if( s1[i] > s0[i] )
+		if( s1[ i ] > s0[ i ] )
 		{
 			return qtrue;
 		}
-		if( s1[i] < s0[i] )
+		if( s1[ i ] < s0[ i ] )
 		{
 			return qfalse;
 		}
@@ -466,69 +464,68 @@ static qboolean strgtr( const char* s0, const char* s1 )
 Sys_ListFiles
 ==============
 */
-char**          Sys_ListFiles( const char* directory, const char* extension, char* filter, int* numfiles, qboolean wantsubs )
+char** Sys_ListFiles( const char* directory, const char* extension, char* filter, int* numfiles, qboolean wantsubs )
 {
-	char            search[MAX_OSPATH];
-	int             nfiles;
-	char**          listCopy;
-	char*           list[MAX_FOUND_FILES];
+	char               search[ MAX_OSPATH ];
+	int                nfiles;
+	char**             listCopy;
+	char*              list[ MAX_FOUND_FILES ];
 	struct _finddata_t findinfo;
-	intptr_t        findhandle;
-	int             flag;
-	int             i;
-	
+	intptr_t           findhandle;
+	int                flag;
+	int                i;
+
 	if( filter )
 	{
-	
 		nfiles = 0;
 		Sys_ListFilteredFiles( directory, "", filter, list, &nfiles );
-		
-		list[nfiles] = 0;
-		*numfiles = nfiles;
-		
+
+		list[ nfiles ] = 0;
+		*numfiles      = nfiles;
+
 		if( !nfiles )
 		{
 			return NULL;
 		}
-		
+
 		listCopy = Z_Malloc( ( nfiles + 1 ) * sizeof( *listCopy ) );
 		for( i = 0; i < nfiles; i++ )
 		{
-			listCopy[i] = list[i];
+			listCopy[ i ] = list[ i ];
 		}
-		listCopy[i] = NULL;
-		
+		listCopy[ i ] = NULL;
+
 		return listCopy;
 	}
-	
+
 	if( !extension )
 	{
 		extension = "";
 	}
-	
+
 	// passing a slash as extension will find directories
-	if( extension[0] == '/' && extension[1] == 0 )
+	if( extension[ 0 ] == '/' && extension[ 1 ] == 0 )
 	{
 		extension = "";
-		flag = 0;
+		flag      = 0;
 	}
 	else
 	{
 		flag = _A_SUBDIR;
 	}
-	
+
 	Com_sprintf( search, sizeof( search ), "%s\\*%s", directory, extension );
-	
+
 	// search
 	nfiles = 0;
-	
+
 	findhandle = _findfirst( search, &findinfo );
 	if( findhandle == -1 )
 	{
 		*numfiles = 0;
 		return NULL;
 	}
-	
+
 	do
 	{
 		if( ( !wantsubs && flag ^ ( findinfo.attrib & _A_SUBDIR ) ) || ( wantsubs && findinfo.attrib & _A_SUBDIR ) )
@@ -537,48 +534,46 @@ char**          Sys_ListFiles( const char* directory, const char* extension, cha
 			{
 				break;
 			}
-			list[nfiles] = CopyString( findinfo.name );
+			list[ nfiles ] = CopyString( findinfo.name );
 			nfiles++;
 		}
-	}
-	while( _findnext( findhandle, &findinfo ) != -1 );
-	
-	list[nfiles] = 0;
-	
+	} while( _findnext( findhandle, &findinfo ) != -1 );
+
+	list[ nfiles ] = 0;
+
 	_findclose( findhandle );
-	
+
 	// return a copy of the list
 	*numfiles = nfiles;
-	
+
 	if( !nfiles )
 	{
 		return NULL;
 	}
-	
+
 	listCopy = Z_Malloc( ( nfiles + 1 ) * sizeof( *listCopy ) );
 	for( i = 0; i < nfiles; i++ )
 	{
-		listCopy[i] = list[i];
+		listCopy[ i ] = list[ i ];
 	}
-	listCopy[i] = NULL;
-	
+	listCopy[ i ] = NULL;
+
 	do
 	{
 		flag = 0;
 		for( i = 1; i < nfiles; i++ )
 		{
-			if( strgtr( listCopy[i - 1], listCopy[i] ) )
+			if( strgtr( listCopy[ i - 1 ], listCopy[ i ] ) )
 			{
-				char*           temp = listCopy[i];
-				
-				listCopy[i] = listCopy[i - 1];
-				listCopy[i - 1] = temp;
-				flag = 1;
+				char* temp = listCopy[ i ];
+
+				listCopy[ i ]     = listCopy[ i - 1 ];
+				listCopy[ i - 1 ] = temp;
+				flag              = 1;
 			}
 		}
-	}
-	while( flag );
-	
+	} while( flag );
+
 	return listCopy;
 }
 
@@ -589,21 +584,20 @@ Sys_FreeFileList
 */
 void Sys_FreeFileList( char** list )
 {
-	int             i;
-	
+	int i;
+
 	if( !list )
 	{
 		return;
 	}
-	
-	for( i = 0; list[i]; i++ )
+
+	for( i = 0; list[ i ]; i++ )
 	{
-		Z_Free( list[i] );
+		Z_Free( list[ i ] );
 	}
-	
+
 	Z_Free( list );
 }
-
 
 /*
 ==============
@@ -618,7 +612,7 @@ void Sys_Sleep( int msec )
 	{
 		return;
 	}
-	
+
 #ifdef DEDICATED
 	if( msec < 0 )
 	{
@@ -634,7 +628,7 @@ void Sys_Sleep( int msec )
 	{
 		return;
 	}
-	
+
 	Sleep( msec );
 #endif
 }
@@ -650,31 +644,31 @@ void Sys_ErrorDialog( const char* error )
 {
 	if( Sys_Dialog( DT_YES_NO, va( "%s. Copy console log to clipboard?", error ), "Error" ) == DR_YES )
 	{
-		HGLOBAL         memoryHandle;
-		char*           clipMemory;
-		
+		HGLOBAL memoryHandle;
+		char*   clipMemory;
+
 		memoryHandle = GlobalAlloc( GMEM_MOVEABLE | GMEM_DDESHARE, CON_LogSize() + 1 );
-		clipMemory = ( char* )GlobalLock( memoryHandle );
-		
+		clipMemory   = (char*)GlobalLock( memoryHandle );
+
 		if( clipMemory )
 		{
-			char*           p = clipMemory;
-			char            buffer[1024];
-			unsigned int    size;
-			
+			char*        p = clipMemory;
+			char         buffer[ 1024 ];
+			unsigned int size;
+
 			while( ( size = CON_LogRead( buffer, sizeof( buffer ) ) ) > 0 )
 			{
 				Com_Memcpy( p, buffer, size );
 				p += size;
 			}
-			
+
 			*p = '\0';
-			
+
 			if( OpenClipboard( NULL ) && EmptyClipboard() )
 			{
 				SetClipboardData( CF_TEXT, memoryHandle );
 			}
-			
+
 			GlobalUnlock( clipMemory );
 			CloseClipboard();
 		}
@@ -690,8 +684,8 @@ Display a win32 dialog box
 */
 dialogResult_t Sys_Dialog( dialogType_t type, const char* message, const char* title )
 {
-	UINT            uType;
-	
+	UINT uType;
+
 	switch( type )
 	{
 		default:
@@ -711,7 +705,7 @@ dialogResult_t Sys_Dialog( dialogType_t type, const char* message, const char* t
 			uType = MB_ICONWARNING | MB_OKCANCEL;
 			break;
 	}
-	
+
 	switch( MessageBox( NULL, message, title, uType ) )
 	{
 		default:
@@ -760,20 +754,21 @@ void Sys_PlatformInit( void )
 #ifndef DEDICATED
 	TIMECAPS ptc;
 #endif
-	
+
 	Sys_SetFloatEnv();
-	
+
 #ifndef DEDICATED
 	if( timeGetDevCaps( &ptc, sizeof( ptc ) ) == MMSYSERR_NOERROR )
 	{
 		timerResolution = ptc.wPeriodMin;
-		
+
 		if( timerResolution > 1 )
 		{
 			Com_Printf( "Warning: Minimum supported timer resolution is %ums "
-						"on this system, recommended resolution 1ms\n", timerResolution );
+						"on this system, recommended resolution 1ms\n",
+				timerResolution );
 		}
-		
+
 		timeBeginPeriod( timerResolution );
 	}
 	else
@@ -836,25 +831,25 @@ Sys_PIDIsRunning
 */
 qboolean Sys_PIDIsRunning( int pid )
 {
-	DWORD           processes[1024];
-	DWORD           numBytes, numProcesses;
-	int             i;
-	
+	DWORD processes[ 1024 ];
+	DWORD numBytes, numProcesses;
+	int   i;
+
 	if( !EnumProcesses( processes, sizeof( processes ), &numBytes ) )
 	{
-		return qfalse;    // Assume it's not running
+		return qfalse; // Assume it's not running
 	}
-	
+
 	numProcesses = numBytes / sizeof( DWORD );
-	
+
 	// Search for the pid
 	for( i = 0; i < numProcesses; i++ )
 	{
-		if( processes[i] == pid )
+		if( processes[ i ] == pid )
 		{
 			return qtrue;
 		}
 	}
-	
+
 	return qfalse;
 }

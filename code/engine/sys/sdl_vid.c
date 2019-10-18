@@ -21,20 +21,20 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #ifdef USE_LOCAL_HEADERS
-	#include "SDL.h"
+#include "SDL.h"
 #else
-	#include <SDL.h>
+#include <SDL.h>
 #endif
 
-#if !SDL_VERSION_ATLEAST(1, 2, 10)
-	#define SDL_GL_ACCELERATED_VISUAL 15
-	#define SDL_GL_SWAP_CONTROL 16
+#if !SDL_VERSION_ATLEAST( 1, 2, 10 )
+#define SDL_GL_ACCELERATED_VISUAL 15
+#define SDL_GL_SWAP_CONTROL 16
 #elif MINSDL_PATCH >= 10
-	#error Code block no longer necessary, please remove
+#error Code block no longer necessary, please remove
 #endif
 
 #ifdef SMP
-	#include <SDL_thread.h>
+#include <SDL_thread.h>
 #endif
 
 #include <stdarg.h>
@@ -48,9 +48,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "../sys/sys_local.h"
 #include "sdl_icon.h"
 #include "SDL_syswm.h"
-
-
-
 
 static void GLimp_GetCurrentContext( void )
 {
@@ -75,7 +72,7 @@ void GLimp_ShutdownRenderThread( void )
 {
 }
 
-void*           GLimp_RendererSleep( void )
+void* GLimp_RendererSleep( void )
 {
 	return NULL;
 }
@@ -88,21 +85,20 @@ void GLimp_WakeRenderer( void* data )
 {
 }
 
-
 typedef enum
 {
 	RSERR_OK,
-	
+
 	RSERR_INVALID_FULLSCREEN,
 	RSERR_INVALID_MODE,
 	RSERR_NO_DEVICE,
-	
+
 	RSERR_UNKNOWN
 } rserr_t;
 
 static SDL_Surface* screen = NULL;
 
-cvar_t*         r_sdlDriver;
+cvar_t* r_sdlDriver;
 
 /*
 ===============
@@ -112,13 +108,13 @@ GLimp_Shutdown
 void GLimp_Shutdown( void )
 {
 	ri.IN_Shutdown();
-	
+
 	SDL_QuitSubSystem( SDL_INIT_VIDEO );
 	screen = NULL;
-	
+
 	Com_Memset( &glConfig, 0, sizeof( glConfig ) );
-	
-#if !defined(USE_D3D10)
+
+#if !defined( USE_D3D10 )
 	Com_Memset( &glState, 0, sizeof( glState ) );
 #endif
 }
@@ -130,13 +126,13 @@ GLimp_CompareModes
 */
 static int GLimp_CompareModes( const void* a, const void* b )
 {
-	const float     ASPECT_EPSILON = 0.001f;
-	SDL_Rect*       modeA = *( SDL_Rect** ) a;
-	SDL_Rect*       modeB = *( SDL_Rect** ) b;
-	float           aspectDiffA = fabs( ( ( float )modeA->w / ( float )modeA->h ) - displayAspect );
-	float           aspectDiffB = fabs( ( ( float )modeB->w / ( float )modeB->h ) - displayAspect );
-	float           aspectDiffsDiff = aspectDiffA - aspectDiffB;
-	
+	const float ASPECT_EPSILON  = 0.001f;
+	SDL_Rect*   modeA           = *(SDL_Rect**)a;
+	SDL_Rect*   modeB           = *(SDL_Rect**)b;
+	float       aspectDiffA     = fabs( ( (float)modeA->w / (float)modeA->h ) - displayAspect );
+	float       aspectDiffB     = fabs( ( (float)modeB->w / (float)modeB->h ) - displayAspect );
+	float       aspectDiffsDiff = aspectDiffA - aspectDiffB;
+
 	if( aspectDiffsDiff > ASPECT_EPSILON )
 	{
 		return 1;
@@ -165,49 +161,50 @@ GLimp_DetectAvailableModes
 */
 static void GLimp_DetectAvailableModes( void )
 {
-	char            buf[MAX_STRING_CHARS] = { 0 };
-	SDL_Rect**      modes;
-	int             numModes;
-	int             i;
-	
+	char       buf[ MAX_STRING_CHARS ] = { 0 };
+	SDL_Rect** modes;
+	int        numModes;
+	int        i;
+
 	modes = SDL_ListModes( NULL, SDL_OPENGL | SDL_FULLSCREEN );
-	
+
 	if( !modes )
 	{
 		ri.Printf( PRINT_WARNING, "Can't get list of available modes\n" );
 		return;
 	}
-	
-	if( modes == ( SDL_Rect** ) - 1 )
+
+	if( modes == (SDL_Rect**)-1 )
 	{
 		ri.Printf( PRINT_ALL, "Display supports any resolution\n" );
-		return;					// can set any resolution
+		return; // can set any resolution
 	}
-	
-	for( numModes = 0; modes[numModes]; numModes++ );
-	
+
+	for( numModes = 0; modes[ numModes ]; numModes++ )
+		;
+
 	if( numModes > 1 )
 	{
 		qsort( modes + 1, numModes - 1, sizeof( SDL_Rect* ), GLimp_CompareModes );
 	}
-	
+
 	for( i = 0; i < numModes; i++ )
 	{
-		const char*     newModeString = va( "%ux%u ", modes[i]->w, modes[i]->h );
-		
-		if( strlen( newModeString ) < ( int )sizeof( buf ) - strlen( buf ) )
+		const char* newModeString = va( "%ux%u ", modes[ i ]->w, modes[ i ]->h );
+
+		if( strlen( newModeString ) < (int)sizeof( buf ) - strlen( buf ) )
 		{
 			Q_strcat( buf, sizeof( buf ), newModeString );
 		}
 		else
 		{
-			ri.Printf( PRINT_WARNING, "Skipping mode %ux%x, buffer too small\n", modes[i]->w, modes[i]->h );
+			ri.Printf( PRINT_WARNING, "Skipping mode %ux%x, buffer too small\n", modes[ i ]->w, modes[ i ]->h );
 		}
 	}
-	
+
 	if( *buf )
 	{
-		buf[strlen( buf ) - 1] = 0;
+		buf[ strlen( buf ) - 1 ] = 0;
 		ri.Printf( PRINT_ALL, "Available modes: '%s'\n", buf );
 		ri.Cvar_Set( "r_availableModes", buf );
 	}
@@ -220,41 +217,41 @@ GLimp_SetMode
 */
 static int GLimp_SetMode( int mode, qboolean fullscreen )
 {
-	int             sdlcolorbits;
-	int             colorbits, depthbits, stencilbits;
-	int             tcolorbits, tdepthbits, tstencilbits;
-	int             i = 0;
-	SDL_Surface*    vidscreen = NULL;
-	Uint32          flags = 0;
+	int                  sdlcolorbits;
+	int                  colorbits, depthbits, stencilbits;
+	int                  tcolorbits, tdepthbits, tstencilbits;
+	int                  i         = 0;
+	SDL_Surface*         vidscreen = NULL;
+	Uint32               flags     = 0;
 	const SDL_VideoInfo* videoInfo;
-	
+
 	ri.Printf( PRINT_ALL, "Initializing display\n" );
-	
+
 	if( displayAspect == 0.0f )
 	{
-#if !SDL_VERSION_ATLEAST(1, 2, 10)
+#if !SDL_VERSION_ATLEAST( 1, 2, 10 )
 		// 1.2.10 is needed to get the desktop resolution
 		displayAspect = 4.0f / 3.0f;
 #else
 		// Guess the display aspect ratio through the desktop resolution
 		// by assuming (relatively safely) that it is set at or close to
 		// the display's native aspect ratio
-		videoInfo = SDL_GetVideoInfo();
-		displayAspect = ( float )videoInfo->current_w / ( float )videoInfo->current_h;
+		videoInfo     = SDL_GetVideoInfo();
+		displayAspect = (float)videoInfo->current_w / (float)videoInfo->current_h;
 #endif
-		
+
 		ri.Printf( PRINT_ALL, "Estimated display aspect: %.3f\n", displayAspect );
 	}
-	
+
 	ri.Printf( PRINT_ALL, "...setting mode %d:", mode );
-	
+
 	if( !R_GetModeInfo( &glConfig.vidWidth, &glConfig.vidHeight, &glConfig.windowAspect, mode ) )
 	{
 		ri.Printf( PRINT_ALL, " invalid mode\n" );
 		return RSERR_INVALID_MODE;
 	}
 	ri.Printf( PRINT_ALL, " %d %d\n", glConfig.vidWidth, glConfig.vidHeight );
-	
+
 	if( fullscreen )
 	{
 		//flags |= SDL_FULLSCREEN;
@@ -264,7 +261,7 @@ static int GLimp_SetMode( int mode, qboolean fullscreen )
 	{
 		glConfig.isFullscreen = qfalse;
 	}
-	
+
 	if( !r_colorbits->value )
 	{
 		colorbits = 24;
@@ -273,7 +270,7 @@ static int GLimp_SetMode( int mode, qboolean fullscreen )
 	{
 		colorbits = r_colorbits->value;
 	}
-	
+
 	if( !r_depthbits->value )
 	{
 		depthbits = 24;
@@ -283,7 +280,7 @@ static int GLimp_SetMode( int mode, qboolean fullscreen )
 		depthbits = r_depthbits->value;
 	}
 	stencilbits = r_stencilbits->value;
-	
+
 	for( i = 0; i < 16; i++ )
 	{
 		// 0 - default
@@ -321,11 +318,11 @@ static int GLimp_SetMode( int mode, qboolean fullscreen )
 					}
 			}
 		}
-		
-		tcolorbits = colorbits;
-		tdepthbits = depthbits;
+
+		tcolorbits   = colorbits;
+		tdepthbits   = depthbits;
 		tstencilbits = stencilbits;
-		
+
 		if( ( i % 4 ) == 3 )
 		{
 			// reduce colorbits
@@ -334,7 +331,7 @@ static int GLimp_SetMode( int mode, qboolean fullscreen )
 				tcolorbits = 16;
 			}
 		}
-		
+
 		if( ( i % 4 ) == 2 )
 		{
 			// reduce depthbits
@@ -347,7 +344,7 @@ static int GLimp_SetMode( int mode, qboolean fullscreen )
 				tdepthbits = 8;
 			}
 		}
-		
+
 		if( ( i % 4 ) == 1 )
 		{
 			// reduce stencilbits
@@ -364,65 +361,70 @@ static int GLimp_SetMode( int mode, qboolean fullscreen )
 				tstencilbits = 0;
 			}
 		}
-		
+
 		sdlcolorbits = 4;
 		if( tcolorbits == 24 )
 		{
 			sdlcolorbits = 8;
 		}
-		
+
 #ifdef USE_ICON
 		{
-			SDL_Surface*    icon = SDL_CreateRGBSurfaceFrom( ( void* )CLIENT_WINDOW_ICON.pixel_data,
-								   CLIENT_WINDOW_ICON.width,
-								   CLIENT_WINDOW_ICON.height,
-								   CLIENT_WINDOW_ICON.bytes_per_pixel * 8,
-								   CLIENT_WINDOW_ICON.bytes_per_pixel * CLIENT_WINDOW_ICON.width,
+			SDL_Surface* icon = SDL_CreateRGBSurfaceFrom( (void*)CLIENT_WINDOW_ICON.pixel_data,
+				CLIENT_WINDOW_ICON.width,
+				CLIENT_WINDOW_ICON.height,
+				CLIENT_WINDOW_ICON.bytes_per_pixel * 8,
+				CLIENT_WINDOW_ICON.bytes_per_pixel * CLIENT_WINDOW_ICON.width,
 #ifdef Q3_LITTLE_ENDIAN
-								   0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000
+				0x000000FF,
+				0x0000FF00,
+				0x00FF0000,
+				0xFF000000
 #else
-								   0xFF000000, 0x00FF0000, 0x0000FF00, 0x000000FF
+				0xFF000000,
+				0x00FF0000,
+				0x0000FF00,
+				0x000000FF
 #endif
-														   );
-														   
+			);
+
 			SDL_WM_SetIcon( icon, NULL );
 			SDL_FreeSurface( icon );
 		}
 #endif
-		
+
 		SDL_WM_SetCaption( CLIENT_WINDOW_TITLE, CLIENT_WINDOW_MIN_TITLE );
 		SDL_ShowCursor( 0 );
-		
+
 		if( !( vidscreen = SDL_SetVideoMode( glConfig.vidWidth, glConfig.vidHeight, colorbits, flags ) ) )
 		{
 			ri.Printf( PRINT_DEVELOPER, "SDL_SetVideoMode failed: %s\n", SDL_GetError() );
 			continue;
 		}
-		
+
 		//GLimp_GetCurrentContext();
-		
-		ri.Printf( PRINT_ALL, "Using %d/%d/%d Color bits, %d depth, %d stencil display.\n",
-				   sdlcolorbits, sdlcolorbits, sdlcolorbits, tdepthbits, tstencilbits );
-				   
-		glConfig.colorBits = tcolorbits;
-		glConfig.depthBits = tdepthbits;
+
+		ri.Printf( PRINT_ALL, "Using %d/%d/%d Color bits, %d depth, %d stencil display.\n", sdlcolorbits, sdlcolorbits, sdlcolorbits, tdepthbits, tstencilbits );
+
+		glConfig.colorBits   = tcolorbits;
+		glConfig.depthBits   = tdepthbits;
 		glConfig.stencilBits = tstencilbits;
 		break;
 	}
-	
+
 	GLimp_DetectAvailableModes();
-	
+
 	if( !vidscreen )
 	{
 		ri.Printf( PRINT_ALL, "Couldn't get a visual\n" );
 		return RSERR_INVALID_MODE;
 	}
-	
+
 	screen = vidscreen;
-	
+
 	//glstring = (char *)qglGetString(GL_RENDERER);
 	//ri.Printf(PRINT_ALL, "GL_RENDERER: %s\n", glstring);
-	
+
 	return RSERR_OK;
 }
 
@@ -433,34 +435,34 @@ GLimp_StartDriverAndSetMode
 */
 static qboolean GLimp_StartDriverAndSetMode( int mode, qboolean fullscreen )
 {
-	rserr_t         err;
-	
+	rserr_t err;
+
 	if( !SDL_WasInit( SDL_INIT_VIDEO ) )
 	{
-		char            driverName[64];
-		
+		char driverName[ 64 ];
+
 		ri.Printf( PRINT_ALL, "SDL_Init( SDL_INIT_VIDEO )... " );
 		if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE ) == -1 )
 		{
 			ri.Printf( PRINT_ALL, "SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE) FAILED (%s)\n", SDL_GetError() );
 			return qfalse;
 		}
-		
+
 		SDL_VideoDriverName( driverName, sizeof( driverName ) - 1 );
 		ri.Printf( PRINT_ALL, "SDL using driver \"%s\"\n", driverName );
 		ri.Cvar_Set( "r_sdlDriver", driverName );
 	}
-	
+
 	if( fullscreen && ri.Cvar_VariableIntegerValue( "in_nograb" ) )
 	{
 		ri.Printf( PRINT_ALL, "Fullscreen not allowed with in_nograb 1\n" );
 		ri.Cvar_Set( "r_fullscreen", "0" );
 		r_fullscreen->modified = qfalse;
-		fullscreen = qfalse;
+		fullscreen             = qfalse;
 	}
-	
+
 	err = GLimp_SetMode( mode, fullscreen );
-	
+
 	switch( err )
 	{
 		case RSERR_INVALID_FULLSCREEN:
@@ -472,11 +474,11 @@ static qboolean GLimp_StartDriverAndSetMode( int mode, qboolean fullscreen )
 		default:
 			break;
 	}
-	
+
 	return qtrue;
 }
 
-#define R_MODE_FALLBACK 3		// 640 * 480
+#define R_MODE_FALLBACK 3 // 640 * 480
 
 /*
 ===============
@@ -488,11 +490,11 @@ of OpenGL
 */
 void GLimp_Init( void )
 {
-	qboolean        success = qtrue;
-	
+	qboolean success = qtrue;
+
 	r_sdlDriver = ri.Cvar_Get( "r_sdlDriver", "", CVAR_ROM );
-	
-//	Sys_GLimpInit();
+
+	//	Sys_GLimpInit();
 
 	// create the window and set up the context
 	if( !GLimp_StartDriverAndSetMode( r_mode->integer, r_fullscreen->integer ) )
@@ -510,35 +512,29 @@ void GLimp_Init( void )
 			success = qfalse;
 		}
 	}
-	
+
 	if( !success )
 	{
 		ri.Error( ERR_FATAL, "GLimp_Init() - could not load OpenGL subsystem\n" );
 	}
-	
+
 	// This values force the UI to disable driver selection
-	glConfig.driverType = GLDRV_DEFAULT;
-	glConfig.hardwareType = GLHW_GENERIC;
+	glConfig.driverType          = GLDRV_DEFAULT;
+	glConfig.hardwareType        = GLHW_GENERIC;
 	glConfig.deviceSupportsGamma = !!( SDL_SetGamma( 1.0f, 1.0f, 1.0f ) >= 0 );
-	
+
 	// get our config strings
 	Q_strncpyz( glConfig.vendor_string, "Microsoft", sizeof( glConfig.vendor_string ) );
 	Q_strncpyz( glConfig.renderer_string, "D3D", sizeof( glConfig.renderer_string ) );
-	if( *glConfig.renderer_string && glConfig.renderer_string[strlen( glConfig.renderer_string ) - 1] == '\n' )
+	if( *glConfig.renderer_string && glConfig.renderer_string[ strlen( glConfig.renderer_string ) - 1 ] == '\n' )
 	{
-		glConfig.renderer_string[strlen( glConfig.renderer_string ) - 1] = 0;
+		glConfig.renderer_string[ strlen( glConfig.renderer_string ) - 1 ] = 0;
 	}
 	Q_strncpyz( glConfig.version_string, "10.0", sizeof( glConfig.version_string ) );
 	Q_strncpyz( glConfig.extensions_string, "None", sizeof( glConfig.extensions_string ) );
-	
+
 	ri.Cvar_Get( "r_availableModes", "", CVAR_ROM );
-	
+
 	// This depends on SDL_INIT_VIDEO, hence having it here
 	ri.IN_Init();
 }
-
-
-
-
-
-

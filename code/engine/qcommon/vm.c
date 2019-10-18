@@ -30,13 +30,11 @@ a dll has one imported function: VM_SystemCall
 and one exported function: VM_Main
 */
 
-vm_t*           currentVM = NULL;	// bk001212
-vm_t*           lastVM = NULL;	// bk001212
+vm_t* currentVM = NULL; // bk001212
+vm_t* lastVM    = NULL; // bk001212
 
-#define	MAX_VM		3
-vm_t            vmTable[MAX_VM];
-
-
+#define MAX_VM 3
+vm_t vmTable[ MAX_VM ];
 
 /*
 ==============
@@ -45,14 +43,14 @@ VM_VmInfo_f
 */
 static void VM_VmInfo_f( void )
 {
-	vm_t*           vm;
-	int             i;
-	
+	vm_t* vm;
+	int   i;
+
 	Com_Printf( "Registered virtual machines:\n" );
 	for( i = 0; i < MAX_VM; i++ )
 	{
-		vm = &vmTable[i];
-		if( !vm->name[0] )
+		vm = &vmTable[ i ];
+		if( !vm->name[ 0 ] )
 		{
 			break;
 		}
@@ -62,7 +60,7 @@ static void VM_VmInfo_f( void )
 			Com_Printf( "native\n" );
 			continue;
 		}
-		
+
 #if USE_LLVM
 		if( vm->llvmModuleProvider )
 		{
@@ -83,10 +81,10 @@ void VM_Init( void )
 	Cvar_Get( "vm_cgame", "1", CVAR_ARCHIVE );
 	Cvar_Get( "vm_game", "1", CVAR_ARCHIVE );
 	Cvar_Get( "vm_ui", "1", CVAR_ARCHIVE );
-	
-//	Cmd_AddCommand("vmprofile", VM_VmProfile_f);
+
+	//	Cmd_AddCommand("vmprofile", VM_VmProfile_f);
 	Cmd_AddCommand( "vminfo", VM_VmInfo_f );
-	
+
 	Com_Memset( vmTable, 0, sizeof( vmTable ) );
 }
 
@@ -98,24 +96,23 @@ Reload the data, but leave everything else in place
 This allows a server to do a map_restart without changing memory allocation
 =================
 */
-vm_t*           VM_Restart( vm_t* vm )
+vm_t* VM_Restart( vm_t* vm )
 {
 	// DLL's can't be restarted in place
-	char            name[MAX_QPATH];
-	vmInterpret_t	interpret;
-	
-	intptr_t( *systemCall )( intptr_t* parms );
-	
+	char          name[ MAX_QPATH ];
+	vmInterpret_t interpret;
+
+	intptr_t ( *systemCall )( intptr_t * parms );
+
 	systemCall = vm->systemCall;
 	Q_strncpyz( name, vm->name, sizeof( name ) );
 	interpret = vm->interpret;
-	
+
 	VM_Free( vm );
-	
+
 	vm = VM_Create( name, systemCall, interpret );
 	return vm;
 }
-
 
 void VM_Forced_Unload_Start( void )
 {
@@ -137,7 +134,7 @@ void VM_Free( vm_t* vm )
 		Sys_UnloadDll( vm->dllHandle );
 		Com_Memset( vm, 0, sizeof( *vm ) );
 	}
-	
+
 #if USE_LLVM
 	if( vm->llvmModuleProvider )
 	{
@@ -145,60 +142,60 @@ void VM_Free( vm_t* vm )
 		Com_Memset( vm, 0, sizeof( *vm ) );
 	}
 #endif
-	
+
 	Com_Memset( vm, 0, sizeof( *vm ) );
-	
+
 	currentVM = NULL;
-	lastVM = NULL;
+	lastVM    = NULL;
 }
 
 void VM_Clear( void )
 {
-	int             i;
-	
+	int i;
+
 	for( i = 0; i < MAX_VM; i++ )
 	{
-		if( vmTable[i].dllHandle )
+		if( vmTable[ i ].dllHandle )
 		{
-			Sys_UnloadDll( vmTable[i].dllHandle );
+			Sys_UnloadDll( vmTable[ i ].dllHandle );
 		}
-		
-		Com_Memset( &vmTable[i], 0, sizeof( vm_t ) );
+
+		Com_Memset( &vmTable[ i ], 0, sizeof( vm_t ) );
 	}
 	currentVM = NULL;
-	lastVM = NULL;
+	lastVM    = NULL;
 }
 
-void*           VM_ArgPtr( intptr_t intValue )
+void* VM_ArgPtr( intptr_t intValue )
 {
 	if( !intValue )
 	{
 		return NULL;
 	}
-	
+
 	// bk001220 - currentVM is missing on reconnect
 	if( currentVM == NULL )
 	{
 		return NULL;
 	}
-	
-	return ( void* )( currentVM->dataBase + intValue );
+
+	return (void*)( currentVM->dataBase + intValue );
 }
 
-void*           VM_ExplicitArgPtr( vm_t* vm, intptr_t intValue )
+void* VM_ExplicitArgPtr( vm_t* vm, intptr_t intValue )
 {
 	if( !intValue )
 	{
 		return NULL;
 	}
-	
+
 	// bk010124 - currentVM is missing on reconnect here as well?
 	if( currentVM == NULL )
 	{
 		return NULL;
 	}
-	
-	return ( void* )( vm->dataBase + intValue );
+
+	return (void*)( vm->dataBase + intValue );
 }
 
 /*
@@ -242,19 +239,19 @@ intptr_t QDECL VM_DllSyscall( intptr_t arg, ... )
 {
 #if !id386
 	// rcg010206 - see commentary above
-	intptr_t        args[16];
-	int             i;
-	va_list         ap;
-	
-	args[0] = arg;
-	
+	intptr_t args[ 16 ];
+	int      i;
+	va_list  ap;
+
+	args[ 0 ] = arg;
+
 	va_start( ap, arg );
-	for( i = 1; i < sizeof( args ) / sizeof( args[i] ); i++ )
+	for( i = 1; i < sizeof( args ) / sizeof( args[ i ] ); i++ )
 	{
-		args[i] = va_arg( ap, intptr_t );
+		args[ i ] = va_arg( ap, intptr_t );
 	}
 	va_end( ap );
-	
+
 	return currentVM->systemCall( args );
 #else
 	// original id code
@@ -271,35 +268,35 @@ rcg010207 -  see dissertation at top of VM_DllSyscall() in this file.
 */
 intptr_t QDECL VM_Call( vm_t* vm, int callnum, ... )
 {
-	vm_t*           oldVM;
-	intptr_t        r;
-	int             i;
-	int             args[10];
-	va_list         ap;
-	
+	vm_t*    oldVM;
+	intptr_t r;
+	int      i;
+	int      args[ 10 ];
+	va_list  ap;
+
 	if( !vm )
 	{
 		Com_Error( ERR_FATAL, "VM_Call with NULL vm" );
 	}
-	
-	oldVM = currentVM;
+
+	oldVM     = currentVM;
 	currentVM = vm;
-	lastVM = vm;
-	
+	lastVM    = vm;
+
 	va_start( ap, callnum );
-	for( i = 0; i < sizeof( args ) / sizeof( args[i] ); i++ )
+	for( i = 0; i < sizeof( args ) / sizeof( args[ i ] ); i++ )
 	{
-		args[i] = va_arg( ap, int );
+		args[ i ] = va_arg( ap, int );
 	}
 	va_end( ap );
-	
-	r = vm->entryPoint( callnum, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9] );
-	
-	if( oldVM != NULL )			// bk001220 - assert(currentVM!=NULL) for oldVM==NULL
+
+	r = vm->entryPoint( callnum, args[ 0 ], args[ 1 ], args[ 2 ], args[ 3 ], args[ 4 ], args[ 5 ], args[ 6 ], args[ 7 ], args[ 8 ], args[ 9 ] );
+
+	if( oldVM != NULL ) // bk001220 - assert(currentVM!=NULL) for oldVM==NULL
 	{
 		currentVM = oldVM;
 	}
-	
+
 	return r;
 }
 
@@ -308,65 +305,65 @@ intptr_t QDECL VM_Call( vm_t* vm, int callnum, ... )
 VM_Create
 ================
 */
-vm_t*           VM_Create( const char* module, intptr_t( *systemCalls )( intptr_t* ), vmInterpret_t interpret )
+vm_t* VM_Create( const char* module, intptr_t ( *systemCalls )( intptr_t* ), vmInterpret_t interpret )
 {
-	vm_t*           vm;
-	int             i, remaining, retval;
-	char filename[MAX_OSPATH];
+	vm_t* vm;
+	int   i, remaining, retval;
+	char  filename[ MAX_OSPATH ];
 	void* startSearch = NULL;
-	
-	if( !module || !module[0] || !systemCalls )
+
+	if( !module || !module[ 0 ] || !systemCalls )
 	{
 		Com_Error( ERR_FATAL, "VM_Create: bad parms" );
 	}
-	
+
 	remaining = Hunk_MemoryRemaining();
-	
+
 	// see if we already have the VM
 	for( i = 0; i < MAX_VM; i++ )
 	{
-		if( !Q_stricmp( vmTable[i].name, module ) )
+		if( !Q_stricmp( vmTable[ i ].name, module ) )
 		{
-			vm = &vmTable[i];
+			vm = &vmTable[ i ];
 			return vm;
 		}
 	}
-	
+
 	// find a free vm
 	for( i = 0; i < MAX_VM; i++ )
 	{
-		if( !vmTable[i].name[0] )
+		if( !vmTable[ i ].name[ 0 ] )
 		{
 			break;
 		}
 	}
-	
+
 	if( i == MAX_VM )
 	{
 		Com_Error( ERR_FATAL, "VM_Create: no free vm_t" );
 	}
-	
-	vm = &vmTable[i];
-	
+
+	vm = &vmTable[ i ];
+
 	Q_strncpyz( vm->name, module, sizeof( vm->name ) );
-	
+
 	do
 	{
 		retval = FS_FindVM( &startSearch, filename, sizeof( filename ), module, ( interpret == VMI_NATIVE ) );
-		
+
 		if( retval == VMI_NATIVE )
 		{
 			Com_DPrintf( "Try loading dll file %s\n", filename );
-			
+
 			vm->dllHandle = Sys_LoadGameDll( filename, &vm->entryPoint, VM_DllSyscall );
-			
+
 			if( vm->dllHandle )
 			{
 				vm->systemCall = systemCalls;
-				vm->interpret = VMI_NATIVE;
+				vm->interpret  = VMI_NATIVE;
 				return vm;
 			}
-			
+
 			Com_DPrintf( "Failed loading dll, trying next\n" );
 		}
 #ifdef USE_QVM
@@ -377,22 +374,19 @@ vm_t*           VM_Create( const char* module, intptr_t( *systemCalls )( intptr_
 			{
 				break;
 			}
-			
+
 			// VM_Free overwrites the name on failed load
 			Q_strncpyz( vm->name, module, sizeof( vm->name ) );
 		}
 #endif
-	}
-	while( retval >= 0 );
-	
+	} while( retval >= 0 );
+
 	if( retval < 0 )
 	{
 		return NULL;
 	}
-	
+
 	vm->systemCall = systemCalls;
-	
+
 	return NULL;
 }
-
-

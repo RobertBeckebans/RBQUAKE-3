@@ -26,13 +26,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "snd_local.h"
 #include "snd_public.h"
 
-cvar_t*         s_volume;
-cvar_t*         s_muted;
-cvar_t*         s_musicVolume;
-cvar_t*         s_doppler;
-cvar_t*         s_backend;
-cvar_t*         s_muteWhenMinimized;
-cvar_t*         s_muteWhenUnfocused;
+cvar_t* s_volume;
+cvar_t* s_muted;
+cvar_t* s_musicVolume;
+cvar_t* s_doppler;
+cvar_t* s_backend;
+cvar_t* s_muteWhenMinimized;
+cvar_t* s_muteWhenUnfocused;
 
 static soundInterface_t si;
 
@@ -123,7 +123,7 @@ static qboolean S_ValidSoundInterface( soundInterface_t* si )
 	{
 		return qfalse;
 	}
-	
+
 #ifdef USE_VOIP
 	if( !si->StartCapture )
 	{
@@ -146,7 +146,7 @@ static qboolean S_ValidSoundInterface( soundInterface_t* si )
 		return qfalse;
 	}
 #endif
-	
+
 	return qtrue;
 }
 
@@ -285,7 +285,7 @@ void S_StopLoopingSound( int entityNum )
 S_Respatialize
 =================
 */
-void S_Respatialize( int entityNum, const vec3_t origin, vec3_t axis[3], int inwater )
+void S_Respatialize( int entityNum, const vec3_t origin, vec3_t axis[ 3 ], int inwater )
 {
 	if( si.Respatialize )
 	{
@@ -317,7 +317,7 @@ void S_Update( void )
 	{
 		if( !( s_muteWhenMinimized->integer && com_minimized->integer ) && !( s_muteWhenUnfocused->integer && com_unfocused->integer ) )
 		{
-			s_muted->integer = qfalse;
+			s_muted->integer  = qfalse;
 			s_muted->modified = qtrue;
 		}
 	}
@@ -325,11 +325,11 @@ void S_Update( void )
 	{
 		if( ( s_muteWhenMinimized->integer && com_minimized->integer ) || ( s_muteWhenUnfocused->integer && com_unfocused->integer ) )
 		{
-			s_muted->integer = qtrue;
+			s_muted->integer  = qtrue;
 			s_muted->modified = qtrue;
 		}
 	}
-	
+
 	if( si.Update )
 	{
 		si.Update();
@@ -418,7 +418,6 @@ void S_SoundList( void )
 	}
 }
 
-
 #ifdef USE_VOIP
 /*
 =================
@@ -496,15 +495,15 @@ S_Play_f
 */
 void S_Play_f( void )
 {
-	int             i;
-	sfxHandle_t     h;
-	char            name[256];
-	
+	int         i;
+	sfxHandle_t h;
+	char        name[ 256 ];
+
 	if( !si.RegisterSound || !si.StartLocalSound )
 	{
 		return;
 	}
-	
+
 	i = 1;
 	while( i < Cmd_Argc() )
 	{
@@ -532,15 +531,15 @@ S_Music_f
 */
 void S_Music_f( void )
 {
-	int             c;
-	
+	int c;
+
 	if( !si.StartBackgroundTrack )
 	{
 		return;
 	}
-	
+
 	c = Cmd_Argc();
-	
+
 	if( c == 2 )
 	{
 		si.StartBackgroundTrack( Cmd_Argv( 1 ), NULL );
@@ -554,7 +553,6 @@ void S_Music_f( void )
 		Com_Printf( "music <musicfile> [loopfile]\n" );
 		return;
 	}
-	
 }
 
 /*
@@ -568,10 +566,9 @@ void S_StopMusic_f( void )
 	{
 		return;
 	}
-	
+
 	si.StopBackgroundTrack();
 }
-
 
 //=============================================================================
 
@@ -582,19 +579,19 @@ S_Init
 */
 void S_Init( void )
 {
-	cvar_t*         cv;
-	qboolean        started = qfalse;
-	
+	cvar_t*  cv;
+	qboolean started = qfalse;
+
 	Com_Printf( "------ Initializing Sound ------\n" );
-	
-	s_volume = Cvar_Get( "s_volume", "0.8", CVAR_ARCHIVE );
-	s_musicVolume = Cvar_Get( "s_musicvolume", "0.25", CVAR_ARCHIVE );
-	s_muted = Cvar_Get( "s_muted", "0", CVAR_ROM );
-	s_doppler = Cvar_Get( "s_doppler", "1", CVAR_ARCHIVE );
-	s_backend = Cvar_Get( "s_backend", "", CVAR_ROM );
+
+	s_volume            = Cvar_Get( "s_volume", "0.8", CVAR_ARCHIVE );
+	s_musicVolume       = Cvar_Get( "s_musicvolume", "0.25", CVAR_ARCHIVE );
+	s_muted             = Cvar_Get( "s_muted", "0", CVAR_ROM );
+	s_doppler           = Cvar_Get( "s_doppler", "1", CVAR_ARCHIVE );
+	s_backend           = Cvar_Get( "s_backend", "", CVAR_ROM );
 	s_muteWhenMinimized = Cvar_Get( "s_muteWhenMinimized", "0", CVAR_ARCHIVE );
 	s_muteWhenUnfocused = Cvar_Get( "s_muteWhenUnfocused", "0", CVAR_ARCHIVE );
-	
+
 	cv = Cvar_Get( "s_initsound", "1", 0 );
 	if( !cv->integer )
 	{
@@ -602,16 +599,15 @@ void S_Init( void )
 	}
 	else
 	{
-	
 		S_CodecInit();
-		
+
 		Cmd_AddCommand( "play", S_Play_f );
 		Cmd_AddCommand( "music", S_Music_f );
 		Cmd_AddCommand( "stopmusic", S_StopMusic_f );
 		Cmd_AddCommand( "s_list", S_SoundList );
 		Cmd_AddCommand( "s_stop", S_StopAllSounds );
 		Cmd_AddCommand( "s_info", S_SoundInfo );
-		
+
 		cv = Cvar_Get( "s_useOpenAL", "1", CVAR_ARCHIVE );
 		if( cv->integer )
 		{
@@ -619,20 +615,20 @@ void S_Init( void )
 			started = S_AL_Init( &si );
 			Cvar_Set( "s_backend", "OpenAL" );
 		}
-		
+
 		if( !started )
 		{
 			started = S_Base_Init( &si );
 			Cvar_Set( "s_backend", "base" );
 		}
-		
+
 		if( started )
 		{
 			if( !S_ValidSoundInterface( &si ) )
 			{
 				Com_Error( ERR_FATAL, "Sound interface invalid." );
 			}
-			
+
 			S_SoundInfo();
 			Com_Printf( "Sound initialization successful.\n" );
 		}
@@ -641,7 +637,7 @@ void S_Init( void )
 			Com_Printf( "Sound initialization failed.\n" );
 		}
 	}
-	
+
 	Com_Printf( "--------------------------------\n" );
 }
 
@@ -656,15 +652,15 @@ void S_Shutdown( void )
 	{
 		si.Shutdown();
 	}
-	
+
 	Com_Memset( &si, 0, sizeof( soundInterface_t ) );
-	
+
 	Cmd_RemoveCommand( "play" );
 	Cmd_RemoveCommand( "music" );
 	Cmd_RemoveCommand( "stopmusic" );
 	Cmd_RemoveCommand( "s_list" );
 	Cmd_RemoveCommand( "s_stop" );
 	Cmd_RemoveCommand( "s_info" );
-	
+
 	S_CodecShutdown();
 }

@@ -28,21 +28,20 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "scriplib.h"
 #include "vfs.h"
 
-
 typedef struct
 {
-	char            filename[1024];
-	char*           buffer, *script_p, *end_p;
-	int             line;
+	char  filename[ 1024 ];
+	char *buffer, *script_p, *end_p;
+	int   line;
 } script_t;
 
-#define	MAX_INCLUDES	8
-static script_t scriptstack[MAX_INCLUDES];
+#define MAX_INCLUDES 8
+static script_t  scriptstack[ MAX_INCLUDES ];
 static script_t* script;
 
-char            token[MAXTOKEN];
-qboolean        endofscript;
-qboolean        tokenready;		// only qtrue if UnGetToken was just called
+char     token[ MAXTOKEN ];
+qboolean endofscript;
+qboolean tokenready; // only qtrue if UnGetToken was just called
 
 /*
 ==============
@@ -51,19 +50,19 @@ AddScriptToStack
 */
 void AddScriptToStack( const char* filename, int index )
 {
-	int             size;
-	
+	int size;
+
 	script++;
-	
-	if( script == &scriptstack[MAX_INCLUDES] )
+
+	if( script == &scriptstack[ MAX_INCLUDES ] )
 	{
 		Error( "script file exceeded MAX_INCLUDES" );
 	}
-	
+
 	strcpy( script->filename, ExpandPath( filename ) );
-	
-	size = vfsLoadFile( script->filename, ( void** )&script->buffer, index );
-	
+
+	size = vfsLoadFile( script->filename, (void**)&script->buffer, index );
+
 	if( size == -1 )
 	{
 		Sys_Printf( "Script file %s was not found\n", script->filename );
@@ -79,13 +78,12 @@ void AddScriptToStack( const char* filename, int index )
 			Sys_Printf( "entering %s\n", script->filename );
 		}
 	}
-	
-	script->line = 1;
-	
-	script->script_p = script->buffer;
-	script->end_p = script->buffer + size;
-}
 
+	script->line = 1;
+
+	script->script_p = script->buffer;
+	script->end_p    = script->buffer + size;
+}
 
 /*
 ==============
@@ -96,11 +94,10 @@ void LoadScriptFile( const char* filename, int index )
 {
 	script = scriptstack;
 	AddScriptToStack( filename, index );
-	
-	endofscript = qfalse;
-	tokenready = qfalse;
-}
 
+	endofscript = qfalse;
+	tokenready  = qfalse;
+}
 
 /*
 ==============
@@ -111,23 +108,22 @@ void ParseFromMemory( char* buffer, int size )
 {
 	script = scriptstack;
 	script++;
-	
-	if( script == &scriptstack[MAX_INCLUDES] )
+
+	if( script == &scriptstack[ MAX_INCLUDES ] )
 	{
 		Error( "script file exceeded MAX_INCLUDES" );
 	}
-	
-	strcpy( script->filename, "memory buffer" );
-	
-	script->buffer = buffer;
-	script->line = 1;
-	script->script_p = script->buffer;
-	script->end_p = script->buffer + size;
-	
-	endofscript = qfalse;
-	tokenready = qfalse;
-}
 
+	strcpy( script->filename, "memory buffer" );
+
+	script->buffer   = buffer;
+	script->line     = 1;
+	script->script_p = script->buffer;
+	script->end_p    = script->buffer + size;
+
+	endofscript = qfalse;
+	tokenready  = qfalse;
+}
 
 /*
 ==============
@@ -148,20 +144,19 @@ void UnGetToken( void )
 	tokenready = qtrue;
 }
 
-
 qboolean EndOfScript( qboolean crossline )
 {
 	if( !crossline )
 	{
 		Error( "Line %i is incomplete\n", script->line );
 	}
-	
+
 	if( !strcmp( script->filename, "memory buffer" ) )
 	{
 		endofscript = qtrue;
 		return qfalse;
 	}
-	
+
 	if( script->buffer == NULL )
 	{
 		Sys_Printf( "WARNING: Attempt to free already freed script buffer\n" );
@@ -187,202 +182,198 @@ GetToken
 ==============
 */
 // *INDENT-OFF*
-qboolean GetToken(qboolean crossline)
+qboolean GetToken( qboolean crossline )
 {
-	char           *token_p;
-	
+	char* token_p;
+
 	// ydnar: dummy testing
-	if(script == NULL || script->buffer == NULL)
+	if( script == NULL || script->buffer == NULL )
 		return qfalse;
-		
-	if(tokenready)				// is a token already waiting?
+
+	if( tokenready ) // is a token already waiting?
 	{
 		tokenready = qfalse;
 		return qtrue;
 	}
-	
-	if((script->script_p >= script->end_p) || (script->script_p == NULL))
-		return EndOfScript(crossline);
-		
+
+	if( ( script->script_p >= script->end_p ) || ( script->script_p == NULL ) )
+		return EndOfScript( crossline );
+
 skipspace:
 	// skip whitespace
-	while(*script->script_p <= ' ')
+	while( *script->script_p <= ' ' )
 	{
-		if(script->script_p >= script->end_p)
-			return EndOfScript(crossline);
-			
-		if(*script->script_p++ == '\n')
+		if( script->script_p >= script->end_p )
+			return EndOfScript( crossline );
+
+		if( *script->script_p++ == '\n' )
 		{
-			if(!crossline)
-				Error("Line %i is incomplete\n", script->line);
-				
+			if( !crossline )
+				Error( "Line %i is incomplete\n", script->line );
+
 			script->line++;
 		}
 	}
-	
-	if(script->script_p >= script->end_p)
-		return EndOfScript(crossline);
-		
+
+	if( script->script_p >= script->end_p )
+		return EndOfScript( crossline );
+
 	// skip ; # // comments
-	if(*script->script_p == ';' || *script->script_p == '#' || (*script->script_p == '/' && script->script_p[1] == '/'))
+	if( *script->script_p == ';' || *script->script_p == '#' || ( *script->script_p == '/' && script->script_p[ 1 ] == '/' ) )
 	{
-		if(!crossline)
-			Error("Line %i is incomplete\n", script->line);
-			
-		while(*script->script_p && *script->script_p++ != '\n')
+		if( !crossline )
+			Error( "Line %i is incomplete\n", script->line );
+
+		while( *script->script_p && *script->script_p++ != '\n' )
 		{
-			if(script->script_p >= script->end_p)
-				return EndOfScript(crossline);
+			if( script->script_p >= script->end_p )
+				return EndOfScript( crossline );
 		}
 		script->line++;
 		goto skipspace;
 	}
-	
+
 	// skip /* */ comments
 #if 1
-	if(*script->script_p == '/' && script->script_p[1] == '*')
+	if( *script->script_p == '/' && script->script_p[ 1 ] == '*' )
 	{
-		if(!crossline)
-			Error("Line %i is incomplete\n", script->line);
-			
+		if( !crossline )
+			Error( "Line %i is incomplete\n", script->line );
+
 		script->script_p += 2;
-		while(*script->script_p && (*script->script_p != '*' || script->script_p[1] != '/'))
+		while( *script->script_p && ( *script->script_p != '*' || script->script_p[ 1 ] != '/' ) )
 		{
-			if(*script->script_p == '\n')
+			if( *script->script_p == '\n' )
 			{
 				script->line++;
 			}
 			script->script_p++;
-			
-			if(script->script_p >= script->end_p)
-				return EndOfScript(crossline);
+
+			if( script->script_p >= script->end_p )
+				return EndOfScript( crossline );
 		}
-		if(*script->script_p)
+		if( *script->script_p )
 		{
 			script->script_p += 2;
 		}
 		goto skipspace;
 	}
 #endif
-	
+
 	// copy token
 	token_p = token;
-	
+
 	// check for a quotation
-	if(*script->script_p == '"')
+	if( *script->script_p == '"' )
 	{
 		// quoted token
 		script->script_p++;
-		while(*script->script_p != '"')
+		while( *script->script_p != '"' )
 		{
 			*token_p++ = *script->script_p++;
-			
-			if(script->script_p == script->end_p)
+
+			if( script->script_p == script->end_p )
 				break;
-				
-			if(token_p == &token[MAXTOKEN])
-				Error("Token too large on line %i\n", script->line);
+
+			if( token_p == &token[ MAXTOKEN ] )
+				Error( "Token too large on line %i\n", script->line );
 		}
 		script->script_p++;
 	}
 	// check for a number
-	else if((*script->script_p >= '0' && *script->script_p <= '9')									||
-			(*script->script_p == '-' && script->script_p[1] >= '0' && script->script_p[1] <= '9')	||
-			(*script->script_p == '+' && script->script_p[1] >= '0' && script->script_p[1] <= '9')	||
-			(*script->script_p == '.' && script->script_p[1] >= '0' && script->script_p[1] <= '9')	||
-			(*script->script_p == '-' && script->script_p[1] == '.' && script->script_p[2] >= '0' && script->script_p[2] <= '9')
-	)
+	else if( ( *script->script_p >= '0' && *script->script_p <= '9' ) ||
+		( *script->script_p == '-' && script->script_p[ 1 ] >= '0' && script->script_p[ 1 ] <= '9' ) ||
+		( *script->script_p == '+' && script->script_p[ 1 ] >= '0' && script->script_p[ 1 ] <= '9' ) ||
+		( *script->script_p == '.' && script->script_p[ 1 ] >= '0' && script->script_p[ 1 ] <= '9' ) ||
+		( *script->script_p == '-' && script->script_p[ 1 ] == '.' && script->script_p[ 2 ] >= '0' && script->script_p[ 2 ] <= '9' ) )
 	{
 		do
 		{
 			*token_p++ = *script->script_p++;
-			
-			if(script->script_p == script->end_p)
+
+			if( script->script_p == script->end_p )
 				break;
-				
-			if(token_p == &token[MAXTOKEN])
-				Error("Token too large on line %i\n", script->line);
-				
-		} while((*script->script_p >= '0' && *script->script_p <= '9') || *script->script_p == '.' );
-		
+
+			if( token_p == &token[ MAXTOKEN ] )
+				Error( "Token too large on line %i\n", script->line );
+
+		} while( ( *script->script_p >= '0' && *script->script_p <= '9' ) || *script->script_p == '.' );
+
 		// parse the exponent
-		if(*script->script_p == 'e' || *script->script_p == 'E')
+		if( *script->script_p == 'e' || *script->script_p == 'E' )
 		{
 			*token_p++ = *script->script_p;
-			
+
 			script->script_p++;
-			if(*script->script_p == '-' || *script->script_p == '+')
+			if( *script->script_p == '-' || *script->script_p == '+' )
 			{
 				*token_p++ = *script->script_p++;
 			}
-			
+
 			do
 			{
 				*token_p++ = *script->script_p++;
-				
-				if(script->script_p == script->end_p)
+
+				if( script->script_p == script->end_p )
 					break;
-					
-				if(token_p == &token[MAXTOKEN])
-					Error("Token too large on line %i\n", script->line);
-					
-			} while(*script->script_p >= '0' && *script->script_p <= '9');
+
+				if( token_p == &token[ MAXTOKEN ] )
+					Error( "Token too large on line %i\n", script->line );
+
+			} while( *script->script_p >= '0' && *script->script_p <= '9' );
 		}
 	}
 	// check for a regular word
 	// we still allow forward and back slashes in name tokens for pathnames
 	// and also colons for drive letters
-	else if((*script->script_p >= 'a' && *script->script_p <= 'z')	||
-			(*script->script_p >= 'A' && *script->script_p <= 'Z')	||
-			(*script->script_p == '_')								||
-			(*script->script_p == '/')								||
-			(*script->script_p == '\\')								||
-			(*script->script_p == '$')	)
+	else if( ( *script->script_p >= 'a' && *script->script_p <= 'z' ) ||
+		( *script->script_p >= 'A' && *script->script_p <= 'Z' ) ||
+		( *script->script_p == '_' ) ||
+		( *script->script_p == '/' ) ||
+		( *script->script_p == '\\' ) ||
+		( *script->script_p == '$' ) )
 	{
 		do
 		{
 			*token_p++ = *script->script_p++;
-			
-			if(script->script_p == script->end_p)
+
+			if( script->script_p == script->end_p )
 				break;
-				
-			if(token_p == &token[MAXTOKEN])
-				Error("Token too large on line %i\n", script->line);
-		}
-		while
-		(
-			   (*script->script_p >= 'a' && *script->script_p <= 'z')	||
-			   (*script->script_p >= 'A' && *script->script_p <= 'Z')	||
-			   (*script->script_p == '_') 								||
-			   (*script->script_p == '-') 								||
-			   (*script->script_p >= '0' && *script->script_p <= '9')	||
-			   (*script->script_p == '/')								||
-			   (*script->script_p == '\\')								||
-			   (*script->script_p == ':')								||
-			   (*script->script_p == '.')								||
-			   (*script->script_p == '$')								||
-			   (*script->script_p == '@')
-		);
+
+			if( token_p == &token[ MAXTOKEN ] )
+				Error( "Token too large on line %i\n", script->line );
+		} while(
+			( *script->script_p >= 'a' && *script->script_p <= 'z' ) ||
+			( *script->script_p >= 'A' && *script->script_p <= 'Z' ) ||
+			( *script->script_p == '_' ) ||
+			( *script->script_p == '-' ) ||
+			( *script->script_p >= '0' && *script->script_p <= '9' ) ||
+			( *script->script_p == '/' ) ||
+			( *script->script_p == '\\' ) ||
+			( *script->script_p == ':' ) ||
+			( *script->script_p == '.' ) ||
+			( *script->script_p == '$' ) ||
+			( *script->script_p == '@' ) );
 	}
 	else
 	{
 		// single character punctuation
 		*token_p++ = *script->script_p++;
-		
-		if(token_p == &token[MAXTOKEN])
-			Error("Token too large on line %i\n", script->line);
+
+		if( token_p == &token[ MAXTOKEN ] )
+			Error( "Token too large on line %i\n", script->line );
 	}
-	
+
 	// add tailing zero
 	*token_p = 0;
-	
-	if(!strcmp(token, "$include"))
+
+	if( !strcmp( token, "$include" ) )
 	{
-		GetToken(qfalse);
-		AddScriptToStack(token, 0);
-		return GetToken(crossline);
+		GetToken( qfalse );
+		AddScriptToStack( token, 0 );
+		return GetToken( crossline );
 	}
-	
+
 	return qtrue;
 }
 // *INDENT-ON*
@@ -406,11 +397,11 @@ Returns qtrue if there is another token on the line
 */
 qboolean TokenAvailable( void )
 {
-	int             oldLine;
-	qboolean        r;
-	
+	int      oldLine;
+	qboolean r;
+
 	oldLine = script->line;
-	r = GetToken( qtrue );
+	r       = GetToken( qtrue );
 	if( !r )
 	{
 		return qfalse;
@@ -423,11 +414,10 @@ qboolean TokenAvailable( void )
 	return qfalse;
 }
 
-
 void MatchToken( char* match )
 {
 	GetToken( qtrue );
-	
+
 	if( strcmp( token, match ) )
 	{
 		Error( "MatchToken: \"%s\" != \"%s\" at line %i in file '%s'", token, match, script->line, script->filename );
@@ -445,25 +435,24 @@ Internal brace depths are properly skipped.
 */
 void SkipBracedSection()
 {
-	int             depth;
-	
+	int depth;
+
 	depth = 0;
 	do
 	{
 		GetToken( qtrue );
-		if( token[1] == 0 )
+		if( token[ 1 ] == 0 )
 		{
-			if( token[0] == '{' )
+			if( token[ 0 ] == '{' )
 			{
 				depth++;
 			}
-			else if( token[0] == '}' )
+			else if( token[ 0 ] == '}' )
 			{
 				depth--;
 			}
 		}
-	}
-	while( depth && script->script_p < script->end_p );
+	} while( depth && script->script_p < script->end_p );
 }
 
 /*
@@ -473,9 +462,9 @@ SkipRestOfLine
 */
 void SkipRestOfLine()
 {
-	char*           p;
-	int             c;
-	
+	char* p;
+	int   c;
+
 	p = script->script_p;
 	while( ( c = *p++ ) != 0 )
 	{
@@ -485,68 +474,67 @@ void SkipRestOfLine()
 			break;
 		}
 	}
-	
+
 	script->script_p = p;
 }
 
 void Parse1DMatrix( int x, vec_t* m )
 {
-	int             i;
-	
+	int i;
+
 	MatchToken( "(" );
-	
+
 	for( i = 0; i < x; i++ )
 	{
 		GetToken( qfalse );
-		m[i] = atof( token );
+		m[ i ] = atof( token );
 	}
-	
+
 	MatchToken( ")" );
 }
 
 void Parse2DMatrix( int y, int x, vec_t* m )
 {
-	int             i;
-	
+	int i;
+
 	MatchToken( "(" );
-	
+
 	for( i = 0; i < y; i++ )
 	{
 		Parse1DMatrix( x, m + i * x );
 	}
-	
+
 	MatchToken( ")" );
 }
 
 void Parse3DMatrix( int z, int y, int x, vec_t* m )
 {
-	int             i;
-	
+	int i;
+
 	MatchToken( "(" );
-	
+
 	for( i = 0; i < z; i++ )
 	{
 		Parse2DMatrix( y, x, m + i * x * y );
 	}
-	
+
 	MatchToken( ")" );
 }
 
-
 void Write1DMatrix( FILE* f, int x, vec_t* m )
 {
-	int             i;
-	
+	int i;
+
 	fprintf( f, " ( " );
 	for( i = 0; i < x; i++ )
 	{
-		if( m[i] == ( int )m[i] )
+		if( m[ i ] == (int)m[ i ] )
 		{
-			fprintf( f, "%i ", ( int )m[i] );
+			fprintf( f, "%i ", (int)m[ i ] );
 		}
 		else
 		{
-			fprintf( f, "%f ", m[i] );
+			fprintf( f, "%f ", m[ i ] );
 		}
 	}
 	fprintf( f, " ) " );
@@ -554,8 +542,8 @@ void Write1DMatrix( FILE* f, int x, vec_t* m )
 
 void Write2DMatrix( FILE* f, int y, int x, vec_t* m )
 {
-	int             i;
-	
+	int i;
+
 	fprintf( f, " ( " );
 	for( i = 0; i < y; i++ )
 	{
@@ -565,11 +553,10 @@ void Write2DMatrix( FILE* f, int y, int x, vec_t* m )
 	fprintf( f, " ) " );
 }
 
-
 void Write3DMatrix( FILE* f, int z, int y, int x, vec_t* m )
 {
-	int             i;
-	
+	int i;
+
 	fprintf( f, "(\n" );
 	for( i = 0; i < z; i++ )
 	{

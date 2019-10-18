@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "g_local.h"
 
-#if(defined(G_LUA) || defined(CG_LUA))
+#if( defined( G_LUA ) || defined( CG_LUA ) )
 
 #include <lua.h>
 #include <lauxlib.h>
@@ -97,9 +97,9 @@ static int qmath_fmod( lua_State* L )
 
 static int qmath_modf( lua_State* L )
 {
-	double          ip;
-	double          fp = modf( luaL_checknumber( L, 1 ), &ip );
-	
+	double ip;
+	double fp = modf( luaL_checknumber( L, 1 ), &ip );
+
 	lua_pushnumber( L, ip );
 	lua_pushnumber( L, fp );
 	return 2;
@@ -149,8 +149,8 @@ static int qmath_rad( lua_State* L )
 
 static int qmath_frexp( lua_State* L )
 {
-	int             e;
-	
+	int e;
+
 	lua_pushnumber( L, frexp( luaL_checknumber( L, 1 ), &e ) );
 	lua_pushnumber( L, e );
 	return 2;
@@ -162,18 +162,16 @@ static int qmath_ldexp( lua_State* L )
 	return 1;
 }
 
-
-
 static int qmath_min( lua_State* L )
 {
-	int             n = lua_gettop( L );	/* number of arguments */
-	lua_Number      dmin = luaL_checknumber( L, 1 );
-	int             i;
-	
+	int        n    = lua_gettop( L ); /* number of arguments */
+	lua_Number dmin = luaL_checknumber( L, 1 );
+	int        i;
+
 	for( i = 2; i <= n; i++ )
 	{
-		lua_Number      d = luaL_checknumber( L, i );
-		
+		lua_Number d = luaL_checknumber( L, i );
+
 		if( d < dmin )
 		{
 			dmin = d;
@@ -183,17 +181,16 @@ static int qmath_min( lua_State* L )
 	return 1;
 }
 
-
 static int qmath_max( lua_State* L )
 {
-	int             n = lua_gettop( L );	/* number of arguments */
-	lua_Number      dmax = luaL_checknumber( L, 1 );
-	int             i;
-	
+	int        n    = lua_gettop( L ); /* number of arguments */
+	lua_Number dmax = luaL_checknumber( L, 1 );
+	int        i;
+
 	for( i = 2; i <= n; i++ )
 	{
-		lua_Number      d = luaL_checknumber( L, i );
-		
+		lua_Number d = luaL_checknumber( L, i );
+
 		if( d > dmax )
 		{
 			dmax = d;
@@ -270,36 +267,35 @@ static int qmath_crandom( lua_State* L )
 	return 1;
 }
 
-static const luaL_reg qmathlib[] =
-{
-	{"abs", qmath_abs},
-	{"sin", qmath_sin},
-	{"cos", qmath_cos},
-	{"tan", qmath_tan},
-	{"asin", qmath_asin},
-	{"acos", qmath_acos},
-	{"atan", qmath_atan},
-	{"atan2", qmath_atan2},
-	{"ceil", qmath_ceil},
-	{"floor", qmath_floor},
-	{"fmod", qmath_fmod},
-	{"modf", qmath_modf},
-	{"frexp", qmath_frexp},
-	{"ldexp", qmath_ldexp},
-	{"sqrt", qmath_sqrt},
-	{"min", qmath_min},
-	{"max", qmath_max},
-	{"log", qmath_log},
-	{"log10", qmath_log10},
-	{"exp", qmath_exp},
-	{"deg", qmath_deg},
-	{"pow", qmath_pow},
-	{"rad", qmath_rad},
-	{"rand", qmath_rand},
-	{"random", qmath_random},
-//  {"randomseed", qmath_randomseed},
-	{"crandom", qmath_crandom},
-	{NULL, NULL}
+static const luaL_reg qmathlib[] = {
+	{ "abs", qmath_abs },
+	{ "sin", qmath_sin },
+	{ "cos", qmath_cos },
+	{ "tan", qmath_tan },
+	{ "asin", qmath_asin },
+	{ "acos", qmath_acos },
+	{ "atan", qmath_atan },
+	{ "atan2", qmath_atan2 },
+	{ "ceil", qmath_ceil },
+	{ "floor", qmath_floor },
+	{ "fmod", qmath_fmod },
+	{ "modf", qmath_modf },
+	{ "frexp", qmath_frexp },
+	{ "ldexp", qmath_ldexp },
+	{ "sqrt", qmath_sqrt },
+	{ "min", qmath_min },
+	{ "max", qmath_max },
+	{ "log", qmath_log },
+	{ "log10", qmath_log10 },
+	{ "exp", qmath_exp },
+	{ "deg", qmath_deg },
+	{ "pow", qmath_pow },
+	{ "rad", qmath_rad },
+	{ "rand", qmath_rand },
+	{ "random", qmath_random },
+	//  {"randomseed", qmath_randomseed},
+	{ "crandom", qmath_crandom },
+	{ NULL, NULL }
 };
 
 int luaopen_qmath( lua_State* L )

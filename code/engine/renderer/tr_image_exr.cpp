@@ -34,22 +34,21 @@ extern "C"
 //#include <OpenEXR/half.h>
 #include "../openexr/half.h"
 
-
 #ifdef __cplusplus
-extern          "C"
+extern "C"
 {
 #endif
 
-void LoadRGBEToFloats( const char* name, float** pic, int* width, int* height, qboolean doGamma, qboolean toneMap, qboolean compensate );
+	void LoadRGBEToFloats( const char* name, float** pic, int* width, int* height, qboolean doGamma, qboolean toneMap, qboolean compensate );
 
-void LoadRGBEToHalfs( const char* name, unsigned short** halfImage, int* width, int* height )
-{
-	int             i, j;
-	int             w, h;
-	float*          hdrImage;
-	float*          floatbuf;
-	unsigned short* halfbuf;
-	
+	void LoadRGBEToHalfs( const char* name, unsigned short** halfImage, int* width, int* height )
+	{
+		int             i, j;
+		int             w, h;
+		float*          hdrImage;
+		float*          floatbuf;
+		unsigned short* halfbuf;
+
 #if 0
 	w = h = 0;
 	LoadRGBEToFloats( name, &hdrImage, &w, &h, qtrue, qtrue, qtrue );
@@ -78,13 +77,13 @@ void LoadRGBEToHalfs( const char* name, unsigned short** halfImage, int* width, 
 #else
 	w = h = 0;
 	LoadRGBEToFloats( name, &hdrImage, &w, &h, qtrue, qfalse, qtrue );
-	
-	*width = w;
+
+	*width  = w;
 	*height = h;
-	
-	*halfImage = ( unsigned short* ) Com_Allocate( w * h * 3 * 6 );
-	
-	halfbuf = *halfImage;
+
+	*halfImage = (unsigned short*)Com_Allocate( w * h * 3 * 6 );
+
+	halfbuf  = *halfImage;
 	floatbuf = hdrImage;
 	for( i = 0; i < ( w * h ); i++ )
 	{
@@ -95,9 +94,9 @@ void LoadRGBEToHalfs( const char* name, unsigned short** halfImage, int* width, 
 		}
 	}
 #endif
-	
-	Com_Dealloc( hdrImage );
-}
+
+		Com_Dealloc( hdrImage );
+	}
 
 #ifdef __cplusplus
 }

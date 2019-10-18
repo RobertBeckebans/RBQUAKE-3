@@ -26,44 +26,35 @@ several games based on the Quake III Arena engine, in the form of "Q3Map2."
 
 ------------------------------------------------------------------------------- */
 
-
-
 /* marker */
 #define TREE_C
-
-
 
 /* dependencies */
 #include "q3map2.h"
 
+void RemovePortalFromNode( portal_t* portal, node_t* l );
 
-
-
-void            RemovePortalFromNode( portal_t* portal, node_t* l );
-
-node_t*         NodeForPoint( node_t* node, vec3_t origin )
+node_t* NodeForPoint( node_t* node, vec3_t origin )
 {
-	plane_t*        plane;
-	vec_t           d;
-	
+	plane_t* plane;
+	vec_t    d;
+
 	while( node->planenum != PLANENUM_LEAF )
 	{
-		plane = &mapplanes[node->planenum];
-		d = DotProduct( origin, plane->normal ) - plane->dist;
+		plane = &mapplanes[ node->planenum ];
+		d     = DotProduct( origin, plane->normal ) - plane->dist;
 		if( d >= 0 )
 		{
-			node = node->children[0];
+			node = node->children[ 0 ];
 		}
 		else
 		{
-			node = node->children[1];
+			node = node->children[ 1 ];
 		}
 	}
-	
+
 	return node;
 }
-
-
 
 /*
 =============
@@ -72,23 +63,23 @@ FreeTreePortals_r
 */
 void FreeTreePortals_r( node_t* node )
 {
-	portal_t*       p, *nextp;
-	int             s;
-	
+	portal_t *p, *nextp;
+	int       s;
+
 	// free children
 	if( node->planenum != PLANENUM_LEAF )
 	{
-		FreeTreePortals_r( node->children[0] );
-		FreeTreePortals_r( node->children[1] );
+		FreeTreePortals_r( node->children[ 0 ] );
+		FreeTreePortals_r( node->children[ 1 ] );
 	}
-	
+
 	// free portals
 	for( p = node->portals; p; p = nextp )
 	{
-		s = ( p->nodes[1] == node );
-		nextp = p->next[s];
-		
-		RemovePortalFromNode( p, p->nodes[!s] );
+		s     = ( p->nodes[ 1 ] == node );
+		nextp = p->next[ s ];
+
+		RemovePortalFromNode( p, p->nodes[ !s ] );
 		FreePortal( p );
 	}
 	node->portals = NULL;
@@ -104,22 +95,21 @@ void FreeTree_r( node_t* node )
 	// free children
 	if( node->planenum != PLANENUM_LEAF )
 	{
-		FreeTree_r( node->children[0] );
-		FreeTree_r( node->children[1] );
+		FreeTree_r( node->children[ 0 ] );
+		FreeTree_r( node->children[ 1 ] );
 	}
-	
+
 	// free bspbrushes
 	FreeBrushList( node->brushlist );
-	
+
 	// free the node
 	if( node->volume )
 	{
 		FreeBrush( node->volume );
 	}
-	
+
 	free( node );
 }
-
 
 /*
 =============
@@ -137,10 +127,10 @@ void FreeTree( tree_t* tree )
 
 void PrintTree_r( node_t* node, int depth )
 {
-	int             i;
-	plane_t*        plane;
-	brush_t*        bb;
-	
+	int      i;
+	plane_t* plane;
+	brush_t* bb;
+
 	for( i = 0; i < depth; i++ )
 	{
 		Sys_Printf( "  " );
@@ -161,10 +151,9 @@ void PrintTree_r( node_t* node, int depth )
 		}
 		return;
 	}
-	
-	plane = &mapplanes[node->planenum];
-	Sys_Printf( "#%d (%5.2f %5.2f %5.2f):%5.2f\n", node->planenum,
-				plane->normal[0], plane->normal[1], plane->normal[2], plane->dist );
-	PrintTree_r( node->children[0], depth + 1 );
-	PrintTree_r( node->children[1], depth + 1 );
+
+	plane = &mapplanes[ node->planenum ];
+	Sys_Printf( "#%d (%5.2f %5.2f %5.2f):%5.2f\n", node->planenum, plane->normal[ 0 ], plane->normal[ 1 ], plane->normal[ 2 ], plane->dist );
+	PrintTree_r( node->children[ 0 ], depth + 1 );
+	PrintTree_r( node->children[ 1 ], depth + 1 );
 }

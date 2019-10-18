@@ -26,17 +26,11 @@ several games based on the Quake III Arena engine, in the form of "Q3Map2."
 
 ------------------------------------------------------------------------------- */
 
-
-
 /* marker */
 #define IMAGE_C
 
-
-
 /* dependencies */
 #include "q3map2.h"
-
-
 
 /* -------------------------------------------------------------------------------
 
@@ -90,7 +84,6 @@ static void LoadDDSBuffer( byte* buffer, int size, byte** pixels, int* width, in
 	DDSDecompress( ( ddsBuffer_t* ) buffer, *pixels );
 }
 #endif
-
 
 /*
 PNGReadData()
@@ -247,7 +240,6 @@ static void LoadPNGBuffer( byte* buffer, int size, byte** pixels, int* width, in
 }
 #endif
 
-
 /*
 ImageInit()
 implicitly called by every function to set up image list
@@ -255,31 +247,28 @@ implicitly called by every function to set up image list
 
 static void ImageInit( void )
 {
-	int             i;
-	
-	
+	int i;
+
 	if( numImages <= 0 )
 	{
 		/* clear images (fixme: this could theoretically leak) */
 		memset( images, 0, sizeof( images ) );
-		
+
 		/* generate *bogus image */
-		images[0].name = safe_malloc( strlen( DEFAULT_IMAGE ) + 1 );
-		strcpy( images[0].name, DEFAULT_IMAGE );
-		images[0].filename = safe_malloc( strlen( DEFAULT_IMAGE ) + 1 );
-		strcpy( images[0].filename, DEFAULT_IMAGE );
-		images[0].width = 64;
-		images[0].height = 64;
-		images[0].refCount = 1;
-		images[0].pixels = safe_malloc( 64 * 64 * 4 );
+		images[ 0 ].name = safe_malloc( strlen( DEFAULT_IMAGE ) + 1 );
+		strcpy( images[ 0 ].name, DEFAULT_IMAGE );
+		images[ 0 ].filename = safe_malloc( strlen( DEFAULT_IMAGE ) + 1 );
+		strcpy( images[ 0 ].filename, DEFAULT_IMAGE );
+		images[ 0 ].width    = 64;
+		images[ 0 ].height   = 64;
+		images[ 0 ].refCount = 1;
+		images[ 0 ].pixels   = safe_malloc( 64 * 64 * 4 );
 		for( i = 0; i < ( 64 * 64 * 4 ); i++ )
 		{
-			images[0].pixels[i] = 255;
+			images[ 0 ].pixels[ i ] = 255;
 		}
 	}
 }
-
-
 
 /*
 ImageFree()
@@ -293,10 +282,10 @@ void ImageFree( image_t* image )
 	{
 		return;
 	}
-	
+
 	/* decrement refcount */
 	image->refCount--;
-	
+
 	/* free? */
 	if( image->refCount <= 0 )
 	{
@@ -311,80 +300,74 @@ void ImageFree( image_t* image )
 		}
 		image->filename = NULL;
 		free( image->pixels );
-		image->width = 0;
+		image->width  = 0;
 		image->height = 0;
 		numImages--;
 	}
 }
-
-
 
 /*
 ImageFind()
 finds an existing rgba image and returns a pointer to the image_t struct or NULL if not found
 */
 
-image_t*        ImageFind( const char* filename )
+image_t* ImageFind( const char* filename )
 {
-	int             i;
-	char            name[1024];
-	
-	
+	int  i;
+	char name[ 1024 ];
+
 	/* init */
 	ImageInit();
-	
+
 	/* dummy check */
-	if( filename == NULL || filename[0] == '\0' )
+	if( filename == NULL || filename[ 0 ] == '\0' )
 	{
 		return NULL;
 	}
-	
+
 	/* strip file extension off name */
 	strcpy( name, filename );
 	StripExtension( name );
-	
+
 	/* search list */
 	for( i = 0; i < MAX_IMAGES; i++ )
 	{
-		if( images[i].name != NULL && !strcmp( name, images[i].name ) )
+		if( images[ i ].name != NULL && !strcmp( name, images[ i ].name ) )
 		{
-			return &images[i];
+			return &images[ i ];
 		}
 	}
-	
+
 	/* no matching image found */
 	return NULL;
 }
-
-
 
 /*
 ImageLoad()
 loads an rgba image and returns a pointer to the image_t struct or NULL if not found
 */
 
-image_t*        ImageLoad( const char* filename )
+image_t* ImageLoad( const char* filename )
 {
-	int             i;
-	image_t*        image;
-	char            name[1024];
-	int             size;
-	byte*           buffer = NULL;
-	
-	
+	int      i;
+	image_t* image;
+	char     name[ 1024 ];
+	int      size;
+	byte*    buffer = NULL;
+
 	/* init */
 	ImageInit();
-	
+
 	/* dummy check */
-	if( filename == NULL || filename[0] == '\0' )
+	if( filename == NULL || filename[ 0 ] == '\0' )
 	{
 		return NULL;
 	}
-	
+
 	/* strip file extension off name */
 	strcpy( name, filename );
 	StripExtension( name );
-	
+
 	/* try to find existing image */
 	image = ImageFind( name );
 	if( image != NULL )
@@ -392,33 +375,33 @@ image_t*        ImageLoad( const char* filename )
 		image->refCount++;
 		return image;
 	}
-	
+
 	/* none found, so find first non-null image */
 	image = NULL;
 	for( i = 0; i < MAX_IMAGES; i++ )
 	{
-		if( images[i].name == NULL )
+		if( images[ i ].name == NULL )
 		{
-			image = &images[i];
+			image = &images[ i ];
 			break;
 		}
 	}
-	
+
 	/* too many images? */
 	if( image == NULL )
 	{
 		Error( "MAX_IMAGES (%d) exceeded, there are too many image files referenced by the map.", MAX_IMAGES );
 	}
-	
+
 	/* set it up */
 	image->name = safe_malloc( strlen( name ) + 1 );
 	strcpy( image->name, name );
-	
+
 #if 1
 	/* attempt to load tga */
 	StripExtension( name );
 	strcat( name, ".tga" );
-	size = vfsLoadFile( ( const char* )name, ( void** )&buffer, 0 );
+	size = vfsLoadFile( (const char*)name, (void**)&buffer, 0 );
 	if( size > 0 )
 	{
 		LoadTGABuffer( buffer, &image->pixels, &image->width, &image->height );
@@ -429,7 +412,7 @@ image_t*        ImageLoad( const char* filename )
 		/* attempt to load png */
 		StripExtension( name );
 		strcat( name, ".png" );
-		size = vfsLoadFile( ( const char* )name, ( void** )&buffer, 0 );
+		size = vfsLoadFile( (const char*)name, (void**)&buffer, 0 );
 		if( size > 0 )
 		{
 			LoadPNGBuffer( buffer, &image->pixels, &image->width, &image->height );
@@ -440,10 +423,10 @@ image_t*        ImageLoad( const char* filename )
 			/* attempt to load jpg */
 			StripExtension( name );
 			strcat( name, ".jpg" );
-			size = vfsLoadFile( ( const char* )name, ( void** )&buffer, 0 );
+			size = vfsLoadFile( (const char*)name, (void**)&buffer, 0 );
 			if( size > 0 )
 			{
-				LoadJPGBuffer( ( const char* )name, buffer, size, &image->pixels, &image->width, &image->height );
+				LoadJPGBuffer( (const char*)name, buffer, size, &image->pixels, &image->width, &image->height );
 				if( image->pixels == NULL )
 				{
 					Sys_Printf( "WARNING: LoadJPGBuffer: '%s'\n", image->name );
@@ -475,19 +458,19 @@ image_t*        ImageLoad( const char* filename )
 									  image->height );
 						}
 					}
-#endif							// dds debug
+#endif // dds debug
 				}
-#endif							// ignore dds
+#endif // ignore dds
 			}
-#endif							// ignore jpg dds
+#endif // ignore jpg dds
 		}
-#endif							// ignore png jpg dds
+#endif // ignore png jpg dds
 	}
-#endif							// ignore all images
-	
+#endif // ignore all images
+
 	/* free file buffer */
 	free( buffer );
-	
+
 	/* make sure everything's kosher */
 	if( size <= 0 || image->width <= 0 || image->height <= 0 || image->pixels == NULL )
 	{
@@ -497,15 +480,15 @@ image_t*        ImageLoad( const char* filename )
 		image->name = NULL;
 		return NULL;
 	}
-	
+
 	/* set filename */
 	image->filename = safe_malloc( strlen( name ) + 1 );
 	strcpy( image->filename, name );
-	
+
 	/* set count */
 	image->refCount = 1;
 	numImages++;
-	
+
 	/* return the image */
 	return image;
 }

@@ -38,11 +38,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include <sys/stat.h>
 
 #ifdef WIN32
-	#include <direct.h>
-	#include <windows.h>
+#include <direct.h>
+#include <windows.h>
 #endif
 
-#if defined(USE_XML)
+#if defined( USE_XML )
 // network broadcasting
 #include "../xrealradiant/include/stream_version.h"
 
@@ -54,30 +54,30 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include <glib/gmem.h>
 
 #ifdef WIN32
-	HWND            hwndOut = NULL;
-	qboolean        lookedForServer = qfalse;
-	UINT            wm_BroadcastCommand = -1;
+HWND     hwndOut             = NULL;
+qboolean lookedForServer     = qfalse;
+UINT     wm_BroadcastCommand = -1;
 #endif
 
-socket_t*       brdcst_socket;
-netmessage_t    msg;
+socket_t*    brdcst_socket;
+netmessage_t msg;
 
-qboolean        verbose = qfalse;
+qboolean verbose = qfalse;
 
 // our main document
 // is streamed through the network to Radiant
 // possibly written to disk at the end of the run
 //++timo FIXME: need to be global, required when creating nodes?
-xmlDocPtr       doc;
-xmlNodePtr      tree;
+xmlDocPtr  doc;
+xmlNodePtr tree;
 
 // some useful stuff
 xmlNodePtr xml_NodeForVec( vec3_t v )
 {
-	xmlNodePtr      ret;
-	char            buf[1024];
-	
-	sprintf( buf, "%f %f %f", v[0], v[1], v[2] );
+	xmlNodePtr ret;
+	char       buf[ 1024 ];
+
+	sprintf( buf, "%f %f %f", v[ 0 ], v[ 1 ], v[ 2 ] );
 	ret = xmlNewNode( NULL, "point" );
 	xmlNodeSetContent( ret, buf );
 	return ret;
@@ -86,20 +86,20 @@ xmlNodePtr xml_NodeForVec( vec3_t v )
 // send a node down the stream, add it to the document
 void xml_SendNode( xmlNodePtr node )
 {
-	xmlBufferPtr    xml_buf;
-	char            xmlbuf[MAX_NETMESSAGE];	// we have to copy content from the xmlBufferPtr into an aux buffer .. that sucks ..
-	
+	xmlBufferPtr xml_buf;
+	char         xmlbuf[ MAX_NETMESSAGE ]; // we have to copy content from the xmlBufferPtr into an aux buffer .. that sucks ..
+
 	// this index loops through the node buffer
-	int             pos = 0;
-	int             size;
-	
+	int pos = 0;
+	int size;
+
 	xmlAddChild( doc->children, node );
-	
+
 	if( brdcst_socket )
 	{
 		xml_buf = xmlBufferCreate();
 		xmlNodeDump( xml_buf, doc, node, 0, 0 );
-		
+
 		// the XML node might be too big to fit in a single network message
 		// l_net library defines an upper limit of MAX_NETMESSAGE
 		// there are some size check errors, so we use MAX_NETMESSAGE-10 to be safe
@@ -114,14 +114,14 @@ void xml_SendNode( xmlNodePtr node )
 				Sys_FPrintf( SYS_NOXML, "Got to split the buffer\n" );
 			}
 			memcpy( xmlbuf, xml_buf->content + pos, size );
-			xmlbuf[size] = '\0';
+			xmlbuf[ size ] = '\0';
 			NMSG_Clear( &msg );
 			NMSG_WriteString( &msg, xmlbuf );
 			Net_Send( brdcst_socket, &msg );
 			// now that the thing is sent prepare to loop again
 			pos += size;
 		}
-		
+
 #if 0
 		// NOTE: the NMSG_WriteString is limited to MAX_NETMESSAGE
 		// we will need to split into chunks
@@ -149,31 +149,31 @@ void xml_SendNode( xmlNodePtr node )
 		NMSG_WriteString( &msg, xmlbuf );
 		Net_Send( brdcst_socket, &msg );
 #endif
-		
+
 		xmlBufferFree( xml_buf );
 	}
 }
 
 void xml_Select( char* msg, int entitynum, int brushnum, qboolean bError )
 {
-	xmlNodePtr      node, select;
-	char            buf[1024];
-	char            level[2];
-	
+	xmlNodePtr node, select;
+	char       buf[ 1024 ];
+	char       level[ 2 ];
+
 	// now build a proper "select" XML node
 	sprintf( buf, "Entity %i, Brush %i: %s", entitynum, brushnum, msg );
 	node = xmlNewNode( NULL, "select" );
 	xmlNodeSetContent( node, buf );
-	level[0] = ( int )'0' + ( bError ? SYS_ERR : SYS_WRN );
-	level[1] = 0;
-	xmlSetProp( node, "level", ( char* )&level );
+	level[ 0 ] = (int)'0' + ( bError ? SYS_ERR : SYS_WRN );
+	level[ 1 ] = 0;
+	xmlSetProp( node, "level", (char*)&level );
 	// a 'select' information
 	sprintf( buf, "%i %i", entitynum, brushnum );
 	select = xmlNewNode( NULL, "brush" );
 	xmlNodeSetContent( select, buf );
 	xmlAddChild( node, select );
 	xml_SendNode( node );
-	
+
 	sprintf( buf, "Entity %i, Brush %i: %s", entitynum, brushnum, msg );
 	if( bError )
 	{
@@ -183,50 +183,49 @@ void xml_Select( char* msg, int entitynum, int brushnum, qboolean bError )
 	{
 		Sys_FPrintf( SYS_NOXML, "%s\n", buf );
 	}
-	
 }
 
 void xml_Point( char* msg, vec3_t pt )
 {
-	xmlNodePtr      node, point;
-	char            buf[1024];
-	char            level[2];
-	
+	xmlNodePtr node, point;
+	char       buf[ 1024 ];
+	char       level[ 2 ];
+
 	node = xmlNewNode( NULL, "pointmsg" );
 	xmlNodeSetContent( node, msg );
-	level[0] = ( int )'0' + SYS_ERR;
-	level[1] = 0;
-	xmlSetProp( node, "level", ( char* )&level );
+	level[ 0 ] = (int)'0' + SYS_ERR;
+	level[ 1 ] = 0;
+	xmlSetProp( node, "level", (char*)&level );
 	// a 'point' node
-	sprintf( buf, "%g %g %g", pt[0], pt[1], pt[2] );
+	sprintf( buf, "%g %g %g", pt[ 0 ], pt[ 1 ], pt[ 2 ] );
 	point = xmlNewNode( NULL, "point" );
 	xmlNodeSetContent( point, buf );
 	xmlAddChild( node, point );
 	xml_SendNode( node );
-	
-	sprintf( buf, "%s (%g %g %g)", msg, pt[0], pt[1], pt[2] );
+
+	sprintf( buf, "%s (%g %g %g)", msg, pt[ 0 ], pt[ 1 ], pt[ 2 ] );
 	Error( buf );
 }
 
 #define WINDING_BUFSIZE 2048
 void xml_Winding( char* msg, vec3_t p[], int numpoints, qboolean die )
 {
-	xmlNodePtr      node, winding;
-	char            buf[WINDING_BUFSIZE];
-	char            smlbuf[128];
-	char            level[2];
-	int             i;
-	
+	xmlNodePtr node, winding;
+	char       buf[ WINDING_BUFSIZE ];
+	char       smlbuf[ 128 ];
+	char       level[ 2 ];
+	int        i;
+
 	node = xmlNewNode( NULL, "windingmsg" );
 	xmlNodeSetContent( node, msg );
-	level[0] = ( int )'0' + SYS_ERR;
-	level[1] = 0;
-	xmlSetProp( node, "level", ( char* )&level );
+	level[ 0 ] = (int)'0' + SYS_ERR;
+	level[ 1 ] = 0;
+	xmlSetProp( node, "level", (char*)&level );
 	// a 'winding' node
 	sprintf( buf, "%i ", numpoints );
 	for( i = 0; i < numpoints; i++ )
 	{
-		sprintf( smlbuf, "(%g %g %g)", p[i][0], p[i][1], p[i][2] );
+		sprintf( smlbuf, "(%g %g %g)", p[ i ][ 0 ], p[ i ][ 1 ], p[ i ][ 2 ] );
 		// don't overflow
 		if( strlen( buf ) + strlen( smlbuf ) > WINDING_BUFSIZE )
 		{
@@ -234,12 +233,12 @@ void xml_Winding( char* msg, vec3_t p[], int numpoints, qboolean die )
 		}
 		strcat( buf, smlbuf );
 	}
-	
+
 	winding = xmlNewNode( NULL, "winding" );
 	xmlNodeSetContent( winding, buf );
 	xmlAddChild( node, winding );
 	xml_SendNode( node );
-	
+
 	if( die )
 	{
 		Error( msg );
@@ -254,12 +253,12 @@ void xml_Winding( char* msg, vec3_t p[], int numpoints, qboolean die )
 
 void Broadcast_Setup( const char* dest )
 {
-#if defined(USE_XML)
-	address_t       address;
-	char            sMsg[1024];
-	
+#if defined( USE_XML )
+	address_t address;
+	char      sMsg[ 1024 ];
+
 	Net_Setup();
-	Net_StringToAddress( ( char* )dest, &address );
+	Net_StringToAddress( (char*)dest, &address );
 	brdcst_socket = Net_Connect( &address, 0 );
 	if( brdcst_socket )
 	{
@@ -274,7 +273,7 @@ void Broadcast_Setup( const char* dest )
 
 void Broadcast_Shutdown()
 {
-#if defined(USE_XML)
+#if defined( USE_XML )
 	if( brdcst_socket )
 	{
 		Sys_Printf( "Disconnecting\n" );
@@ -287,21 +286,21 @@ void Broadcast_Shutdown()
 // all output ends up through here
 void FPrintf( int flag, char* buf )
 {
-#if defined(USE_XML)
+#if defined( USE_XML )
 	xmlNodePtr      node;
 	static qboolean bGotXML = qfalse;
 #endif
-	char            level[2];
-	
+	char level[ 2 ];
+
 	printf( buf );
-	
-#if defined(USE_XML)
+
+#if defined( USE_XML )
 	// the following part is XML stuff only.. but maybe we don't want that message to go down the XML pipe?
 	if( flag == SYS_NOXML )
 	{
 		return;
 	}
-	
+
 	// ouput an XML file of the run
 	// use the DOM interface to build a tree
 	/*
@@ -313,21 +312,21 @@ void FPrintf( int flag, char* buf )
 	if( !bGotXML )
 	{
 		// initialize
-		doc = xmlNewDoc( "1.0" );
+		doc           = xmlNewDoc( "1.0" );
 		doc->children = xmlNewDocRawNode( doc, NULL, "q3map_feedback", NULL );
-		bGotXML = qtrue;
+		bGotXML       = qtrue;
 	}
 	node = xmlNewNode( NULL, "message" );
 	{
-		gchar*          utf8 = g_locale_to_utf8( buf, -1, NULL, NULL, NULL );
-		
+		gchar* utf8 = g_locale_to_utf8( buf, -1, NULL, NULL, NULL );
+
 		xmlNodeSetContent( node, utf8 );
 		g_free( utf8 );
 	}
-	level[0] = ( int )'0' + flag;
-	level[1] = 0;
-	xmlSetProp( node, "level", ( char* )&level );
-	
+	level[ 0 ] = (int)'0' + flag;
+	level[ 1 ] = 0;
+	xmlSetProp( node, "level", (char*)&level );
+
 	xml_SendNode( node );
 #endif
 }
@@ -341,30 +340,30 @@ void DumpXML()
 
 void Sys_FPrintf( int flag, const char* format, ... )
 {
-	char            out_buffer[4096];
-	va_list         argptr;
-	
+	char    out_buffer[ 4096 ];
+	va_list argptr;
+
 	if( ( flag == SYS_VRB ) && ( verbose == qfalse ) )
 	{
 		return;
 	}
-	
+
 	va_start( argptr, format );
 	vsprintf( out_buffer, format, argptr );
 	va_end( argptr );
-	
+
 	FPrintf( flag, out_buffer );
 }
 
 void Sys_Printf( const char* format, ... )
 {
-	char            out_buffer[4096];
-	va_list         argptr;
-	
+	char    out_buffer[ 4096 ];
+	va_list argptr;
+
 	va_start( argptr, format );
 	vsprintf( out_buffer, format, argptr );
 	va_end( argptr );
-	
+
 	FPrintf( SYS_STD, out_buffer );
 }
 
@@ -377,31 +376,31 @@ For abnormal program terminations
 */
 void Error( const char* error, ... )
 {
-	char            out_buffer[4096];
-	char            tmp[4096];
-	va_list         argptr;
-	
+	char    out_buffer[ 4096 ];
+	char    tmp[ 4096 ];
+	va_list argptr;
+
 	va_start( argptr, error );
 	vsprintf( tmp, error, argptr );
 	va_end( argptr );
-	
+
 	sprintf( out_buffer, "************ ERROR ************\n%s\n", tmp );
-	
+
 	FPrintf( SYS_ERR, out_buffer );
-	
+
 #ifdef DBG_XML
 	DumpXML();
 #endif
-	
+
 	//++timo HACK ALERT .. if we shut down too fast the xml stream won't reach the listener.
 	// a clean solution is to send a sync request node in the stream and wait for an answer before exiting
 	Sys_Sleep( 1000 );
-	
+
 	Broadcast_Shutdown();
-	
-#if defined(_DEBUG)
+
+#if defined( _DEBUG )
 	assert( 0 );
 #endif
-	
+
 	exit( 1 );
 }

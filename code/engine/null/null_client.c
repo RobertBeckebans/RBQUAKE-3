@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "../client/client.h"
 
-cvar_t*         cl_shownet;
+cvar_t* cl_shownet;
 
 void CL_Shutdown( char* finalmsg )
 {

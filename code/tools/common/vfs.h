@@ -33,9 +33,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #define VFS_MAXDIRS 64
 
-void            vfsInitDirectory( const char* path );
-void            vfsShutdown();
-int             vfsGetFileCount( const char* filename );
-int             vfsLoadFile( const char* filename, void** buffer, int index );
+void vfsInitDirectory( const char* path );
+void vfsShutdown();
+int  vfsGetFileCount( const char* filename );
+int  vfsLoadFile( const char* filename, void** buffer, int index );
 
-#endif							// _VFS_H_
+#endif // _VFS_H_

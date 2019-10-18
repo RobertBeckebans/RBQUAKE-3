@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // ui_syscalls.c -- this file is only included when building a dll
 #include "ui_local.h"
 
-static          intptr_t( QDECL* syscall )( intptr_t arg, ... ) = ( intptr_t( QDECL* )( intptr_t, ... ) ) - 1;
+static intptr_t( QDECL* syscall )( intptr_t arg, ... ) = ( intptr_t( QDECL* )( intptr_t, ... ) ) - 1;
 
 void dllEntry( intptr_t( QDECL* syscallptr )( intptr_t arg, ... ) )
 {
@@ -32,10 +32,10 @@ void dllEntry( intptr_t( QDECL* syscallptr )( intptr_t arg, ... ) )
 
 int PASSFLOAT( float x )
 {
-	float           floatTemp;
-	
+	float floatTemp;
+
 	floatTemp = x;
-	return *( int* )&floatTemp;
+	return *(int*)&floatTemp;
 }
 
 void trap_Print( const char* string )
@@ -72,10 +72,10 @@ void trap_Cvar_Set( const char* var_name, const char* value )
 
 float trap_Cvar_VariableValue( const char* var_name )
 {
-	int             temp;
-	
+	int temp;
+
 	temp = syscall( UI_CVAR_VARIABLEVALUE, var_name );
-	return ( *( float* )&temp );
+	return ( *(float*)&temp );
 }
 
 void trap_Cvar_VariableStringBuffer( const char* var_name, char* buffer, int bufsize )
@@ -224,15 +224,12 @@ void trap_R_SetClipRegion( const float* region )
 
 void trap_R_DrawStretchPic( float x, float y, float w, float h, float s1, float t1, float s2, float t2, qhandle_t hShader )
 {
-	syscall( UI_R_DRAWSTRETCHPIC, PASSFLOAT( x ), PASSFLOAT( y ), PASSFLOAT( w ), PASSFLOAT( h ), PASSFLOAT( s1 ), PASSFLOAT( t1 ),
-			 PASSFLOAT( s2 ), PASSFLOAT( t2 ), hShader );
+	syscall( UI_R_DRAWSTRETCHPIC, PASSFLOAT( x ), PASSFLOAT( y ), PASSFLOAT( w ), PASSFLOAT( h ), PASSFLOAT( s1 ), PASSFLOAT( t1 ), PASSFLOAT( s2 ), PASSFLOAT( t2 ), hShader );
 }
 
-void trap_R_DrawRotatedPic( float x, float y, float w, float h, float s1, float t1, float s2, float t2, qhandle_t hShader,
-							float angle )
+void trap_R_DrawRotatedPic( float x, float y, float w, float h, float s1, float t1, float s2, float t2, qhandle_t hShader, float angle )
 {
-	syscall( UI_R_DRAWROTATEDPIC, PASSFLOAT( x ), PASSFLOAT( y ), PASSFLOAT( w ), PASSFLOAT( h ), PASSFLOAT( s1 ), PASSFLOAT( t1 ),
-			 PASSFLOAT( s2 ), PASSFLOAT( t2 ), hShader, PASSFLOAT( angle ) );
+	syscall( UI_R_DRAWROTATEDPIC, PASSFLOAT( x ), PASSFLOAT( y ), PASSFLOAT( w ), PASSFLOAT( h ), PASSFLOAT( s1 ), PASSFLOAT( t1 ), PASSFLOAT( s2 ), PASSFLOAT( t2 ), hShader, PASSFLOAT( angle ) );
 }
 
 void trap_R_ModelBounds( clipHandle_t model, vec3_t mins, vec3_t maxs )
@@ -484,13 +481,11 @@ e_status trap_CIN_StopCinematic( int handle )
 	return syscall( UI_CIN_STOPCINEMATIC, handle );
 }
 
-
 // will run a frame of the cinematic but will not draw it.  Will return FMV_EOF if the end of the cinematic has been reached.
 e_status trap_CIN_RunCinematic( int handle )
 {
 	return syscall( UI_CIN_RUNCINEMATIC, handle );
 }
-
 
 // draws the current frame
 void trap_CIN_DrawCinematic( int handle )
@@ -498,13 +493,11 @@ void trap_CIN_DrawCinematic( int handle )
 	syscall( UI_CIN_DRAWCINEMATIC, handle );
 }
 
-
 // allows you to resize the animation dynamically
 void trap_CIN_SetExtents( int handle, int x, int y, int w, int h )
 {
 	syscall( UI_CIN_SETEXTENTS, handle, x, y, w, h );
 }
-
 
 void trap_R_RemapShader( const char* oldShader, const char* newShader, const char* timeOffset )
 {

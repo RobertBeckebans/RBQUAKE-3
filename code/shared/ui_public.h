@@ -24,16 +24,16 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #ifndef __UI_PUBLIC_H__
 #define __UI_PUBLIC_H__
 
-#define UI_API_VERSION	9
+#define UI_API_VERSION 9
 
 typedef struct
 {
-	connstate_t     connState;
-	int             connectPacketCount;
-	int             clientNum;
-	char            servername[MAX_STRING_CHARS];
-	char            updateInfoString[MAX_STRING_CHARS];
-	char            messageString[MAX_STRING_CHARS];
+	connstate_t connState;
+	int         connectPacketCount;
+	int         clientNum;
+	char        servername[ MAX_STRING_CHARS ];
+	char        updateInfoString[ MAX_STRING_CHARS ];
+	char        messageString[ MAX_STRING_CHARS ];
 } uiClientState_t;
 
 typedef enum
@@ -56,7 +56,7 @@ typedef enum
 	UI_FS_WRITE,
 	UI_FS_FCLOSEFILE,
 	UI_FS_GETFILELIST,
-	
+
 	UI_R_REGISTERMODEL,
 	UI_R_REGISTERANIMATION,
 	UI_R_RESETSKELETON,
@@ -65,7 +65,7 @@ typedef enum
 	UI_R_BONEINDEX,
 	UI_R_ANIMNUMFRAMES,
 	UI_R_ANIMFRAMERATE,
-	
+
 	UI_R_REGISTERSKIN,
 	UI_R_REGISTERSHADERNOMIP,
 	UI_R_CLEARSCENE,
@@ -130,9 +130,9 @@ typedef enum
 	UI_LAN_COMPARESERVERS,
 	// 1.32
 	UI_FS_SEEK,
-	
+
 	UI_GETNEWS,
-	
+
 	UI_MEMSET = 100,
 	UI_MEMCPY,
 	UI_STRNCPY,
@@ -164,43 +164,43 @@ typedef enum
 
 typedef enum
 {
-	UI_GETAPIVERSION = 0,		// system reserved
-	
+	UI_GETAPIVERSION = 0, // system reserved
+
 	UI_INIT,
-//  void    UI_Init( void );
+	//  void    UI_Init( void );
 
 	UI_SHUTDOWN,
-//  void    UI_Shutdown( void );
+	//  void    UI_Shutdown( void );
 
 	UI_KEY_EVENT,
-//  void    UI_KeyEvent( int key );
+	//  void    UI_KeyEvent( int key );
 
 	UI_MOUSE_EVENT,
-//  void    UI_MouseEvent( int dx, int dy );
+	//  void    UI_MouseEvent( int dx, int dy );
 
 	UI_MOUSE_POSITION,
-//  int   UI_MousePosition( void );
+	//  int   UI_MousePosition( void );
 
 	UI_SET_MOUSE_POSITION,
-//  void  UI_SetMousePosition( int x, int y );
+	//  void  UI_SetMousePosition( int x, int y );
 
 	UI_REFRESH,
-//  void    UI_Refresh( int time );
+	//  void    UI_Refresh( int time );
 
 	UI_IS_FULLSCREEN,
-//  qboolean UI_IsFullscreen( void );
+	//  qboolean UI_IsFullscreen( void );
 
 	UI_SET_ACTIVE_MENU,
-//  void    UI_SetActiveMenu( uiMenuCommand_t menu );
+	//  void    UI_SetActiveMenu( uiMenuCommand_t menu );
 
 	UI_CONSOLE_COMMAND,
-//  qboolean UI_ConsoleCommand( int realTime );
+	//  qboolean UI_ConsoleCommand( int realTime );
 
 	UI_DRAW_CONNECT_SCREEN
-//  void    UI_DrawConnectScreen( qboolean overlay );
-// if !overlay, the background will be drawn, otherwise it will be
-// overlayed over whatever the cgame has drawn.
-// a GetClientState syscall will be made to get the current strings
+	//  void    UI_DrawConnectScreen( qboolean overlay );
+	// if !overlay, the background will be drawn, otherwise it will be
+	// overlayed over whatever the cgame has drawn.
+	// a GetClientState syscall will be made to get the current strings
 } uiExport_t;
 
 #endif

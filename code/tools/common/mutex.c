@@ -34,45 +34,45 @@ WIN32
 */
 #ifdef WIN32
 
-#define	USED
+#define USED
 
 #include <windows.h>
 
 void MutexLock( mutex_t* m )
 {
 	CRITICAL_SECTION* crit;
-	
+
 	if( !m )
 	{
 		return;
 	}
-	crit = ( CRITICAL_SECTION* ) m;
+	crit = (CRITICAL_SECTION*)m;
 	EnterCriticalSection( crit );
 }
 
 void MutexUnlock( mutex_t* m )
 {
 	CRITICAL_SECTION* crit;
-	
+
 	if( !m )
 	{
 		return;
 	}
-	crit = ( CRITICAL_SECTION* ) m;
+	crit = (CRITICAL_SECTION*)m;
 	LeaveCriticalSection( crit );
 }
 
-mutex_t*        MutexAlloc( void )
+mutex_t* MutexAlloc( void )
 {
 	CRITICAL_SECTION* crit;
-	
+
 	if( numthreads == 1 )
 	{
 		return NULL;
 	}
-	crit = ( CRITICAL_SECTION* ) safe_malloc( sizeof( CRITICAL_SECTION ) );
+	crit = (CRITICAL_SECTION*)safe_malloc( sizeof( CRITICAL_SECTION ) );
 	InitializeCriticalSection( crit );
-	return ( void* )crit;
+	return (void*)crit;
 }
 
 #endif
@@ -86,39 +86,39 @@ OSF1
 */
 
 #ifdef __osf__
-#define	USED
+#define USED
 
 #include <pthread.h>
 
 void MutexLock( mutex_t* m )
 {
 	pthread_mutex_t* my_mutex;
-	
+
 	if( !m )
 	{
 		return;
 	}
-	my_mutex = ( pthread_mutex_t* ) m;
+	my_mutex = (pthread_mutex_t*)m;
 	pthread_mutex_lock( my_mutex );
 }
 
 void MutexUnlock( mutex_t* m )
 {
 	pthread_mutex_t* my_mutex;
-	
+
 	if( !m )
 	{
 		return;
 	}
-	my_mutex = ( pthread_mutex_t* ) m;
+	my_mutex = (pthread_mutex_t*)m;
 	pthread_mutex_unlock( my_mutex );
 }
 
-mutex_t*        MutexAlloc( void )
+mutex_t* MutexAlloc( void )
 {
-	pthread_mutex_t* my_mutex;
+	pthread_mutex_t*    my_mutex;
 	pthread_mutexattr_t mattrib;
-	
+
 	if( numthreads == 1 )
 	{
 		return NULL;
@@ -136,7 +136,7 @@ mutex_t*        MutexAlloc( void )
 	{
 		Error( "pthread_mutex_init failed" );
 	}
-	return ( void* )my_mutex;
+	return (void*)my_mutex;
 }
 
 #endif
@@ -150,7 +150,7 @@ IRIX
 */
 
 #ifdef _MIPS_ISA
-#define	USED
+#define USED
 
 #include <task.h>
 #include <abi_mutex.h>
@@ -159,39 +159,39 @@ IRIX
 
 void MutexLock( mutex_t* m )
 {
-	abilock_t*      lck;
-	
+	abilock_t* lck;
+
 	if( !m )
 	{
 		return;
 	}
-	lck = ( abilock_t* ) m;
+	lck = (abilock_t*)m;
 	spin_lock( lck );
 }
 
 void MutexUnlock( mutex_t* m )
 {
-	abilock_t*      lck;
-	
+	abilock_t* lck;
+
 	if( !m )
 	{
 		return;
 	}
-	lck = ( abilock_t* ) m;
+	lck = (abilock_t*)m;
 	release_lock( lck );
 }
 
-mutex_t*        MutexAlloc( void )
+mutex_t* MutexAlloc( void )
 {
-	abilock_t*      lck;
-	
+	abilock_t* lck;
+
 	if( numthreads == 1 )
 	{
 		return NULL;
 	}
-	lck = ( abilock_t* ) safe_malloc( sizeof( abilock_t ) );
+	lck = (abilock_t*)safe_malloc( sizeof( abilock_t ) );
 	init_lock( lck );
-	return ( void* )lck;
+	return (void*)lck;
 }
 
 #endif
@@ -214,7 +214,7 @@ void MutexUnlock( mutex_t* m )
 {
 }
 
-mutex_t*        MutexAlloc( void )
+mutex_t* MutexAlloc( void )
 {
 	return NULL;
 }

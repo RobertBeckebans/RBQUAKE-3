@@ -41,7 +41,7 @@ qboolean NET_StringToAdr( char* s, netadr_t* a )
 		a->type = NA_LOOPBACK;
 		return true;
 	}
-	
+
 	return false;
 }
 

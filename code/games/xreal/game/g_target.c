@@ -30,19 +30,19 @@ Gives the activator all the items pointed to.
 */
 void Use_Target_Give( gentity_t* ent, gentity_t* other, gentity_t* activator )
 {
-	gentity_t*      t;
-	trace_t         trace;
-	
+	gentity_t* t;
+	trace_t    trace;
+
 	if( !activator->client )
 	{
 		return;
 	}
-	
+
 	if( !ent->target )
 	{
 		return;
 	}
-	
+
 	memset( &trace, 0, sizeof( trace ) );
 	t = NULL;
 	while( ( t = G_Find( t, FOFS( name ), ent->target ) ) != NULL )
@@ -52,7 +52,7 @@ void Use_Target_Give( gentity_t* ent, gentity_t* other, gentity_t* activator )
 			continue;
 		}
 		Touch_Item( t, activator, &trace );
-		
+
 		// make sure it isn't going to respawn or show any events
 		t->nextthink = 0;
 		trap_UnlinkEntity( t );
@@ -63,7 +63,6 @@ void SP_target_give( gentity_t* ent )
 {
 	ent->use = Use_Target_Give;
 }
-
 
 //==========================================================
 
@@ -77,20 +76,20 @@ void Use_target_remove_powerups( gentity_t* ent, gentity_t* other, gentity_t* ac
 	{
 		return;
 	}
-	
-	if( activator->client->ps.powerups[PW_REDFLAG] )
+
+	if( activator->client->ps.powerups[ PW_REDFLAG ] )
 	{
 		Team_ReturnFlag( TEAM_RED );
 	}
-	else if( activator->client->ps.powerups[PW_BLUEFLAG] )
+	else if( activator->client->ps.powerups[ PW_BLUEFLAG ] )
 	{
 		Team_ReturnFlag( TEAM_BLUE );
 	}
-	else if( activator->client->ps.powerups[PW_NEUTRALFLAG] )
+	else if( activator->client->ps.powerups[ PW_NEUTRALFLAG ] )
 	{
 		Team_ReturnFlag( TEAM_FREE );
 	}
-	
+
 	memset( activator->client->ps.powerups, 0, sizeof( activator->client->ps.powerups ) );
 }
 
@@ -98,7 +97,6 @@ void SP_target_remove_powerups( gentity_t* ent )
 {
 	ent->use = Use_target_remove_powerups;
 }
-
 
 //==========================================================
 
@@ -114,7 +112,7 @@ void Think_Target_Delay( gentity_t* ent )
 void Use_Target_Delay( gentity_t* ent, gentity_t* other, gentity_t* activator )
 {
 	ent->nextthink = level.time + ( ent->wait + ent->random * crandom() ) * 1000;
-	ent->think = Think_Target_Delay;
+	ent->think     = Think_Target_Delay;
 	ent->activator = activator;
 }
 
@@ -125,14 +123,13 @@ void SP_target_delay( gentity_t* ent )
 	{
 		G_SpawnFloat( "wait", "1", &ent->wait );
 	}
-	
+
 	if( !ent->wait )
 	{
 		ent->wait = 1;
 	}
 	ent->use = Use_Target_Delay;
 }
-
 
 //==========================================================
 
@@ -155,7 +152,6 @@ void SP_target_score( gentity_t* ent )
 	ent->use = Use_Target_Score;
 }
 
-
 //==========================================================
 
 /*QUAKED target_print (1 0 0) (-8 -8 -8) (8 8 8) red_only blue_only private
@@ -169,7 +165,7 @@ void Use_Target_Print( gentity_t* ent, gentity_t* other, gentity_t* activator )
 		trap_SendServerCommand( activator - g_entities, va( "cp \"%s\"", ent->message ) );
 		return;
 	}
-	
+
 	if( ent->red_only )
 	{
 		G_TeamCommand( TEAM_RED, va( "cp \"%s\"", ent->message ) );
@@ -180,7 +176,7 @@ void Use_Target_Print( gentity_t* ent, gentity_t* other, gentity_t* activator )
 		G_TeamCommand( TEAM_BLUE, va( "cp \"%s\"", ent->message ) );
 		return;
 	}
-	
+
 	trap_SendServerCommand( -1, va( "cp \"%s\"", ent->message ) );
 }
 
@@ -189,13 +185,11 @@ void SP_target_print( gentity_t* ent )
 	G_SpawnBoolean( "red_only", "0", &ent->red_only );
 	G_SpawnBoolean( "blue_only", "0", &ent->blue_only );
 	G_SpawnBoolean( "private", "0", &ent->priv );
-	
+
 	ent->use = Use_Target_Print;
 }
 
-
 //==========================================================
-
 
 /*QUAKED target_speaker (1 0 0) (-8 -8 -8) (8 8 8) looped-on looped-off global activator
 "noise"		wav file to play
@@ -216,11 +210,11 @@ void Use_Target_Speaker( gentity_t* ent, gentity_t* other, gentity_t* activator 
 		// looping sound toggles
 		if( ent->s.loopSound )
 		{
-			ent->s.loopSound = 0;    // turn it off
+			ent->s.loopSound = 0; // turn it off
 		}
 		else
 		{
-			ent->s.loopSound = ent->soundIndex;    // start it
+			ent->s.loopSound = ent->soundIndex; // start it
 		}
 	}
 	else
@@ -243,9 +237,9 @@ void Use_Target_Speaker( gentity_t* ent, gentity_t* other, gentity_t* activator 
 
 void SP_target_speaker( gentity_t* ent )
 {
-	char            buffer[MAX_QPATH];
-	char*           s;
-	
+	char  buffer[ MAX_QPATH ];
+	char* s;
+
 	if( G_SpawnString( "s_sound", "NOSOUND", &s ) )
 	{
 		G_SpawnBoolean( "s_looping", "0", &ent->soundLooping );
@@ -268,57 +262,54 @@ void SP_target_speaker( gentity_t* ent )
 	else if( G_SpawnString( "noise", "NOSOUND", &s ) )
 	{
 		// Q3A compatibility mode
-		ent->soundLooping = ent->spawnflags & 1 ? qtrue : qfalse;
+		ent->soundLooping        = ent->spawnflags & 1 ? qtrue : qfalse;
 		ent->soundWaitForTrigger = ent->spawnflags & 2 ? qtrue : qfalse;
-		ent->soundGlobal = ent->spawnflags & 4 ? qtrue : qfalse;
-		ent->soundActivator = ent->spawnflags & 8 ? qtrue : qfalse;
+		ent->soundGlobal         = ent->spawnflags & 4 ? qtrue : qfalse;
+		ent->soundActivator      = ent->spawnflags & 8 ? qtrue : qfalse;
 	}
 	else
 	{
 		//G_Error("speaker without a noise key at %s", vtos(ent->s.origin));
 		G_Printf( S_COLOR_YELLOW "WARNING: speaker '%s' without a noise key at %s", ent->name, vtos( ent->s.origin ) );
 	}
-	
+
 	// force all client relative sounds to be "activator" speakers that
 	// play on the entity that activates it
-	if( s[0] == '*' )
+	if( s[ 0 ] == '*' )
 	{
 		ent->soundActivator = qtrue;
 	}
-	
+
 	Q_strncpyz( buffer, s, sizeof( buffer ) );
 	Com_DefaultExtension( buffer, sizeof( buffer ), ".wav" );
-	
+
 	ent->soundIndex = G_SoundIndex( buffer );
-	
+
 	// a repeating speaker can be done completely client side
-	ent->s.eType = ET_SPEAKER;
+	ent->s.eType     = ET_SPEAKER;
 	ent->s.eventParm = ent->soundIndex;
-	ent->s.frame = ent->wait * 10;
+	ent->s.frame     = ent->wait * 10;
 	ent->s.clientNum = ent->random * 10;
-	
-	
+
 	// check for prestarted looping sound
 	if( ent->soundLooping && !ent->soundWaitForTrigger )
 	{
 		ent->s.loopSound = ent->soundIndex;
 	}
-	
+
 	ent->use = Use_Target_Speaker;
-	
+
 	if( ent->soundGlobal )
 	{
 		ent->r.svFlags |= SVF_BROADCAST;
 	}
-	
+
 	VectorCopy( ent->s.origin, ent->s.pos.trBase );
-	
+
 	// must link the entity so we get areas and clusters so
 	// the server can determine who to send updates to
 	trap_LinkEntity( ent );
 }
-
-
 
 //==========================================================
 
@@ -327,10 +318,10 @@ When triggered, fires a laser.  You can either set a target or a direction.
 */
 void target_laser_think( gentity_t* self )
 {
-	vec3_t          end;
-	trace_t         tr;
-	vec3_t          point;
-	
+	vec3_t  end;
+	trace_t tr;
+	vec3_t  point;
+
 	// if pointed at another entity, set movedir to point at it
 	if( self->enemy )
 	{
@@ -339,21 +330,20 @@ void target_laser_think( gentity_t* self )
 		VectorSubtract( point, self->s.origin, self->movedir );
 		VectorNormalize( self->movedir );
 	}
-	
+
 	// fire forward and see what we hit
 	VectorMA( self->s.origin, 2048, self->movedir, end );
-	
+
 	trap_Trace( &tr, self->s.origin, NULL, NULL, end, self->s.number, CONTENTS_SOLID | CONTENTS_BODY | CONTENTS_CORPSE );
-	
+
 	if( tr.entityNum )
 	{
 		// hurt it if we can
-		G_Damage( &g_entities[tr.entityNum], self, self->activator, self->movedir,
-				  tr.endpos, self->damage, DAMAGE_NO_KNOCKBACK, MOD_TARGET_LASER );
+		G_Damage( &g_entities[ tr.entityNum ], self, self->activator, self->movedir, tr.endpos, self->damage, DAMAGE_NO_KNOCKBACK, MOD_TARGET_LASER );
 	}
-	
+
 	VectorCopy( tr.endpos, self->s.origin2 );
-	
+
 	trap_LinkEntity( self );
 	self->nextthink = level.time + FRAMETIME;
 }
@@ -388,10 +378,10 @@ void target_laser_use( gentity_t* self, gentity_t* other, gentity_t* activator )
 
 void target_laser_start( gentity_t* self )
 {
-	gentity_t*      ent;
-	
+	gentity_t* ent;
+
 	self->s.eType = ET_BEAM;
-	
+
 	if( self->target )
 	{
 		ent = G_Find( NULL, FOFS( name ), self->target );
@@ -405,15 +395,15 @@ void target_laser_start( gentity_t* self )
 	{
 		G_SetMovedir( self->s.angles, self->movedir );
 	}
-	
-	self->use = target_laser_use;
+
+	self->use   = target_laser_use;
 	self->think = target_laser_think;
-	
+
 	if( !self->damage )
 	{
 		self->damage = 9999;
 	}
-	
+
 	if( self->start_on )
 	{
 		target_laser_on( self );
@@ -427,19 +417,18 @@ void target_laser_start( gentity_t* self )
 void SP_target_laser( gentity_t* self )
 {
 	G_SpawnBoolean( "start_on", "0", &self->start_on );
-	
+
 	// let everything else get spawned before we start firing
-	self->think = target_laser_start;
+	self->think     = target_laser_start;
 	self->nextthink = level.time + FRAMETIME;
 }
-
 
 //==========================================================
 
 void target_teleporter_use( gentity_t* self, gentity_t* other, gentity_t* activator )
 {
-	gentity_t*      dest;
-	
+	gentity_t* dest;
+
 	if( !activator->client )
 	{
 		return;
@@ -450,7 +439,7 @@ void target_teleporter_use( gentity_t* self, gentity_t* other, gentity_t* activa
 		G_Printf( "Couldn't find teleporter destination\n" );
 		return;
 	}
-	
+
 	TeleportPlayer( activator, dest->s.origin, dest->s.angles );
 }
 
@@ -463,12 +452,11 @@ void SP_target_teleporter( gentity_t* self )
 	{
 		G_Printf( "untargeted %s at %s\n", self->classname, vtos( self->s.origin ) );
 	}
-	
+
 	self->use = target_teleporter_use;
 }
 
 //==========================================================
-
 
 /*QUAKED target_relay (.5 .5 .5) (-8 -8 -8) (8 8 8) RED_ONLY BLUE_ONLY RANDOM
 This doesn't perform any actions except fire its targets.
@@ -481,16 +469,16 @@ void target_relay_use( gentity_t* self, gentity_t* other, gentity_t* activator )
 	{
 		return;
 	}
-	
+
 	if( self->blue_only && activator->client && activator->client->sess.sessionTeam != TEAM_BLUE )
 	{
 		return;
 	}
-	
+
 	if( self->random )
 	{
-		gentity_t*      ent;
-		
+		gentity_t* ent;
+
 		ent = G_PickTarget( self->target );
 		if( ent && ent->use )
 		{
@@ -506,10 +494,9 @@ void SP_target_relay( gentity_t* self )
 	G_SpawnBoolean( "red_only", "0", &self->red_only );
 	G_SpawnBoolean( "blue_only", "0", &self->blue_only );
 	G_SpawnFloat( "random", "0", &self->random );
-	
+
 	self->use = target_relay_use;
 }
-
 
 //==========================================================
 
@@ -544,33 +531,33 @@ void SP_target_null( gentity_t* self )
 
 static void target_location_linkup( gentity_t* ent )
 {
-	int             i;
-	int             n;
-	
+	int i;
+	int n;
+
 	if( level.locationLinked )
 	{
 		return;
 	}
-	
+
 	level.locationLinked = qtrue;
-	
+
 	level.locationHead = NULL;
-	
+
 	trap_SetConfigstring( CS_LOCATIONS, "unknown" );
-	
+
 	for( i = 0, ent = g_entities, n = 1; i < level.numEntities; i++, ent++ )
 	{
 		if( ent->classname && !Q_stricmp( ent->classname, "target_location" ) )
 		{
 			// lets overload some variables!
-			ent->health = n;	// use for location marking
+			ent->health = n; // use for location marking
 			trap_SetConfigstring( CS_LOCATIONS + n, ent->message );
 			n++;
-			ent->nextTrain = level.locationHead;
+			ent->nextTrain     = level.locationHead;
 			level.locationHead = ent;
 		}
 	}
-	
+
 	// All linked together now
 }
 
@@ -584,9 +571,9 @@ in site, closest in distance
 */
 void SP_target_location( gentity_t* self )
 {
-	self->think = target_location_linkup;
-	self->nextthink = level.time + 200;	// Let them all spawn first
-	
+	self->think     = target_location_linkup;
+	self->nextthink = level.time + 200; // Let them all spawn first
+
 	G_SetOrigin( self, self->s.origin );
 }
 
@@ -609,7 +596,7 @@ static void target_fx_use(gentity_t *self, gentity_t *other, gentity_t *activato
 static void target_fx_think( gentity_t* self )
 {
 	G_AddEvent( self, EV_EFFECT, self->s.modelindex );
-	
+
 	if( self->wait > 0 )
 	{
 		//ent->think = multi_wait;
@@ -619,48 +606,47 @@ static void target_fx_think( gentity_t* self )
 	{
 		// we can't just remove (self) here, because this is a touch function
 		// called while looping through area links...
-		self->touch = NULL;
+		self->touch     = NULL;
 		self->nextthink = level.time + FRAMETIME;
-		self->think = G_FreeEntity;
+		self->think     = G_FreeEntity;
 	}
 }
-
 
 /*QUAKED target_fx (0 0 1) (-8 -8 -8) (8 8 8)
 */
 void SP_target_fx( gentity_t* self )
 {
-	char*           effectName;
-	int             startOn = 0;
-	
+	char* effectName;
+	int   startOn = 0;
+
 	self->s.eType = ET_INVISIBLE;
-	
+
 	G_SpawnFloat( "wait", "0.5", &self->wait );
 	G_SpawnFloat( "random", "0", &self->random );
-	
+
 	G_SpawnInt( "start_on", "0", &startOn );
 	if( !startOn )
 	{
 		self->s.eFlags |= EF_NODRAW;
 	}
-	
+
 	G_SpawnString( "luaThink", "", &effectName );
 	self->s.modelindex = G_EffectIndex( effectName );
-	
+
 	G_SetOrigin( self, self->s.origin );
-	
+
 	// save angles
 	VectorCopy( self->s.angles, self->s.apos.trBase );
-	self->s.apos.trType = TR_STATIONARY;
-	self->s.apos.trTime = 0;
+	self->s.apos.trType     = TR_STATIONARY;
+	self->s.apos.trTime     = 0;
 	self->s.apos.trDuration = 0;
 	VectorClear( self->s.apos.trDelta );
 	//VectorCopy(origin, ent->r.currentAOrigin);
-	
+
 	VectorClear( self->r.mins );
 	VectorClear( self->r.maxs );
 	trap_LinkEntity( self );
-	
-	self->think = target_fx_think;
+
+	self->think     = target_fx_think;
 	self->nextthink = level.time + 1000;
 }

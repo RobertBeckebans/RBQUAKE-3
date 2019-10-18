@@ -26,17 +26,11 @@ several games based on the Quake III Arena engine, in the form of "Q3Map2."
 
 ------------------------------------------------------------------------------- */
 
-
-
 /* marker */
 #define LEAKFILE_C
 
-
-
 /* dependencies */
 #include "q3map2.h"
-
-
 
 /*
 ==============================================================================
@@ -46,7 +40,6 @@ LEAK FILE GENERATION
 Save out name.line for qe3 to read
 ==============================================================================
 */
-
 
 /*
 =============
@@ -59,29 +52,29 @@ occupied leaf
 TTimo: builds a polyline xml node
 =============
 */
-#if defined(USE_XML)
-	xmlNodePtr LeakFile( tree_t* tree )
+#if defined( USE_XML )
+xmlNodePtr LeakFile( tree_t* tree )
 #else
-	void LeakFile( tree_t* tree )
+void LeakFile( tree_t* tree )
 #endif
 {
-	vec3_t          mid;
-	FILE*           linefile;
-	char            filename[1024];
-	node_t*         node;
-	int             count;
-	
-#if defined(USE_XML)
-	xmlNodePtr      xml_node, point;
+	vec3_t  mid;
+	FILE*   linefile;
+	char    filename[ 1024 ];
+	node_t* node;
+	int     count;
+
+#if defined( USE_XML )
+	xmlNodePtr xml_node, point;
 #endif
-	
+
 	if( !tree->outside_node.occupied )
 	{
 		return NULL;
 	}
-	
+
 	Sys_FPrintf( SYS_VRB, "--- LeakFile ---\n" );
-	
+
 	//
 	// write the points to the file
 	//
@@ -91,36 +84,36 @@ TTimo: builds a polyline xml node
 	{
 		Error( "Couldn't open %s\n", filename );
 	}
-	
-#if defined(USE_XML)
+
+#if defined( USE_XML )
 	xml_node = xmlNewNode( NULL, "polyline" );
 #endif
-	
+
 	count = 0;
-	node = &tree->outside_node;
+	node  = &tree->outside_node;
 	while( node->occupied > 1 )
 	{
-		int             next;
-		portal_t*       p, *nextportal;
-		node_t*         nextnode;
-		int             s;
-		
+		int       next;
+		portal_t *p, *nextportal;
+		node_t*   nextnode;
+		int       s;
+
 		// find the best portal exit
 		next = node->occupied;
-		for( p = node->portals; p; p = p->next[!s] )
+		for( p = node->portals; p; p = p->next[ !s ] )
 		{
-			s = ( p->nodes[0] == node );
-			if( p->nodes[s]->occupied && p->nodes[s]->occupied < next )
+			s = ( p->nodes[ 0 ] == node );
+			if( p->nodes[ s ]->occupied && p->nodes[ s ]->occupied < next )
 			{
 				nextportal = p;
-				nextnode = p->nodes[s];
-				next = nextnode->occupied;
+				nextnode   = p->nodes[ s ];
+				next       = nextnode->occupied;
 			}
 		}
 		node = nextnode;
 		WindingCenter( nextportal->winding, mid );
-		fprintf( linefile, "%f %f %f\n", mid[0], mid[1], mid[2] );
-#if defined(USE_XML)
+		fprintf( linefile, "%f %f %f\n", mid[ 0 ], mid[ 1 ], mid[ 2 ] );
+#if defined( USE_XML )
 		point = xml_NodeForVec( mid );
 		xmlAddChild( xml_node, point );
 #endif
@@ -128,17 +121,17 @@ TTimo: builds a polyline xml node
 	}
 	// add the occupant center
 	GetVectorForKey( node->occupant, "origin", mid );
-	
-	fprintf( linefile, "%f %f %f\n", mid[0], mid[1], mid[2] );
-#if defined(USE_XML)
+
+	fprintf( linefile, "%f %f %f\n", mid[ 0 ], mid[ 1 ], mid[ 2 ] );
+#if defined( USE_XML )
 	point = xml_NodeForVec( mid );
 	xmlAddChild( xml_node, point );
 #endif
 	Sys_FPrintf( SYS_VRB, "%9d point linefile\n", count + 1 );
-	
+
 	fclose( linefile );
-	
-#if defined(USE_XML)
+
+#if defined( USE_XML )
 	return xml_node;
 #endif
 }

@@ -20,10 +20,8 @@
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-
 #ifndef _COMMON_H_
 #define _COMMON_H_
-
 
 #include <errno.h>
 #include <stdio.h>
@@ -33,62 +31,62 @@
 #include <time.h>
 
 #ifdef WIN32
-	#include <winsock2.h>
+#include <winsock2.h>
 #else
-	#include <netinet/in.h>
-	#include <arpa/inet.h>
-	#include <netdb.h>
-	#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <sys/socket.h>
 #endif
-
 
 // ---------- Types ---------- //
 
 // A few basic types
 typedef enum
-{ qfalse, qtrue } qboolean;
+{
+	qfalse,
+	qtrue
+} qboolean;
 typedef unsigned char qbyte;
 
 // The various messages levels
 typedef enum
 {
-	MSG_NOPRINT,				// used by "max_msg_level" (= no printings)
-	MSG_ERROR,					// errors
-	MSG_WARNING,				// warnings
-	MSG_NORMAL,					// standard messages
-	MSG_DEBUG					// for debugging purpose
+	MSG_NOPRINT, // used by "max_msg_level" (= no printings)
+	MSG_ERROR,   // errors
+	MSG_WARNING, // warnings
+	MSG_NORMAL,  // standard messages
+	MSG_DEBUG    // for debugging purpose
 } msg_level_t;
-
 
 // ---------- Public variables ---------- //
 
 // The master socket
-extern int      inSock;
-extern int      outSock;
+extern int inSock;
+extern int outSock;
 
 // The current time (updated every time we receive a packet)
-extern time_t   crt_time;
+extern time_t crt_time;
 
 // Maximum level for a message to be printed
 extern msg_level_t max_msg_level;
 
 // Peer address. We rebuild it every time we receive a new packet
-extern char     peer_address[128];
-
+extern char peer_address[ 128 ];
 
 // ---------- Public functions ---------- //
 
 // Win32 uses a different name for some standard functions
 #ifdef WIN32
-	#define snprintf _snprintf
+#define snprintf _snprintf
 #endif
 
 #ifndef max
-	#define max( x, y ) ( ( ( x ) > ( y ) ) ? ( x ) : ( y ) )
-	#define min( x, y ) ( ( ( x ) < ( y ) ) ? ( x ) : ( y ) )
+#define max( x, y ) ( ( ( x ) > ( y ) ) ? ( x ) : ( y ) )
+#define min( x, y ) ( ( ( x ) < ( y ) ) ? ( x ) : ( y ) )
 #endif
 
 // Print a message to screen, depending on its verbose level
-int             MsgPrint( msg_level_t msg_level, const char* format, ... );
+int MsgPrint( msg_level_t msg_level, const char* format, ... );
 
-#endif							// _COMMON_H_
+#endif // _COMMON_H_

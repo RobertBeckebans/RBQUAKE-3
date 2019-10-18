@@ -72,8 +72,8 @@ enum
 	WINDOW_STYLE_CINEMATIC  // cinematic
 };
 
-#define MENU_TRUE                         1     // uh.. true
-#define MENU_FALSE                        0     // and false
+#define MENU_TRUE 1  // uh.. true
+#define MENU_FALSE 0 // and false
 
 enum
 {
@@ -103,7 +103,7 @@ enum
 	FEEDER_SERVERSTATUS,   // server status
 	FEEDER_FINDPLAYER,     // find player
 	FEEDER_CINEMATICS,     // cinematics
-	
+
 	FEEDER_TREMTEAMS,            // teams
 	FEEDER_TREMALIENCLASSES,     // alien classes
 	FEEDER_TREMHUMANITEMS,       // human items
@@ -118,15 +118,15 @@ enum
 };
 
 // display flags
-#define UI_SHOW_FAVORITESERVERS           0x00000001
-#define UI_SHOW_NOTFAVORITESERVERS        0x00000002
+#define UI_SHOW_FAVORITESERVERS 0x00000001
+#define UI_SHOW_NOTFAVORITESERVERS 0x00000002
 
-#define UI_SHOW_VOTEACTIVE                0x00000004
-#define UI_SHOW_CANVOTE                   0x00000008
-#define UI_SHOW_TEAMVOTEACTIVE            0x00000010
-#define UI_SHOW_CANTEAMVOTE               0x00000020
+#define UI_SHOW_VOTEACTIVE 0x00000004
+#define UI_SHOW_CANVOTE 0x00000008
+#define UI_SHOW_TEAMVOTEACTIVE 0x00000010
+#define UI_SHOW_CANTEAMVOTE 0x00000020
 
-#define UI_SHOW_NOTSPECTATING             0x00000040
+#define UI_SHOW_NOTSPECTATING 0x00000040
 
 // owner draw types
 enum
@@ -162,12 +162,12 @@ enum
 	CG_PLAYER_LOCATION,
 	CG_TEAMOVERLAY,
 	CG_PLAYER_CREDITS_FRACTION,
-	
+
 	CG_KILLER,
 	CG_SPECTATORS,
 	CG_FOLLOW,
-	
-// loading screen
+
+	// loading screen
 	CG_LOAD_LEVELSHOT,
 	CG_LOAD_MEDIA,
 	CG_LOAD_MEDIA_LABEL,
@@ -179,7 +179,7 @@ enum
 	CG_LOAD_LEVELNAME,
 	CG_LOAD_MOTD,
 	CG_LOAD_HOSTNAME,
-	
+
 	CG_FPS,
 	CG_FPS_FIXED,
 	CG_TIMER,
@@ -194,11 +194,11 @@ enum
 	CG_HUMANS_SCORE_LABEL,
 	CG_DEMO_PLAYBACK,
 	CG_DEMO_RECORDING,
-	
+
 	CG_CONSOLE,
 	CG_TUTORIAL,
 	CG_CLOCK,
-	
+
 	UI_NETSOURCE,
 	UI_NETMAPPREVIEW,
 	UI_NETMAPCINEMATIC,
@@ -208,7 +208,7 @@ enum
 	UI_KEYBINDSTATUS,
 	UI_SELECTEDMAPPREVIEW,
 	UI_SELECTEDMAPNAME,
-	
+
 	UI_TEAMINFOPANE,
 	UI_ACLASSINFOPANE,
 	UI_AUPGRADEINFOPANE,
@@ -220,39 +220,39 @@ enum
 	UI_HELPINFOPANE
 };
 
-#define VOICECHAT_GETFLAG			"getflag"	// command someone to get the flag
-#define VOICECHAT_OFFENSE			"offense"	// command someone to go on offense
-#define VOICECHAT_DEFEND			"defend"	// command someone to go on defense
-#define VOICECHAT_DEFENDFLAG		"defendflag"	// command someone to defend the flag
-#define VOICECHAT_PATROL			"patrol"	// command someone to go on patrol (roam)
-#define VOICECHAT_CAMP				"camp"	// command someone to camp (we don't have sounds for this one)
-#define VOICECHAT_FOLLOWME			"followme"	// command someone to follow you
-#define VOICECHAT_RETURNFLAG		"returnflag"	// command someone to return our flag
-#define VOICECHAT_FOLLOWFLAGCARRIER	"followflagcarrier"	// command someone to follow the flag carrier
-#define VOICECHAT_YES				"yes"	// yes, affirmative, etc.
-#define VOICECHAT_NO				"no"	// no, negative, etc.
-#define VOICECHAT_ONGETFLAG			"ongetflag"	// I'm getting the flag
-#define VOICECHAT_ONOFFENSE			"onoffense"	// I'm on offense
-#define VOICECHAT_ONDEFENSE			"ondefense"	// I'm on defense
-#define VOICECHAT_ONPATROL			"onpatrol"	// I'm on patrol (roaming)
-#define VOICECHAT_ONCAMPING			"oncamp"	// I'm camping somewhere
-#define VOICECHAT_ONFOLLOW			"onfollow"	// I'm following
-#define VOICECHAT_ONFOLLOWCARRIER	"onfollowcarrier"	// I'm following the flag carrier
-#define VOICECHAT_ONRETURNFLAG		"onreturnflag"	// I'm returning our flag
-#define VOICECHAT_INPOSITION		"inposition"	// I'm in position
-#define VOICECHAT_IHAVEFLAG			"ihaveflag"	// I have the flag
-#define VOICECHAT_BASEATTACK		"baseattack"	// the base is under attack
-#define VOICECHAT_ENEMYHASFLAG		"enemyhasflag"	// the enemy has our flag (CTF)
-#define VOICECHAT_STARTLEADER		"startleader"	// I'm the leader
-#define VOICECHAT_STOPLEADER		"stopleader"	// I resign leadership
-#define VOICECHAT_TRASH				"trash"	// lots of trash talk
-#define VOICECHAT_WHOISLEADER		"whoisleader"	// who is the team leader
-#define VOICECHAT_WANTONDEFENSE		"wantondefense"	// I want to be on defense
-#define VOICECHAT_WANTONOFFENSE		"wantonoffense"	// I want to be on offense
-#define VOICECHAT_KILLINSULT		"kill_insult"	// I just killed you
-#define VOICECHAT_TAUNT				"taunt"	// I want to taunt you
-#define VOICECHAT_DEATHINSULT		"death_insult"	// you just killed me
-#define VOICECHAT_KILLGAUNTLET		"kill_gauntlet"	// I just killed you with the gauntlet
-#define VOICECHAT_PRAISE			"praise"	// you did something good
+#define VOICECHAT_GETFLAG "getflag"                     // command someone to get the flag
+#define VOICECHAT_OFFENSE "offense"                     // command someone to go on offense
+#define VOICECHAT_DEFEND "defend"                       // command someone to go on defense
+#define VOICECHAT_DEFENDFLAG "defendflag"               // command someone to defend the flag
+#define VOICECHAT_PATROL "patrol"                       // command someone to go on patrol (roam)
+#define VOICECHAT_CAMP "camp"                           // command someone to camp (we don't have sounds for this one)
+#define VOICECHAT_FOLLOWME "followme"                   // command someone to follow you
+#define VOICECHAT_RETURNFLAG "returnflag"               // command someone to return our flag
+#define VOICECHAT_FOLLOWFLAGCARRIER "followflagcarrier" // command someone to follow the flag carrier
+#define VOICECHAT_YES "yes"                             // yes, affirmative, etc.
+#define VOICECHAT_NO "no"                               // no, negative, etc.
+#define VOICECHAT_ONGETFLAG "ongetflag"                 // I'm getting the flag
+#define VOICECHAT_ONOFFENSE "onoffense"                 // I'm on offense
+#define VOICECHAT_ONDEFENSE "ondefense"                 // I'm on defense
+#define VOICECHAT_ONPATROL "onpatrol"                   // I'm on patrol (roaming)
+#define VOICECHAT_ONCAMPING "oncamp"                    // I'm camping somewhere
+#define VOICECHAT_ONFOLLOW "onfollow"                   // I'm following
+#define VOICECHAT_ONFOLLOWCARRIER "onfollowcarrier"     // I'm following the flag carrier
+#define VOICECHAT_ONRETURNFLAG "onreturnflag"           // I'm returning our flag
+#define VOICECHAT_INPOSITION "inposition"               // I'm in position
+#define VOICECHAT_IHAVEFLAG "ihaveflag"                 // I have the flag
+#define VOICECHAT_BASEATTACK "baseattack"               // the base is under attack
+#define VOICECHAT_ENEMYHASFLAG "enemyhasflag"           // the enemy has our flag (CTF)
+#define VOICECHAT_STARTLEADER "startleader"             // I'm the leader
+#define VOICECHAT_STOPLEADER "stopleader"               // I resign leadership
+#define VOICECHAT_TRASH "trash"                         // lots of trash talk
+#define VOICECHAT_WHOISLEADER "whoisleader"             // who is the team leader
+#define VOICECHAT_WANTONDEFENSE "wantondefense"         // I want to be on defense
+#define VOICECHAT_WANTONOFFENSE "wantonoffense"         // I want to be on offense
+#define VOICECHAT_KILLINSULT "kill_insult"              // I just killed you
+#define VOICECHAT_TAUNT "taunt"                         // I want to taunt you
+#define VOICECHAT_DEATHINSULT "death_insult"            // you just killed me
+#define VOICECHAT_KILLGAUNTLET "kill_gauntlet"          // I just killed you with the gauntlet
+#define VOICECHAT_PRAISE "praise"                       // you did something good
 
 #endif

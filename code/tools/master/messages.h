@@ -20,15 +20,12 @@
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-
 #ifndef _MESSAGES_H_
 #define _MESSAGES_H_
-
 
 // ---------- Public functions ---------- //
 
 // Parse a packet to figure out what to do with it
-void            HandleMessage( const char* msg, size_t length, const struct sockaddr_in* address );
+void HandleMessage( const char* msg, size_t length, const struct sockaddr_in* address );
 
-
-#endif							// _MESSAGES_H_
+#endif // _MESSAGES_H_

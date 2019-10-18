@@ -26,23 +26,22 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // this file is only included when building a dll
 // g_syscalls.asm is included instead when building a qvm
 #ifdef Q3_VM
-	#error "Do not use in VM build"
+#error "Do not use in VM build"
 #endif
 
-static intptr_t ( QDECL* syscall )( intptr_t arg, ... ) = ( intptr_t( QDECL* )( intptr_t, ... ) ) - 1;
+static intptr_t( QDECL* syscall )( intptr_t arg, ... ) = ( intptr_t( QDECL* )( intptr_t, ... ) ) - 1;
 
-
-void dllEntry( intptr_t ( QDECL* syscallptr )( intptr_t arg, ... ) )
+void dllEntry( intptr_t( QDECL* syscallptr )( intptr_t arg, ... ) )
 {
 	syscall = syscallptr;
 }
 
 int PASSFLOAT( float x )
 {
-	float           floatTemp;
-	
+	float floatTemp;
+
 	floatTemp = x;
-	return *( int* )&floatTemp;
+	return *(int*)&floatTemp;
 }
 
 void trap_Printf( const char* fmt )
@@ -131,7 +130,6 @@ void trap_Cvar_VariableStringBuffer( const char* var_name, char* buffer, int buf
 	syscall( G_CVAR_VARIABLE_STRING_BUFFER, var_name, buffer, bufsize );
 }
 
-
 void trap_LocateGameData( gentity_t* gEnts, int numGEntities, int sizeofGEntity_t, playerState_t* clients, int sizeofGClient )
 {
 	syscall( G_LOCATE_GAME_DATA, gEnts, numGEntities, sizeofGEntity_t, clients, sizeofGClient );
@@ -177,26 +175,22 @@ void trap_SetBrushModel( gentity_t* ent, const char* name )
 	syscall( G_SET_BRUSH_MODEL, ent, name );
 }
 
-void trap_Trace( trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end, int passEntityNum,
-				 int contentmask )
+void trap_Trace( trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end, int passEntityNum, int contentmask )
 {
 	syscall( G_TRACE, results, start, mins, maxs, end, passEntityNum, contentmask );
 }
 
-void trap_TraceNoEnts( trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
-					   int passEntityNum, int contentmask )
+void trap_TraceNoEnts( trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end, int passEntityNum, int contentmask )
 {
 	syscall( G_TRACE, results, start, mins, maxs, end, -2, contentmask );
 }
 
-void trap_TraceCapsule( trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
-						int passEntityNum, int contentmask )
+void trap_TraceCapsule( trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end, int passEntityNum, int contentmask )
 {
 	syscall( G_TRACECAPSULE, results, start, mins, maxs, end, passEntityNum, contentmask );
 }
 
-void trap_TraceCapsuleNoEnts( trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
-							  int passEntityNum, int contentmask )
+void trap_TraceCapsuleNoEnts( trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end, int passEntityNum, int contentmask )
 {
 	syscall( G_TRACECAPSULE, results, start, mins, maxs, end, -2, contentmask );
 }
@@ -205,7 +199,6 @@ int trap_PointContents( const vec3_t point, int passEntityNum )
 {
 	return syscall( G_POINT_CONTENTS, point, passEntityNum );
 }
-
 
 qboolean trap_InPVS( const vec3_t p1, const vec3_t p2 )
 {
@@ -297,14 +290,14 @@ int trap_RealTime( qtime_t* qtime )
 	return syscall( G_REAL_TIME, qtime );
 }
 
-#if defined(USE_BULLET)
+#if defined( USE_BULLET )
 void trap_Bullet_AddWorldBrushesToDynamicsWorld( void* collisionShapesHandle, plDynamicsWorldHandle* dynamicsWorldHandle )
 {
 	syscall( BULLET_ADD_WORLD_BRUSHES_TO_DYNAMICS_WORLD, collisionShapesHandle, dynamicsWorldHandle );
 }
 #endif
 
-#if defined(BRAINWORKS)
+#if defined( BRAINWORKS )
 
 // BotLib traps start here
 int trap_BotLibSetup( void )
@@ -342,7 +335,7 @@ int trap_BotLibLoadMap( const char* mapname )
 	return syscall( BOTLIB_LOAD_MAP, mapname );
 }
 
-int trap_BotLibUpdateEntity( int ent, void /* struct bot_updateentity_s */ *bue )
+int trap_BotLibUpdateEntity( int ent, void /* struct bot_updateentity_s */* bue )
 {
 	return syscall( BOTLIB_UPDATENTITY, ent, bue );
 }
@@ -355,8 +348,8 @@ int trap_BotLibTest( int parm0, char* parm1, vec3_t parm2, vec3_t parm3 )
 
 //#endif
 
-#if defined(GLADIATOR)
-void trap_AAS_EntityInfo( int entnum, void /* struct aas_entityinfo_s */ *info )
+#if defined( GLADIATOR )
+void trap_AAS_EntityInfo( int entnum, void /* struct aas_entityinfo_s */* info )
 {
 	syscall( BOTLIB_AAS_ENTITY_INFO, entnum, info );
 }
@@ -372,13 +365,13 @@ void trap_AAS_PresenceTypeBoundingBox( int presencetype, vec3_t mins, vec3_t max
 	syscall( BOTLIB_AAS_PRESENCE_TYPE_BOUNDING_BOX, presencetype, mins, maxs );
 }
 
-#if defined(GLADIATOR)
+#if defined( GLADIATOR )
 float trap_AAS_Time( void )
 {
-	int             temp;
-	
+	int temp;
+
 	temp = syscall( BOTLIB_AAS_TIME );
-	return ( *( float* )&temp );
+	return ( *(float*)&temp );
 }
 #endif
 
@@ -387,7 +380,7 @@ int trap_AAS_PointAreaNum( vec3_t point )
 	return syscall( BOTLIB_AAS_POINT_AREA_NUM, point );
 }
 
-#if defined(GLADIATOR)
+#if defined( GLADIATOR )
 int trap_AAS_PointReachabilityAreaIndex( vec3_t point )
 {
 	return syscall( BOTLIB_AAS_POINT_REACHABILITY_AREA_INDEX, point );
@@ -404,7 +397,7 @@ int trap_AAS_BBoxAreas( vec3_t absmins, vec3_t absmaxs, int* areas, int maxareas
 	return syscall( BOTLIB_AAS_BBOX_AREAS, absmins, absmaxs, areas, maxareas );
 }
 
-int trap_AAS_AreaInfo( int areanum, void /* struct aas_areainfo_s */ *info )
+int trap_AAS_AreaInfo( int areanum, void /* struct aas_areainfo_s */* info )
 {
 	return syscall( BOTLIB_AAS_AREA_INFO, areanum, info );
 }
@@ -414,7 +407,7 @@ int trap_AAS_PointContents( vec3_t point )
 	return syscall( BOTLIB_AAS_POINT_CONTENTS, point );
 }
 
-#if defined(GLADIATOR)
+#if defined( GLADIATOR )
 int trap_AAS_NextBSPEntity( int ent )
 {
 	return syscall( BOTLIB_AAS_NEXT_BSP_ENTITY, ent );
@@ -456,21 +449,15 @@ int trap_AAS_EnableRoutingArea( int areanum, int enable )
 	return syscall( BOTLIB_AAS_ENABLE_ROUTING_AREA, areanum, enable );
 }
 
-int trap_AAS_PredictRoute( void /*struct aas_predictroute_s */ *route, int areanum, vec3_t origin,
-						   int goalareanum, int travelflags, int maxareas, int maxtime,
-						   int stopevent, int stopcontents, int stoptfl, int stopareanum )
+int trap_AAS_PredictRoute( void /*struct aas_predictroute_s */* route, int areanum, vec3_t origin, int goalareanum, int travelflags, int maxareas, int maxtime, int stopevent, int stopcontents, int stoptfl, int stopareanum )
 {
-	return syscall( BOTLIB_AAS_PREDICT_ROUTE, route, areanum, origin, goalareanum, travelflags, maxareas, maxtime, stopevent,
-					stopcontents, stoptfl, stopareanum );
+	return syscall( BOTLIB_AAS_PREDICT_ROUTE, route, areanum, origin, goalareanum, travelflags, maxareas, maxtime, stopevent, stopcontents, stoptfl, stopareanum );
 }
 
-#if defined(GLADIATOR)
-int trap_AAS_AlternativeRouteGoals( vec3_t start, int startareanum, vec3_t goal, int goalareanum, int travelflags,
-									void /*struct aas_altroutegoal_s */ *altroutegoals, int maxaltroutegoals,
-									int type )
+#if defined( GLADIATOR )
+int trap_AAS_AlternativeRouteGoals( vec3_t start, int startareanum, vec3_t goal, int goalareanum, int travelflags, void /*struct aas_altroutegoal_s */* altroutegoals, int maxaltroutegoals, int type )
 {
-	return syscall( BOTLIB_AAS_ALTERNATIVE_ROUTE_GOAL, start, startareanum, goal, goalareanum, travelflags, altroutegoals,
-					maxaltroutegoals, type );
+	return syscall( BOTLIB_AAS_ALTERNATIVE_ROUTE_GOAL, start, startareanum, goal, goalareanum, travelflags, altroutegoals, maxaltroutegoals, type );
 }
 
 int trap_AAS_Swimming( vec3_t origin )
@@ -478,12 +465,9 @@ int trap_AAS_Swimming( vec3_t origin )
 	return syscall( BOTLIB_AAS_SWIMMING, origin );
 }
 
-int trap_AAS_PredictClientMovement( void /* struct aas_clientmove_s */ *move, int entnum, vec3_t origin, int presencetype,
-									int onground, vec3_t velocity, vec3_t cmdmove, int cmdframes, int maxframes, float frametime,
-									int stopevent, int stopareanum, int visualize )
+int trap_AAS_PredictClientMovement( void /* struct aas_clientmove_s */* move, int entnum, vec3_t origin, int presencetype, int onground, vec3_t velocity, vec3_t cmdmove, int cmdframes, int maxframes, float frametime, int stopevent, int stopareanum, int visualize )
 {
-	return syscall( BOTLIB_AAS_PREDICT_CLIENT_MOVEMENT, move, entnum, origin, presencetype, onground, velocity, cmdmove, cmdframes,
-					maxframes, PASSFLOAT( frametime ), stopevent, stopareanum, visualize );
+	return syscall( BOTLIB_AAS_PREDICT_CLIENT_MOVEMENT, move, entnum, origin, presencetype, onground, velocity, cmdmove, cmdframes, maxframes, PASSFLOAT( frametime ), stopevent, stopareanum, visualize );
 }
 #endif
 
@@ -507,7 +491,7 @@ void trap_EA_Action( int client, int action )
 	syscall( BOTLIB_EA_ACTION, client, action );
 }
 
-#if defined(GLADIATOR)
+#if defined( GLADIATOR )
 void trap_EA_Gesture( int client )
 {
 	syscall( BOTLIB_EA_GESTURE, client );
@@ -574,7 +558,7 @@ void trap_EA_SelectWeapon( int client, int weapon )
 	syscall( BOTLIB_EA_SELECT_WEAPON, client, weapon );
 }
 
-#if defined(GLADIATOR)
+#if defined( GLADIATOR )
 void trap_EA_Jump( int client )
 {
 	syscall( BOTLIB_EA_JUMP, client );
@@ -596,14 +580,14 @@ void trap_EA_View( int client, vec3_t viewangles )
 	syscall( BOTLIB_EA_VIEW, client, viewangles );
 }
 
-#if defined(GLADIATOR)
+#if defined( GLADIATOR )
 void trap_EA_EndRegular( int client, float thinktime )
 {
 	syscall( BOTLIB_EA_END_REGULAR, client, PASSFLOAT( thinktime ) );
 }
 #endif
 
-void trap_EA_GetInput( int client, float thinktime, void /* struct bot_input_s */ *input )
+void trap_EA_GetInput( int client, float thinktime, void /* struct bot_input_s */* input )
 {
 	syscall( BOTLIB_EA_GET_INPUT, client, PASSFLOAT( thinktime ), input );
 }
@@ -625,18 +609,18 @@ void trap_BotFreeCharacter( int character )
 
 float trap_Characteristic_Float( int character, int index )
 {
-	int             temp;
-	
+	int temp;
+
 	temp = syscall( BOTLIB_AI_CHARACTERISTIC_FLOAT, character, index );
-	return ( *( float* )&temp );
+	return ( *(float*)&temp );
 }
 
 float trap_Characteristic_BFloat( int character, int index, float min, float max )
 {
-	int             temp;
-	
+	int temp;
+
 	temp = syscall( BOTLIB_AI_CHARACTERISTIC_BFLOAT, character, index, PASSFLOAT( min ), PASSFLOAT( max ) );
-	return ( *( float* )&temp );
+	return ( *(float*)&temp );
 }
 
 int trap_Characteristic_Integer( int character, int index )
@@ -674,7 +658,7 @@ void trap_BotRemoveConsoleMessage( int chatstate, int handle )
 	syscall( BOTLIB_AI_REMOVE_CONSOLE_MESSAGE, chatstate, handle );
 }
 
-int trap_BotNextConsoleMessage( int chatstate, void /* struct bot_consolemessage_s */ *cm )
+int trap_BotNextConsoleMessage( int chatstate, void /* struct bot_consolemessage_s */* cm )
 {
 	return syscall( BOTLIB_AI_NEXT_CONSOLE_MESSAGE, chatstate, cm );
 }
@@ -684,8 +668,7 @@ int trap_BotNumConsoleMessages( int chatstate )
 	return syscall( BOTLIB_AI_NUM_CONSOLE_MESSAGE, chatstate );
 }
 
-void trap_BotInitialChat( int chatstate, char* type, int mcontext, char* var0, char* var1, char* var2, char* var3, char* var4,
-						  char* var5, char* var6, char* var7 )
+void trap_BotInitialChat( int chatstate, char* type, int mcontext, char* var0, char* var1, char* var2, char* var3, char* var4, char* var5, char* var6, char* var7 )
 {
 	syscall( BOTLIB_AI_INITIAL_CHAT, chatstate, type, mcontext, var0, var1, var2, var3, var4, var5, var6, var7 );
 }
@@ -695,8 +678,7 @@ int trap_BotNumInitialChats( int chatstate, char* type )
 	return syscall( BOTLIB_AI_NUM_INITIAL_CHATS, chatstate, type );
 }
 
-int trap_BotReplyChat( int chatstate, char* message, int mcontext, int vcontext, char* var0, char* var1, char* var2, char* var3,
-					   char* var4, char* var5, char* var6, char* var7 )
+int trap_BotReplyChat( int chatstate, char* message, int mcontext, int vcontext, char* var0, char* var1, char* var2, char* var3, char* var4, char* var5, char* var6, char* var7 )
 {
 	return syscall( BOTLIB_AI_REPLY_CHAT, chatstate, message, mcontext, vcontext, var0, var1, var2, var3, var4, var5, var6, var7 );
 }
@@ -721,12 +703,12 @@ int trap_StringContains( char* str1, char* str2, int casesensitive )
 	return syscall( BOTLIB_AI_STRING_CONTAINS, str1, str2, casesensitive );
 }
 
-int trap_BotFindMatch( char* str, void /* struct bot_match_s */ *match, unsigned long int context )
+int trap_BotFindMatch( char* str, void /* struct bot_match_s */* match, unsigned long int context )
 {
 	return syscall( BOTLIB_AI_FIND_MATCH, str, match, context );
 }
 
-void trap_BotMatchVariable( void /* struct bot_match_s */ *match, int variable, char* buf, int size )
+void trap_BotMatchVariable( void /* struct bot_match_s */* match, int variable, char* buf, int size )
 {
 	syscall( BOTLIB_AI_MATCH_VARIABLE, match, variable, buf, size );
 }
@@ -756,7 +738,7 @@ void trap_BotSetChatName( int chatstate, char* name, int client )
 	syscall( BOTLIB_AI_SET_CHAT_NAME, chatstate, name, client );
 }
 
-#if defined(GLADIATOR)
+#if defined( GLADIATOR )
 void trap_BotResetGoalState( int goalstate )
 {
 	syscall( BOTLIB_AI_RESET_GOAL_STATE, goalstate );
@@ -772,7 +754,7 @@ void trap_BotRemoveFromAvoidGoals( int goalstate, int number )
 	syscall( BOTLIB_AI_REMOVE_FROM_AVOID_GOALS, goalstate, number );
 }
 
-void trap_BotPushGoal( int goalstate, void /* struct bot_goal_s */ *goal )
+void trap_BotPushGoal( int goalstate, void /* struct bot_goal_s */* goal )
 {
 	syscall( BOTLIB_AI_PUSH_GOAL, goalstate, goal );
 }
@@ -802,12 +784,12 @@ void trap_BotGoalName( int number, char* name, int size )
 	syscall( BOTLIB_AI_GOAL_NAME, number, name, size );
 }
 
-int trap_BotGetTopGoal( int goalstate, void /* struct bot_goal_s */ *goal )
+int trap_BotGetTopGoal( int goalstate, void /* struct bot_goal_s */* goal )
 {
 	return syscall( BOTLIB_AI_GET_TOP_GOAL, goalstate, goal );
 }
 
-int trap_BotGetSecondGoal( int goalstate, void /* struct bot_goal_s */ *goal )
+int trap_BotGetSecondGoal( int goalstate, void /* struct bot_goal_s */* goal )
 {
 	return syscall( BOTLIB_AI_GET_SECOND_GOAL, goalstate, goal );
 }
@@ -817,47 +799,46 @@ int trap_BotChooseLTGItem( int goalstate, vec3_t origin, int* inventory, int tra
 	return syscall( BOTLIB_AI_CHOOSE_LTG_ITEM, goalstate, origin, inventory, travelflags );
 }
 
-int trap_BotChooseNBGItem( int goalstate, vec3_t origin, int* inventory, int travelflags, void /* struct bot_goal_s */ *ltg,
-						   float maxtime )
+int trap_BotChooseNBGItem( int goalstate, vec3_t origin, int* inventory, int travelflags, void /* struct bot_goal_s */* ltg, float maxtime )
 {
 	return syscall( BOTLIB_AI_CHOOSE_NBG_ITEM, goalstate, origin, inventory, travelflags, ltg, PASSFLOAT( maxtime ) );
 }
 #endif
 
-int trap_BotTouchingGoal( vec3_t origin, void /* struct bot_goal_s */ *goal )
+int trap_BotTouchingGoal( vec3_t origin, void /* struct bot_goal_s */* goal )
 {
 	return syscall( BOTLIB_AI_TOUCHING_GOAL, origin, goal );
 }
 
-int trap_BotItemGoalInVisButNotVisible( int viewer, vec3_t eye, vec3_t viewangles, void /* struct bot_goal_s */ *goal )
+int trap_BotItemGoalInVisButNotVisible( int viewer, vec3_t eye, vec3_t viewangles, void /* struct bot_goal_s */* goal )
 {
 	return syscall( BOTLIB_AI_ITEM_GOAL_IN_VIS_BUT_NOT_VISIBLE, viewer, eye, viewangles, goal );
 }
 
-int trap_BotGetLevelItemGoal( int index, char* classname, void /* struct bot_goal_s */ *goal )
+int trap_BotGetLevelItemGoal( int index, char* classname, void /* struct bot_goal_s */* goal )
 {
 	return syscall( BOTLIB_AI_GET_LEVEL_ITEM_GOAL, index, classname, goal );
 }
 
-int trap_BotGetNextCampSpotGoal( int num, void /* struct bot_goal_s */ *goal )
+int trap_BotGetNextCampSpotGoal( int num, void /* struct bot_goal_s */* goal )
 {
 	return syscall( BOTLIB_AI_GET_NEXT_CAMP_SPOT_GOAL, num, goal );
 }
 
-#if defined(GLADIATOR)
-int trap_BotGetMapLocationGoal( char* name, void /* struct bot_goal_s */ *goal )
+#if defined( GLADIATOR )
+int trap_BotGetMapLocationGoal( char* name, void /* struct bot_goal_s */* goal )
 {
 	return syscall( BOTLIB_AI_GET_MAP_LOCATION_GOAL, name, goal );
 }
 #endif
 
-#if defined(GLADIATOR)
+#if defined( GLADIATOR )
 float trap_BotAvoidGoalTime( int goalstate, int number )
 {
-	int             temp;
-	
+	int temp;
+
 	temp = syscall( BOTLIB_AI_AVOID_GOAL_TIME, goalstate, number );
-	return ( *( float* )&temp );
+	return ( *(float*)&temp );
 }
 
 void trap_BotSetAvoidGoalTime( int goalstate, int number, float avoidtime )
@@ -921,8 +902,7 @@ void trap_BotAddAvoidSpot( int movestate, vec3_t origin, float radius, int type 
 	syscall( BOTLIB_AI_ADD_AVOID_SPOT, movestate, origin, PASSFLOAT( radius ), type );
 }
 
-void trap_BotMoveToGoal( void /* struct bot_moveresult_s */ *result, int movestate, void /* struct bot_goal_s */ *goal,
-						 int travelflags )
+void trap_BotMoveToGoal( void /* struct bot_moveresult_s */* result, int movestate, void /* struct bot_goal_s */* goal, int travelflags )
 {
 	syscall( BOTLIB_AI_MOVE_TO_GOAL, result, movestate, goal, travelflags );
 }
@@ -937,7 +917,7 @@ void trap_BotResetAvoidReach( int movestate )
 	syscall( BOTLIB_AI_RESET_AVOID_REACH, movestate );
 }
 
-#if defined(GLADIATOR)
+#if defined( GLADIATOR )
 void trap_BotResetLastAvoidReach( int movestate )
 {
 	syscall( BOTLIB_AI_RESET_LAST_AVOID_REACH, movestate );
@@ -949,12 +929,12 @@ int trap_BotReachabilityArea( vec3_t origin, int testground )
 }
 #endif
 
-int trap_BotMovementViewTarget( int movestate, void /* struct bot_goal_s */ *goal, int travelflags, float lookahead, vec3_t target )
+int trap_BotMovementViewTarget( int movestate, void /* struct bot_goal_s */* goal, int travelflags, float lookahead, vec3_t target )
 {
 	return syscall( BOTLIB_AI_MOVEMENT_VIEW_TARGET, movestate, goal, travelflags, PASSFLOAT( lookahead ), target );
 }
 
-int trap_BotPredictVisiblePosition( vec3_t origin, int areanum, void /* struct bot_goal_s */ *goal, int travelflags, vec3_t target )
+int trap_BotPredictVisiblePosition( vec3_t origin, int areanum, void /* struct bot_goal_s */* goal, int travelflags, vec3_t target )
 {
 	return syscall( BOTLIB_AI_PREDICT_VISIBLE_POSITION, origin, areanum, goal, travelflags, target );
 }
@@ -969,18 +949,18 @@ void trap_BotFreeMoveState( int handle )
 	syscall( BOTLIB_AI_FREE_MOVE_STATE, handle );
 }
 
-void trap_BotInitMoveState( int handle, void /* struct bot_initmove_s */ *initmove )
+void trap_BotInitMoveState( int handle, void /* struct bot_initmove_s */* initmove )
 {
 	syscall( BOTLIB_AI_INIT_MOVE_STATE, handle, initmove );
 }
 
-#if defined(GLADIATOR)
+#if defined( GLADIATOR )
 int trap_BotChooseBestFightWeapon( int weaponstate, int* inventory )
 {
 	return syscall( BOTLIB_AI_CHOOSE_BEST_FIGHT_WEAPON, weaponstate, inventory );
 }
 
-void trap_BotGetWeaponInfo( int weaponstate, int weapon, void /* struct weaponinfo_s */ *weaponinfo )
+void trap_BotGetWeaponInfo( int weaponstate, int weapon, void /* struct weaponinfo_s */* weaponinfo )
 {
 	syscall( BOTLIB_AI_GET_WEAPON_INFO, weaponstate, weapon, weaponinfo );
 }
@@ -1011,4 +991,4 @@ int trap_GeneticParentsAndChildSelection( int numranks, float* ranks, int* paren
 }
 #endif
 
-#endif							// BRAINWORKS
+#endif // BRAINWORKS

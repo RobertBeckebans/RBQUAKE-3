@@ -21,9 +21,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
 
+typedef void* mutex_t;
 
-typedef void*   mutex_t;
-
-void            MutexLock( mutex_t* m );
-void            MutexUnlock( mutex_t* m );
-mutex_t*        MutexAlloc( void );
+void     MutexLock( mutex_t* m );
+void     MutexUnlock( mutex_t* m );
+mutex_t* MutexAlloc( void );

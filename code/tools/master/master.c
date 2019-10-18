@@ -20,20 +20,18 @@
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-
 #include <stdarg.h>
 #include <signal.h>
 #include <ctype.h>
 
 #ifndef WIN32
-	#include <pwd.h>
-	#include <unistd.h>
+#include <pwd.h>
+#include <unistd.h>
 #endif
 
 #include "common.h"
 #include "messages.h"
 #include "servers.h"
-
 
 // ---------- Constants ---------- //
 
@@ -48,20 +46,18 @@
 #define MIN_PACKET_SIZE 5
 
 #ifndef WIN32
-	// Default path we use for chroot
-	#define DEFAULT_JAIL_PATH "/var/empty/"
-	
-	// User we use by default for dropping super-user privileges
-	#define DEFAULT_LOW_PRIV_USER "nobody"
-#endif
+// Default path we use for chroot
+#define DEFAULT_JAIL_PATH "/var/empty/"
 
+// User we use by default for dropping super-user privileges
+#define DEFAULT_LOW_PRIV_USER "nobody"
+#endif
 
 // ---------- Types ---------- //
 
 #ifdef WIN32
-	typedef int     socklen_t;
+typedef int socklen_t;
 #endif
-
 
 // ---------- Private variables ---------- //
 
@@ -69,36 +65,34 @@
 static unsigned short master_port = DEFAULT_MASTER_PORT;
 
 // Local address we listen on, if any
-static const char* listen_name = NULL;
+static const char*    listen_name = NULL;
 static struct in_addr listen_addr;
 
 #ifndef WIN32
-	// On UNIX systems, we can run as a daemon
-	static qboolean daemon_mode = qfalse;
-	
-	// Path we use for chroot
-	static const char* jail_path = DEFAULT_JAIL_PATH;
-	
-	// Low privileges user
-	static const char* low_priv_user = DEFAULT_LOW_PRIV_USER;
-#endif
+// On UNIX systems, we can run as a daemon
+static qboolean daemon_mode = qfalse;
 
+// Path we use for chroot
+static const char* jail_path = DEFAULT_JAIL_PATH;
+
+// Low privileges user
+static const char* low_priv_user = DEFAULT_LOW_PRIV_USER;
+#endif
 
 // ---------- Public variables ---------- //
 
 // The master socket
-int             inSock = -1;
-int             outSock = -1;
+int inSock  = -1;
+int outSock = -1;
 
 // The current time (updated every time we receive a packet)
-time_t          crt_time;
+time_t crt_time;
 
 // Maximum level for a message to be printed
-msg_level_t     max_msg_level = MSG_NORMAL;
+msg_level_t max_msg_level = MSG_NORMAL;
 
 // Peer address. We rebuild it every time we receive a new packet
-char            peer_address[128];
-
+char peer_address[ 128 ];
 
 // ---------- Private functions ---------- //
 
@@ -111,17 +105,17 @@ Print the contents of a packet on stdout
 */
 static void PrintPacket( const char* packet, size_t length )
 {
-	size_t          i;
-	
+	size_t i;
+
 	// Exceptionally, we use MSG_NOPRINT here because if the function is
 	// called, the user probably wants this text to be displayed
 	// whatever the maximum message level is.
 	MsgPrint( MSG_NOPRINT, "\"" );
-	
+
 	for( i = 0; i < length; i++ )
 	{
-		char            c = packet[i];
-		
+		char c = packet[ i ];
+
 		if( c == '\\' )
 		{
 			MsgPrint( MSG_NOPRINT, "\\\\" );
@@ -130,7 +124,7 @@ static void PrintPacket( const char* packet, size_t length )
 		{
 			MsgPrint( MSG_NOPRINT, "\"" );
 		}
-		else if( c >= 32 && ( qbyte ) c <= 127 )
+		else if( c >= 32 && (qbyte)c <= 127 )
 		{
 			MsgPrint( MSG_NOPRINT, "%c", c );
 		}
@@ -139,10 +133,9 @@ static void PrintPacket( const char* packet, size_t length )
 			MsgPrint( MSG_NOPRINT, "\\x%02X", c );
 		}
 	}
-	
+
 	MsgPrint( MSG_NOPRINT, "\" (%u bytes)\n", length );
 }
-
 
 /*
 ====================
@@ -154,18 +147,17 @@ System dependent initializations
 static qboolean SysInit( void )
 {
 #ifdef WIN32
-	WSADATA         winsockdata;
-	
+	WSADATA winsockdata;
+
 	if( WSAStartup( MAKEWORD( 1, 1 ), &winsockdata ) )
 	{
 		MsgPrint( MSG_ERROR, "ERROR: can't initialize winsocks\n" );
 		return qfalse;
 	}
 #endif
-	
+
 	return qtrue;
 }
-
 
 /*
 ====================
@@ -183,12 +175,12 @@ static qboolean UnsecureInit( void )
 	{
 		return qfalse;
 	}
-	
+
 	// Resolve the listen address if one was specified
 	if( listen_name != NULL )
 	{
 		struct hostent* itf;
-		
+
 		itf = gethostbyname( listen_name );
 		if( itf == NULL )
 		{
@@ -200,13 +192,12 @@ static qboolean UnsecureInit( void )
 			MsgPrint( MSG_ERROR, "ERROR: %s is not an IPv4 address\n", listen_name );
 			return qfalse;
 		}
-		
+
 		memcpy( &listen_addr.s_addr, itf->h_addr, sizeof( listen_addr.s_addr ) );
 	}
-	
+
 	return qtrue;
 }
-
 
 /*
 ====================
@@ -224,14 +215,14 @@ static qboolean SecInit( void )
 		MsgPrint( MSG_NOPRINT, "ERROR: daemonization failed (%s)\n", strerror( errno ) );
 		return qfalse;
 	}
-	
+
 	// UNIX allows us to be completely paranoid, so let's go for it
 	if( geteuid() == 0 )
 	{
-		struct passwd*  pw;
-		
+		struct passwd* pw;
+
 		MsgPrint( MSG_WARNING, "WARNING: running with super-user privileges\n" );
-		
+
 		// We must get the account infos before the calls to chroot and chdir
 		pw = getpwnam( low_priv_user );
 		if( pw == NULL )
@@ -239,7 +230,7 @@ static qboolean SecInit( void )
 			MsgPrint( MSG_ERROR, "ERROR: can't get user \"%s\" properties\n", low_priv_user );
 			return qfalse;
 		}
-		
+
 		// Chroot ourself
 		MsgPrint( MSG_NORMAL, "  - chrooting myself to %s... ", jail_path );
 		if( chroot( jail_path ) || chdir( "/" ) )
@@ -248,7 +239,7 @@ static qboolean SecInit( void )
 			return qfalse;
 		}
 		MsgPrint( MSG_NORMAL, "succeeded\n" );
-		
+
 		// Switch to lower privileges
 		MsgPrint( MSG_NORMAL, "  - switching to user \"%s\" privileges... ", low_priv_user );
 		if( setgid( pw->pw_gid ) || setuid( pw->pw_uid ) )
@@ -257,14 +248,13 @@ static qboolean SecInit( void )
 			return qfalse;
 		}
 		MsgPrint( MSG_NORMAL, "succeeded (UID: %u, GID: %u)\n", pw->pw_uid, pw->pw_gid );
-		
+
 		MsgPrint( MSG_NORMAL, "\n" );
 	}
 #endif
-	
+
 	return qtrue;
 }
-
 
 /*
 ====================
@@ -275,20 +265,20 @@ Parse the options passed by the command line
 */
 static qboolean ParseCommandLine( int argc, const char* argv[] )
 {
-	int             ind = 1;
-	unsigned int    vlevel = max_msg_level;
-	qboolean        valid_options = qtrue;
-	
+	int          ind           = 1;
+	unsigned int vlevel        = max_msg_level;
+	qboolean     valid_options = qtrue;
+
 	while( ind < argc && valid_options )
 	{
 		// If it doesn't even look like an option, why bother?
-		if( argv[ind][0] != '-' )
+		if( argv[ ind ][ 0 ] != '-' )
 		{
 			valid_options = qfalse;
 		}
-		
+
 		else
-			switch( argv[ind][1] )
+			switch( argv[ ind ][ 1 ] )
 			{
 #ifndef WIN32
 				// Daemon mode
@@ -296,32 +286,32 @@ static qboolean ParseCommandLine( int argc, const char* argv[] )
 					daemon_mode = qtrue;
 					break;
 #endif
-					
+
 				// Help
 				case 'h':
 					valid_options = qfalse;
 					break;
-					
+
 				// Hash size
 				case 'H':
 					ind++;
 					if( ind < argc )
 					{
-						valid_options = Sv_SetHashSize( atoi( argv[ind] ) );
+						valid_options = Sv_SetHashSize( atoi( argv[ ind ] ) );
 					}
 					else
 					{
 						valid_options = qfalse;
 					}
 					break;
-					
+
 #ifndef WIN32
 				// Jail path
 				case 'j':
 					ind++;
 					if( ind < argc )
 					{
-						jail_path = argv[ind];
+						jail_path = argv[ ind ];
 					}
 					else
 					{
@@ -329,55 +319,55 @@ static qboolean ParseCommandLine( int argc, const char* argv[] )
 					}
 					break;
 #endif
-					
+
 				// Listen address
 				case 'l':
 					ind++;
-					if( ind >= argc || argv[ind][0] == '\0' )
+					if( ind >= argc || argv[ ind ][ 0 ] == '\0' )
 					{
 						valid_options = qfalse;
 					}
 					else
 					{
-						listen_name = argv[ind];
+						listen_name = argv[ ind ];
 					}
 					break;
-					
+
 				// Address mapping
 				case 'm':
 					ind++;
 					if( ind < argc )
 					{
-						valid_options = Sv_AddAddressMapping( argv[ind] );
+						valid_options = Sv_AddAddressMapping( argv[ ind ] );
 					}
 					else
 					{
 						valid_options = qfalse;
 					}
 					break;
-					
+
 				// Maximum number of servers
 				case 'n':
 					ind++;
 					if( ind < argc )
 					{
-						valid_options = Sv_SetMaxNbServers( atoi( argv[ind] ) );
+						valid_options = Sv_SetMaxNbServers( atoi( argv[ ind ] ) );
 					}
 					else
 					{
 						valid_options = qfalse;
 					}
 					break;
-					
+
 				// Port number
 				case 'p':
 				{
-					unsigned short  port_num = 0;
-					
+					unsigned short port_num = 0;
+
 					ind++;
 					if( ind < argc )
 					{
-						port_num = atoi( argv[ind] );
+						port_num = atoi( argv[ ind ] );
 					}
 					if( !port_num )
 					{
@@ -389,14 +379,14 @@ static qboolean ParseCommandLine( int argc, const char* argv[] )
 					}
 					break;
 				}
-				
+
 #ifndef WIN32
 				// Low privileges user
 				case 'u':
 					ind++;
 					if( ind < argc )
 					{
-						low_priv_user = argv[ind];
+						low_priv_user = argv[ ind ];
 					}
 					else
 					{
@@ -404,14 +394,14 @@ static qboolean ParseCommandLine( int argc, const char* argv[] )
 					}
 					break;
 #endif
-					
+
 				// Verbose level
 				case 'v':
 					// If a verbose level has been specified
-					if( ind + 1 < argc && argv[ind + 1][0] != '-' )
+					if( ind + 1 < argc && argv[ ind + 1 ][ 0 ] != '-' )
 					{
 						ind++;
-						vlevel = atoi( argv[ind] );
+						vlevel = atoi( argv[ ind ] );
 						if( vlevel > MSG_DEBUG )
 						{
 							valid_options = qfalse;
@@ -422,14 +412,14 @@ static qboolean ParseCommandLine( int argc, const char* argv[] )
 						vlevel = MSG_DEBUG;
 					}
 					break;
-					
+
 				default:
 					valid_options = qfalse;
 			}
-			
+
 		ind++;
 	}
-	
+
 	// If the command line is OK, we can set the verbose level now
 	if( valid_options )
 	{
@@ -443,10 +433,9 @@ static qboolean ParseCommandLine( int argc, const char* argv[] )
 #endif
 			max_msg_level = vlevel;
 	}
-	
+
 	return valid_options;
 }
-
 
 /*
 ====================
@@ -457,36 +446,41 @@ Print the command line syntax and the available options
 */
 static void PrintHelp( void )
 {
-	MsgPrint( MSG_ERROR, "Syntax: xrealmaster [options]\n" "Available options are:\n"
+	MsgPrint( MSG_ERROR, "Syntax: xrealmaster [options]\n"
+						 "Available options are:\n"
 #ifndef WIN32
-			  "  -D               : run as a daemon\n"
+						 "  -D               : run as a daemon\n"
 #endif
-			  "  -h               : this help\n" "  -H <hash_size>   : hash size in bits, up to %u (default: %u)\n"
+						 "  -h               : this help\n"
+						 "  -H <hash_size>   : hash size in bits, up to %u (default: %u)\n"
 #ifndef WIN32
-			  "  -j <jail_path>   : use <jail_path> as chroot path (default: %s)\n"
-			  "                     only available when running with super-user privileges\n"
+						 "  -j <jail_path>   : use <jail_path> as chroot path (default: %s)\n"
+						 "                     only available when running with super-user privileges\n"
 #endif
-			  "  -l <address>     : listen on local address <address>\n"
-			  "  -m <a1>=<a2>     : map address <a1> to <a2> when sending it to clients\n"
-			  "                     addresses can contain a port number (ex: myaddr.net:1234)\n"
-			  "  -n <max_servers> : maximum number of servers recorded (default: %u)\n"
-			  "  -p <port_num>    : use port <port_num> (default: %u)\n"
+						 "  -l <address>     : listen on local address <address>\n"
+						 "  -m <a1>=<a2>     : map address <a1> to <a2> when sending it to clients\n"
+						 "                     addresses can contain a port number (ex: myaddr.net:1234)\n"
+						 "  -n <max_servers> : maximum number of servers recorded (default: %u)\n"
+						 "  -p <port_num>    : use port <port_num> (default: %u)\n"
 #ifndef WIN32
-			  "  -u <user>        : use <user> privileges (default: %s)\n"
-			  "                     only available when running with super-user privileges\n"
+						 "  -u <user>        : use <user> privileges (default: %s)\n"
+						 "                     only available when running with super-user privileges\n"
 #endif
-			  "  -v [verbose_lvl] : verbose level, up to %u (default: %u; no value means max)\n"
-			  "\n", MAX_HASH_SIZE, DEFAULT_HASH_SIZE,
+						 "  -v [verbose_lvl] : verbose level, up to %u (default: %u; no value means max)\n"
+						 "\n",
+		MAX_HASH_SIZE,
+		DEFAULT_HASH_SIZE,
 #ifndef WIN32
-			  DEFAULT_JAIL_PATH,
+		DEFAULT_JAIL_PATH,
 #endif
-			  DEFAULT_MAX_NB_SERVERS, DEFAULT_MASTER_PORT,
+		DEFAULT_MAX_NB_SERVERS,
+		DEFAULT_MASTER_PORT,
 #ifndef WIN32
-			  DEFAULT_LOW_PRIV_USER,
+		DEFAULT_LOW_PRIV_USER,
 #endif
-			  MSG_DEBUG, MSG_NORMAL );
+		MSG_DEBUG,
+		MSG_NORMAL );
 }
-
 
 /*
 ====================
@@ -498,17 +492,17 @@ System independent initializations, called AFTER the security initializations
 static qboolean SecureInit( void )
 {
 	struct sockaddr_in address;
-	
+
 	// Init the time and the random seed
 	crt_time = time( NULL );
 	srand( crt_time );
-	
+
 	// Initialize the server list and hash table
 	if( !Sv_Init() )
 	{
 		return qfalse;
 	}
-	
+
 	// Open the socket
 	inSock = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
 	if( inSock < 0 )
@@ -516,14 +510,14 @@ static qboolean SecureInit( void )
 		MsgPrint( MSG_ERROR, "ERROR: socket creation failed (%s)\n", strerror( errno ) );
 		return qfalse;
 	}
-	
+
 	outSock = socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
 	if( outSock < 0 )
 	{
 		MsgPrint( MSG_ERROR, "ERROR: socket creation failed (%s)\n", strerror( errno ) );
 		return qfalse;
 	}
-	
+
 	// Bind it to the master port
 	memset( &address, 0, sizeof( address ) );
 	address.sin_family = AF_INET;
@@ -536,9 +530,9 @@ static qboolean SecureInit( void )
 	{
 		address.sin_addr.s_addr = htonl( INADDR_ANY );
 	}
-	
+
 	address.sin_port = htons( master_port );
-	if( bind( inSock, ( struct sockaddr* )&address, sizeof( address ) ) != 0 )
+	if( bind( inSock, (struct sockaddr*)&address, sizeof( address ) ) != 0 )
 	{
 		MsgPrint( MSG_ERROR, "ERROR: socket binding failed (%s)\n", strerror( errno ) );
 #ifdef WIN32
@@ -549,12 +543,12 @@ static qboolean SecureInit( void )
 		return qfalse;
 	}
 	MsgPrint( MSG_NORMAL, "Listening on UDP port %hu\n", ntohs( address.sin_port ) );
-	
+
 	// Deliberately use a different port for outgoing traffic in order
 	// to confuse NAT UDP "connection" tracking and thus delist servers
 	// hidden by NAT
 	address.sin_port = htons( master_port + 1 );
-	if( bind( outSock, ( struct sockaddr* )&address, sizeof( address ) ) != 0 )
+	if( bind( outSock, (struct sockaddr*)&address, sizeof( address ) ) != 0 )
 	{
 		MsgPrint( MSG_ERROR, "ERROR: socket binding failed (%s)\n", strerror( errno ) );
 #ifdef WIN32
@@ -564,7 +558,7 @@ static qboolean SecureInit( void )
 #endif
 		return qfalse;
 	}
-	
+
 	return qtrue;
 }
 
@@ -580,7 +574,7 @@ Clean up
 static void cleanUp( int signal )
 {
 	MsgPrint( MSG_NORMAL, "Caught signal %d, exiting...\n", signal );
-	
+
 	exitNow = qtrue;
 }
 
@@ -589,14 +583,14 @@ static const char* ignoreFile = "ignore.txt";
 
 typedef struct
 {
-	char            address[ADDRESS_LENGTH];	// Dotted quad
+	char address[ ADDRESS_LENGTH ]; // Dotted quad
 } ignoreAddress_t;
 
-#define PARSE_INTERVAL		60	// seconds
+#define PARSE_INTERVAL 60 // seconds
 
-static time_t   lastParseTime = 0;
-static int      numIgnoreAddresses = 0;
-static ignoreAddress_t* ignoreAddresses = NULL;
+static time_t           lastParseTime      = 0;
+static int              numIgnoreAddresses = 0;
+static ignoreAddress_t* ignoreAddresses    = NULL;
 
 /*
 ====================
@@ -605,91 +599,89 @@ parseIgnoreAddress
 */
 static qboolean parseIgnoreAddress( void )
 {
-	int             numAllocIgnoreAddresses = 1;
-	FILE*           f = NULL;
-	int             i;
-	
+	int   numAllocIgnoreAddresses = 1;
+	FILE* f                       = NULL;
+	int   i;
+
 	// Only reparse periodically
 	if( crt_time - lastParseTime < PARSE_INTERVAL )
 	{
 		return qtrue;
 	}
-	
+
 	lastParseTime = time( NULL );
-	
+
 	// Free existing list
 	if( ignoreAddresses != NULL )
 	{
 		free( ignoreAddresses );
 		ignoreAddresses = NULL;
 	}
-	
+
 	numIgnoreAddresses = 0;
-	ignoreAddresses = malloc( sizeof( ignoreAddress_t ) * numAllocIgnoreAddresses );
-	
+	ignoreAddresses    = malloc( sizeof( ignoreAddress_t ) * numAllocIgnoreAddresses );
+
 	// Alloc failed, fail parsing
 	if( ignoreAddresses == NULL )
 	{
 		return qfalse;
 	}
-	
+
 	f = fopen( ignoreFile, "r" );
-	
+
 	if( !f )
 	{
 		free( ignoreAddresses );
 		ignoreAddresses = NULL;
 		return qfalse;
 	}
-	
+
 	while( !feof( f ) )
 	{
-		char            c;
-		char            buffer[ADDRESS_LENGTH];
-		
+		char c;
+		char buffer[ ADDRESS_LENGTH ];
+
 		i = 0;
-		
+
 		// Skip whitespace
 		do
 		{
 			c = fgetc( f );
-		}
-		while( c != EOF && isspace( c ) );
-		
+		} while( c != EOF && isspace( c ) );
+
 		if( c != EOF )
 		{
 			do
 			{
 				if( i >= ADDRESS_LENGTH )
 				{
-					buffer[i - 1] = '\0';
+					buffer[ i - 1 ] = '\0';
 					break;
 				}
-				
-				buffer[i] = c;
-				
+
+				buffer[ i ] = c;
+
 				if( isspace( c ) )
 				{
-					buffer[i] = '\0';
+					buffer[ i ] = '\0';
 					break;
 				}
-				
+
 				i++;
-			}
-			while( ( c = fgetc( f ) ) != EOF );
-			
-			strcpy( ignoreAddresses[numIgnoreAddresses].address, buffer );
-			
+			} while( ( c = fgetc( f ) ) != EOF );
+
+			strcpy( ignoreAddresses[ numIgnoreAddresses ].address, buffer );
+
 			numIgnoreAddresses++;
-			
+
 			// Make list bigger
 			if( numIgnoreAddresses >= numAllocIgnoreAddresses )
 			{
 				ignoreAddress_t* new;
-				
+
 				numAllocIgnoreAddresses *= 2;
 				new = realloc( ignoreAddresses, sizeof( ignoreAddress_t ) * numAllocIgnoreAddresses );
-				
+
 				// Alloc failed, fail parsing
 				if( new == NULL )
 				{
@@ -698,14 +690,14 @@ static qboolean parseIgnoreAddress( void )
 					ignoreAddresses = NULL;
 					return qfalse;
 				}
-				
+
 				ignoreAddresses = new;
 			}
 		}
 	}
-	
+
 	fclose( f );
-	
+
 	return qtrue;
 }
 
@@ -718,28 +710,28 @@ Check whether or not to ignore a specific address
 */
 static qboolean ignoreAddress( const char* address )
 {
-	int             i;
-	
+	int i;
+
 	if( !parseIgnoreAddress() )
 	{
 		// Couldn't parse, allow the address
 		return qfalse;
 	}
-	
+
 	for( i = 0; i < numIgnoreAddresses; i++ )
 	{
-		if( strcmp( address, ignoreAddresses[i].address ) == 0 )
+		if( strcmp( address, ignoreAddresses[ i ].address ) == 0 )
 		{
 			break;
 		}
 	}
-	
+
 	// It matched
 	if( i < numIgnoreAddresses )
 	{
 		return qtrue;
 	}
-	
+
 	return qfalse;
 }
 
@@ -753,37 +745,36 @@ Main function
 int main( int argc, const char* argv[] )
 {
 	struct sockaddr_in address;
-	socklen_t       addrlen;
-	int             nb_bytes;
-	int             sock;
-	char            packet[MAX_PACKET_SIZE + 1];	// "+ 1" because we append a '\0'
-	qboolean        valid_options;
-	fd_set          rfds;
-	struct timeval  tv;
-	
-	
+	socklen_t          addrlen;
+	int                nb_bytes;
+	int                sock;
+	char               packet[ MAX_PACKET_SIZE + 1 ]; // "+ 1" because we append a '\0'
+	qboolean           valid_options;
+	fd_set             rfds;
+	struct timeval     tv;
+
 	signal( SIGINT, cleanUp );
 	signal( SIGTERM, cleanUp );
-	
+
 	// Get the options from the command line
 	valid_options = ParseCommandLine( argc, argv );
-	
+
 	MsgPrint( MSG_NORMAL, "xrealmaster (version " VERSION " " __DATE__ " " __TIME__ ")\n" );
-	
+
 	// If there was a mistake in the command line, print the help and exit
 	if( !valid_options )
 	{
 		PrintHelp();
 		return EXIT_FAILURE;
 	}
-	
+
 	// Initializations
 	if( !SysInit() || !UnsecureInit() || !SecInit() || !SecureInit() )
 	{
 		return EXIT_FAILURE;
 	}
 	MsgPrint( MSG_NORMAL, "\n" );
-	
+
 	// Until the end of times...
 	while( !exitNow )
 	{
@@ -791,7 +782,7 @@ int main( int argc, const char* argv[] )
 		FD_SET( inSock, &rfds );
 		FD_SET( outSock, &rfds );
 		tv.tv_sec = tv.tv_usec = 0;
-		
+
 		// Check for new data every 100ms
 		if( select( max( inSock, outSock ) + 1, &rfds, NULL, NULL, &tv ) <= 0 )
 		{
@@ -802,7 +793,7 @@ int main( int argc, const char* argv[] )
 #endif
 			continue;
 		}
-		
+
 		if( FD_ISSET( inSock, &rfds ) )
 		{
 			sock = inSock;
@@ -815,28 +806,28 @@ int main( int argc, const char* argv[] )
 		{
 			continue;
 		}
-		
+
 		// Get the next valid message
-		addrlen = sizeof( address );
-		nb_bytes = recvfrom( sock, packet, sizeof( packet ) - 1, 0, ( struct sockaddr* )&address, &addrlen );
+		addrlen  = sizeof( address );
+		nb_bytes = recvfrom( sock, packet, sizeof( packet ) - 1, 0, (struct sockaddr*)&address, &addrlen );
 		if( nb_bytes <= 0 )
 		{
 			MsgPrint( MSG_WARNING, "WARNING: \"recvfrom\" returned %d\n", nb_bytes );
 			continue;
 		}
-		
+
 		// Ignore abusers
 		if( ignoreAddress( inet_ntoa( address.sin_addr ) ) )
 		{
 			continue;
 		}
-		
+
 		// If we may have to print something, rebuild the peer address buffer
 		if( max_msg_level != MSG_NOPRINT )
 		{
 			snprintf( peer_address, sizeof( peer_address ), "%s:%hu", inet_ntoa( address.sin_addr ), ntohs( address.sin_port ) );
 		}
-		
+
 		// We print the packet contents if necessary
 		// TODO: print the current time here
 		if( max_msg_level >= MSG_DEBUG )
@@ -844,14 +835,14 @@ int main( int argc, const char* argv[] )
 			MsgPrint( MSG_DEBUG, "New packet received from %s: ", peer_address );
 			PrintPacket( packet, nb_bytes );
 		}
-		
+
 		// A few sanity checks
 		if( nb_bytes < MIN_PACKET_SIZE )
 		{
 			MsgPrint( MSG_WARNING, "WARNING: rejected packet from %s (size = %d bytes)\n", peer_address, nb_bytes );
 			continue;
 		}
-		if( *( ( unsigned int* )packet ) != 0xFFFFFFFF )
+		if( *( (unsigned int*)packet ) != 0xFFFFFFFF )
 		{
 			MsgPrint( MSG_WARNING, "WARNING: rejected packet from %s (invalid header)\n", peer_address );
 			continue;
@@ -861,18 +852,17 @@ int main( int argc, const char* argv[] )
 			MsgPrint( MSG_WARNING, "WARNING: rejected packet from %s (source port = 0)\n", peer_address );
 			continue;
 		}
-		
+
 		// Append a '\0' to make the parsing easier and update the current time
-		packet[nb_bytes] = '\0';
-		crt_time = time( NULL );
-		
+		packet[ nb_bytes ] = '\0';
+		crt_time           = time( NULL );
+
 		// Call HandleMessage with the remaining contents
 		HandleMessage( packet + 4, nb_bytes - 4, &address );
 	}
-	
+
 	return 0;
 }
-
 
 // ---------- Public functions ---------- //
 
@@ -885,20 +875,20 @@ Print a message to screen, depending on its verbose level
 */
 int MsgPrint( msg_level_t msg_level, const char* format, ... )
 {
-	va_list         args;
-	int             result;
-	
+	va_list args;
+	int     result;
+
 	// If the message level is above the maximum level, don't print it
 	if( msg_level > max_msg_level )
 	{
 		return 0;
 	}
-	
+
 	va_start( args, format );
 	result = vprintf( format, args );
 	va_end( args );
-	
+
 	fflush( stdout );
-	
+
 	return result;
 }

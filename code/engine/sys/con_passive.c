@@ -49,7 +49,7 @@ void CON_Init( void )
 CON_Input
 ==================
 */
-char*           CON_Input( void )
+char* CON_Input( void )
 {
 	return NULL;
 }

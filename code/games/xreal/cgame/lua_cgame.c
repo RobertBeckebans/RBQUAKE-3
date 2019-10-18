@@ -31,65 +31,64 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 static int cgame_Print( lua_State* L )
 {
-	int             i;
-	char            buf[MAX_STRING_CHARS];
-	int             n = lua_gettop( L );	// number of arguments
-	
+	int  i;
+	char buf[ MAX_STRING_CHARS ];
+	int  n = lua_gettop( L ); // number of arguments
+
 	memset( buf, 0, sizeof( buf ) );
-	
+
 	lua_getglobal( L, "tostring" );
 	for( i = 1; i <= n; i++ )
 	{
-		const char*     s;
-		
-		lua_pushvalue( L, -1 );	// function to be called
-		lua_pushvalue( L, i );	// value to print
+		const char* s;
+
+		lua_pushvalue( L, -1 ); // function to be called
+		lua_pushvalue( L, i );  // value to print
 		lua_call( L, 1, 1 );
-		s = lua_tostring( L, -1 );	// get result
-		
+		s = lua_tostring( L, -1 ); // get result
+
 		if( s == NULL )
 		{
 			return luaL_error( L, "`tostring' must return a string to `print'" );
 		}
-		
+
 		Q_strcat( buf, sizeof( buf ), s );
-		
-		lua_pop( L, 1 );			// pop result
+
+		lua_pop( L, 1 ); // pop result
 	}
-	
+
 	CG_Printf( "%s\n", buf );
 	return 0;
 }
 
 static int cgame_RegisterShader( lua_State* L )
 {
-	const char*     s;
-	char            shaderName[MAX_QPATH];
-	qhandle_t       shader;
-	
+	const char* s;
+	char        shaderName[ MAX_QPATH ];
+	qhandle_t   shader;
+
 	s = luaL_checkstring( L, 1 );
 	Q_strncpyz( shaderName, s, sizeof( shaderName ) );
-	
+
 	shader = trap_R_RegisterShader( shaderName );
 	lua_pushinteger( L, shader );
-	
+
 	return 1;
 }
 
-static const luaL_reg cgamelib[] =
-{
-	{"Print", cgame_Print},
-	{"RegisterShader", cgame_RegisterShader},
-	{NULL, NULL}
+static const luaL_reg cgamelib[] = {
+	{ "Print", cgame_Print },
+	{ "RegisterShader", cgame_RegisterShader },
+	{ NULL, NULL }
 };
 
 int luaopen_cgame( lua_State* L )
 {
 	luaL_register( L, "cgame", cgamelib );
-	
+
 	lua_pushliteral( L, "_GAME_VERSION" );
 	lua_pushliteral( L, GAME_VERSION );
-	
+
 	return 1;
 }
 

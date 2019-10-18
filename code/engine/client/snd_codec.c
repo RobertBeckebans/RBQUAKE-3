@@ -31,13 +31,13 @@ static snd_codec_t* codecs;
 S_FileExtension
 =================
 */
-char*    S_FileExtension( const char* fni )
+char* S_FileExtension( const char* fni )
 {
 	// we should search from the ending to the last '/'
-	
-	char*           fn = ( char* )fni + strlen( fni ) - 1;
-	char*           eptr = NULL;
-	
+
+	char* fn   = (char*)fni + strlen( fni ) - 1;
+	char* eptr = NULL;
+
 	while( *fn != '/' && fn != fni )
 	{
 		if( *fn == '.' )
@@ -47,7 +47,7 @@ char*    S_FileExtension( const char* fni )
 		}
 		fn--;
 	}
-	
+
 	return eptr;
 }
 
@@ -60,34 +60,34 @@ Select an appropriate codec for a file based on its extension
 */
 static snd_codec_t* S_FindCodecForFile( const char* filename )
 {
-	char*           ext = S_FileExtension( filename );
-	snd_codec_t*    codec = codecs;
-	
+	char*        ext   = S_FileExtension( filename );
+	snd_codec_t* codec = codecs;
+
 	if( !ext )
 	{
 		// No extension - auto-detect
 		while( codec )
 		{
-			char            fn[MAX_QPATH];
-			
+			char fn[ MAX_QPATH ];
+
 			// there is no extension so we do not need to subtract 4 chars
 			Q_strncpyz( fn, filename, MAX_QPATH );
 			Com_DefaultExtension( fn, MAX_QPATH, codec->ext );
-			
+
 			// Check it exists
 			if( FS_ReadFile( fn, NULL ) != -1 )
 			{
 				return codec;
 			}
-			
+
 			// Nope. Next!
 			codec = codec->next;
 		}
-		
+
 		// Nothin'
 		return NULL;
 	}
-	
+
 	while( codec )
 	{
 		if( !Q_stricmp( ext, codec->ext ) )
@@ -96,7 +96,7 @@ static snd_codec_t* S_FindCodecForFile( const char* filename )
 		}
 		codec = codec->next;
 	}
-	
+
 	return NULL;
 }
 
@@ -132,7 +132,7 @@ S_CodecRegister
 void S_CodecRegister( snd_codec_t* codec )
 {
 	codec->next = codecs;
-	codecs = codec;
+	codecs      = codec;
 }
 
 /*
@@ -140,21 +140,21 @@ void S_CodecRegister( snd_codec_t* codec )
 S_CodecLoad
 =================
 */
-void*           S_CodecLoad( const char* filename, snd_info_t* info )
+void* S_CodecLoad( const char* filename, snd_info_t* info )
 {
-	snd_codec_t*    codec;
-	char            fn[MAX_QPATH];
-	
+	snd_codec_t* codec;
+	char         fn[ MAX_QPATH ];
+
 	codec = S_FindCodecForFile( filename );
 	if( !codec )
 	{
 		Com_Printf( "Unknown extension for %s\n", filename );
 		return NULL;
 	}
-	
+
 	strncpy( fn, filename, sizeof( fn ) );
 	Com_DefaultExtension( fn, sizeof( fn ), codec->ext );
-	
+
 	return codec->load( fn, info );
 }
 
@@ -163,21 +163,21 @@ void*           S_CodecLoad( const char* filename, snd_info_t* info )
 S_CodecOpenStream
 =================
 */
-snd_stream_t*   S_CodecOpenStream( const char* filename )
+snd_stream_t* S_CodecOpenStream( const char* filename )
 {
-	snd_codec_t*    codec;
-	char            fn[MAX_QPATH];
-	
+	snd_codec_t* codec;
+	char         fn[ MAX_QPATH ];
+
 	codec = S_FindCodecForFile( filename );
 	if( !codec )
 	{
 		Com_Printf( "Unknown extension for %s\n", filename );
 		return NULL;
 	}
-	
+
 	strncpy( fn, filename, sizeof( fn ) );
 	Com_DefaultExtension( fn, sizeof( fn ), codec->ext );
-	
+
 	return codec->open( fn );
 }
 
@@ -199,12 +199,12 @@ int S_CodecReadStream( snd_stream_t* stream, int bytes, void* buffer )
 S_CodecUtilOpen
 =================
 */
-snd_stream_t*   S_CodecUtilOpen( const char* filename, snd_codec_t* codec )
+snd_stream_t* S_CodecUtilOpen( const char* filename, snd_codec_t* codec )
 {
-	snd_stream_t*   stream;
-	fileHandle_t    hnd;
-	int             length;
-	
+	snd_stream_t* stream;
+	fileHandle_t  hnd;
+	int           length;
+
 	// Try to open the file
 	length = FS_FOpenFileRead( filename, &hnd, qtrue );
 	if( !hnd )
@@ -212,7 +212,7 @@ snd_stream_t*   S_CodecUtilOpen( const char* filename, snd_codec_t* codec )
 		Com_Printf( "Can't read sound file %s\n", filename );
 		return NULL;
 	}
-	
+
 	// Allocate a stream
 	stream = Z_Malloc( sizeof( snd_stream_t ) );
 	if( !stream )
@@ -220,10 +220,10 @@ snd_stream_t*   S_CodecUtilOpen( const char* filename, snd_codec_t* codec )
 		FS_FCloseFile( hnd );
 		return NULL;
 	}
-	
+
 	// Copy over, return
-	stream->codec = codec;
-	stream->file = hnd;
+	stream->codec  = codec;
+	stream->file   = hnd;
 	stream->length = length;
 	return stream;
 }
