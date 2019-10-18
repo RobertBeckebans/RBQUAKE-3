@@ -1455,7 +1455,7 @@ typedef struct
 qboolean		Com_ClientListContains( const clientList_t* list, int clientNum );
 void			Com_ClientListAdd( clientList_t* list, int clientNum );
 void			Com_ClientListRemove( clientList_t* list, int clientNum );
-char*		   Com_ClientListString( const clientList_t* list );
+char*			Com_ClientListString( const clientList_t* list );
 void			Com_ClientListParse( clientList_t* list, const char* s );
 
 // mode parm for FS_FOpenFile

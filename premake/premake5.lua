@@ -500,7 +500,7 @@ project "RBQuake3"
 		
 		
 	configuration { "vs*", "x32" }
-		targetdir 	"../bin/win32"
+		targetdir 	".."
 		libdirs
 		{
 			"../code/libs/sdl2/lib/x86",
@@ -514,7 +514,7 @@ project "RBQuake3"
 		}
 		
 	configuration { "vs*", "x64" }
-		targetdir 	"../bin/win64"
+		targetdir 	".."
 		libdirs
 		{
 			"../code/libs/sdl2/lib/x64",

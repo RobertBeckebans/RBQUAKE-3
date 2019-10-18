@@ -216,7 +216,7 @@ static qboolean IN_IsConsoleKey( keyNum_t key, int character )
 		
 		switch( c->type )
 		{
-#if 1
+#if 0
 			case QUAKE_KEY:
 				if( key && c->u.key == key )
 				{
