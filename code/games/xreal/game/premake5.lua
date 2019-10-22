@@ -5,7 +5,7 @@ project "xreal-game"
 	kind        "SharedLib"
 	files
 	{
-		"../../../shared/**.c",
+		"../../../shared/*.c",
 		"../../../shared/q_shared.h",
 		"../../../shared/g_public.h",
 		"../../../shared/surfaceflags.h",
@@ -80,7 +80,8 @@ project "xreal-game"
 		"../../../libs/lua/src",
 	}
 	defines
-	{ 
+	{
+		"STANDALONE",
 		"QAGAME",
 		"LUA"
 	}

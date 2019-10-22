@@ -2,20 +2,20 @@
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -512,7 +512,6 @@ static void SV_KickBots_f( void )
 		cl->lastPacketTime = svs.time; // in case there is a funny zombie
 	}
 }
-
 /*
 ==================
 SV_KickAll_f
@@ -783,11 +782,13 @@ static void SV_RehashBans_f( void )
 				serverBans[ index ].isexception = ( curpos[ 0 ] != '0' );
 				serverBans[ index ].subnet      = atoi( maskpos );
 
-				if( serverBans[ index ].ip.type == NA_IP && ( serverBans[ index ].subnet < 1 || serverBans[ index ].subnet > 32 ) )
+				if( serverBans[ index ].ip.type == NA_IP &&
+					( serverBans[ index ].subnet < 1 || serverBans[ index ].subnet > 32 ) )
 				{
 					serverBans[ index ].subnet = 32;
 				}
-				else if( serverBans[ index ].ip.type == NA_IP6 && ( serverBans[ index ].subnet < 1 || serverBans[ index ].subnet > 128 ) )
+				else if( serverBans[ index ].ip.type == NA_IP6 &&
+					( serverBans[ index ].subnet < 1 || serverBans[ index ].subnet > 128 ) )
 				{
 					serverBans[ index ].subnet = 128;
 				}
@@ -952,7 +953,7 @@ static void SV_AddBanToList( qboolean isexception )
 		return;
 	}
 
-	if( serverBansCount > ARRAY_LEN( serverBans ) )
+	if( serverBansCount >= ARRAY_LEN( serverBans ) )
 	{
 		Com_Printf( "Error: Maximum number of bans/exceptions exceeded.\n" );
 		return;

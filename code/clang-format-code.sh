@@ -38,4 +38,4 @@ CLANGFMT_BIN=clang-format
 
 #find . -regex ".*\.\(cpp\|cc\|cxx\|h\|hpp\)" ! -path "./libs/*" ! -path "./d3xp/gamesys/SysCvar.cpp" ! -path "./d3xp/gamesys/Callbacks.cpp" ! -path "./sys/win32/win_cpu.cpp" ! -path "./sys/win32_win_main.cpp" -exec $CLANGFMT_BIN -i {} \;
 
-find . -regex ".*\.\(c\|cpp\|cc\|cxx\|h\|hpp\)" ! -path "./libs/*" ! -exec $CLANGFMT_BIN -i {} \;
+find . -regex ".*\.\(c\|cpp\|cc\|cxx\|h\|hpp\)" ! -path "./libs/*" ! -path "./engine/renderer/tr_local.h" ! -path "./shared/q_shared.h" ! -exec $CLANGFMT_BIN -i {} \;

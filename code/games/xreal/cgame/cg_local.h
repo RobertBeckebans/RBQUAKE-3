@@ -81,9 +81,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define TEAM_OVERLAY_MAXNAME_WIDTH 12
 #define TEAM_OVERLAY_MAXLOCATION_WIDTH 16
 
-#define DEFAULT_REDTEAM_NAME "Stroggs"
-#define DEFAULT_BLUETEAM_NAME "Pagans"
-
 typedef enum
 {
 	FOOTSTEP_STONE,
@@ -233,7 +230,7 @@ typedef struct centity_s
 //======================================================================
 
 // local entities are created as a result of events or predicted actions,
-// and live independantly from all server transmitted entities
+// and live independently from all server transmitted entities
 
 typedef struct markPoly_s
 {

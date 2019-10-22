@@ -352,7 +352,7 @@ static qboolean CG_RegisterPlayerAnimation( clientInfo_t* ci, const char* modelN
 	{
 		frameRate = 1;
 	}
-	ci->animations[ anim ].frameTime   = 1000 / frameRate;
+	ci->animations[ anim ].frameLerp   = 1000 / frameRate;
 	ci->animations[ anim ].initialLerp = 1000 / frameRate;
 
 	if( loop )
@@ -1215,7 +1215,7 @@ static void CG_RunPlayerLerpFrame( clientInfo_t* ci, lerpFrame_t* lf, int newAni
 
 		// get the next frame based on the animation
 		anim = lf->animation;
-		if( !anim->frameTime )
+		if( !anim->frameLerp )
 		{
 			return; // shouldn't happen
 		}
@@ -1226,9 +1226,9 @@ static void CG_RunPlayerLerpFrame( clientInfo_t* ci, lerpFrame_t* lf, int newAni
 		}
 		else
 		{
-			lf->frameTime = lf->oldFrameTime + anim->frameTime;
+			lf->frameTime = lf->oldFrameTime + anim->frameLerp;
 		}
-		f = ( lf->frameTime - lf->animationStartTime ) / anim->frameTime;
+		f = ( lf->frameTime - lf->animationStartTime ) / anim->frameLerp;
 		f *= speedScale; // adjust for haste, etc
 
 		numFrames = anim->numFrames;

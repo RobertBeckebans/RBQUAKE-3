@@ -1,22 +1,21 @@
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
-Copyright (C) 2006 Robert Beckebans <trebor_7@users.sourceforge.net>
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -864,7 +863,8 @@ gitem_t* BG_FindItemForPowerup( powerup_t pw )
 	for( i = 0; i < bg_numItems; i++ )
 	{
 		if( ( bg_itemlist[ i ].giType == IT_POWERUP ||
-				bg_itemlist[ i ].giType == IT_TEAM || bg_itemlist[ i ].giType == IT_PERSISTANT_POWERUP ) &&
+				bg_itemlist[ i ].giType == IT_TEAM ||
+				bg_itemlist[ i ].giType == IT_PERSISTANT_POWERUP ) &&
 			bg_itemlist[ i ].giTag == pw )
 		{
 			return &bg_itemlist[ i ];
@@ -973,7 +973,6 @@ This needs to be the same for client side prediction and server use.
 qboolean BG_CanItemBeGrabbed( int gametype, const entityState_t* ent, const playerState_t* ps )
 {
 	gitem_t* item;
-
 #ifdef MISSIONPACK
 	int upperBound;
 #endif
@@ -1373,14 +1372,13 @@ void BG_AddPredictableEventToPlayerstate( int newEvent, int eventParm, playerSta
 #ifdef _DEBUG
 	{
 		char buf[ 256 ];
-
 		trap_Cvar_VariableStringBuffer( "showevents", buf, sizeof( buf ) );
 		if( atof( buf ) != 0 )
 		{
 #ifdef QAGAME
-			Com_Printf( " game event svt %5d -> %5d: num = %20s parm %d\n", ps->pmove_framecount /*ps->commandTime */, ps->eventSequence, eventnames[ newEvent ], eventParm );
+			Com_Printf( " game event svt %5d -> %5d: num = %20s parm %d\n", ps->pmove_framecount /*ps->commandTime*/, ps->eventSequence, eventnames[ newEvent ], eventParm );
 #else
-			Com_Printf( "Cgame event svt %5d -> %5d: num = %20s parm %d\n", ps->pmove_framecount /*ps->commandTime */, ps->eventSequence, eventnames[ newEvent ], eventParm );
+			Com_Printf( "Cgame event svt %5d -> %5d: num = %20s parm %d\n", ps->pmove_framecount /*ps->commandTime*/, ps->eventSequence, eventnames[ newEvent ], eventParm );
 #endif
 		}
 	}

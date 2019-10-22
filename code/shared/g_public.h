@@ -1,25 +1,25 @@
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
-Copyright (C) 2006 Robert Beckebans <trebor_7@users.sourceforge.net>
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
+//
 
 // g_public.h -- game module information visible to server
 
@@ -80,9 +80,9 @@ typedef struct
 
 	// when a trace call is made and passEntityNum != ENTITYNUM_NONE,
 	// an ent will be excluded from testing if:
-	// ent->s.number == passEntityNum   (don't interact with self)
-	// ent->r.ownerNum == passEntityNum (don't interact with your own missiles)
-	// entity[ent->r.ownerNum].r.ownerNum == passEntityNum  (don't interact with other missiles from owner)
+	// ent->s.number == passEntityNum	(don't interact with self)
+	// ent->r.ownerNum == passEntityNum	(don't interact with your own missiles)
+	// entity[ent->r.ownerNum].r.ownerNum == passEntityNum	(don't interact with other missiles from owner)
 	int ownerNum;
 } entityShared_t;
 
@@ -138,7 +138,7 @@ typedef enum
 	//=========== server specific functionality =============
 
 	G_LOCATE_GAME_DATA, // ( gentity_t *gEnts, int numGEntities, int sizeofGEntity_t,
-	//                          playerState_t *clients, int sizeofGameClient );
+	//							playerState_t *clients, int sizeofGameClient );
 	// the game needs to let the server system know where and how big the gentities
 	// are, so it can look at them directly without going through an interface
 

@@ -5,7 +5,7 @@ project "xreal-cgame"
 	kind        "SharedLib"
 	files
 	{
-		"../../../shared/**.c",
+		"../../../shared/*.c",
 		"../../../shared/q_shared.h",
 		"../../../shared/cg_public.h",
 		"../../../shared/tr_types.h",
@@ -44,7 +44,9 @@ project "xreal-cgame"
 		"lua_cgame.c",
 		"lua_particle.c",
 
-		"../game/bg_**.c", "../game/bg_**.cpp", "../game/bg_**.h",
+		"../game/bg_**.c",
+		"../game/bg_**.cpp",
+		"../game/bg_**.h",
 		
 		"../game/lua_qmath.c",
 		"../game/lua_vector.c",
@@ -85,7 +87,8 @@ project "xreal-cgame"
 		"../../../libs/lua/src",
 	}
 	defines
-	{ 
+	{
+		"STANDALONE",
 		"CGAME",
 		"LUA",
 	}

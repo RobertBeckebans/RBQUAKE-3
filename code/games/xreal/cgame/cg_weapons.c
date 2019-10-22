@@ -652,7 +652,7 @@ static qboolean CG_RegisterWeaponAnimation( animation_t* anim, const char* filen
 	{
 		frameRate = 1;
 	}
-	anim->frameTime   = 1000 / frameRate;
+	anim->frameLerp   = 1000 / frameRate;
 	anim->initialLerp = 1000 / frameRate;
 
 	if( loop )
@@ -1074,7 +1074,7 @@ static void CG_SetWeaponLerpFrameAnimation( weaponInfo_t* wi, lerpFrame_t* lf, i
 	lf->animationStartTime = lf->frameTime + anim->initialLerp;
 
 	shouldTime = weaponTime;
-	wouldTime  = anim->numFrames * anim->frameTime;
+	wouldTime  = anim->numFrames * anim->frameLerp;
 
 	if( shouldTime != wouldTime && shouldTime > 0 )
 	{
@@ -1174,7 +1174,7 @@ static void CG_RunWeaponLerpFrame( weaponInfo_t* wi, lerpFrame_t* lf, int weapon
 
 		// get the next frame based on the animation
 		anim = lf->animation;
-		if( !anim->frameTime )
+		if( !anim->frameLerp )
 		{
 			if( cg_debugWeaponAnim.integer )
 			{
@@ -1189,10 +1189,10 @@ static void CG_RunWeaponLerpFrame( weaponInfo_t* wi, lerpFrame_t* lf, int weapon
 		}
 		else
 		{
-			lf->frameTime = lf->oldFrameTime + anim->frameTime;
+			lf->frameTime = lf->oldFrameTime + anim->frameLerp;
 		}
 
-		f = ( lf->frameTime - lf->animationStartTime ) / anim->frameTime;
+		f = ( lf->frameTime - lf->animationStartTime ) / anim->frameLerp;
 		f *= lf->animationScale;
 		f *= speedScale; // adjust for haste, etc
 

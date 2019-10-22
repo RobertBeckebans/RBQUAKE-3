@@ -1,22 +1,21 @@
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
-Copyright (C) 2006-2008 Robert Beckebans <trebor_7@users.sourceforge.net>
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -135,9 +134,9 @@ typedef struct client_s
 	char          userinfo[ MAX_INFO_STRING ]; // name, etc
 
 	char reliableCommands[ MAX_RELIABLE_COMMANDS ][ MAX_STRING_CHARS ];
-	int  reliableSequence;    // last added reliable message, not necesarily sent or acknowledged yet
+	int  reliableSequence;    // last added reliable message, not necessarily sent or acknowledged yet
 	int  reliableAcknowledge; // last acknowledged reliable message
-	int  reliableSent;        // last sent reliable message, not necesarily acknowledged yet
+	int  reliableSent;        // last sent reliable message, not necessarily acknowledged yet
 	int  messageAcknowledge;
 
 	int gamestateMessageNum; // netchan->outgoingSequence of gamestate
@@ -397,21 +396,17 @@ void BotImport_DebugPolygonDelete( int id );
 void SV_BotInitBotLib( void );
 
 //============================================================
-
 //
 // high level object sorting to reduce interaction tests
 //
-void SV_ClearWorld( void );
 
 // called after the world model has been loaded, before linking any entities
 
 void SV_UnlinkEntity( sharedEntity_t* ent );
-
 // call before removing an entity, and before trying to move one,
 // so it doesn't clip against itself
 
 void SV_LinkEntity( sharedEntity_t* ent );
-
 // Needs to be called any time an entity changes origin, mins, maxs,
 // or solid.  Automatically unlinks if needed.
 // sets ent->v.absmin and ent->v.absmax
@@ -423,7 +418,6 @@ clipHandle_t SV_ClipHandleForEntity( const sharedEntity_t* ent );
 void SV_SectorList_f( void );
 
 int SV_AreaEntities( const vec3_t mins, const vec3_t maxs, int* entityList, int maxcount );
-
 // fills in a table of entity numbers with entities that have bounding boxes
 // that intersect the given area.  It is possible for a non-axial bmodel
 // to be returned that doesn't actually intersect the area on an exact
@@ -432,7 +426,6 @@ int SV_AreaEntities( const vec3_t mins, const vec3_t maxs, int* entityList, int 
 // The world entity is never returned in this list.
 
 int SV_PointContents( const vec3_t p, int passEntityNum );
-
 // returns the CONTENTS_* value from the world and all entities at the given point.
 
 void SV_Trace( trace_t* results, const vec3_t start, vec3_t mins, vec3_t maxs, const vec3_t end, int passEntityNum, int contentmask, traceType_t type );

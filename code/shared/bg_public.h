@@ -1,22 +1,21 @@
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
-Copyright (C) 2006 Robert Beckebans <trebor_7@users.sourceforge.net>
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -26,7 +25,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // because games can change separately from the main system version, we need a
 // second version that must match between game and cgame
 
-#define GAME_VERSION "XreaL"
+#define GAME_VERSION BASEGAME "-1"
+
+#define DEFAULT_GRAVITY 800
 
 // Tr3B: define this to use the new Quake4 like player model system
 #define XPPM 1
@@ -38,8 +39,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define DEFAULT_MODEL "visor"
 #define DEFAULT_HEADMODEL "visor"
 #endif
-
-#define DEFAULT_GRAVITY 800
+#define DEFAULT_REDTEAM_NAME "Stroggs"
+#define DEFAULT_BLUETEAM_NAME "Pagans"
 
 #if 0 //def XPPM
 #define GIB_HEALTH 0
@@ -63,12 +64,19 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #define VOTE_TIME 30000 // 30 seconds before vote times out
 
+#if defined( STANDALONE )
 // Tr3B: changed to HL 2 / Quake 4 properties
 #define STEPSIZE 18
 #define DEFAULT_VIEWHEIGHT 44 // 68	// Tr3B: was 26
 #define CROUCH_VIEWHEIGHT 16  // 32	// Tr3B: was 12
 #define CROUCH_HEIGHT 20      // 38	// Tr3B: was 16
 #define DEAD_VIEWHEIGHT -16   // Tr3B: was -16
+#else
+#define MINS_Z -24
+#define DEFAULT_VIEWHEIGHT 26
+#define CROUCH_VIEWHEIGHT 12
+#define DEAD_VIEWHEIGHT -16
+#endif
 
 //
 // config strings are a general means of communicating variable length strings
@@ -243,7 +251,7 @@ typedef enum
 	STAT_ARMOR,
 	STAT_DEAD_YAW,      // look this direction when dead (FIXME: get rid of?)
 	STAT_CLIENTS_READY, // bit mask of clients wishing to exit the intermission (FIXME: configstring?)
-	STAT_MAX_HEALTH     // health / armor limit, changable by handicap
+	STAT_MAX_HEALTH     // health / armor limit, changeable by handicap
 } statIndex_t;
 
 // player_state->persistant[] indexes
@@ -362,7 +370,7 @@ typedef enum
 #define PLAYEREVENT_HOLYSHIT 0x0004
 
 // entityState_t->event values
-// entity events are for effects that take place reletive
+// entity events are for effects that take place relative
 // to an existing entities origin.  Very network efficient.
 
 // two bits at the top of the entityState->event field
@@ -483,6 +491,7 @@ typedef enum
 	EV_TAUNT_GETFLAG,
 	EV_TAUNT_GUARDBASE,
 	EV_TAUNT_PATROL
+
 } entity_event_t;
 
 typedef enum
@@ -502,6 +511,8 @@ typedef enum
 	GTS_TEAMS_ARE_TIED,
 	GTS_KAMIKAZE
 } global_team_sound_t;
+
+#if defined( STANDALONE )
 
 // animations
 typedef enum
@@ -562,6 +573,65 @@ typedef enum
 	MAX_FLAG_ANIMATIONS
 } flagAnimNumber_t;
 
+#else
+
+// animations
+typedef enum
+{
+	BOTH_DEATH1,
+	BOTH_DEAD1,
+	BOTH_DEATH2,
+	BOTH_DEAD2,
+	BOTH_DEATH3,
+	BOTH_DEAD3,
+
+	TORSO_GESTURE,
+
+	TORSO_ATTACK,
+	TORSO_ATTACK2,
+
+	TORSO_DROP,
+	TORSO_RAISE,
+
+	TORSO_STAND,
+	TORSO_STAND2,
+
+	LEGS_WALKCR,
+	LEGS_WALK,
+	LEGS_RUN,
+	LEGS_BACK,
+	LEGS_SWIM,
+
+	LEGS_JUMP,
+	LEGS_LAND,
+
+	LEGS_JUMPB,
+	LEGS_LANDB,
+
+	LEGS_IDLE,
+	LEGS_IDLECR,
+
+	LEGS_TURN,
+
+	TORSO_GETFLAG,
+	TORSO_GUARDBASE,
+	TORSO_PATROL,
+	TORSO_FOLLOWME,
+	TORSO_AFFIRMATIVE,
+	TORSO_NEGATIVE,
+
+	MAX_ANIMATIONS,
+
+	LEGS_BACKCR,
+	LEGS_BACKWALK,
+	FLAG_RUN,
+	FLAG_STAND,
+	FLAG_STAND2RUN,
+
+	MAX_TOTALANIMATIONS
+} animNumber_t;
+#endif
+
 typedef struct animation_s
 {
 	qhandle_t handle;      // registered md5Animation or whatever
@@ -570,7 +640,7 @@ typedef struct animation_s
 	int firstFrame;
 	int numFrames;
 	int loopFrames;  // 0 to numFrames
-	int frameTime;   // msec between frames
+	int frameLerp;   // msec between frames
 	int initialLerp; // msec to get to first frame
 	int reversed;    // true if animation is reversed
 	int flipflop;    // true if animation should flipflop back to base
@@ -729,7 +799,7 @@ typedef enum
 	ET_INVISIBLE,
 	ET_GRAPPLE, // grapple hooked on wall
 	ET_TEAM,
-	ET_AI_NODE, // AI visualization tool
+	ET_AI_NODE, // RB AI visualization tool
 	ET_AI_LINK,
 
 	ET_EVENTS // any of the EV_* events can be added freestanding

@@ -5,7 +5,7 @@ project "xreal-ui"
 	kind        "SharedLib"
 	files
 	{
-		"../../../shared/**.c",
+		"../../../shared/*.c",
 		"../../../shared/q_shared.h",
 		"../../../shared/ui_public.h",
 		"../../../shared/tr_types.h",
@@ -19,7 +19,8 @@ project "xreal-ui"
 		"../../../shared",
 	}
 	defines
-	{ 
+	{
+		"STANDALONE",
 		"UI",
 	}
 	

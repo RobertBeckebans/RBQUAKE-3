@@ -44,7 +44,7 @@ qboolean CG_RegisterAnimation( animation_t* anim, const char* filename, qboolean
 	{
 		frameRate = 1;
 	}
-	anim->frameTime   = 1000 / frameRate;
+	anim->frameLerp   = 1000 / frameRate;
 	anim->initialLerp = 1000 / frameRate;
 
 	if( loop )
@@ -165,7 +165,7 @@ void CG_RunLerpFrame( lerpFrame_t* lf, animation_t* anims, int animsNum, int new
 
 		// get the next frame based on the animation
 		anim = lf->animation;
-		if( !anim->frameTime )
+		if( !anim->frameLerp )
 		{
 			return; // shouldn't happen
 		}
@@ -176,9 +176,9 @@ void CG_RunLerpFrame( lerpFrame_t* lf, animation_t* anims, int animsNum, int new
 		}
 		else
 		{
-			lf->frameTime = lf->oldFrameTime + anim->frameTime;
+			lf->frameTime = lf->oldFrameTime + anim->frameLerp;
 		}
-		f = ( lf->frameTime - lf->animationStartTime ) / anim->frameTime;
+		f = ( lf->frameTime - lf->animationStartTime ) / anim->frameLerp;
 		f *= speedScale; // adjust for haste, etc
 
 		numFrames = anim->numFrames;
