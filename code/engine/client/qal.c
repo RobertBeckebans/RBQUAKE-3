@@ -3,20 +3,20 @@
 Copyright (C) 1999-2005 Id Software, Inc.
 Copyright (C) 2005 Stuart Dalton (badcdev@gmail.com)
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -83,7 +83,7 @@ LPALBUFFERDATA           qalBufferData;
 LPALGETBUFFERF           qalGetBufferf;
 LPALGETBUFFERI           qalGetBufferi;
 LPALDOPPLERFACTOR        qalDopplerFactor;
-LPALDOPPLERVELOCITY      qalDopplerVelocity;
+LPALSPEEDOFSOUND         qalSpeedOfSound;
 LPALDISTANCEMODEL        qalDistanceModel;
 
 LPALCCREATECONTEXT      qalcCreateContext;
@@ -146,23 +146,9 @@ qboolean QAL_Init( const char* libname )
 		return qtrue;
 	}
 
-	Com_Printf( "Loading \"%s\"...\n", libname );
-	if( ( OpenALLib = Sys_LoadLibrary( libname ) ) == 0 )
+	if( !( OpenALLib = Sys_LoadDll( libname, qtrue ) ) )
 	{
-		#ifdef _WIN32
 		return qfalse;
-		#else
-		char fn[ 1024 ];
-
-		Q_strncpyz( fn, Sys_Cwd(), sizeof( fn ) );
-		strncat( fn, "/", sizeof( fn ) - strlen( fn ) - 1 );
-		strncat( fn, libname, sizeof( fn ) - strlen( fn ) - 1 );
-
-		if( ( OpenALLib = Sys_LoadLibrary( fn ) ) == 0 )
-		{
-			return qfalse;
-		}
-		#endif
 	}
 
 	alinit_fail = qfalse;
@@ -219,7 +205,7 @@ qboolean QAL_Init( const char* libname )
 	qalGetBufferf           = GPA( "alGetBufferf" );
 	qalGetBufferi           = GPA( "alGetBufferi" );
 	qalDopplerFactor        = GPA( "alDopplerFactor" );
-	qalDopplerVelocity      = GPA( "alDopplerVelocity" );
+	qalSpeedOfSound         = GPA( "alSpeedOfSound" );
 	qalDistanceModel        = GPA( "alDistanceModel" );
 
 	qalcCreateContext      = GPA( "alcCreateContext" );
@@ -318,7 +304,7 @@ void QAL_Shutdown( void )
 	qalGetBufferf           = NULL;
 	qalGetBufferi           = NULL;
 	qalDopplerFactor        = NULL;
-	qalDopplerVelocity      = NULL;
+	qalSpeedOfSound         = NULL;
 	qalDistanceModel        = NULL;
 
 	qalcCreateContext      = NULL;

@@ -1,22 +1,21 @@
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
-Copyright (C) 2006-2009 Robert Beckebans <trebor_7@users.sourceforge.net>
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -110,21 +109,15 @@ bit functions
 =============================================================================
 */
 
-int overflows;
-
 // negative bit values include signs
 void MSG_WriteBits( msg_t* msg, int value, int bits )
 {
 	int i;
 
-	//  FILE*   fp;
-
 	oldsize += bits;
 
-	// this isn't an exact overflow check, but close enough
-	if( msg->maxsize - msg->cursize < 4 )
+	if( msg->overflowed )
 	{
-		msg->overflowed = qtrue;
 		return;
 	}
 
@@ -133,34 +126,19 @@ void MSG_WriteBits( msg_t* msg, int value, int bits )
 		Com_Error( ERR_DROP, "MSG_WriteBits: bad bits %i", bits );
 	}
 
-	// check for overflows
-	if( bits != 32 )
-	{
-		if( bits > 0 )
-		{
-			if( value > ( ( 1 << bits ) - 1 ) || value < 0 )
-			{
-				overflows++;
-			}
-		}
-		else
-		{
-			int r;
-
-			r = 1 << ( bits - 1 );
-
-			if( value > r - 1 || value < -r )
-			{
-				overflows++;
-			}
-		}
-	}
 	if( bits < 0 )
 	{
 		bits = -bits;
 	}
+
 	if( msg->oob )
 	{
+		if( msg->cursize + ( bits >> 3 ) > msg->maxsize )
+		{
+			msg->overflowed = qtrue;
+			return;
+		}
+
 		if( bits == 8 )
 		{
 			msg->data[ msg->cursize ] = value;
@@ -169,34 +147,35 @@ void MSG_WriteBits( msg_t* msg, int value, int bits )
 		}
 		else if( bits == 16 )
 		{
-			unsigned short* sp = ( unsigned short* )&msg->data[ msg->cursize ];
+			short temp = value;
 
-			*sp = LittleShort( value );
+			CopyLittleShort( &msg->data[ msg->cursize ], &temp );
 			msg->cursize += 2;
 			msg->bit += 16;
 		}
 		else if( bits == 32 )
 		{
-			unsigned int* ip = ( unsigned int* )&msg->data[ msg->cursize ];
-
-			*ip = LittleLong( value );
+			CopyLittleLong( &msg->data[ msg->cursize ], &value );
 			msg->cursize += 4;
 			msg->bit += 32;
 		}
 		else
 		{
-			Com_Error( ERR_DROP, "can't read %d bits\n", bits );
+			Com_Error( ERR_DROP, "can't write %d bits", bits );
 		}
 	}
 	else
 	{
-		//      fp = fopen("c:\\netchan.bin", "a");
 		value &= ( 0xffffffff >> ( 32 - bits ) );
 		if( bits & 7 )
 		{
 			int nbits;
-
 			nbits = bits & 7;
+			if( msg->bit + nbits > msg->maxsize << 3 )
+			{
+				msg->overflowed = qtrue;
+				return;
+			}
 			for( i = 0; i < nbits; i++ )
 			{
 				Huff_putBit( ( value & 1 ), msg->data, &msg->bit );
@@ -208,13 +187,17 @@ void MSG_WriteBits( msg_t* msg, int value, int bits )
 		{
 			for( i = 0; i < bits; i += 8 )
 			{
-				//              fwrite(bp, 1, 1, fp);
-				Huff_offsetTransmit( &msgHuff.compressor, ( value & 0xff ), msg->data, &msg->bit );
+				Huff_offsetTransmit( &msgHuff.compressor, ( value & 0xff ), msg->data, &msg->bit, msg->maxsize << 3 );
 				value = ( value >> 8 );
+
+				if( msg->bit > msg->maxsize << 3 )
+				{
+					msg->overflowed = qtrue;
+					return;
+				}
 			}
 		}
 		msg->cursize = ( msg->bit >> 3 ) + 1;
-		//      fclose(fp);
 	}
 }
 
@@ -224,8 +207,12 @@ int MSG_ReadBits( msg_t* msg, int bits )
 	int      get;
 	qboolean sgn;
 	int      i, nbits;
+	//	FILE*	fp;
 
-	//  FILE*   fp;
+	if( msg->readcount > msg->cursize )
+	{
+		return 0;
+	}
 
 	value = 0;
 
@@ -241,6 +228,12 @@ int MSG_ReadBits( msg_t* msg, int bits )
 
 	if( msg->oob )
 	{
+		if( msg->readcount + ( bits >> 3 ) > msg->cursize )
+		{
+			msg->readcount = msg->cursize + 1;
+			return 0;
+		}
+
 		if( bits == 8 )
 		{
 			value = msg->data[ msg->readcount ];
@@ -249,23 +242,22 @@ int MSG_ReadBits( msg_t* msg, int bits )
 		}
 		else if( bits == 16 )
 		{
-			unsigned short* sp = ( unsigned short* )&msg->data[ msg->readcount ];
+			short temp;
 
-			value = LittleShort( *sp );
+			CopyLittleShort( &temp, &msg->data[ msg->readcount ] );
+			value = temp;
 			msg->readcount += 2;
 			msg->bit += 16;
 		}
 		else if( bits == 32 )
 		{
-			unsigned int* ip = ( unsigned int* )&msg->data[ msg->readcount ];
-
-			value = LittleLong( *ip );
+			CopyLittleLong( &value, &msg->data[ msg->readcount ] );
 			msg->readcount += 4;
 			msg->bit += 32;
 		}
 		else
 		{
-			Com_Error( ERR_DROP, "can't read %d bits\n", bits );
+			Com_Error( ERR_DROP, "can't read %d bits", bits );
 		}
 	}
 	else
@@ -274,6 +266,11 @@ int MSG_ReadBits( msg_t* msg, int bits )
 		if( bits & 7 )
 		{
 			nbits = bits & 7;
+			if( msg->bit + nbits > msg->cursize << 3 )
+			{
+				msg->readcount = msg->cursize + 1;
+				return 0;
+			}
 			for( i = 0; i < nbits; i++ )
 			{
 				value |= ( Huff_getBit( msg->data, &msg->bit ) << i );
@@ -282,18 +279,24 @@ int MSG_ReadBits( msg_t* msg, int bits )
 		}
 		if( bits )
 		{
-			//          fp = fopen("c:\\netchan.bin", "a");
+			//			fp = fopen("c:\\netchan.bin", "a");
 			for( i = 0; i < bits; i += 8 )
 			{
-				Huff_offsetReceive( msgHuff.decompressor.tree, &get, msg->data, &msg->bit );
-				//              fwrite(&get, 1, 1, fp);
-				value |= ( get << ( i + nbits ) );
+				Huff_offsetReceive( msgHuff.decompressor.tree, &get, msg->data, &msg->bit, msg->cursize << 3 );
+				//				fwrite(&get, 1, 1, fp);
+				value = ( unsigned int )value | ( ( unsigned int )get << ( i + nbits ) );
+
+				if( msg->bit > msg->cursize << 3 )
+				{
+					msg->readcount = msg->cursize + 1;
+					return 0;
+				}
 			}
-			//          fclose(fp);
+			//			fclose(fp);
 		}
 		msg->readcount = ( msg->bit >> 3 ) + 1;
 	}
-	if( sgn )
+	if( sgn && bits > 0 && bits < 32 )
 	{
 		if( value & ( 1 << ( bits - 1 ) ) )
 		{
@@ -337,7 +340,6 @@ void MSG_WriteByte( msg_t* sb, int c )
 void MSG_WriteData( msg_t* buf, const void* data, int length )
 {
 	int i;
-
 	for( i = 0; i < length; i++ )
 	{
 		MSG_WriteByte( buf, ( ( byte* )data )[ i ] );
@@ -364,7 +366,6 @@ void MSG_WriteLong( msg_t* sb, int c )
 void MSG_WriteFloat( msg_t* sb, float f )
 {
 	floatint_t dat;
-
 	dat.f = f;
 	MSG_WriteBits( sb, dat.i, 32 );
 }
@@ -483,7 +484,6 @@ int MSG_LookaheadByte( msg_t* msg )
 	const int readcount = msg->readcount;
 	const int bit       = msg->bit;
 	int       c         = MSG_ReadByte( msg );
-
 	Huff_setBloc( bloc );
 	msg->readcount = readcount;
 	msg->bit       = bit;
@@ -552,12 +552,15 @@ char* MSG_ReadString( msg_t* msg )
 		{
 			c = '.';
 		}
+		// break only after reading all expected data from bitstream
+		if( l >= sizeof( string ) - 1 )
+		{
+			break;
+		}
+		string[ l++ ] = c;
+	} while( 1 );
 
-		string[ l ] = c;
-		l++;
-	} while( l < sizeof( string ) - 1 );
-
-	string[ l ] = 0;
+	string[ l ] = '\0';
 
 	return string;
 }
@@ -585,12 +588,15 @@ char* MSG_ReadBigString( msg_t* msg )
 		{
 			c = '.';
 		}
+		// break only after reading all expected data from bitstream
+		if( l >= sizeof( string ) - 1 )
+		{
+			break;
+		}
+		string[ l++ ] = c;
+	} while( 1 );
 
-		string[ l ] = c;
-		l++;
-	} while( l < sizeof( string ) - 1 );
-
-	string[ l ] = 0;
+	string[ l ] = '\0';
 
 	return string;
 }
@@ -618,12 +624,15 @@ char* MSG_ReadStringLine( msg_t* msg )
 		{
 			c = '.';
 		}
+		// break only after reading all expected data from bitstream
+		if( l >= sizeof( string ) - 1 )
+		{
+			break;
+		}
+		string[ l++ ] = c;
+	} while( 1 );
 
-		string[ l ] = c;
-		l++;
-	} while( l < sizeof( string ) - 1 );
-
-	string[ l ] = 0;
+	string[ l ] = '\0';
 
 	return string;
 }
@@ -675,10 +684,10 @@ delta functions
 
 extern cvar_t* cl_shownet;
 
-#define LOG( x )                   \
-	if( cl_shownet->integer == 4 ) \
-	{                              \
-		Com_Printf( "%s ", x );    \
+#define LOG( x )                                 \
+	if( cl_shownet && cl_shownet->integer == 4 ) \
+	{                                            \
+		Com_Printf( "%s ", x );                  \
 	};
 
 void MSG_WriteDelta( msg_t* msg, int oldV, int newV, int bits )
@@ -785,7 +794,7 @@ int MSG_ReadDeltaKey( msg_t* msg, int key, int oldV, int bits )
 {
 	if( MSG_ReadBits( msg, 1 ) )
 	{
-		return MSG_ReadBits( msg, bits ) ^ ( key & kbitmask[ bits ] );
+		return MSG_ReadBits( msg, bits ) ^ ( key & kbitmask[ bits - 1 ] );
 	}
 	return oldV;
 }
@@ -793,7 +802,6 @@ int MSG_ReadDeltaKey( msg_t* msg, int key, int oldV, int bits )
 void MSG_WriteDeltaKeyFloat( msg_t* msg, int key, float oldV, float newV )
 {
 	floatint_t fi;
-
 	if( oldV == newV )
 	{
 		MSG_WriteBits( msg, 0, 1 );
@@ -908,7 +916,9 @@ void MSG_WriteDeltaUsercmdKey( msg_t* msg, int key, usercmd_t* from, usercmd_t* 
 		from->angles[ 2 ] == to->angles[ 2 ] &&
 		from->forwardmove == to->forwardmove &&
 		from->rightmove == to->rightmove &&
-		from->upmove == to->upmove && from->buttons == to->buttons && from->weapon == to->weapon )
+		from->upmove == to->upmove &&
+		from->buttons == to->buttons &&
+		from->weapon == to->weapon )
 	{
 		MSG_WriteBits( msg, 0, 1 ); // no change
 		oldsize += 7;
@@ -1089,7 +1099,7 @@ void MSG_WriteDeltaEntity( msg_t* msg, struct entityState_s* from, struct entity
 	float       fullFloat;
 	int *       fromF, *toF;
 
-	numFields = sizeof( entityStateFields ) / sizeof( entityStateFields[ 0 ] );
+	numFields = ARRAY_LEN( entityStateFields );
 
 	// all fields should be 32 bits to avoid any compiler packing issues
 	// the "number" field is not part of the field list
@@ -1179,7 +1189,8 @@ void MSG_WriteDeltaEntity( msg_t* msg, struct entityState_s* from, struct entity
 			else
 			{
 				MSG_WriteBits( msg, 1, 1 );
-				if( trunc == fullFloat && trunc + FLOAT_INT_BIAS >= 0 && trunc + FLOAT_INT_BIAS < ( 1 << FLOAT_INT_BITS ) )
+				if( trunc == fullFloat && trunc + FLOAT_INT_BIAS >= 0 &&
+					trunc + FLOAT_INT_BIAS < ( 1 << FLOAT_INT_BITS ) )
 				{
 					// send as small integer
 					MSG_WriteBits( msg, 0, 1 );
@@ -1250,7 +1261,7 @@ void MSG_ReadDeltaEntity( msg_t* msg, entityState_t* from, entityState_t* to, in
 	{
 		Com_Memset( to, 0, sizeof( *to ) );
 		to->number = MAX_GENTITIES - 1;
-		if( cl_shownet->integer >= 2 || cl_shownet->integer == -1 )
+		if( cl_shownet && ( cl_shownet->integer >= 2 || cl_shownet->integer == -1 ) )
 		{
 			Com_Printf( "%3i: #%-3i remove\n", msg->readcount, number );
 		}
@@ -1265,12 +1276,17 @@ void MSG_ReadDeltaEntity( msg_t* msg, entityState_t* from, entityState_t* to, in
 		return;
 	}
 
-	numFields = sizeof( entityStateFields ) / sizeof( entityStateFields[ 0 ] );
+	numFields = ARRAY_LEN( entityStateFields );
 	lc        = MSG_ReadByte( msg );
+
+	if( lc > numFields || lc < 0 )
+	{
+		Com_Error( ERR_DROP, "invalid entityState field count" );
+	}
 
 	// shownet 2/3 will interleave with other printed info, -1 will
 	// just print the delta records`
-	if( cl_shownet->integer >= 2 || cl_shownet->integer == -1 )
+	if( cl_shownet && ( cl_shownet->integer >= 2 || cl_shownet->integer == -1 ) )
 	{
 		print = 1;
 		Com_Printf( "%3i: #%-3i ", msg->readcount, to->number );
@@ -1342,7 +1358,7 @@ void MSG_ReadDeltaEntity( msg_t* msg, entityState_t* from, entityState_t* to, in
 					}
 				}
 			}
-			//          pcount[i]++;
+			//			pcount[i]++;
 		}
 	}
 	for( i = lc, field = &entityStateFields[ lc ]; i < numFields; i++, field++ )
@@ -1444,7 +1460,6 @@ void MSG_WriteDeltaPlayerstate( msg_t* msg, struct playerState_s* from, struct p
 	int           ammobits;
 	int           powerupbits;
 	int           numFields;
-	int           c;
 	netField_t*   field;
 	int *         fromF, *toF;
 	float         fullFloat;
@@ -1456,9 +1471,7 @@ void MSG_WriteDeltaPlayerstate( msg_t* msg, struct playerState_s* from, struct p
 		Com_Memset( &dummy, 0, sizeof( dummy ) );
 	}
 
-	c = msg->cursize;
-
-	numFields = sizeof( playerStateFields ) / sizeof( playerStateFields[ 0 ] );
+	numFields = ARRAY_LEN( playerStateFields );
 
 	lc = 0;
 	for( i = 0, field = playerStateFields; i < numFields; i++, field++ )
@@ -1487,7 +1500,7 @@ void MSG_WriteDeltaPlayerstate( msg_t* msg, struct playerState_s* from, struct p
 		}
 
 		MSG_WriteBits( msg, 1, 1 ); // changed
-									//      pcount[i]++;
+									//		pcount[i]++;
 
 		if( field->bits == 0 )
 		{
@@ -1495,7 +1508,8 @@ void MSG_WriteDeltaPlayerstate( msg_t* msg, struct playerState_s* from, struct p
 			fullFloat = *( float* )toF;
 			trunc     = ( int )fullFloat;
 
-			if( trunc == fullFloat && trunc + FLOAT_INT_BIAS >= 0 && trunc + FLOAT_INT_BIAS < ( 1 << FLOAT_INT_BITS ) )
+			if( trunc == fullFloat && trunc + FLOAT_INT_BIAS >= 0 &&
+				trunc + FLOAT_INT_BIAS < ( 1 << FLOAT_INT_BITS ) )
 			{
 				// send as small integer
 				MSG_WriteBits( msg, 0, 1 );
@@ -1514,7 +1528,6 @@ void MSG_WriteDeltaPlayerstate( msg_t* msg, struct playerState_s* from, struct p
 			MSG_WriteBits( msg, *toF, field->bits );
 		}
 	}
-	c = msg->cursize - c;
 
 	//
 	// send the arrays
@@ -1656,7 +1669,7 @@ void MSG_ReadDeltaPlayerstate( msg_t* msg, playerState_t* from, playerState_t* t
 
 	// shownet 2/3 will interleave with other printed info, -2 will
 	// just print the delta records
-	if( cl_shownet->integer >= 2 || cl_shownet->integer == -2 )
+	if( cl_shownet && ( cl_shownet->integer >= 2 || cl_shownet->integer == -2 ) )
 	{
 		print = 1;
 		Com_Printf( "%3i: playerstate ", msg->readcount );
@@ -1666,8 +1679,13 @@ void MSG_ReadDeltaPlayerstate( msg_t* msg, playerState_t* from, playerState_t* t
 		print = 0;
 	}
 
-	numFields = sizeof( playerStateFields ) / sizeof( playerStateFields[ 0 ] );
+	numFields = ARRAY_LEN( playerStateFields );
 	lc        = MSG_ReadByte( msg );
+
+	if( lc > numFields || lc < 0 )
+	{
+		Com_Error( ERR_DROP, "invalid playerState field count" );
+	}
 
 	for( i = 0, field = playerStateFields; i < lc; i++, field++ )
 	{

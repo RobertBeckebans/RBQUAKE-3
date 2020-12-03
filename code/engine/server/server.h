@@ -84,7 +84,7 @@ typedef struct
 	int        nextFrameTime;   // when time > nextFrameTime, process world
 	char*      configstrings[ MAX_CONFIGSTRINGS ];
 	svEntity_t svEntities[ MAX_GENTITIES ];
-	
+
 	struct cmodel_s* models[ MAX_MODELS ];
 
 	char* entityParsePoint; // used during game VM init

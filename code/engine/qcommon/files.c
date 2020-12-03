@@ -1370,12 +1370,12 @@ long FS_FOpenFileReadDir( const char* filename, searchpath_t* search, fileHandle
 
 					if( !( pak->referenced & FS_GENERAL_REF ) )
 					{
-						if( 
-						#if defined( STANDALONE )
+						if(
+#if defined( STANDALONE )
 							!FS_IsExt( filename, ".mtr", len ) &&
-						#else
+#else
 							!FS_IsExt( filename, ".shader", len ) &&
-						#endif
+#endif
 							!FS_IsExt( filename, ".txt", len ) &&
 							!FS_IsExt( filename, ".cfg", len ) &&
 							!FS_IsExt( filename, ".config", len ) &&

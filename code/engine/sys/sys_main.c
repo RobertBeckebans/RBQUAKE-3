@@ -158,16 +158,31 @@ char* Sys_ConsoleInput( void )
 Sys_PIDFileName
 =================
 */
-static char* Sys_PIDFileName( void )
+static char* Sys_PIDFileName( const char* gamedir )
 {
-	const char* homePath = Sys_DefaultHomePath();
+	const char* homePath = Cvar_VariableString( "fs_homepath" );
 
-	if( homePath != NULL && *homePath != '\0' )
+	if( *homePath != '\0' )
 	{
-		return va( "%s/%s", homePath, PID_FILENAME );
+		return va( "%s/%s/%s", homePath, gamedir, PID_FILENAME );
 	}
 
 	return NULL;
+}
+
+/*
+=================
+Sys_RemovePIDFile
+=================
+*/
+void Sys_RemovePIDFile( const char* gamedir )
+{
+	char* pidFile = Sys_PIDFileName( gamedir );
+
+	if( pidFile != NULL )
+	{
+		remove( pidFile );
+	}
 }
 
 /*
@@ -177,9 +192,9 @@ Sys_WritePIDFile
 Return qtrue if there is an existing stale PID file
 =================
 */
-qboolean Sys_WritePIDFile( void )
+static qboolean Sys_WritePIDFile( const char* gamedir )
 {
-	char*    pidFile = Sys_PIDFileName();
+	char*    pidFile = Sys_PIDFileName( gamedir );
 	FILE*    f;
 	qboolean stale = qfalse;
 
@@ -211,6 +226,11 @@ qboolean Sys_WritePIDFile( void )
 		}
 	}
 
+	if( FS_CreatePath( pidFile ) )
+	{
+		return 0;
+	}
+
 	if( ( f = fopen( pidFile, "w" ) ) != NULL )
 	{
 		fprintf( f, "%d", Sys_PID() );
@@ -226,6 +246,35 @@ qboolean Sys_WritePIDFile( void )
 
 /*
 =================
+Sys_InitPIDFile
+=================
+*/
+void Sys_InitPIDFile( const char* gamedir )
+{
+	if( Sys_WritePIDFile( gamedir ) )
+	{
+#ifndef DEDICATED
+		char message[ 1024 ];
+		char modName[ MAX_OSPATH ];
+
+		FS_GetModDescription( gamedir, modName, sizeof( modName ) );
+		Q_CleanStr( modName );
+
+		Com_sprintf( message, sizeof( message ), "The last time %s ran, "
+												 "it didn't exit properly. This may be due to inappropriate video "
+												 "settings. Would you like to start with \"safe\" video settings?",
+			modName );
+
+		if( Sys_Dialog( DT_YES_NO, message, "Abnormal Exit" ) == DR_YES )
+		{
+			Cvar_Set( "com_abnormalExit", "1" );
+		}
+#endif
+	}
+}
+
+/*
+=================
 Sys_Exit
 
 Single exit point (regular exit or in case of error)
@@ -233,22 +282,19 @@ Single exit point (regular exit or in case of error)
 */
 static __attribute__( ( noreturn ) ) void Sys_Exit( int exitCode )
 {
-	//	CON_Shutdown();
+	CON_Shutdown();
 
 #ifndef DEDICATED
 	SDL_Quit();
 #endif
 
-	if( exitCode < 2 )
+	if( exitCode < 2 && com_fullyInitialized )
 	{
 		// Normal exit
-		char* pidFile = Sys_PIDFileName();
-
-		if( pidFile != NULL )
-		{
-			remove( pidFile );
-		}
+		Sys_RemovePIDFile( FS_GetCurrentGameDir() );
 	}
+
+	NET_Shutdown();
 
 	Sys_PlatformExit();
 
@@ -402,7 +448,6 @@ void Sys_Error( const char* error, ... )
 	Q_vsnprintf( string, sizeof( string ), error, argptr );
 	va_end( argptr );
 
-	CL_Shutdown( string );
 	Sys_ErrorDialog( string );
 
 	Sys_Exit( 3 );
@@ -416,8 +461,8 @@ Sys_Warn
 */
 static __attribute__( ( format( printf, 1, 2 ) ) ) void Sys_Warn( char* warning, ... )
 {
-	va_list         argptr;
-	char            string[1024];
+	va_list argptr;
+	char    string[1024];
 	
 	va_start( argptr, warning );
 	Q_vsnprintf( string, sizeof( string ), warning, argptr );
@@ -473,17 +518,25 @@ from executable path, then fs_basepath.
 
 void* Sys_LoadDll( const char* name, qboolean useSystemLib )
 {
-	void* dllhandle;
+	void* dllhandle = NULL;
+
+	if( !Sys_DllExtension( name ) )
+	{
+		Com_Printf( "Refusing to attempt to load library \"%s\": Extension not allowed.\n", name );
+		return NULL;
+	}
 
 	if( useSystemLib )
 	{
 		Com_Printf( "Trying to load \"%s\"...\n", name );
+		dllhandle = Sys_LoadLibrary( name );
 	}
 
-	if( !useSystemLib || !( dllhandle = Sys_LoadLibrary( name ) ) )
+	if( !dllhandle )
 	{
 		const char* topDir;
 		char        libPath[ MAX_OSPATH ];
+		int         len;
 
 		topDir = Sys_BinaryPath();
 
@@ -492,10 +545,18 @@ void* Sys_LoadDll( const char* name, qboolean useSystemLib )
 			topDir = ".";
 		}
 
-		Com_Printf( "Trying to load \"%s\" from \"%s\"...\n", name, topDir );
-		Com_sprintf( libPath, sizeof( libPath ), "%s%c%s", topDir, PATH_SEP, name );
+		len = Com_sprintf( libPath, sizeof( libPath ), "%s%c%s", topDir, PATH_SEP, name );
+		if( len < sizeof( libPath ) )
+		{
+			Com_Printf( "Trying to load \"%s\" from \"%s\"...\n", name, topDir );
+			dllhandle = Sys_LoadLibrary( libPath );
+		}
+		else
+		{
+			Com_Printf( "Skipping trying to load \"%s\" from \"%s\", file name is too long.\n", name, topDir );
+		}
 
-		if( !( dllhandle = Sys_LoadLibrary( libPath ) ) )
+		if( !dllhandle )
 		{
 			const char* basePath = Cvar_VariableString( "fs_basepath" );
 
@@ -506,9 +567,16 @@ void* Sys_LoadDll( const char* name, qboolean useSystemLib )
 
 			if( FS_FilenameCompare( topDir, basePath ) )
 			{
-				Com_Printf( "Trying to load \"%s\" from \"%s\"...\n", name, basePath );
-				Com_sprintf( libPath, sizeof( libPath ), "%s%c%s", basePath, PATH_SEP, name );
-				dllhandle = Sys_LoadLibrary( libPath );
+				len = Com_sprintf( libPath, sizeof( libPath ), "%s%c%s", basePath, PATH_SEP, name );
+				if( len < sizeof( libPath ) )
+				{
+					Com_Printf( "Trying to load \"%s\" from \"%s\"...\n", name, basePath );
+					dllhandle = Sys_LoadLibrary( libPath );
+				}
+				else
+				{
+					Com_Printf( "Skipping trying to load \"%s\" from \"%s\", file name is too long.\n", name, basePath );
+				}
 			}
 
 			if( !dllhandle )
@@ -536,6 +604,12 @@ void* Sys_LoadGameDll( const char* name,
 	void ( *dllEntry )( intptr_t( *syscallptr )( intptr_t, ... ) );
 
 	assert( name );
+
+	if( !Sys_DllExtension( name ) )
+	{
+		Com_Printf( "Refusing to attempt to load library \"%s\": Extension not allowed.\n", name );
+		return NULL;
+	}
 
 	Com_Printf( "Loading DLL file: %s\n", name );
 	libHandle = Sys_LoadLibrary( name );
@@ -572,10 +646,10 @@ void Sys_ParseArgs( int argc, char** argv )
 {
 	if( argc == 2 )
 	{
-		if( !strcmp( argv[ 1 ], "--version" ) || !strcmp( argv[ 1 ], "-v" ) )
+		if( !strcmp( argv[ 1 ], "--version" ) ||
+			!strcmp( argv[ 1 ], "-v" ) )
 		{
-			const char* date = __DATE__;
-
+			const char* date = PRODUCT_DATE;
 #ifdef DEDICATED
 			fprintf( stdout, Q3_VERSION " dedicated server (%s)\n", date );
 #else
@@ -587,7 +661,7 @@ void Sys_ParseArgs( int argc, char** argv )
 }
 
 #ifndef DEFAULT_BASEDIR
-	#ifdef MACOS_X
+	#ifdef __APPLE__
 		#define DEFAULT_BASEDIR Sys_StripAppBundle( Sys_BinaryPath() )
 	#else
 		#define DEFAULT_BASEDIR Sys_BinaryPath()
@@ -612,7 +686,7 @@ void Sys_SigHandler( int signal )
 		signalcaught = qtrue;
 		VM_Forced_Unload_Start();
 #ifndef DEDICATED
-		CL_Shutdown( va( "Received signal %d", signal ) );
+		CL_Shutdown( va( "Received signal %d", signal ), qtrue, qtrue );
 #endif
 		SV_Shutdown( va( "Received signal %d", signal ) );
 		VM_Forced_Unload_Done();
@@ -674,6 +748,14 @@ int main( int argc, char** argv )
 	// Set the initial time base
 	Sys_Milliseconds();
 
+#ifdef __APPLE__
+	// This is passed if we are launched by double-clicking
+	if( argc >= 2 && Q_strncmp( argv[ 1 ], "-psn", 4 ) == 0 )
+	{
+		argc = 1;
+	}
+#endif
+
 	Sys_ParseArgs( argc, argv );
 	Sys_SetBinaryPath( Sys_Dirname( argv[ 0 ] ) );
 	Sys_SetDefaultInstallPath( DEFAULT_BASEDIR );
@@ -697,6 +779,7 @@ int main( int argc, char** argv )
 		Q_strcat( commandLine, sizeof( commandLine ), " " );
 	}
 
+	CON_Init();
 	Com_Init( commandLine );
 	NET_Init();
 
@@ -714,7 +797,6 @@ int main( int argc, char** argv )
 
 	while( 1 )
 	{
-		IN_Frame();
 		Com_Frame();
 	}
 

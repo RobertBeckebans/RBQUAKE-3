@@ -75,21 +75,6 @@ static int     hist_current = -1, hist_count = 0;
 
 /*
 ==================
-CON_FlushIn
-
-Flush stdin, I suspect some terminals are sending a LOT of shit
-FIXME relevant?
-==================
-*/
-static void CON_FlushIn( void )
-{
-	char key;
-	while( read( STDIN_FILENO, &key, 1 ) != -1 )
-		;
-}
-
-/*
-==================
 CON_Back
 
 Output a backspace
@@ -125,7 +110,6 @@ static void CON_Hide( void )
 	if( ttycon_on )
 	{
 		int i;
-
 		if( ttycon_hide )
 		{
 			ttycon_hide++;
@@ -237,7 +221,6 @@ Hist_Prev
 field_t* Hist_Prev( void )
 {
 	int hist_prev;
-
 	assert( hist_count <= CON_HISTORY );
 	assert( hist_count >= 0 );
 	assert( hist_current >= -1 );
@@ -323,19 +306,19 @@ void CON_Init( void )
 	tc        = TTY_tc;
 
 	/*
-	   ECHO: don't echo input characters
-	   ICANON: enable canonical mode.  This  enables  the  special
-	   characters  EOF,  EOL,  EOL2, ERASE, KILL, REPRINT,
-	   STATUS, and WERASE, and buffers by lines.
-	   ISIG: when any of the characters  INTR,  QUIT,  SUSP,  or
-	   DSUSP are received, generate the corresponding signal
-	 */
+	ECHO: don't echo input characters
+	ICANON: enable canonical mode.  This  enables  the  special
+	characters  EOF,  EOL,  EOL2, ERASE, KILL, REPRINT,
+	STATUS, and WERASE, and buffers by lines.
+	ISIG: when any of the characters  INTR,  QUIT,  SUSP,  or
+	DSUSP are received, generate the corresponding signal
+	*/
 	tc.c_lflag &= ~( ECHO | ICANON );
 
 	/*
-	   ISTRIP strip off bit 8
-	   INPCK enable input parity checking
-	 */
+	ISTRIP strip off bit 8
+	INPCK enable input parity checking
+	*/
 	tc.c_iflag &= ~( ISTRIP | INPCK );
 	tc.c_cc[ VMIN ]  = 1;
 	tc.c_cc[ VTIME ] = 0;
@@ -384,7 +367,7 @@ char* CON_Input( void )
 				{
 #ifndef DEDICATED
 					// if not in the game explicitly prepend a slash if needed
-					if( clc.state != CA_ACTIVE && TTY_con.cursor &&
+					if( clc.state != CA_ACTIVE && con_autochat->integer && TTY_con.cursor &&
 						TTY_con.buffer[ 0 ] != '/' && TTY_con.buffer[ 0 ] != '\\' )
 					{
 						memmove( TTY_con.buffer + 1, TTY_con.buffer, sizeof( TTY_con.buffer ) - 1 );
@@ -398,7 +381,14 @@ char* CON_Input( void )
 					}
 					else if( TTY_con.cursor )
 					{
-						Com_sprintf( text, sizeof( text ), "cmd say %s", TTY_con.buffer );
+						if( con_autochat->integer )
+						{
+							Com_sprintf( text, sizeof( text ), "cmd say %s", TTY_con.buffer );
+						}
+						else
+						{
+							Q_strncpyz( text, TTY_con.buffer, sizeof( text ) );
+						}
 					}
 					else
 					{
@@ -448,7 +438,7 @@ char* CON_Input( void )
 										TTY_con = *history;
 										CON_Show();
 									}
-									CON_FlushIn();
+									tcflush( STDIN_FILENO, TCIFLUSH );
 									return NULL;
 									break;
 								case 'B':
@@ -463,7 +453,7 @@ char* CON_Input( void )
 										Field_Clear( &TTY_con );
 									}
 									CON_Show();
-									CON_FlushIn();
+									tcflush( STDIN_FILENO, TCIFLUSH );
 									return NULL;
 									break;
 								case 'C':
@@ -475,7 +465,7 @@ char* CON_Input( void )
 					}
 				}
 				Com_DPrintf( "droping ISCTL sequence: %d, TTY_erase: %d\n", key, TTY_erase );
-				CON_FlushIn();
+				tcflush( STDIN_FILENO, TCIFLUSH );
 				return NULL;
 			}
 			if( TTY_con.cursor >= sizeof( text ) - 1 )

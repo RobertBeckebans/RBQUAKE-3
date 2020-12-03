@@ -356,6 +356,7 @@ typedef struct
 	glconfig2_t glconfig2;
 	qhandle_t   charSetShader;
 	qhandle_t   whiteShader;
+	qhandle_t   consoleShader;
 
 	// true type fonts
 	fontInfo_t consoleFont;
@@ -586,7 +587,7 @@ void CL_SaveConsoleHistory( void );
 void SCR_Init( void );
 void SCR_UpdateScreen( void );
 
-void SCR_DebugGraph( float value, int color );
+void SCR_DebugGraph( float value );
 
 int SCR_GetBigStringWidth( const char* str ); // returns in virtual 640x480 coordinates
 
@@ -662,7 +663,6 @@ void LAN_SaveServersToCache( void );
 // cl_net_chan.c
 //
 void     CL_Netchan_Transmit( netchan_t* chan, msg_t* msg ); //int length, const byte *data );
-void     CL_Netchan_TransmitNextFragment( netchan_t* chan );
 qboolean CL_Netchan_Process( netchan_t* chan, msg_t* msg );
 
 //

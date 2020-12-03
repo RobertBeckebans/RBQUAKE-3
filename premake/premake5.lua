@@ -125,6 +125,12 @@ solution "RBQUAKE-3"
 --
 newoption
 {
+	trigger = "standalone",
+	description = "Compile XreaL game code"
+}
+
+newoption
+{
 	trigger = "with-bullet",
 	description = "Compile with Bullet physics game code support"
 }
@@ -175,7 +181,7 @@ project "RBQuake3"
 	kind        "WindowedApp"
 	files
 	{
-		"../code/shared/**.c", "../code/shared/**.h",
+		"../code/shared/*.c", "../code/shared/*.h",
 	
 		"../code/engine/client/**.c", "../code/engine/client/**.h",
 		"../code/engine/server/**.c", "../code/engine/server/**.h",
@@ -390,6 +396,23 @@ project "RBQuake3"
 	--
 	-- Options Configurations
 	--
+	configuration "standalone"
+		defines
+		{
+			"STANDALONE"
+		}
+		
+	if not _OPTIONS["standalone"] then
+		defines
+		{
+			"BOTLIB"
+		}
+		files
+		{
+			"../code/shared/botlib/*.c", "../code/shared/botlib/*.h",
+		}
+	end
+	
 	configuration "with-bullet"
 		defines
 		{
@@ -579,10 +602,18 @@ project "RBQuake3"
             "PNG_NO_ASSEMBLER_CODE",
 		}
 
--- game mod code
+-- Quake 3 game mod code based on ioq3
+if not _OPTIONS["standalone"] then
+include "../code/games/q3a/game"
+include "../code/games/q3a/cgame"
+include "../code/games/q3a/q3_ui"
+end
+
+if _OPTIONS["standalone"] then
 include "../code/games/xreal/game"
 include "../code/games/xreal/cgame"
 include "../code/games/xreal/ui"
+end
 
 -- tools
 --include "code/tools/xmap2"

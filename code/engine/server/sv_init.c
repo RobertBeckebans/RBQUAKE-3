@@ -301,12 +301,12 @@ static void SV_Startup( void )
 	svs.clients = Z_Malloc( sizeof( client_t ) * sv_maxclients->integer );
 	if( com_dedicated->integer )
 	{
-		svs.numSnapshotEntities = sv_maxclients->integer * PACKET_BACKUP * 64;
+		svs.numSnapshotEntities = sv_maxclients->integer * PACKET_BACKUP * MAX_SNAPSHOT_ENTITIES;
 	}
 	else
 	{
 		// we don't need nearly as many when playing locally
-		svs.numSnapshotEntities = sv_maxclients->integer * 4 * 64;
+		svs.numSnapshotEntities = sv_maxclients->integer * 4 * MAX_SNAPSHOT_ENTITIES;
 	}
 	svs.initialized = qtrue;
 
@@ -470,7 +470,7 @@ void SV_SpawnServer( char* server, qboolean killBots )
 	CL_MapLoading();
 
 	// make sure all the client stuff is unloaded
-	CL_ShutdownAll();
+	CL_ShutdownAll( qfalse );
 
 	// clear the whole hunk because we're (re)loading the server
 	Hunk_Clear();

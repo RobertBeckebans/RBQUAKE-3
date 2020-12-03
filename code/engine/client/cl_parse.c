@@ -290,7 +290,7 @@ void CL_ParseSnapshot( msg_t* msg )
 			// is too old, so we can't reconstruct it properly.
 			Com_Printf( "Delta frame too old.\n" );
 		}
-		else if( cl.parseEntitiesNum - old->parseEntitiesNum > MAX_PARSE_ENTITIES - 128 )
+		else if( cl.parseEntitiesNum - old->parseEntitiesNum > MAX_PARSE_ENTITIES - MAX_SNAPSHOT_ENTITIES )
 		{
 			Com_Printf( "Delta parseEntitiesNum too old.\n" );
 		}

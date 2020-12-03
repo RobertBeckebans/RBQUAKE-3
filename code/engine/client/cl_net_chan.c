@@ -1,22 +1,21 @@
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
-Copyright (C) 2006 Robert Beckebans <trebor_7@users.sourceforge.net>
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -25,6 +24,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "../qcommon/qcommon.h"
 #include "client.h"
 
+#ifdef LEGACY_PROTOCOL
 /*
 ==============
 CL_Netchan_Encode
@@ -38,10 +38,9 @@ CL_Netchan_Encode
 */
 static void CL_Netchan_Encode( msg_t* msg )
 {
-	int      serverId, messageAcknowledge, reliableAcknowledge;
-	int      i, index, srdc, sbit;
-	qboolean soob;
-	byte     key, *string;
+	int  serverId, messageAcknowledge, reliableAcknowledge;
+	int  i, index, srdc, sbit, soob;
+	byte key, *string;
 
 	if( msg->cursize <= CL_ENCODE_START )
 	{
@@ -54,7 +53,7 @@ static void CL_Netchan_Encode( msg_t* msg )
 
 	msg->bit       = 0;
 	msg->readcount = 0;
-	msg->oob       = qfalse;
+	msg->oob       = 0;
 
 	serverId            = MSG_ReadLong( msg );
 	messageAcknowledge  = MSG_ReadLong( msg );
@@ -67,7 +66,7 @@ static void CL_Netchan_Encode( msg_t* msg )
 	string = ( byte* )clc.serverCommands[ reliableAcknowledge & ( MAX_RELIABLE_COMMANDS - 1 ) ];
 	index  = 0;
 	//
-	key = ( clc.challenge ^ serverId ^ messageAcknowledge ) & 0xFF;
+	key = clc.challenge ^ serverId ^ messageAcknowledge;
 	for( i = CL_ENCODE_START; i < msg->cursize; i++ )
 	{
 		// modify the key with the last received now acknowledged server command
@@ -140,15 +139,22 @@ static void CL_Netchan_Decode( msg_t* msg )
 		*( msg->data + i ) = *( msg->data + i ) ^ key;
 	}
 }
+#endif
 
 /*
 =================
 CL_Netchan_TransmitNextFragment
 =================
 */
-void CL_Netchan_TransmitNextFragment( netchan_t* chan )
+qboolean CL_Netchan_TransmitNextFragment( netchan_t* chan )
 {
-	Netchan_TransmitNextFragment( chan );
+	if( chan->unsentFragments )
+	{
+		Netchan_TransmitNextFragment( chan );
+		return qtrue;
+	}
+
+	return qfalse;
 }
 
 /*
@@ -160,12 +166,21 @@ void CL_Netchan_Transmit( netchan_t* chan, msg_t* msg )
 {
 	MSG_WriteByte( msg, clc_EOF );
 
-	CL_Netchan_Encode( msg );
-	Netchan_Transmit( chan, msg->cursize, msg->data );
-}
+#ifdef LEGACY_PROTOCOL
+	if( chan->compat )
+	{
+		CL_Netchan_Encode( msg );
+	}
+#endif
 
-extern int oldsize;
-int        newsize = 0;
+	Netchan_Transmit( chan, msg->cursize, msg->data );
+
+	// Transmit all fragments without delay
+	while( CL_Netchan_TransmitNextFragment( chan ) )
+	{
+		Com_DPrintf( "WARNING: #462 unsent fragments (not supposed to happen!)\n" );
+	}
+}
 
 /*
 =================
@@ -181,7 +196,13 @@ qboolean CL_Netchan_Process( netchan_t* chan, msg_t* msg )
 	{
 		return qfalse;
 	}
-	CL_Netchan_Decode( msg );
-	newsize += msg->cursize;
+
+#ifdef LEGACY_PROTOCOL
+	if( chan->compat )
+	{
+		CL_Netchan_Decode( msg );
+	}
+#endif
+
 	return qtrue;
 }
