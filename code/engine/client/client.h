@@ -163,6 +163,8 @@ demo through a file.
 
 typedef struct
 {
+	connstate_t state; // connection status
+
 	int clientNum;
 	int lastPacketSentTime; // for retransmits during connection
 	int lastPacketTime;     // for timeouts
@@ -223,7 +225,6 @@ typedef struct
 	qboolean     demowaiting; // don't record until a non-delta message is received
 	qboolean     firstDemoFrameSkipped;
 	fileHandle_t demofile;
-	int          demoStartTime;
 
 	int           timeDemoFrames;                              // counter of rendered frames
 	int           timeDemoStart;                               // cls.realtime before first frame
@@ -232,6 +233,9 @@ typedef struct
 	int           timeDemoMinDuration;                         // minimum frame duration
 	int           timeDemoMaxDuration;                         // maximum frame duration
 	unsigned char timeDemoDurations[ MAX_TIMEDEMO_DURATIONS ]; // log of frame durations
+
+	float aviVideoFrameRemainder;
+	float aviSoundFrameRemainder;
 
 #ifdef USE_VOIP
 	qboolean voipEnabled;
@@ -260,6 +264,10 @@ typedef struct
 	float        voipPower;
 #endif
 
+#ifdef LEGACY_PROTOCOL
+	qboolean compat;
+#endif
+
 	// big stuff at end of structure so most offsets are 15 bits or less
 	netchan_t netchan;
 } clientConnection_t;
@@ -284,14 +292,12 @@ typedef struct
 	char     info[ MAX_INFO_STRING ];
 } ping_t;
 
-#define MAX_FEATLABEL_CHARS 32
 typedef struct
 {
 	netadr_t adr;
 	char     hostName[ MAX_HOSTNAME_LENGTH ];
 	char     mapName[ MAX_NAME_LENGTH ];
 	char     game[ MAX_NAME_LENGTH ];
-	char     label[ MAX_FEATLABEL_CHARS ]; // for featured servers, NULL otherwise
 	int      netType;
 	int      gameType;
 	int      clients;
@@ -300,15 +306,14 @@ typedef struct
 	int      maxPing;
 	int      ping;
 	qboolean visible;
+	int      punkbuster;
+	int      g_humanplayers;
+	int      g_needpass;
 } serverInfo_t;
 
 typedef struct
 {
-	connstate_t state; // connection status
-
 	qboolean cddialog; // bring up the cd needed dialog next frame
-
-	char servername[ MAX_OSPATH ]; // name of server from original connect (used by reconnect)
 
 	// when the server clears the hunk, all of these must be restarted
 	qboolean rendererStarted;
@@ -360,12 +365,14 @@ typedef struct
 
 extern clientStatic_t cls;
 
+extern char     cl_oldGame[ MAX_QPATH ];
+extern qboolean cl_oldGameSet;
+
 //=============================================================================
 
-extern vm_t* cgvm; // interface to cgame dll or vm
-extern vm_t* uivm; // interface to ui dll or vm
-
-extern refexport_t re; // interface to refresh .dll
+extern vm_t*       cgvm; // interface to cgame dll or vm
+extern vm_t*       uivm; // interface to ui dll or vm
+extern refexport_t re;   // interface to refresh .dll
 
 //
 // cvars
@@ -425,8 +432,6 @@ extern cvar_t* cl_inGameVideo;
 
 extern cvar_t* cl_lanForcePackets;
 extern cvar_t* cl_autoRecordDemo;
-extern cvar_t* cl_autoScreenshotPeriod;
-extern cvar_t* cl_autoScreenshotName;
 
 extern cvar_t* cl_consoleKeys;
 
@@ -469,17 +474,14 @@ void CL_AddReliableCommand( const char* cmd, qboolean isDisconnectCmd );
 
 void CL_StartHunkUsers( qboolean rendererOnly );
 
-void        CL_Disconnect_f( void );
-void        CL_GetChallengePacket( void );
-void        CL_Vid_Restart_f( void );
-void        CL_Snd_Restart_f( void );
-void        CL_StartDemoLoop( void );
-void        CL_NextDemo( void );
-void        CL_ReadDemoMessage( void );
-void        CL_StopRecord_f( void );
-demoState_t CL_DemoState( void );
-int         CL_DemoPos( void );
-void        CL_DemoName( char* buffer, int size );
+void CL_Disconnect_f( void );
+void CL_GetChallengePacket( void );
+void CL_Vid_Restart_f( void );
+void CL_Snd_Restart_f( void );
+void CL_StartDemoLoop( void );
+void CL_NextDemo( void );
+void CL_ReadDemoMessage( void );
+void CL_StopRecord_f( void );
 
 void CL_InitDownloads( void );
 void CL_NextDownload( void );
@@ -489,13 +491,10 @@ void CL_GetPingInfo( int n, char* buf, int buflen );
 void CL_ClearPing( int n );
 int  CL_GetPingQueueCount( void );
 
-void CL_ShutdownRef( void );
-void CL_InitRef( void );
-
-#ifndef STANDALONE
+void     CL_ShutdownRef( void );
+void     CL_InitRef( void );
 qboolean CL_CDKeyValidate( const char* key, const char* checksum );
-#endif
-int CL_ServerStatus( char* serverAddress, char* serverStatusString, int maxLen );
+int      CL_ServerStatus( char* serverAddress, char* serverStatusString, int maxLen );
 
 qboolean CL_CheckPaused( void );
 
@@ -522,6 +521,7 @@ extern kbutton_t in_voiprecord;
 #endif
 
 void CL_InitInput( void );
+void CL_ShutdownInput( void );
 void CL_SendCmd( void );
 void CL_ClearState( void );
 void CL_ReadPackets( void );
@@ -564,6 +564,7 @@ void Con_DrawCharacter( int cx, int line, int num );
 
 void Con_CheckResize( void );
 void Con_Init( void );
+void Con_Shutdown( void );
 void Con_Clear_f( void );
 void Con_ToggleConsole_f( void );
 void Con_DrawNotify( void );

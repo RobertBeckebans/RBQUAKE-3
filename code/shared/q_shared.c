@@ -634,8 +634,38 @@ void Com_StripExtension( const char* src, char* dest, int destsize )
 }
 
 /*
+============
+Com_CompareExtension
+
+string compare the end of the strings and return qtrue if strings match
+============
+*/
+qboolean Com_CompareExtension( const char* in, const char* ext )
+{
+	int inlen, extlen;
+
+	inlen  = strlen( in );
+	extlen = strlen( ext );
+
+	if( extlen <= inlen )
+	{
+		in += inlen - extlen;
+
+		if( !Q_stricmp( in, ext ) )
+		{
+			return qtrue;
+		}
+	}
+
+	return qfalse;
+}
+
+/*
 ==================
 Com_DefaultExtension
+
+if path doesn't have an extension, then append
+ the specified one (which should include the .)
 ==================
 */
 void Com_DefaultExtension( char* path, int maxSize, const char* extension )
@@ -696,9 +726,9 @@ int Com_HashKey( char* string, int maxlength )
 
 /*
 ============================================================================
- 
+
 					BYTE ORDER FUNCTIONS
- 
+
 ============================================================================
 */
 /*
@@ -712,7 +742,7 @@ static qint64	(*_BigLong64) (qint64 l);
 static qint64	(*_LittleLong64) (qint64 l);
 static float	(*_BigFloat) (const float *l);
 static float	(*_LittleFloat) (const float *l);
- 
+
 short	BigShort(short l){return _BigShort(l);}
 short	LittleShort(short l) {return _LittleShort(l);}
 int		BigLong (int l) {return _BigLong(l);}
@@ -776,18 +806,12 @@ qint64 Long64NoSwap( qint64 ll )
 	return ll;
 }
 
-typedef union
-{
-	float        f;
-	unsigned int i;
-} _FloatByteUnion;
-
 float FloatSwap( const float* f )
 {
-	_FloatByteUnion out;
+	floatint_t out;
 
-	out.f = *f;
-	out.i = LongSwap( out.i );
+	out.f  = *f;
+	out.ui = LongSwap( out.ui );
 
 	return out.f;
 }
@@ -799,9 +823,9 @@ float FloatNoSwap( const float* f )
 
 /*
 ============================================================================
- 
+
 PARSING
- 
+
 ============================================================================
 */
 
@@ -857,10 +881,10 @@ void Com_ParseWarning( char* format, ... )
 /*
 ==============
 Com_Parse
- 
+
 Parse a token out of a string
 Will never return NULL, just empty strings
- 
+
 If "allowLineBreaks" is qtrue then an empty
 string will be returned if the next token is
 a newline.
@@ -910,9 +934,13 @@ int Com_Compress( char* data_p )
 			else if( c == '/' && in[ 1 ] == '*' )
 			{
 				while( *in && ( *in != '*' || in[ 1 ] != '/' ) )
+				{
 					in++;
+				}
 				if( *in )
+				{
 					in += 2;
+				}
 				// record when we hit a newline
 			}
 			else if( c == '\n' || c == '\r' )
@@ -1003,9 +1031,9 @@ char* Com_ParseExt( char** data_p, qboolean allowLineBreaks )
 		return com_token;
 	}
 
-	// skip whitespace
 	while( 1 )
 	{
+		// skip whitespace
 		data = SkipWhitespace( data, &hasNewLines );
 		if( !data )
 		{

@@ -2,20 +2,20 @@
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -98,7 +98,7 @@ static void SV_EmitPacketEntities( clientSnapshot_t* from, clientSnapshot_t* to,
 		{
 			// delta update from old position
 			// because the force parm is qfalse, this will not result
-			// in any bytes being emited if the entity has not changed at all
+			// in any bytes being emitted if the entity has not changed at all
 			MSG_WriteDeltaEntity( msg, oldent, newent, qfalse );
 			oldindex++;
 			newindex++;
@@ -263,7 +263,6 @@ Build a client snapshot structure
 =============================================================================
 */
 
-#define MAX_SNAPSHOT_ENTITIES 1024
 typedef struct
 {
 	int numSnapshotEntities;
@@ -395,7 +394,7 @@ static void SV_AddEntitiesVisibleFromPoint( vec3_t origin, clientSnapshot_t* fra
 		{
 			if( frame->ps.clientNum >= 32 )
 			{
-				Com_Error( ERR_DROP, "SVF_CLIENTMASK: cientNum > 32\n" );
+				Com_Error( ERR_DROP, "SVF_CLIENTMASK: clientNum >= 32" );
 			}
 			if( ~ent->r.singleClient & ( 1 << frame->ps.clientNum ) )
 			{
@@ -474,13 +473,12 @@ static void SV_AddEntitiesVisibleFromPoint( vec3_t origin, clientSnapshot_t* fra
 		// add it
 		SV_AddEntToSnapshot( svEnt, ent, eNums );
 
-		// if its a portal entity, add everything visible from its camera position
+		// if it's a portal entity, add everything visible from its camera position
 		if( ent->r.svFlags & SVF_PORTAL )
 		{
 			if( ent->s.generic1 )
 			{
 				vec3_t dir;
-
 				VectorSubtract( ent->s.origin, origin, dir );
 				if( VectorLengthSquared( dir ) > ( float )ent->s.generic1 * ent->s.generic1 )
 				{
@@ -591,53 +589,54 @@ static void SV_BuildClientSnapshot( client_t* client )
 	}
 }
 
+#ifdef USE_VOIP
 /*
-====================
-SV_RateMsec
+==================
+SV_WriteVoipToClient
 
-Return the number of msec a given size message is supposed
-to take to clear, based on the current rate
-====================
+Check to see if there is any VoIP queued for a client, and send if there is.
+==================
 */
-#define HEADER_RATE_BYTES 48 // include our header, IP header, and some overhead
-static int SV_RateMsec( client_t* client, int messageSize )
+static void SV_WriteVoipToClient( client_t* cl, msg_t* msg )
 {
-	int rate;
-	int rateMsec;
+	int                 totalbytes = 0;
+	int                 i;
+	voipServerPacket_t* packet;
 
-	// individual messages will never be larger than fragment size
-	if( messageSize > 1500 )
+	if( cl->queuedVoipPackets )
 	{
-		messageSize = 1500;
-	}
-	rate = client->rate;
-	if( sv_maxRate->integer )
-	{
-		if( sv_maxRate->integer < 1000 )
+		// Write as many VoIP packets as we reasonably can...
+		for( i = 0; i < cl->queuedVoipPackets; i++ )
 		{
-			Cvar_Set( "sv_MaxRate", "1000" );
-		}
-		if( sv_maxRate->integer < rate )
-		{
-			rate = sv_maxRate->integer;
-		}
-	}
-	if( sv_minRate->integer )
-	{
-		if( sv_minRate->integer < 1000 )
-		{
-			Cvar_Set( "sv_minRate", "1000" );
-		}
-		if( sv_minRate->integer > rate )
-		{
-			rate = sv_minRate->integer;
-		}
-	}
+			packet = cl->voipPacket[ ( i + cl->queuedVoipIndex ) % ARRAY_LEN( cl->voipPacket ) ];
 
-	rateMsec = ( messageSize + HEADER_RATE_BYTES ) * 1000 / rate * com_timescale->value;
+			if( !*cl->downloadName )
+			{
+				totalbytes += packet->len;
+				if( totalbytes > ( msg->maxsize - msg->cursize ) / 2 )
+				{
+					break;
+				}
 
-	return rateMsec;
+				MSG_WriteByte( msg, svc_voipOpus );
+				MSG_WriteShort( msg, packet->sender );
+				MSG_WriteByte( msg, ( byte )packet->generation );
+				MSG_WriteLong( msg, packet->sequence );
+				MSG_WriteByte( msg, packet->frames );
+				MSG_WriteShort( msg, packet->len );
+				MSG_WriteBits( msg, packet->flags, VOIP_FLAGCNT );
+				MSG_WriteData( msg, packet->data, packet->len );
+			}
+
+			Z_Free( packet );
+		}
+
+		cl->queuedVoipPackets -= i;
+		cl->queuedVoipIndex += i;
+		cl->queuedVoipIndex %= ARRAY_LEN( cl->voipPacket );
+	}
 }
+#endif
 
 /*
 =======================
@@ -648,55 +647,13 @@ Called by SV_SendClientSnapshot and SV_SendClientGameState
 */
 void SV_SendMessageToClient( msg_t* msg, client_t* client )
 {
-	int rateMsec;
-
 	// record information about the message
 	client->frames[ client->netchan.outgoingSequence & PACKET_MASK ].messageSize  = msg->cursize;
 	client->frames[ client->netchan.outgoingSequence & PACKET_MASK ].messageSent  = svs.time;
 	client->frames[ client->netchan.outgoingSequence & PACKET_MASK ].messageAcked = -1;
 
 	// send the datagram
-	SV_Netchan_Transmit( client, msg ); //msg->cursize, msg->data );
-
-	// set nextSnapshotTime based on rate and requested number of updates
-
-	// local clients get snapshots every server frame
-	// TTimo - https://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=491
-	// added sv_lanForceRate check
-	if( client->netchan.remoteAddress.type == NA_LOOPBACK ||
-		( sv_lanForceRate->integer && Sys_IsLANAddress( client->netchan.remoteAddress ) ) )
-	{
-		client->nextSnapshotTime = svs.time + ( 1000.0 / sv_fps->integer * com_timescale->value );
-		return;
-	}
-
-	// normal rate / snapshotMsec calculation
-	rateMsec = SV_RateMsec( client, msg->cursize );
-
-	if( rateMsec < client->snapshotMsec * com_timescale->value )
-	{
-		// never send more packets than this, no matter what the rate is at
-		rateMsec            = client->snapshotMsec * com_timescale->value;
-		client->rateDelayed = qfalse;
-	}
-	else
-	{
-		client->rateDelayed = qtrue;
-	}
-
-	client->nextSnapshotTime = svs.time + rateMsec * com_timescale->value;
-
-	// don't pile up empty snapshots while connecting
-	if( client->state != CS_ACTIVE )
-	{
-		// a gigantic connection message may have already put the nextSnapshotTime
-		// more than a second away, so don't shorten it
-		// do shorten if client is downloading
-		if( !*client->downloadName && client->nextSnapshotTime < svs.time + 1000 * com_timescale->value )
-		{
-			client->nextSnapshotTime = svs.time + 1000 * com_timescale->value;
-		}
-	}
+	SV_Netchan_Transmit( client, msg );
 }
 
 /*
@@ -736,9 +693,6 @@ void SV_SendClientSnapshot( client_t* client )
 	// and the playerState_t
 	SV_WriteSnapshotToClient( client, &msg );
 
-	// Add any download data if the client is downloading
-	SV_WriteDownloadToClient( client, &msg );
-
 #ifdef USE_VOIP
 	SV_WriteVoipToClient( client, &msg );
 #endif
@@ -764,28 +718,46 @@ void SV_SendClientMessages( void )
 	client_t* c;
 
 	// send a message to each connected client
-	for( i = 0, c = svs.clients; i < sv_maxclients->integer; i++, c++ )
+	for( i = 0; i < sv_maxclients->integer; i++ )
 	{
+		c = &svs.clients[ i ];
+
 		if( !c->state )
 		{
 			continue; // not connected
 		}
 
-		if( svs.time < c->nextSnapshotTime )
+		if( svs.time - c->lastSnapshotTime < c->snapshotMsec * com_timescale->value )
 		{
-			continue; // not time yet
+			continue; // It's not time yet
 		}
 
-		// send additional message fragments if the last message
-		// was too large to send at once
-		if( c->netchan.unsentFragments )
+		if( *c->downloadName )
 		{
-			c->nextSnapshotTime = svs.time + SV_RateMsec( c, c->netchan.unsentLength - c->netchan.unsentFragmentStart );
-			SV_Netchan_TransmitNextFragment( c );
-			continue;
+			continue; // Client is downloading, don't send snapshots
+		}
+
+		if( c->netchan.unsentFragments || c->netchan_start_queue )
+		{
+			c->rateDelayed = qtrue;
+			continue; // Drop this snapshot if the packet queue is still full or delta compression will break
+		}
+
+		if( !( c->netchan.remoteAddress.type == NA_LOOPBACK ||
+				( sv_lanForceRate->integer && Sys_IsLANAddress( c->netchan.remoteAddress ) ) ) )
+		{
+			// rate control for clients not on LAN
+			if( SV_RateMsec( c ) > 0 )
+			{
+				// Not enough time since last packet passed through the line
+				c->rateDelayed = qtrue;
+				continue;
+			}
 		}
 
 		// generate and send a new message
 		SV_SendClientSnapshot( c );
+		c->lastSnapshotTime = svs.time;
+		c->rateDelayed      = qfalse;
 	}
 }

@@ -1,27 +1,26 @@
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
-Copyright (C) 2006-2009 Robert Beckebans <trebor_7@users.sourceforge.net>
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
-
 // sv_game.c -- interface to the game dll
+
 #include "server.h"
 
 #ifdef BOTLIB
@@ -241,7 +240,7 @@ void SV_AdjustAreaPortalState( sharedEntity_t* ent, qboolean open )
 
 /*
 ==================
-SV_GameAreaEntities
+SV_EntityContact
 ==================
 */
 qboolean SV_EntityContact( vec3_t mins, vec3_t maxs, const sharedEntity_t* gEnt, traceType_t type )
@@ -311,7 +310,6 @@ void SV_GetUsercmd( int clientNum, usercmd_t* cmd )
 static int FloatAsInt( float f )
 {
 	floatint_t fi;
-
 	fi.f = f;
 	return fi.i;
 }
@@ -342,7 +340,7 @@ intptr_t SV_GameSystemCalls( intptr_t* args )
 			Cvar_Update( VMA( 1 ) );
 			return 0;
 		case G_CVAR_SET:
-			Cvar_Set( ( const char* )VMA( 1 ), ( const char* )VMA( 2 ) );
+			Cvar_SetSafe( ( const char* )VMA( 1 ), ( const char* )VMA( 2 ) );
 			return 0;
 		case G_CVAR_VARIABLE_INTEGER_VALUE:
 			return Cvar_VariableIntegerValue( ( const char* )VMA( 1 ) );
@@ -361,7 +359,7 @@ intptr_t SV_GameSystemCalls( intptr_t* args )
 		case G_FS_FOPEN_FILE:
 			return FS_FOpenFileByMode( VMA( 1 ), VMA( 2 ), args[ 3 ] );
 		case G_FS_READ:
-			FS_Read2( VMA( 1 ), args[ 2 ], args[ 3 ] );
+			FS_Read( VMA( 1 ), args[ 2 ], args[ 3 ] );
 			return 0;
 		case G_FS_WRITE:
 			FS_Write( VMA( 1 ), args[ 2 ], args[ 3 ] );
@@ -505,7 +503,14 @@ intptr_t SV_GameSystemCalls( intptr_t* args )
 		case BOTLIB_GET_CONSOLE_MESSAGE:
 			return SV_BotGetConsoleMessage( args[ 1 ], VMA( 2 ), args[ 3 ] );
 		case BOTLIB_USER_COMMAND:
-			SV_ClientThink( &svs.clients[ args[ 1 ] ], VMA( 2 ) );
+		{
+			int clientNum = args[ 1 ];
+
+			if( clientNum >= 0 && clientNum < sv_maxclients->integer )
+			{
+				SV_ClientThink( &svs.clients[ clientNum ], VMA( 2 ) );
+			}
+		}
 			return 0;
 		case BOTLIB_CLIENT_COMMAND:
 			SV_BotClientCommand( args[ 1 ], VMA( 2 ) );
@@ -974,7 +979,8 @@ Called on a normal map change, not on a map_restart
 void SV_InitGameProgs( void )
 {
 #ifdef BOTLIB
-	cvar_t*    var;
+	cvar_t* var;
+	//FIXME these are temp while I make bots run in vm
 	extern int bot_enable;
 
 	var = Cvar_Get( "bot_enable", "1", CVAR_LATCH );

@@ -32,8 +32,8 @@ GetClientState
 static void GetClientState( uiClientState_t* state )
 {
 	state->connectPacketCount = clc.connectPacketCount;
-	state->connState          = cls.state;
-	Q_strncpyz( state->servername, cls.servername, sizeof( state->servername ) );
+	state->connState          = clc.state;
+	Q_strncpyz( state->servername, clc.servername, sizeof( state->servername ) );
 	Q_strncpyz( state->updateInfoString, cls.updateInfoString, sizeof( state->updateInfoString ) );
 	Q_strncpyz( state->messageString, clc.serverMessage, sizeof( state->messageString ) );
 	state->clientNum = cl.snap.ps.clientNum;
@@ -318,7 +318,6 @@ static void LAN_GetServerInfo( int source, int n, char* buf, int buflen )
 		buf[ 0 ] = '\0';
 		Info_SetValueForKey( info, "hostname", server->hostName );
 		Info_SetValueForKey( info, "mapname", server->mapName );
-		Info_SetValueForKey( info, "label", server->label );
 		Info_SetValueForKey( info, "clients", va( "%i", server->clients ) );
 		Info_SetValueForKey( info, "sv_maxclients", va( "%i", server->maxClients ) );
 		Info_SetValueForKey( info, "ping", va( "%i", server->ping ) );
@@ -327,7 +326,10 @@ static void LAN_GetServerInfo( int source, int n, char* buf, int buflen )
 		Info_SetValueForKey( info, "game", server->game );
 		Info_SetValueForKey( info, "gametype", va( "%i", server->gameType ) );
 		Info_SetValueForKey( info, "nettype", va( "%i", server->netType ) );
-		Info_SetValueForKey( info, "addr", NET_AdrToString( server->adr ) );
+		Info_SetValueForKey( info, "addr", NET_AdrToStringwPort( server->adr ) );
+		Info_SetValueForKey( info, "punkbuster", va( "%i", server->punkbuster ) );
+		Info_SetValueForKey( info, "g_needpass", va( "%i", server->g_needpass ) );
+		Info_SetValueForKey( info, "g_humanplayers", va( "%i", server->g_humanplayers ) );
 		Q_strncpyz( buf, info, buflen );
 	}
 	else
@@ -408,7 +410,6 @@ static serverInfo_t* LAN_GetServerPtr( int source, int n )
 	return NULL;
 }
 
-#define FEATURED_MAXPING 200
 /*
 ====================
 LAN_CompareServers
@@ -418,6 +419,7 @@ static int LAN_CompareServers( int source, int sortKey, int sortDir, int s1, int
 {
 	int           res;
 	serverInfo_t *server1, *server2;
+	int           clients1, clients2;
 
 	server1 = LAN_GetServerPtr( source, s1 );
 	server2 = LAN_GetServerPtr( source, s2 );
@@ -426,59 +428,48 @@ static int LAN_CompareServers( int source, int sortKey, int sortDir, int s1, int
 		return 0;
 	}
 
-	// featured servers on top
-	if( ( server1->label[ 0 ] && server1->ping <= FEATURED_MAXPING ) || ( server2->label[ 0 ] && server2->ping <= FEATURED_MAXPING ) )
-	{
-		res = Q_stricmpn( server1->label, server2->label, MAX_FEATLABEL_CHARS );
-		if( res )
-		{
-			return -res;
-		}
-	}
-
 	res = 0;
 	switch( sortKey )
 	{
 		case SORT_HOST:
-		{
-			char  hostName1[ MAX_HOSTNAME_LENGTH ];
-			char  hostName2[ MAX_HOSTNAME_LENGTH ];
-			char* p;
-			int   i;
-
-			for( p = server1->hostName, i = 0; *p != '\0'; p++ )
-			{
-				if( Q_isalpha( *p ) )
-				{
-					hostName1[ i++ ] = *p;
-				}
-			}
-			hostName1[ i ] = '\0';
-
-			for( p = server2->hostName, i = 0; *p != '\0'; p++ )
-			{
-				if( Q_isalpha( *p ) )
-				{
-					hostName2[ i++ ] = *p;
-				}
-			}
-			hostName2[ i ] = '\0';
-
-			res = Q_stricmp( hostName1, hostName2 );
-		}
-		break;
-		case SORT_GAME:
-			res = Q_stricmp( server1->game, server2->game );
+			res = Q_stricmp( server1->hostName, server2->hostName );
 			break;
+
 		case SORT_MAP:
 			res = Q_stricmp( server1->mapName, server2->mapName );
 			break;
 		case SORT_CLIENTS:
-			if( server1->clients < server2->clients )
+			// sub sort by max clients
+			if( server1->clients == server2->clients )
+			{
+				clients1 = server1->maxClients;
+				clients2 = server2->maxClients;
+			}
+			else
+			{
+				clients1 = server1->clients;
+				clients2 = server2->clients;
+			}
+
+			if( clients1 < clients2 )
 			{
 				res = -1;
 			}
-			else if( server1->clients > server2->clients )
+			else if( clients1 > clients2 )
+			{
+				res = 1;
+			}
+			else
+			{
+				res = 0;
+			}
+			break;
+		case SORT_GAME:
+			if( server1->gameType < server2->gameType )
+			{
+				res = -1;
+			}
+			else if( server1->gameType > server2->gameType )
 			{
 				res = 1;
 			}
@@ -569,7 +560,6 @@ static void LAN_MarkServerVisible( int source, int n, qboolean visible )
 	{
 		int           count  = MAX_OTHER_SERVERS;
 		serverInfo_t* server = NULL;
-
 		switch( source )
 		{
 			case AS_LOCAL:
@@ -780,7 +770,6 @@ FloatAsInt
 static int FloatAsInt( float f )
 {
 	floatint_t fi;
-
 	fi.f = f;
 	return fi.i;
 }
@@ -816,7 +805,7 @@ intptr_t CL_UISystemCalls( intptr_t* args )
 			return 0;
 
 		case UI_CVAR_SET:
-			Cvar_Set( VMA( 1 ), VMA( 2 ) );
+			Cvar_SetSafe( VMA( 1 ), VMA( 2 ) );
 			return 0;
 
 		case UI_CVAR_VARIABLEVALUE:
@@ -827,7 +816,7 @@ intptr_t CL_UISystemCalls( intptr_t* args )
 			return 0;
 
 		case UI_CVAR_SETVALUE:
-			Cvar_SetValue( VMA( 1 ), VMF( 2 ) );
+			Cvar_SetValueSafe( VMA( 1 ), VMF( 2 ) );
 			return 0;
 
 		case UI_CVAR_RESET:
@@ -835,7 +824,7 @@ intptr_t CL_UISystemCalls( intptr_t* args )
 			return 0;
 
 		case UI_CVAR_CREATE:
-			Cvar_Get( VMA( 1 ), VMA( 2 ), args[ 3 ] );
+			Cvar_Register( NULL, VMA( 1 ), VMA( 2 ), args[ 3 ] );
 			return 0;
 
 		case UI_CVAR_INFOSTRINGBUFFER:
@@ -850,7 +839,7 @@ intptr_t CL_UISystemCalls( intptr_t* args )
 			return 0;
 
 		case UI_CMD_EXECUTETEXT:
-			if( args[ 1 ] == 0 && ( !strncmp( VMA( 2 ), "snd_restart", 11 ) || !strncmp( VMA( 2 ), "vid_restart", 11 ) || !strncmp( VMA( 2 ), "quit", 5 ) ) )
+			if( args[ 1 ] == EXEC_NOW && ( !strncmp( VMA( 2 ), "snd_restart", 11 ) || !strncmp( VMA( 2 ), "vid_restart", 11 ) || !strncmp( VMA( 2 ), "quit", 5 ) ) )
 			{
 				Com_Printf( S_COLOR_YELLOW "turning EXEC_NOW '%.11s' into EXEC_INSERT\n", ( const char* )VMA( 2 ) );
 				args[ 1 ] = EXEC_INSERT;
@@ -862,7 +851,7 @@ intptr_t CL_UISystemCalls( intptr_t* args )
 			return FS_FOpenFileByMode( VMA( 1 ), VMA( 2 ), args[ 3 ] );
 
 		case UI_FS_READ:
-			FS_Read2( VMA( 1 ), args[ 2 ], args[ 3 ] );
+			FS_Read( VMA( 1 ), args[ 2 ], args[ 3 ] );
 			return 0;
 
 		case UI_FS_WRITE:
@@ -901,6 +890,7 @@ intptr_t CL_UISystemCalls( intptr_t* args )
 
 		case UI_R_REGISTERSKIN:
 			return re.RegisterSkin( VMA( 1 ) );
+
 		case UI_R_REGISTERSHADERNOMIP:
 			return re.RegisterShaderNoMip( VMA( 1 ) );
 
@@ -1207,7 +1197,7 @@ void CL_InitUI( void )
 	else
 	{
 		// init for this gamestate
-		VM_Call( uivm, UI_INIT, ( cls.state >= CA_AUTHORIZING && cls.state < CA_ACTIVE ) );
+		VM_Call( uivm, UI_INIT, ( clc.state >= CA_AUTHORIZING && clc.state < CA_ACTIVE ) );
 	}
 
 	// reset any CVAR_CHEAT cvars registered by ui

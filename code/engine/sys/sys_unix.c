@@ -44,6 +44,12 @@ qboolean stdinIsATTY;
 // Used to determine where to store user-specific files
 static char homePath[ MAX_OSPATH ] = { 0 };
 
+// Used to store the Steam Quake 3 installation path
+static char steamPath[ MAX_OSPATH ] = { 0 };
+
+// Used to store the GOG Quake 3 installation path
+static char gogPath[ MAX_OSPATH ] = { 0 };
+
 /*
 ==================
 Sys_DefaultHomePath
@@ -58,7 +64,7 @@ char* Sys_DefaultHomePath( void )
 		if( ( p = getenv( "HOME" ) ) != NULL )
 		{
 			Com_sprintf( homePath, sizeof( homePath ), "%s%c", p, PATH_SEP );
-#ifdef MACOS_X
+#ifdef __APPLE__
 			Q_strcat( homePath, sizeof( homePath ), "Library/Application Support/" );
 
 			if( com_homepath->string[ 0 ] )
@@ -83,6 +89,42 @@ char* Sys_DefaultHomePath( void )
 	}
 
 	return homePath;
+}
+
+/*
+================
+Sys_SteamPath
+================
+*/
+char* Sys_SteamPath( void )
+{
+	// Disabled since Steam doesn't let you install Quake 3 on Mac/Linux
+#if 0 //#ifdef STEAMPATH_NAME
+	char* p;
+	
+	if( ( p = getenv( "HOME" ) ) != NULL )
+	{
+	#ifdef __APPLE__
+		char* steamPathEnd = "/Library/Application Support/Steam/SteamApps/common/" STEAMPATH_NAME;
+	#else
+		char* steamPathEnd = "/.steam/steam/SteamApps/common/" STEAMPATH_NAME;
+	#endif
+		Com_sprintf( steamPath, sizeof( steamPath ), "%s%s", p, steamPathEnd );
+	}
+#endif
+
+	return steamPath;
+}
+
+/*
+================
+Sys_GogPath
+================
+*/
+char* Sys_GogPath( void )
+{
+	// GOG also doesn't let you install Quake 3 on Mac/Linux
+	return gogPath;
 }
 
 /*
@@ -131,6 +173,8 @@ qboolean Sys_RandomBytes( byte* string, int len )
 	{
 		return qfalse;
 	}
+
+	setvbuf( fp, NULL, _IONBF, 0 ); // don't buffer reads from /dev/urandom
 
 	if( fread( string, sizeof( byte ), len, fp ) != len )
 	{
@@ -443,14 +487,18 @@ char** Sys_ListFiles( const char* directory, const char* extension, char* filter
 		{
 			continue;
 		}
-		if( ( dironly && !( st.st_mode & S_IFDIR ) ) || ( !dironly && ( st.st_mode & S_IFDIR ) ) )
+		if( ( dironly && !( st.st_mode & S_IFDIR ) ) ||
+			( !dironly && ( st.st_mode & S_IFDIR ) ) )
 		{
 			continue;
 		}
 
 		if( *extension )
 		{
-			if( strlen( d->d_name ) < strlen( extension ) || Q_stricmp( d->d_name + strlen( d->d_name ) - strlen( extension ), extension ) )
+			if( strlen( d->d_name ) < extLen ||
+				Q_stricmp(
+					d->d_name + strlen( d->d_name ) - extLen,
+					extension ) )
 			{
 				continue; // didn't match
 			}
@@ -512,7 +560,7 @@ void Sys_FreeFileList( char** list )
 ==================
 Sys_Sleep
 
-Block execution for msec or until input is recieved.
+Block execution for msec or until input is received.
 ==================
 */
 void Sys_Sleep( int msec )
@@ -568,6 +616,7 @@ void Sys_ErrorDialog( const char* error )
 	const char*  homepath = Cvar_VariableString( "fs_homepath" );
 	const char*  gamedir  = Cvar_VariableString( "fs_game" );
 	const char*  fileName = "crashlog.txt";
+	char*        dirpath  = FS_BuildOSPath( homepath, gamedir, "" );
 	char*        ospath   = FS_BuildOSPath( homepath, gamedir, fileName );
 
 	Sys_Print( va( "%s\n", error ) );
@@ -577,9 +626,16 @@ void Sys_ErrorDialog( const char* error )
 #endif
 
 	// Make sure the write path for the crashlog exists...
-	if( FS_CreatePath( ospath ) )
+
+	if( !Sys_Mkdir( homepath ) )
 	{
-		Com_Printf( "ERROR: couldn't create path '%s' for crash log.\n", ospath );
+		Com_Printf( "ERROR: couldn't create path '%s' for crash log.\n", homepath );
+		return;
+	}
+
+	if( !Sys_Mkdir( dirpath ) )
+	{
+		Com_Printf( "ERROR: couldn't create path '%s' for crash log.\n", dirpath );
 		return;
 	}
 
@@ -606,7 +662,7 @@ void Sys_ErrorDialog( const char* error )
 	close( f );
 }
 
-#ifndef MACOS_X
+#ifndef __APPLE__
 static char  execBuffer[ 1024 ];
 static char* execBufferPointer;
 static char* execArgv[ 16 ];
@@ -804,6 +860,7 @@ dialogResult_t Sys_Dialog( dialogType_t type, const char* message, const char* t
 	qboolean               tried[ NUM_DIALOG_PROGRAMS ]    = { qfalse };
 	dialogCommandBuilder_t commands[ NUM_DIALOG_PROGRAMS ] = { NULL };
 	dialogCommandType_t    preferredCommandType            = NONE;
+	int                    i;
 
 	commands[ ZENITY ]   = &Sys_ZenityCommand;
 	commands[ KDIALOG ]  = &Sys_KdialogCommand;
@@ -819,57 +876,42 @@ dialogResult_t Sys_Dialog( dialogType_t type, const char* message, const char* t
 		preferredCommandType = KDIALOG;
 	}
 
-	while( 1 )
+	for( i = NONE + 1; i < NUM_DIALOG_PROGRAMS; i++ )
 	{
-		int i;
-
-		for( i = NONE + 1; i < NUM_DIALOG_PROGRAMS; i++ )
+		if( preferredCommandType != NONE && preferredCommandType != i )
 		{
-			if( preferredCommandType != NONE && preferredCommandType != i )
-			{
-				continue;
-			}
-
-			if( !tried[ i ] )
-			{
-				int exitCode;
-
-				commands[ i ]( type, message, title );
-				exitCode = Sys_Exec();
-
-				if( exitCode >= 0 )
-				{
-					switch( type )
-					{
-						case DT_YES_NO:
-							return exitCode ? DR_NO : DR_YES;
-						case DT_OK_CANCEL:
-							return exitCode ? DR_CANCEL : DR_OK;
-						default:
-							return DR_OK;
-					}
-				}
-
-				tried[ i ] = qtrue;
-
-				// The preference failed, so start again in order
-				if( preferredCommandType != NONE )
-				{
-					preferredCommandType = NONE;
-					break;
-				}
-			}
+			continue;
 		}
 
-		for( i = NONE + 1; i < NUM_DIALOG_PROGRAMS; i++ )
+		if( !tried[ i ] )
 		{
-			if( !tried[ i ] )
+			int exitCode;
+
+			commands[ i ]( type, message, title );
+			exitCode = Sys_Exec();
+
+			if( exitCode >= 0 )
 			{
-				continue;
+				switch( type )
+				{
+					case DT_YES_NO:
+						return exitCode ? DR_NO : DR_YES;
+					case DT_OK_CANCEL:
+						return exitCode ? DR_CANCEL : DR_OK;
+					default:
+						return DR_OK;
+				}
+			}
+
+			tried[ i ] = qtrue;
+
+			// The preference failed, so start again in order
+			if( preferredCommandType != NONE )
+			{
+				preferredCommandType = NONE;
+				i                    = NONE + 1;
 			}
 		}
-
-		break;
 	}
 
 	Com_DPrintf( S_COLOR_YELLOW "WARNING: failed to show a dialog\n" );
@@ -921,7 +963,7 @@ void Sys_PlatformInit( void )
 	signal( SIGHUP, Sys_SigHandler );
 	signal( SIGQUIT, Sys_SigHandler );
 	signal( SIGTRAP, Sys_SigHandler );
-	signal( SIGIOT, Sys_SigHandler );
+	signal( SIGABRT, Sys_SigHandler );
 	signal( SIGBUS, Sys_SigHandler );
 
 	stdinIsATTY = isatty( STDIN_FILENO ) &&
@@ -977,4 +1019,60 @@ Sys_PIDIsRunning
 qboolean Sys_PIDIsRunning( int pid )
 {
 	return kill( pid, 0 ) == 0;
+}
+
+/*
+=================
+Sys_DllExtension
+
+Check if filename should be allowed to be loaded as a DLL.
+=================
+*/
+qboolean Sys_DllExtension( const char* name )
+{
+	const char* p;
+	char        c = 0;
+
+	if( Com_CompareExtension( name, DLL_EXT ) )
+	{
+		return qtrue;
+	}
+
+#ifdef __APPLE__
+	// Allow system frameworks without dylib extensions
+	// i.e., /System/Library/Frameworks/OpenAL.framework/OpenAL
+	if( strncmp( name, "/System/Library/Frameworks/", 27 ) == 0 )
+	{
+		return qtrue;
+	}
+#endif
+
+	// Check for format of filename.so.1.2.3
+	p = strstr( name, DLL_EXT "." );
+
+	if( p )
+	{
+		p += strlen( DLL_EXT );
+
+		// Check if .so is only followed for periods and numbers.
+		while( *p )
+		{
+			c = *p;
+
+			if( !isdigit( c ) && c != '.' )
+			{
+				return qfalse;
+			}
+
+			p++;
+		}
+
+		// Don't allow filename to end in a period. file.so., file.so.0., etc
+		if( c != '.' )
+		{
+			return qtrue;
+		}
+	}
+
+	return qfalse;
 }

@@ -1,22 +1,21 @@
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
-Copyright (C) 2006-2008 Robert Beckebans <trebor_7@users.sourceforge.net>
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -86,7 +85,7 @@ void SV_UpdateConfigstrings( client_t* client )
 {
 	int index;
 
-	for( index = 0; index <= MAX_CONFIGSTRINGS; index++ )
+	for( index = 0; index < MAX_CONFIGSTRINGS; index++ )
 	{
 		// if the CS hasn't changed since we went to CS_PRIMED, ignore
 		if( !client->csUpdated[ index ] )
@@ -95,7 +94,8 @@ void SV_UpdateConfigstrings( client_t* client )
 		}
 
 		// do not always send server info to all clients
-		if( index == CS_SERVERINFO && client->gentity && ( client->gentity->r.svFlags & SVF_NOSERVERINFO ) )
+		if( index == CS_SERVERINFO && client->gentity &&
+			( client->gentity->r.svFlags & SVF_NOSERVERINFO ) )
 		{
 			continue;
 		}
@@ -139,7 +139,7 @@ void SV_SetConfigstring( int index, const char* val )
 	// spawning a new server
 	if( sv.state == SS_GAME || sv.restarting )
 	{
-		// send the data to all relevent clients
+		// send the data to all relevant clients
 		for( i = 0, client = svs.clients; i < sv_maxclients->integer; i++, client++ )
 		{
 			if( client->state < CS_ACTIVE )
@@ -393,12 +393,12 @@ void SV_ChangeMaxClients( void )
 	// allocate new snapshot entities
 	if( com_dedicated->integer )
 	{
-		svs.numSnapshotEntities = sv_maxclients->integer * PACKET_BACKUP * 64;
+		svs.numSnapshotEntities = sv_maxclients->integer * PACKET_BACKUP * MAX_SNAPSHOT_ENTITIES;
 	}
 	else
 	{
 		// we don't need nearly as many when playing locally
-		svs.numSnapshotEntities = sv_maxclients->integer * 4 * 64;
+		svs.numSnapshotEntities = sv_maxclients->integer * 4 * MAX_SNAPSHOT_ENTITIES;
 	}
 }
 
@@ -511,7 +511,7 @@ void SV_SpawnServer( char* server, qboolean killBots )
 	// set nextmap to the same map, but it may be overriden
 	// by the game startup or another console command
 	Cvar_Set( "nextmap", "map_restart 0" );
-	//  Cvar_Set( "nextmap", va("map %s", server) );
+	//	Cvar_Set( "nextmap", va("map %s", server) );
 
 	for( i = 0; i < sv_maxclients->integer; i++ )
 	{
@@ -533,7 +533,7 @@ void SV_SpawnServer( char* server, qboolean killBots )
 	Cvar_Set( "cl_paused", "0" );
 
 	// get a new checksum feed and restart the file system
-	sv.checksumFeed = ( ( ( int )rand() << 16 ) ^ rand() ) ^ Com_Milliseconds();
+	sv.checksumFeed = ( ( ( unsigned int )rand() << 16 ) ^ ( unsigned int )rand() ) ^ Com_Milliseconds();
 	FS_Restart( sv.checksumFeed );
 
 	CM_LoadMap( va( "maps/%s.bsp", server ), qfalse, &checksum );
@@ -624,7 +624,7 @@ void SV_SpawnServer( char* server, qboolean killBots )
 					client->gentity = ent;
 
 					client->deltaMessage     = -1;
-					client->nextSnapshotTime = svs.time; // generate a snapshot immediately
+					client->lastSnapshotTime = 0; // generate a snapshot immediately
 
 					VM_Call( gvm, GAME_CLIENT_BEGIN, i );
 				}
@@ -700,6 +700,8 @@ Only called at main exe startup, not for each game
 */
 void SV_Init( void )
 {
+	int index;
+
 	SV_AddOperatorCommands();
 
 	// serverinfo vars
@@ -716,6 +718,7 @@ void SV_Init( void )
 
 	sv_minRate      = Cvar_Get( "sv_minRate", "0", CVAR_ARCHIVE | CVAR_SERVERINFO );
 	sv_maxRate      = Cvar_Get( "sv_maxRate", "0", CVAR_ARCHIVE | CVAR_SERVERINFO );
+	sv_dlRate       = Cvar_Get( "sv_dlRate", "100", CVAR_ARCHIVE | CVAR_SERVERINFO );
 	sv_minPing      = Cvar_Get( "sv_minPing", "0", CVAR_ARCHIVE | CVAR_SERVERINFO );
 	sv_maxPing      = Cvar_Get( "sv_maxPing", "0", CVAR_ARCHIVE | CVAR_SERVERINFO );
 	sv_floodProtect = Cvar_Get( "sv_floodProtect", "1", CVAR_ARCHIVE | CVAR_SERVERINFO );
@@ -725,8 +728,9 @@ void SV_Init( void )
 	sv_serverid = Cvar_Get( "sv_serverid", "0", CVAR_SYSTEMINFO | CVAR_ROM );
 	sv_pure     = Cvar_Get( "sv_pure", "0", CVAR_SYSTEMINFO | CVAR_INIT | CVAR_ROM );
 #ifdef USE_VOIP
-	sv_voip = Cvar_Get( "sv_voip", "1", CVAR_SYSTEMINFO | CVAR_LATCH );
+	sv_voip = Cvar_Get( "sv_voip", "1", CVAR_LATCH );
 	Cvar_CheckRange( sv_voip, 0, 1, qtrue );
+	sv_voipProtocol = Cvar_Get( "sv_voipProtocol", sv_voip->integer ? "opus" : "", CVAR_SYSTEMINFO | CVAR_ROM );
 #endif
 	Cvar_Get( "sv_paks", "", CVAR_SYSTEMINFO | CVAR_ROM );
 	Cvar_Get( "sv_pakNames", "", CVAR_SYSTEMINFO | CVAR_ROM );
@@ -749,19 +753,24 @@ void SV_Init( void )
 
 	sv_allowDownload = Cvar_Get( "sv_allowDownload", "0", CVAR_SERVERINFO );
 	Cvar_Get( "sv_dlURL", "", CVAR_SERVERINFO | CVAR_ARCHIVE );
-	sv_master[ 0 ]    = Cvar_Get( "sv_master1", MASTER_SERVER_NAME, 0 );
-	sv_master[ 1 ]    = Cvar_Get( "sv_master2", "", CVAR_ARCHIVE );
-	sv_master[ 2 ]    = Cvar_Get( "sv_master3", "", CVAR_ARCHIVE );
-	sv_master[ 3 ]    = Cvar_Get( "sv_master4", "", CVAR_ARCHIVE );
-	sv_master[ 4 ]    = Cvar_Get( "sv_master5", "", CVAR_ARCHIVE );
+
+	sv_master[ 0 ] = Cvar_Get( "sv_master1", MASTER_SERVER_NAME, 0 );
+	sv_master[ 1 ] = Cvar_Get( "sv_master2", "master.ioquake3.org", 0 );
+	for( index = 2; index < MAX_MASTER_SERVERS; index++ )
+	{
+		sv_master[ index ] = Cvar_Get( va( "sv_master%d", index + 1 ), "", CVAR_ARCHIVE );
+	}
+
 	sv_reconnectlimit = Cvar_Get( "sv_reconnectlimit", "3", 0 );
 	sv_showloss       = Cvar_Get( "sv_showloss", "0", 0 );
 	sv_padPackets     = Cvar_Get( "sv_padPackets", "0", 0 );
 	sv_killserver     = Cvar_Get( "sv_killserver", "0", 0 );
 	sv_mapChecksum    = Cvar_Get( "sv_mapChecksum", "", CVAR_ROM );
 	sv_lanForceRate   = Cvar_Get( "sv_lanForceRate", "1", CVAR_ARCHIVE );
-	sv_strictAuth     = Cvar_Get( "sv_strictAuth", "1", CVAR_ARCHIVE );
-	sv_banFile        = Cvar_Get( "sv_banFile", "serverbans.dat", CVAR_ARCHIVE );
+#ifndef STANDALONE
+	sv_strictAuth = Cvar_Get( "sv_strictAuth", "1", CVAR_ARCHIVE );
+#endif
+	sv_banFile = Cvar_Get( "sv_banFile", "serverbans.dat", CVAR_ARCHIVE );
 
 	// initialize bot cvars so they are listed and can be set before loading the botlib
 	SV_BotInitCvars();
@@ -802,7 +811,7 @@ void SV_FinalMessage( char* message )
 					SV_SendServerCommand( cl, "disconnect \"%s\"", message );
 				}
 				// force a snapshot to be sent
-				cl->nextSnapshotTime = -1;
+				cl->lastSnapshotTime = 0;
 				SV_SendClientSnapshot( cl );
 			}
 		}

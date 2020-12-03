@@ -4,24 +4,24 @@ Copyright (C) 1999-2005 Id Software, Inc.
 Copyright (C) 2000-2006 Tim Angus
 Copyright (C) 2006-2011 Robert Beckebans <trebor_7@users.sourceforge.net>
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
-
+//
 #ifndef __Q_SHARED_H
 #define __Q_SHARED_H
 
@@ -33,13 +33,31 @@ extern "C"
 // q_shared.h -- included first by ALL program modules.
 // A user mod should never modify this file
 
-#define PRODUCT_NAME        "XreaL" // Case, Spaces allowed
-#define PRODUCT_NAME_UPPPER "XreaL" // Case, No spaces
-#define PRODUCT_NAME_LOWER  "xreal" // No case, No spaces
-#define PRODUCT_VERSION     "0.5.0"
+#if 1
+	#define PRODUCT_NAME        "RBQUAKE-3" // Case, Spaces allowed
+	#define PRODUCT_NAME_UPPPER "RBQUAKE-3" // Case, No spaces
+	#define PRODUCT_NAME_LOWER  "rbquake-3" // No case, No spaces
+	#define PRODUCT_VERSION     "0.5.0"
+	
+	#define HOMEPATH_NAME_UNIX   ".rbquake3"
+	#define HOMEPATH_NAME_WIN    "RBQUAKE-3"
+	#define HOMEPATH_NAME_MACOSX HOMEPATH_NAME_WIN
+	
+	#define ENGINE_NAME    		 "XreaL Engine"
+	#define ENGINE_VERSION		 "0.9.7"
+	
+	#define STEAMPATH_NAME          "Quake 3 Arena"
+	#define STEAMPATH_APPID         "2200"
+	#define GOGPATH_ID              "1441704920"
+#endif
 
-#define ENGINE_NAME    "XreaL Engine"
-#define ENGINE_VERSION "0.9.7"
+// Heartbeat for dpmaster protocol. You shouldn't change this unless you know what you're doing
+#define HEARTBEAT_FOR_MASTER "DarkPlaces"
+
+// When com_gamename is LEGACY_MASTER_GAMENAME, use quake3 master protocol.
+// You shouldn't change this unless you know what you're doing
+#define LEGACY_MASTER_GAMENAME      "Quake3Arena"
+#define LEGACY_HEARTBEAT_FOR_MASTER "QuakeArena-1"
 
 #if 0
 #if !defined( COMPAT_Q3A )
@@ -56,9 +74,7 @@ extern "C"
 #define Q3_ENGINE      ENGINE_NAME " " ENGINE_VERSION
 #define Q3_ENGINE_DATE __DATE__
 
-#define HOMEPATH_NAME_UNIX   ".xreal"
-#define HOMEPATH_NAME_WIN    "XreaL"
-#define HOMEPATH_NAME_MACOSX HOMEPATH_NAME_WIN
+
 
 #define CLIENT_WINDOW_TITLE     PRODUCT_NAME
 #define CLIENT_WINDOW_MIN_TITLE PRODUCT_NAME_LOWER
@@ -82,6 +98,9 @@ extern "C"
 //unlagged - lag simulation #2
 
 #define MAX_TEAMNAME 32
+#define MAX_MASTER_SERVERS 5 // number of supported master servers
+
+#define DEMOEXT "dm_" // standard demo extension
 
 #ifdef _MSC_VER
 #pragma warning( disable : 4018 ) // signed/unsigned mismatch
@@ -1409,7 +1428,8 @@ float Com_Clamp( float min, float max, float value );
 
 char*       Com_SkipPath( char* pathname );
 const char* Com_GetExtension( const char* name );
-void        Com_StripExtension( const char* src, char* dest, int destsize );
+void        Com_StripExtension( const char* in, char* out, int destsize );
+qboolean    Com_CompareExtension( const char* in, const char* ext );
 void        Com_DefaultExtension( char* path, int maxSize, const char* extension );
 
 int Com_HashKey( char* string, int maxlength );
@@ -1499,25 +1519,23 @@ qboolean Q_isanumber( const char* s );
 qboolean Q_isintegral( float f );
 
 // portable case insensitive compare
-int   Q_stricmp( const char* s1, const char* s2 );
-int   Q_strncmp( const char* s1, const char* s2, int n );
-int   Q_stricmpn( const char* s1, const char* s2, int n );
-char* Q_strlwr( char* s1 );
-char* Q_strupr( char* s1 );
-char* Q_strrchr( const char* string, int c );
-char* Q_stristr( const char* s, const char* find );
+int         Q_stricmp( const char* s1, const char* s2 );
+int         Q_strncmp( const char* s1, const char* s2, int n );
+int         Q_stricmpn( const char* s1, const char* s2, int n );
+char*       Q_strlwr( char* s1 );
+char*       Q_strupr( char* s1 );
+char*       Q_stristr( const char* s, const char* find );
+char*		Q_strrchr( const char* string, int c );
 
 // buffer size safe library replacements
-void     Q_strncpyz( char* dest, const char* src, int destsize );
-void     Q_strcat( char* dest, int destsize, const char* src );
+void Q_strncpyz( char* dest, const char* src, int destsize );
+void Q_strcat( char* dest, int size, const char* src );
 qboolean Q_strreplace( char* dest, int destsize, const char* find, const char* replace );
 
 // strlen that discounts Quake color sequences
 int Q_PrintStrlen( const char* string );
-
 // removes color sequences from string
 char* Q_CleanStr( char* string );
-
 // Count the number of char tocount encountered in string
 int Q_CountChar( const char* string, char tocount );
 
@@ -1638,6 +1656,7 @@ typedef struct cvar_s
 	qboolean integral;
 	float    min;
 	float    max;
+	char*    description;
 
 	struct cvar_s* next;
 	struct cvar_s* prev;
@@ -1793,7 +1812,7 @@ typedef enum
 /*
 ========================================================================
 
-ELEMENTS COMMUNICATED ACROSS THE NET
+  ELEMENTS COMMUNICATED ACROSS THE NET
 
 ========================================================================
 */

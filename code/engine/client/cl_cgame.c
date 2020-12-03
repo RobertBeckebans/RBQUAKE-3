@@ -504,7 +504,7 @@ intptr_t CL_CgameSystemCalls( intptr_t* args )
 			Cvar_Update( VMA( 1 ) );
 			return 0;
 		case CG_CVAR_SET:
-			Cvar_Set( VMA( 1 ), VMA( 2 ) );
+			Cvar_SetSafe( VMA( 1 ), VMA( 2 ) );
 			return 0;
 		case CG_CVAR_VARIABLESTRINGBUFFER:
 			Cvar_VariableStringBuffer( VMA( 1 ), VMA( 2 ), args[ 3 ] );
@@ -520,7 +520,7 @@ intptr_t CL_CgameSystemCalls( intptr_t* args )
 		case CG_FS_FOPENFILE:
 			return FS_FOpenFileByMode( VMA( 1 ), VMA( 2 ), args[ 3 ] );
 		case CG_FS_READ:
-			FS_Read2( VMA( 1 ), args[ 2 ], args[ 3 ] );
+			FS_Read( VMA( 1 ), args[ 2 ], args[ 3 ] );
 			return 0;
 		case CG_FS_WRITE:
 			FS_Write( VMA( 1 ), args[ 2 ], args[ 3 ] );
@@ -539,15 +539,17 @@ intptr_t CL_CgameSystemCalls( intptr_t* args )
 			CL_AddCgameCommand( VMA( 1 ) );
 			return 0;
 		case CG_REMOVECOMMAND:
-			Cmd_RemoveCommand( VMA( 1 ) );
+			Cmd_RemoveCommandSafe( VMA( 1 ) );
 			return 0;
 		case CG_SENDCLIENTCOMMAND:
 			CL_AddReliableCommand( VMA( 1 ), qfalse );
 			return 0;
 		case CG_UPDATESCREEN:
 			// this is used during lengthy level loading, so pump message loop
+			//		Com_EventLoop();	// FIXME: if a server restarts here, BAD THINGS HAPPEN!
 			// We can't call Com_EventLoop here, a restart will crash and this _does_ happen
-			// if there is a map change while we are downloading at pk3. ZOID
+			// if there is a map change while we are downloading at pk3.
+			// ZOID
 			SCR_UpdateScreen();
 			return 0;
 		case CG_CM_LOADMAP:
@@ -847,7 +849,7 @@ void CL_InitCGame( void )
 	{
 		Com_Error( ERR_DROP, "VM_Create on cgame failed" );
 	}
-	cls.state = CA_LOADING;
+	clc.state = CA_LOADING;
 
 	// init for this gamestate
 	// use the lastExecutedServerCommand instead of the serverCommandSequence
@@ -862,7 +864,7 @@ void CL_InitCGame( void )
 
 	// we will send a usercmd this frame, which
 	// will cause the server to send us the first snapshot
-	cls.state = CA_PRIMED;
+	clc.state = CA_PRIMED;
 
 	t2 = Sys_Milliseconds();
 
@@ -933,7 +935,6 @@ or bursted delayed packets.
 
 void CL_AdjustTimeDelta( void )
 {
-	int resetTime;
 	int newDelta;
 	int deltaDelta;
 
@@ -943,16 +944,6 @@ void CL_AdjustTimeDelta( void )
 	if( clc.demoplaying )
 	{
 		return;
-	}
-
-	// if the current time is WAY off, just correct to the current value
-	if( com_sv_running->integer )
-	{
-		resetTime = 100;
-	}
-	else
-	{
-		resetTime = RESET_TIME;
 	}
 
 	newDelta   = cl.snap.serverTime - cls.realtime;
@@ -1017,7 +1008,7 @@ void CL_FirstSnapshot( void )
 	{
 		return;
 	}
-	cls.state = CA_ACTIVE;
+	clc.state = CA_ACTIVE;
 
 	// set the timedelta so we are exactly on this first frame
 	cl.serverTimeDelta = cl.snap.serverTime - cls.realtime;
@@ -1085,9 +1076,9 @@ CL_SetCGameTime
 void CL_SetCGameTime( void )
 {
 	// getting a valid frame message ends the connection process
-	if( cls.state != CA_ACTIVE )
+	if( clc.state != CA_ACTIVE )
 	{
-		if( cls.state != CA_PRIMED )
+		if( clc.state != CA_PRIMED )
 		{
 			return;
 		}
@@ -1107,7 +1098,7 @@ void CL_SetCGameTime( void )
 			cl.newSnapshots = qfalse;
 			CL_FirstSnapshot();
 		}
-		if( cls.state != CA_ACTIVE )
+		if( clc.state != CA_ACTIVE )
 		{
 			return;
 		}
@@ -1187,7 +1178,7 @@ void CL_SetCGameTime( void )
 	}
 
 	// if we are playing a demo back, we can just keep reading
-	// messages from the demo file until the cgame definately
+	// messages from the demo file until the cgame definitely
 	// has valid snapshots to interpolate between
 
 	// a timedemo will always use a deterministic set of time samples
@@ -1228,7 +1219,8 @@ void CL_SetCGameTime( void )
 				frameDuration = UCHAR_MAX;
 			}
 
-			clc.timeDemoDurations[ ( clc.timeDemoFrames - 1 ) % MAX_TIMEDEMO_DURATIONS ] = frameDuration;
+			clc.timeDemoDurations[ ( clc.timeDemoFrames - 1 ) %
+				MAX_TIMEDEMO_DURATIONS ] = frameDuration;
 		}
 
 		clc.timeDemoFrames++;
@@ -1240,7 +1232,7 @@ void CL_SetCGameTime( void )
 		// feed another messag, which should change
 		// the contents of cl.snap
 		CL_ReadDemoMessage();
-		if( cls.state != CA_ACTIVE )
+		if( clc.state != CA_ACTIVE )
 		{
 			return; // end of demo
 		}

@@ -134,6 +134,8 @@ NET
 
 #define MAX_PACKET_USERCMDS 32 // max number of usercmd_t in a packet
 
+#define MAX_SNAPSHOT_ENTITIES 1024
+
 #define PORT_ANY -1
 
 #define MAX_RELIABLE_COMMANDS 64 // max string commands buffered for restransmit
@@ -238,7 +240,7 @@ typedef struct
 } netchan_t;
 
 void Netchan_Init( int qport );
-void Netchan_Setup( netsrc_t sock, netchan_t* chan, netadr_t adr, int qport );
+void Netchan_Setup( netsrc_t sock, netchan_t* chan, netadr_t adr, int qport, int challenge, qboolean compat );
 
 void Netchan_Transmit( netchan_t* chan, int length, const byte* data );
 void Netchan_TransmitNextFragment( netchan_t* chan );
@@ -295,10 +297,9 @@ enum svc_ops_e
 	svc_snapshot,
 	svc_EOF,
 
-	// svc_extension follows a svc_EOF, followed by another svc_* ...
-	//  this keeps legacy clients compatible.
-	svc_extension,
-	svc_voip, // not wrapped in USE_VOIP, so this value is reserved.
+	// new commands, supported only by ioquake3 protocol but not legacy
+	svc_voipSpeex, // not wrapped in USE_VOIP, so this value is reserved.
+	svc_voipOpus,  //
 };
 
 //
@@ -313,10 +314,9 @@ enum clc_ops_e
 	clc_clientCommand, // [string] message
 	clc_EOF,
 
-	// clc_extension follows a clc_EOF, followed by another clc_* ...
-	//  this keeps legacy servers compatible.
-	clc_extension,
-	clc_voip, // not wrapped in USE_VOIP, so this value is reserved.
+	// new commands, supported only by ioquake3 protocol but not legacy
+	clc_voipSpeex, // not wrapped in USE_VOIP, so this value is reserved.
+	clc_voipOpus,  //
 };
 
 /*
@@ -626,7 +626,7 @@ qboolean FS_Initialized( void );
 void FS_InitFilesystem( void );
 void FS_Shutdown( qboolean closemfp );
 
-qboolean FS_ConditionalRestart( int checksumFeed );
+qboolean FS_ConditionalRestart( int checksumFeed, qboolean disconnect );
 void     FS_Restart( int checksumFeed );
 // shutdown and restart the filesystem so changes to fs_gamedir can take effect
 
@@ -665,10 +665,9 @@ fileHandle_t FS_FCreateOpenPipeFile( const char* filename );
 
 long         FS_filelength( fileHandle_t f );
 fileHandle_t FS_SV_FOpenFileWrite( const char* filename );
-int          FS_SV_FOpenFileRead( const char* filename, fileHandle_t* fp );
-void         FS_SV_Rename( const char* from, const char* to );
-long         FS_FOpenFileRead( const char* filename, fileHandle_t* file, qboolean uniqueFILE );
-
+long         FS_SV_FOpenFileRead( const char* filename, fileHandle_t* fp );
+void         FS_SV_Rename( const char* from, const char* to, qboolean safe );
+long         FS_FOpenFileRead( const char* qpath, fileHandle_t* file, qboolean uniqueFILE );
 // if uniqueFILE is true, then a new FILE will be fopened even if the file
 // is found in an already open pak file.  If uniqueFILE is false, you must call
 // FS_FCloseFile instead of fclose, otherwise the pak FILE would be improperly closed
@@ -680,15 +679,14 @@ int FS_FileIsInPAK( const char* filename, int* pChecksum );
 
 int FS_Write( const void* buffer, int len, fileHandle_t f );
 
-int FS_Read2( void* buffer, int len, fileHandle_t f );
 int FS_Read( void* buffer, int len, fileHandle_t f );
 // properly handles partial reads and reads from other dlls
 
 void FS_FCloseFile( fileHandle_t f );
 // note: you can't just fclose from another DLL, due to MS libc issues
 
-int FS_ReadFile( const char* qpath, void** buffer );
-
+long FS_ReadFileDir( const char* qpath, void* searchPath, qboolean unpure, void** buffer );
+long FS_ReadFile( const char* qpath, void** buffer );
 // returns the length of the file
 // a null buffer will just return the file length without loading
 // as a quick check for existence. -1 length == not present
@@ -704,6 +702,9 @@ void FS_FreeFile( void* buffer );
 
 void FS_WriteFile( const char* qpath, const void* buffer, int size );
 // writes a complete file, creating any subdirectories needed
+
+long FS_filelength( fileHandle_t f );
+// doesn't work for files that are opened from a pack file
 
 int FS_FTell( fileHandle_t f );
 // where are we?
@@ -749,6 +750,8 @@ void FS_PureServerSetLoadedPaks( const char* pakSums, const char* pakNames );
 // sole exception of .cfg files.
 
 qboolean FS_CheckDirTraversal( const char* checkdir );
+qboolean FS_InvalidGameDir( const char* gamedir );
+qboolean FS_idPak( char* pak, char* base, int numPaks );
 qboolean FS_ComparePaks( char* neededpaks, int len, qboolean dlstring );
 
 void FS_Rename( const char* from, const char* to );
@@ -756,7 +759,7 @@ void FS_Rename( const char* from, const char* to );
 void FS_Remove( const char* osPath );
 void FS_HomeRemove( const char* homePath );
 
-void FS_FilenameCompletion( const char* dir, const char* ext, qboolean stripExt, void ( *callback )( const char* s ) );
+void FS_FilenameCompletion( const char* dir, const char* ext, qboolean stripExt, void ( *callback )( const char* s ), qboolean allowNonPureFilesOnDisk );
 
 const char* FS_GetCurrentGameDir( void );
 qboolean    FS_Which( const char* filename, void* searchPath );
@@ -781,8 +784,14 @@ typedef struct
 void Field_Clear( field_t* edit );
 void Field_AutoComplete( field_t* edit );
 void Field_CompleteKeyname( void );
-void Field_CompleteFilename( const char* dir, const char* ext, qboolean stripExt );
-void Field_CompleteCommand( char* cmd, qboolean doCommands, qboolean doCvars );
+void Field_CompleteFilename( const char* dir,
+	const char*                          ext,
+	qboolean                             stripExt,
+	qboolean                             allowNonPureFilesOnDisk );
+void Field_CompleteCommand( char* cmd,
+	qboolean                      doCommands,
+	qboolean                      doCvars );
+void Field_CompletePlayerName( const char** names, int count );
 
 /*
 ==============================================================
@@ -820,8 +829,7 @@ typedef enum
 	SE_CHAR,          // evValue is an ascii char
 	SE_MOUSE,         // evValue and evValue2 are relative signed x / y moves
 	SE_JOYSTICK_AXIS, // evValue is an axis number and evValue2 is the current state (-127 to 127)
-	SE_CONSOLE,       // evPtr is a char*
-	SE_PACKET         // evPtr is a netadr_t followed by data bytes to evPtrLength
+	SE_CONSOLE        // evPtr is a char*
 } sysEventType_t;
 
 typedef struct
@@ -844,9 +852,9 @@ void       Com_BeginRedirect( char* buffer, int buffersize, void ( *flush )( cha
 void       Com_EndRedirect( void );
 void QDECL Com_Printf( const char* fmt, ... ) __attribute__( ( format( printf, 1, 2 ) ) );
 void QDECL Com_DPrintf( const char* fmt, ... ) __attribute__( ( format( printf, 1, 2 ) ) );
-void QDECL Com_Error( int code, const char* fmt, ... ) __attribute__( ( format( printf, 2, 3 ) ) );
-void       Com_Quit_f( void );
-void       Com_GameRestart( int checksumFeed, qboolean clientRestart );
+void QDECL Com_Error( int code, const char* fmt, ... ) __attribute__( ( noreturn, format( printf, 2, 3 ) ) );
+void       Com_Quit_f( void ) __attribute__( ( noreturn ) );
+void       Com_GameRestart( int checksumFeed, qboolean disconnect );
 
 int      Com_Milliseconds( void ); // will be journaled properly
 unsigned Com_BlockChecksum( const void* buffer, int length );
@@ -856,11 +864,17 @@ int      Com_FilterPath( char* filter, char* name, int casesensitive );
 int      Com_RealTime( qtime_t* qtime );
 qboolean Com_SafeMode( void );
 void     Com_RandomBytes( byte* string, int len );
-void     Com_StartupVariable( const char* match );
+void     Com_RunAndTimeServerPacket( netadr_t* evFrom, msg_t* buf );
 
+qboolean Com_IsVoipTarget( uint8_t* voipTargets, int voipTargetsSize, int clientNum );
+void     Com_StartupVariable( const char* match );
 // checks for and removes command line "+set var arg" constructs
 // if match is NULL, all set commands will be executed, otherwise
 // only a set with the exact name.  Only used during startup.
+
+qboolean  Com_PlayerNameToFieldString( char* str, int length, const char* name );
+qboolean  Com_FieldStringToPlayerName( char* name, int length, const char* rawname );
+int QDECL Com_strCompare( const void* a, const void* b );
 
 extern cvar_t* com_developer;
 extern cvar_t* com_dedicated;
@@ -1029,19 +1043,19 @@ void CL_ForwardCommandToServer( const char* string );
 void CL_CDDialog( void );
 // bring up the "need a cd to play" dialog
 
-void CL_ShutdownAll( void );
-
-// shutdown all the client stuff
-
 void CL_FlushMemory( void );
-
 // dump all memory on an error
+
+void CL_ShutdownAll( qboolean shutdownRef );
+// shutdown client
+
+void CL_InitRef( void );
+// initialize renderer interface
 
 void CL_StartHunkUsers( qboolean rendererOnly );
 // start all the client stuff using the hunk
 
-void CL_Snd_Restart( void );
-
+void CL_Snd_Shutdown( void );
 // Restart sound subsystem
 
 void Key_KeynameCompletion( void ( *callback )( const char* s ) );
@@ -1053,7 +1067,7 @@ void Key_WriteBindings( fileHandle_t f );
 void S_ClearSoundBuffer( void );
 // call before filesystem access
 
-void SCR_DebugGraph( float value, int color ); // FIXME: move logging to common?
+void SCR_DebugGraph( float value ); // FIXME: move logging to common?
 
 // AVI files have the start of pixel lines 4 byte-aligned
 #define AVI_LINE_PADDING 4
@@ -1065,13 +1079,23 @@ void     SV_Init( void );
 void     SV_Shutdown( char* finalmsg );
 void     SV_Frame( int msec );
 void     SV_PacketEvent( netadr_t from, msg_t* msg );
+int      SV_FrameMsec( void );
 qboolean SV_GameCommand( void );
+int      SV_SendQueuedPackets( void );
 
 //
 // UI interface
 //
 qboolean UI_GameCommand( void );
 qboolean UI_usesUniqueCDKey( void );
+
+//
+// input interface
+//
+void IN_Init( void* windowData );
+void IN_Frame( void );
+void IN_Shutdown( void );
+void IN_Restart( void );
 
 /*
 ==============================================================
@@ -1088,6 +1112,8 @@ void Sys_Init( void );
 // general development dll loading for virtual machine testing
 void* QDECL Sys_LoadGameDll( const char* name, intptr_t( QDECL** entryPoint )( int, ... ), intptr_t( QDECL* systemcalls )( intptr_t, ... ) );
 void        Sys_UnloadDll( void* dllHandle );
+
+qboolean Sys_DllExtension( const char* name );
 
 void  Sys_UnloadGame( void );
 void* Sys_GetGameAPI( void* parms );
@@ -1123,8 +1149,7 @@ cpuFeatures_t Sys_GetProcessorFeatures( void );
 
 void Sys_SetErrorText( const char* text );
 
-void     Sys_SendPacket( int length, const void* data, netadr_t to );
-qboolean Sys_GetPacket( netadr_t* net_from, msg_t* net_message );
+void Sys_SendPacket( int length, const void* data, netadr_t to );
 
 qboolean Sys_StringToAdr( const char* s, netadr_t* a, netadrtype_t family );
 //Does NOT parse port numbers, only base addresses.
@@ -1178,7 +1203,8 @@ typedef enum
 
 dialogResult_t Sys_Dialog( dialogType_t type, const char* message, const char* title );
 
-qboolean Sys_WritePIDFile( void );
+void Sys_RemovePIDFile( const char* gamedir );
+void Sys_InitPIDFile( const char* gamedir );
 
 /* This is based on the Adaptive Huffman algorithm described in Sayood's Data
  * Compression book.  The ranks are not actually stored, but implicitly defined
@@ -1224,9 +1250,9 @@ void Huff_Decompress( msg_t* buf, int offset );
 void Huff_Init( huffman_t* huff );
 void Huff_addRef( huff_t* huff, byte ch );
 int  Huff_Receive( node_t* node, int* ch, byte* fin );
-void Huff_transmit( huff_t* huff, int ch, byte* fout );
-void Huff_offsetReceive( node_t* node, int* ch, byte* fin, int* offset );
-void Huff_offsetTransmit( huff_t* huff, int ch, byte* fout, int* offset );
+void Huff_transmit( huff_t* huff, int ch, byte* fout, int maxoffset );
+void Huff_offsetReceive( node_t* node, int* ch, byte* fin, int* offset, int maxoffset );
+void Huff_offsetTransmit( huff_t* huff, int ch, byte* fout, int* offset, int maxoffset );
 void Huff_putBit( int bit, byte* fout, int* offset );
 int  Huff_getBit( byte* fout, int* offset );
 

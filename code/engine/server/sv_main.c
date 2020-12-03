@@ -1,22 +1,21 @@
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
-Copyright (C) 2006-2008 Robert Beckebans <trebor_7@users.sourceforge.net>
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -25,12 +24,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #ifdef USE_VOIP
 cvar_t* sv_voip;
+cvar_t* sv_voipProtocol;
 #endif
 
-serverStatic_t svs; // persistant server info
-server_t       sv;  // local server
-
-vm_t* gvm = NULL; // game virtual machine
+serverStatic_t svs;        // persistant server info
+server_t       sv;         // local server
+vm_t*          gvm = NULL; // game virtual machine
 
 cvar_t* sv_fps = NULL;      // time rate for running non-clients
 cvar_t* sv_timeout;         // seconds without any message
@@ -52,13 +51,16 @@ cvar_t* sv_mapChecksum;
 cvar_t* sv_serverid;
 cvar_t* sv_minRate;
 cvar_t* sv_maxRate;
+cvar_t* sv_dlRate;
 cvar_t* sv_minPing;
 cvar_t* sv_maxPing;
 cvar_t* sv_gametype;
 cvar_t* sv_pure;
 cvar_t* sv_floodProtect;
 cvar_t* sv_lanForceRate; // dedicated 1 (LAN) server forces local client rates to 99999 (bug #491)
+#ifndef STANDALONE
 cvar_t* sv_strictAuth;
+#endif
 cvar_t* sv_banFile;
 
 serverBan_t serverBans[ SERVER_MAXBANS ];
@@ -113,24 +115,24 @@ FIXME: This is ugly
 #if 0 // unused
 static int SV_ReplacePendingServerCommands( client_t* client, const char* cmd )
 {
-	int             i, index, csnum1, csnum2;
+	int i, index, csnum1, csnum2;
 	
 	for( i = client->reliableSent + 1; i <= client->reliableSequence; i++ )
 	{
 		index = i & ( MAX_RELIABLE_COMMANDS - 1 );
 		//
-		if( !Q_strncmp( cmd, client->reliableCommands[index], strlen( "cs" ) ) )
+		if( !Q_strncmp( cmd, client->reliableCommands[ index ], strlen( "cs" ) ) )
 		{
 			sscanf( cmd, "cs %i", &csnum1 );
-			sscanf( client->reliableCommands[index], "cs %i", &csnum2 );
+			sscanf( client->reliableCommands[ index ], "cs %i", &csnum2 );
 			if( csnum1 == csnum2 )
 			{
-				Q_strncpyz( client->reliableCommands[index], cmd, sizeof( client->reliableCommands[index] ) );
+				Q_strncpyz( client->reliableCommands[ index ], cmd, sizeof( client->reliableCommands[ index ] ) );
 				/*
-				   if ( client->netchan.remoteAddress.type != NA_BOT ) {
-				   Com_Printf( "WARNING: client %i removed double pending config string %i: %s\n", client-svs.clients, csnum1, cmd );
-				   }
-				 */
+				if ( client->netchan.remoteAddress.type != NA_BOT ) {
+					Com_Printf( "WARNING: client %i removed double pending config string %i: %s\n", client-svs.clients, csnum1, cmd );
+				}
+				*/
 				return qtrue;
 			}
 		}
@@ -153,9 +155,9 @@ void SV_AddServerCommand( client_t* client, const char* cmd )
 
 	// this is very ugly but it's also a waste to for instance send multiple config string updates
 	// for the same config string index in one snapshot
-	//  if ( SV_ReplacePendingServerCommands( client, cmd ) ) {
-	//      return;
-	//  }
+	//	if ( SV_ReplacePendingServerCommands( client, cmd ) ) {
+	//		return;
+	//	}
 
 	// do not send commands until the gamestate has been sent
 	if( client->state < CS_PRIMED )
@@ -224,7 +226,7 @@ void QDECL SV_SendServerCommand( client_t* cl, const char* fmt, ... )
 		Com_Printf( "broadcast: %s\n", SV_ExpandNewlines( ( char* )message ) );
 	}
 
-	// send the data to all relevent clients
+	// send the data to all relevant clients
 	for( j = 0, client = svs.clients; j < sv_maxclients->integer; j++, client++ )
 	{
 		SV_AddServerCommand( client, ( char* )message );
@@ -251,8 +253,8 @@ but not on every player enter or exit.
 ================
 */
 #define HEARTBEAT_MSEC 300 * 1000
-#define HEARTBEAT_GAME "XreaL-1"
-void SV_MasterHeartbeat( void )
+#define MASTERDNS_MSEC 24 * 60 * 60 * 1000
+void SV_MasterHeartbeat( const char* message )
 {
 	static netadr_t adr[ MAX_MASTER_SERVERS ][ 2 ]; // [2] for v4 and v6 address for the same address string.
 	int             i;
@@ -273,6 +275,11 @@ void SV_MasterHeartbeat( void )
 		return;
 	}
 
+	if( !Q_stricmp( com_gamename->string, LEGACY_MASTER_GAMENAME ) )
+	{
+		message = LEGACY_HEARTBEAT_FOR_MASTER;
+	}
+
 	svs.nextHeartbeatTime = svs.time + HEARTBEAT_MSEC;
 
 	// send to group masters
@@ -283,12 +290,12 @@ void SV_MasterHeartbeat( void )
 			continue;
 		}
 
-		// see if we haven't already resolved the name
-		// resolving usually causes hitches on win95, so only
-		// do it when needed
-		if( sv_master[ i ]->modified || ( adr[ i ][ 0 ].type == NA_BAD && adr[ i ][ 1 ].type == NA_BAD ) )
+		// see if we haven't already resolved the name or if it's been over 24 hours
+		// resolving usually causes hitches on win95, so only do it when needed
+		if( sv_master[ i ]->modified || svs.time > svs.masterResolveTime[ i ] )
 		{
-			sv_master[ i ]->modified = qfalse;
+			sv_master[ i ]->modified   = qfalse;
+			svs.masterResolveTime[ i ] = svs.time + MASTERDNS_MSEC;
 
 			if( netenabled & NET_ENABLEV4 )
 			{
@@ -331,16 +338,11 @@ void SV_MasterHeartbeat( void )
 					Com_Printf( "%s has no IPv6 address.\n", sv_master[ i ]->string );
 				}
 			}
+		}
 
-			if( adr[ i ][ 0 ].type == NA_BAD && adr[ i ][ 1 ].type == NA_BAD )
-			{
-				// if the address failed to resolve, clear it
-				// so we don't take repeated dns hits
-				Com_Printf( "Couldn't resolve address: %s\n", sv_master[ i ]->string );
-				Cvar_Set( sv_master[ i ]->name, "" );
-				sv_master[ i ]->modified = qfalse;
-				continue;
-			}
+		if( adr[ i ][ 0 ].type == NA_BAD && adr[ i ][ 1 ].type == NA_BAD )
+		{
+			continue;
 		}
 
 		Com_Printf( "Sending heartbeat to %s\n", sv_master[ i ]->string );
@@ -350,11 +352,11 @@ void SV_MasterHeartbeat( void )
 
 		if( adr[ i ][ 0 ].type != NA_BAD )
 		{
-			NET_OutOfBandPrint( NS_SERVER, adr[ i ][ 0 ], "heartbeat %s\n", HEARTBEAT_GAME );
+			NET_OutOfBandPrint( NS_SERVER, adr[ i ][ 0 ], "heartbeat %s\n", message );
 		}
 		if( adr[ i ][ 1 ].type != NA_BAD )
 		{
-			NET_OutOfBandPrint( NS_SERVER, adr[ i ][ 1 ], "heartbeat %s\n", HEARTBEAT_GAME );
+			NET_OutOfBandPrint( NS_SERVER, adr[ i ][ 1 ], "heartbeat %s\n", message );
 		}
 	}
 }
@@ -368,13 +370,13 @@ Informs all masters that this server is going down
 */
 void SV_MasterShutdown( void )
 {
-	// send a hearbeat right now
+	// send a heartbeat right now
 	svs.nextHeartbeatTime = -9999;
-	SV_MasterHeartbeat();
+	SV_MasterHeartbeat( HEARTBEAT_FOR_MASTER );
 
 	// send it again to minimize chance of drops
 	svs.nextHeartbeatTime = -9999;
-	SV_MasterHeartbeat();
+	SV_MasterHeartbeat( HEARTBEAT_FOR_MASTER );
 
 	// when the master tries to poll the server, it won't respond, so
 	// it will be removed from the list
@@ -388,31 +390,13 @@ CONNECTIONLESS COMMANDS
 ==============================================================================
 */
 
-typedef struct leakyBucket_s leakyBucket_t;
-struct leakyBucket_s
-{
-	netadrtype_t type;
-
-	union
-	{
-		byte _4[ 4 ];
-		byte _6[ 16 ];
-	} ipv;
-
-	int         lastTime;
-	signed char burst;
-
-	long hash;
-
-	leakyBucket_t *prev, *next;
-};
-
 // This is deliberately quite large to make it more of an effort to DoS
 #define MAX_BUCKETS 16384
 #define MAX_HASHES  1024
 
 static leakyBucket_t  buckets[ MAX_BUCKETS ];
 static leakyBucket_t* bucketHashes[ MAX_HASHES ];
+leakyBucket_t         outboundLeakyBucket;
 
 /*
 ================
@@ -557,7 +541,7 @@ static leakyBucket_t* SVC_BucketForAddress( netadr_t address, int burst, int per
 SVC_RateLimit
 ================
 */
-static qboolean SVC_RateLimit( leakyBucket_t* bucket, int burst, int period )
+qboolean SVC_RateLimit( leakyBucket_t* bucket, int burst, int period )
 {
 	if( bucket != NULL )
 	{
@@ -566,7 +550,7 @@ static qboolean SVC_RateLimit( leakyBucket_t* bucket, int burst, int period )
 		int expired          = interval / period;
 		int expiredRemainder = interval % period;
 
-		if( expired > bucket->burst )
+		if( expired > bucket->burst || interval < 0 )
 		{
 			bucket->burst    = 0;
 			bucket->lastTime = now;
@@ -595,7 +579,7 @@ SVC_RateLimitAddress
 Rate limit for a particular address
 ================
 */
-static qboolean SVC_RateLimitAddress( netadr_t from, int burst, int period )
+qboolean SVC_RateLimitAddress( netadr_t from, int burst, int period )
 {
 	leakyBucket_t* bucket = SVC_BucketForAddress( from, burst, period );
 
@@ -613,18 +597,17 @@ the simple info query.
 */
 static void SVC_Status( netadr_t from )
 {
-	char                 player[ 1024 ];
-	char                 status[ MAX_MSGLEN ];
-	int                  i;
-	client_t*            cl;
-	playerState_t*       ps;
-	int                  statusLength;
-	int                  playerLength;
-	char                 infostring[ MAX_INFO_STRING ];
-	static leakyBucket_t bucket;
+	char           player[ 1024 ];
+	char           status[ MAX_MSGLEN ];
+	int            i;
+	client_t*      cl;
+	playerState_t* ps;
+	int            statusLength;
+	int            playerLength;
+	char           infostring[ MAX_INFO_STRING ];
 
 	// ignore if we are in single player
-	if( Cvar_VariableValue( "g_gametype" ) == GT_SINGLE_PLAYER )
+	if( Cvar_VariableValue( "g_gametype" ) == GT_SINGLE_PLAYER || Cvar_VariableValue( "ui_singlePlayerActive" ) )
 	{
 		return;
 	}
@@ -632,15 +615,22 @@ static void SVC_Status( netadr_t from )
 	// Prevent using getstatus as an amplifier
 	if( SVC_RateLimitAddress( from, 10, 1000 ) )
 	{
-		Com_DPrintf( "SVC_Status: rate limit from %s exceeded, dropping request\n", NET_AdrToString( from ) );
+		Com_DPrintf( "SVC_Status: rate limit from %s exceeded, dropping request\n",
+			NET_AdrToString( from ) );
 		return;
 	}
 
 	// Allow getstatus to be DoSed relatively easily, but prevent
 	// excess outbound bandwidth usage when being flooded inbound
-	if( SVC_RateLimit( &bucket, 10, 100 ) )
+	if( SVC_RateLimit( &outboundLeakyBucket, 10, 100 ) )
 	{
 		Com_DPrintf( "SVC_Status: rate limit exceeded, dropping request\n" );
+		return;
+	}
+
+	// A maximum challenge length of 128 should be more than plenty.
+	if( strlen( Cmd_Argv( 1 ) ) > 128 )
+	{
 		return;
 	}
 
@@ -693,6 +683,22 @@ void SVC_Info( netadr_t from )
 		return;
 	}
 
+	// Prevent using getinfo as an amplifier
+	if( SVC_RateLimitAddress( from, 10, 1000 ) )
+	{
+		Com_DPrintf( "SVC_Info: rate limit from %s exceeded, dropping request\n",
+			NET_AdrToString( from ) );
+		return;
+	}
+
+	// Allow getinfo to be DoSed relatively easily, but prevent
+	// excess outbound bandwidth usage when being flooded inbound
+	if( SVC_RateLimit( &outboundLeakyBucket, 10, 100 ) )
+	{
+		Com_DPrintf( "SVC_Info: rate limit exceeded, dropping request\n" );
+		return;
+	}
+
 	/*
 	 * Check whether Cmd_Argv(1) has a sane length. This was not done in the original Quake3 version which led
 	 * to the Infostring bug discovered by Luigi Auriemma. See http://aluigi.altervista.org/ for the advisory.
@@ -724,7 +730,17 @@ void SVC_Info( netadr_t from )
 	// to prevent timed spoofed reply packets that add ghost servers
 	Info_SetValueForKey( infostring, "challenge", Cmd_Argv( 1 ) );
 
-	Info_SetValueForKey( infostring, "protocol", va( "%i", PROTOCOL_VERSION ) );
+	Info_SetValueForKey( infostring, "gamename", com_gamename->string );
+
+#ifdef LEGACY_PROTOCOL
+	if( com_legacyprotocol->integer > 0 )
+	{
+		Info_SetValueForKey( infostring, "protocol", va( "%i", com_legacyprotocol->integer ) );
+	}
+	else
+#endif
+		Info_SetValueForKey( infostring, "protocol", va( "%i", com_protocol->integer ) );
+
 	Info_SetValueForKey( infostring, "hostname", sv_hostname->string );
 	Info_SetValueForKey( infostring, "mapname", sv_mapname->string );
 	Info_SetValueForKey( infostring, "clients", va( "%i", count ) );
@@ -732,12 +748,12 @@ void SVC_Info( netadr_t from )
 	Info_SetValueForKey( infostring, "sv_maxclients", va( "%i", sv_maxclients->integer - sv_privateClients->integer ) );
 	Info_SetValueForKey( infostring, "gametype", va( "%i", sv_gametype->integer ) );
 	Info_SetValueForKey( infostring, "pure", va( "%i", sv_pure->integer ) );
-	Info_SetValueForKey( infostring, "gamename", GAMENAME_FOR_MASTER );
+	Info_SetValueForKey( infostring, "g_needpass", va( "%d", Cvar_VariableIntegerValue( "g_needpass" ) ) );
 
 #ifdef USE_VOIP
-	if( sv_voip->integer )
+	if( sv_voipProtocol->string && *sv_voipProtocol->string )
 	{
-		Info_SetValueForKey( infostring, "voip", va( "%i", sv_voip->integer ) );
+		Info_SetValueForKey( infostring, "voip", sv_voipProtocol->string );
 	}
 #endif
 
@@ -782,7 +798,6 @@ static void SVC_RemoteCommand( netadr_t from, msg_t* msg )
 {
 	qboolean valid;
 	char     remaining[ 1024 ];
-
 	// TTimo - scaled down to accumulate, but not overflow anything network wise, print wise etc.
 	// (OOB messages are the bottleneck here)
 #define SV_OUTPUTBUF_LENGTH ( 1024 - 16 )
@@ -792,11 +807,13 @@ static void SVC_RemoteCommand( netadr_t from, msg_t* msg )
 	// Prevent using rcon as an amplifier and make dictionary attacks impractical
 	if( SVC_RateLimitAddress( from, 10, 1000 ) )
 	{
-		Com_DPrintf( "SVC_RemoteCommand: rate limit from %s exceeded, dropping request\n", NET_AdrToString( from ) );
+		Com_DPrintf( "SVC_RemoteCommand: rate limit from %s exceeded, dropping request\n",
+			NET_AdrToString( from ) );
 		return;
 	}
 
-	if( !strlen( sv_rconPassword->string ) || strcmp( Cmd_Argv( 1 ), sv_rconPassword->string ) )
+	if( !strlen( sv_rconPassword->string ) ||
+		strcmp( Cmd_Argv( 1 ), sv_rconPassword->string ) )
 	{
 		static leakyBucket_t bucket;
 
@@ -922,7 +939,9 @@ static void SV_ConnectionlessPacket( netadr_t from, msg_t* msg )
 	}
 	else
 	{
-		Com_DPrintf( "bad connectionless packet from %s:\n%s\n", NET_AdrToString( from ), s );
+		Com_DPrintf( "bad connectionless packet from %s:\n%s\n",
+			NET_AdrToString( from ),
+			s );
 	}
 }
 
@@ -993,10 +1012,6 @@ void SV_PacketEvent( netadr_t from, msg_t* msg )
 		}
 		return;
 	}
-
-	// if we received a sequenced packet from an address we don't recognize,
-	// send an out of band disconnect packet to it
-	NET_OutOfBandPrint( NS_SERVER, from, "disconnect" );
 }
 
 /*
@@ -1164,6 +1179,35 @@ static qboolean SV_CheckPaused( void )
 
 /*
 ==================
+SV_FrameMsec
+Return time in millseconds until processing of the next server frame.
+==================
+*/
+int SV_FrameMsec()
+{
+	if( sv_fps )
+	{
+		int frameMsec;
+
+		frameMsec = 1000.0f / sv_fps->value;
+
+		if( frameMsec < sv.timeResidual )
+		{
+			return 0;
+		}
+		else
+		{
+			return frameMsec - sv.timeResidual;
+		}
+	}
+	else
+	{
+		return 1;
+	}
+}
+
+/*
+==================
 SV_Frame
 
 Player movement occurs as a result of packet events, which
@@ -1219,14 +1263,6 @@ void SV_Frame( int msec )
 	if( !com_dedicated->integer )
 	{
 		SV_BotFrame( sv.time + sv.timeResidual );
-	}
-
-	if( com_dedicated->integer && sv.timeResidual < frameMsec )
-	{
-		// NET_Sleep will give the OS time slices until either get a packet
-		// or time enough for a server frame has gone by
-		NET_Sleep( frameMsec - sv.timeResidual );
-		return;
 	}
 
 	// if time is about to hit the 32nd bit, kick all clients
@@ -1306,7 +1342,161 @@ void SV_Frame( int msec )
 	SV_SendClientMessages();
 
 	// send a heartbeat to the master if needed
-	SV_MasterHeartbeat();
+	SV_MasterHeartbeat( HEARTBEAT_FOR_MASTER );
 }
 
-//============================================================================
+/*
+====================
+SV_RateMsec
+
+Return the number of msec until another message can be sent to
+a client based on its rate settings
+====================
+*/
+
+#define UDPIP_HEADER_SIZE  28
+#define UDPIP6_HEADER_SIZE 48
+
+int SV_RateMsec( client_t* client )
+{
+	int rate, rateMsec;
+	int messageSize;
+
+	messageSize = client->netchan.lastSentSize;
+	rate        = client->rate;
+
+	if( sv_maxRate->integer )
+	{
+		if( sv_maxRate->integer < 1000 )
+		{
+			Cvar_Set( "sv_MaxRate", "1000" );
+		}
+		if( sv_maxRate->integer < rate )
+		{
+			rate = sv_maxRate->integer;
+		}
+	}
+
+	if( sv_minRate->integer )
+	{
+		if( sv_minRate->integer < 1000 )
+		{
+			Cvar_Set( "sv_minRate", "1000" );
+		}
+		if( sv_minRate->integer > rate )
+		{
+			rate = sv_minRate->integer;
+		}
+	}
+
+	if( client->netchan.remoteAddress.type == NA_IP6 )
+	{
+		messageSize += UDPIP6_HEADER_SIZE;
+	}
+	else
+	{
+		messageSize += UDPIP_HEADER_SIZE;
+	}
+
+	rateMsec = messageSize * 1000 / ( ( int )( rate * com_timescale->value ) );
+	rate     = Sys_Milliseconds() - client->netchan.lastSentTime;
+
+	if( rate > rateMsec )
+	{
+		return 0;
+	}
+	else
+	{
+		return rateMsec - rate;
+	}
+}
+
+/*
+====================
+SV_SendQueuedPackets
+
+Send download messages and queued packets in the time that we're idle, i.e.
+not computing a server frame or sending client snapshots.
+Return the time in msec until we expect to be called next
+====================
+*/
+
+int SV_SendQueuedPackets()
+{
+	int        numBlocks;
+	int        dlStart, deltaT, delayT;
+	static int dlNextRound = 0;
+	int        timeVal     = INT_MAX;
+
+	// Send out fragmented packets now that we're idle
+	delayT = SV_SendQueuedMessages();
+	if( delayT >= 0 )
+	{
+		timeVal = delayT;
+	}
+
+	if( sv_dlRate->integer )
+	{
+		// Rate limiting. This is very imprecise for high
+		// download rates due to millisecond timedelta resolution
+		dlStart = Sys_Milliseconds();
+		deltaT  = dlNextRound - dlStart;
+
+		if( deltaT > 0 )
+		{
+			if( deltaT < timeVal )
+			{
+				timeVal = deltaT + 1;
+			}
+		}
+		else
+		{
+			numBlocks = SV_SendDownloadMessages();
+
+			if( numBlocks )
+			{
+				// There are active downloads
+				deltaT = Sys_Milliseconds() - dlStart;
+
+				delayT = 1000 * numBlocks * MAX_DOWNLOAD_BLKSIZE;
+				delayT /= sv_dlRate->integer * 1024;
+
+				if( delayT <= deltaT + 1 )
+				{
+					// Sending the last round of download messages
+					// took too long for given rate, don't wait for
+					// next round, but always enforce a 1ms delay
+					// between DL message rounds so we don't hog
+					// all of the bandwidth. This will result in an
+					// effective maximum rate of 1MB/s per user, but the
+					// low download window size limits this anyways.
+					if( timeVal > 2 )
+					{
+						timeVal = 2;
+					}
+
+					dlNextRound = dlStart + deltaT + 1;
+				}
+				else
+				{
+					dlNextRound = dlStart + delayT;
+					delayT -= deltaT;
+
+					if( delayT < timeVal )
+					{
+						timeVal = delayT;
+					}
+				}
+			}
+		}
+	}
+	else
+	{
+		if( SV_SendDownloadMessages() )
+		{
+			timeVal = 0;
+		}
+	}
+
+	return timeVal;
+}
