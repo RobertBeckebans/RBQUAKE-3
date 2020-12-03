@@ -381,8 +381,8 @@ vwinding_t* ClipToSeperators( vwinding_t* source, vwinding_t* pass, vwinding_t* 
 				continue; // planar with seperating plane
 			}
 #else
-			k        = ( j + 1 ) % pass->numpoints;
-			d        = DotProduct( pass->points[ k ], plane.normal ) - plane.dist;
+			k = ( j + 1 ) % pass->numpoints;
+			d = DotProduct( pass->points[ k ], plane.normal ) - plane.dist;
 			if( d < -ON_EPSILON )
 			{
 				continue;

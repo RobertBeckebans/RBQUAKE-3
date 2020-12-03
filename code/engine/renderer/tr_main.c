@@ -1268,12 +1268,12 @@ void R_RotateForViewer( void )
 		plane[2] = tr.viewParms.portalPlane.normal[2];
 		plane[3] = tr.viewParms.portalPlane.dist;
 
-#if 1
+	#if 1
 		MatrixPlaneReflection( mirrorMatrix, plane );
 		//MatrixInverse(mirrorMatrix);
 		MatrixMultiply( mirrorMatrix, viewMatrix, tr.orientation.viewMatrix );
 		//MatrixMultiply(viewMatrix, mirrorMatrix, tr.orientation.viewMatrix);
-#else
+	#else
 		
 		// clipping plane in view space
 		plane2[0] = DotProduct( tr.viewParms.orientation.axis[0], plane );
@@ -1291,7 +1291,7 @@ void R_RotateForViewer( void )
 		
 		MatrixMultiply( mirrorMatrix, viewMatrix, tr.orientation.viewMatrix );
 		//MatrixMultiply(viewMatrix, mirrorMatrix, tr.orientation.viewMatrix);
-#endif
+	#endif
 	}
 	else
 #endif
@@ -1370,7 +1370,7 @@ static void SetFarClip( void )
 		farthestCornerDistance = max( farthestCornerDistance, eye[0] * eye[0] + eye[1] * eye[1] + eye[2] * eye[2] );
 	}
 
-#if 0
+	#if 0
 	// check lightBounds
 	if( tr.refdef.numLights )
 	{
@@ -1413,7 +1413,7 @@ static void SetFarClip( void )
 			farthestCornerDistance = max( farthestCornerDistance, eye[0] * eye[0] + eye[1] * eye[1] + eye[2] * eye[2] );
 		}
 	}
-#endif
+	#endif
 
 #else
 	farthestCornerDistance = 0;
@@ -1459,7 +1459,7 @@ static void SetFarClip( void )
 		}
 	}
 
-#if 0
+	#if 0
 	// check lightBounds
 	for( i = 0; i < 8; i++ )
 	{
@@ -1503,7 +1503,7 @@ static void SetFarClip( void )
 			farthestCornerDistance = distance;
 		}
 	}
-#endif
+	#endif
 
 #endif
 	tr.viewParms.zFar = sqrt( farthestCornerDistance );

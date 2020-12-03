@@ -40,16 +40,16 @@ typedef vec_t matrix_t[ 16 ];
 
 // angle indexes
 #define PITCH 0 // up / down
-#define YAW 1   // left / right
-#define ROLL 2  // fall over
+#define YAW   1 // left / right
+#define ROLL  2 // fall over
 
 // plane sides
 #define SIDE_FRONT 0
-#define SIDE_ON 2
-#define SIDE_BACK 1
+#define SIDE_ON    2
+#define SIDE_BACK  1
 #define SIDE_CROSS -2
 
-#define Q_PI 3.14159265358979323846
+#define Q_PI         3.14159265358979323846
 #define DEG2RAD( a ) ( ( ( a )*Q_PI ) / 180.0F )
 #define RAD2DEG( a ) ( ( ( a )*180.0f ) / Q_PI )
 
@@ -59,20 +59,20 @@ extern vec3_t vec3_origin;
 
 // plane types are used to speed some tests
 // 0-2 are axial planes
-#define PLANE_X 0
-#define PLANE_Y 1
-#define PLANE_Z 2
+#define PLANE_X         0
+#define PLANE_Y         1
+#define PLANE_Z         2
 #define PLANE_NON_AXIAL 3
 
-#define DotProduct( x, y ) ( ( x )[ 0 ] * ( y )[ 0 ] + ( x )[ 1 ] * ( y )[ 1 ] + ( x )[ 2 ] * ( y )[ 2 ] )
+#define DotProduct( x, y )        ( ( x )[ 0 ] * ( y )[ 0 ] + ( x )[ 1 ] * ( y )[ 1 ] + ( x )[ 2 ] * ( y )[ 2 ] )
 #define VectorSubtract( a, b, c ) ( ( c )[ 0 ] = ( a )[ 0 ] - ( b )[ 0 ], ( c )[ 1 ] = ( a )[ 1 ] - ( b )[ 1 ], ( c )[ 2 ] = ( a )[ 2 ] - ( b )[ 2 ] )
-#define VectorAdd( a, b, c ) ( ( c )[ 0 ] = ( a )[ 0 ] + ( b )[ 0 ], ( c )[ 1 ] = ( a )[ 1 ] + ( b )[ 1 ], ( c )[ 2 ] = ( a )[ 2 ] + ( b )[ 2 ] )
-#define VectorCopy( a, b ) ( ( b )[ 0 ] = ( a )[ 0 ], ( b )[ 1 ] = ( a )[ 1 ], ( b )[ 2 ] = ( a )[ 2 ] )
-#define VectorScale( v, s, o ) ( ( o )[ 0 ] = ( v )[ 0 ] * ( s ), ( o )[ 1 ] = ( v )[ 1 ] * ( s ), ( o )[ 2 ] = ( v )[ 2 ] * ( s ) )
-#define VectorMA( v, s, b, o ) ( ( o )[ 0 ] = ( v )[ 0 ] + ( b )[ 0 ] * ( s ), ( o )[ 1 ] = ( v )[ 1 ] + ( b )[ 1 ] * ( s ), ( o )[ 2 ] = ( v )[ 2 ] + ( b )[ 2 ] * ( s ) )
-#define VectorClear( a ) ( ( a )[ 0 ] = ( a )[ 1 ] = ( a )[ 2 ] = 0 )
-#define VectorNegate( a, b ) ( ( b )[ 0 ] = -( a )[ 0 ], ( b )[ 1 ] = -( a )[ 1 ], ( b )[ 2 ] = -( a )[ 2 ] )
-#define VectorSet( v, x, y, z ) ( ( v )[ 0 ] = ( x ), ( v )[ 1 ] = ( y ), ( v )[ 2 ] = ( z ) )
+#define VectorAdd( a, b, c )      ( ( c )[ 0 ] = ( a )[ 0 ] + ( b )[ 0 ], ( c )[ 1 ] = ( a )[ 1 ] + ( b )[ 1 ], ( c )[ 2 ] = ( a )[ 2 ] + ( b )[ 2 ] )
+#define VectorCopy( a, b )        ( ( b )[ 0 ] = ( a )[ 0 ], ( b )[ 1 ] = ( a )[ 1 ], ( b )[ 2 ] = ( a )[ 2 ] )
+#define VectorScale( v, s, o )    ( ( o )[ 0 ] = ( v )[ 0 ] * ( s ), ( o )[ 1 ] = ( v )[ 1 ] * ( s ), ( o )[ 2 ] = ( v )[ 2 ] * ( s ) )
+#define VectorMA( v, s, b, o )    ( ( o )[ 0 ] = ( v )[ 0 ] + ( b )[ 0 ] * ( s ), ( o )[ 1 ] = ( v )[ 1 ] + ( b )[ 1 ] * ( s ), ( o )[ 2 ] = ( v )[ 2 ] + ( b )[ 2 ] * ( s ) )
+#define VectorClear( a )          ( ( a )[ 0 ] = ( a )[ 1 ] = ( a )[ 2 ] = 0 )
+#define VectorNegate( a, b )      ( ( b )[ 0 ] = -( a )[ 0 ], ( b )[ 1 ] = -( a )[ 1 ], ( b )[ 2 ] = -( a )[ 2 ] )
+#define VectorSet( v, x, y, z )   ( ( v )[ 0 ] = ( x ), ( v )[ 1 ] = ( y ), ( v )[ 2 ] = ( z ) )
 
 int  VectorCompare( const vec3_t v1, const vec3_t v2 );
 void Vec10Copy( vec_t* in, vec_t* out );

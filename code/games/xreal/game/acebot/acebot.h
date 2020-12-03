@@ -28,17 +28,17 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #if defined( ACEBOT )
 
-// FIXME remove: game print flags
-#define PRINT_LOW 0    // pickup messages
-#define PRINT_MEDIUM 1 // death messages
-#define PRINT_HIGH 2   // critical messages
-#define PRINT_CHAT 3   // chat messages
+	// FIXME remove: game print flags
+	#define PRINT_LOW    0 // pickup messages
+	#define PRINT_MEDIUM 1 // death messages
+	#define PRINT_HIGH   2 // critical messages
+	#define PRINT_CHAT   3 // chat messages
 
-// maximum nodes
-#define MAX_NODES 1000
+	// maximum nodes
+	#define MAX_NODES 1000
 
-// link types
-#define INVALID -1
+	// link types
+	#define INVALID -1
 
 // node types
 enum
@@ -55,8 +55,8 @@ enum
 	NODE_ALL = 99, // For selecting all nodes
 };
 
-// density setting for nodes
-#define NODE_DENSITY 128 // fomerly 128
+	// density setting for nodes
+	#define NODE_DENSITY 128 // fomerly 128
 
 // bot state types
 enum

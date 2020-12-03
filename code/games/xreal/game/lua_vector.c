@@ -25,9 +25,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #if( defined( CG_LUA ) || defined( G_LUA ) )
 
-#include <lua.h>
-#include <lauxlib.h>
-#include <lualib.h>
+	#include <lua.h>
+	#include <lauxlib.h>
+	#include <lualib.h>
 
 static int vector_New( lua_State* L )
 {
@@ -401,7 +401,7 @@ int luaopen_vector( lua_State* L )
 	luaL_register( L, NULL, vector_meta );
 	luaL_register( L, "vector", vector_ctor );
 
-#if 0
+	#if 0
 	// now the stack has the metatable at index 1 and `vector' at index 2
 	lua_pushstring( L, "__index" );
 	lua_pushstring( L, "Get" );
@@ -412,7 +412,7 @@ int luaopen_vector( lua_State* L )
 	lua_pushstring( L, "Set" );
 	lua_gettable( L, 2 );			/* get array.set */
 	lua_settable( L, 1 );			/* metatable.__newindex = array.set */
-#endif
+	#endif
 
 	return 1;
 }

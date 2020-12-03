@@ -541,7 +541,7 @@ Generated a bunch of gibs launching out from the bodies location
 ===================
 */
 #define GIB_VELOCITY 250
-#define GIB_JUMP 250
+#define GIB_JUMP     250
 void CG_GibPlayer( vec3_t playerOrigin )
 {
 	vec3_t origin, velocity;

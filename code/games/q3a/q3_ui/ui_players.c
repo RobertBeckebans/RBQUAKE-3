@@ -24,13 +24,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "ui_local.h"
 
-#define UI_TIMER_GESTURE 2300
-#define UI_TIMER_JUMP 1000
-#define UI_TIMER_LAND 130
+#define UI_TIMER_GESTURE       2300
+#define UI_TIMER_JUMP          1000
+#define UI_TIMER_LAND          130
 #define UI_TIMER_WEAPON_SWITCH 300
-#define UI_TIMER_ATTACK 500
-#define UI_TIMER_MUZZLE_FLASH 20
-#define UI_TIMER_WEAPON_DELAY 250
+#define UI_TIMER_ATTACK        500
+#define UI_TIMER_MUZZLE_FLASH  20
+#define UI_TIMER_WEAPON_DELAY  250
 
 #define JUMP_HEIGHT 56
 

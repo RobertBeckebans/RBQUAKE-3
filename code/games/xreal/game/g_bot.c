@@ -32,10 +32,10 @@ static char* g_botInfos[ MAX_BOTS ];
 int          g_numArenas;
 static char* g_arenaInfos[ MAX_ARENAS ];
 
-#define BOT_BEGIN_DELAY_BASE 2000
-#define BOT_BEGIN_DELAY_INCREMENT 1500
+	#define BOT_BEGIN_DELAY_BASE      2000
+	#define BOT_BEGIN_DELAY_INCREMENT 1500
 
-#define BOT_SPAWN_QUEUE_DEPTH 16
+	#define BOT_SPAWN_QUEUE_DEPTH 16
 
 typedef struct
 {
@@ -705,7 +705,7 @@ static void G_AddBot( const char* name, float skill, const char* team, int delay
 	Info_SetValueForKey( userinfo, "snaps", "20" );
 	Info_SetValueForKey( userinfo, "skill", va( "%.2f", skill ) );
 
-#if defined( GLADIATOR )
+	#if defined( GLADIATOR )
 	// outcommented for brainworks
 	if( skill >= 1 && skill < 2 )
 	{
@@ -719,7 +719,7 @@ static void G_AddBot( const char* name, float skill, const char* team, int delay
 	{
 		Info_SetValueForKey( userinfo, "handicap", "90" );
 	}
-#endif
+	#endif
 
 	key   = "model";
 	model = Info_ValueForKey( botinfo, key );

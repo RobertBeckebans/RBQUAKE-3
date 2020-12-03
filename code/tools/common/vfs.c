@@ -44,14 +44,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdio.h>
 
 #if defined( __linux__ ) || defined( __APPLE__ ) || defined( __FreeBSD__ ) || defined( __sun )
-#include <dirent.h>
-#include <unistd.h>
+	#include <dirent.h>
+	#include <unistd.h>
 #else
-#include <wtypes.h>
-#include <io.h>
-#define R_OK 04
-#define S_ISDIR( mode ) ( mode & _S_IFDIR )
-#define PATH_MAX 260
+	#include <wtypes.h>
+	#include <io.h>
+	#define R_OK            04
+	#define S_ISDIR( mode ) ( mode & _S_IFDIR )
+	#define PATH_MAX        260
 #endif
 
 #include <string.h>

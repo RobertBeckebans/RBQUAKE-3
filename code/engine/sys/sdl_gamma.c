@@ -21,13 +21,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #ifdef _WIN32
-#include <windows.h>
+	#include <windows.h>
 #endif
 
 #ifdef USE_LOCAL_HEADERS
-#include "SDL.h"
+	#include "SDL.h"
 #else
-#include <SDL.h>
+	#include <SDL.h>
 #endif
 
 #include "../renderer/tr_local.h"

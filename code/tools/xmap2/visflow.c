@@ -392,8 +392,8 @@ fixedWinding_t* ClipToSeperators( fixedWinding_t* source, fixedWinding_t* pass, 
 				continue; // planar with seperating plane
 			}
 #else
-			k        = ( j + 1 ) % pass->numpoints;
-			d        = DotProduct( pass->points[ k ], plane.normal ) - plane.dist;
+			k = ( j + 1 ) % pass->numpoints;
+			d = DotProduct( pass->points[ k ], plane.normal ) - plane.dist;
 			if( d < -ON_EPSILON )
 			{
 				continue;

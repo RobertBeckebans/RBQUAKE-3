@@ -230,9 +230,9 @@ void CG_RailTrail( clientInfo_t* ci, vec3_t start, vec3_t end )
 	localEntity_t* le;
 	refEntity_t*   re;
 
-#define RADIUS 4
+#define RADIUS   4
 #define ROTATION 1
-#define SPACING 5
+#define SPACING  5
 
 	start[ 2 ] -= 4;
 

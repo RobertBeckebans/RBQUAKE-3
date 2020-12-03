@@ -46,9 +46,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 extern botlib_import_t botimport;
 
-#define AAS_MAX_PORTALS 65536
+#define AAS_MAX_PORTALS         65536
 #define AAS_MAX_PORTALINDEXSIZE 65536
-#define AAS_MAX_CLUSTERS 65536
+#define AAS_MAX_CLUSTERS        65536
 //
 #define MAX_PORTALAREAS 1024
 

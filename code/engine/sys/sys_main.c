@@ -32,13 +32,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include <errno.h>
 
 #ifndef DEDICATED
-#ifdef USE_LOCAL_HEADERS
-#include "SDL.h"
-#include "SDL_cpuinfo.h"
-#else
-#include <SDL.h>
-#include <SDL_cpuinfo.h>
-#endif
+	#ifdef USE_LOCAL_HEADERS
+		#include "SDL.h"
+		#include "SDL_cpuinfo.h"
+	#else
+		#include <SDL.h>
+		#include <SDL_cpuinfo.h>
+	#endif
 #endif
 
 #include "sys_local.h"
@@ -148,9 +148,9 @@ char* Sys_ConsoleInput( void )
 }
 
 #ifdef DEDICATED
-#define PID_FILENAME PRODUCT_NAME "_server.pid"
+	#define PID_FILENAME PRODUCT_NAME "_server.pid"
 #else
-#define PID_FILENAME PRODUCT_NAME ".pid"
+	#define PID_FILENAME PRODUCT_NAME ".pid"
 #endif
 
 /*
@@ -587,11 +587,11 @@ void Sys_ParseArgs( int argc, char** argv )
 }
 
 #ifndef DEFAULT_BASEDIR
-#ifdef MACOS_X
-#define DEFAULT_BASEDIR Sys_StripAppBundle( Sys_BinaryPath() )
-#else
-#define DEFAULT_BASEDIR Sys_BinaryPath()
-#endif
+	#ifdef MACOS_X
+		#define DEFAULT_BASEDIR Sys_StripAppBundle( Sys_BinaryPath() )
+	#else
+		#define DEFAULT_BASEDIR Sys_BinaryPath()
+	#endif
 #endif
 
 /*
@@ -642,17 +642,17 @@ int main( int argc, char** argv )
 	// SDL version check
 
 	// Compile time
-#if !SDL_VERSION_ATLEAST( MINSDL_MAJOR, MINSDL_MINOR, MINSDL_PATCH )
-#error A more recent version of SDL is required
-#endif
+	#if !SDL_VERSION_ATLEAST( MINSDL_MAJOR, MINSDL_MINOR, MINSDL_PATCH )
+		#error A more recent version of SDL is required
+	#endif
 
 	// Run time
 	SDL_version ver;
 	SDL_GetVersion( &ver );
 
-#define MINSDL_VERSION      \
-	XSTRING( MINSDL_MAJOR ) \
-	"." XSTRING( MINSDL_MINOR ) "." XSTRING( MINSDL_PATCH )
+	#define MINSDL_VERSION      \
+		XSTRING( MINSDL_MAJOR ) \
+		"." XSTRING( MINSDL_MINOR ) "." XSTRING( MINSDL_PATCH )
 
 	if( SDL_VERSIONNUM( ver.major, ver.minor, ver.patch ) <
 		SDL_VERSIONNUM( MINSDL_MAJOR, MINSDL_MINOR, MINSDL_PATCH ) )

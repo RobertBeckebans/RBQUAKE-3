@@ -26,7 +26,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define NOISE_SIZE 256
 #define NOISE_MASK ( NOISE_SIZE - 1 )
 
-#define VAL( a ) s_noise_perm[ ( a ) & ( NOISE_MASK ) ]
+#define VAL( a )            s_noise_perm[ ( a ) & ( NOISE_MASK ) ]
 #define INDEX( x, y, z, t ) VAL( x + VAL( y + VAL( z + VAL( t ) ) ) )
 
 static float s_noise_table[ NOISE_SIZE ];

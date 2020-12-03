@@ -135,8 +135,8 @@ static void CON_HistPrev( void )
 	int pos;
 
 	pos = ( qconsole_history_pos < 1 ) ?
-		( QCONSOLE_HISTORY - 1 ) :
-		( qconsole_history_pos - 1 );
+        ( QCONSOLE_HISTORY - 1 ) :
+        ( qconsole_history_pos - 1 );
 
 	// don' t allow looping through history
 	if( pos == qconsole_history_oldest || pos >= qconsole_history_lines )
@@ -165,8 +165,8 @@ static void CON_HistNext( void )
 	}
 
 	pos = ( qconsole_history_pos >= QCONSOLE_HISTORY - 1 ) ?
-		0 :
-		( qconsole_history_pos + 1 );
+        0 :
+        ( qconsole_history_pos + 1 );
 
 	// clear the edit buffer if they try to advance to a future command
 	if( pos == qconsole_history_oldest )
@@ -419,8 +419,8 @@ char* CON_Input( void )
 			if( key == VK_BACK )
 			{
 				int pos = ( qconsole_linelen > 0 ) ?
-					qconsole_linelen - 1 :
-					0;
+                    qconsole_linelen - 1 :
+                    0;
 
 				qconsole_line[ pos ] = '\0';
 				qconsole_linelen     = pos;

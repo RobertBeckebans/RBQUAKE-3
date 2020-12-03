@@ -2403,20 +2403,20 @@ qboolean CG_PlayerShadow( centity_t* cent, float* shadowPlane, int noShadowID )
 		// find projection end
 		VectorMA( light.origin, SHADOW_DISTANCE * 100, lightDirInversed, projectionEnd );
 		trap_CM_BoxTrace( &trace, light.origin, projectionEnd, mins, maxs, 0, MASK_PLAYERSOLID );
-#if 0
+	#if 0
 		if( /* trace.fraction == 1.0 || */ trace.startsolid || trace.allsolid )
 		{
 			return qfalse;
 		}
-#endif
+	#endif
 
-#if 0
+	#if 0
 		angle = AngleBetweenVectors( lightDirInversed, surfNormal );
 		if( angle > 30 )
 		{
 			VectorCopy( surfNormal, lightDirInversed );
 		}
-#endif
+	#endif
 		
 		VectorToAngles( lightDirInversed, angles );
 		QuatFromAngles( light.rotation, angles[PITCH], angles[YAW], angles[ROLL] );
@@ -2672,7 +2672,7 @@ CG_Player
 */
 // has to be in sync with clientRespawnTime
 #define DEATHANIM_TIME 1650
-#define TRACE_DEPTH 64.0f
+#define TRACE_DEPTH    64.0f
 void CG_Player( centity_t* cent )
 {
 	clientInfo_t* ci;
@@ -2913,13 +2913,13 @@ void CG_Player( centity_t* cent )
 			body.skeleton.bounds[ 0 ][ i ] =
 				cent->pe.torso.skeleton.bounds[ 0 ][ i ] <
 					cent->pe.legs.skeleton.bounds[ 0 ][ i ] ?
-				cent->pe.torso.skeleton.bounds[ 0 ][ i ] :
-				cent->pe.legs.skeleton.bounds[ 0 ][ i ];
+                cent->pe.torso.skeleton.bounds[ 0 ][ i ] :
+                cent->pe.legs.skeleton.bounds[ 0 ][ i ];
 			body.skeleton.bounds[ 1 ][ i ] =
 				cent->pe.torso.skeleton.bounds[ 1 ][ i ] >
 					cent->pe.legs.skeleton.bounds[ 1 ][ i ] ?
-				cent->pe.torso.skeleton.bounds[ 1 ][ i ] :
-				cent->pe.legs.skeleton.bounds[ 1 ][ i ];
+                cent->pe.torso.skeleton.bounds[ 1 ][ i ] :
+                cent->pe.legs.skeleton.bounds[ 1 ][ i ];
 		}
 	}
 	else

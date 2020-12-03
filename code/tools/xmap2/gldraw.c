@@ -25,10 +25,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #if defined( USE_OPENGL )
 
-#include <SDL.h>
-#include <SDL_opengl.h>
+	#include <SDL.h>
+	#include <SDL_opengl.h>
 
-#include <GL/glu.h>
+	#include <GL/glu.h>
 
 // can't use the glvertex3fv functions, because the vec3_t fields
 // could be either floats or doubles, depending on DOUBLEVEC_T
@@ -42,7 +42,7 @@ static vec3_t   drawAngles = { 0, 0, 0 };
 static SDL_Window*   mainwindow;
 static SDL_GLContext maincontext;
 
-#define WIN_SIZE 512
+	#define WIN_SIZE 512
 
 static void Reshape( int width, int height )
 {
@@ -131,7 +131,7 @@ static void Draw_BeginScene( void )
 	glEnable( GL_BLEND );
 	glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
-#if 0
+	#if 0
 	glColor4f( 1, 0, 0, 0.5 );
 	glBegin( GL_POLYGON );
 	
@@ -141,7 +141,7 @@ static void Draw_BeginScene( void )
 	glVertex3f( 0, 500, 100 );
 	
 	glEnd();
-#endif
+	#endif
 
 	glFlush();
 }

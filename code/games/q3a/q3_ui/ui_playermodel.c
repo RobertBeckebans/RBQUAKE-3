@@ -22,16 +22,16 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //
 #include "ui_local.h"
 
-#define MODEL_BACK0 "menu/art/back_0"
-#define MODEL_BACK1 "menu/art/back_1"
-#define MODEL_SELECT "menu/art/opponents_select"
+#define MODEL_BACK0    "menu/art/back_0"
+#define MODEL_BACK1    "menu/art/back_1"
+#define MODEL_SELECT   "menu/art/opponents_select"
 #define MODEL_SELECTED "menu/art/opponents_selected"
-#define MODEL_FRAMEL "menu/art/frame1_l"
-#define MODEL_FRAMER "menu/art/frame1_r"
-#define MODEL_PORTS "menu/art/player_models_ports"
-#define MODEL_ARROWS "menu/art/gs_arrows_0"
-#define MODEL_ARROWSL "menu/art/gs_arrows_l"
-#define MODEL_ARROWSR "menu/art/gs_arrows_r"
+#define MODEL_FRAMEL   "menu/art/frame1_l"
+#define MODEL_FRAMER   "menu/art/frame1_r"
+#define MODEL_PORTS    "menu/art/player_models_ports"
+#define MODEL_ARROWS   "menu/art/gs_arrows_0"
+#define MODEL_ARROWSL  "menu/art/gs_arrows_l"
+#define MODEL_ARROWSR  "menu/art/gs_arrows_r"
 
 #define LOW_MEMORY ( 5 * 1024 * 1024 )
 
@@ -49,31 +49,31 @@ static char* playermodel_artlist[] = {
 	NULL
 };
 
-#define PLAYERGRID_COLS 4
-#define PLAYERGRID_ROWS 4
+#define PLAYERGRID_COLS   4
+#define PLAYERGRID_ROWS   4
 #define MAX_MODELSPERPAGE ( PLAYERGRID_ROWS * PLAYERGRID_COLS )
 
 #define MAX_PLAYERMODELS 256
 
-#define ID_PLAYERPIC0 0
-#define ID_PLAYERPIC1 1
-#define ID_PLAYERPIC2 2
-#define ID_PLAYERPIC3 3
-#define ID_PLAYERPIC4 4
-#define ID_PLAYERPIC5 5
-#define ID_PLAYERPIC6 6
-#define ID_PLAYERPIC7 7
-#define ID_PLAYERPIC8 8
-#define ID_PLAYERPIC9 9
+#define ID_PLAYERPIC0  0
+#define ID_PLAYERPIC1  1
+#define ID_PLAYERPIC2  2
+#define ID_PLAYERPIC3  3
+#define ID_PLAYERPIC4  4
+#define ID_PLAYERPIC5  5
+#define ID_PLAYERPIC6  6
+#define ID_PLAYERPIC7  7
+#define ID_PLAYERPIC8  8
+#define ID_PLAYERPIC9  9
 #define ID_PLAYERPIC10 10
 #define ID_PLAYERPIC11 11
 #define ID_PLAYERPIC12 12
 #define ID_PLAYERPIC13 13
 #define ID_PLAYERPIC14 14
 #define ID_PLAYERPIC15 15
-#define ID_PREVPAGE 100
-#define ID_NEXTPAGE 101
-#define ID_BACK 102
+#define ID_PREVPAGE    100
+#define ID_NEXTPAGE    101
+#define ID_BACK        102
 
 typedef struct
 {

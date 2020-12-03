@@ -393,7 +393,8 @@ struct leakyBucket_s
 {
 	netadrtype_t type;
 
-	union {
+	union
+	{
 		byte _4[ 4 ];
 		byte _6[ 16 ];
 	} ipv;
@@ -408,7 +409,7 @@ struct leakyBucket_s
 
 // This is deliberately quite large to make it more of an effort to DoS
 #define MAX_BUCKETS 16384
-#define MAX_HASHES 1024
+#define MAX_HASHES  1024
 
 static leakyBucket_t  buckets[ MAX_BUCKETS ];
 static leakyBucket_t* bucketHashes[ MAX_HASHES ];

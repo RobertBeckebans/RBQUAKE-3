@@ -38,7 +38,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //#define MEMDEBUG
 //#define MEMORYMANEGER
 
-#define MEM_ID 0x12345678l
+#define MEM_ID  0x12345678l
 #define HUNK_ID 0x87654321l
 
 int allocatedmemory;
@@ -52,11 +52,11 @@ typedef struct memoryblock_s
 	unsigned long int id;
 	void*             ptr;
 	int               size;
-#ifdef MEMDEBUG
+	#ifdef MEMDEBUG
 	char* label;
 	char* file;
 	int   line;
-#endif //MEMDEBUG
+	#endif //MEMDEBUG
 	struct memoryblock_s *prev, *next;
 } memoryblock_t;
 
@@ -99,17 +99,17 @@ void UnlinkMemoryBlock( memoryblock_t* block )
 		block->next->prev = block->prev;
 	}
 } //end of the function UnlinkMemoryBlock
-//===========================================================================
-//
-// Parameter:			-
-// Returns:				-
-// Changes Globals:		-
-//===========================================================================
-#ifdef MEMDEBUG
+	//===========================================================================
+	//
+	// Parameter:			-
+	// Returns:				-
+	// Changes Globals:		-
+	//===========================================================================
+	#ifdef MEMDEBUG
 void* GetMemoryDebug( unsigned long size, char* label, char* file, int line )
-#else
+	#else
 void* GetMemory( unsigned long size )
-#endif //MEMDEBUG
+	#endif //MEMDEBUG
 {
 	void*          ptr;
 	memoryblock_t* block;
@@ -119,49 +119,49 @@ void* GetMemory( unsigned long size )
 	block->id   = MEM_ID;
 	block->ptr  = ( char* )ptr + sizeof( memoryblock_t );
 	block->size = size + sizeof( memoryblock_t );
-#ifdef MEMDEBUG
+	#ifdef MEMDEBUG
 	block->label = label;
 	block->file  = file;
 	block->line  = line;
-#endif //MEMDEBUG
+	#endif //MEMDEBUG
 	LinkMemoryBlock( block );
 	allocatedmemory += block->size;
 	totalmemorysize += block->size + sizeof( memoryblock_t );
 	numblocks++;
 	return block->ptr;
 } //end of the function GetMemoryDebug
-//===========================================================================
-//
-// Parameter:			-
-// Returns:				-
-// Changes Globals:		-
-//===========================================================================
-#ifdef MEMDEBUG
+	//===========================================================================
+	//
+	// Parameter:			-
+	// Returns:				-
+	// Changes Globals:		-
+	//===========================================================================
+	#ifdef MEMDEBUG
 void* GetClearedMemoryDebug( unsigned long size, char* label, char* file, int line )
-#else
+	#else
 void* GetClearedMemory( unsigned long size )
-#endif //MEMDEBUG
+	#endif //MEMDEBUG
 {
 	void* ptr;
-#ifdef MEMDEBUG
+	#ifdef MEMDEBUG
 	ptr = GetMemoryDebug( size, label, file, line );
-#else
+	#else
 	ptr = GetMemory( size );
-#endif //MEMDEBUG
+	#endif //MEMDEBUG
 	Com_Memset( ptr, 0, size );
 	return ptr;
 } //end of the function GetClearedMemory
-//===========================================================================
-//
-// Parameter:			-
-// Returns:				-
-// Changes Globals:		-
-//===========================================================================
-#ifdef MEMDEBUG
+	//===========================================================================
+	//
+	// Parameter:			-
+	// Returns:				-
+	// Changes Globals:		-
+	//===========================================================================
+	#ifdef MEMDEBUG
 void* GetHunkMemoryDebug( unsigned long size, char* label, char* file, int line )
-#else
+	#else
 void* GetHunkMemory( unsigned long size )
-#endif //MEMDEBUG
+	#endif //MEMDEBUG
 {
 	void*          ptr;
 	memoryblock_t* block;
@@ -171,35 +171,35 @@ void* GetHunkMemory( unsigned long size )
 	block->id   = HUNK_ID;
 	block->ptr  = ( char* )ptr + sizeof( memoryblock_t );
 	block->size = size + sizeof( memoryblock_t );
-#ifdef MEMDEBUG
+	#ifdef MEMDEBUG
 	block->label = label;
 	block->file  = file;
 	block->line  = line;
-#endif //MEMDEBUG
+	#endif //MEMDEBUG
 	LinkMemoryBlock( block );
 	allocatedmemory += block->size;
 	totalmemorysize += block->size + sizeof( memoryblock_t );
 	numblocks++;
 	return block->ptr;
 } //end of the function GetHunkMemoryDebug
-//===========================================================================
-//
-// Parameter:			-
-// Returns:				-
-// Changes Globals:		-
-//===========================================================================
-#ifdef MEMDEBUG
+	//===========================================================================
+	//
+	// Parameter:			-
+	// Returns:				-
+	// Changes Globals:		-
+	//===========================================================================
+	#ifdef MEMDEBUG
 void* GetClearedHunkMemoryDebug( unsigned long size, char* label, char* file, int line )
-#else
+	#else
 void* GetClearedHunkMemory( unsigned long size )
-#endif //MEMDEBUG
+	#endif //MEMDEBUG
 {
 	void* ptr;
-#ifdef MEMDEBUG
+	#ifdef MEMDEBUG
 	ptr = GetHunkMemoryDebug( size, label, file, line );
-#else
+	#else
 	ptr = GetHunkMemory( size );
-#endif //MEMDEBUG
+	#endif //MEMDEBUG
 	Com_Memset( ptr, 0, size );
 	return ptr;
 } //end of the function GetClearedHunkMemory
@@ -215,11 +215,11 @@ memoryblock_t* BlockFromPointer( void* ptr, char* str )
 
 	if( !ptr )
 	{
-#ifdef MEMDEBUG
+	#ifdef MEMDEBUG
 		//char *crash = (char *) NULL;
 		//crash[0] = 1;
 		botimport.Print( PRT_FATAL, "%s: NULL pointer\n", str );
-#endif // MEMDEBUG
+	#endif // MEMDEBUG
 		return NULL;
 	} //end if
 	block = ( memoryblock_t* )( ( char* )ptr - sizeof( memoryblock_t ) );
@@ -316,7 +316,7 @@ void PrintMemoryLabels( void )
 	Log_Write( "\r\n" );
 	for( block = memory; block; block = block->next )
 	{
-#ifdef MEMDEBUG
+	#ifdef MEMDEBUG
 		if( block->id == HUNK_ID )
 		{
 			Log_Write( "%6d, hunk %p, %8d: %24s line %6d: %s\r\n", i, block->ptr, block->size, block->file, block->line, block->label );
@@ -325,7 +325,7 @@ void PrintMemoryLabels( void )
 		{
 			Log_Write( "%6d,      %p, %8d: %24s line %6d: %s\r\n", i, block->ptr, block->size, block->file, block->line, block->label );
 		} //end else
-#endif    //MEMDEBUG
+	#endif //MEMDEBUG
 		i++;
 	} //end for
 } //end of the function PrintMemoryLabels
@@ -349,17 +349,17 @@ void DumpMemory( void )
 
 #else
 
-//===========================================================================
-//
-// Parameter:			-
-// Returns:				-
-// Changes Globals:		-
-//===========================================================================
-#ifdef MEMDEBUG
+	//===========================================================================
+	//
+	// Parameter:			-
+	// Returns:				-
+	// Changes Globals:		-
+	//===========================================================================
+	#ifdef MEMDEBUG
 void* GetMemoryDebug( unsigned long size, char* label, char* file, int line )
-#else
+	#else
 void* GetMemory( unsigned long size )
-#endif //MEMDEBUG
+	#endif //MEMDEBUG
 {
 	void*              ptr;
 	unsigned long int* memid;
@@ -379,18 +379,18 @@ void* GetMemory( unsigned long size )
   // Returns:				-
   // Changes Globals:		-
   //===========================================================================
-#ifdef MEMDEBUG
+	#ifdef MEMDEBUG
 void* GetClearedMemoryDebug( unsigned long size, char* label, char* file, int line )
-#else
+	#else
 void* GetClearedMemory( unsigned long size )
-#endif //MEMDEBUG
+	#endif //MEMDEBUG
 {
 	void* ptr;
-#ifdef MEMDEBUG
+	#ifdef MEMDEBUG
 	ptr = GetMemoryDebug( size, label, file, line );
-#else
+	#else
 	ptr = GetMemory( size );
-#endif //MEMDEBUG
+	#endif //MEMDEBUG
 	Com_Memset( ptr, 0, size );
 	return ptr;
 } //end of the function GetClearedMemory
@@ -400,11 +400,11 @@ void* GetClearedMemory( unsigned long size )
   // Returns:				-
   // Changes Globals:		-
   //===========================================================================
-#ifdef MEMDEBUG
+	#ifdef MEMDEBUG
 void* GetHunkMemoryDebug( unsigned long size, char* label, char* file, int line )
-#else
+	#else
 void* GetHunkMemory( unsigned long size )
-#endif //MEMDEBUG
+	#endif //MEMDEBUG
 {
 	void*              ptr;
 	unsigned long int* memid;
@@ -424,18 +424,18 @@ void* GetHunkMemory( unsigned long size )
   // Returns:				-
   // Changes Globals:		-
   //===========================================================================
-#ifdef MEMDEBUG
+	#ifdef MEMDEBUG
 void* GetClearedHunkMemoryDebug( unsigned long size, char* label, char* file, int line )
-#else
+	#else
 void* GetClearedHunkMemory( unsigned long size )
-#endif //MEMDEBUG
+	#endif //MEMDEBUG
 {
 	void* ptr;
-#ifdef MEMDEBUG
+	#ifdef MEMDEBUG
 	ptr = GetHunkMemoryDebug( size, label, file, line );
-#else
+	#else
 	ptr = GetHunkMemory( size );
-#endif //MEMDEBUG
+	#endif //MEMDEBUG
 	Com_Memset( ptr, 0, size );
 	return ptr;
 } //end of the function GetClearedHunkMemory

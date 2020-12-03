@@ -48,20 +48,20 @@ void UI_UpdateCvars( void );
 void UI_DrawConnectScreen( qboolean overlay );
 
 // new ui stuff
-#define MAX_MAPS 128
-#define MAX_PINGREQUESTS 32
-#define MAX_ADDRESSLENGTH 64
-#define MAX_DISPLAY_SERVERS 2048
-#define MAX_SERVERSTATUS_LINES 128
-#define MAX_SERVERSTATUS_TEXT 1024
-#define MAX_NEWS_LINES 50
-#define MAX_NEWS_LINEWIDTH 85
+#define MAX_MAPS                128
+#define MAX_PINGREQUESTS        32
+#define MAX_ADDRESSLENGTH       64
+#define MAX_DISPLAY_SERVERS     2048
+#define MAX_SERVERSTATUS_LINES  128
+#define MAX_SERVERSTATUS_TEXT   1024
+#define MAX_NEWS_LINES          50
+#define MAX_NEWS_LINEWIDTH      85
 #define MAX_FOUNDPLAYER_SERVERS 16
-#define MAX_MODS 64
-#define MAX_DEMOS 256
-#define MAX_MOVIES 256
-#define MAX_HELP_INFOPANES 32
-#define MAX_RESOLUTIONS 32
+#define MAX_MODS                64
+#define MAX_DEMOS               256
+#define MAX_MOVIES              256
+#define MAX_HELP_INFOPANES      32
+#define MAX_RESOLUTIONS         32
 
 typedef struct
 {

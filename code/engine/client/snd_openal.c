@@ -27,7 +27,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #ifdef USE_OPENAL
 
-#include "qal.h"
+	#include "qal.h"
 
 // Console variables specific to OpenAL
 cvar_t* s_alPrecache;
@@ -144,8 +144,8 @@ typedef struct alSfx_s
 
 static qboolean alBuffersInitialised = qfalse;
 
-// Sound effect storage, data structures
-#define MAX_SFX 4096
+	// Sound effect storage, data structures
+	#define MAX_SFX 4096
 static alSfx_t knownSfx[ MAX_SFX ];
 static int     numSfx = 0;
 
@@ -542,11 +542,11 @@ typedef struct src_s
 	qboolean local; // Is this local (relative to the cam)
 } src_t;
 
-#ifdef MACOS_X
-#define MAX_SRC 64
-#else
-#define MAX_SRC 128
-#endif
+	#ifdef MACOS_X
+		#define MAX_SRC 64
+	#else
+		#define MAX_SRC 128
+	#endif
 static src_t    srcList[ MAX_SRC ];
 static int      srcCount             = 0;
 static int      srcActiveCnt         = 0;
@@ -568,12 +568,12 @@ typedef struct sentity_s
 
 static sentity_t entityList[ MAX_GENTITIES ];
 
-/*
+	/*
 =================
 S_AL_SanitiseVector
 =================
 */
-#define S_AL_SanitiseVector( v ) _S_AL_SanitiseVector( v, __LINE__ )
+	#define S_AL_SanitiseVector( v ) _S_AL_SanitiseVector( v, __LINE__ )
 static void _S_AL_SanitiseVector( vec3_t v, int line )
 {
 	if( Q_isnan( v[ 0 ] ) || Q_isnan( v[ 1 ] ) || Q_isnan( v[ 2 ] ) )
@@ -586,7 +586,7 @@ static void _S_AL_SanitiseVector( vec3_t v, int line )
 	}
 }
 
-#define AL_THIRD_PERSON_THRESHOLD_SQ ( 48.0f * 48.0f )
+	#define AL_THIRD_PERSON_THRESHOLD_SQ ( 48.0f * 48.0f )
 
 /*
 =================
@@ -1086,14 +1086,14 @@ static srcHandle_t S_AL_SrcAlloc( alSrcPriority_t priority, int entnum, int chan
 		// The channel system is not actually adhered to by baseq3, and not
 		// implemented in snd_dma.c, so while the following is strictly correct, it
 		// causes incorrect behaviour versus defacto baseq3
-#if 0
+	#if 0
 		// Is it an exact match, and not on channel 0?
 		if( ( curSource->entity == entnum ) && ( curSource->channel == channel ) && ( channel != 0 ) )
 		{
 			S_AL_SrcKill( i );
 			return i;
 		}
-#endif
+	#endif
 	}
 
 	if( empty == -1 )
@@ -1111,7 +1111,7 @@ static srcHandle_t S_AL_SrcAlloc( alSrcPriority_t priority, int entnum, int chan
 	return empty;
 }
 
-/*
+	/*
 =================
 S_AL_SrcFind
 
@@ -1119,7 +1119,7 @@ Finds an active source with matching entity and channel numbers
 Returns -1 if there isn't one
 =================
 */
-#if 0
+	#if 0
 static srcHandle_t S_AL_SrcFind( int entnum, int channel )
 {
 	int             i;
@@ -1137,7 +1137,7 @@ static srcHandle_t S_AL_SrcFind( int entnum, int channel )
 	}
 	return -1;
 }
-#endif
+	#endif
 
 /*
 =================
@@ -1891,8 +1891,8 @@ static void S_AL_StreamDie( int stream )
 
 //===========================================================================
 
-#define NUM_MUSIC_BUFFERS 4
-#define MUSIC_BUFFER_SIZE 4096
+	#define NUM_MUSIC_BUFFERS 4
+	#define MUSIC_BUFFER_SIZE 4096
 
 static qboolean    musicPlaying      = qfalse;
 static srcHandle_t musicSourceHandle = -1;
@@ -2204,18 +2204,18 @@ static void S_AL_MusicUpdate( void )
 static ALCdevice*  alDevice;
 static ALCcontext* alContext;
 
-#ifdef USE_VOIP
+	#ifdef USE_VOIP
 static ALCdevice* alCaptureDevice;
 static cvar_t*    s_alCapture;
-#endif
+	#endif
 
-#ifdef _WIN32
-#define ALDRIVER_DEFAULT "OpenAL32.dll"
-#elif defined( MACOS_X )
-#define ALDRIVER_DEFAULT "/System/Library/Frameworks/OpenAL.framework/OpenAL"
-#else
-#define ALDRIVER_DEFAULT "libopenal.so.1"
-#endif
+	#ifdef _WIN32
+		#define ALDRIVER_DEFAULT "OpenAL32.dll"
+	#elif defined( MACOS_X )
+		#define ALDRIVER_DEFAULT "/System/Library/Frameworks/OpenAL.framework/OpenAL"
+	#else
+		#define ALDRIVER_DEFAULT "libopenal.so.1"
+	#endif
 
 /*
 =================
@@ -2371,7 +2371,7 @@ static void S_AL_SoundList( void )
 {
 }
 
-#ifdef USE_VOIP
+	#ifdef USE_VOIP
 static void S_AL_StartCapture( void )
 {
 	if( alCaptureDevice != NULL )
@@ -2414,7 +2414,7 @@ void S_AL_MasterGain( float gain )
 {
 	qalListenerf( AL_GAIN, gain );
 }
-#endif
+	#endif
 
 /*
 =================
@@ -2457,7 +2457,7 @@ static void S_AL_Shutdown( void )
 	qalcDestroyContext( alContext );
 	qalcCloseDevice( alDevice );
 
-#ifdef USE_VOIP
+	#ifdef USE_VOIP
 	if( alCaptureDevice != NULL )
 	{
 		qalcCaptureStop( alCaptureDevice );
@@ -2465,7 +2465,7 @@ static void S_AL_Shutdown( void )
 		alCaptureDevice = NULL;
 		Com_Printf( "OpenAL capture device closed.\n" );
 	}
-#endif
+	#endif
 
 	for( i = 0; i < MAX_RAW_STREAMS; i++ )
 	{
@@ -2542,7 +2542,7 @@ qboolean S_AL_Init( soundInterface_t* si )
 		devicelist    = qalcGetString( NULL, ALC_DEVICE_SPECIFIER );
 		defaultdevice = qalcGetString( NULL, ALC_DEFAULT_DEVICE_SPECIFIER );
 
-#ifdef _WIN32
+	#ifdef _WIN32
 		// check whether the default device is generic hardware. If it is, change to
 		// Generic Software as that one works more reliably with various sound systems.
 		// If it's not, use OpenAL's default selection as we don't want to ignore
@@ -2551,7 +2551,7 @@ qboolean S_AL_Init( soundInterface_t* si )
 		{
 			device = "Generic Software";
 		}
-#endif
+	#endif
 
 		// dump a list of available devices to a cvar for the user to see.
 		while( ( curlen = strlen( devicelist ) ) )
@@ -2599,7 +2599,7 @@ qboolean S_AL_Init( soundInterface_t* si )
 	qalDopplerFactor( s_alDopplerFactor->value );
 	qalDopplerVelocity( s_alDopplerSpeed->value );
 
-#ifdef USE_VOIP
+	#ifdef USE_VOIP
 	// !!! FIXME: some of these alcCaptureOpenDevice() values should be cvars.
 	// !!! FIXME: add support for capture device enumeration.
 	// !!! FIXME: add some better error reporting.
@@ -2608,24 +2608,24 @@ qboolean S_AL_Init( soundInterface_t* si )
 	{
 		Com_Printf( "OpenAL capture support disabled by user ('+set s_alCapture 1' to enable)\n" );
 	}
-#if USE_MUMBLE
+		#if USE_MUMBLE
 	else if( cl_useMumble->integer )
 	{
 		Com_Printf( "OpenAL capture support disabled for Mumble support\n" );
 	}
-#endif
+		#endif
 	else
 	{
-#ifdef MACOS_X
+		#ifdef MACOS_X
 		// !!! FIXME: Apple has a 1.1-compliant OpenAL, which includes
 		// !!! FIXME:  capture support, but they don't list it in the
 		// !!! FIXME:  extension string. We need to check the version string,
 		// !!! FIXME:  then the extension string, but that's too much trouble,
 		// !!! FIXME:  so we'll just check the function pointer for now.
 		if( qalcCaptureOpenDevice == NULL )
-#else
+		#else
 		if( !qalcIsExtensionPresent( NULL, "ALC_EXT_capture" ) )
-#endif
+		#endif
 		{
 			Com_Printf( "No ALC_EXT_capture support, can't record audio.\n" );
 		}
@@ -2640,7 +2640,7 @@ qboolean S_AL_Init( soundInterface_t* si )
 			Com_Printf( "OpenAL capture device %s.\n", ( alCaptureDevice == NULL ) ? "failed to open" : "opened" );
 		}
 	}
-#endif
+	#endif
 
 	si->Shutdown             = S_AL_Shutdown;
 	si->StartSound           = S_AL_StartSound;
@@ -2663,13 +2663,13 @@ qboolean S_AL_Init( soundInterface_t* si )
 	si->SoundInfo            = S_AL_SoundInfo;
 	si->SoundList            = S_AL_SoundList;
 
-#ifdef USE_VOIP
+	#ifdef USE_VOIP
 	si->StartCapture            = S_AL_StartCapture;
 	si->AvailableCaptureSamples = S_AL_AvailableCaptureSamples;
 	si->Capture                 = S_AL_Capture;
 	si->StopCapture             = S_AL_StopCapture;
 	si->MasterGain              = S_AL_MasterGain;
-#endif
+	#endif
 
 	return qtrue;
 #else

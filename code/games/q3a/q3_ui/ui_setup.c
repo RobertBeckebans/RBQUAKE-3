@@ -32,20 +32,20 @@ SETUP MENU
 
 #define SETUP_MENU_VERTICAL_SPACING 34
 
-#define ART_BACK0 "menu/art/back_0"
-#define ART_BACK1 "menu/art/back_1"
+#define ART_BACK0  "menu/art/back_0"
+#define ART_BACK1  "menu/art/back_1"
 #define ART_FRAMEL "menu/art/frame2_l"
 #define ART_FRAMER "menu/art/frame1_r"
 
-#define ID_CUSTOMIZEPLAYER 10
+#define ID_CUSTOMIZEPLAYER   10
 #define ID_CUSTOMIZECONTROLS 11
-#define ID_SYSTEMCONFIG 12
-#define ID_GAME 13
-#define ID_CDKEY 14
-#define ID_LOAD 15
-#define ID_SAVE 16
-#define ID_DEFAULTS 17
-#define ID_BACK 18
+#define ID_SYSTEMCONFIG      12
+#define ID_GAME              13
+#define ID_CDKEY             14
+#define ID_LOAD              15
+#define ID_SAVE              16
+#define ID_DEFAULTS          17
+#define ID_BACK              18
 
 typedef struct
 {

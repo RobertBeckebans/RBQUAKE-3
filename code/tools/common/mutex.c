@@ -34,9 +34,9 @@ WIN32
 */
 #ifdef WIN32
 
-#define USED
+	#define USED
 
-#include <windows.h>
+	#include <windows.h>
 
 void MutexLock( mutex_t* m )
 {
@@ -86,9 +86,9 @@ OSF1
 */
 
 #ifdef __osf__
-#define USED
+	#define USED
 
-#include <pthread.h>
+	#include <pthread.h>
 
 void MutexLock( mutex_t* m )
 {
@@ -150,12 +150,12 @@ IRIX
 */
 
 #ifdef _MIPS_ISA
-#define USED
+	#define USED
 
-#include <task.h>
-#include <abi_mutex.h>
-#include <sys/types.h>
-#include <sys/prctl.h>
+	#include <task.h>
+	#include <abi_mutex.h>
+	#include <sys/types.h>
+	#include <sys/prctl.h>
 
 void MutexLock( mutex_t* m )
 {

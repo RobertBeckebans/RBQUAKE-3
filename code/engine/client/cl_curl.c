@@ -21,11 +21,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #ifdef USE_CURL
-#include "client.h"
+	#include "client.h"
 cvar_t* cl_cURLLib;
 
-#ifdef USE_CURL_DLOPEN
-#include "../sys/sys_loadlib.h"
+	#ifdef USE_CURL_DLOPEN
+		#include "../sys/sys_loadlib.h"
 
 char* ( *qcurl_version )( void );
 
@@ -78,7 +78,7 @@ static void* GPA( char* str )
 		return rv;
 	}
 }
-#endif /* USE_CURL_DLOPEN */
+	#endif /* USE_CURL_DLOPEN */
 
 /*
 =================
@@ -87,7 +87,7 @@ CL_cURL_Init
 */
 qboolean CL_cURL_Init()
 {
-#ifdef USE_CURL_DLOPEN
+	#ifdef USE_CURL_DLOPEN
 	if( cURLLib )
 	{
 		return qtrue;
@@ -96,9 +96,9 @@ qboolean CL_cURL_Init()
 	Com_Printf( "Loading \"%s\"...", cl_cURLLib->string );
 	if( ( cURLLib = Sys_LoadLibrary( cl_cURLLib->string ) ) == 0 )
 	{
-#ifdef _WIN32
+		#ifdef _WIN32
 		return qfalse;
-#else
+		#else
 		char fn[ 1024 ];
 
 		Q_strncpyz( fn, Sys_Cwd(), sizeof( fn ) );
@@ -107,17 +107,17 @@ qboolean CL_cURL_Init()
 
 		if( ( cURLLib = Sys_LoadLibrary( fn ) ) == 0 )
 		{
-#ifdef ALTERNATE_CURL_LIB
+			#ifdef ALTERNATE_CURL_LIB
 			// On some linux distributions there is no libcurl.so.3, but only libcurl.so.4. That one works too.
 			if( ( cURLLib = Sys_LoadLibrary( ALTERNATE_CURL_LIB ) ) == 0 )
 			{
 				return qfalse;
 			}
-#else
+			#else
 			return qfalse;
-#endif
+			#endif
 		}
-#endif /* _WIN32 */
+		#endif /* _WIN32 */
 	}
 
 	clc.cURLEnabled = qtrue;
@@ -151,10 +151,10 @@ qboolean CL_cURL_Init()
 	Com_Printf( "OK\n" );
 
 	return qtrue;
-#else
+	#else
 	clc.cURLEnabled = qtrue;
 	return qtrue;
-#endif /* USE_CURL_DLOPEN */
+	#endif /* USE_CURL_DLOPEN */
 }
 
 /*
@@ -165,7 +165,7 @@ CL_cURL_Shutdown
 void CL_cURL_Shutdown( void )
 {
 	CL_cURL_Cleanup();
-#ifdef USE_CURL_DLOPEN
+	#ifdef USE_CURL_DLOPEN
 	if( cURLLib )
 	{
 		Sys_UnloadLibrary( cURLLib );
@@ -187,7 +187,7 @@ void CL_cURL_Shutdown( void )
 	qcurl_multi_cleanup       = NULL;
 	qcurl_multi_info_read     = NULL;
 	qcurl_multi_strerror      = NULL;
-#endif /* USE_CURL_DLOPEN */
+	#endif /* USE_CURL_DLOPEN */
 }
 
 void CL_cURL_Cleanup( void )

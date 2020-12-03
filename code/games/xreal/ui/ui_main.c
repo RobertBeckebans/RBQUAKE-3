@@ -1766,7 +1766,7 @@ static const char* UI_OwnerDrawText( int ownerDraw )
 				dots[ i ] = '\0';
 
 				s = numServers < 0 ? va( "Waiting for response%s", dots ) :
-									 va( "Getting info for %d servers (ESC to cancel)%s", numServers, dots );
+                                     va( "Getting info for %d servers (ESC to cancel)%s", numServers, dots );
 			}
 			else
 			{
@@ -3697,15 +3697,15 @@ static const char* UI_FeederItemText( int feederID, int index, int column, qhand
 					// am I ignoring him
 					return Com_ClientListContains( &uiInfo.ignoreList[ uiInfo.myPlayerIndex ],
 							   uiInfo.clientNums[ index ] ) ?
-						"X" :
-						"";
+                        "X" :
+                        "";
 
 				case 2:
 					// is he ignoring me
 					return Com_ClientListContains( &uiInfo.ignoreList[ index ],
 							   uiInfo.playerNumber ) ?
-						"X" :
-						"";
+                        "X" :
+                        "";
 
 				default:
 					return uiInfo.playerNames[ index ];
@@ -4718,6 +4718,7 @@ UI_UpdateNews
 */
 void UI_UpdateNews( qboolean begin )
 {
+#if 0
 	char        newsString[ MAX_NEWS_STRING ];
 	const char* c;
 	const char* wrapped;
@@ -4785,4 +4786,5 @@ void UI_UpdateNews( qboolean begin )
 	{
 		uiInfo.newsInfo.refreshActive = qfalse;
 	}
+#endif
 }

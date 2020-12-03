@@ -23,10 +23,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // scriplib.h
 
 #ifndef __CMDLIB__
-#include "cmdlib.h"
+	#include "cmdlib.h"
 #endif
 #ifndef __MATHLIB__
-#include "mathlib.h"
+	#include "mathlib.h"
 #endif
 
 #define MAXTOKEN 1024

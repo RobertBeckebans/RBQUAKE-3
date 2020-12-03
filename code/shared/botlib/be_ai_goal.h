@@ -30,11 +30,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *****************************************************************************/
 
 #define MAX_AVOIDGOALS 256
-#define MAX_GOALSTACK 8
+#define MAX_GOALSTACK  8
 
-#define GFL_NONE 0
-#define GFL_ITEM 1
-#define GFL_ROAM 2
+#define GFL_NONE    0
+#define GFL_ITEM    1
+#define GFL_ROAM    2
 #define GFL_DROPPED 4
 
 //a bot goal

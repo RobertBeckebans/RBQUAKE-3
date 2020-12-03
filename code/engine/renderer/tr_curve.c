@@ -291,10 +291,10 @@ static void MakeMeshTangentVectors( int width, int height, srfVert_t ctrl[ MAX_G
 		dv0 = &ctrl2[i];
 		
 		VectorNormalize( dv0->normal );
-#if 0
+	#if 0
 		VectorNormalize( dv0->tangent );
 		VectorNormalize( dv0->binormal );
-#else
+	#else
 		d = DotProduct( dv0->tangent, dv0->normal );
 		VectorMA( dv0->tangent, -d, dv0->normal, dv0->tangent );
 		VectorNormalize( dv0->tangent );
@@ -302,7 +302,7 @@ static void MakeMeshTangentVectors( int width, int height, srfVert_t ctrl[ MAX_G
 		d = DotProduct( dv0->binormal, dv0->normal );
 		VectorMA( dv0->binormal, -d, dv0->normal, dv0->binormal );
 		VectorNormalize( dv0->binormal );
-#endif
+	#endif
 	}
 #endif
 

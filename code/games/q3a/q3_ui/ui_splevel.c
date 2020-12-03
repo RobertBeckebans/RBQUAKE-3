@@ -30,42 +30,42 @@ SINGLE PLAYER LEVEL SELECT MENU
 
 #include "ui_local.h"
 
-#define ART_LEVELFRAME_FOCUS "menu/art/maps_select"
+#define ART_LEVELFRAME_FOCUS    "menu/art/maps_select"
 #define ART_LEVELFRAME_SELECTED "menu/art/maps_selected"
-#define ART_ARROW "menu/art/narrow_0"
-#define ART_ARROW_FOCUS "menu/art/narrow_1"
-#define ART_MAP_UNKNOWN "menu/art/unknownmap"
-#define ART_MAP_COMPLETE1 "menu/art/level_complete1"
-#define ART_MAP_COMPLETE2 "menu/art/level_complete2"
-#define ART_MAP_COMPLETE3 "menu/art/level_complete3"
-#define ART_MAP_COMPLETE4 "menu/art/level_complete4"
-#define ART_MAP_COMPLETE5 "menu/art/level_complete5"
-#define ART_BACK0 "menu/art/back_0"
-#define ART_BACK1 "menu/art/back_1"
-#define ART_FIGHT0 "menu/art/fight_0"
-#define ART_FIGHT1 "menu/art/fight_1"
-#define ART_RESET0 "menu/art/reset_0"
-#define ART_RESET1 "menu/art/reset_1"
-#define ART_CUSTOM0 "menu/art/skirmish_0"
-#define ART_CUSTOM1 "menu/art/skirmish_1"
+#define ART_ARROW               "menu/art/narrow_0"
+#define ART_ARROW_FOCUS         "menu/art/narrow_1"
+#define ART_MAP_UNKNOWN         "menu/art/unknownmap"
+#define ART_MAP_COMPLETE1       "menu/art/level_complete1"
+#define ART_MAP_COMPLETE2       "menu/art/level_complete2"
+#define ART_MAP_COMPLETE3       "menu/art/level_complete3"
+#define ART_MAP_COMPLETE4       "menu/art/level_complete4"
+#define ART_MAP_COMPLETE5       "menu/art/level_complete5"
+#define ART_BACK0               "menu/art/back_0"
+#define ART_BACK1               "menu/art/back_1"
+#define ART_FIGHT0              "menu/art/fight_0"
+#define ART_FIGHT1              "menu/art/fight_1"
+#define ART_RESET0              "menu/art/reset_0"
+#define ART_RESET1              "menu/art/reset_1"
+#define ART_CUSTOM0             "menu/art/skirmish_0"
+#define ART_CUSTOM1             "menu/art/skirmish_1"
 
-#define ID_LEFTARROW 10
-#define ID_PICTURE0 11
-#define ID_PICTURE1 12
-#define ID_PICTURE2 13
-#define ID_PICTURE3 14
+#define ID_LEFTARROW  10
+#define ID_PICTURE0   11
+#define ID_PICTURE1   12
+#define ID_PICTURE2   13
+#define ID_PICTURE3   14
 #define ID_RIGHTARROW 15
-#define ID_PLAYERPIC 16
-#define ID_AWARD1 17
-#define ID_AWARD2 18
-#define ID_AWARD3 19
-#define ID_AWARD4 20
-#define ID_AWARD5 21
-#define ID_AWARD6 22
-#define ID_BACK 23
-#define ID_RESET 24
-#define ID_CUSTOM 25
-#define ID_NEXT 26
+#define ID_PLAYERPIC  16
+#define ID_AWARD1     17
+#define ID_AWARD2     18
+#define ID_AWARD3     19
+#define ID_AWARD4     20
+#define ID_AWARD5     21
+#define ID_AWARD6     22
+#define ID_BACK       23
+#define ID_RESET      24
+#define ID_CUSTOM     25
+#define ID_NEXT       26
 
 #define PLAYER_Y 314
 #define AWARDS_Y ( PLAYER_Y + 26 )

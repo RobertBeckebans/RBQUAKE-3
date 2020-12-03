@@ -25,9 +25,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #if( defined( G_LUA ) || defined( CG_LUA ) )
 
-#include <lua.h>
-#include <lauxlib.h>
-#include <lualib.h>
+	#include <lua.h>
+	#include <lauxlib.h>
+	#include <lualib.h>
 
 static int qmath_abs( lua_State* L )
 {
@@ -200,7 +200,7 @@ static int qmath_max( lua_State* L )
 	return 1;
 }
 
-#if 0
+	#if 0
 static int qmath_random( lua_State* L )
 {
 	/* the `%' avoids the (rare) case of r==1, and is needed also because on
@@ -247,7 +247,7 @@ static int qmath_randomseed( lua_State* L )
 	srand( luaL_checkint( L, 1 ) );
 	return 0;
 }
-#endif
+	#endif
 
 static int qmath_rand( lua_State* L )
 {

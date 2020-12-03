@@ -1387,8 +1387,8 @@ TRAIN
 ===============================================================================
 */
 
-#define TRAIN_START_ON 1
-#define TRAIN_TOGGLE 2
+#define TRAIN_START_ON    1
+#define TRAIN_TOGGLE      2
 #define TRAIN_BLOCK_STOPS 4
 
 /*

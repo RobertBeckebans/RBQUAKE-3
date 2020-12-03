@@ -162,13 +162,13 @@ qhandle_t RE_RegisterModel( const char* name )
 
 			ident = LittleLong( *( unsigned* )buffer );
 #if defined( COMPAT_ET )
-#if 0
+	#if 0
 			if( ident == MDS_IDENT )
 			{
 				loaded = R_LoadMDS( mod, buffer, name );
 			}
 			else
-#endif
+	#endif
 			if( ident == MDM_IDENT )
 			{
 				loaded = R_LoadMDM( mod, buffer, name );

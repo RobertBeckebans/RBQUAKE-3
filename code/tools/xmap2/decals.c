@@ -116,7 +116,7 @@ static qboolean MakeTextureMatrix( decalProjector_t* dp, vec4_t projection, bspD
 		}
 
 		/* calculate texture origin */
-#if 0
+	#if 0
 		s = 0.0;
 		t = 0.0;
 		bary[0] = ( ( b->st[0] - s ) * ( c->st[1] - t ) - ( c->st[0] - s ) * ( b->st[1] - t ) ) / bb;
@@ -126,7 +126,7 @@ static qboolean MakeTextureMatrix( decalProjector_t* dp, vec4_t projection, bspD
 		origin[0] = bary[0] * pa[0] + bary[1] * pb[0] + bary[2] * pc[0];
 		origin[1] = bary[0] * pa[1] + bary[1] * pb[1] + bary[2] * pc[1];
 		origin[2] = bary[0] * pa[2] + bary[1] * pb[2] + bary[2] * pc[2];
-#endif
+	#endif
 
 		/* calculate s vector */
 		s         = a->st[ 0 ] + 1.0;

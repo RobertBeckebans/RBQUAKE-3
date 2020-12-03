@@ -35,16 +35,16 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // https://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=551
 #define SVF_CLIENTMASK 0x00000002
 
-#define SVF_BOT 0x00000008                // set if the entity is a bot
-#define SVF_BROADCAST 0x00000020          // send to all connected clients
-#define SVF_PORTAL 0x00000040             // merge a second pvs at origin2 into snapshots
+#define SVF_BOT                0x00000008 // set if the entity is a bot
+#define SVF_BROADCAST          0x00000020 // send to all connected clients
+#define SVF_PORTAL             0x00000040 // merge a second pvs at origin2 into snapshots
 #define SVF_USE_CURRENT_ORIGIN 0x00000080 // entity->r.currentOrigin instead of entity->s.origin
 // for link position (missiles and movers)
 #define SVF_SINGLECLIENT 0x00000100 // only send to a single client (entityShared_t->singleClient)
 #define SVF_NOSERVERINFO 0x00000200 // don't send CS_SERVERINFO updates to this client
 // so that it can be updated for ping tools without
 // lagging clients
-#define SVF_CAPSULE 0x00000400         // use capsule for collision detection instead of bbox
+#define SVF_CAPSULE         0x00000400 // use capsule for collision detection instead of bbox
 #define SVF_NOTSINGLECLIENT 0x00000800 // send entity to everyone but one client
 // (entityShared_t->singleClient)
 

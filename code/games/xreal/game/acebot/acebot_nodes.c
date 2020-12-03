@@ -276,21 +276,21 @@ void ACEND_PathMap( gentity_t* self )
 	//qboolean        isJumping;
 	//int             i;
 
-#if 0
+	#if 0
 	if( level.time < lastUpdate )
 	{
 		return;
 	}
-#endif
+	#endif
 
 	lastUpdate = level.time + 150; // slow down updates a bit
 
-#if 0
+	#if 0
 	if( self->r.svFlags & SVF_BOT )
 	{
 		return;
 	}
-#endif
+	#endif
 
 	// don't add links when you went into a trap
 	if( self->health <= 0 )
@@ -298,10 +298,10 @@ void ACEND_PathMap( gentity_t* self )
 		return;
 	}
 
-#if 1
+	#if 1
 	if( self->s.groundEntityNum == ENTITYNUM_NONE && !( self->r.svFlags & SVF_BOT ) )
 	{
-#if 0
+		#if 0
 		isJumping = qfalse;
 		for( i = 0; i < self->client->ps.eventSequence; i++ )
 		{
@@ -312,9 +312,9 @@ void ACEND_PathMap( gentity_t* self )
 		}
 		
 		if( isJumping )
-#else
+		#else
 		if( ( self->client->ps.pm_flags & PMF_JUMP_HELD ) )
-#endif
+		#endif
 		{
 			if( ace_debug.integer )
 			{
@@ -339,7 +339,7 @@ void ACEND_PathMap( gentity_t* self )
 			return;
 		}
 	}
-#endif
+	#endif
 
 	// not on ground, and not in the water, so bail
 	if( self->s.groundEntityNum == ENTITYNUM_NONE )
@@ -409,7 +409,7 @@ void ACEND_PathMap( gentity_t* self )
 
 		self->bs.lastNode = closestNode; // set visited to last
 	}
-#if 1
+	#if 1
 	else if( closestNode == INVALID && self->s.groundEntityNum != ENTITYNUM_NONE )
 	{
 		// add nodes in the water as needed
@@ -435,7 +435,7 @@ void ACEND_PathMap( gentity_t* self )
 
 		self->bs.lastNode = closestNode; // set visited to last
 	}
-#endif
+	#endif
 }
 
 void ACEND_InitNodes( void )
@@ -540,13 +540,13 @@ int ACEND_AddNode( gentity_t* self, int type )
 		return INVALID;
 	}
 
-#if 0
+	#if 0
 	// it's better when bots do not create any path nodes ..
 	if( self->r.svFlags & SVF_BOT )
 	{
 		return INVALID;
 	}
-#endif
+	#endif
 
 	if( self->name )
 	{

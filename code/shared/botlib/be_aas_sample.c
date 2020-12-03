@@ -35,7 +35,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "l_precomp.h"
 #include "l_struct.h"
 #ifndef BSPC
-#include "l_libvar.h"
+	#include "l_libvar.h"
 #endif
 #include "aasfile.h"
 #include "botlib.h"
@@ -262,7 +262,7 @@ int AAS_PointAreaNum( vec3_t point )
 			botimport.Print( PRT_ERROR, "nodenum = %d >= aasworld.numnodes = %d\n", nodenum, aasworld.numnodes );
 			return 0;
 		} //end if
-#endif    //AAS_SAMPLE_DEBUG
+#endif //AAS_SAMPLE_DEBUG
 		node = &aasworld.nodes[ nodenum ];
 #ifdef AAS_SAMPLE_DEBUG
 		if( node->planenum < 0 || node->planenum >= aasworld.numplanes )
@@ -270,7 +270,7 @@ int AAS_PointAreaNum( vec3_t point )
 			botimport.Print( PRT_ERROR, "node->planenum = %d >= aasworld.numplanes = %d\n", node->planenum, aasworld.numplanes );
 			return 0;
 		} //end if
-#endif    //AAS_SAMPLE_DEBUG
+#endif //AAS_SAMPLE_DEBUG
 		plane = &aasworld.planes[ node->planenum ];
 		dist  = DotProduct( point, plane->normal ) - plane->dist;
 		if( dist > 0 )
@@ -571,7 +571,7 @@ aas_trace_t AAS_TraceClientBBox( vec3_t start, vec3_t end, int presencetype, int
 				botimport.Print( PRT_ERROR, "AAS_TraceBoundingBox: -nodenum out of range\n" );
 				return trace;
 			} //end if
-#endif        //AAS_SAMPLE_DEBUG                                                                     \
+#endif //AAS_SAMPLE_DEBUG                                                                     \
 	//botimport.Print(PRT_MESSAGE, "areanum = %d, must be %d\n", -nodenum, AAS_PointAreaNum(start)); \
 	//if can't enter the area because it hasn't got the right presence type
 			if( !( aasworld.areasettings[ -nodenum ].presencetype & presencetype ) )
@@ -668,7 +668,7 @@ aas_trace_t AAS_TraceClientBBox( vec3_t start, vec3_t end, int presencetype, int
 			botimport.Print( PRT_ERROR, "AAS_TraceBoundingBox: nodenum out of range\n" );
 			return trace;
 		} //end if
-#endif    //AAS_SAMPLE_DEBUG \
+#endif //AAS_SAMPLE_DEBUG \
 	//the node to test against
 		aasnode = &aasworld.nodes[ nodenum ];
 		//start point of current line to test against node
@@ -857,7 +857,7 @@ int AAS_TraceAreas( vec3_t start, vec3_t end, int* areas, vec3_t* points, int ma
 				botimport.Print( PRT_ERROR, "AAS_TraceAreas: -nodenum = %d out of range\n", -nodenum );
 				return numareas;
 			} //end if
-#endif        //AAS_SAMPLE_DEBUG \
+#endif //AAS_SAMPLE_DEBUG \
 	//botimport.Print(PRT_MESSAGE, "areanum = %d, must be %d\n", -nodenum, AAS_PointAreaNum(start));
 			areas[ numareas ] = -nodenum;
 			if( points )
@@ -882,7 +882,7 @@ int AAS_TraceAreas( vec3_t start, vec3_t end, int* areas, vec3_t* points, int ma
 			botimport.Print( PRT_ERROR, "AAS_TraceAreas: nodenum out of range\n" );
 			return numareas;
 		} //end if
-#endif    //AAS_SAMPLE_DEBUG \
+#endif //AAS_SAMPLE_DEBUG \
 	//the node to test against
 		aasnode = &aasworld.nodes[ nodenum ];
 		//start point of current line to test against node
@@ -1309,17 +1309,17 @@ int AAS_BoxOnPlaneSide2( vec3_t absmins, vec3_t absmaxs, aas_plane_t* p )
 //int AAS_BoxOnPlaneSide(vec3_t absmins, vec3_t absmaxs, aas_plane_t *p)
 #define AAS_BoxOnPlaneSide( absmins, absmaxs, p ) (                 \
 	( ( p )->type < 3 ) ?                                           \
-		(                                                           \
+        (                                                           \
 			( ( p )->dist <= ( absmins )[ ( p )->type ] ) ?         \
-				(                                                   \
+                (                                                   \
 					1 ) :                                           \
-				(                                                   \
+                (                                                   \
 					( ( p )->dist >= ( absmaxs )[ ( p )->type ] ) ? \
-						(                                           \
+                        (                                           \
 							2 ) :                                   \
-						(                                           \
+                        (                                           \
 							3 ) ) ) :                               \
-		(                                                           \
+        (                                                           \
 			AAS_BoxOnPlaneSide2( ( absmins ), ( absmaxs ), ( p ) ) ) ) //end of the function AAS_BoxOnPlaneSide
 //===========================================================================
 // remove the links to this entity from all areas

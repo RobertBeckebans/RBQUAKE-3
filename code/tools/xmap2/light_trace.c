@@ -35,22 +35,22 @@ several games based on the Quake III Arena engine, in the form of "Q3Map2."
 #define Vector2Copy( a, b ) ( ( b )[ 0 ] = ( a )[ 0 ], ( b )[ 1 ] = ( a )[ 1 ] )
 #define Vector4Copy( a, b ) ( ( b )[ 0 ] = ( a )[ 0 ], ( b )[ 1 ] = ( a )[ 1 ], ( b )[ 2 ] = ( a )[ 2 ], ( b )[ 3 ] = ( a )[ 3 ] )
 
-#define MAX_NODE_ITEMS 5
+#define MAX_NODE_ITEMS     5
 #define MAX_NODE_TRIANGLES 5
-#define MAX_TRACE_DEPTH 32
-#define MIN_NODE_SIZE 512 //32.0f
+#define MAX_TRACE_DEPTH    32
+#define MIN_NODE_SIZE      512 //32.0f
 
-#define GROW_TRACE_INFOS 32768      //% 4096
-#define GROW_TRACE_WINDINGS 65536   //% 32768
+#define GROW_TRACE_INFOS     32768  //% 4096
+#define GROW_TRACE_WINDINGS  65536  //% 32768
 #define GROW_TRACE_TRIANGLES 131072 //% 32768
-#define GROW_TRACE_NODES 16384      //% 16384
-#define GROW_NODE_ITEMS 16          //% 256
+#define GROW_TRACE_NODES     16384  //% 16384
+#define GROW_NODE_ITEMS      16     //% 256
 
 #define MAX_TW_VERTS 24 // vortex: increased from 12 to 24 for ability co compile some insane maps with large curve count
 
 #define TRACE_ON_EPSILON 0.1f
 
-#define TRACE_LEAF -1
+#define TRACE_LEAF       -1
 #define TRACE_LEAF_SOLID -2
 
 typedef struct traceVert_s
@@ -1489,9 +1489,9 @@ based on code written by william 'spog' joseph
 based on code originally written by tomas moller and ben trumbore, journal of graphics tools, 2(1):21-28, 1997
 */
 
-#define BARY_EPSILON 0.01f
-#define ASLF_EPSILON 0.0001f     /* so to not get double shadows */
-#define COPLANAR_EPSILON 0.25f   //% 0.000001f
+#define BARY_EPSILON        0.01f
+#define ASLF_EPSILON        0.0001f /* so to not get double shadows */
+#define COPLANAR_EPSILON    0.25f //% 0.000001f
 #define NEAR_SHADOW_EPSILON 1.5f //% 1.25f
 #define SELF_SHADOW_EPSILON 0.5f
 

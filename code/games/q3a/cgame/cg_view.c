@@ -469,7 +469,7 @@ static void CG_OffsetFirstPersonView( void )
 	// pivot the eye based on a neck length
 #if 0
 	{
-#define NECK_LENGTH 8
+	#define NECK_LENGTH 8
 		vec3_t			forward, up;
 		
 		cg.refdef.vieworg[2] -= NECK_LENGTH;

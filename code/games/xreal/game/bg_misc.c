@@ -1144,9 +1144,9 @@ qboolean BG_CanItemBeGrabbed( int gametype, const entityState_t* ent, const play
 			Com_Error( ERR_DROP, "BG_CanItemBeGrabbed: IT_BAD" );
 		default:
 #ifndef Q3_VM
-#ifndef NDEBUG
+	#ifndef NDEBUG
 			Com_Printf( "BG_CanItemBeGrabbed: unknown enum %d\n", item->giType );
-#endif
+	#endif
 #endif
 			break;
 	}
@@ -1375,11 +1375,11 @@ void BG_AddPredictableEventToPlayerstate( int newEvent, int eventParm, playerSta
 		trap_Cvar_VariableStringBuffer( "showevents", buf, sizeof( buf ) );
 		if( atof( buf ) != 0 )
 		{
-#ifdef QAGAME
+	#ifdef QAGAME
 			Com_Printf( " game event svt %5d -> %5d: num = %20s parm %d\n", ps->pmove_framecount /*ps->commandTime*/, ps->eventSequence, eventnames[ newEvent ], eventParm );
-#else
+	#else
 			Com_Printf( "Cgame event svt %5d -> %5d: num = %20s parm %d\n", ps->pmove_framecount /*ps->commandTime*/, ps->eventSequence, eventnames[ newEvent ], eventParm );
-#endif
+	#endif
 		}
 	}
 #endif

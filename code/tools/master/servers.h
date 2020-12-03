@@ -30,7 +30,7 @@
 
 // Address hash size in bits (between 0 and MAX_HASH_SIZE)
 #define DEFAULT_HASH_SIZE 6
-#define MAX_HASH_SIZE 8
+#define MAX_HASH_SIZE     8
 
 // Number of characters in a challenge, including the '\0'
 #define CHALLENGE_MIN_LENGTH 9

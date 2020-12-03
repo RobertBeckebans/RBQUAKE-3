@@ -2603,14 +2603,14 @@ static void RB_RenderInteractionsShadowMapped()
 								
 								//MatrixScaleTranslateToUnitCube(projectionMatrix, splitFrustumViewBounds[0], splitFrustumViewBounds[1]);
 								//MatrixOrthogonalProjectionRH(projectionMatrix, -1, 1, -1, 1, -splitFrustumViewBounds[1][2], -splitFrustumViewBounds[0][2]);
-#if 1
+	#if 1
 								MatrixOrthogonalProjectionRH( projectionMatrix,	splitFrustumViewBounds[0][0],
 															  splitFrustumViewBounds[1][0],
 															  splitFrustumViewBounds[0][1],
 															  splitFrustumViewBounds[1][1],
 															  -splitFrustumViewBounds[1][2],
 															  -splitFrustumViewBounds[0][2] );
-#endif
+	#endif
 								MatrixMultiply( projectionMatrix, light->viewMatrix, viewProjectionMatrix );
 								
 								// find the bounding box of the current split in the light's clip space
@@ -2656,14 +2656,14 @@ static void RB_RenderInteractionsShadowMapped()
 								{
 									VectorCopy( splitFrustumCorners[ j ], point );
 									point[ 3 ] = 1;
-#if 1
+	#if 1
 									MatrixTransform4( light->viewMatrix, point, transf );
 									transf[ 0 ] /= transf[ 3 ];
 									transf[ 1 ] /= transf[ 3 ];
 									transf[ 2 ] /= transf[ 3 ];
-#else
+	#else
 									MatrixTransformPoint( light->viewMatrix, point, transf );
-#endif
+	#endif
 
 									AddPointToBounds( transf, cropBounds[ 0 ], cropBounds[ 1 ] );
 								}
@@ -4567,21 +4567,21 @@ static void RB_RenderInteractionsDeferredShadowMapped()
 								CrossProduct( side, lightDirection, up );
 								VectorNormalize( up );
 
-#if 0
+	#if 0
 								VectorToAngles( lightDirection, angles );
 								MatrixFromAngles( rotationMatrix, angles[PITCH], angles[YAW], angles[ROLL] );
 								AngleVectors( angles, forward, side, up );
-#endif
+	#endif
 								
 								MatrixLookAtRH( light->viewMatrix, viewOrigin, lightDirection, up );
 
-#if 0
+	#if 0
 								ri.Printf( PRINT_ALL, "light = (%5.3f, %5.3f, %5.3f)\n", lightDirection[0], lightDirection[1], lightDirection[2] );
 								ri.Printf( PRINT_ALL, "side = (%5.3f, %5.3f, %5.3f)\n", side[0], side[1], side[2] );
 								ri.Printf( PRINT_ALL, "up = (%5.3f, %5.3f, %5.3f)\n", up[0], up[1], up[2] );
-#endif
+	#endif
 
-#if 0
+	#if 0
 								for( j = 0; j < 6; j++ )
 								{
 									VectorCopy( backEnd.viewParms.frustums[splitFrustumIndex][j].normal, splitFrustum[j] );
@@ -4593,36 +4593,36 @@ static void RB_RenderInteractionsDeferredShadowMapped()
 								PlanesGetIntersectionPoint( splitFrustum[FRUSTUM_RIGHT], splitFrustum[FRUSTUM_BOTTOM], splitFrustum[FRUSTUM_NEAR], splitFrustumCorners[2] );
 								PlanesGetIntersectionPoint( splitFrustum[FRUSTUM_LEFT], splitFrustum[FRUSTUM_BOTTOM], splitFrustum[FRUSTUM_NEAR], splitFrustumCorners[3] );
 
-#if 0
+		#if 0
 								ri.Printf( PRINT_ALL, "split frustum %i\n", splitFrustumIndex );
 								ri.Printf( PRINT_ALL, "pyramid nearCorners\n" );
 								for( j = 0; j < 4; j++ )
 								{
 									ri.Printf( PRINT_ALL, "(%5.3f, %5.3f, %5.3f)\n", splitFrustumCorners[j][0], splitFrustumCorners[j][1], splitFrustumCorners[j][2] );
 								}
-#endif
+		#endif
 								
 								PlanesGetIntersectionPoint( splitFrustum[FRUSTUM_LEFT], splitFrustum[FRUSTUM_TOP], splitFrustum[FRUSTUM_FAR], splitFrustumCorners[4] );
 								PlanesGetIntersectionPoint( splitFrustum[FRUSTUM_RIGHT], splitFrustum[FRUSTUM_TOP], splitFrustum[FRUSTUM_FAR], splitFrustumCorners[5] );
 								PlanesGetIntersectionPoint( splitFrustum[FRUSTUM_RIGHT], splitFrustum[FRUSTUM_BOTTOM], splitFrustum[FRUSTUM_FAR], splitFrustumCorners[6] );
 								PlanesGetIntersectionPoint( splitFrustum[FRUSTUM_LEFT], splitFrustum[FRUSTUM_BOTTOM], splitFrustum[FRUSTUM_FAR], splitFrustumCorners[7] );
 
-#if 0
+		#if 0
 								ri.Printf( PRINT_ALL, "pyramid farCorners\n" );
 								for( j = 4; j < 8; j++ )
 								{
 									ri.Printf( PRINT_ALL, "(%5.3f, %5.3f, %5.3f)\n", splitFrustumCorners[j][0], splitFrustumCorners[j][1], splitFrustumCorners[j][2] );
 								}
-#endif
-#endif
+		#endif
+	#endif
 								
 								ClearBounds( splitFrustumBounds[0], splitFrustumBounds[1] );
-#if 0
+	#if 0
 								for( i = 0; i < 8; i++ )
 								{
 									AddPointToBounds( splitFrustumCorners[i], splitFrustumBounds[0], splitFrustumBounds[1] );
 								}
-#endif
+	#endif
 								//BoundsAdd(splitFrustumBounds[0], splitFrustumBounds[1], backEnd.viewParms.visBounds[0], backEnd.viewParms.visBounds[1]);
 								BoundsAdd( splitFrustumBounds[0], splitFrustumBounds[1], light->worldBounds[0], light->worldBounds[1] );
 								
@@ -4634,18 +4634,18 @@ static void RB_RenderInteractionsDeferredShadowMapped()
 									point[2] = splitFrustumBounds[( j >> 2 ) & 1][2];
 									point[3] = 1;
 
-#if 1
+	#if 1
 									MatrixTransform4( light->viewMatrix, point, transf );
 									transf[0] /= transf[3];
 									transf[1] /= transf[3];
 									transf[2] /= transf[3];
-#else
+	#else
 									MatrixTransformPoint( light->viewMatrix, point, transf );
-#endif
+	#endif
 									AddPointToBounds( transf, cropBounds[0], cropBounds[1] );
 								}
 
-#if 0
+	#if 0
 								MatrixOrthogonalProjection( projectionMatrix, cropBounds[0][0], cropBounds[1][0], cropBounds[0][1], cropBounds[1][1], cropBounds[0][2], cropBounds[1][2] );
 								MatrixMultiply( projectionMatrix, light->viewMatrix, viewProjectionMatrix );
 								MatrixMultiply( viewProjectionMatrix, backEnd.viewParms.world.viewMatrix, postMatrix );
@@ -4658,15 +4658,15 @@ static void RB_RenderInteractionsDeferredShadowMapped()
 								
 								VectorSet( up, 0, 1, 0 );
 								MatrixTransformPoint2( viewDirection );
-#endif
+	#endif
 
-#if 0
+	#if 0
 								ri.Printf( PRINT_ALL, "light space crop bounds (%5.3f, %5.3f, %5.3f) (%5.3f, %5.3f, %5.3f)\n",
 										   cropBounds[0][0], cropBounds[0][1], cropBounds[0][2],
 										   cropBounds[1][0], cropBounds[1][1], cropBounds[1][2] );
-#endif
+	#endif
 
-#if 0
+	#if 0
 								ri.Printf( PRINT_ALL, "cropMatrix =\n(%5.3f, %5.3f, %5.3f, %5.3f)\n"
 										   "(%5.3f, %5.3f, %5.3f, %5.3f)\n"
 										   "(%5.3f, %5.3f, %5.3f, %5.3f)\n"
@@ -4675,7 +4675,7 @@ static void RB_RenderInteractionsDeferredShadowMapped()
 										   cropMatrix[1], cropMatrix[5], cropMatrix[9], cropMatrix[13],
 										   cropMatrix[2], cropMatrix[6], cropMatrix[10], cropMatrix[14],
 										   cropMatrix[3], cropMatrix[7], cropMatrix[11], cropMatrix[15] );
-#endif
+	#endif
 										   
 								{
 									float gamma;
@@ -4687,40 +4687,40 @@ static void RB_RenderInteractionsDeferredShadowMapped()
 									vec3_t viewOriginLS, Cstart_lp, C;
 									
 									// use the formulas of the paper to get n (and f)
-#if 0
+	#if 0
 									cosGamma = DotProduct( viewDirection, lightDirection );
 									sinGamma = sqrt( 1.0f - cosGamma * cosGamma );
-#else
+	#else
 									gamma = AngleBetweenVectors( viewDirection, lightDirection );
 									sinGamma = sin( DEG2RAD( gamma ) );
-#endif
+	#endif
 									
 									depth = fabs( cropBounds[1][1] - cropBounds[0][1] ); //perspective transform depth //light space y extents
 									//depth = fabs(cropBounds[0][2]) + fabs(cropBounds[1][2]);
 
-#if 1
+	#if 1
 									zNear = backEnd.viewParms.zNear / sinGamma;
 									zFar = zNear + depth * sinGamma;
 									n = ( zNear + sqrt( zFar * zNear ) ) / sinGamma;
-#elif 0
+	#elif 0
 									zNear = backEnd.viewParms.zNear;
 									zFar = backEnd.viewParms.zFar;
 									
 									n = ( zNear + sqrt( zFar * zNear ) ) / sinGamma;
-#else
+	#else
 									zNear = backEnd.viewParms.zNear;
 									zFar = zNear + depth * sinGamma;
 									n = ( zNear + sqrt( zFar * zNear ) ) / sinGamma;
-#endif
+	#endif
 									f = n + depth;
 									
 									ri.Printf( PRINT_ALL, "gamma = %5.3f, sin(gamma) = %5.3f, n = %5.3f, f = %5.3f\n", gamma, sinGamma, n, f );
 									
 									// new observer point n-1 behind eye position:  pos = eyePos-up*(n-nearDist)
-#if 1
+	#if 1
 									VectorMA( viewOrigin, -( n - zNear ), up, C );
 									//VectorMA(C, depth * 0.5f, lightDirection, C);
-#else
+	#else
 									// get the coordinates of the near camera point in light space
 									MatrixTransformPoint( light->viewMatrix, viewOrigin, viewOriginLS );
 									
@@ -4732,26 +4732,26 @@ static void RB_RenderInteractionsDeferredShadowMapped()
 									VectorMA( Cstart_lp, -n, axisDefault[1], C );
 									MatrixAffineInverse( light->viewMatrix, transformMatrix );
 									MatrixTransformPoint2( transformMatrix, C );
-#endif
+	#endif
 
-#if 1
+	#if 1
 									MatrixLookAtRH( light->viewMatrix, C, lightDirection, up );
-#else
+	#else
 									VectorInverse( up );
 									MatrixLookAtRH( light->viewMatrix, C, up, lightDirection );
 									VectorInverse( up );
 									
 									//MatrixLookAtRH(light->viewMatrix, viewOrigin, viewDirection, backEnd.viewParms.orientation.axis[2]);
-#endif
+	#endif
 
-#if 0
+	#if 0
 									if( n >= FLT_MAX )
 									{
 										// if n is infinite than we should do uniform shadow mapping
 										MatrixIdentity( lispMatrix );
 									}
 									else
-#endif
+	#endif
 									{
 										// one possibility for a simple perspective transformation matrix
 										// with the two parameters n(near) and f(far) in y direction
@@ -4788,7 +4788,7 @@ static void RB_RenderInteractionsDeferredShadowMapped()
 										//MatrixPerspectiveProjectionLH(lispMatrix, cropBounds[0][0], cropBounds[1][0], cropBounds[0][1], cropBounds[1][1], cropBounds[0][2], cropBounds[1][2]);
 										//MatrixPerspectiveProjectionRH(lispMatrix, cropBounds[0][0], cropBounds[1][0], cropBounds[0][1], cropBounds[1][1], -f, -n);
 
-#if 0
+	#if 0
 										ri.Printf( PRINT_ALL, "lispMatrix =\n(%5.3f, %5.3f, %5.3f, %5.3f)\n"
 												   "(%5.3f, %5.3f, %5.3f, %5.3f)\n"
 												   "(%5.3f, %5.3f, %5.3f, %5.3f)\n"
@@ -4797,13 +4797,13 @@ static void RB_RenderInteractionsDeferredShadowMapped()
 												   m[1], m[5], m[9], m[13],
 												   m[2], m[6], m[10], m[14],
 												   m[3], m[7], m[11], m[15] );
-#endif
+	#endif
 									}
 									
 									//MatrixIdentity(lispMatrix);
 									
 									// temporal arrangement for the transformation of the points to post-perspective space
-#if 0
+	#if 0
 									MatrixCopy( flipZMatrix, viewProjectionMatrix );
 									//MatrixMultiply2(viewProjectionMatrix, switchToGL);
 									MatrixMultiply2( viewProjectionMatrix, lispMatrix );
@@ -4815,11 +4815,11 @@ static void RB_RenderInteractionsDeferredShadowMapped()
 									MatrixMultiply2( viewProjectionMatrix, light->viewMatrix );
 									//MatrixMultiply2(viewProjectionMatrix, projectionCenter);
 									//MatrixMultiply2(viewProjectionMatrix, transformMatrix);
-#else
+	#else
 									MatrixMultiply( lispMatrix, light->viewMatrix, viewProjectionMatrix );
 									//MatrixMultiply(flipZMatrix, lispMatrix, viewProjectionMatrix);
 									//MatrixMultiply2(viewProjectionMatrix, light->viewMatrix);
-#endif
+	#endif
 									//MatrixMultiply(lispMatrix, light->viewMatrix, viewProjectionMatrix);
 									//MatrixMultiply(light->viewMatrix, lispMatrix, viewProjectionMatrix);
 									
@@ -4831,7 +4831,7 @@ static void RB_RenderInteractionsDeferredShadowMapped()
 									//and save the two extreme points min and max
 									//calcCubicHull(min,max,Bcopy.points,Bcopy.size);
 
-#if 0
+	#if 0
 									
 									VectorSet( forward, 1, 0, 0 );
 									VectorSet( side, 0, 1, 0 );
@@ -4844,9 +4844,9 @@ static void RB_RenderInteractionsDeferredShadowMapped()
 									ri.Printf( PRINT_ALL, "forward = (%5.3f, %5.3f, %5.3f)\n", forward[0], forward[1], forward[2] );
 									ri.Printf( PRINT_ALL, "side = (%5.3f, %5.3f, %5.3f)\n", side[0], side[1], side[2] );
 									ri.Printf( PRINT_ALL, "up = (%5.3f, %5.3f, %5.3f)\n", up[0], up[1], up[2] );
-#endif
+	#endif
 
-#if 1
+	#if 1
 									ClearBounds( cropBounds[0], cropBounds[1] );
 									for( j = 0; j < 8; j++ )
 									{
@@ -4865,19 +4865,19 @@ static void RB_RenderInteractionsDeferredShadowMapped()
 									
 									MatrixScaleTranslateToUnitCube( cropMatrix, cropBounds[0], cropBounds[1] );
 									//MatrixOrthogonalProjection(cropMatrix, cropBounds[0][0], cropBounds[1][0], cropBounds[0][1], cropBounds[1][1], cropBounds[0][2], cropBounds[1][2]);
-#endif
+	#endif
 								}
 
-#if 0
+	#if 0
 								ri.Printf( PRINT_ALL, "light space post crop bounds (%5.3f, %5.3f, %5.3f) (%5.3f, %5.3f, %5.3f)\n",
 										   cropBounds[0][0], cropBounds[0][1], cropBounds[0][2],
 										   cropBounds[1][0], cropBounds[1][1], cropBounds[1][2] );
-#endif
+	#endif
 										   
 								//
 								//MatrixInverse(cropMatrix);
 
-#if 0
+	#if 0
 								ri.Printf( PRINT_ALL, "cropMatrix =\n(%5.3f, %5.3f, %5.3f, %5.3f)\n"
 										   "(%5.3f, %5.3f, %5.3f, %5.3f)\n"
 										   "(%5.3f, %5.3f, %5.3f, %5.3f)\n"
@@ -4886,7 +4886,7 @@ static void RB_RenderInteractionsDeferredShadowMapped()
 										   cropMatrix[1], cropMatrix[5], cropMatrix[9], cropMatrix[13],
 										   cropMatrix[2], cropMatrix[6], cropMatrix[10], cropMatrix[14],
 										   cropMatrix[3], cropMatrix[7], cropMatrix[11], cropMatrix[15] );
-#endif
+	#endif
 										   
 								//MatrixOrthogonalProjectionLH(cropMatrix, -1024, 1024, -1024, 1024, cropBounds[0][2], cropBounds[1][2]);
 								
@@ -7917,13 +7917,13 @@ static void RenderEntityOcclusionVolume( trRefEntity_t* entity )
 	matrix_t transform, scale, rot;
 	axis_t   axis;
 
-#if 0
+	#if 0
 	VectorSubtract( entity->localBounds[1], entity->localBounds[0], boundsSize );
-#else
+	#else
 	boundsSize[ 0 ] = Q_fabs( entity->localBounds[ 0 ][ 0 ] ) + Q_fabs( entity->localBounds[ 1 ][ 0 ] );
 	boundsSize[ 1 ] = Q_fabs( entity->localBounds[ 0 ][ 1 ] ) + Q_fabs( entity->localBounds[ 1 ][ 1 ] );
 	boundsSize[ 2 ] = Q_fabs( entity->localBounds[ 0 ][ 2 ] ) + Q_fabs( entity->localBounds[ 1 ][ 2 ] );
-#endif
+	#endif
 
 	VectorScale( entity->e.axis[ 0 ], boundsSize[ 0 ] * 0.5f, axis[ 0 ] );
 	VectorScale( entity->e.axis[ 1 ], boundsSize[ 1 ] * 0.5f, axis[ 1 ] );
@@ -8453,12 +8453,12 @@ void RB_RenderBspOcclusionQueries()
 			// don't read back immediately so that we give the query time to be ready
 			glEndQuery( GL_SAMPLES_PASSED );
 
-#if 0
+	#if 0
 			if( !glIsQuery( node->occlusionQueryObjects[backEnd.viewParms.viewCount] ) )
 			{
 				ri.Error( ERR_FATAL, "node %i has no occlusion query object in slot %i: %i", j, 0, node->occlusionQueryObjects[backEnd.viewParms.viewCount] );
 			}
-#endif
+	#endif
 			
 			backEnd.pc.c_occlusionQueries++;
 			
@@ -8749,26 +8749,26 @@ static void RB_RenderDebugUtils()
 							Tess_UpdateVBOs( ATTR_POSITION | ATTR_COLOR );
 							Tess_DrawElements();
 #else
-                            matrix_t transform, scale, rot;
+							matrix_t transform, scale, rot;
 
-                            MatrixSetupScale( scale, light->l.radius[ 0 ], light->l.radius[ 1 ], light->l.radius[ 2 ] );
-                            MatrixMultiply( light->transformMatrix, scale, transform );
+							MatrixSetupScale( scale, light->l.radius[ 0 ], light->l.radius[ 1 ], light->l.radius[ 2 ] );
+							MatrixMultiply( light->transformMatrix, scale, transform );
 
-                            GL_LoadModelViewMatrix( transform );
-                            //GL_LoadProjectionMatrix(backEnd.viewParms.projectionMatrix);
+							GL_LoadModelViewMatrix( transform );
+							//GL_LoadProjectionMatrix(backEnd.viewParms.projectionMatrix);
 
-                            gl_genericShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[ glState.stackIndex ] );
+							gl_genericShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[ glState.stackIndex ] );
 
-                            R_BindVBO( tr.unitCubeVBO );
-                            R_BindIBO( tr.unitCubeIBO );
+							R_BindVBO( tr.unitCubeVBO );
+							R_BindIBO( tr.unitCubeIBO );
 
-                            GL_VertexAttribsState( ATTR_POSITION );
+							GL_VertexAttribsState( ATTR_POSITION );
 
-                            tess.multiDrawPrimitives = 0;
-                            tess.numVertexes         = tr.unitCubeVBO->vertexesNum;
-                            tess.numIndexes          = tr.unitCubeIBO->indexesNum;
+							tess.multiDrawPrimitives = 0;
+							tess.numVertexes         = tr.unitCubeVBO->vertexesNum;
+							tess.numIndexes          = tr.unitCubeIBO->indexesNum;
 
-                            Tess_DrawElements();
+							Tess_DrawElements();
 #endif
 							break;
 						}
@@ -9296,9 +9296,9 @@ static void RB_RenderDebugUtils()
 							skeleton.numBones = model->md5->numBones;
 							for( j = 0, bone = &skeleton.bones[ 0 ]; j < skeleton.numBones; j++, bone++ )
 							{
-#if defined( REFBONE_NAMES )
+	#if defined( REFBONE_NAMES )
 								Q_strncpyz( bone->name, model->md5->bones[ j ].name, sizeof( bone->name ) );
-#endif
+	#endif
 
 								bone->parentIndex = model->md5->bones[ j ].parentIndex;
 								VectorCopy( model->md5->bones[ j ].origin, bone->origin );
@@ -9373,7 +9373,7 @@ static void RB_RenderDebugUtils()
 				tess.numVertexes         = 0;
 				tess.numIndexes          = 0;
 
-#if defined( REFBONE_NAMES )
+	#if defined( REFBONE_NAMES )
 				{
 					GL_State( GLS_DEPTHTEST_DISABLE | GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA );
 
@@ -9434,7 +9434,7 @@ static void RB_RenderDebugUtils()
 						tess.numIndexes          = 0;
 					}
 				}
-#endif // REFBONE_NAMES
+	#endif // REFBONE_NAMES
 			}
 
 			tess.multiDrawPrimitives = 0;

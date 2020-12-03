@@ -53,7 +53,7 @@ ydnar: replaced with variable epsilon for djbob
 */
 
 #define NORMAL_EPSILON 0.00001
-#define DIST_EPSILON 0.01
+#define DIST_EPSILON   0.01
 
 qboolean PlaneEqual( plane_t* p, vec3_t normal, vec_t dist )
 {
@@ -2255,12 +2255,12 @@ static qboolean ParseMapEntity( qboolean onlyLights )
 		brush_t* brush;
 		vec3_t   originNeg;
 
-#if 1
+	#if 1
 		VectorNegate( mapEnt->origin, originNeg );
 		AdjustBrushesForOrigin( mapEnt, originNeg );
-#else
+	#else
 		AdjustBrushesForOrigin( mapEnt, mapEnt->origin );
-#endif
+	#endif
 
 		// NOTE: func_static entities should always contain detail brushes
 		for( brush = mapEnt->brushes; brush != NULL; brush = brush->next )
@@ -2274,7 +2274,7 @@ static qboolean ParseMapEntity( qboolean onlyLights )
 			}
 		}
 
-#if 0
+	#if 0
 		if( !strcmp( "0", ValueForKey( mapEnt, "solid" ) ) )
 		{
 			side_t*         s;
@@ -2296,7 +2296,7 @@ static qboolean ParseMapEntity( qboolean onlyLights )
 				}
 			}
 		}
-#endif
+	#endif
 
 		MoveBrushesToWorld( mapEnt );
 		MovePatchesToWorld( mapEnt );

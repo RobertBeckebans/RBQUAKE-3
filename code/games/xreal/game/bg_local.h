@@ -27,7 +27,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #define JUMP_VELOCITY 270
 
-#define TIMER_LAND 130
+#define TIMER_LAND    130
 #define TIMER_GESTURE ( 34 * 66 + 50 )
 
 #define OVERCLIP 1.001f

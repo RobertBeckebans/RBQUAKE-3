@@ -748,12 +748,12 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 			t1 = v1->texCoords;
 			t2 = v2->texCoords;
 
-#if 1
+	#if 1
 			R_CalcTangentSpace( tangent, binormal, normal, p0, p1, p2, t0, t1, t2 );
-#else
+	#else
 			R_CalcNormalForTriangle( normal, p0, p1, p2 );
 			R_CalcTangentsForTriangle( tangent, binormal, p0, p1, p2, t0, t1, t2 );
-#endif
+	#endif
 
 			for( k = 0; k < 3; k++ )
 			{
@@ -837,7 +837,7 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 				VectorNormalize( dv[ k ]->binormal );
 
 				// calculate the normal as cross product N=TxB
-#if 0
+	#if 0
 				CrossProduct( dv[k]->tangent, dv[k]->binormal, dv[k]->normal );
 				VectorNormalize( dv[k]->normal );
 	
@@ -852,13 +852,13 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 					//VectorInverse(dv[k]->tangent);
 					//VectorInverse(dv[k]->binormal);
 				}
-#else
+	#else
 				VectorAdd( dv[ k ]->normal, faceNormal, dv[ k ]->normal );
-#endif
+	#endif
 			}
 		}
 
-#if 1
+	#if 1
 		for( j = 0; j < vboVertexes.currentElements; j++ )
 		{
 			dv[ 0 ] = Com_GrowListElement( &vboVertexes, j );
@@ -866,7 +866,7 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 			//VectorNormalize(dv[0]->binormal);
 			VectorNormalize( dv[ 0 ]->normal );
 		}
-#endif
+	#endif
 	}
 #endif
 

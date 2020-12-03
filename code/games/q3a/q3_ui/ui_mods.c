@@ -22,19 +22,19 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //
 #include "ui_local.h"
 
-#define ART_BACK0 "menu/art/back_0"
-#define ART_BACK1 "menu/art/back_1"
+#define ART_BACK0  "menu/art/back_0"
+#define ART_BACK1  "menu/art/back_1"
 #define ART_FIGHT0 "menu/art/load_0"
 #define ART_FIGHT1 "menu/art/load_1"
 #define ART_FRAMEL "menu/art/frame2_l"
 #define ART_FRAMER "menu/art/frame1_r"
 
-#define MAX_MODS 64
+#define MAX_MODS    64
 #define NAMEBUFSIZE ( MAX_MODS * 48 )
 #define GAMEBUFSIZE ( MAX_MODS * 16 )
 
 #define ID_BACK 10
-#define ID_GO 11
+#define ID_GO   11
 #define ID_LIST 12
 
 typedef struct

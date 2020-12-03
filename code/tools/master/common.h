@@ -31,12 +31,12 @@
 #include <time.h>
 
 #ifdef WIN32
-#include <winsock2.h>
+	#include <winsock2.h>
 #else
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <netdb.h>
-#include <sys/socket.h>
+	#include <netinet/in.h>
+	#include <arpa/inet.h>
+	#include <netdb.h>
+	#include <sys/socket.h>
 #endif
 
 // ---------- Types ---------- //
@@ -78,12 +78,12 @@ extern char peer_address[ 128 ];
 
 // Win32 uses a different name for some standard functions
 #ifdef WIN32
-#define snprintf _snprintf
+	#define snprintf _snprintf
 #endif
 
 #ifndef max
-#define max( x, y ) ( ( ( x ) > ( y ) ) ? ( x ) : ( y ) )
-#define min( x, y ) ( ( ( x ) < ( y ) ) ? ( x ) : ( y ) )
+	#define max( x, y ) ( ( ( x ) > ( y ) ) ? ( x ) : ( y ) )
+	#define min( x, y ) ( ( ( x ) < ( y ) ) ? ( x ) : ( y ) )
 #endif
 
 // Print a message to screen, depending on its verbose level

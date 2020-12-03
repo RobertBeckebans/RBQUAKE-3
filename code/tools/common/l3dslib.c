@@ -30,14 +30,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "trilib.h"
 #include "l3dslib.h"
 
-#define MAIN3DS 0x4D4D
-#define EDIT3DS 0x3D3D // this is the start of the editor config
+#define MAIN3DS     0x4D4D
+#define EDIT3DS     0x3D3D // this is the start of the editor config
 #define EDIT_OBJECT 0x4000
 #define OBJ_TRIMESH 0x4100
 #define TRI_VERTEXL 0x4110
-#define TRI_FACEL1 0x4120
+#define TRI_FACEL1  0x4120
 
-#define MAXVERTS 2000
+#define MAXVERTS     2000
 #define MAXTRIANGLES 750
 
 typedef struct

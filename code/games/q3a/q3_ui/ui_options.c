@@ -31,14 +31,14 @@ SYSTEM CONFIGURATION MENU
 
 #define ART_FRAMEL "menu/art/frame2_l"
 #define ART_FRAMER "menu/art/frame1_r"
-#define ART_BACK0 "menu/art/back_0"
-#define ART_BACK1 "menu/art/back_1"
+#define ART_BACK0  "menu/art/back_0"
+#define ART_BACK1  "menu/art/back_1"
 
 #define ID_GRAPHICS 10
-#define ID_DISPLAY 11
-#define ID_SOUND 12
-#define ID_NETWORK 13
-#define ID_BACK 14
+#define ID_DISPLAY  11
+#define ID_SOUND    12
+#define ID_NETWORK  13
+#define ID_BACK     14
 
 #define VERTICAL_SPACING 34
 

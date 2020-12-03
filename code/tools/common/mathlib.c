@@ -26,9 +26,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "mathlib.h"
 
 #ifdef _MSC_VER
-//Improve floating-point consistency.
-//without this option weird floating point issues occur
-#pragma optimize( "p", on )
+	//Improve floating-point consistency.
+	//without this option weird floating point issues occur
+	#pragma optimize( "p", on )
 #endif
 
 vec3_t vec3_origin = { 0, 0, 0 };

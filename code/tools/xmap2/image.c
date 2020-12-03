@@ -408,7 +408,7 @@ image_t* ImageLoad( const char* filename )
 	}
 	else
 	{
-#if 1
+	#if 1
 		/* attempt to load png */
 		StripExtension( name );
 		strcat( name, ".png" );
@@ -419,7 +419,7 @@ image_t* ImageLoad( const char* filename )
 		}
 		else
 		{
-#if 1
+		#if 1
 			/* attempt to load jpg */
 			StripExtension( name );
 			strcat( name, ".jpg" );
@@ -434,7 +434,7 @@ image_t* ImageLoad( const char* filename )
 			}
 			else
 			{
-#if 0
+			#if 0
 				/* attempt to load dds */
 				StripExtension( name );
 				strcat( name, ".dds" );
@@ -444,7 +444,7 @@ image_t* ImageLoad( const char* filename )
 					LoadDDSBuffer( buffer, size, &image->pixels, &image->width, &image->height );
 					
 					/* debug code */
-#if 0
+				#if 0
 					{
 						ddsPF_t         pf;
 						
@@ -458,13 +458,13 @@ image_t* ImageLoad( const char* filename )
 									  image->height );
 						}
 					}
-#endif // dds debug
+				#endif // dds debug
 				}
-#endif // ignore dds
+			#endif // ignore dds
 			}
-#endif // ignore jpg dds
+		#endif // ignore jpg dds
 		}
-#endif // ignore png jpg dds
+	#endif // ignore png jpg dds
 	}
 #endif // ignore all images
 

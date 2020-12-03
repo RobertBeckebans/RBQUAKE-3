@@ -25,11 +25,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #ifdef USE_OPENAL
 
-#include "qal.h"
+	#include "qal.h"
 
-#ifdef USE_OPENAL_DLOPEN
+	#ifdef USE_OPENAL_DLOPEN
 
-#include "../sys/sys_loadlib.h"
+		#include "../sys/sys_loadlib.h"
 
 LPALENABLE               qalEnable;
 LPALDISABLE              qalDisable;
@@ -149,9 +149,9 @@ qboolean QAL_Init( const char* libname )
 	Com_Printf( "Loading \"%s\"...\n", libname );
 	if( ( OpenALLib = Sys_LoadLibrary( libname ) ) == 0 )
 	{
-#ifdef _WIN32
+		#ifdef _WIN32
 		return qfalse;
-#else
+		#else
 		char fn[ 1024 ];
 
 		Q_strncpyz( fn, Sys_Cwd(), sizeof( fn ) );
@@ -162,7 +162,7 @@ qboolean QAL_Init( const char* libname )
 		{
 			return qfalse;
 		}
-#endif
+		#endif
 	}
 
 	alinit_fail = qfalse;
@@ -342,7 +342,7 @@ void QAL_Shutdown( void )
 	qalcCaptureStop        = NULL;
 	qalcCaptureSamples     = NULL;
 }
-#else
+	#else
 qboolean QAL_Init( const char* libname )
 {
 	return qtrue;
@@ -350,5 +350,5 @@ qboolean QAL_Init( const char* libname )
 void QAL_Shutdown( void )
 {
 }
-#endif
+	#endif
 #endif

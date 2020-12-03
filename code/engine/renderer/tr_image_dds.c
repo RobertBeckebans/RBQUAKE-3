@@ -41,7 +41,8 @@ typedef struct
 	unsigned int dwCaps; // capabilities of surface wanted
 	unsigned int dwCaps2;
 	unsigned int dwCaps3;
-	union {
+	union
+	{
 		unsigned int dwCaps4;
 		unsigned int dwVolumeDepth;
 	} u0;
@@ -53,7 +54,8 @@ typedef struct
 	unsigned int dwFlags;  // pixel format flags
 	unsigned int dwFourCC; // (FOURCC code)
 
-	union {
+	union
+	{
 		unsigned int dwRGBBitCount;           // how many bits per pixel
 		unsigned int dwYUVBitCount;           // how many bits per pixel
 		unsigned int dwZBufferBitDepth;       // how many total bits/pixel in z buffer (including any stencil bits)
@@ -64,7 +66,8 @@ typedef struct
 											  // format list and if DDPF_D3DFORMAT is set
 	} u0;
 
-	union {
+	union
+	{
 		unsigned int dwRBitMask;         // mask for red bit
 		unsigned int dwYBitMask;         // mask for Y bits
 		unsigned int dwStencilBitDepth;  // how many stencil bits (note: dwZBufferBitDepth-dwStencilBitDepth is total Z-only bits)
@@ -73,7 +76,8 @@ typedef struct
 		unsigned int dwOperations;       // DDPF_D3DFORMAT Operations
 	} u1;
 
-	union {
+	union
+	{
 		unsigned int dwGBitMask;      // mask for green bits
 		unsigned int dwUBitMask;      // mask for U bits
 		unsigned int dwZBitMask;      // mask for Z bits
@@ -86,14 +90,16 @@ typedef struct
 
 	} u2;
 
-	union {
+	union
+	{
 		unsigned int dwBBitMask;             // mask for blue bits
 		unsigned int dwVBitMask;             // mask for V bits
 		unsigned int dwStencilBitMask;       // mask for stencil bits
 		unsigned int dwBumpLuminanceBitMask; // mask for luminance in bump map
 	} u3;
 
-	union {
+	union
+	{
 		unsigned int dwRGBAlphaBitMask;       // mask for alpha channel
 		unsigned int dwYUVAlphaBitMask;       // mask for alpha channel
 		unsigned int dwLuminanceAlphaBitMask; // mask for alpha channel
@@ -109,17 +115,20 @@ typedef struct
 	unsigned int dwHeight; // height of surface to be created
 	unsigned int dwWidth;  // width of input surface
 
-	union {
+	union
+	{
 		int          lPitch;       // distance to start of next line (return value only)
 		unsigned int dwLinearSize; // Formless late-allocated optimized surface size
 	} u0;
 
-	union {
+	union
+	{
 		unsigned int dwBackBufferCount; // number of back buffers requested
 		unsigned int dwDepth;           // the depth if this is a volume texture
 	} u1;
 
-	union {
+	union
+	{
 		unsigned int dwMipMapCount; // number of mip-map levels requestde
 		// dwZBufferBitDepth removed, use ddpfPixelFormat one instead
 		unsigned int dwRefreshRate; // refresh rate (used when display mode is described)
@@ -130,14 +139,16 @@ typedef struct
 	unsigned int dwReserved;      // reserved
 	void*        lpSurface;       // pointer to the associated surface memory
 
-	union {
+	union
+	{
 		DDCOLORKEY_t ddckCKDestOverlay; // color key for destination overlay use
 		unsigned int dwEmptyFaceColor;  // Physical color for empty cubemap faces
 	} u3;
 	DDCOLORKEY_t ddckCKDestBlt;    // color key for destination blt use
 	DDCOLORKEY_t ddckCKSrcOverlay; // color key for source overlay use
 	DDCOLORKEY_t ddckCKSrcBlt;     // color key for source blt use
-	union {
+	union
+	{
 		DDPIXELFORMAT_t ddpfPixelFormat; // pixel format description of the surface
 		unsigned int    dwFVF;           // vertex format description of vertex buffers
 	} u4;
@@ -145,65 +156,65 @@ typedef struct
 	unsigned int dwTextureStage; // stage in multitexture cascade
 } DDSURFACEDESC2_t;
 
-//
-// DDSURFACEDESC2 flags that mark the validity of the struct data
-//
-#define DDSD_CAPS 0x00000001l        // default
-#define DDSD_HEIGHT 0x00000002l      // default
-#define DDSD_WIDTH 0x00000004l       // default
-#define DDSD_PIXELFORMAT 0x00001000l // default
-#define DDSD_PITCH 0x00000008l       // For uncompressed formats
-#define DDSD_MIPMAPCOUNT 0x00020000l
-#define DDSD_LINEARSIZE 0x00080000l // For compressed formats
-#define DDSD_DEPTH 0x00800000l      // Volume Textures
+	//
+	// DDSURFACEDESC2 flags that mark the validity of the struct data
+	//
+	#define DDSD_CAPS        0x00000001l // default
+	#define DDSD_HEIGHT      0x00000002l // default
+	#define DDSD_WIDTH       0x00000004l // default
+	#define DDSD_PIXELFORMAT 0x00001000l // default
+	#define DDSD_PITCH       0x00000008l // For uncompressed formats
+	#define DDSD_MIPMAPCOUNT 0x00020000l
+	#define DDSD_LINEARSIZE  0x00080000l // For compressed formats
+	#define DDSD_DEPTH       0x00800000l // Volume Textures
 
-//
-// DDPIXELFORMAT flags
-//
-#define DDPF_ALPHAPIXELS 0x00000001l
-#define DDPF_FOURCC 0x00000004l // Compressed formats
-#define DDPF_RGB 0x00000040l    // Uncompressed formats
-#define DDPF_ALPHA 0x00000002l
-#define DDPF_COMPRESSED 0x00000080l
-#define DDPF_LUMINANCE 0x00020000l
-#define DDPF_PALETTEINDEXED4 0x00000008l
-#define DDPF_PALETTEINDEXEDTO8 0x00000010l
-#define DDPF_PALETTEINDEXED8 0x00000020l
+	//
+	// DDPIXELFORMAT flags
+	//
+	#define DDPF_ALPHAPIXELS       0x00000001l
+	#define DDPF_FOURCC            0x00000004l // Compressed formats
+	#define DDPF_RGB               0x00000040l // Uncompressed formats
+	#define DDPF_ALPHA             0x00000002l
+	#define DDPF_COMPRESSED        0x00000080l
+	#define DDPF_LUMINANCE         0x00020000l
+	#define DDPF_PALETTEINDEXED4   0x00000008l
+	#define DDPF_PALETTEINDEXEDTO8 0x00000010l
+	#define DDPF_PALETTEINDEXED8   0x00000020l
 
-//
-// DDSCAPS flags
-//
-#define DDSCAPS_COMPLEX 0x00000008l
-#define DDSCAPS_TEXTURE 0x00001000l // default
-#define DDSCAPS_MIPMAP 0x00400000l
+	//
+	// DDSCAPS flags
+	//
+	#define DDSCAPS_COMPLEX 0x00000008l
+	#define DDSCAPS_TEXTURE 0x00001000l // default
+	#define DDSCAPS_MIPMAP  0x00400000l
 
-#define DDSCAPS2_VOLUME 0x00200000l
-#define DDSCAPS2_CUBEMAP 0x00000200L
-#define DDSCAPS2_CUBEMAP_POSITIVEX 0x00000400L
-#define DDSCAPS2_CUBEMAP_NEGATIVEX 0x00000800L
-#define DDSCAPS2_CUBEMAP_POSITIVEY 0x00001000L
-#define DDSCAPS2_CUBEMAP_NEGATIVEY 0x00002000L
-#define DDSCAPS2_CUBEMAP_POSITIVEZ 0x00004000L
-#define DDSCAPS2_CUBEMAP_NEGATIVEZ 0x00008000L
+	#define DDSCAPS2_VOLUME            0x00200000l
+	#define DDSCAPS2_CUBEMAP           0x00000200L
+	#define DDSCAPS2_CUBEMAP_POSITIVEX 0x00000400L
+	#define DDSCAPS2_CUBEMAP_NEGATIVEX 0x00000800L
+	#define DDSCAPS2_CUBEMAP_POSITIVEY 0x00001000L
+	#define DDSCAPS2_CUBEMAP_NEGATIVEY 0x00002000L
+	#define DDSCAPS2_CUBEMAP_POSITIVEZ 0x00004000L
+	#define DDSCAPS2_CUBEMAP_NEGATIVEZ 0x00008000L
 
-#ifndef MAKEFOURCC
+	#ifndef MAKEFOURCC
 
-#define MAKEFOURCC( ch0, ch1, ch2, ch3 )                                           \
-	( ( unsigned int )( char )( ch0 ) | ( ( unsigned int )( char )( ch1 ) << 8 ) | \
-		( ( unsigned int )( char )( ch2 ) << 16 ) | ( ( unsigned int )( char )( ch3 ) << 24 ) )
+		#define MAKEFOURCC( ch0, ch1, ch2, ch3 )                                           \
+			( ( unsigned int )( char )( ch0 ) | ( ( unsigned int )( char )( ch1 ) << 8 ) | \
+				( ( unsigned int )( char )( ch2 ) << 16 ) | ( ( unsigned int )( char )( ch3 ) << 24 ) )
 
-#endif
+	#endif
 
-#define FOURCC_DDS MAKEFOURCC( 'D', 'D', 'S', ' ' )
+	#define FOURCC_DDS MAKEFOURCC( 'D', 'D', 'S', ' ' )
 
-//FOURCC codes for DXTn compressed-texture pixel formats
-#define FOURCC_DXT1 MAKEFOURCC( 'D', 'X', 'T', '1' )
-#define FOURCC_DXT2 MAKEFOURCC( 'D', 'X', 'T', '2' )
-#define FOURCC_DXT3 MAKEFOURCC( 'D', 'X', 'T', '3' )
-#define FOURCC_DXT4 MAKEFOURCC( 'D', 'X', 'T', '4' )
-#define FOURCC_DXT5 MAKEFOURCC( 'D', 'X', 'T', '5' )
+	//FOURCC codes for DXTn compressed-texture pixel formats
+	#define FOURCC_DXT1 MAKEFOURCC( 'D', 'X', 'T', '1' )
+	#define FOURCC_DXT2 MAKEFOURCC( 'D', 'X', 'T', '2' )
+	#define FOURCC_DXT3 MAKEFOURCC( 'D', 'X', 'T', '3' )
+	#define FOURCC_DXT4 MAKEFOURCC( 'D', 'X', 'T', '4' )
+	#define FOURCC_DXT5 MAKEFOURCC( 'D', 'X', 'T', '5' )
 
-#define R_LoadDDSImage_MAX_MIPS 16
+	#define R_LoadDDSImage_MAX_MIPS 16
 
 static ID_INLINE void UnpackRGB565( byte rgb[ 3 ], uint16_t cl )
 {
@@ -598,7 +609,7 @@ image_t* R_LoadDDSImageData( void* pImageData, const char* name, int bits, filte
 
 	//Byte Swapping for the DDS headers.
 	//beware: we ignore some of the shorts.
-#ifdef Q3_BIG_ENDIAN
+	#ifdef Q3_BIG_ENDIAN
 	{
 		int  i;
 		int* field;
@@ -609,7 +620,7 @@ image_t* R_LoadDDSImageData( void* pImageData, const char* name, int bits, filte
 		}
 	}
 
-#endif
+	#endif
 
 	if( ddsd->dwSize != sizeof( DDSURFACEDESC2_t ) || ddsd->u4.ddpfPixelFormat.dwSize != sizeof( DDPIXELFORMAT_t ) )
 	{
@@ -981,29 +992,29 @@ image_t* R_LoadDDSImageData( void* pImageData, const char* name, int bits, filte
 		GL_Bind( ret );
 
 		//macros so this doesn't get disgustingly huge
-#define loadCubeFace( glTarget )                                                                                \
-	w = width;                                                                                                  \
-                                                                                                                \
-	for( i = 0; i < mipLevels; i++ )                                                                            \
-	{                                                                                                           \
-		if( compressed )                                                                                        \
-		{                                                                                                       \
-			GLsizei size = mipOffsets[ i + 1 ] - mipOffsets[ i ];                                               \
-			R_UploadCompressedImage2D( ret, glTarget, i, format, w, w, size, mipOffsets[ i ] );                 \
-		}                                                                                                       \
-		else                                                                                                    \
-		{                                                                                                       \
-			R_UploadImage2D( ret, glTarget, i, internal_format, w, w, internal_format, type, mipOffsets[ i ] ); \
-		}                                                                                                       \
-                                                                                                                \
-		w >>= 1;                                                                                                \
-		if( w == 0 )                                                                                            \
-			w = 1;                                                                                              \
-	}
+	#define loadCubeFace( glTarget )                                                                                \
+		w = width;                                                                                                  \
+                                                                                                                    \
+		for( i = 0; i < mipLevels; i++ )                                                                            \
+		{                                                                                                           \
+			if( compressed )                                                                                        \
+			{                                                                                                       \
+				GLsizei size = mipOffsets[ i + 1 ] - mipOffsets[ i ];                                               \
+				R_UploadCompressedImage2D( ret, glTarget, i, format, w, w, size, mipOffsets[ i ] );                 \
+			}                                                                                                       \
+			else                                                                                                    \
+			{                                                                                                       \
+				R_UploadImage2D( ret, glTarget, i, internal_format, w, w, internal_format, type, mipOffsets[ i ] ); \
+			}                                                                                                       \
+                                                                                                                    \
+			w >>= 1;                                                                                                \
+			if( w == 0 )                                                                                            \
+				w = 1;                                                                                              \
+		}
 
-#define shiftMipOffsets()             \
-	for( i = 0; i <= mipLevels; i++ ) \
-	mipOffsets[ i ] += shift
+	#define shiftMipOffsets()             \
+		for( i = 0; i <= mipLevels; i++ ) \
+		mipOffsets[ i ] += shift
 
 		//the faces are stored in the order +x, -x, +y, -y, +z, -z
 		//but there may be missing faces in the sequence which we cannot upload

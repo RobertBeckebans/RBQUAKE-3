@@ -41,20 +41,20 @@ theora:
 
 #if defined( USE_CODEC_VORBIS ) && ( defined( USE_CIN_XVID ) || defined( USE_CIN_THEORA ) )
 
-#include <ogg/ogg.h>
-#include <vorbis/codec.h>
+	#include <ogg/ogg.h>
+	#include <vorbis/codec.h>
 
-#ifdef USE_CIN_XVID
-#include <xvid.h>
-#endif
-#ifdef USE_CIN_THEORA
-#include <theora/theora.h>
-#endif
+	#ifdef USE_CIN_XVID
+		#include <xvid.h>
+	#endif
+	#ifdef USE_CIN_THEORA
+		#include <theora/theora.h>
+	#endif
 
-#include "client.h"
-#include "snd_local.h"
+	#include "client.h"
+	#include "snd_local.h"
 
-#define OGG_BUFFER_SIZE 8 * 1024 //4096
+	#define OGG_BUFFER_SIZE 8 * 1024 //4096
 
 typedef struct
 {
@@ -70,18 +70,18 @@ typedef struct
 	vorbis_comment   vc; /* struct that stores all the bitstream user comments */
 
 	qboolean videoStreamIsXvid; //FIXME: atm there isn't realy a check for this (all "video" streams are handelt as xvid, because xvid support more than one "subtype")
-#ifdef USE_CIN_XVID
+	#ifdef USE_CIN_XVID
 	xvid_dec_stats_t xvid_dec_stats;
 	void*            xvid_dec_handle;
-#endif
+	#endif
 	qboolean videoStreamIsTheora;
-#ifdef USE_CIN_THEORA
+	#ifdef USE_CIN_THEORA
 	theora_info    th_info;    // dump_video.c(example decoder): ti
 	theora_comment th_comment; // dump_video.c(example decoder): tc
 	theora_state   th_state;   // dump_video.c(example decoder): td
 
 	yuv_buffer th_yuvbuffer;
-#endif
+	#endif
 
 	unsigned char* outputBuffer;
 	int            outputWidht;
@@ -96,14 +96,14 @@ static cin_ogm_t g_ogm;
 
 int nextNeededVFrame( void );
 
-/* ####################### #######################
+	/* ####################### #######################
 
   XVID
 
 */
-#ifdef USE_CIN_XVID
+	#ifdef USE_CIN_XVID
 
-#define BPP 4
+		#define BPP 4
 
 static int init_xvid()
 {
@@ -190,7 +190,7 @@ static int shutdown_xvid()
 
 	return ( ret );
 }
-#endif
+	#endif
 
 /* ####################### #######################
 
@@ -269,11 +269,11 @@ static int loadPagesToStreams( void )
 	return r;
 }
 
-#define SIZEOF_RAWBUFF 4 * 1024
+	#define SIZEOF_RAWBUFF 4 * 1024
 static byte rawBuffer[ SIZEOF_RAWBUFF ];
 
-#define MIN_AUDIO_PRELOAD 400 // in ms
-#define MAX_AUDIO_PRELOAD 500 // in ms
+	#define MIN_AUDIO_PRELOAD 400 // in ms
+	#define MAX_AUDIO_PRELOAD 500 // in ms
 
 /*
 
@@ -314,12 +314,12 @@ static qboolean loadAudio( void )
 			{
 				ptr[ 0 ] = ( left[ i ] >= -1.0f &&
 							   left[ i ] <= 1.0f ) ?
-					left[ i ] * 32767.f :
-					32767 * ( ( left[ i ] > 0.0f ) - ( left[ i ] < 0.0f ) );
+                    left[ i ] * 32767.f :
+                    32767 * ( ( left[ i ] > 0.0f ) - ( left[ i ] < 0.0f ) );
 				ptr[ 1 ] = ( right[ i ] >= -1.0f &&
 							   right[ i ] <= 1.0f ) ?
-					right[ i ] * 32767.f :
-					32767 * ( ( right[ i ] > 0.0f ) - ( right[ i ] < 0.0f ) );
+                    right[ i ] * 32767.f :
+                    32767 * ( ( right[ i ] > 0.0f ) - ( right[ i ] < 0.0f ) );
 				ptr += 2; //numChans;
 			}
 
@@ -361,13 +361,13 @@ static qboolean loadAudio( void )
 	}
 }
 
-/*
+	/*
 
   return:	1	-> loaded a new Frame ( g_ogm.outputBuffer points to the actual frame )
 			0	-> no new Frame
 			<0	-> error
 */
-#ifdef USE_CIN_XVID
+	#ifdef USE_CIN_XVID
 static int loadVideoFrameXvid()
 {
 	int        r = 0;
@@ -429,15 +429,15 @@ static int loadVideoFrameXvid()
 
 	return r;
 }
-#endif
+	#endif
 
-/*
+	/*
 
   return:	1	-> loaded a new Frame ( g_ogm.outputBuffer points to the actual frame )
 			0	-> no new Frame
 			<0	-> error
 */
-#ifdef USE_CIN_THEORA
+	#ifdef USE_CIN_THEORA
 /*
 how many >> are needed to make y==x (shifting y>>i)
 return: -1	-> no match
@@ -555,7 +555,7 @@ static int loadVideoFrameTheora( void )
 
 	return r;
 }
-#endif
+	#endif
 
 /*
 
@@ -565,18 +565,18 @@ static int loadVideoFrameTheora( void )
 */
 static int loadVideoFrame( void )
 {
-#ifdef USE_CIN_XVID
+	#ifdef USE_CIN_XVID
 	if( g_ogm.videoStreamIsXvid )
 	{
 		return loadVideoFrameXvid();
 	}
-#endif
-#ifdef USE_CIN_THEORA
+	#endif
+	#ifdef USE_CIN_THEORA
 	if( g_ogm.videoStreamIsTheora )
 	{
 		return loadVideoFrameTheora();
 	}
-#endif
+	#endif
 
 	// if we come to this point, there will be no codec that use the stream content ...
 	if( g_ogm.os_video.serialno )
@@ -674,7 +674,8 @@ typedef struct
 	ogg_int32_t buffersize;
 	ogg_int16_t bits_per_sample;
 
-	union {
+	union
+	{
 		struct
 		{
 			ogg_int32_t width;
@@ -753,7 +754,7 @@ int Cin_OGM_Init( const char* filename )
 					ogg_stream_pagein( &g_ogm.os_audio, &og );
 				}
 			}
-#ifdef USE_CIN_THEORA
+	#ifdef USE_CIN_THEORA
 			if( strstr( ( char* )( og.body + 1 ), "theora" ) )
 			{
 				if( g_ogm.os_video.serialno )
@@ -767,8 +768,8 @@ int Cin_OGM_Init( const char* filename )
 					ogg_stream_pagein( &g_ogm.os_video, &og );
 				}
 			}
-#endif
-#ifdef USE_CIN_XVID
+	#endif
+	#ifdef USE_CIN_XVID
 			if( strstr( ( char* )( og.body + 1 ), "video" ) )
 			{
 				//FIXME? better way to find video stream
@@ -803,7 +804,7 @@ int Cin_OGM_Init( const char* filename )
 					ogg_stream_pagein( &g_ogm.os_video, &og );
 				}
 			}
-#endif
+	#endif
 		}
 		else if( loadBlockToSync() )
 		{
@@ -817,13 +818,13 @@ int Cin_OGM_Init( const char* filename )
 		return -2;
 	}
 
-#if 1
+	#if 1
 	if( !g_ogm.os_audio.serialno )
 	{
 		Com_Printf( S_COLOR_YELLOW "WARNING: Haven't found a audio(vorbis) stream in ogm-file (%s)\n", filename );
 		return -2;
 	}
-#endif
+	#endif
 	if( !g_ogm.os_video.serialno )
 	{
 		Com_Printf( S_COLOR_YELLOW "WARNING: Haven't found a video stream in ogm-file (%s)\n", filename );
@@ -864,7 +865,7 @@ int Cin_OGM_Init( const char* filename )
 
 	vorbis_synthesis_init( &g_ogm.vd, &g_ogm.vi );
 
-#ifdef USE_CIN_XVID
+	#ifdef USE_CIN_XVID
 	status = init_xvid();
 	if( status )
 	{
@@ -872,9 +873,9 @@ int Cin_OGM_Init( const char* filename )
 
 		return -4;
 	}
-#endif
+	#endif
 
-#ifdef USE_CIN_THEORA
+	#ifdef USE_CIN_THEORA
 	if( g_ogm.videoStreamIsTheora )
 	{
 		ROQ_GenYUVTables();
@@ -926,7 +927,7 @@ int Cin_OGM_Init( const char* filename )
 
 		g_ogm.Vtime_unit = ( ( ogg_int64_t )g_ogm.th_info.fps_denominator * 1000 * 10000 / g_ogm.th_info.fps_numerator );
 	}
-#endif
+	#endif
 
 	Com_DPrintf( "OGM-Init done (%s)\n", filename );
 
@@ -979,7 +980,7 @@ unsigned char* Cin_OGM_GetOutput( int* outWidth, int* outHeight )
 
 void Cin_OGM_Shutdown()
 {
-#ifdef USE_CIN_XVID
+	#ifdef USE_CIN_XVID
 	int status;
 
 	status = shutdown_xvid();
@@ -987,13 +988,13 @@ void Cin_OGM_Shutdown()
 	{
 		Com_Printf( "[Xvid]Decore RELEASE problem, return value %d\n", status );
 	}
-#endif
+	#endif
 
-#ifdef USE_CIN_THEORA
+	#ifdef USE_CIN_THEORA
 	theora_clear( &g_ogm.th_state );
 	theora_comment_clear( &g_ogm.th_comment );
 	theora_info_clear( &g_ogm.th_info );
-#endif
+	#endif
 
 	if( g_ogm.outputBuffer )
 	{

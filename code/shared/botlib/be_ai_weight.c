@@ -503,7 +503,7 @@ weightconfig_t* ReadWeightConfig( char* filename )
 	if( botDeveloper )
 	{
 		botimport.Print( PRT_MESSAGE, "weights loaded in %d msec\n", Sys_MilliSeconds() - starttime );
-	}  //end if
+	} //end if
 #endif //DEBUG
 	//
 	if( !LibVarGetValue( "bot_reloadcharacters" ) )

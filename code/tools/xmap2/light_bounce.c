@@ -254,7 +254,7 @@ samples a fragment's lightmap or vertex color and returns an
 average color and a color gradient for the sample
 */
 
-#define MAX_SAMPLES 150
+#define MAX_SAMPLES        150
 #define SAMPLE_GRANULARITY 6
 
 static void RadSample( int lightmapNum, bspDrawSurface_t* ds, rawLightmap_t* lm, shaderInfo_t* si, radWinding_t* rw, vec3_t average, vec3_t gradient, int* style )
@@ -434,8 +434,8 @@ subdivides a radiosity winding until it is smaller than subdivide, then generate
 */
 
 #define RADIOSITY_MAX_GRADIENT 0.75f //% 0.25f
-#define RADIOSITY_VALUE 500.0f
-#define RADIOSITY_MIN 0.0001f
+#define RADIOSITY_VALUE        500.0f
+#define RADIOSITY_MIN          0.0001f
 #define RADIOSITY_CLIP_EPSILON 0.125f
 
 static void RadSubdivideDiffuseLight( int lightmapNum, bspDrawSurface_t* ds, rawLightmap_t* lm, shaderInfo_t* si, float scale, float subdivide, qboolean original, radWinding_t* rw, clipWork_t* cw )

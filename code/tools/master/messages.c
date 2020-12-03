@@ -27,7 +27,7 @@
 // ---------- Constants ---------- //
 
 // Timeouts (in secondes)
-#define TIMEOUT_HEARTBEAT 2
+#define TIMEOUT_HEARTBEAT    2
 #define TIMEOUT_INFORESPONSE ( 15 * 60 )
 
 // Period of validity for a challenge string (in secondes)
@@ -54,7 +54,7 @@
 #define M2C_GETSERVERSREPONSE "getserversResponse"
 
 #define C2M_GETMOTD "getmotd"
-#define M2C_MOTD "motd "
+#define M2C_MOTD    "motd "
 
 // ---------- Private functions ---------- //
 
@@ -392,7 +392,7 @@ static void HandleInfoResponse( server_t* server, const char* msg )
 }
 
 #define CHALLENGE_KEY "challenge\\"
-#define MOTD_KEY "motd\\"
+#define MOTD_KEY      "motd\\"
 
 /*
 ====================

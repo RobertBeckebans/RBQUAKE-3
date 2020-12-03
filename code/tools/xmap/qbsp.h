@@ -35,7 +35,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #define MAX_PATCH_SIZE 32
 
-#define CLIP_EPSILON 0.1
+#define CLIP_EPSILON  0.1
 #define PLANENUM_LEAF -1
 
 #define HINT_PRIORITY 1000
@@ -323,9 +323,9 @@ bspBrush_t* MakeBspBrushList( bspBrush_t* brushes, vec3_t clipmins, vec3_t clipm
 
 // brushbsp
 
-#define PSIDE_FRONT 1
-#define PSIDE_BACK 2
-#define PSIDE_BOTH ( PSIDE_FRONT | PSIDE_BACK )
+#define PSIDE_FRONT  1
+#define PSIDE_BACK   2
+#define PSIDE_BOTH   ( PSIDE_FRONT | PSIDE_BACK )
 #define PSIDE_FACING 4
 
 int      BoxOnPlaneSide( vec3_t mins, vec3_t maxs, plane_t* plane );
@@ -471,11 +471,11 @@ void           FilterDrawsurfsIntoTree( entity_t* e, tree_t* tree );
 
 // brush_primit.c
 
-#define BPRIMIT_UNDEFINED 0
+#define BPRIMIT_UNDEFINED  0
 #define BPRIMIT_OLDBRUSHES 1
 #define BPRIMIT_NEWBRUSHES 2
-#define BPRIMIT_D3BRUSHES 3
-#define BPRIMIT_Q4BRUSHES 4
+#define BPRIMIT_D3BRUSHES  3
+#define BPRIMIT_Q4BRUSHES  4
 extern int g_bBrushPrimit;
 
 void ComputeAxisBase( vec3_t normal, vec3_t texX, vec3_t texY );

@@ -31,36 +31,36 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *****************************************************************************/
 
 #ifndef MAX_STRINGFIELD
-#define MAX_STRINGFIELD 80
+	#define MAX_STRINGFIELD 80
 #endif
 
 //travel flags
-#define TFL_INVALID 0x00000001      //traveling temporary not possible
-#define TFL_WALK 0x00000002         //walking
-#define TFL_CROUCH 0x00000004       //crouching
-#define TFL_BARRIERJUMP 0x00000008  //jumping onto a barrier
-#define TFL_JUMP 0x00000010         //jumping
-#define TFL_LADDER 0x00000020       //climbing a ladder
+#define TFL_INVALID      0x00000001 //traveling temporary not possible
+#define TFL_WALK         0x00000002 //walking
+#define TFL_CROUCH       0x00000004 //crouching
+#define TFL_BARRIERJUMP  0x00000008 //jumping onto a barrier
+#define TFL_JUMP         0x00000010 //jumping
+#define TFL_LADDER       0x00000020 //climbing a ladder
 #define TFL_WALKOFFLEDGE 0x00000080 //walking of a ledge
-#define TFL_SWIM 0x00000100         //swimming
-#define TFL_WATERJUMP 0x00000200    //jumping out of the water
-#define TFL_TELEPORT 0x00000400     //teleporting
-#define TFL_ELEVATOR 0x00000800     //elevator
-#define TFL_ROCKETJUMP 0x00001000   //rocket jumping
-#define TFL_BFGJUMP 0x00002000      //bfg jumping
-#define TFL_GRAPPLEHOOK 0x00004000  //grappling hook
-#define TFL_DOUBLEJUMP 0x00008000   //double jump
-#define TFL_RAMPJUMP 0x00010000     //ramp jump
-#define TFL_STRAFEJUMP 0x00020000   //strafe jump
-#define TFL_JUMPPAD 0x00040000      //jump pad
-#define TFL_AIR 0x00080000          //travel through air
-#define TFL_WATER 0x00100000        //travel through water
-#define TFL_SLIME 0x00200000        //travel through slime
-#define TFL_LAVA 0x00400000         //travel through lava
-#define TFL_DONOTENTER 0x00800000   //travel through donotenter area
-#define TFL_FUNCBOB 0x01000000      //func bobbing
-#define TFL_FLIGHT 0x02000000       //flight
-#define TFL_BRIDGE 0x04000000       //move over a bridge
+#define TFL_SWIM         0x00000100 //swimming
+#define TFL_WATERJUMP    0x00000200 //jumping out of the water
+#define TFL_TELEPORT     0x00000400 //teleporting
+#define TFL_ELEVATOR     0x00000800 //elevator
+#define TFL_ROCKETJUMP   0x00001000 //rocket jumping
+#define TFL_BFGJUMP      0x00002000 //bfg jumping
+#define TFL_GRAPPLEHOOK  0x00004000 //grappling hook
+#define TFL_DOUBLEJUMP   0x00008000 //double jump
+#define TFL_RAMPJUMP     0x00010000 //ramp jump
+#define TFL_STRAFEJUMP   0x00020000 //strafe jump
+#define TFL_JUMPPAD      0x00040000 //jump pad
+#define TFL_AIR          0x00080000 //travel through air
+#define TFL_WATER        0x00100000 //travel through water
+#define TFL_SLIME        0x00200000 //travel through slime
+#define TFL_LAVA         0x00400000 //travel through lava
+#define TFL_DONOTENTER   0x00800000 //travel through donotenter area
+#define TFL_FUNCBOB      0x01000000 //func bobbing
+#define TFL_FLIGHT       0x02000000 //flight
+#define TFL_BRIDGE       0x04000000 //move over a bridge
 //
 #define TFL_NOTTEAM1 0x08000000 //not team 1
 #define TFL_NOTTEAM2 0x10000000 //not team 2
@@ -160,19 +160,19 @@ typedef struct aas_areainfo_s
 } aas_areainfo_t;
 
 // client movement prediction stop events, stop as soon as:
-#define SE_NONE 0
-#define SE_HITGROUND 1             // the ground is hit
-#define SE_LEAVEGROUND 2           // there's no ground
-#define SE_ENTERWATER 4            // water is entered
-#define SE_ENTERSLIME 8            // slime is entered
-#define SE_ENTERLAVA 16            // lava is entered
-#define SE_HITGROUNDDAMAGE 32      // the ground is hit with damage
-#define SE_GAP 64                  // there's a gap
-#define SE_TOUCHJUMPPAD 128        // touching a jump pad area
-#define SE_TOUCHTELEPORTER 256     // touching teleporter
-#define SE_ENTERAREA 512           // the given stoparea is entered
-#define SE_HITGROUNDAREA 1024      // a ground face in the area is hit
-#define SE_HITBOUNDINGBOX 2048     // hit the specified bounding box
+#define SE_NONE               0
+#define SE_HITGROUND          1 // the ground is hit
+#define SE_LEAVEGROUND        2 // there's no ground
+#define SE_ENTERWATER         4 // water is entered
+#define SE_ENTERSLIME         8 // slime is entered
+#define SE_ENTERLAVA          16 // lava is entered
+#define SE_HITGROUNDDAMAGE    32 // the ground is hit with damage
+#define SE_GAP                64 // there's a gap
+#define SE_TOUCHJUMPPAD       128 // touching a jump pad area
+#define SE_TOUCHTELEPORTER    256 // touching teleporter
+#define SE_ENTERAREA          512 // the given stoparea is entered
+#define SE_HITGROUNDAREA      1024 // a ground face in the area is hit
+#define SE_HITBOUNDINGBOX     2048 // hit the specified bounding box
 #define SE_TOUCHCLUSTERPORTAL 4096 // touching a cluster portal
 
 typedef struct aas_clientmove_s
@@ -189,9 +189,9 @@ typedef struct aas_clientmove_s
 } aas_clientmove_t;
 
 // alternate route goals
-#define ALTROUTEGOAL_ALL 1
+#define ALTROUTEGOAL_ALL            1
 #define ALTROUTEGOAL_CLUSTERPORTALS 2
-#define ALTROUTEGOAL_VIEWPORTALS 4
+#define ALTROUTEGOAL_VIEWPORTALS    4
 
 typedef struct aas_altroutegoal_s
 {
@@ -203,11 +203,11 @@ typedef struct aas_altroutegoal_s
 } aas_altroutegoal_t;
 
 // route prediction stop events
-#define RSE_NONE 0
-#define RSE_NOROUTE 1       //no route to goal
+#define RSE_NONE          0
+#define RSE_NOROUTE       1 //no route to goal
 #define RSE_USETRAVELTYPE 2 //stop as soon as on of the given travel types is used
 #define RSE_ENTERCONTENTS 4 //stop when entering the given contents
-#define RSE_ENTERAREA 8     //stop when entering the given area
+#define RSE_ENTERAREA     8 //stop when entering the given area
 
 typedef struct aas_predictroute_s
 {

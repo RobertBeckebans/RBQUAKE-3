@@ -34,7 +34,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // pretty good job and looks for lava/slime.
 qboolean ACEMV_CanMove( gentity_t* self, int direction )
 {
-#if 1
+	#if 1
 	vec3_t  forward, right;
 	vec3_t  offset, start, end;
 	vec3_t  angles;
@@ -84,9 +84,9 @@ qboolean ACEMV_CanMove( gentity_t* self, int direction )
 	}
 
 	return qtrue; // yup, can move
-#else
+	#else
 	return qtrue;
-#endif
+	#endif
 }
 
 // Handle special cases of crouch/jump
@@ -286,7 +286,7 @@ static qboolean ACEMV_CheckEyes( gentity_t* self )
 // Modified from the original id ChangeYaw code...
 void ACEMV_ChangeBotAngle( gentity_t* ent )
 {
-#if 1
+	#if 1
 	vec3_t ideal_angles;
 	float  ideal_yaw;
 	float  ideal_pitch;
@@ -377,9 +377,9 @@ void ACEMV_ChangeBotAngle( gentity_t* ent )
 		}
 		ent->bs.viewAngles[ PITCH ] = AngleNormalize360( current_pitch + move );
 	}
-#else
+	#else
 
-#endif
+	#endif
 }
 
 // Set bot to move to it's moveTarget. (following node path)
@@ -467,7 +467,7 @@ void ACEMV_Move( gentity_t* self )
 	   }
 	 */
 
-#if 0
+	#if 0
 	// check for platforms
 	if( currentNodeType != NODE_PLATFORM && nextNodeType == NODE_PLATFORM )
 	{
@@ -479,7 +479,7 @@ void ACEMV_Move( gentity_t* self )
 					return;    // Wait for elevator
 				}
 	}
-#endif
+	#endif
 
 	if( currentNodeType == NODE_PLATFORM && nextNodeType == NODE_PLATFORM )
 	{

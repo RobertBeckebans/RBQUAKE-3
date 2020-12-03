@@ -118,11 +118,11 @@ int AAS_AlternativeRouteGoals( vec3_t start, int startareanum, vec3_t goal, int 
 	int    starttime, goaltime, goaltraveltime;
 	float  dist, bestdist;
 	vec3_t mid, dir;
-#ifdef ALTROUTE_DEBUG
-	int    startmillisecs;
+	#ifdef ALTROUTE_DEBUG
+	int startmillisecs;
 
 	startmillisecs = Sys_MilliSeconds();
-#endif
+	#endif
 
 	if( !startareanum || !goalareanum )
 	{
@@ -225,18 +225,18 @@ int AAS_AlternativeRouteGoals( vec3_t start, int startareanum, vec3_t goal, int 
 			goaltraveltime;
 		numaltroutegoals++;
 		//
-#ifdef ALTROUTE_DEBUG
+	#ifdef ALTROUTE_DEBUG
 		AAS_ShowAreaPolygons( bestareanum, 1, qtrue );
-#endif
+	#endif
 		//don't return more than the maximum alternative route goals
 		if( numaltroutegoals >= maxaltroutegoals )
 		{
 			break;
 		}
 	} //end for
-#ifdef ALTROUTE_DEBUG
+	#ifdef ALTROUTE_DEBUG
 	botimport.Print( PRT_MESSAGE, "alternative route goals in %d msec\n", Sys_MilliSeconds() - startmillisecs );
-#endif
+	#endif
 	return numaltroutegoals;
 #endif
 } //end of the function AAS_AlternativeRouteGoals

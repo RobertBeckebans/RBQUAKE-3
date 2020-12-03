@@ -166,11 +166,11 @@ void SnapVectorTowards( vec3_t v, vec3_t to )
 }
 
 #ifdef MISSIONPACK
-#define CHAINGUN_SPREAD 600
-#define CHAINGUN_DAMAGE 7
+	#define CHAINGUN_SPREAD 600
+	#define CHAINGUN_DAMAGE 7
 #endif
-#define MACHINEGUN_SPREAD 200
-#define MACHINEGUN_DAMAGE 7
+#define MACHINEGUN_SPREAD      200
+#define MACHINEGUN_DAMAGE      7
 #define MACHINEGUN_TEAM_DAMAGE 5 // wimpier MG in teamplay
 
 void Bullet_Fire( gentity_t* ent, float spread, int damage, int mod )

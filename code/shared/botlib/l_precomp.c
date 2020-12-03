@@ -39,15 +39,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //#define MEQCC
 
 #ifdef SCREWUP
-#include <stdio.h>
-#include <stdlib.h>
-#include <limits.h>
-#include <string.h>
-#include <stdarg.h>
-#include <time.h>
-#include "l_memory.h"
-#include "l_script.h"
-#include "l_precomp.h"
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <limits.h>
+	#include <string.h>
+	#include <stdarg.h>
+	#include <time.h>
+	#include "l_memory.h"
+	#include "l_script.h"
+	#include "l_precomp.h"
 
 typedef enum
 {
@@ -57,43 +57,43 @@ typedef enum
 #endif //SCREWUP
 
 #ifdef BOTLIB
-#include "../qcommon/q_shared.h"
-#include "botlib.h"
-#include "be_interface.h"
-#include "l_memory.h"
-#include "l_script.h"
-#include "l_precomp.h"
-#include "l_log.h"
+	#include "../qcommon/q_shared.h"
+	#include "botlib.h"
+	#include "be_interface.h"
+	#include "l_memory.h"
+	#include "l_script.h"
+	#include "l_precomp.h"
+	#include "l_log.h"
 #endif //BOTLIB
 
 #ifdef MEQCC
-#include "qcc.h"
-#include "time.h" //time & ctime
-#include "math.h" //fabs
-#include "l_memory.h"
-#include "l_script.h"
-#include "l_precomp.h"
-#include "l_log.h"
+	#include "qcc.h"
+	#include "time.h" //time & ctime
+	#include "math.h" //fabs
+	#include "l_memory.h"
+	#include "l_script.h"
+	#include "l_precomp.h"
+	#include "l_log.h"
 
-#define qtrue true
-#define qfalse false
+	#define qtrue  true
+	#define qfalse false
 #endif //MEQCC
 
 #ifdef BSPC
-//include files for usage in the BSP Converter
-#include "../bspc/qbsp.h"
-#include "../bspc/l_log.h"
-#include "../bspc/l_mem.h"
-#include "l_precomp.h"
+	//include files for usage in the BSP Converter
+	#include "../bspc/qbsp.h"
+	#include "../bspc/l_log.h"
+	#include "../bspc/l_mem.h"
+	#include "l_precomp.h"
 
-#define qtrue true
-#define qfalse false
-#define Q_stricmp stricmp
+	#define qtrue     true
+	#define qfalse    false
+	#define Q_stricmp stricmp
 
 #endif //BSPC
 
 #if defined( QUAKE ) && !defined( BSPC )
-#include "l_utils.h"
+	#include "l_utils.h"
 #endif //QUAKE
 
 //#define DEBUG_EVAL
@@ -730,7 +730,7 @@ void PC_AddBuiltinDefines( source_t* source )
 		define->next    = source->defines;
 		source->defines = define;
 #endif //DEFINEHASHING
-	}  //end for
+	} //end for
 } //end of the function PC_AddBuiltinDefines
 //============================================================================
 //
@@ -842,8 +842,8 @@ int PC_ExpandDefine( source_t* source, token_t* deftoken, define_t* define, toke
 				Log_Write( "%s", pt->string );
 			} //end for
 		}     //end for
-#endif        //DEBUG_EVAL
-	}         //end if
+#endif //DEBUG_EVAL
+	} //end if
 	//empty list at first
 	first = NULL;
 	last  = NULL;
@@ -1110,7 +1110,7 @@ int PC_Directive_include( source_t* source )
 		{
 			Q_strncpyz( script->filename, path, sizeof( script->filename ) );
 		}
-	}  //end if
+	} //end if
 #endif //QUAKE
 	if( !script )
 	{
@@ -1121,7 +1121,7 @@ int PC_Directive_include( source_t* source )
 		SourceError( source, "file %s not found", path );
 		return qfalse;
 #endif //SCREWUP
-	}  //end if
+	} //end if
 	PC_PushScript( source, script );
 	return qtrue;
 } //end of the function PC_Directive_include
@@ -1230,8 +1230,8 @@ int PC_Directive_undef( source_t* source )
 			break;
 		} //end if
 		lastdefine = define;
-	}  //end for
-#else  //DEFINEHASHING
+	} //end for
+#else //DEFINEHASHING
 	for( lastdefine = NULL, define = source->defines; define; define = define->next )
 	{
 		if( !strcmp( define->name, token.string ) )
@@ -1315,7 +1315,7 @@ int PC_Directive_define( source_t* source )
 	//add the define to the source
 #if DEFINEHASHING
 	PC_AddDefineToHash( define, source->definehash );
-#else  //DEFINEHASHING
+#else //DEFINEHASHING
 	define->next = source->defines;
 	source->defines = define;
 #endif //DEFINEHASHING
@@ -1504,7 +1504,7 @@ int PC_AddDefine( source_t* source, char* string )
 	}
 #if DEFINEHASHING
 	PC_AddDefineToHash( define, source->definehash );
-#else  //DEFINEHASHING
+#else //DEFINEHASHING
 	define->next = source->defines;
 	source->defines = define;
 #endif //DEFINEHASHING
@@ -1636,11 +1636,11 @@ void PC_AddGlobalDefinesToSource( source_t* source )
 		newdefine = PC_CopyDefine( source, define );
 #if DEFINEHASHING
 		PC_AddDefineToHash( newdefine, source->definehash );
-#else  //DEFINEHASHING
+#else //DEFINEHASHING
 		newdefine->next = source->defines;
 		source->defines = newdefine;
 #endif //DEFINEHASHING
-	}  //end for
+	} //end for
 } //end of the function PC_AddGlobalDefinesToSource
 //============================================================================
 //
@@ -1820,7 +1820,7 @@ int PC_OperatorPriority( int op )
 //#define AllocOperator(op)		op = (operator_t *) GetClearedMemory(sizeof(operator_t));
 //#define FreeOperator(op)		FreeMemory(op);
 
-#define MAX_VALUES 64
+#define MAX_VALUES    64
 #define MAX_OPERATORS 64
 #define AllocValue( val )                            \
 	if( numvalues >= MAX_VALUES )                    \
@@ -2162,7 +2162,7 @@ int PC_EvaluateTokens( source_t* source, token_t* tokens, signed long int* intva
 				}
 			} //end if
 			//if the arity of the operator isn't equal to 1
-			if( o->operator!= P_LOGIC_NOT && o->operator!= P_BIN_NOT)
+			if( o->operator!= P_LOGIC_NOT && o->operator!= P_BIN_NOT )
 			{
 				v = v->next;
 			}
@@ -2197,7 +2197,7 @@ int PC_EvaluateTokens( source_t* source, token_t* tokens, signed long int* intva
 				Log_Write( "value2 = %f", v2->floatvalue );
 			}
 		} //end else
-#endif    //DEBUG_EVAL
+#endif //DEBUG_EVAL
 		switch( o->operator)
 		{
 			case P_LOGIC_NOT:
@@ -2339,10 +2339,10 @@ int PC_EvaluateTokens( source_t* source, token_t* tokens, signed long int* intva
 			break;
 		}
 		//if not an operator with arity 1
-		if( o->operator!= P_LOGIC_NOT && o->operator!= P_BIN_NOT)
+		if( o->operator!= P_LOGIC_NOT && o->operator!= P_BIN_NOT )
 		{
 			//remove the second value if not question mark operator
-			if( o->operator!= P_QUESTIONMARK)
+			if( o->operator!= P_QUESTIONMARK )
 			{
 				v = v->next;
 			}
@@ -3564,7 +3564,7 @@ void FreeSource( source_t* source )
 			PC_FreeDefine( define );
 		} //end while
 	}     //end for
-#else     //DEFINEHASHING
+#else //DEFINEHASHING
 	//free all defines
 	while( source->defines )
 	{
@@ -3572,7 +3572,7 @@ void FreeSource( source_t* source )
 		source->defines = source->defines->next;
 		PC_FreeDefine( define );
 	} //end for
-#endif    //DEFINEHASHING
+#endif //DEFINEHASHING
 	//free all indents
 	while( source->indentstack )
 	{
@@ -3733,7 +3733,7 @@ void PC_CheckOpenSourceHandles( void )
 		{
 #ifdef BOTLIB
 			botimport.Print( PRT_ERROR, "file %s still open in precompiler\n", sourceFiles[ i ]->scriptstack->filename );
-#endif    //BOTLIB
+#endif //BOTLIB
 		} //end if
 	}     //end for
 } //end of the function PC_CheckOpenSourceHandles

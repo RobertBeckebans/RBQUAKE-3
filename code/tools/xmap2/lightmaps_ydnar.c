@@ -1393,7 +1393,7 @@ stitches lightmap edges
 */
 
 #define MAX_STITCH_CANDIDATES 32
-#define MAX_STITCH_LUXELS 64
+#define MAX_STITCH_LUXELS     64
 
 void StitchSurfaceLightmaps( void )
 {
@@ -1562,8 +1562,8 @@ CompareBSPLuxels()
 compares two surface lightmaps' bsp luxels, ignoring occluded luxels
 */
 
-#define SOLID_EPSILON 0.0625
-#define LUXEL_TOLERANCE 0.0025
+#define SOLID_EPSILON    0.0625
+#define LUXEL_TOLERANCE  0.0025
 #define LUXEL_COLOR_FRAC 0.001302083 /* 1 / 3 / 256 */
 
 static qboolean CompareBSPLuxels( rawLightmap_t* a, int aNum, rawLightmap_t* b, int bNum )

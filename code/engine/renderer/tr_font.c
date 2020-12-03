@@ -70,15 +70,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "../png/png.h"
 
 #ifdef BUILD_FREETYPE
-//#include <freetype/fterrors.h>
-#include <freetype/ftsystem.h>
-#include <freetype/ftimage.h>
-#include <freetype/freetype.h>
-#include <freetype/ftoutln.h>
+	//#include <freetype/fterrors.h>
+	#include <freetype/ftsystem.h>
+	#include <freetype/ftimage.h>
+	#include <freetype/freetype.h>
+	#include <freetype/ftoutln.h>
 
-#define _FLOOR( x ) ( ( x ) & -64 )
-#define _CEIL( x ) ( ( ( x ) + 63 ) & -64 )
-#define _TRUNC( x ) ( ( x ) >> 6 )
+	#define _FLOOR( x ) ( ( x ) & -64 )
+	#define _CEIL( x )  ( ( ( x ) + 63 ) & -64 )
+	#define _TRUNC( x ) ( ( x ) >> 6 )
 
 FT_Library ftLibrary = NULL;
 #endif
@@ -301,7 +301,8 @@ int readInt()
 	return i;
 }
 
-typedef union {
+typedef union
+{
 	byte  fred[ 4 ];
 	float ffred;
 } poor;

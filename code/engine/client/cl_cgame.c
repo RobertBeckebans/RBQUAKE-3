@@ -1,22 +1,21 @@
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
-Copyright (C) 2006 Robert Beckebans <trebor_7@users.sourceforge.net>
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -228,26 +227,6 @@ void CL_AddCgameCommand( const char* cmdName )
 
 /*
 =====================
-CL_AddCgameButtonAlias
-=====================
-*/
-void CL_AddCgameCommandAlias( const char* cmdName, const char* cmdOther )
-{
-	xcommand_t funcOther = NULL;
-
-	funcOther = Cmd_GetCommandFunction( cmdOther );
-
-	if( funcOther == NULL )
-	{
-		Com_Error( ERR_DROP, "CL_AddCgameCommandAlias: ignored alias %s because %s is completion-only or not a registered command\n", cmdName, cmdOther );
-		return;
-	}
-
-	Cmd_AddCommand( cmdName, funcOther );
-}
-
-/*
-=====================
 CL_CgameError
 =====================
 */
@@ -272,7 +251,7 @@ void CL_ConfigstringModified( void )
 	index = atoi( Cmd_Argv( 1 ) );
 	if( index < 0 || index >= MAX_CONFIGSTRINGS )
 	{
-		Com_Error( ERR_DROP, "configstring > MAX_CONFIGSTRINGS" );
+		Com_Error( ERR_DROP, "CL_ConfigstringModified: bad index %i > MAX_CONFIGSTRINGS", index );
 	}
 	// get everything after "cs <num>"
 	s = Cmd_ArgsFrom( 2 );
@@ -379,7 +358,7 @@ rescan:
 		}
 		else
 		{
-			Com_Error( ERR_SERVERDISCONNECT, "Server disconnected\n" );
+			Com_Error( ERR_SERVERDISCONNECT, "Server disconnected" );
 		}
 	}
 
@@ -435,7 +414,7 @@ rescan:
 	// the clientLevelShot command is used during development
 	// to generate 128*128 screenshots from the intermission
 	// point of levels for the menu system to use
-	// we pass it along to the cgame to make apropriate adjustments,
+	// we pass it along to the cgame to make appropriate adjustments,
 	// but we also clear the console and notify lines here
 	if( !strcmp( cmd, "clientLevelShot" ) )
 	{
@@ -495,7 +474,6 @@ void CL_ShutdownCGame( void )
 static int FloatAsInt( float f )
 {
 	floatint_t fi;
-
 	fi.f = f;
 	return fi.i;
 }
@@ -562,9 +540,6 @@ intptr_t CL_CgameSystemCalls( intptr_t* args )
 			return 0;
 		case CG_REMOVECOMMAND:
 			Cmd_RemoveCommand( VMA( 1 ) );
-			return 0;
-		case CG_ADDCOMMANDALIAS:
-			CL_AddCgameCommandAlias( VMA( 1 ), VMA( 2 ) );
 			return 0;
 		case CG_SENDCLIENTCOMMAND:
 			CL_AddReliableCommand( VMA( 1 ), qfalse );
@@ -1064,45 +1039,40 @@ void CL_FirstSnapshot( void )
 	if( ( cl_useMumble->integer ) && !mumble_islinked() )
 	{
 		int ret = mumble_link( CLIENT_WINDOW_TITLE );
-
 		Com_Printf( "Mumble: Linking to Mumble application %s\n", ret == 0 ? "ok" : "failed" );
 	}
 #endif
 
 #ifdef USE_VOIP
-	if( !clc.speexInitialized )
+	if( !clc.voipCodecInitialized )
 	{
 		int i;
+		int error;
 
-		speex_bits_init( &clc.speexEncoderBits );
-		speex_bits_reset( &clc.speexEncoderBits );
+		clc.opusEncoder = opus_encoder_create( 48000, 1, OPUS_APPLICATION_VOIP, &error );
 
-		clc.speexEncoder = speex_encoder_init( &speex_nb_mode );
-
-		speex_encoder_ctl( clc.speexEncoder, SPEEX_GET_FRAME_SIZE, &clc.speexFrameSize );
-		speex_encoder_ctl( clc.speexEncoder, SPEEX_GET_SAMPLING_RATE, &clc.speexSampleRate );
-
-		clc.speexPreprocessor = speex_preprocess_state_init( clc.speexFrameSize, clc.speexSampleRate );
-
-		i = 1;
-		speex_preprocess_ctl( clc.speexPreprocessor, SPEEX_PREPROCESS_SET_DENOISE, &i );
-
-		i = 1;
-		speex_preprocess_ctl( clc.speexPreprocessor, SPEEX_PREPROCESS_SET_AGC, &i );
+		if( error )
+		{
+			Com_DPrintf( "VoIP: Error opus_encoder_create %d\n", error );
+			return;
+		}
 
 		for( i = 0; i < MAX_CLIENTS; i++ )
 		{
-			speex_bits_init( &clc.speexDecoderBits[ i ] );
-			speex_bits_reset( &clc.speexDecoderBits[ i ] );
-			clc.speexDecoder[ i ] = speex_decoder_init( &speex_nb_mode );
-			clc.voipIgnore[ i ]   = qfalse;
-			clc.voipGain[ i ]     = 1.0f;
+			clc.opusDecoder[ i ] = opus_decoder_create( 48000, 1, &error );
+			if( error )
+			{
+				Com_DPrintf( "VoIP: Error opus_decoder_create(%d) %d\n", i, error );
+				return;
+			}
+			clc.voipIgnore[ i ] = qfalse;
+			clc.voipGain[ i ]   = 1.0f;
 		}
-		clc.speexInitialized = qtrue;
-		clc.voipMuteAll      = qfalse;
+		clc.voipCodecInitialized = qtrue;
+		clc.voipMuteAll          = qfalse;
 		Cmd_AddCommand( "voip", CL_Voip_f );
-		Cvar_Set( "cl_voipSendTarget", "all" );
-		clc.voipTarget1 = clc.voipTarget2 = clc.voipTarget3 = 0x7FFFFFFF;
+		Cvar_Set( "cl_voipSendTarget", "spatial" );
+		Com_Memset( clc.voipTargets, ~0, sizeof( clc.voipTargets ) );
 	}
 #endif
 }

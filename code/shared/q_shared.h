@@ -33,12 +33,12 @@ extern "C"
 // q_shared.h -- included first by ALL program modules.
 // A user mod should never modify this file
 
-#define PRODUCT_NAME "XreaL"        // Case, Spaces allowed
+#define PRODUCT_NAME        "XreaL" // Case, Spaces allowed
 #define PRODUCT_NAME_UPPPER "XreaL" // Case, No spaces
-#define PRODUCT_NAME_LOWER "xreal"  // No case, No spaces
-#define PRODUCT_VERSION "0.5.0"
+#define PRODUCT_NAME_LOWER  "xreal" // No case, No spaces
+#define PRODUCT_VERSION     "0.5.0"
 
-#define ENGINE_NAME "XreaL Engine"
+#define ENGINE_NAME    "XreaL Engine"
 #define ENGINE_VERSION "0.9.7"
 
 #if 0
@@ -53,14 +53,14 @@ extern "C"
 #define Q3_VERSION PRODUCT_NAME " " PRODUCT_VERSION
 #endif
 
-#define Q3_ENGINE ENGINE_NAME " " ENGINE_VERSION
+#define Q3_ENGINE      ENGINE_NAME " " ENGINE_VERSION
 #define Q3_ENGINE_DATE __DATE__
 
-#define HOMEPATH_NAME_UNIX ".xreal"
-#define HOMEPATH_NAME_WIN "XreaL"
+#define HOMEPATH_NAME_UNIX   ".xreal"
+#define HOMEPATH_NAME_WIN    "XreaL"
 #define HOMEPATH_NAME_MACOSX HOMEPATH_NAME_WIN
 
-#define CLIENT_WINDOW_TITLE PRODUCT_NAME
+#define CLIENT_WINDOW_TITLE     PRODUCT_NAME
 #define CLIENT_WINDOW_MIN_TITLE PRODUCT_NAME_LOWER
 // 1.32 released 7-10-2002
 
@@ -68,7 +68,7 @@ extern "C"
 //#define STANDALONE
 //#endif
 
-#define BASEGAME "base"
+#define BASEGAME            "base"
 #define GAMENAME_FOR_MASTER PRODUCT_NAME_UPPPER // must NOT contain whitespaces
 
 /*
@@ -212,7 +212,7 @@ typedef int sfxHandle_t;
 typedef int fileHandle_t;
 typedef int clipHandle_t;
 
-#define PAD( base, alignment ) ( ( ( base ) + ( alignment )-1 ) & ~( ( alignment )-1 ) )
+#define PAD( base, alignment )    ( ( ( base ) + ( alignment )-1 ) & ~( ( alignment )-1 ) )
 #define PADLEN( base, alignment ) ( PAD( ( base ), ( alignment ) ) - ( base ) )
 
 #define PADP( base, alignment ) ( ( void* )PAD( ( intptr_t )( base ), ( alignment ) ) )
@@ -229,10 +229,10 @@ typedef int clipHandle_t;
 // abstracting this to make it portable
 #ifdef _WIN32
 #define Q_vsnprintf _vsnprintf
-#define Q_snprintf _snprintf
+#define Q_snprintf  _snprintf
 #else
 #define Q_vsnprintf vsnprintf
-#define Q_snprintf snprintf
+#define Q_snprintf  snprintf
 #endif
 
 #ifndef NULL
@@ -250,7 +250,7 @@ typedef int clipHandle_t;
 #define MAX_QINT 0x7fffffff
 #define MIN_QINT ( -MAX_QINT - 1 )
 
-#define ARRAY_LEN( x ) ( sizeof( x ) / sizeof( *( x ) ) )
+#define ARRAY_LEN( x )    ( sizeof( x ) / sizeof( *( x ) ) )
 #define STRARRAY_LEN( x ) ( ARRAY_LEN( x ) - 1 )
 
 #ifndef max
@@ -264,17 +264,17 @@ typedef int clipHandle_t;
 
 // the game guarantees that no string from the network will ever
 // exceed MAX_STRING_CHARS
-#define MAX_STRING_CHARS 1024  // max length of a string passed to Cmd_TokenizeString
+#define MAX_STRING_CHARS  1024 // max length of a string passed to Cmd_TokenizeString
 #define MAX_STRING_TOKENS 1024 // max tokens resulting from Cmd_TokenizeString
-#define MAX_TOKEN_CHARS 1024   // max length of an individual token
+#define MAX_TOKEN_CHARS   1024 // max length of an individual token
 
 #define MAX_INFO_STRING 1024
-#define MAX_INFO_KEY 1024
-#define MAX_INFO_VALUE 1024
+#define MAX_INFO_KEY    1024
+#define MAX_INFO_VALUE  1024
 
 #define BIG_INFO_STRING 8192 // used for system info key only
-#define BIG_INFO_KEY 8192
-#define BIG_INFO_VALUE 8192
+#define BIG_INFO_KEY    8192
+#define BIG_INFO_VALUE  8192
 
 #define MAX_NEWS_STRING 10000
 
@@ -285,7 +285,7 @@ typedef int clipHandle_t;
 #define MAX_OSPATH 256 // max length of a filesystem pathname
 #endif
 
-#define MAX_NAME_LENGTH 32     // max length of a client name
+#define MAX_NAME_LENGTH     32 // max length of a client name
 #define MAX_HOSTNAME_LENGTH 80 // max length of a host name
 
 #define MAX_SAY_TEXT 150
@@ -328,26 +328,26 @@ typedef enum
 
 // font rendering values used by ui and cgame
 
-#define PROP_GAP_WIDTH 3
-#define PROP_SPACE_WIDTH 8
-#define PROP_HEIGHT 27
+#define PROP_GAP_WIDTH        3
+#define PROP_SPACE_WIDTH      8
+#define PROP_HEIGHT           27
 #define PROP_SMALL_SIZE_SCALE 0.75
 
 #define BLINK_DIVISOR 200
 #define PULSE_DIVISOR 75.0f
 
-#define UI_LEFT 0x00000000 // default
-#define UI_CENTER 0x00000001
-#define UI_RIGHT 0x00000002
+#define UI_LEFT       0x00000000 // default
+#define UI_CENTER     0x00000001
+#define UI_RIGHT      0x00000002
 #define UI_FORMATMASK 0x00000007
-#define UI_SMALLFONT 0x00000010
-#define UI_BIGFONT 0x00000020 // default
-#define UI_GIANTFONT 0x00000040
+#define UI_SMALLFONT  0x00000010
+#define UI_BIGFONT    0x00000020 // default
+#define UI_GIANTFONT  0x00000040
 #define UI_DROPSHADOW 0x00000800
-#define UI_BLINK 0x00001000
-#define UI_INVERSE 0x00002000
-#define UI_PULSE 0x00004000
-#define UI_BOLD 0x00008000
+#define UI_BLINK      0x00001000
+#define UI_INVERSE    0x00002000
+#define UI_PULSE      0x00004000
+#define UI_BOLD       0x00008000
 
 #if defined( _DEBUG ) && !defined( BSPC )
 #define HUNK_DEBUG
@@ -364,18 +364,18 @@ typedef enum
 #define Hunk_Alloc( size, preference ) Hunk_AllocDebug( size, preference, #size, __FILE__, __LINE__ )
 void* Hunk_AllocDebug( int size, ha_pref preference, char* label, char* file, int line );
 #else
-void*                    Hunk_Alloc( int size, ha_pref preference );
+void* Hunk_Alloc( int size, ha_pref preference );
 #endif
 
 void Com_Memcpy( void* dest, const void* src, const size_t count );
 void Com_Memset( void* dest, const int val, const size_t count );
 
 #define Com_Allocate malloc
-#define Com_Dealloc free
+#define Com_Dealloc  free
 
 #define CIN_system 1
-#define CIN_loop 2
-#define CIN_hold 4
+#define CIN_loop   2
+#define CIN_hold   4
 #define CIN_silent 8
 #define CIN_shader 16
 
@@ -394,8 +394,8 @@ typedef vec_t vec2_t[ 2 ];
 typedef vec_t  vec3_t[ 4 ]; // ALIGN(16);
 typedef vec3_t vec4_t;
 #else
-typedef vec_t            vec3_t[ 3 ];
-typedef vec_t            vec4_t[ 4 ];
+typedef vec_t vec3_t[ 3 ];
+typedef vec_t vec4_t[ 4 ];
 #endif
 
 typedef vec_t vec5_t[ 5 ];
@@ -423,8 +423,8 @@ typedef int fixed16_t;
 
 // angle indexes
 #define PITCH 0 // up / down
-#define YAW 1   // left / right
-#define ROLL 2  // fall over
+#define YAW   1 // left / right
+#define ROLL  2 // fall over
 
 // plane sides
 typedef enum
@@ -440,19 +440,19 @@ extern vec3_t bytedirs[ NUMVERTEXNORMALS ];
 
 // all drawing is done to a 640*480 virtual screen size
 // and will be automatically scaled to the real resolution
-#define SCREEN_WIDTH 640
+#define SCREEN_WIDTH  640
 #define SCREEN_HEIGHT 480
 
-#define TINYCHAR_WIDTH ( SMALLCHAR_WIDTH )
+#define TINYCHAR_WIDTH  ( SMALLCHAR_WIDTH )
 #define TINYCHAR_HEIGHT ( SMALLCHAR_HEIGHT / 2 )
 
-#define SMALLCHAR_WIDTH 8
+#define SMALLCHAR_WIDTH  8
 #define SMALLCHAR_HEIGHT 16
 
-#define BIGCHAR_WIDTH 16
+#define BIGCHAR_WIDTH  16
 #define BIGCHAR_HEIGHT 16
 
-#define GIANTCHAR_WIDTH 32
+#define GIANTCHAR_WIDTH  32
 #define GIANTCHAR_HEIGHT 48
 
 extern vec4_t colorBlack;
@@ -467,28 +467,28 @@ extern vec4_t colorLtGrey;
 extern vec4_t colorMdGrey;
 extern vec4_t colorDkGrey;
 
-#define Q_COLOR_ESCAPE '^'
+#define Q_COLOR_ESCAPE       '^'
 #define Q_IsColorString( p ) ( p && *( p ) == Q_COLOR_ESCAPE && *( ( p ) + 1 ) && *( ( p ) + 1 ) != Q_COLOR_ESCAPE ) // ^[0-9a-zA-Z]
 
-#define COLOR_BLACK '0'
-#define COLOR_RED '1'
-#define COLOR_GREEN '2'
-#define COLOR_YELLOW '3'
-#define COLOR_BLUE '4'
-#define COLOR_CYAN '5'
+#define COLOR_BLACK   '0'
+#define COLOR_RED     '1'
+#define COLOR_GREEN   '2'
+#define COLOR_YELLOW  '3'
+#define COLOR_BLUE    '4'
+#define COLOR_CYAN    '5'
 #define COLOR_MAGENTA '6'
-#define COLOR_WHITE '7'
+#define COLOR_WHITE   '7'
 
 #define ColorIndex( c ) ( ( ( c ) - '0' ) & 0x07 )
 
-#define S_COLOR_BLACK "^0"
-#define S_COLOR_RED "^1"
-#define S_COLOR_GREEN "^2"
-#define S_COLOR_YELLOW "^3"
-#define S_COLOR_BLUE "^4"
-#define S_COLOR_CYAN "^5"
+#define S_COLOR_BLACK   "^0"
+#define S_COLOR_RED     "^1"
+#define S_COLOR_GREEN   "^2"
+#define S_COLOR_YELLOW  "^3"
+#define S_COLOR_BLUE    "^4"
+#define S_COLOR_CYAN    "^5"
 #define S_COLOR_MAGENTA "^6"
-#define S_COLOR_WHITE "^7"
+#define S_COLOR_WHITE   "^7"
 
 #define INDENT_MARKER '\v'
 void Q_StripIndentMarker( char* string );
@@ -508,10 +508,12 @@ extern const vec4_t g_color_table[ 8 ];
 #define DEG2RAD( a ) ( ( ( a )*M_PI ) / 180.0F )
 #define RAD2DEG( a ) ( ( ( a )*180.0f ) / M_PI )
 
-#define Q_max( a, b ) ( ( a ) > ( b ) ? ( a ) : ( b ) )
-#define Q_min( a, b ) ( ( a ) < ( b ) ? ( a ) : ( b ) )
+#define Q_max( a, b )      ( ( a ) > ( b ) ? ( a ) : ( b ) )
+#define Q_min( a, b )      ( ( a ) < ( b ) ? ( a ) : ( b ) )
 #define Q_bound( a, b, c ) ( Q_max( a, Q_min( b, c ) ) )
-#define Q_clamp( a, b, c ) ( ( b ) >= ( c ) ? ( a ) = ( b ) : ( a ) < ( b ) ? ( a ) = ( b ) : ( a ) > ( c ) ? ( a ) = ( c ) : ( a ) )
+#define Q_clamp( a, b, c ) ( ( b ) >= ( c ) ? ( a ) = ( b ) : ( a ) < ( b ) ? ( a ) = ( b ) :                                                       \
+		( a ) > ( c )                                                       ? ( a )                                                       = ( c ) : \
+                                                                              ( a ) )
 #define Q_lerp( from, to, frac ) ( from + ( ( to - from ) * frac ) )
 
 struct cplane_s;
@@ -533,7 +535,7 @@ extern quat_t   quatIdentity;
 		static int                            tmp;
 		__asm fld f __asm fistp tmp __asm mov eax, tmp
 #else
-    return ( long )f;
+	return ( long )f;
 #endif
 	}
 
@@ -554,33 +556,34 @@ extern quat_t   quatIdentity;
 		return y * ( 1.5f - ( x * y * y ) );
 
 #elif id386_3dnow && defined __GNUC__
-    //#error Q_rqsrt
-    asm volatile(
-        // lo                                   | hi
-        "femms                               \n"
-        "movd           (%%eax),        %%mm0\n" // in                                   |       -
-        "pfrsqrt        %%mm0,          %%mm1\n" // 1/sqrt(in)                           | 1/sqrt(in)    (approx)
-        "movq           %%mm1,          %%mm2\n" // 1/sqrt(in)                           | 1/sqrt(in)    (approx)
-        "pfmul          %%mm1,          %%mm1\n" // (1/sqrt(in))?                        | (1/sqrt(in))?         step 1
-        "pfrsqit1       %%mm0,          %%mm1\n" // intermediate                                                 step 2
-        "pfrcpit2       %%mm2,          %%mm1\n" // 1/sqrt(in) (full 24-bit precision)                           step 3
-        "movd           %%mm1,        (%%edx)\n"
-        "femms                               \n"
-        :
-        : "a"( &number ), "d"( &y )
-        : "memory" );
-#elif id386_sse && defined   __GNUC__
+	//#error Q_rqsrt
+	asm volatile(
+		// lo                                   | hi
+		"femms                               \n"
+		"movd           (%%eax),        %%mm0\n" // in                                   |       -
+		"pfrsqrt        %%mm0,          %%mm1\n" // 1/sqrt(in)                           | 1/sqrt(in)    (approx)
+		"movq           %%mm1,          %%mm2\n" // 1/sqrt(in)                           | 1/sqrt(in)    (approx)
+		"pfmul          %%mm1,          %%mm1\n" // (1/sqrt(in))?                        | (1/sqrt(in))?         step 1
+		"pfrsqit1       %%mm0,          %%mm1\n" // intermediate                                                 step 2
+		"pfrcpit2       %%mm2,          %%mm1\n" // 1/sqrt(in) (full 24-bit precision)                           step 3
+		"movd           %%mm1,        (%%edx)\n"
+		"femms                               \n"
+		:
+		: "a"( &number ), "d"( &y )
+		: "memory" );
+#elif id386_sse && defined __GNUC__
 	asm volatile( "rsqrtss %0, %1"
 				  : "=x"( y )
 				  : "x"( number ) );
-#elif id386_sse && defined   _MSC_VER
+#elif id386_sse && defined _MSC_VER
 	__asm
 	{
 		rsqrtss xmm0, number
 		movss y, xmm0
 	}
 #else
-	union {
+	union
+	{
 		float f;
 		int   i;
 	} t;
@@ -606,11 +609,11 @@ extern quat_t   quatIdentity;
 			 : "f"( x ) );
 		return abs_x;
 #else
-    floatint_t tmp;
+	floatint_t tmp;
 
-    tmp.f = x;
-    tmp.i &= 0x7FFFFFFF;
-    return tmp.f;
+	tmp.f = x;
+	tmp.i &= 0x7FFFFFFF;
+	return tmp.f;
 #endif
 	}
 
@@ -632,7 +635,7 @@ extern quat_t   quatIdentity;
 		femms();
 		return out;
 #else
-    return ( ( float )( 1.0f / ( in ) ) );
+	return ( ( float )( 1.0f / ( in ) ) );
 #endif
 	}
 	// *INDENT-ON*
@@ -647,17 +650,17 @@ void ByteToDir( int b, vec3_t dir );
 
 #define Byte4Copy( a, b ) ( ( b )[ 0 ] = ( a )[ 0 ], ( b )[ 1 ] = ( a )[ 1 ], ( b )[ 2 ] = ( a )[ 2 ], ( b )[ 3 ] = ( a )[ 3 ] )
 
-#define VectorNegate( a, b ) ( ( b )[ 0 ] = -( a )[ 0 ], ( b )[ 1 ] = -( a )[ 1 ], ( b )[ 2 ] = -( a )[ 2 ] )
+#define VectorNegate( a, b )    ( ( b )[ 0 ] = -( a )[ 0 ], ( b )[ 1 ] = -( a )[ 1 ], ( b )[ 2 ] = -( a )[ 2 ] )
 #define VectorSet( v, x, y, z ) ( ( v )[ 0 ] = ( x ), ( v )[ 1 ] = ( y ), ( v )[ 2 ] = ( z ) )
 
-#define DotProduct4( x, y ) ( ( x )[ 0 ] * ( y )[ 0 ] + ( x )[ 1 ] * ( y )[ 1 ] + ( x )[ 2 ] * ( y )[ 2 ] + ( x )[ 3 ] * ( y )[ 3 ] )
-#define Vector4Subtract( a, b, c ) ( ( c )[ 0 ] = ( a )[ 0 ] - ( b )[ 0 ], ( c )[ 1 ] = ( a )[ 1 ] - ( b )[ 1 ], ( c )[ 2 ] = ( a )[ 2 ] - ( b )[ 2 ], ( c )[ 3 ] = ( a )[ 3 ] - ( b )[ 3 ] )
-#define Vector4Add( a, b, c ) ( ( c )[ 0 ] = ( a )[ 0 ] + ( b )[ 0 ], ( c )[ 1 ] = ( a )[ 1 ] + ( b )[ 1 ], ( c )[ 2 ] = ( a )[ 2 ] + ( b )[ 2 ], ( c )[ 3 ] = ( a )[ 3 ] + ( b )[ 3 ] )
-#define Vector4Copy( a, b ) ( ( b )[ 0 ] = ( a )[ 0 ], ( b )[ 1 ] = ( a )[ 1 ], ( b )[ 2 ] = ( a )[ 2 ], ( b )[ 3 ] = ( a )[ 3 ] )
-#define Vector4Scale( v, s, o ) ( ( o )[ 0 ] = ( v )[ 0 ] * ( s ), ( o )[ 1 ] = ( v )[ 1 ] * ( s ), ( o )[ 2 ] = ( v )[ 2 ] * ( s ), ( o )[ 3 ] = ( v )[ 3 ] * ( s ) )
-#define Vector4MA( v, s, b, o ) ( ( o )[ 0 ] = ( v )[ 0 ] + ( b )[ 0 ] * ( s ), ( o )[ 1 ] = ( v )[ 1 ] + ( b )[ 1 ] * ( s ), ( o )[ 2 ] = ( v )[ 2 ] + ( b )[ 2 ] * ( s ), ( o )[ 3 ] = ( v )[ 3 ] + ( b )[ 3 ] * ( s ) )
-#define Vector4Clear( a ) ( ( a )[ 0 ] = ( a )[ 1 ] = ( a )[ 2 ] = ( a )[ 3 ] = 0 )
-#define Vector4Negate( a, b ) ( ( b )[ 0 ] = -( a )[ 0 ], ( b )[ 1 ] = -( a )[ 1 ], ( b )[ 2 ] = -( a )[ 2 ], ( b )[ 3 ] = -( a )[ 3 ] )
+#define DotProduct4( x, y )         ( ( x )[ 0 ] * ( y )[ 0 ] + ( x )[ 1 ] * ( y )[ 1 ] + ( x )[ 2 ] * ( y )[ 2 ] + ( x )[ 3 ] * ( y )[ 3 ] )
+#define Vector4Subtract( a, b, c )  ( ( c )[ 0 ] = ( a )[ 0 ] - ( b )[ 0 ], ( c )[ 1 ] = ( a )[ 1 ] - ( b )[ 1 ], ( c )[ 2 ] = ( a )[ 2 ] - ( b )[ 2 ], ( c )[ 3 ] = ( a )[ 3 ] - ( b )[ 3 ] )
+#define Vector4Add( a, b, c )       ( ( c )[ 0 ] = ( a )[ 0 ] + ( b )[ 0 ], ( c )[ 1 ] = ( a )[ 1 ] + ( b )[ 1 ], ( c )[ 2 ] = ( a )[ 2 ] + ( b )[ 2 ], ( c )[ 3 ] = ( a )[ 3 ] + ( b )[ 3 ] )
+#define Vector4Copy( a, b )         ( ( b )[ 0 ] = ( a )[ 0 ], ( b )[ 1 ] = ( a )[ 1 ], ( b )[ 2 ] = ( a )[ 2 ], ( b )[ 3 ] = ( a )[ 3 ] )
+#define Vector4Scale( v, s, o )     ( ( o )[ 0 ] = ( v )[ 0 ] * ( s ), ( o )[ 1 ] = ( v )[ 1 ] * ( s ), ( o )[ 2 ] = ( v )[ 2 ] * ( s ), ( o )[ 3 ] = ( v )[ 3 ] * ( s ) )
+#define Vector4MA( v, s, b, o )     ( ( o )[ 0 ] = ( v )[ 0 ] + ( b )[ 0 ] * ( s ), ( o )[ 1 ] = ( v )[ 1 ] + ( b )[ 1 ] * ( s ), ( o )[ 2 ] = ( v )[ 2 ] + ( b )[ 2 ] * ( s ), ( o )[ 3 ] = ( v )[ 3 ] + ( b )[ 3 ] * ( s ) )
+#define Vector4Clear( a )           ( ( a )[ 0 ] = ( a )[ 1 ] = ( a )[ 2 ] = ( a )[ 3 ] = 0 )
+#define Vector4Negate( a, b )       ( ( b )[ 0 ] = -( a )[ 0 ], ( b )[ 1 ] = -( a )[ 1 ], ( b )[ 2 ] = -( a )[ 2 ], ( b )[ 3 ] = -( a )[ 3 ] )
 #define Vector4Set( v, x, y, z, w ) ( ( v )[ 0 ] = ( x ), ( v )[ 1 ] = ( y ), ( v )[ 2 ] = ( z ), ( v )[ 3 ] = ( w ) )
 
 #if 1
@@ -1115,7 +1118,7 @@ int   Q_rand( int* seed );
 float Q_random( int* seed );
 float Q_crandom( int* seed );
 
-#define random() ( ( rand() & 0x7fff ) / ( ( float )0x7fff ) )
+#define random()  ( ( rand() & 0x7fff ) / ( ( float )0x7fff ) )
 #define crandom() ( 2.0 * ( random() - 0.5 ) )
 
 void  AnglesToAxis( const vec3_t angles, vec3_t axis[ 3 ] );
@@ -1254,7 +1257,7 @@ static ID_INLINE void AnglesToMatrix( const vec3_t angles, matrix_t m )
 // RB: XreaL quaternion math functions required by the renderer
 
 #define QuatSet( q, x, y, z, w ) ( ( q )[ 0 ] = ( x ), ( q )[ 1 ] = ( y ), ( q )[ 2 ] = ( z ), ( q )[ 3 ] = ( w ) )
-#define QuatCopy( a, b ) ( ( b )[ 0 ] = ( a )[ 0 ], ( b )[ 1 ] = ( a )[ 1 ], ( b )[ 2 ] = ( a )[ 2 ], ( b )[ 3 ] = ( a )[ 3 ] )
+#define QuatCopy( a, b )         ( ( b )[ 0 ] = ( a )[ 0 ], ( b )[ 1 ] = ( a )[ 1 ], ( b )[ 2 ] = ( a )[ 2 ], ( b )[ 3 ] = ( a )[ 3 ] )
 
 #define QuatCompare( a, b ) ( ( a )[ 0 ] == ( b )[ 0 ] && ( a )[ 1 ] == ( b )[ 1 ] && ( a )[ 2 ] == ( b )[ 2 ] && ( a )[ 3 ] == ( b )[ 3 ] )
 
@@ -1423,10 +1426,10 @@ void  Com_ParseWarning( char* format, ... );
 
 #ifndef TT_STRING
 //token types
-#define TT_STRING 1      // string
-#define TT_LITERAL 2     // literal
-#define TT_NUMBER 3      // number
-#define TT_NAME 4        // name
+#define TT_STRING      1 // string
+#define TT_LITERAL     2 // literal
+#define TT_NUMBER      3 // number
+#define TT_NAME        4 // name
 #define TT_PUNCTUATION 5 // punctuation
 #endif
 
@@ -1611,7 +1614,11 @@ typedef enum cvar_flags_s
 	CVAR_NORESTART      = BIT( 10 ), // do not clear when a cvar_restart is issued
 	CVAR_SERVER_CREATED = BIT( 11 ), // cvar was created by a server the client connected to
 	CVAR_VM_CREATED     = BIT( 12 ), // cvar was created exclusively in one of the VMs.
-	CVAR_SHADER         = BIT( 13 ), // tell renderer to recompile shaders.
+	CVAR_PROTECTED      = BIT( 13 ), // prevent modifying this var from VMs or the server
+	CVAR_SHADER         = BIT( 14 ), // tell renderer to recompile shaders.
+	
+	// These flags are only returned by the Cvar_Flags() function
+	CVAR_MODIFIED		= BIT( 15 ),
 	CVAR_NONEXISTENT    = 0xFFFFFFFF // cvar doesn't exist
 } cvar_flags_t;
 
@@ -1764,9 +1771,9 @@ typedef struct
 // in order from highest priority to lowest
 // if none of the catchers are active, bound key strings will be executed
 #define KEYCATCH_CONSOLE 0x0001
-#define KEYCATCH_UI 0x0002
+#define KEYCATCH_UI      0x0002
 #define KEYCATCH_MESSAGE 0x0004
-#define KEYCATCH_CGAME 0x0008
+#define KEYCATCH_CGAME   0x0008
 
 // sound channels
 // channel 0 never willingly overrides
@@ -1795,34 +1802,34 @@ ELEMENTS COMMUNICATED ACROSS THE NET
 #define SHORT2ANGLE( x ) ( ( x ) * ( 360.0 / 65536 ) )
 
 #define SNAPFLAG_RATE_DELAYED 1
-#define SNAPFLAG_NOT_ACTIVE 2  // snapshot used during connection and for zombies
-#define SNAPFLAG_SERVERCOUNT 4 // toggled every map_restart so transitions can be detected
+#define SNAPFLAG_NOT_ACTIVE   2 // snapshot used during connection and for zombies
+#define SNAPFLAG_SERVERCOUNT  4 // toggled every map_restart so transitions can be detected
 
 //
 // per-level limits
 //
-#define MAX_CLIENTS 64 // absolute limit
+#define MAX_CLIENTS   64 // absolute limit
 #define MAX_LOCATIONS 64
 
 #define GENTITYNUM_BITS 11 // don't need to send any more
-#define MAX_GENTITIES ( 1 << GENTITYNUM_BITS )
+#define MAX_GENTITIES   ( 1 << GENTITYNUM_BITS )
 
 // entitynums are communicated with GENTITY_BITS, so any reserved
 // values that are going to be communcated over the net need to
 // also be in this range
-#define ENTITYNUM_NONE ( MAX_GENTITIES - 1 )
-#define ENTITYNUM_WORLD ( MAX_GENTITIES - 2 )
+#define ENTITYNUM_NONE       ( MAX_GENTITIES - 1 )
+#define ENTITYNUM_WORLD      ( MAX_GENTITIES - 2 )
 #define ENTITYNUM_MAX_NORMAL ( MAX_GENTITIES - 2 )
 
 // Tr3B: if you increase GMODELNUM_BITS then:
 //  increase MAX_CONFIGSTRINGS to 2048 and double MAX_MSGLEN
-#define GMODELNUM_BITS 9                   // don't need to send any more
-#define MAX_MODELS ( 1 << GMODELNUM_BITS ) // references entityState_t::modelindex
+#define GMODELNUM_BITS 9 // don't need to send any more
+#define MAX_MODELS     ( 1 << GMODELNUM_BITS ) // references entityState_t::modelindex
 
-#define MAX_SOUNDS 256 // so they cannot be blindly increased
+#define MAX_SOUNDS  256 // so they cannot be blindly increased
 #define MAX_EFFECTS 256
 
-#define MAX_GAME_SHADERS 64          // needed by Tremulous
+#define MAX_GAME_SHADERS          64 // needed by Tremulous
 #define MAX_GAME_PARTICLE_SYSTEMS 64 // needed by Tremulous
 
 #define MAX_CONFIGSTRINGS ( 1024 * 2 )
@@ -1847,10 +1854,10 @@ typedef struct
 // bit field limits
 // Tr3B: NOTE: never go beyond 32 without recoding the delta compression of playerState_t
 // in msg.c
-#define MAX_STATS 16
+#define MAX_STATS      16
 #define MAX_PERSISTANT 16
-#define MAX_POWERUPS 16
-#define MAX_WEAPONS 16
+#define MAX_POWERUPS   16
+#define MAX_WEAPONS    16
 
 #define MAX_PS_EVENTS 2
 
@@ -1942,11 +1949,11 @@ typedef struct playerState_s
 // usercmd_t->button bits, many of which are generated by the client system,
 // so they aren't game/cgame only definitions
 //
-#define BUTTON_ATTACK 1
-#define BUTTON_TALK 2 // displays talk balloon and disables actions
+#define BUTTON_ATTACK       1
+#define BUTTON_TALK         2 // displays talk balloon and disables actions
 #define BUTTON_USE_HOLDABLE 4
-#define BUTTON_GESTURE 8
-#define BUTTON_WALKING 16 // walking can't just be infered from MOVE_RUN
+#define BUTTON_GESTURE      8
+#define BUTTON_WALKING      16 // walking can't just be infered from MOVE_RUN
 // because a key pressed late in the frame will
 // only generate a small move value for that frame
 // walking will use different animations and
@@ -1954,12 +1961,12 @@ typedef struct playerState_s
 
 //#if defined(MISSIONPACK)
 #define BUTTON_AFFIRMATIVE 32
-#define BUTTON_NEGATIVE 64
+#define BUTTON_NEGATIVE    64
 
-#define BUTTON_GETFLAG 128
+#define BUTTON_GETFLAG   128
 #define BUTTON_GUARDBASE 256
-#define BUTTON_PATROL 512
-#define BUTTON_FOLLOWME 1024
+#define BUTTON_PATROL    512
+#define BUTTON_FOLLOWME  1024
 //#endif
 
 #define BUTTON_ANY 2048 // any key whatsoever
@@ -2069,10 +2076,10 @@ typedef enum
 
 // font support
 
-#define GLYPH_START 0
-#define GLYPH_END 255
+#define GLYPH_START     0
+#define GLYPH_END       255
 #define GLYPH_CHARSTART 32
-#define GLYPH_CHAREND 127
+#define GLYPH_CHAREND   127
 #define GLYPHS_PER_FONT GLYPH_END - GLYPH_START + 1
 typedef struct
 {
@@ -2118,9 +2125,9 @@ typedef struct qtime_s
 
 // server browser sources
 // TTimo: AS_MPLAYER is no longer used
-#define AS_LOCAL 0
-#define AS_MPLAYER 1
-#define AS_GLOBAL 2
+#define AS_LOCAL     0
+#define AS_MPLAYER   1
+#define AS_GLOBAL    2
 #define AS_FAVORITES 3
 
 // cinematic states
@@ -2154,26 +2161,26 @@ typedef enum
 	DS_NUM_DEMO_STATES
 } demoState_t;
 
-#define MAX_GLOBAL_SERVERS 4096
-#define MAX_OTHER_SERVERS 128
-#define MAX_PINGREQUESTS 32
+#define MAX_GLOBAL_SERVERS       4096
+#define MAX_OTHER_SERVERS        128
+#define MAX_PINGREQUESTS         32
 #define MAX_SERVERSTATUSREQUESTS 16
 
-#define SAY_ALL 0
+#define SAY_ALL  0
 #define SAY_TEAM 1
 #define SAY_TELL 2
 
-#define CDKEY_LEN 16
+#define CDKEY_LEN    16
 #define CDCHKSUM_LEN 2
 
 // flags for com_downloadPrompt
 #define DLP_TYPE_MASK 0x0f
-#define DLP_IGNORE 0x01   // don't download anything
-#define DLP_CURL 0x02     // download via HTTP redirect
-#define DLP_UDP 0x04      // download from server
-#define DLP_SHOW 0x10     // prompt needs to be shown
-#define DLP_PROMPTED 0x20 // prompt has been processed by client
-#define DLP_STALE 0x40    // prompt is not being shown by UI VM
+#define DLP_IGNORE    0x01 // don't download anything
+#define DLP_CURL      0x02 // download via HTTP redirect
+#define DLP_UDP       0x04 // download from server
+#define DLP_SHOW      0x10 // prompt needs to be shown
+#define DLP_PROMPTED  0x20 // prompt has been processed by client
+#define DLP_STALE     0x40 // prompt is not being shown by UI VM
 
 #define SQR( a ) ( ( a ) * ( a ) )
 

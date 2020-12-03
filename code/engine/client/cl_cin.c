@@ -25,17 +25,17 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define MAXSIZE 8
 #define MINSIZE 4
 
-#define DEFAULT_CIN_WIDTH 512
+#define DEFAULT_CIN_WIDTH  512
 #define DEFAULT_CIN_HEIGHT 512
 
-#define ROQ_QUAD 0x1000
-#define ROQ_QUAD_INFO 0x1001
-#define ROQ_CODEBOOK 0x1002
-#define ROQ_QUAD_VQ 0x1011
-#define ROQ_QUAD_JPEG 0x1012
-#define ROQ_QUAD_HANG 0x1013
-#define ROQ_PACKET 0x1030
-#define ZA_SOUND_MONO 0x1020
+#define ROQ_QUAD        0x1000
+#define ROQ_QUAD_INFO   0x1001
+#define ROQ_CODEBOOK    0x1002
+#define ROQ_QUAD_VQ     0x1011
+#define ROQ_QUAD_JPEG   0x1012
+#define ROQ_QUAD_HANG   0x1013
+#define ROQ_PACKET      0x1030
+#define ZA_SOUND_MONO   0x1020
 #define ZA_SOUND_STEREO 0x1021
 
 #define MAX_VIDEO_HANDLES 16
@@ -751,7 +751,8 @@ static void decodeCodeBook( byte* input, unsigned short roq_flags )
 	unsigned short *aptr, *bptr, *cptr, *dptr;
 	long            y0, y1, y2, y3, cr, cb;
 	byte *          bbptr, *baptr, *bcptr, *bdptr;
-	union {
+	union
+	{
 		unsigned int*   i;
 		unsigned short* s;
 	} iaptr, ibptr, icptr, idptr;

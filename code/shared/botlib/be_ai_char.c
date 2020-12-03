@@ -47,13 +47,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define MAX_CHARACTERISTICS 80
 
 #define CT_INTEGER 1
-#define CT_FLOAT 2
-#define CT_STRING 3
+#define CT_FLOAT   2
+#define CT_STRING  3
 
 #define DEFAULT_CHARACTER "bots/default_c.c"
 
 //characteristic value
-union cvalue {
+union cvalue
+{
 	int   integer;
 	float _float;
 	char* string;

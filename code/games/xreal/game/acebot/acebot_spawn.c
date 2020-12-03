@@ -502,7 +502,7 @@ void ACESP_SpawnBot( char* name, float skill, char* team )
 // Remove a bot by name or all bots
 void ACESP_RemoveBot( char* name )
 {
-#if 0
+	#if 0
 	int             i;
 	qboolean        freed = false;
 	gentity_t*      bot;
@@ -532,12 +532,12 @@ void ACESP_RemoveBot( char* name )
 	}
 	
 	//ACESP_SaveBots();         // Save them again
-#endif
+	#endif
 }
 
 qboolean ACESP_BotConnect( int clientNum, qboolean restart )
 {
-#if 1
+	#if 1
 	char userinfo[ MAX_INFO_STRING ];
 
 	trap_GetUserinfo( clientNum, userinfo, sizeof( userinfo ) );
@@ -571,7 +571,7 @@ qboolean ACESP_BotConnect( int clientNum, qboolean restart )
 	 */
 
 	return qtrue;
-#endif
+	#endif
 }
 
 void ACESP_SetupBotState( gentity_t* self )

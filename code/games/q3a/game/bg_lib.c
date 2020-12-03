@@ -5,7 +5,7 @@
 
 #ifdef Q3_VM
 
-#include "../qcommon/q_shared.h"
+	#include "../qcommon/q_shared.h"
 
 /*-
  * Copyright (c) 1992, 1993
@@ -36,38 +36,39 @@
  * SUCH DAMAGE.
  */
 
-#include "bg_lib.h"
+	#include "bg_lib.h"
 
-#if defined( LIBC_SCCS ) && !defined( lint )
-#if 0
+	#if defined( LIBC_SCCS ) && !defined( lint )
+		#if 0
 		static char sccsid[] = "@(#)qsort.c	8.1 (Berkeley) 6/4/93";
-#endif
+		#endif
 static const char rcsid[] =
-#endif /* LIBC_SCCS and not lint */
+	#endif /* LIBC_SCCS and not lint */
 
 	static char * med3( char*, char*, char*, cmp_t* );
 static void swapfunc( char*, char*, int, int );
 
-/*
+	/*
  * Qsort routine from Bentley & McIlroy's "Engineering a Sort Function".
  */
-#define swapcode( TYPE, parmi, parmj, n )  \
-	{                                      \
-		long  i  = ( n ) / sizeof( TYPE ); \
-		TYPE* pi = ( TYPE* )( parmi );     \
-		TYPE* pj = ( TYPE* )( parmj );     \
-		do                                 \
-		{                                  \
-			TYPE t = *pi;                  \
-			*pi++  = *pj;                  \
-			*pj++  = t;                    \
-		} while( --i > 0 );                \
-	}
+	#define swapcode( TYPE, parmi, parmj, n )  \
+		{                                      \
+			long  i  = ( n ) / sizeof( TYPE ); \
+			TYPE* pi = ( TYPE* )( parmi );     \
+			TYPE* pj = ( TYPE* )( parmj );     \
+			do                                 \
+			{                                  \
+				TYPE t = *pi;                  \
+				*pi++  = *pj;                  \
+				*pj++  = t;                    \
+			} while( --i > 0 );                \
+		}
 
-#define SWAPINIT( a, es ) swaptype = ( ( char* )a - ( char* )0 ) % sizeof( long ) || \
-		es % sizeof( long ) ?                                                        \
-	2 :                                                                              \
-	es == sizeof( long ) ? 0 : 1;
+	#define SWAPINIT( a, es ) swaptype = ( ( char* )a - ( char* )0 ) % sizeof( long ) || \
+			es % sizeof( long ) ?                                                        \
+                               2 :                                                       \
+		es == sizeof( long ) ? 0 :                                                       \
+                               1;
 
 static void
 	swapfunc( a, b, n, swaptype ) char *a,
@@ -78,19 +79,19 @@ int n, swaptype;
 		swapcode( long, a, b, n ) else swapcode( char, a, b, n )
 }
 
-#define swap( a, b )                       \
-	if( swaptype == 0 )                    \
-	{                                      \
-		long t          = *( long* )( a ); \
-		*( long* )( a ) = *( long* )( b ); \
-		*( long* )( b ) = t;               \
-	}                                      \
-	else                                   \
-		swapfunc( a, b, es, swaptype )
+	#define swap( a, b )                       \
+		if( swaptype == 0 )                    \
+		{                                      \
+			long t          = *( long* )( a ); \
+			*( long* )( a ) = *( long* )( b ); \
+			*( long* )( b ) = t;               \
+		}                                      \
+		else                                   \
+			swapfunc( a, b, es, swaptype )
 
-#define vecswap( a, b, n ) \
-	if( ( n ) > 0 )        \
-	swapfunc( a, b, n, swaptype )
+	#define vecswap( a, b, n ) \
+		if( ( n ) > 0 )        \
+		swapfunc( a, b, n, swaptype )
 
 static char *
 	med3( a, b, c, cmp ) char *a,
@@ -98,12 +99,12 @@ static char *
 cmp_t* cmp;
 {
 	return cmp( a, b ) < 0 ?
-		( cmp( b, c ) < 0 ? b : ( cmp( a, c ) < 0 ? c : a ) ) :
-		( cmp( b, c ) > 0 ? b : ( cmp( a, c ) < 0 ? a : c ) );
+        ( cmp( b, c ) < 0 ? b : ( cmp( a, c ) < 0 ? c : a ) ) :
+        ( cmp( b, c ) > 0 ? b : ( cmp( a, c ) < 0 ? a : c ) );
 }
 
 void
-	qsort( a, n, es, cmp ) void* a;
+	   qsort( a, n, es, cmp ) void* a;
 size_t n, es;
 cmp_t* cmp;
 {
@@ -369,7 +370,7 @@ void* memmove( void* dest, const void* src, size_t count )
 	return dest;
 }
 
-#if 0
+	#if 0
 
 double floor( double x )
 {
@@ -854,7 +855,7 @@ double atan2( double y, double x )
 	return base + dir * i * ( M_PI / 2048 );
 }
 
-#endif
+	#endif
 
 /*
 ===============
@@ -1622,19 +1623,19 @@ double fabs( double x )
 /* BDR 2002-01-13  %e and %g were being ignored.  Now do something,
    if not necessarily correctly */
 
-#if( SIZEOF_LONG_DOUBLE > 0 )
-/* #ifdef HAVE_LONG_DOUBLE */
-#define LDOUBLE long double
-#else
-#define LDOUBLE double
-#endif
+	#if( SIZEOF_LONG_DOUBLE > 0 )
+		/* #ifdef HAVE_LONG_DOUBLE */
+		#define LDOUBLE long double
+	#else
+		#define LDOUBLE double
+	#endif
 
-#if( SIZEOF_LONG_LONG > 0 )
-/* #ifdef HAVE_LONG_LONG */
-#define LLONG long long
-#else
-#define LLONG long
-#endif
+	#if( SIZEOF_LONG_LONG > 0 )
+		/* #ifdef HAVE_LONG_LONG */
+		#define LLONG long long
+	#else
+		#define LLONG long
+	#endif
 
 static int dopr( char* buffer, size_t maxlen, const char* format, va_list args );
 static int fmtstr( char* buffer, size_t* currlen, size_t maxlen, char* value, int flags, int min, int max );
@@ -1642,37 +1643,37 @@ static int fmtint( char* buffer, size_t* currlen, size_t maxlen, LLONG value, in
 static int fmtfp( char* buffer, size_t* currlen, size_t maxlen, LDOUBLE fvalue, int min, int max, int flags );
 static int dopr_outch( char* buffer, size_t* currlen, size_t maxlen, char c );
 
-/*
+	/*
  * dopr(): poor man's version of doprintf
  */
 
-/* format read states */
-#define DP_S_DEFAULT 0
-#define DP_S_FLAGS 1
-#define DP_S_MIN 2
-#define DP_S_DOT 3
-#define DP_S_MAX 4
-#define DP_S_MOD 5
-#define DP_S_MOD_L 6
-#define DP_S_CONV 7
-#define DP_S_DONE 8
+	/* format read states */
+	#define DP_S_DEFAULT 0
+	#define DP_S_FLAGS   1
+	#define DP_S_MIN     2
+	#define DP_S_DOT     3
+	#define DP_S_MAX     4
+	#define DP_S_MOD     5
+	#define DP_S_MOD_L   6
+	#define DP_S_CONV    7
+	#define DP_S_DONE    8
 
-/* format flags - Bits */
-#define DP_F_MINUS ( 1 << 0 )
-#define DP_F_PLUS ( 1 << 1 )
-#define DP_F_SPACE ( 1 << 2 )
-#define DP_F_NUM ( 1 << 3 )
-#define DP_F_ZERO ( 1 << 4 )
-#define DP_F_UP ( 1 << 5 )
-#define DP_F_UNSIGNED ( 1 << 6 )
+	/* format flags - Bits */
+	#define DP_F_MINUS    ( 1 << 0 )
+	#define DP_F_PLUS     ( 1 << 1 )
+	#define DP_F_SPACE    ( 1 << 2 )
+	#define DP_F_NUM      ( 1 << 3 )
+	#define DP_F_ZERO     ( 1 << 4 )
+	#define DP_F_UP       ( 1 << 5 )
+	#define DP_F_UNSIGNED ( 1 << 6 )
 
-/* Conversion Flags */
-#define DP_C_SHORT 1
-#define DP_C_LONG 2
-#define DP_C_LLONG 3
-#define DP_C_LDOUBLE 4
+	/* Conversion Flags */
+	#define DP_C_SHORT   1
+	#define DP_C_LONG    2
+	#define DP_C_LLONG   3
+	#define DP_C_LDOUBLE 4
 
-#define char_to_int( p ) ( p - '0' )
+	#define char_to_int( p ) ( p - '0' )
 
 static int dopr( char* buffer, size_t maxlen, const char* format, va_list args )
 {
@@ -2146,9 +2147,9 @@ static int fmtint( char* buffer, size_t* currlen, size_t maxlen, LLONG value, in
 		spadlen = -spadlen; /* Left Justifty */
 	}
 
-#ifdef DEBUG_SNPRINTF
+	#ifdef DEBUG_SNPRINTF
 	dprint( 1, ( debugfile, "zpad: %d, spad: %d, min: %d, max: %d, place: %d\n", zpadlen, spadlen, min, max, place ) );
-#endif
+	#endif
 
 	/* Spaces */
 	while( spadlen > 0 )
@@ -2254,12 +2255,12 @@ static int fmtfp( char* buffer, size_t* currlen, size_t maxlen, LDOUBLE fvalue, 
 		signvalue = ' ';
 	}
 
-#if 0
+	#if 0
 	if( flags & DP_F_UP )
 	{
 		caps = 1;    /* Should characters be upper case? */
 	}
-#endif
+	#endif
 
 	intpart = ufvalue;
 
@@ -2283,9 +2284,9 @@ static int fmtfp( char* buffer, size_t* currlen, size_t maxlen, LDOUBLE fvalue, 
 		fracpart -= powN( 10, max );
 	}
 
-#ifdef DEBUG_SNPRINTF
+	#ifdef DEBUG_SNPRINTF
 	dprint( 1, ( debugfile, "fmtfp: %f =? %d.%d\n", fvalue, intpart, fracpart ) );
-#endif
+	#endif
 
 	/* Convert integer part */
 	do

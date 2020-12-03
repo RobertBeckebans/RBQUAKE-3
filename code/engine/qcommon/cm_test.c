@@ -1,22 +1,21 @@
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
-Copyright (C) 2006 Robert Beckebans <trebor_7@users.sourceforge.net>
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -141,9 +140,9 @@ void CM_StoreBrushes( leafList_t* ll, int nodenum )
 	}
 #if 0
 	// store patches?
-	for( k = 0; k < leaf->numLeafSurfaces; k++ )
+	for( k = 0 ; k < leaf->numLeafSurfaces ; k++ )
 	{
-		patch = cm.surfaces[cm.leafsurfaces[leaf->firstleafsurface + k]];
+		patch = cm.surfaces[ cm.leafsurfaces[ leaf->firstleafsurface + k ] ];
 		if( !patch )
 		{
 			continue;
@@ -249,6 +248,7 @@ int CM_BoxBrushes( const vec3_t mins, const vec3_t maxs, cbrush_t** list, int li
 /*
 ==================
 CM_PointContents
+
 ==================
 */
 int CM_PointContents( const vec3_t p, clipHandle_t model )
@@ -302,7 +302,7 @@ int CM_PointContents( const vec3_t p, clipHandle_t model )
 		{
 			d = DotProduct( p, b->sides[ i ].plane->normal );
 			// FIXME test for Cash
-			//          if ( d >= b->sides[i].plane->dist ) {
+			//			if ( d >= b->sides[i].plane->dist ) {
 			if( d > b->sides[ i ].plane->dist )
 			{
 				break;
@@ -336,7 +336,8 @@ int CM_TransformedPointContents( const vec3_t p, clipHandle_t model, const vec3_
 	VectorSubtract( p, origin, p_l );
 
 	// rotate start and end into the models frame of reference
-	if( model != BOX_MODEL_HANDLE && ( angles[ 0 ] || angles[ 1 ] || angles[ 2 ] ) )
+	if( model != BOX_MODEL_HANDLE &&
+		( angles[ 0 ] || angles[ 1 ] || angles[ 2 ] ) )
 	{
 		AngleVectors( angles, forward, right, up );
 
@@ -476,10 +477,12 @@ CM_AreasConnected
 */
 qboolean CM_AreasConnected( int area1, int area2 )
 {
+#ifndef BSPC
 	if( cm_noAreas->integer )
 	{
 		return qtrue;
 	}
+#endif
 
 	if( area1 < 0 || area2 < 0 )
 	{
@@ -520,7 +523,11 @@ int CM_WriteAreaBits( byte* buffer, int area )
 
 	bytes = ( cm.numAreas + 7 ) >> 3;
 
+#ifndef BSPC
 	if( cm_noAreas->integer || area == -1 )
+#else
+	if( area == -1 )
+#endif
 	{
 		// for debugging, send everything
 		Com_Memset( buffer, 255, bytes );
@@ -551,7 +558,8 @@ qboolean CM_BoundsIntersect( const vec3_t mins, const vec3_t maxs, const vec3_t 
 		maxs[ 1 ] < mins2[ 1 ] - SURFACE_CLIP_EPSILON ||
 		maxs[ 2 ] < mins2[ 2 ] - SURFACE_CLIP_EPSILON ||
 		mins[ 0 ] > maxs2[ 0 ] + SURFACE_CLIP_EPSILON ||
-		mins[ 1 ] > maxs2[ 1 ] + SURFACE_CLIP_EPSILON || mins[ 2 ] > maxs2[ 2 ] + SURFACE_CLIP_EPSILON )
+		mins[ 1 ] > maxs2[ 1 ] + SURFACE_CLIP_EPSILON ||
+		mins[ 2 ] > maxs2[ 2 ] + SURFACE_CLIP_EPSILON )
 	{
 		return qfalse;
 	}
@@ -570,7 +578,8 @@ qboolean CM_BoundsIntersectPoint( const vec3_t mins, const vec3_t maxs, const ve
 		maxs[ 1 ] < point[ 1 ] - SURFACE_CLIP_EPSILON ||
 		maxs[ 2 ] < point[ 2 ] - SURFACE_CLIP_EPSILON ||
 		mins[ 0 ] > point[ 0 ] + SURFACE_CLIP_EPSILON ||
-		mins[ 1 ] > point[ 1 ] + SURFACE_CLIP_EPSILON || mins[ 2 ] > point[ 2 ] + SURFACE_CLIP_EPSILON )
+		mins[ 1 ] > point[ 1 ] + SURFACE_CLIP_EPSILON ||
+		mins[ 2 ] > point[ 2 ] + SURFACE_CLIP_EPSILON )
 	{
 		return qfalse;
 	}

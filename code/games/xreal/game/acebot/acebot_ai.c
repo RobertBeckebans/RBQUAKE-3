@@ -50,7 +50,7 @@ void ACEAI_CheckServerCommands( gentity_t* self )
 
 	while( trap_BotGetServerCommand( self->client - level.clients, buf, sizeof( buf ) ) )
 	{
-#if 0
+	#if 0
 		//have buf point to the command and args to the command arguments
 		if( ace_debug.integer )
 		{
@@ -58,7 +58,7 @@ void ACEAI_CheckServerCommands( gentity_t* self )
 		}
 		
 		// TODO check for orders by team mates
-#endif
+	#endif
 	}
 }
 
@@ -153,7 +153,7 @@ void ACEAI_Think( gentity_t* self )
 		ACEAI_PickLongRangeGoal( self );
 	}
 
-#if 0
+	#if 0
 	// kill the bot if completely stuck somewhere
 	if( VectorLength( self->client->ps.velocity ) > 37 )	//
 	{
@@ -165,7 +165,7 @@ void ACEAI_Think( gentity_t* self )
 		self->client->ps.stats[STAT_HEALTH] = self->health = -999;
 		player_die( self, self, self, 100000, MOD_SUICIDE );
 	}
-#endif
+	#endif
 
 	// find any short range goal
 	ACEAI_PickShortRangeGoal( self );
@@ -189,12 +189,12 @@ void ACEAI_Think( gentity_t* self )
 		}
 	}
 
-#if 0
+	#if 0
 	if( ace_debug.integer )
 	{
 		trap_SendServerCommand( -1, va( "print \"%s: state %dl!\n\"", self->client->pers.netname, self->bs.state ) );
 	}
-#endif
+	#endif
 
 	// set approximate ping
 	if( !g_synchronousClients.integer )
@@ -490,7 +490,7 @@ void ACEAI_PickShortRangeGoal( gentity_t* self )
 			break;
 		}
 
-#if 0
+	#if 0
 		// so players can't sneak RIGHT up on a bot
 		if( !Q_stricmp( target->classname, "player" ) )
 		{
@@ -501,7 +501,7 @@ void ACEAI_PickShortRangeGoal( gentity_t* self )
 				break;
 			}
 		}
-#endif
+	#endif
 
 		if( ACEIT_IsReachable( self, target->s.origin ) )
 		{
@@ -680,14 +680,14 @@ void ACEAI_ChooseWeapon( gentity_t* self )
 			return;
 		}
 
-#ifdef MISSIONPACK
+	#ifdef MISSIONPACK
 	// only use CG when ammo > 50
 	if( self->client->pers.inventory[ ITEMLIST_BULLETS ] >= 50 )
 		if( ACEIT_ChangeWeapon( self, FindItem( "chaingun" ) ) )
 		{
 			return;
 		}
-#endif
+	#endif
 
 	if( ACEIT_ChangeWeapon( self, WP_PLASMAGUN ) )
 	{

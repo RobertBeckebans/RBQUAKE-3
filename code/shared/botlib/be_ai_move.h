@@ -31,45 +31,45 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *****************************************************************************/
 
 //movement types
-#define MOVE_WALK 1
-#define MOVE_CROUCH 2
-#define MOVE_JUMP 4
-#define MOVE_GRAPPLE 8
+#define MOVE_WALK       1
+#define MOVE_CROUCH     2
+#define MOVE_JUMP       4
+#define MOVE_GRAPPLE    8
 #define MOVE_ROCKETJUMP 16
-#define MOVE_BFGJUMP 32
+#define MOVE_BFGJUMP    32
 //move flags
-#define MFL_BARRIERJUMP 1     //bot is performing a barrier jump
-#define MFL_ONGROUND 2        //bot is in the ground
-#define MFL_SWIMMING 4        //bot is swimming
+#define MFL_BARRIERJUMP   1   //bot is performing a barrier jump
+#define MFL_ONGROUND      2   //bot is in the ground
+#define MFL_SWIMMING      4   //bot is swimming
 #define MFL_AGAINSTLADDER 8   //bot is against a ladder
-#define MFL_WATERJUMP 16      //bot is waterjumping
-#define MFL_TELEPORTED 32     //bot is being teleported
-#define MFL_GRAPPLEPULL 64    //bot is being pulled by the grapple
+#define MFL_WATERJUMP     16  //bot is waterjumping
+#define MFL_TELEPORTED    32  //bot is being teleported
+#define MFL_GRAPPLEPULL   64  //bot is being pulled by the grapple
 #define MFL_ACTIVEGRAPPLE 128 //bot is using the grapple hook
-#define MFL_GRAPPLERESET 256  //bot has reset the grapple
-#define MFL_WALK 512          //bot should walk slowly
+#define MFL_GRAPPLERESET  256 //bot has reset the grapple
+#define MFL_WALK          512 //bot should walk slowly
 // move result flags
-#define MOVERESULT_MOVEMENTVIEW 1         //bot uses view for movement
-#define MOVERESULT_SWIMVIEW 2             //bot uses view for swimming
-#define MOVERESULT_WAITING 4              //bot is waiting for something
-#define MOVERESULT_MOVEMENTVIEWSET 8      //bot has set the view in movement code
-#define MOVERESULT_MOVEMENTWEAPON 16      //bot uses weapon for movement
-#define MOVERESULT_ONTOPOFOBSTACLE 32     //bot is ontop of obstacle
-#define MOVERESULT_ONTOPOF_FUNCBOB 64     //bot is ontop of a func_bobbing
-#define MOVERESULT_ONTOPOF_ELEVATOR 128   //bot is ontop of an elevator (func_plat)
+#define MOVERESULT_MOVEMENTVIEW       1   //bot uses view for movement
+#define MOVERESULT_SWIMVIEW           2   //bot uses view for swimming
+#define MOVERESULT_WAITING            4   //bot is waiting for something
+#define MOVERESULT_MOVEMENTVIEWSET    8   //bot has set the view in movement code
+#define MOVERESULT_MOVEMENTWEAPON     16  //bot uses weapon for movement
+#define MOVERESULT_ONTOPOFOBSTACLE    32  //bot is ontop of obstacle
+#define MOVERESULT_ONTOPOF_FUNCBOB    64  //bot is ontop of a func_bobbing
+#define MOVERESULT_ONTOPOF_ELEVATOR   128 //bot is ontop of an elevator (func_plat)
 #define MOVERESULT_BLOCKEDBYAVOIDSPOT 256 //bot is blocked by an avoid spot
 //
 #define MAX_AVOIDREACH 1
 #define MAX_AVOIDSPOTS 32
 // avoid spot types
-#define AVOID_CLEAR 0     //clear all avoid spots
-#define AVOID_ALWAYS 1    //avoid always
+#define AVOID_CLEAR     0 //clear all avoid spots
+#define AVOID_ALWAYS    1 //avoid always
 #define AVOID_DONTBLOCK 2 //never totally block
 // restult types
-#define RESULTTYPE_ELEVATORUP 1         //elevator is up
+#define RESULTTYPE_ELEVATORUP         1 //elevator is up
 #define RESULTTYPE_WAITFORFUNCBOBBING 2 //waiting for func bobbing to arrive
-#define RESULTTYPE_BADGRAPPLEPATH 4     //grapple path is obstructed
-#define RESULTTYPE_INSOLIDAREA 8        //stuck in solid area, this is bad
+#define RESULTTYPE_BADGRAPPLEPATH     4 //grapple path is obstructed
+#define RESULTTYPE_INSOLIDAREA        8 //stuck in solid area, this is bad
 
 //structure used to initialize the movement state
 //the or_moveflags MFL_ONGROUND, MFL_TELEPORTED and MFL_WATERJUMP come from the playerstate

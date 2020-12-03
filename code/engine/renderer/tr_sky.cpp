@@ -24,7 +24,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "tr_local.h"
 #include "gl_shader.h"
 
-#define SKY_SUBDIVISIONS 8
+#define SKY_SUBDIVISIONS      8
 #define HALF_SKY_SUBDIVISIONS ( SKY_SUBDIVISIONS / 2 )
 
 static float s_cloudTexCoords[ 6 ][ SKY_SUBDIVISIONS + 1 ][ SKY_SUBDIVISIONS + 1 ][ 2 ];
@@ -175,7 +175,7 @@ static void AddSkyPolygon( int nump, vec3_t vecs )
 	}
 }
 
-#define ON_EPSILON 0.1f // point on plane side epsilon
+#define ON_EPSILON     0.1f // point on plane side epsilon
 #define MAX_CLIP_VERTS 64
 /*
 ================
@@ -999,7 +999,7 @@ void Tess_StageIteratorSky( void )
 		// draw the outer skybox
 		if( tess.surfaceShader->sky.outerbox && tess.surfaceShader->sky.outerbox != tr.blackCubeImage )
 		{
-#if 1
+	#if 1
 			R_BindVBO( tess.vbo );
 			R_BindIBO( tess.ibo );
 
@@ -1032,7 +1032,7 @@ void Tess_StageIteratorSky( void )
 			GL_Bind( tess.surfaceShader->sky.outerbox );
 
 			DrawSkyBox( tess.surfaceShader );
-#endif
+	#endif
 		}
 
 		// generate the vertexes for all the clouds, which will be drawn

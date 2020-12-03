@@ -40,24 +40,24 @@ into the abstracted bsp file used by xmap2.
 ------------------------------------------------------------------------------- */
 
 /* constants */
-#define LUMP_ENTITIES 0
-#define LUMP_SHADERS 1
-#define LUMP_PLANES 2
-#define LUMP_NODES 3
-#define LUMP_LEAFS 4
+#define LUMP_ENTITIES     0
+#define LUMP_SHADERS      1
+#define LUMP_PLANES       2
+#define LUMP_NODES        3
+#define LUMP_LEAFS        4
 #define LUMP_LEAFSURFACES 5
-#define LUMP_LEAFBRUSHES 6
-#define LUMP_MODELS 7
-#define LUMP_BRUSHES 8
-#define LUMP_BRUSHSIDES 9
-#define LUMP_DRAWVERTS 10
-#define LUMP_DRAWINDEXES 11
-#define LUMP_FOGS 12
-#define LUMP_SURFACES 13
-#define LUMP_LIGHTMAPS 14
-#define LUMP_LIGHTGRID 15
-#define LUMP_VISIBILITY 16
-#define HEADER_LUMPS 17
+#define LUMP_LEAFBRUSHES  6
+#define LUMP_MODELS       7
+#define LUMP_BRUSHES      8
+#define LUMP_BRUSHSIDES   9
+#define LUMP_DRAWVERTS    10
+#define LUMP_DRAWINDEXES  11
+#define LUMP_FOGS         12
+#define LUMP_SURFACES     13
+#define LUMP_LIGHTMAPS    14
+#define LUMP_LIGHTGRID    15
+#define LUMP_VISIBILITY   16
+#define HEADER_LUMPS      17
 
 /* types */
 typedef struct

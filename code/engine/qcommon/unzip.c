@@ -7,7 +7,7 @@
 */
 
 #ifndef BSPC
-#include "../client/client.h"
+	#include "../client/client.h"
 #endif
 #include "unzip.h"
 
@@ -46,51 +46,51 @@ woven in by Terry Thorsen 1/2003.
 #include "unzip.h"
 
 #ifdef STDC
-#include <stddef.h>
-#include <string.h>
-#include <stdlib.h>
+	#include <stddef.h>
+	#include <string.h>
+	#include <stdlib.h>
 #endif
 #ifdef NO_ERRNO_H
 extern int errno;
 #else
-#include <errno.h>
+	#include <errno.h>
 #endif
 
 #ifndef local
-#define local static
+	#define local static
 #endif
 /* compile with -Dlocal if your debugger can't find static symbols */
 
 #ifndef CASESENSITIVITYDEFAULT_NO
-#if !defined( unix ) && !defined( CASESENSITIVITYDEFAULT_YES )
-#define CASESENSITIVITYDEFAULT_NO
-#endif
+	#if !defined( unix ) && !defined( CASESENSITIVITYDEFAULT_YES )
+		#define CASESENSITIVITYDEFAULT_NO
+	#endif
 #endif
 
 #ifndef UNZ_BUFSIZE
-#define UNZ_BUFSIZE ( 16384 )
+	#define UNZ_BUFSIZE ( 16384 )
 #endif
 
 #ifndef UNZ_MAXFILENAMEINZIP
-#define UNZ_MAXFILENAMEINZIP ( 256 )
+	#define UNZ_MAXFILENAMEINZIP ( 256 )
 #endif
 
 #ifndef ALLOC
-#define ALLOC( size ) ( malloc( size ) )
+	#define ALLOC( size ) ( malloc( size ) )
 #endif
 #ifndef TRYFREE
-#define TRYFREE( p )   \
-	{                  \
-		if( p )        \
-			free( p ); \
-	}
+	#define TRYFREE( p )   \
+		{                  \
+			if( p )        \
+				free( p ); \
+		}
 #endif
 
 #define SIZECENTRALDIRITEM ( 0x2e )
 #define SIZEZIPLOCALHEADER ( 0x1e )
 
 #ifndef NOUNCRYPT
-#include "crypt.h"
+	#include "crypt.h"
 #endif
 
 /* ===========================================================================
@@ -242,13 +242,13 @@ const char* fileName2;
 }
 
 #ifdef CASESENSITIVITYDEFAULT_NO
-#define CASESENSITIVITYDEFAULTVALUE 2
+	#define CASESENSITIVITYDEFAULTVALUE 2
 #else
-#define CASESENSITIVITYDEFAULTVALUE 1
+	#define CASESENSITIVITYDEFAULTVALUE 1
 #endif
 
 #ifndef STRCMPCASENOSENTIVEFUNCTION
-#define STRCMPCASENOSENTIVEFUNCTION strcmpcasenosensitive_internal
+	#define STRCMPCASENOSENTIVEFUNCTION strcmpcasenosensitive_internal
 #endif
 
 /*
@@ -279,7 +279,7 @@ int         iCaseSensitivity;
 }
 
 #ifndef BUFREADCOMMENT
-#define BUFREADCOMMENT ( 0x400 )
+	#define BUFREADCOMMENT ( 0x400 )
 #endif
 
 /*

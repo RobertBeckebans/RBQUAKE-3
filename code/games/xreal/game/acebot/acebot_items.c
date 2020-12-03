@@ -101,9 +101,9 @@ float ACEIT_ItemNeed( gentity_t* self, gentity_t* itemEnt )
 
 	gitem_t* item = itemEnt->item;
 
-#ifdef MISSIONPACK
+	#ifdef MISSIONPACK
 	int upperBound;
-#endif
+	#endif
 
 	// raynorpat: improved the item weights a tad bit
 	switch( item->giType )
@@ -188,7 +188,7 @@ float ACEIT_ItemNeed( gentity_t* self, gentity_t* itemEnt )
 
 		case IT_ARMOR:
 		{
-#ifdef MISSIONPACK
+	#ifdef MISSIONPACK
 			if( bg_itemlist[ ps->stats[ STAT_PERSISTANT_POWERUP ] ].giTag == PW_SCOUT )
 			{
 				return 0.0f;
@@ -208,12 +208,12 @@ float ACEIT_ItemNeed( gentity_t* self, gentity_t* itemEnt )
 			{
 				return 0.0f;
 			}
-#else
+	#else
 			if( self->client->ps.stats[ STAT_ARMOR ] >= self->client->ps.stats[ STAT_MAX_HEALTH ] * 2 )
 			{
 				return 0.0f;
 			}
-#endif
+	#endif
 			return 10.0f;
 		}
 
@@ -221,13 +221,13 @@ float ACEIT_ItemNeed( gentity_t* self, gentity_t* itemEnt )
 		{
 			// small and mega healths will go over the max, otherwise
 			// don't pick up if already at max
-#ifdef MISSIONPACK
+	#ifdef MISSIONPACK
 			if( bg_itemlist[ self->client->ps->stats[ STAT_PERSISTANT_POWERUP ] ].giTag == PW_GUARD )
 			{
 				upperBound = self->client->ps->stats[ STAT_MAX_HEALTH ];
 			}
 			else
-#endif
+	#endif
 				if( item->quantity == 5 || item->quantity == 100 )
 			{
 				if( self->client->ps.stats[ STAT_HEALTH ] >= self->client->ps.stats[ STAT_MAX_HEALTH ] * 2 )
@@ -486,7 +486,7 @@ void ACEIT_BuildItemNodeTable( qboolean rebuild )
 							ent->node = i;
 						}
 
-#if 0 //defined(_DEBUG)
+	#if 0 //defined(_DEBUG)
 						if( ent->item )
 						{
 							G_Printf( "relink item: %s node: %d pos: %f %f %f\n", ent->item->classname, ent->node,
@@ -497,7 +497,7 @@ void ACEIT_BuildItemNodeTable( qboolean rebuild )
 							G_Printf( "relink entity: %s node: %d pos: %f %f %f\n", ent->classname, ent->node,
 									  ent->s.origin[0], ent->s.origin[1], ent->s.origin[2] );
 						}
-#endif
+	#endif
 						break;
 					}
 				}
@@ -510,7 +510,7 @@ void ACEIT_BuildItemNodeTable( qboolean rebuild )
 			}
 		}
 
-#if 0 //defined(_DEBUG)                                                                                \
+	#if 0 //defined(_DEBUG)                                                                                \
 	  //if(item_index == INVALID)                                                                      \
 	  //  fprintf(pOut, "Rejected item: %s node: %d pos: %f %f %f\n", ent->item->classname, ent->node, \
 	  //          ent->s.origin[0], ent->s.origin[1], ent->s.origin[2]);                               \
@@ -525,7 +525,7 @@ void ACEIT_BuildItemNodeTable( qboolean rebuild )
 			G_Printf( "accepted entity: %s node: %d pos: %f %f %f\n", ent->classname, ent->node, ent->s.origin[0],
 					  ent->s.origin[1], ent->s.origin[2] );
 		}
-#endif
+	#endif
 	}
 }
 

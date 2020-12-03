@@ -34,8 +34,8 @@ TEAM ORDERS MENU
 #define ART_BACK0 "menu/art/back_0"
 #define ART_BACK1 "menu/art/back_1"
 
-#define ID_LIST_BOTS 10
-#define ID_LIST_CTF_ORDERS 11
+#define ID_LIST_BOTS        10
+#define ID_LIST_CTF_ORDERS  11
 #define ID_LIST_TEAM_ORDERS 12
 
 typedef struct

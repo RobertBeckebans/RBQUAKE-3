@@ -35,9 +35,9 @@ struct mdfour
 
 static struct mdfour* m;
 
-#define F( X, Y, Z ) ( ( ( X ) & ( Y ) ) | ( ( ~( X ) ) & ( Z ) ) )
-#define G( X, Y, Z ) ( ( ( X ) & ( Y ) ) | ( ( X ) & ( Z ) ) | ( ( Y ) & ( Z ) ) )
-#define H( X, Y, Z ) ( ( X ) ^ ( Y ) ^ ( Z ) )
+#define F( X, Y, Z )   ( ( ( X ) & ( Y ) ) | ( ( ~( X ) ) & ( Z ) ) )
+#define G( X, Y, Z )   ( ( ( X ) & ( Y ) ) | ( ( X ) & ( Z ) ) | ( ( Y ) & ( Z ) ) )
+#define H( X, Y, Z )   ( ( X ) ^ ( Y ) ^ ( Z ) )
 #define lshift( x, s ) ( ( ( x ) << ( s ) ) | ( ( x ) >> ( 32 - ( s ) ) ) )
 
 #define ROUND1( a, b, c, d, k, s ) a = lshift( a + F( b, c, d ) + X[ k ], s )

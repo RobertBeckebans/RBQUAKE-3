@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "cg_local.h"
 
 #define PARTICLE_GRAVITY 40
-#define MAX_PARTICLES 1024 * 8
+#define MAX_PARTICLES    1024 * 8
 
 static cparticle_t *cg_activeParticles, *cg_freeParticles;
 static cparticle_t  cg_allParticles[ MAX_PARTICLES ];
@@ -1989,7 +1989,7 @@ void CG_BloodPool( qhandle_t pshader, vec3_t origin )
 }
 
 #define NORMALSIZE 16
-#define LARGESIZE 32
+#define LARGESIZE  32
 
 void CG_ParticleBloodCloud( vec3_t origin, vec3_t dir )
 {

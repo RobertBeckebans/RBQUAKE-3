@@ -32,15 +32,15 @@ several games based on the Quake III Arena engine, in the form of "Q3Map2."
 /* dependencies */
 #include "q3map2.h"
 
-#define LIGHTMAP_EXCEEDED -1
-#define S_EXCEEDED -2
-#define T_EXCEEDED -3
-#define ST_EXCEEDED -4
+#define LIGHTMAP_EXCEEDED   -1
+#define S_EXCEEDED          -2
+#define T_EXCEEDED          -3
+#define ST_EXCEEDED         -4
 #define UNSUITABLE_TRIANGLE -10
-#define VERTS_EXCEEDED -1000
-#define INDEXES_EXCEEDED -2000
+#define VERTS_EXCEEDED      -1000
+#define INDEXES_EXCEEDED    -2000
 
-#define GROW_META_VERTS 1024
+#define GROW_META_VERTS     1024
 #define GROW_META_TRIANGLES 1024
 
 static int numMetaSurfaces, numPatchMetaSurfaces;
@@ -847,7 +847,7 @@ fixes t-junctions on meta triangles
 */
 
 #define TJ_PLANE_EPSILON ( 1.0f / 8.0f )
-#define TJ_EDGE_EPSILON ( 1.0f / 8.0f )
+#define TJ_EDGE_EPSILON  ( 1.0f / 8.0f )
 #define TJ_POINT_EPSILON ( 1.0f / 8.0f )
 
 void FixMetaTJunctions( void )
@@ -1050,8 +1050,8 @@ SmoothMetaTriangles()
 averages coincident vertex normals in the meta triangles
 */
 
-#define MAX_SAMPLES 256
-#define THETA_EPSILON 0.000001
+#define MAX_SAMPLES          256
+#define THETA_EPSILON        0.000001
 #define EQUAL_NORMAL_EPSILON 0.01
 
 void SmoothMetaTriangles( void )
@@ -1316,16 +1316,16 @@ attempts to add a metatriangle to a surface
 returns the score of the triangle added
 */
 
-#define AXIS_SCORE 100000
-#define AXIS_MIN 100000
-#define VERT_SCORE 10000
+#define AXIS_SCORE    100000
+#define AXIS_MIN      100000
+#define VERT_SCORE    10000
 #define SURFACE_SCORE 1000
-#define ST_SCORE 50
-#define ST_SCORE2 ( 2 * ( ST_SCORE ) )
+#define ST_SCORE      50
+#define ST_SCORE2     ( 2 * ( ST_SCORE ) )
 
 #define ADEQUATE_SCORE ( ( AXIS_MIN ) + 1 * ( VERT_SCORE ) )
-#define GOOD_SCORE ( ( AXIS_MIN ) + 2 * ( VERT_SCORE ) + 4 * ( ST_SCORE ) )
-#define PERFECT_SCORE ( ( AXIS_MIN ) + 3 * ( VERT_SCORE ) + ( SURFACE_SCORE ) + 4 * ( ST_SCORE ) )
+#define GOOD_SCORE     ( ( AXIS_MIN ) + 2 * ( VERT_SCORE ) + 4 * ( ST_SCORE ) )
+#define PERFECT_SCORE  ( ( AXIS_MIN ) + 3 * ( VERT_SCORE ) + ( SURFACE_SCORE ) + 4 * ( ST_SCORE ) )
 
 static int AddMetaTriangleToSurface( mapDrawSurface_t* ds, metaTriangle_t* tri, qboolean testAdd )
 {

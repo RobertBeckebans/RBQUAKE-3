@@ -29,8 +29,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //
 
 // surface geometry should not exceed these limits
-#define SHADER_MAX_VERTEXES 100000
-#define SHADER_MAX_INDEXES ( SHADER_MAX_VERTEXES * 6 )
+#define SHADER_MAX_VERTEXES  100000
+#define SHADER_MAX_INDEXES   ( SHADER_MAX_VERTEXES * 6 )
 #define SHADER_MAX_TRIANGLES ( SHADER_MAX_INDEXES / 3 )
 
 /*
@@ -107,17 +107,17 @@ typedef struct _TargaHeader
 ========================================================================
 */
 
-#define MD3_IDENT ( ( '3' << 24 ) + ( 'P' << 16 ) + ( 'D' << 8 ) + 'I' )
+#define MD3_IDENT   ( ( '3' << 24 ) + ( 'P' << 16 ) + ( 'D' << 8 ) + 'I' )
 #define MD3_VERSION 15
 
 // limits
-#define MD3_MAX_LODS 3
+#define MD3_MAX_LODS      3
 #define MD3_MAX_TRIANGLES 8192 // per surface
-#define MD3_MAX_VERTS 4096     // per surface
-#define MD3_MAX_SHADERS 256    // per surface
-#define MD3_MAX_FRAMES 1024    // per model
-#define MD3_MAX_SURFACES 32    // per model
-#define MD3_MAX_TAGS 16        // per frame
+#define MD3_MAX_VERTS     4096 // per surface
+#define MD3_MAX_SHADERS   256 // per surface
+#define MD3_MAX_FRAMES    1024 // per model
+#define MD3_MAX_SURFACES  32 // per model
+#define MD3_MAX_TAGS      16 // per frame
 
 // vertex scales
 #define MD3_XYZ_SCALE ( 1.0 / 64 )
@@ -228,43 +228,43 @@ typedef struct
 
 // there shouldn't be any problem with increasing these values at the
 // expense of more memory allocation in the utilities
-#define MAX_MAP_MODELS 0x400
-#define MAX_MAP_BRUSHES 0x8000
-#define MAX_MAP_ENTITIES 0x800
+#define MAX_MAP_MODELS    0x400
+#define MAX_MAP_BRUSHES   0x8000
+#define MAX_MAP_ENTITIES  0x800
 #define MAX_MAP_ENTSTRING 0x80000
-#define MAX_MAP_SHADERS 0x400
+#define MAX_MAP_SHADERS   0x400
 
-#define MAX_MAP_AREAS 0x100 // MAX_MAP_AREA_BYTES in q_shared must match!
-#define MAX_MAP_FOGS 0x100
-#define MAX_MAP_PLANES 0x20000
-#define MAX_MAP_NODES 0x20000
-#define MAX_MAP_BRUSHSIDES 0x40000 //% 0x20000 /* ydnar */
-#define MAX_MAP_LEAFS 0x20000
-#define MAX_MAP_LEAFFACES 0x20000
+#define MAX_MAP_AREAS       0x100 // MAX_MAP_AREA_BYTES in q_shared must match!
+#define MAX_MAP_FOGS        0x100
+#define MAX_MAP_PLANES      0x20000
+#define MAX_MAP_NODES       0x20000
+#define MAX_MAP_BRUSHSIDES  0x40000 //% 0x20000 /* ydnar */
+#define MAX_MAP_LEAFS       0x20000
+#define MAX_MAP_LEAFFACES   0x20000
 #define MAX_MAP_LEAFBRUSHES 0x40000
-#define MAX_MAP_PORTALS 0x20000
-#define MAX_MAP_LIGHTING 0x800000
-#define MAX_MAP_LIGHTGRID 0x800000
-#define MAX_MAP_VISIBILITY 0x200000
+#define MAX_MAP_PORTALS     0x20000
+#define MAX_MAP_LIGHTING    0x800000
+#define MAX_MAP_LIGHTGRID   0x800000
+#define MAX_MAP_VISIBILITY  0x200000
 
-#define MAX_MAP_DRAW_SURFS 0x20000
-#define MAX_MAP_DRAW_VERTS 0x80000
+#define MAX_MAP_DRAW_SURFS   0x20000
+#define MAX_MAP_DRAW_VERTS   0x80000
 #define MAX_MAP_DRAW_INDEXES 0x80000
 
 // key / value pair sizes in the entities lump
-#define MAX_KEY 32
+#define MAX_KEY   32
 #define MAX_VALUE 1024
 
 // the editor uses these predefined yaw angles to orient entities up or down
-#define ANGLE_UP -1
+#define ANGLE_UP   -1
 #define ANGLE_DOWN -2
 
-#define LIGHTMAP_WIDTH 128
+#define LIGHTMAP_WIDTH  128
 #define LIGHTMAP_HEIGHT 128
 
 #define MIN_WORLD_COORD ( -65536 )
 #define MAX_WORLD_COORD ( 65536 )
-#define WORLD_SIZE ( MAX_WORLD_COORD - MIN_WORLD_COORD )
+#define WORLD_SIZE      ( MAX_WORLD_COORD - MIN_WORLD_COORD )
 
 //=============================================================================
 
@@ -273,24 +273,24 @@ typedef struct
 	int fileofs, filelen;
 } lump_t;
 
-#define LUMP_ENTITIES 0
-#define LUMP_SHADERS 1
-#define LUMP_PLANES 2
-#define LUMP_NODES 3
-#define LUMP_LEAFS 4
+#define LUMP_ENTITIES     0
+#define LUMP_SHADERS      1
+#define LUMP_PLANES       2
+#define LUMP_NODES        3
+#define LUMP_LEAFS        4
 #define LUMP_LEAFSURFACES 5
-#define LUMP_LEAFBRUSHES 6
-#define LUMP_MODELS 7
-#define LUMP_BRUSHES 8
-#define LUMP_BRUSHSIDES 9
-#define LUMP_DRAWVERTS 10
-#define LUMP_DRAWINDEXES 11
-#define LUMP_FOGS 12
-#define LUMP_SURFACES 13
-#define LUMP_LIGHTMAPS 14
-#define LUMP_LIGHTGRID 15
-#define LUMP_VISIBILITY 16
-#define HEADER_LUMPS 17
+#define LUMP_LEAFBRUSHES  6
+#define LUMP_MODELS       7
+#define LUMP_BRUSHES      8
+#define LUMP_BRUSHSIDES   9
+#define LUMP_DRAWVERTS    10
+#define LUMP_DRAWINDEXES  11
+#define LUMP_FOGS         12
+#define LUMP_SURFACES     13
+#define LUMP_LIGHTMAPS    14
+#define LUMP_LIGHTGRID    15
+#define LUMP_VISIBILITY   16
+#define HEADER_LUMPS      17
 
 typedef struct
 {

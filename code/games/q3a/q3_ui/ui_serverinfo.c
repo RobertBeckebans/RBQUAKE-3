@@ -24,8 +24,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #define SERVERINFO_FRAMEL "menu/art/frame2_l"
 #define SERVERINFO_FRAMER "menu/art/frame1_r"
-#define SERVERINFO_BACK0 "menu/art/back_0"
-#define SERVERINFO_BACK1 "menu/art/back_1"
+#define SERVERINFO_BACK0  "menu/art/back_0"
+#define SERVERINFO_BACK1  "menu/art/back_1"
 
 static char* serverinfo_artlist[] = {
 	SERVERINFO_FRAMEL,
@@ -35,7 +35,7 @@ static char* serverinfo_artlist[] = {
 	NULL
 };
 
-#define ID_ADD 100
+#define ID_ADD  100
 #define ID_BACK 101
 
 typedef struct

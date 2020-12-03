@@ -27,7 +27,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "cg_local.h"
 #ifdef MISSIONPACK
-#include "../../ui/menudef.h"
+	#include "../../ui/menudef.h"
 
 typedef struct
 {
@@ -575,12 +575,12 @@ static void CG_MapRestart( void )
 
 #ifdef MISSIONPACK
 
-#define MAX_VOICEFILESIZE 16384
-#define MAX_VOICEFILES 8
-#define MAX_VOICECHATS 64
-#define MAX_VOICESOUNDS 64
-#define MAX_CHATSIZE 64
-#define MAX_HEADMODELS 64
+	#define MAX_VOICEFILESIZE 16384
+	#define MAX_VOICEFILES    8
+	#define MAX_VOICECHATS    64
+	#define MAX_VOICESOUNDS   64
+	#define MAX_CHATSIZE      64
+	#define MAX_HEADMODELS    64
 
 typedef struct voiceChat_s
 {
@@ -942,7 +942,7 @@ voiceChatList_t* CG_VoiceChatListForClient( int clientNum )
 	return &voiceChatLists[ 0 ];
 }
 
-#define MAX_VOICECHATBUFFER 32
+	#define MAX_VOICECHATBUFFER 32
 
 typedef struct bufferedVoiceChat_s
 {
@@ -962,7 +962,7 @@ CG_PlayVoiceChat
 */
 void CG_PlayVoiceChat( bufferedVoiceChat_t* vchat )
 {
-#ifdef MISSIONPACK
+	#ifdef MISSIONPACK
 	// if we are going into the intermission, don't start any voices
 	if( cg.intermissionStarted )
 	{
@@ -993,7 +993,7 @@ void CG_PlayVoiceChat( bufferedVoiceChat_t* vchat )
 		CG_Printf( "%s\n", vchat->message );
 	}
 	voiceChatBuffer[ cg.voiceChatBufferOut ].snd = 0;
-#endif
+	#endif
 }
 
 /*
@@ -1003,7 +1003,7 @@ CG_PlayBufferedVoieChats
 */
 void CG_PlayBufferedVoiceChats( void )
 {
-#ifdef MISSIONPACK
+	#ifdef MISSIONPACK
 	if( cg.voiceChatTime < cg.time )
 	{
 		if( cg.voiceChatBufferOut != cg.voiceChatBufferIn && voiceChatBuffer[ cg.voiceChatBufferOut ].snd )
@@ -1015,7 +1015,7 @@ void CG_PlayBufferedVoiceChats( void )
 			cg.voiceChatTime      = cg.time + 1000;
 		}
 	}
-#endif
+	#endif
 }
 
 /*
@@ -1025,7 +1025,7 @@ CG_AddBufferedVoiceChat
 */
 void CG_AddBufferedVoiceChat( bufferedVoiceChat_t* vchat )
 {
-#ifdef MISSIONPACK
+	#ifdef MISSIONPACK
 	// if we are going into the intermission, don't start any voices
 	if( cg.intermissionStarted )
 	{
@@ -1039,7 +1039,7 @@ void CG_AddBufferedVoiceChat( bufferedVoiceChat_t* vchat )
 		CG_PlayVoiceChat( &voiceChatBuffer[ cg.voiceChatBufferOut ] );
 		cg.voiceChatBufferOut++;
 	}
-#endif
+	#endif
 }
 
 /*
@@ -1049,7 +1049,7 @@ CG_VoiceChatLocal
 */
 void CG_VoiceChatLocal( int mode, qboolean voiceOnly, int clientNum, int color, const char* cmd )
 {
-#ifdef MISSIONPACK
+	#ifdef MISSIONPACK
 	char*               chat;
 	voiceChatList_t*    voiceChatList;
 	clientInfo_t*       ci;
@@ -1096,7 +1096,7 @@ void CG_VoiceChatLocal( int mode, qboolean voiceOnly, int clientNum, int color, 
 			CG_AddBufferedVoiceChat( &vchat );
 		}
 	}
-#endif
+	#endif
 }
 
 /*

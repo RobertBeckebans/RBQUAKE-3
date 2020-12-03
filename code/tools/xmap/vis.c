@@ -1351,7 +1351,7 @@ int VisMain( int argc, char** argv )
 	end = clock();
 	Sys_Printf( "%5.2f seconds elapsed\n", ( end - start ) / CLK_TCK );
 #else
-	end   = I_FloatTime();
+	end = I_FloatTime();
 	Sys_Printf( "%5.2f seconds elapsed\n", end - start );
 #endif
 

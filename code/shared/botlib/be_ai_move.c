@@ -86,18 +86,18 @@ typedef struct bot_movestate_s
 
 //used to avoid reachability links for some time after being used
 #define AVOIDREACH
-#define AVOIDREACH_TIME 6 //avoid links for 6 seconds after use
+#define AVOIDREACH_TIME  6 //avoid links for 6 seconds after use
 #define AVOIDREACH_TRIES 4
 //prediction times
 #define PREDICTIONTIME_JUMP 3 //in seconds
 #define PREDICTIONTIME_MOVE 2 //in seconds
 //weapon indexes for weapon jumping
 #define WEAPONINDEX_ROCKET_LAUNCHER 5
-#define WEAPONINDEX_BFG 9
+#define WEAPONINDEX_BFG             9
 
-#define MODELTYPE_FUNC_PLAT 1
-#define MODELTYPE_FUNC_BOB 2
-#define MODELTYPE_FUNC_DOOR 3
+#define MODELTYPE_FUNC_PLAT   1
+#define MODELTYPE_FUNC_BOB    2
+#define MODELTYPE_FUNC_DOOR   3
 #define MODELTYPE_FUNC_STATIC 4
 
 libvar_t* sv_maxstep;
@@ -898,12 +898,12 @@ int BotGetReachabilityToGoal( vec3_t origin, int areanum, int lastgoalareanum, i
 		} //end for
 		if( i != MAX_AVOIDREACH && avoidreachtries[ i ] > AVOIDREACH_TRIES )
 		{
-#ifdef DEBUG
+	#ifdef DEBUG
 			if( botDeveloper )
 			{
 				botimport.Print( PRT_MESSAGE, "avoiding reachability %d\n", avoidreach[ i ] );
 			} //end if
-#endif        //DEBUG
+	#endif    //DEBUG
 			continue;
 		} //end if
 #endif    //AVOIDREACH \
@@ -1523,7 +1523,7 @@ void BotCheckBlocked( bot_movestate_t* ms, vec3_t dir, int checkbottom, bot_move
 #ifdef DEBUG
 		//botimport.Print(PRT_MESSAGE, "%d: BotCheckBlocked: I'm blocked\n", ms->client);
 #endif //DEBUG
-	}  //end if
+	} //end if
 	//if not in an area with reachability
 	else if( checkbottom && !AAS_AreaReachability( ms->areanum ) )
 	{
@@ -1538,7 +1538,7 @@ void BotCheckBlocked( bot_movestate_t* ms, vec3_t dir, int checkbottom, bot_move
 			result->flags |= MOVERESULT_ONTOPOFOBSTACLE;
 #ifdef DEBUG
 			//botimport.Print(PRT_MESSAGE, "%d: BotCheckBlocked: I'm blocked\n", ms->client);
-#endif    //DEBUG
+#endif //DEBUG
 		} //end if
 	}     //end else
 } //end of the function BotCheckBlocked
@@ -2931,7 +2931,7 @@ void BotResetGrapple( bot_movestate_t* ms )
 			ms->grapplevisible_time = 0;
 #ifdef DEBUG_GRAPPLE
 			botimport.Print( PRT_MESSAGE, "reset grapple\n" );
-#endif    //DEBUG_GRAPPLE
+#endif //DEBUG_GRAPPLE
 		} //end if
 	}     //end if
 } //end of the function BotResetGrapple
@@ -3699,7 +3699,7 @@ void BotMoveToGoal( bot_moveresult_t* result, int movestate, bot_goal_t* goal, i
 					botimport.Print( PRT_MESSAGE, "area %d no reachability\n", ms->areanum );
 				} //end if
 #endif            //DEBUG
-			}     //end if
+			} //end if
 			//get a new reachability leading towards the goal
 			reachnum = BotGetReachabilityToGoal( ms->origin, ms->areanum, ms->lastgoalareanum, ms->lastareanum, ms->avoidreach, ms->avoidreachtimes, ms->avoidreachtries, goal, travelflags, ms->avoidspots, ms->numavoidspots, &resultflags );
 			//the area number the reachability starts in
@@ -3717,7 +3717,7 @@ void BotMoveToGoal( bot_moveresult_t* result, int movestate, bot_goal_t* goal, i
 #ifdef AVOIDREACH
 				//add the reachability to the reachabilities to avoid for a while
 				BotAddToAvoidReach( ms, reachnum, AVOIDREACH_TIME );
-#endif        //AVOIDREACH
+#endif //AVOIDREACH
 			} //end if
 #ifdef DEBUG
 
@@ -3738,7 +3738,7 @@ void BotMoveToGoal( bot_moveresult_t* result, int movestate, bot_goal_t* goal, i
 				}     //end if
 			}         //end if
 #endif                //DEBUG
-		}             //end else
+		} //end else
 		//
 		ms->lastreachnum    = reachnum;
 		ms->lastgoalareanum = goal->areanum;
@@ -3834,7 +3834,7 @@ void BotMoveToGoal( bot_moveresult_t* result, int movestate, bot_goal_t* goal, i
 			} //end if
 		}     //end if
 #endif        //DEBUG
-	}         //end if
+	} //end if
 	else
 	{
 		int    i, numareas, areas[ 16 ];
@@ -3960,8 +3960,8 @@ void BotMoveToGoal( bot_moveresult_t* result, int movestate, bot_goal_t* goal, i
 				} //end if
 			}     //end if
 #endif            //DEBUG
-		}         //end if
-	}             //end else
+		} //end if
+	}     //end else
 	//FIXME: is it right to do this here?
 	if( result->blocked )
 	{

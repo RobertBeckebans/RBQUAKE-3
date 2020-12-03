@@ -284,8 +284,8 @@ SmoothNormals()
 smooths together coincident vertex normals across the bsp
 */
 
-#define MAX_SAMPLES 256
-#define THETA_EPSILON 0.000001
+#define MAX_SAMPLES          256
+#define THETA_EPSILON        0.000001
 #define EQUAL_NORMAL_EPSILON 0.01
 
 void SmoothNormals( void )
@@ -580,7 +580,7 @@ MapSingleLuxel()
 maps a luxel for triangle bv at
 */
 
-#define NUDGE 0.5f
+#define NUDGE       0.5f
 #define BOGUS_NUDGE -99999.0f
 
 static int MapSingleLuxel( rawLightmap_t* lm, surfaceInfo_t* info, bspDrawVert_t* dv, vec4_t plane, float pass, vec3_t stv[ 3 ], vec3_t ttv[ 3 ], vec3_t worldverts[ 3 ] )
@@ -1584,10 +1584,10 @@ SetupDirt()
 sets up dirtmap (ambient occlusion)
 */
 
-#define DIRT_CONE_ANGLE 88 /* degrees */
-#define DIRT_NUM_ANGLE_STEPS 16
+#define DIRT_CONE_ANGLE          88 /* degrees */
+#define DIRT_NUM_ANGLE_STEPS     16
 #define DIRT_NUM_ELEVATION_STEPS 3
-#define DIRT_NUM_VECTORS ( DIRT_NUM_ANGLE_STEPS * DIRT_NUM_ELEVATION_STEPS )
+#define DIRT_NUM_VECTORS         ( DIRT_NUM_ANGLE_STEPS * DIRT_NUM_ELEVATION_STEPS )
 
 static vec3_t dirtVectors[ DIRT_NUM_VECTORS ];
 static int    numDirtVectors = 0;
@@ -2121,7 +2121,7 @@ IlluminateRawLightmap()
 illuminates the luxels
 */
 
-#define STACK_LL_SIZE ( SUPER_LUXEL_SIZE * 64 * 64 )
+#define STACK_LL_SIZE       ( SUPER_LUXEL_SIZE * 64 * 64 )
 #define LIGHT_LUXEL( x, y ) ( lightLuxels + ( ( ( ( y )*lm->sw ) + ( x ) ) * SUPER_LUXEL_SIZE ) )
 
 void IlluminateRawLightmap( int rawLightmapNum )
@@ -3812,7 +3812,7 @@ taking into account brightness, type, and pvs.
 */
 
 #define LIGHT_EPSILON 0.125f
-#define LIGHT_NUDGE 2.0f
+#define LIGHT_NUDGE   2.0f
 
 void SetupEnvelopes( qboolean forGrid, qboolean fastFlag )
 {
@@ -4341,10 +4341,10 @@ void CreateTraceLightsForSurface( int num, trace_t* trace )
 
 /////////////////////////////////////////////////////////////
 
-#define FLOODLIGHT_CONE_ANGLE 88 /* degrees */
-#define FLOODLIGHT_NUM_ANGLE_STEPS 16
+#define FLOODLIGHT_CONE_ANGLE          88 /* degrees */
+#define FLOODLIGHT_NUM_ANGLE_STEPS     16
 #define FLOODLIGHT_NUM_ELEVATION_STEPS 4
-#define FLOODLIGHT_NUM_VECTORS ( FLOODLIGHT_NUM_ANGLE_STEPS * FLOODLIGHT_NUM_ELEVATION_STEPS )
+#define FLOODLIGHT_NUM_VECTORS         ( FLOODLIGHT_NUM_ANGLE_STEPS * FLOODLIGHT_NUM_ELEVATION_STEPS )
 
 static vec3_t floodVectors[ FLOODLIGHT_NUM_VECTORS ];
 static int    numFloodVectors = 0;

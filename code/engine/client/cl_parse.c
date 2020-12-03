@@ -884,7 +884,7 @@ static void CL_ParseVoip( msg_t* msg )
 		speex_bits_read_from( &clc.speexDecoderBits[ sender ], encoded, len );
 		speex_decode_int( clc.speexDecoder[ sender ], &clc.speexDecoderBits[ sender ], decoded + written );
 
-#if 0
+	#if 0
 		static FILE*    encio = NULL;
 		
 		if( encio == NULL )
@@ -907,7 +907,7 @@ static void CL_ParseVoip( msg_t* msg )
 			fwrite( decoded + written, clc.speexFrameSize * 2, 1, decio );
 			fflush( decio );
 		}
-#endif
+	#endif
 
 		written += clc.speexFrameSize;
 	}

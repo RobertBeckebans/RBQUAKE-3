@@ -28,13 +28,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #define SPECIFYSERVER_FRAMEL "menu/art/frame2_l"
 #define SPECIFYSERVER_FRAMER "menu/art/frame1_r"
-#define SPECIFYSERVER_BACK0 "menu/art/back_0"
-#define SPECIFYSERVER_BACK1 "menu/art/back_1"
+#define SPECIFYSERVER_BACK0  "menu/art/back_0"
+#define SPECIFYSERVER_BACK1  "menu/art/back_1"
 #define SPECIFYSERVER_FIGHT0 "menu/art/fight_0"
 #define SPECIFYSERVER_FIGHT1 "menu/art/fight_1"
 
 #define ID_SPECIFYSERVERBACK 102
-#define ID_SPECIFYSERVERGO 103
+#define ID_SPECIFYSERVERGO   103
 
 static char* specifyserver_artlist[] = {
 	SPECIFYSERVER_FRAMEL,

@@ -54,8 +54,8 @@ extern botlib_import_t botimport;
 //number of areas reachability is calculated for each frame
 #define REACHABILITYAREASPERCYCLE 15
 //number of units reachability points are placed inside the areas
-#define INSIDEUNITS 2
-#define INSIDEUNITS_WALKEND 5
+#define INSIDEUNITS           2
+#define INSIDEUNITS_WALKEND   5
 #define INSIDEUNITS_WALKSTART 0.1
 #define INSIDEUNITS_WATERJUMP 15
 //area flag used for weapon jumping
@@ -2889,7 +2889,7 @@ int AAS_Reachability_Ladder( int area1num, int area2num )
 			{
 				Log_Write( "trace from area %d started in solid\r\n", area1num );
 			} //end if
-#endif        //REACH_DEBUG \
+#endif //REACH_DEBUG \
 	//
 			trace.endpos[ 2 ] += 1;
 			area2num = AAS_PointAreaNum( trace.endpos );
@@ -2959,14 +2959,14 @@ int AAS_Reachability_Ladder( int area1num, int area2num )
 					return qtrue;
 #ifdef REACH_DEBUG
 					Log_Write( "jump up to ladder reach between %d and %d\r\n", area2num, area1num );
-#endif            //REACH_DEBUG
+#endif //REACH_DEBUG
 				} //end if
 #ifdef REACH_DEBUG
 				else
 				{
 					Log_Write( "jump too high between area %d and %d\r\n", area2num, area1num );
 				}
-#endif        //REACH_DEBUG
+#endif //REACH_DEBUG
 			} //end if
 			  /*//if slime or lava below the ladder
 			//try jump reachability from far towards the ladder
@@ -3841,13 +3841,13 @@ void AAS_Reachability_FuncBobbing( void )
 		VectorSet( end_plane.normal, 0, 0, 1 );
 		//
 #ifndef BSPC
-#if 0
+	#if 0
 		for( i = 0; i < 4; i++ )
 		{
 			AAS_PermanentLine( start_edgeverts[i], start_edgeverts[( i + 1 ) % 4], 1 );
 			AAS_PermanentLine( end_edgeverts[i], end_edgeverts[( i + 1 ) % 4], 1 );
 		} //end for
-#endif
+	#endif
 #endif
 		VectorCopy( move_start, move_start_top );
 		move_start_top[ 2 ] += maxs[ 2 ] - mid[ 2 ] + 24; //+ bbox maxs z
@@ -5242,7 +5242,7 @@ void AAS_InitReachability( void )
 		aasworld.numreachabilityareas = aasworld.numareas + 2;
 		return;
 #endif //BSPC
-	}  //end if
+	} //end if
 #ifndef BSPC
 	calcgrapplereach = LibVarGetValue( "grapplereach" );
 #endif

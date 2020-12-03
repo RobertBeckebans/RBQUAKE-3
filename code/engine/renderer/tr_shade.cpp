@@ -2200,11 +2200,11 @@ static void Render_forwardLighting_DBS_directional( shaderStage_t* diffuseStage,
 	// set uniforms
 	VectorCopy( backEnd.viewParms.orientation.origin, viewOrigin );
 
-#if 1
+	#if 1
 	VectorCopy( tr.sunDirection, lightDirection );
-#else
+	#else
 	VectorCopy( light->direction, lightDirection );
-#endif
+	#endif
 
 	VectorCopy( tess.svars.color, lightColor );
 
@@ -4039,11 +4039,11 @@ void Tess_StageIteratorGBufferNormalsOnly()
 					!( pStage->stateBits & ( GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS ) ) &&
 					( pStage->stateBits & ( GLS_DEPTHMASK_TRUE ) ) )
 				{
-#if defined( OFFSCREEN_PREPASS_LIGHTING )
+	#if defined( OFFSCREEN_PREPASS_LIGHTING )
 					R_BindFBO( tr.geometricRenderFBO );
-#else
+	#else
 					R_BindNullFBO();
-#endif
+	#endif
 					Render_geometricFill( stage, true );
 				}
 #endif

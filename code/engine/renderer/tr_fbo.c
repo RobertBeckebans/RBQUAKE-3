@@ -152,7 +152,7 @@ void R_CreateFBOColorBuffer( FBO_t* fbo, int format, int index )
 		return;
 	}
 
-#if 0
+	#if 0
 	if( format != GL_RGB &&
 			format != GL_RGBA &&
 			format != GL_RGB16F_ARB && format != GL_RGBA16F_ARB && format != GL_RGB32F_ARB && format != GL_RGBA32F_ARB )
@@ -160,7 +160,7 @@ void R_CreateFBOColorBuffer( FBO_t* fbo, int format, int index )
 		ri.Printf( PRINT_WARNING, "R_CreateFBOColorBuffer: format %i is not color-renderable\n", format );
 		//return;
 	}
-#endif
+	#endif
 
 	fbo->colorFormat = format;
 
@@ -516,7 +516,7 @@ void R_InitFBOs( void )
 		tr.geometricRenderFBO = R_CreateFBO( "_geometricRender", width, height );
 		R_BindFBO( tr.geometricRenderFBO );
 
-#if 0
+	#if 0
 		if( glConfig2.framebufferPackedDepthStencilAvailable )
 		{
 			R_CreateFBOPackedDepthStencilBuffer( tr.geometricRenderFBO, GL_DEPTH24_STENCIL8 );
@@ -529,7 +529,7 @@ void R_InitFBOs( void )
 			R_AttachFBOTextureDepth( tr.depthRenderImage->texnum );
 		}
 		else
-#endif
+	#endif
 		{
 			R_CreateFBODepthBuffer( tr.geometricRenderFBO, GL_DEPTH_COMPONENT24 );
 			R_AttachFBOTextureDepth( tr.depthRenderImage->texnum );
@@ -581,7 +581,7 @@ void R_InitFBOs( void )
 		}
 		R_AttachFBOTexture2D( GL_TEXTURE_2D, tr.deferredRenderFBOImage->texnum, 0 );
 
-#if 0
+	#if 0
 		if( glConfig2.framebufferPackedDepthStencilAvailable )
 		{
 			R_CreateFBOPackedDepthStencilBuffer( tr.deferredRenderFBO, GL_DEPTH24_STENCIL8_EXT );
@@ -593,7 +593,7 @@ void R_InitFBOs( void )
 			R_AttachFBOTextureDepth( tr.depthRenderImage->texnum );
 		}
 		else
-#endif
+	#endif
 		{
 			R_CreateFBODepthBuffer( tr.deferredRenderFBO, GL_DEPTH_COMPONENT24 );
 			R_AttachFBOTextureDepth( tr.depthRenderImage->texnum );
@@ -833,7 +833,7 @@ void R_InitFBOs( void )
 		R_AttachFBOTexture2D( GL_TEXTURE_2D, tr.downScaleFBOImage_64x64->texnum, 0 );
 		R_CheckFBO( tr.downScaleFBO_64x64 );
 
-#if 0
+	#if 0
 		tr.downScaleFBO_16x16 = R_CreateFBO( "_downScale_16x16", 16, 16 );
 		R_BindFBO( tr.downScaleFBO_16x16 );
 		if( r_hdrRendering->integer && glConfig2.textureFloatAvailable )
@@ -874,7 +874,7 @@ void R_InitFBOs( void )
 		}
 		R_AttachFBOTexture2D( GL_TEXTURE_2D, tr.downScaleFBOImage_1x1->texnum, 0 );
 		R_CheckFBO( tr.downScaleFBO_1x1 );
-#endif
+	#endif
 
 		if( glConfig2.textureNPOTAvailable )
 		{

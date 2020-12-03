@@ -192,15 +192,15 @@ static void R_HDRTonemapLightingColors( const vec4_t in, vec4_t out, qboolean ap
 		return;
 	}
 
-#if 0
+	#if 0
 	scaledLuminance = r_hdrLightmapExposure->value * DotProduct( in, LUMINANCE_VECTOR );
 
-#if 0
+		#if 0
 	finalLuminance = scaledLuminance / ( scaledLuminance + 1.0 );
-#else
+		#else
 	// exponential tone mapping
 	finalLuminance = 1.0 - exp( -scaledLuminance );
-#endif
+		#endif
 	
 	VectorScale( sample, finalLuminance, sample );
 	sample[3] = Q_min( 1.0f, sample[3] );
@@ -218,7 +218,7 @@ static void R_HDRTonemapLightingColors( const vec4_t in, vec4_t out, qboolean ap
 	{
 		Vector4Copy( sample, out );
 	}
-#else
+	#else
 	if( !r_hdrRendering->integer || !r_hdrLightmap->integer || !glConfig2.framebufferObjectAvailable ||
 		!glConfig2.textureFloatAvailable || !glConfig2.framebufferBlitAvailable )
 	{
@@ -257,24 +257,24 @@ static void R_HDRTonemapLightingColors( const vec4_t in, vec4_t out, qboolean ap
 			}
 		}
 
-#if 0
+		#if 0
 		scaledLuminance = r_hdrLightmapExposure->value * DotProduct( in, LUMINANCE_VECTOR );
 
-#if 0
+			#if 0
 		finalLuminance = scaledLuminance / ( scaledLuminance + 1.0 );
-#else
+			#else
 		// exponential tone mapping
 		finalLuminance = 1.0 - exp( -scaledLuminance );
-#endif
+			#endif
 	
 		VectorScale( sample, finalLuminance, out );
-#else
+		#else
 		VectorCopy( sample, out );
-#endif
+		#endif
 
 		out[ 3 ] = Q_min( 1.0f, sample[ 3 ] );
 	}
-#endif
+	#endif
 #endif
 }
 
@@ -457,7 +457,8 @@ void LoadRGBEToFloats( const char* name, float** pic, int* width, int* height, q
 	double       sum;
 	float        gamma;
 
-	union {
+	union
+	{
 		byte  b[ 4 ];
 		float f;
 	} sample;
@@ -1827,12 +1828,12 @@ static void ParseTriSurf( dsurface_t* ds, drawVert_t* verts, bspSurface_t* surf,
 			t1 = cv->verts[tri->indexes[1]].st;
 			t2 = cv->verts[tri->indexes[2]].st;
 
-#if 1
+	#if 1
 			R_CalcTangentSpace( tangent, binormal, normal, v0, v1, v2, t0, t1, t2 );
-#else
+	#else
 			R_CalcNormalForTriangle( normal, v0, v1, v2 );
 			R_CalcTangentsForTriangle2( tangent, binormal, v0, v1, v2, t0, t1, t2 );
-#endif
+	#endif
 			
 			for( j = 0; j < 3; j++ )
 			{
@@ -3391,9 +3392,9 @@ static int OptimizeVertices( int numVerts, srfVert_t* verts, int numTriangles, s
 						else if( tri->indexes[ l ] > i ) // && redundantIndex[tri->indexes[l]] == -1)
 						{
 							tri->indexes[ l ]--;
-#if DEBUG_OPTIMIZEVERTICES
+	#if DEBUG_OPTIMIZEVERTICES
 							ri.Printf( PRINT_ALL, "decTriangleIndex<%i,%i>(%i->%i)\n", k, l, tri->indexes[ l ] + 1, tri->indexes[ l ] );
-#endif
+	#endif
 
 							if( tri->indexes[ l ] < 0 )
 							{
@@ -4400,9 +4401,9 @@ SmoothNormals()
 smooths together coincident vertex normals across the bsp
 */
 #if 0
-#define MAX_SAMPLES 256
-#define THETA_EPSILON 0.000001
-#define EQUAL_NORMAL_EPSILON 0.01
+	#define MAX_SAMPLES          256
+	#define THETA_EPSILON        0.000001
+	#define EQUAL_NORMAL_EPSILON 0.01
 
 void SmoothNormals( const char* name, srfVert_t* verts, int numTotalVerts )
 {
@@ -4837,9 +4838,9 @@ static void R_CreateWorldVBO()
 									ATTR_NORMAL | ATTR_COLOR | GLCS_LIGHTCOLOR | ATTR_LIGHTDIRECTION );
 #else
 	s_worldData.vbo = R_CreateVBO2( va( "staticBspModel0_VBO %i", 0 ), numVerts, verts, ATTR_POSITION | ATTR_TEXCOORD | ATTR_LIGHTCOORD | ATTR_TANGENT | ATTR_BINORMAL | ATTR_NORMAL | ATTR_COLOR
-#if !defined( COMPAT_Q3A ) && !defined( COMPAT_ET )
+	#if !defined( COMPAT_Q3A ) && !defined( COMPAT_ET )
 			| ATTR_PAINTCOLOR | ATTR_LIGHTDIRECTION
-#endif
+	#endif
 		,
 		VBO_USAGE_STATIC );
 #endif
@@ -5283,9 +5284,9 @@ static void R_CreateSubModelVBOs()
 #else
 				vboSurf->vbo =
 					R_CreateVBO2( va( "staticBspModel%i_VBO %i", m, vboSurfaces.currentElements ), numVerts, verts, ATTR_POSITION | ATTR_TEXCOORD | ATTR_LIGHTCOORD | ATTR_TANGENT | ATTR_BINORMAL | ATTR_NORMAL | ATTR_COLOR
-#if !defined( COMPAT_Q3A ) && !defined( COMPAT_ET )
+	#if !defined( COMPAT_Q3A ) && !defined( COMPAT_ET )
 							| ATTR_PAINTCOLOR | ATTR_LIGHTDIRECTION
-#endif
+	#endif
 						,
 						VBO_USAGE_STATIC );
 #endif
@@ -5667,7 +5668,7 @@ static void R_LoadNodesAndLeafs( lump_t* nodeLump, lump_t* leafLump )
 		if( out->contents != CONTENTS_NODE && out->numMarkSurfaces )
 		{
 			// BSP leaves don't have an optimal size so shrink them if possible by their surfaces
-#if 1
+	#if 1
 			mins[0] = Q_min( Q_max( out->mins[0], out->surfMins[0] ), out->maxs[0] );
 			mins[1] = Q_min( Q_max( out->mins[1], out->surfMins[1] ), out->maxs[1] );
 			mins[2] = Q_min( Q_max( out->mins[2], out->surfMins[2] ), out->maxs[2] );
@@ -5675,7 +5676,7 @@ static void R_LoadNodesAndLeafs( lump_t* nodeLump, lump_t* leafLump )
 			maxs[0] = Q_max( Q_min( out->maxs[0], out->surfMaxs[0] ), out->mins[0] );
 			maxs[1] = Q_max( Q_min( out->maxs[1], out->surfMaxs[1] ), out->mins[1] );
 			maxs[2] = Q_max( Q_min( out->maxs[2], out->surfMaxs[2] ), out->mins[2] );
-#else
+	#else
 			mins[0] = Q_max( out->mins[0], out->surfMins[0] );
 			mins[1] = Q_max( out->mins[1], out->surfMins[1] );
 			mins[2] = Q_max( out->mins[2], out->surfMins[2] );
@@ -5683,7 +5684,7 @@ static void R_LoadNodesAndLeafs( lump_t* nodeLump, lump_t* leafLump )
 			maxs[0] = Q_min( out->maxs[0], out->surfMaxs[0] );
 			maxs[1] = Q_min( out->maxs[1], out->surfMaxs[1] );
 			maxs[2] = Q_min( out->maxs[2], out->surfMaxs[2] );
-#endif
+	#endif
 			
 			for( i = 0; i < 3; i++ )
 			{
@@ -7446,11 +7447,11 @@ static int UpdateLightTriangles( const srfVert_t* verts, int numTriangles, srfTr
 				vec3_t lightDirection;
 
 				// light direction is from surface to light
-#if 1
+	#if 1
 				VectorCopy( tr.sunDirection, lightDirection );
-#else
+	#else
 				VectorCopy( light->direction, lightDirection );
-#endif
+	#endif
 
 				d = DotProduct( tri->plane, lightDirection );
 
@@ -7804,13 +7805,13 @@ static void R_CreateVBOLightMeshes( trRefLight_t* light )
 			   ATTR_COLOR, VBO_USAGE_STATIC);
 			 */
 
-#if CALC_REDUNDANT_SHADOWVERTS
+	#if CALC_REDUNDANT_SHADOWVERTS
 			OptimizeTrianglesLite( s_worldData.redundantLightVerts, numTriangles, triangles );
 			if( c_redundantVertexes )
 			{
 				ri.Printf( PRINT_DEVELOPER, "...removed %i redundant vertices from staticLightMesh %i ( %s, %i verts %i tris )\n", c_redundantVertexes, c_vboLightSurfaces, shader->name, numVerts, numTriangles );
 			}
-#endif
+	#endif
 			vboSurf->vbo = s_worldData.vbo;
 			vboSurf->ibo =
 				R_CreateIBO2( va( "staticLightMesh_IBO %i", c_vboLightSurfaces ), numTriangles, triangles, VBO_USAGE_STATIC );
@@ -8019,12 +8020,12 @@ static void R_CreateVBOShadowMeshes( trRefLight_t* light )
 
 				surface = iaCache2->surface;
 
-#if 0
+	#if 0
 				if( surface->shader != shader )
 				{
 					break;
 				}
-#else
+	#else
 				if( alphaTest )
 				{
 					if( surface->shader != shader )
@@ -8039,7 +8040,7 @@ static void R_CreateVBOShadowMeshes( trRefLight_t* light )
 						break;
 					}
 				}
-#endif
+	#endif
 
 				if( *surface->data == SF_FACE )
 				{
@@ -8131,12 +8132,12 @@ static void R_CreateVBOShadowMeshes( trRefLight_t* light )
 
 				surface = iaCache2->surface;
 
-#if 0
+	#if 0
 				if( surface->shader != shader )
 				{
 					break;
 				}
-#else
+	#else
 				if( alphaTest )
 				{
 					if( surface->shader != shader )
@@ -8151,7 +8152,7 @@ static void R_CreateVBOShadowMeshes( trRefLight_t* light )
 						break;
 					}
 				}
-#endif
+	#endif
 
 				if( *surface->data == SF_FACE )
 				{
@@ -8220,13 +8221,13 @@ static void R_CreateVBOShadowMeshes( trRefLight_t* light )
 			   ATTR_COLOR, VBO_USAGE_STATIC);
 			 */
 
-#if CALC_REDUNDANT_SHADOWVERTS
+	#if CALC_REDUNDANT_SHADOWVERTS
 			OptimizeTrianglesLite( s_worldData.redundantShadowVerts, numTriangles, triangles );
 			if( c_redundantVertexes )
 			{
 				ri.Printf( PRINT_DEVELOPER, "...removed %i redundant vertices from staticLightMesh %i ( %s, %i verts %i tris )\n", c_redundantVertexes, c_vboLightSurfaces, shader->name, numVerts, numTriangles );
 			}
-#endif
+	#endif
 			vboSurf->vbo = s_worldData.vbo;
 			vboSurf->ibo = R_CreateIBO2( va( "staticShadowMesh_IBO %i", c_vboLightSurfaces ), numTriangles, triangles, VBO_USAGE_STATIC );
 
@@ -8877,8 +8878,8 @@ void R_PrecacheInteractions()
 #define HASH_USE_EPSILON
 
 #ifdef HASH_USE_EPSILON
-#define HASH_XYZ_EPSILON 0.01f
-#define HASH_XYZ_EPSILONSPACE_MULTIPLIER 1.f / HASH_XYZ_EPSILON
+	#define HASH_XYZ_EPSILON                 0.01f
+	#define HASH_XYZ_EPSILONSPACE_MULTIPLIER 1.f / HASH_XYZ_EPSILON
 #endif
 
 unsigned int VertexCoordGenerateHash( const vec3_t xyz )
@@ -9164,13 +9165,13 @@ void R_BuildCubeMaps( void )
 	byte            temp[ REF_CUBEMAP_SIZE * REF_CUBEMAP_SIZE * 4 ];
 	byte*           dest;
 
-#if 0
+	#if 0
 	byte*           fileBuf;
 	char*           fileName = NULL;
 	int             fileCount = 0;
 	int             fileBufX = 0;
 	int             fileBufY = 0;
-#endif
+	#endif
 
 	//
 
@@ -9197,7 +9198,7 @@ void R_BuildCubeMaps( void )
 	Com_InitGrowList( &tr.cubeProbes, 4000 );
 	tr.cubeHashTable = NewVertexHashTable();
 
-#if 0
+	#if 0
 	if( tr.world->vis )
 	{
 		bspCluster_t*   cluster;
@@ -9227,7 +9228,7 @@ void R_BuildCubeMaps( void )
 			}
 		}
 	}
-#elif 1
+	#elif 1
 	{
 		bspNode_t* node;
 
@@ -9258,7 +9259,7 @@ void R_BuildCubeMaps( void )
 			}
 		}
 	}
-#else
+	#else
 	{
 		int             numGridPoints;
 		bspGridPoint_t* gridPoint;
@@ -9315,7 +9316,7 @@ void R_BuildCubeMaps( void )
 			}
 		}
 	}
-#endif
+	#endif
 
 	// if we can't find one, fake one
 	if( tr.cubeProbes.currentElements == 0 )
@@ -9345,9 +9346,9 @@ void R_BuildCubeMaps( void )
 			{
 				ri.Printf( PRINT_ALL, "*" );
 
-#if defined( COMPAT_ET )
+	#if defined( COMPAT_ET )
 				ri.Cmd_ExecuteText( EXEC_NOW, "updatescreen\n" );
-#endif
+	#endif
 
 			} while( ++tics < ticsNeeded );
 
@@ -9556,7 +9557,7 @@ void R_BuildCubeMaps( void )
 			}
 
 			// collate cubemaps into one large image and write it out
-#if 0
+	#if 0
 			if( qfalse )
 			{
 				// Initialize output buffer
@@ -9592,13 +9593,13 @@ void R_BuildCubeMaps( void )
 					fileBufY = 0;
 				}
 			}
-#endif
+	#endif
 		}
 
-#if defined( USE_D3D10 )
+	#if defined( USE_D3D10 )
 		// TODO
 		continue;
-#else
+	#else
 		// build the cubemap
 		//cubeProbe->cubemap = R_CreateCubeImage(va("_autoCube%d", j), (const byte **)tr.cubeTemp, REF_CUBEMAP_SIZE, REF_CUBEMAP_SIZE, IF_NOPICMIP, FT_LINEAR, WT_EDGE_CLAMP);
 		cubeProbe->cubemap = R_AllocImage( va( "_autoCube%d", j ), qfalse );
@@ -9621,11 +9622,11 @@ void R_BuildCubeMaps( void )
 		R_UploadImage( ( const byte** )tr.cubeTemp, 6, cubeProbe->cubemap );
 
 		glBindTexture( cubeProbe->cubemap->type, 0 );
-#endif
+	#endif
 	}
 	ri.Printf( PRINT_ALL, "\n" );
 
-#if 0
+	#if 0
 	// flush the buffer if there's any still unwritten content
 	if( fileBufX != 0 || fileBufY != 0 )
 	{
@@ -9636,13 +9637,13 @@ void R_BuildCubeMaps( void )
 	}
 	ri.Printf( PRINT_ALL, "Wrote %d cubemaps in %d files.\n", j, fileCount + 1 );
 	ri.Free( fileBuf );
-#endif
+	#endif
 
 	// turn pixel targets off
 	tr.refdef.pixelTarget = NULL;
 
 	// assign the surfs a cubemap
-#if 0
+	#if 0
 	for( i = 0; i < tr.world->numnodes; i++ )
 	{
 		msurface_t**    mark;
@@ -9692,7 +9693,7 @@ void R_BuildCubeMaps( void )
 			}
 		}
 	}
-#endif
+	#endif
 
 	endTime = ri.Milliseconds();
 	ri.Printf( PRINT_ALL, "cubemap probes pre-rendering time of %i cubes = %5.2f seconds\n", tr.cubeProbes.currentElements, ( endTime - startTime ) / 1000.0 );

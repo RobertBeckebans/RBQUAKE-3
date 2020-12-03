@@ -26,7 +26,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // this file is only included when building a dll
 // g_syscalls.asm is included instead when building a qvm
 #ifdef Q3_VM
-#error "Do not use in VM build"
+	#error "Do not use in VM build"
 #endif
 
 static intptr_t( QDECL* syscall )( intptr_t arg, ... ) = ( intptr_t( QDECL* )( intptr_t, ... ) ) - 1;
@@ -348,12 +348,12 @@ int trap_BotLibTest( int parm0, char* parm1, vec3_t parm2, vec3_t parm3 )
 
 //#endif
 
-#if defined( GLADIATOR )
+	#if defined( GLADIATOR )
 void trap_AAS_EntityInfo( int entnum, void /* struct aas_entityinfo_s */* info )
 {
 	syscall( BOTLIB_AAS_ENTITY_INFO, entnum, info );
 }
-#endif
+	#endif
 
 int trap_AAS_Initialized( void )
 {
@@ -365,7 +365,7 @@ void trap_AAS_PresenceTypeBoundingBox( int presencetype, vec3_t mins, vec3_t max
 	syscall( BOTLIB_AAS_PRESENCE_TYPE_BOUNDING_BOX, presencetype, mins, maxs );
 }
 
-#if defined( GLADIATOR )
+	#if defined( GLADIATOR )
 float trap_AAS_Time( void )
 {
 	int temp;
@@ -373,19 +373,19 @@ float trap_AAS_Time( void )
 	temp = syscall( BOTLIB_AAS_TIME );
 	return ( *( float* )&temp );
 }
-#endif
+	#endif
 
 int trap_AAS_PointAreaNum( vec3_t point )
 {
 	return syscall( BOTLIB_AAS_POINT_AREA_NUM, point );
 }
 
-#if defined( GLADIATOR )
+	#if defined( GLADIATOR )
 int trap_AAS_PointReachabilityAreaIndex( vec3_t point )
 {
 	return syscall( BOTLIB_AAS_POINT_REACHABILITY_AREA_INDEX, point );
 }
-#endif
+	#endif
 
 int trap_AAS_TraceAreas( vec3_t start, vec3_t end, int* areas, vec3_t* points, int maxareas )
 {
@@ -407,7 +407,7 @@ int trap_AAS_PointContents( vec3_t point )
 	return syscall( BOTLIB_AAS_POINT_CONTENTS, point );
 }
 
-#if defined( GLADIATOR )
+	#if defined( GLADIATOR )
 int trap_AAS_NextBSPEntity( int ent )
 {
 	return syscall( BOTLIB_AAS_NEXT_BSP_ENTITY, ent );
@@ -432,7 +432,7 @@ int trap_AAS_IntForBSPEpairKey( int ent, char* key, int* value )
 {
 	return syscall( BOTLIB_AAS_INT_FOR_BSP_EPAIR_KEY, ent, key, value );
 }
-#endif
+	#endif
 
 int trap_AAS_AreaReachability( int areanum )
 {
@@ -454,7 +454,7 @@ int trap_AAS_PredictRoute( void /*struct aas_predictroute_s */* route, int arean
 	return syscall( BOTLIB_AAS_PREDICT_ROUTE, route, areanum, origin, goalareanum, travelflags, maxareas, maxtime, stopevent, stopcontents, stoptfl, stopareanum );
 }
 
-#if defined( GLADIATOR )
+	#if defined( GLADIATOR )
 int trap_AAS_AlternativeRouteGoals( vec3_t start, int startareanum, vec3_t goal, int goalareanum, int travelflags, void /*struct aas_altroutegoal_s */* altroutegoals, int maxaltroutegoals, int type )
 {
 	return syscall( BOTLIB_AAS_ALTERNATIVE_ROUTE_GOAL, start, startareanum, goal, goalareanum, travelflags, altroutegoals, maxaltroutegoals, type );
@@ -469,7 +469,7 @@ int trap_AAS_PredictClientMovement( void /* struct aas_clientmove_s */* move, in
 {
 	return syscall( BOTLIB_AAS_PREDICT_CLIENT_MOVEMENT, move, entnum, origin, presencetype, onground, velocity, cmdmove, cmdframes, maxframes, PASSFLOAT( frametime ), stopevent, stopareanum, visualize );
 }
-#endif
+	#endif
 
 void trap_EA_Say( int client, char* str )
 {
@@ -491,7 +491,7 @@ void trap_EA_Action( int client, int action )
 	syscall( BOTLIB_EA_ACTION, client, action );
 }
 
-#if defined( GLADIATOR )
+	#if defined( GLADIATOR )
 void trap_EA_Gesture( int client )
 {
 	syscall( BOTLIB_EA_GESTURE, client );
@@ -551,14 +551,14 @@ void trap_EA_MoveRight( int client )
 {
 	syscall( BOTLIB_EA_MOVE_RIGHT, client );
 }
-#endif
+	#endif
 
 void trap_EA_SelectWeapon( int client, int weapon )
 {
 	syscall( BOTLIB_EA_SELECT_WEAPON, client, weapon );
 }
 
-#if defined( GLADIATOR )
+	#if defined( GLADIATOR )
 void trap_EA_Jump( int client )
 {
 	syscall( BOTLIB_EA_JUMP, client );
@@ -573,19 +573,19 @@ void trap_EA_Move( int client, vec3_t dir, float speed )
 {
 	syscall( BOTLIB_EA_MOVE, client, dir, PASSFLOAT( speed ) );
 }
-#endif
+	#endif
 
 void trap_EA_View( int client, vec3_t viewangles )
 {
 	syscall( BOTLIB_EA_VIEW, client, viewangles );
 }
 
-#if defined( GLADIATOR )
+	#if defined( GLADIATOR )
 void trap_EA_EndRegular( int client, float thinktime )
 {
 	syscall( BOTLIB_EA_END_REGULAR, client, PASSFLOAT( thinktime ) );
 }
-#endif
+	#endif
 
 void trap_EA_GetInput( int client, float thinktime, void /* struct bot_input_s */* input )
 {
@@ -738,7 +738,7 @@ void trap_BotSetChatName( int chatstate, char* name, int client )
 	syscall( BOTLIB_AI_SET_CHAT_NAME, chatstate, name, client );
 }
 
-#if defined( GLADIATOR )
+	#if defined( GLADIATOR )
 void trap_BotResetGoalState( int goalstate )
 {
 	syscall( BOTLIB_AI_RESET_GOAL_STATE, goalstate );
@@ -803,7 +803,7 @@ int trap_BotChooseNBGItem( int goalstate, vec3_t origin, int* inventory, int tra
 {
 	return syscall( BOTLIB_AI_CHOOSE_NBG_ITEM, goalstate, origin, inventory, travelflags, ltg, PASSFLOAT( maxtime ) );
 }
-#endif
+	#endif
 
 int trap_BotTouchingGoal( vec3_t origin, void /* struct bot_goal_s */* goal )
 {
@@ -825,14 +825,14 @@ int trap_BotGetNextCampSpotGoal( int num, void /* struct bot_goal_s */* goal )
 	return syscall( BOTLIB_AI_GET_NEXT_CAMP_SPOT_GOAL, num, goal );
 }
 
-#if defined( GLADIATOR )
+	#if defined( GLADIATOR )
 int trap_BotGetMapLocationGoal( char* name, void /* struct bot_goal_s */* goal )
 {
 	return syscall( BOTLIB_AI_GET_MAP_LOCATION_GOAL, name, goal );
 }
-#endif
+	#endif
 
-#if defined( GLADIATOR )
+	#if defined( GLADIATOR )
 float trap_BotAvoidGoalTime( int goalstate, int number )
 {
 	int temp;
@@ -890,7 +890,7 @@ void trap_BotFreeGoalState( int handle )
 {
 	syscall( BOTLIB_AI_FREE_GOAL_STATE, handle );
 }
-#endif
+	#endif
 
 void trap_BotResetMoveState( int movestate )
 {
@@ -917,7 +917,7 @@ void trap_BotResetAvoidReach( int movestate )
 	syscall( BOTLIB_AI_RESET_AVOID_REACH, movestate );
 }
 
-#if defined( GLADIATOR )
+	#if defined( GLADIATOR )
 void trap_BotResetLastAvoidReach( int movestate )
 {
 	syscall( BOTLIB_AI_RESET_LAST_AVOID_REACH, movestate );
@@ -927,7 +927,7 @@ int trap_BotReachabilityArea( vec3_t origin, int testground )
 {
 	return syscall( BOTLIB_AI_REACHABILITY_AREA, origin, testground );
 }
-#endif
+	#endif
 
 int trap_BotMovementViewTarget( int movestate, void /* struct bot_goal_s */* goal, int travelflags, float lookahead, vec3_t target )
 {
@@ -954,7 +954,7 @@ void trap_BotInitMoveState( int handle, void /* struct bot_initmove_s */* initmo
 	syscall( BOTLIB_AI_INIT_MOVE_STATE, handle, initmove );
 }
 
-#if defined( GLADIATOR )
+	#if defined( GLADIATOR )
 int trap_BotChooseBestFightWeapon( int weaponstate, int* inventory )
 {
 	return syscall( BOTLIB_AI_CHOOSE_BEST_FIGHT_WEAPON, weaponstate, inventory );
@@ -989,6 +989,6 @@ int trap_GeneticParentsAndChildSelection( int numranks, float* ranks, int* paren
 {
 	return syscall( BOTLIB_AI_GENETIC_PARENTS_AND_CHILD_SELECTION, numranks, ranks, parent1, parent2, child );
 }
-#endif
+	#endif
 
 #endif // BRAINWORKS

@@ -28,9 +28,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAX_ASE_MATERIALS 32
-#define MAX_ASE_OBJECTS 128
-#define MAX_ASE_ANIMATIONS 32
+#define MAX_ASE_MATERIALS        32
+#define MAX_ASE_OBJECTS          128
+#define MAX_ASE_ANIMATIONS       32
 #define MAX_ASE_ANIMATION_FRAMES 512
 
 #define VERBOSE( x )      \

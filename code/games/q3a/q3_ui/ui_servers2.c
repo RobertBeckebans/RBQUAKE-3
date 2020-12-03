@@ -30,78 +30,78 @@ MULTIPLAYER MENU (SERVER BROWSER)
 
 #include "ui_local.h"
 
-#define MAX_GLOBALSERVERS 128
-#define MAX_PINGREQUESTS 32
-#define MAX_ADDRESSLENGTH 64
+#define MAX_GLOBALSERVERS  128
+#define MAX_PINGREQUESTS   32
+#define MAX_ADDRESSLENGTH  64
 #define MAX_HOSTNAMELENGTH 22
-#define MAX_MAPNAMELENGTH 16
-#define MAX_LISTBOXITEMS 128
-#define MAX_LOCALSERVERS 128
-#define MAX_STATUSLENGTH 64
-#define MAX_LEAGUELENGTH 28
-#define MAX_LISTBOXWIDTH 68
+#define MAX_MAPNAMELENGTH  16
+#define MAX_LISTBOXITEMS   128
+#define MAX_LOCALSERVERS   128
+#define MAX_STATUSLENGTH   64
+#define MAX_LEAGUELENGTH   28
+#define MAX_LISTBOXWIDTH   68
 
-#define ART_BACK0 "menu/art/back_0"
-#define ART_BACK1 "menu/art/back_1"
-#define ART_CREATE0 "menu/art/create_0"
-#define ART_CREATE1 "menu/art/create_1"
-#define ART_SPECIFY0 "menu/art/specify_0"
-#define ART_SPECIFY1 "menu/art/specify_1"
-#define ART_REFRESH0 "menu/art/refresh_0"
-#define ART_REFRESH1 "menu/art/refresh_1"
-#define ART_CONNECT0 "menu/art/fight_0"
-#define ART_CONNECT1 "menu/art/fight_1"
-#define ART_ARROWS0 "menu/art/arrows_vert_0"
-#define ART_ARROWS_UP "menu/art/arrows_vert_top"
+#define ART_BACK0       "menu/art/back_0"
+#define ART_BACK1       "menu/art/back_1"
+#define ART_CREATE0     "menu/art/create_0"
+#define ART_CREATE1     "menu/art/create_1"
+#define ART_SPECIFY0    "menu/art/specify_0"
+#define ART_SPECIFY1    "menu/art/specify_1"
+#define ART_REFRESH0    "menu/art/refresh_0"
+#define ART_REFRESH1    "menu/art/refresh_1"
+#define ART_CONNECT0    "menu/art/fight_0"
+#define ART_CONNECT1    "menu/art/fight_1"
+#define ART_ARROWS0     "menu/art/arrows_vert_0"
+#define ART_ARROWS_UP   "menu/art/arrows_vert_top"
 #define ART_ARROWS_DOWN "menu/art/arrows_vert_bot"
-#define ART_UNKNOWNMAP "menu/art/unknownmap"
-#define ART_REMOVE0 "menu/art/delete_0"
-#define ART_REMOVE1 "menu/art/delete_1"
-#define ART_PUNKBUSTER "menu/art/pblogo"
+#define ART_UNKNOWNMAP  "menu/art/unknownmap"
+#define ART_REMOVE0     "menu/art/delete_0"
+#define ART_REMOVE1     "menu/art/delete_1"
+#define ART_PUNKBUSTER  "menu/art/pblogo"
 
-#define ID_MASTER 10
-#define ID_GAMETYPE 11
-#define ID_SORTKEY 12
-#define ID_SHOW_FULL 13
-#define ID_SHOW_EMPTY 14
-#define ID_LIST 15
-#define ID_SCROLL_UP 16
+#define ID_MASTER      10
+#define ID_GAMETYPE    11
+#define ID_SORTKEY     12
+#define ID_SHOW_FULL   13
+#define ID_SHOW_EMPTY  14
+#define ID_LIST        15
+#define ID_SCROLL_UP   16
 #define ID_SCROLL_DOWN 17
-#define ID_BACK 18
-#define ID_REFRESH 19
-#define ID_SPECIFY 20
-#define ID_CREATE 21
-#define ID_CONNECT 22
-#define ID_REMOVE 23
-#define ID_PUNKBUSTER 24
+#define ID_BACK        18
+#define ID_REFRESH     19
+#define ID_SPECIFY     20
+#define ID_CREATE      21
+#define ID_CONNECT     22
+#define ID_REMOVE      23
+#define ID_PUNKBUSTER  24
 
-#define GR_LOGO 30
+#define GR_LOGO    30
 #define GR_LETTERS 31
 
-#define UIAS_LOCAL 0
-#define UIAS_GLOBAL0 1
-#define UIAS_GLOBAL1 2
-#define UIAS_GLOBAL2 3
-#define UIAS_GLOBAL3 4
-#define UIAS_GLOBAL4 5
-#define UIAS_GLOBAL5 6
-#define UIAS_FAVORITES 7
+#define UIAS_LOCAL       0
+#define UIAS_GLOBAL0     1
+#define UIAS_GLOBAL1     2
+#define UIAS_GLOBAL2     3
+#define UIAS_GLOBAL3     4
+#define UIAS_GLOBAL4     5
+#define UIAS_GLOBAL5     6
+#define UIAS_FAVORITES   7
 #define UIAS_NUM_SOURCES 8
 
 #define UI_MAX_MASTER_SERVERS 6
 
-#define SORT_HOST 0
-#define SORT_MAP 1
-#define SORT_CLIENTS 2
-#define SORT_GAME 3
-#define SORT_PING 4
+#define SORT_HOST      0
+#define SORT_MAP       1
+#define SORT_CLIENTS   2
+#define SORT_GAME      3
+#define SORT_PING      4
 #define SORT_NUM_SORTS 5
 
-#define GAMES_ALL 0
-#define GAMES_FFA 1
-#define GAMES_TEAMPLAY 2
-#define GAMES_TOURNEY 3
-#define GAMES_CTF 4
+#define GAMES_ALL       0
+#define GAMES_FFA       1
+#define GAMES_TEAMPLAY  2
+#define GAMES_TOURNEY   3
+#define GAMES_CTF       4
 #define GAMES_NUM_GAMES 5
 
 static const char* master_items[] = {

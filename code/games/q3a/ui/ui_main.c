@@ -49,13 +49,13 @@ static const char* skillLevels[] = {
 
 static const int numSkillLevels = ARRAY_LEN( skillLevels );
 
-#define UIAS_LOCAL 0
-#define UIAS_GLOBAL0 1
-#define UIAS_GLOBAL1 2
-#define UIAS_GLOBAL2 3
-#define UIAS_GLOBAL3 4
-#define UIAS_GLOBAL4 5
-#define UIAS_GLOBAL5 6
+#define UIAS_LOCAL     0
+#define UIAS_GLOBAL0   1
+#define UIAS_GLOBAL1   2
+#define UIAS_GLOBAL2   3
+#define UIAS_GLOBAL3   4
+#define UIAS_GLOBAL4   5
+#define UIAS_GLOBAL5   6
 #define UIAS_FAVORITES 7
 
 static const char* netSources[] = {

@@ -503,8 +503,3 @@ void trap_R_RemapShader( const char* oldShader, const char* newShader, const cha
 {
 	syscall( UI_R_REMAP_SHADER, oldShader, newShader, timeOffset );
 }
-
-qboolean trap_GetNews( qboolean force )
-{
-	return syscall( UI_GETNEWS, force );
-}

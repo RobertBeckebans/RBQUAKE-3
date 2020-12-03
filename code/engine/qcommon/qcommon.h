@@ -1,22 +1,21 @@
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
-Copyright (C) 2006-2008 Robert Beckebans <trebor_7@users.sourceforge.net>
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -29,12 +28,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 //Ignore __attribute__ on non-gcc platforms
 #ifndef __GNUC__
-#ifndef __attribute__
-#define __attribute__( x )
-#endif
+	#ifndef __attribute__
+		#define __attribute__( x )
+	#endif
 #endif
 
-//#define   PRE_RELEASE_DEMO
+//#define	PRE_RELEASE_DEMO
 
 //============================================================================
 
@@ -194,8 +193,11 @@ void        NET_Sleep( int msec );
 #define MAX_MSGLEN ( 16384 * 2 ) // max length of a message, which may
 // be fragmented into multiple packets
 
-#define MAX_DOWNLOAD_WINDOW 8     // max of eight download frames
-#define MAX_DOWNLOAD_BLKSIZE 2048 // 2048 byte block chunks
+#define MAX_DOWNLOAD_WINDOW 48 // ACK window of 48 download chunks. Cannot set this higher, or clients
+// will overflow the reliable commands buffer
+#define MAX_DOWNLOAD_BLKSIZE 1024 // 896 byte block chunks
+
+#define NETCHAN_GENCHECKSUM( challenge, sequence ) ( ( challenge ) ^ ( ( sequence ) * ( challenge ) ) )
 
 /*
 Netchan handles packet fragmentation and out of order / duplicate suppression
@@ -225,6 +227,14 @@ typedef struct
 	int      unsentFragmentStart;
 	int      unsentLength;
 	byte     unsentBuffer[ MAX_MSGLEN ];
+
+	int challenge;
+	int lastSentTime;
+	int lastSentSize;
+
+#ifdef LEGACY_PROTOCOL
+	qboolean compat;
+#endif
 } netchan_t;
 
 void Netchan_Init( int qport );
@@ -250,21 +260,21 @@ PROTOCOL
 extern int demo_protocols[];
 
 #ifndef MASTER_SERVER_NAME
-#define MASTER_SERVER_NAME "master.xreal-project.net"
+	#define MASTER_SERVER_NAME "master.xreal-project.net"
 #endif
 
 #ifndef STANDALONE
-#ifndef AUTHORIZE_SERVER_NAME
-#define AUTHORIZE_SERVER_NAME "authorize.quake3arena.com"
-#endif
-#ifndef PORT_AUTHORIZE
-#define PORT_AUTHORIZE 27952
-#endif
+	#ifndef AUTHORIZE_SERVER_NAME
+		#define AUTHORIZE_SERVER_NAME "authorize.quake3arena.com"
+	#endif
+	#ifndef PORT_AUTHORIZE
+		#define PORT_AUTHORIZE 27952
+	#endif
 #endif
 
-#define PORT_MASTER 27950
-#define PORT_SERVER 27960
-
+#define PORT_MASTER      27950
+#define PORT_UPDATE      27951
+#define PORT_SERVER      27960
 #define NUM_SERVER_PORTS 4 // broadcast scan this many ports after
 // PORT_SERVER so a single machine can
 // run multiple servers
@@ -365,7 +375,6 @@ typedef enum
 
 void  VM_Init( void );
 vm_t* VM_Create( const char* module, intptr_t ( *systemCalls )( intptr_t* ), vmInterpret_t interpret );
-
 // module should be bare: "cgame", not "cgame.dll" or "vm/cgame.qvm"
 
 void  VM_Free( vm_t* vm );
@@ -385,11 +394,9 @@ void* VM_ExplicitArgPtr( vm_t* vm, intptr_t intValue );
 static ID_INLINE float _vmf( intptr_t x )
 {
 	floatint_t fi;
-
 	fi.i = ( int )x;
 	return fi.f;
 }
-
 #define VMF( x ) _vmf( args[ x ] )
 
 /*
@@ -411,19 +418,15 @@ files can be execed.
 */
 
 void Cbuf_Init( void );
-
 // allocates an initial text buffer that will grow as needed
 
 void Cbuf_AddText( const char* text );
-
 // Adds command text at the end of the buffer, does NOT add a final \n
 
 void Cbuf_ExecuteText( int exec_when, const char* text );
-
 // this can be used in place of either Cbuf_AddText or Cbuf_InsertText
 
 void Cbuf_Execute( void );
-
 // Pulls off \n terminated lines of text from the command buffer and sends
 // them through Cmd_ExecuteString.  Stops when the buffer is empty.
 // Normally called once per frame, but may be explicitly invoked.
@@ -443,7 +446,6 @@ typedef void ( *xcommand_t )( void );
 void Cmd_Init( void );
 
 void Cmd_AddCommand( const char* cmd_name, xcommand_t function );
-
 // called by the init functions of other parts of the program to
 // register commands and functions to call for them.
 // The cmd_name is referenced later, so it should not be in temp memory
@@ -454,13 +456,15 @@ void Cmd_RemoveCommand( const char* cmd_name );
 
 typedef void ( *completionFunc_t )( char* args, int argNum );
 
-void Cmd_CommandCompletion( void ( *callback )( const char* s ) );
+// don't allow VMs to remove system commands
+void Cmd_RemoveCommandSafe( const char* cmd_name );
 
+void Cmd_CommandCompletion( void ( *callback )( const char* s ) );
 // callback with each valid string
-void       Cmd_SetCommandCompletionFunc( const char* command, completionFunc_t complete );
-void       Cmd_CompleteArgument( const char* command, char* args, int argNum );
-xcommand_t Cmd_GetCommandFunction( const char* cmdName );
-void       Cmd_CompleteCfgName( char* args, int argNum );
+void Cmd_SetCommandCompletionFunc( const char* command,
+	completionFunc_t                           complete );
+void Cmd_CompleteArgument( const char* command, char* args, int argNum );
+void Cmd_CompleteCfgName( char* args, int argNum );
 
 int   Cmd_Argc( void );
 char* Cmd_Argv( int arg );
@@ -470,19 +474,16 @@ char* Cmd_ArgsFrom( int arg );
 void  Cmd_ArgsBuffer( char* buffer, int bufferLength );
 char* Cmd_Cmd( void );
 void  Cmd_Args_Sanitize( void );
-
 // The functions that execute commands get their parameters with these
 // functions. Cmd_Argv () will return an empty string, not a NULL
 // if arg > argc, so string operations are allways safe.
 
 void Cmd_TokenizeString( const char* text );
 void Cmd_TokenizeStringIgnoreQuotes( const char* text_in );
-
 // Takes a null terminated string.  Does not need to be /n terminated.
 // breaks the string up into arg tokens.
 
 void Cmd_ExecuteString( const char* text );
-
 // Parses a single line of text into arguments and tries to execute it
 // as if it was typed at the console
 
@@ -514,65 +515,59 @@ modules of the program.
 */
 
 cvar_t* Cvar_Get( const char* var_name, const char* value, int flags );
-
 // creates the variable if it doesn't exist, or returns the existing one
 // if it exists, the value will not be changed, but flags will be ORed in
 // that allows variables to be unarchived without needing bitflags
 // if value is "", the value will not override a previously set value.
 
 void Cvar_Register( vmCvar_t* vmCvar, const char* varName, const char* defaultValue, int flags );
-
 // basically a slightly modified Cvar_Get for the interpreted modules
 
 void Cvar_Update( vmCvar_t* vmCvar );
-
 // updates an interpreted modules' version of a cvar
 
 void Cvar_Set( const char* var_name, const char* value );
-
 // will create the variable with no flags if it doesn't exist
 
-void Cvar_SetLatched( const char* var_name, const char* value );
+cvar_t* Cvar_Set2( const char* var_name, const char* value, qboolean force );
+// same as Cvar_Set, but allows more control over setting of cvar
 
+void Cvar_SetSafe( const char* var_name, const char* value );
+// sometimes we set variables from an untrusted source: fail if flags & CVAR_PROTECTED
+
+void Cvar_SetLatched( const char* var_name, const char* value );
 // don't set the cvar immediately
 
 void Cvar_SetValue( const char* var_name, float value );
-
-// expands value to a string and calls Cvar_Set
+void Cvar_SetValueSafe( const char* var_name, float value );
+// expands value to a string and calls Cvar_Set/Cvar_SetSafe
 
 float Cvar_VariableValue( const char* var_name );
 int   Cvar_VariableIntegerValue( const char* var_name );
-
 // returns 0 if not defined or non numeric
 
 char* Cvar_VariableString( const char* var_name );
 void  Cvar_VariableStringBuffer( const char* var_name, char* buffer, int bufsize );
-
 // returns an empty string if not defined
 
 int Cvar_Flags( const char* var_name );
-
 // returns CVAR_NONEXISTENT if cvar doesn't exist or the flags of that particular CVAR.
 
 void Cvar_CommandCompletion( void ( *callback )( const char* s ) );
-
 // callback with each valid string
 
 void Cvar_Reset( const char* var_name );
 void Cvar_ForceReset( const char* var_name );
 
 void Cvar_SetCheatState( void );
-
 // reset all testing vars to a safe value
 
 qboolean Cvar_Command( void );
-
 // called by Cmd_ExecuteString when Cmd_Argv(0) doesn't match a known
 // command.  Returns true if the command was a variable reference that
 // was handled. (print or change)
 
 void Cvar_WriteVariables( fileHandle_t f );
-
 // writes lines containing "set variable value" for all variables
 // with the archive flag set to true.
 
@@ -580,11 +575,11 @@ void Cvar_Init( void );
 
 char* Cvar_InfoString( int bit );
 char* Cvar_InfoString_Big( int bit );
-
 // returns an info string containing all the cvars that have the given bit set
 // in their flags ( CVAR_USERINFO, CVAR_SERVERINFO, CVAR_SYSTEMINFO, etc )
 void Cvar_InfoStringBuffer( int bit, char* buff, int buffsize );
 void Cvar_CheckRange( cvar_t* cv, float minVal, float maxVal, qboolean shouldBeIntegral );
+void Cvar_SetDescription( cvar_t* var, const char* var_description );
 
 void Cvar_Restart( qboolean unsetVM );
 void Cvar_Restart_f( void );
@@ -592,7 +587,6 @@ void Cvar_Restart_f( void );
 void Cvar_CompleteCvarName( char* args, int argNum );
 
 extern int cvar_modifiedFlags;
-
 // whenever a cvar is modifed, its flags will be OR'd into this, so
 // a single check can determine if any CVAR_USERINFO, CVAR_SERVERINFO,
 // etc, variables have been modified since the last check.  The bit
@@ -612,18 +606,19 @@ issues.
 // referenced flags
 // these are in loop specific order so don't change the order
 #define FS_GENERAL_REF 0x01
-#define FS_UI_REF 0x02
-#define FS_CGAME_REF 0x04
-#define FS_QAGAME_REF 0x08
-// number of id paks that will never be autodownloaded from baseq3
+#define FS_UI_REF      0x02
+#define FS_CGAME_REF   0x04
+#define FS_QAGAME_REF  0x08
+// number of id paks that will never be autodownloaded from baseq3/missionpack
 #define NUM_ID_PAKS 9
+#define NUM_TA_PAKS 4
 
 #define MAX_FILE_HANDLES 64
 
 #ifdef DEDICATED
-#define Q3CONFIG_CFG "xreal_server.cfg"
+	#define Q3CONFIG_CFG "q3config_server.cfg"
 #else
-#define Q3CONFIG_CFG "xreal.cfg"
+	#define Q3CONFIG_CFG "q3config.cfg"
 #endif
 
 qboolean FS_Initialized( void );
@@ -633,7 +628,6 @@ void FS_Shutdown( qboolean closemfp );
 
 qboolean FS_ConditionalRestart( int checksumFeed );
 void     FS_Restart( int checksumFeed );
-
 // shutdown and restart the filesystem so changes to fs_gamedir can take effect
 
 void FS_AddGameDirectory( const char* path, const char* dir );
@@ -662,9 +656,11 @@ int FS_LoadStack( void );
 int FS_GetFileList( const char* path, const char* extension, char* listbuf, int bufsize );
 int FS_GetModList( char* listbuf, int bufsize );
 
+void FS_GetModDescription( const char* modDir, char* description, int descriptionLen );
+
 fileHandle_t FS_FOpenFileWrite( const char* qpath );
 fileHandle_t FS_FOpenFileAppend( const char* filename );
-
+fileHandle_t FS_FCreateOpenPipeFile( const char* filename );
 // will properly create any needed paths and deal with seperater character issues
 
 long         FS_filelength( fileHandle_t f );
@@ -680,58 +676,48 @@ long         FS_FOpenFileRead( const char* filename, fileHandle_t* file, qboolea
 // file IO goes through FS_ReadFile, which Does The Right Thing already.
 
 int FS_FileIsInPAK( const char* filename, int* pChecksum );
-
 // returns 1 if a file is in the PAK file, otherwise -1
 
 int FS_Write( const void* buffer, int len, fileHandle_t f );
 
 int FS_Read2( void* buffer, int len, fileHandle_t f );
 int FS_Read( void* buffer, int len, fileHandle_t f );
-
 // properly handles partial reads and reads from other dlls
 
 void FS_FCloseFile( fileHandle_t f );
-
 // note: you can't just fclose from another DLL, due to MS libc issues
 
 int FS_ReadFile( const char* qpath, void** buffer );
 
 // returns the length of the file
 // a null buffer will just return the file length without loading
-// as a quick check for existance. -1 length == not present
+// as a quick check for existence. -1 length == not present
 // A 0 byte will always be appended at the end, so string ops are safe.
 // the buffer should be considered read-only, because it may be cached
 // for other uses.
 
 void FS_ForceFlush( fileHandle_t f );
-
 // forces flush on files we're writing to.
 
 void FS_FreeFile( void* buffer );
-
 // frees the memory returned by FS_ReadFile
 
 void FS_WriteFile( const char* qpath, const void* buffer, int size );
-
 // writes a complete file, creating any subdirectories needed
 
 int FS_FTell( fileHandle_t f );
-
 // where are we?
 
 void FS_Flush( fileHandle_t f );
 
 void QDECL FS_Printf( fileHandle_t f, const char* fmt, ... ) __attribute__( ( format( printf, 2, 3 ) ) );
-
 // like fprintf
 
 int FS_FOpenFileByMode( const char* qpath, fileHandle_t* f, fsMode_t mode );
-
 // opens a file for reading, writing, or appending depending on the value of mode
 
 int FS_Seek( fileHandle_t f, long offset, int origin );
-
-// seek on a file (doesn't work for zip files!!!!!!!!)
+// seek on a file
 
 qboolean FS_FilenameCompare( const char* s1, const char* s2 );
 
@@ -742,25 +728,21 @@ const char* FS_GamePureChecksum( void );
 const char* FS_LoadedPakNames( void );
 const char* FS_LoadedPakChecksums( void );
 const char* FS_LoadedPakPureChecksums( void );
-
 // Returns a space separated string containing the checksums of all loaded pk3 files.
 // Servers with sv_pure set will get this string and pass it to clients.
 
 const char* FS_ReferencedPakNames( void );
 const char* FS_ReferencedPakChecksums( void );
 const char* FS_ReferencedPakPureChecksums( void );
-
 // Returns a space separated string containing the checksums of all loaded
 // AND referenced pk3 files. Servers with sv_pure set will get this string
 // back from clients for pure validation
 
 void FS_ClearPakReferences( int flags );
-
 // clears referenced booleans on loaded pk3s
 
 void FS_PureServerSetReferencedPaks( const char* pakSums, const char* pakNames );
 void FS_PureServerSetLoadedPaks( const char* pakSums, const char* pakNames );
-
 // If the string is empty, all data sources will be allowed.
 // If not empty, only pk3 files that match one of the space
 // separated checksums will be checked for files, with the
@@ -777,6 +759,7 @@ void FS_HomeRemove( const char* homePath );
 void FS_FilenameCompletion( const char* dir, const char* ext, qboolean stripExt, void ( *callback )( const char* s ) );
 
 const char* FS_GetCurrentGameDir( void );
+qboolean    FS_Which( const char* filename, void* searchPath );
 
 /*
 ==============================================================
@@ -835,7 +818,7 @@ typedef enum
 	SE_NONE = 0,      // evTime is still valid
 	SE_KEY,           // evValue is a key code, evValue2 is the down flag
 	SE_CHAR,          // evValue is an ascii char
-	SE_MOUSE,         // evValue and evValue2 are reletive signed x / y moves
+	SE_MOUSE,         // evValue and evValue2 are relative signed x / y moves
 	SE_JOYSTICK_AXIS, // evValue is an axis number and evValue2 is the current state (-127 to 127)
 	SE_CONSOLE,       // evPtr is a char*
 	SE_PACKET         // evPtr is a netadr_t followed by data bytes to evPtrLength
@@ -909,13 +892,22 @@ extern cvar_t* sv_paused;
 extern cvar_t* cl_packetdelay;
 extern cvar_t* sv_packetdelay;
 
+extern cvar_t* com_gamename;
+extern cvar_t* com_protocol;
+#ifdef LEGACY_PROTOCOL
+extern cvar_t* com_legacyprotocol;
+#endif
+#ifndef DEDICATED
+extern cvar_t* con_autochat;
+#endif
+
 // com_speeds times
 extern int time_game;
 extern int time_frontend;
 extern int time_backend; // renderer backend time
 
 extern int com_frameTime;
-extern int com_frameMsec;
+extern int com_frameMsec; // RB
 
 extern qboolean com_errorEntered;
 extern qboolean com_fullyInitialized;
@@ -953,13 +945,13 @@ temp file loading
 */
 
 #if defined( _DEBUG )
-#define ZONE_DEBUG
+	#define ZONE_DEBUG
 #endif
 
 #ifdef ZONE_DEBUG
-#define Z_TagMalloc( size, tag ) Z_TagMallocDebug( size, tag, #size, __FILE__, __LINE__ )
-#define Z_Malloc( size ) Z_MallocDebug( size, #size, __FILE__, __LINE__ )
-#define S_Malloc( size ) S_MallocDebug( size, #size, __FILE__, __LINE__ )
+	#define Z_TagMalloc( size, tag ) Z_TagMallocDebug( size, tag, #size, __FILE__, __LINE__ )
+	#define Z_Malloc( size )         Z_MallocDebug( size, #size, __FILE__, __LINE__ )
+	#define S_Malloc( size )         S_MallocDebug( size, #size, __FILE__, __LINE__ )
 void* Z_TagMallocDebug( int size, int tag, char* label, char* file, int line ); // NOT 0 filled memory
 void* Z_MallocDebug( int size, char* label, char* file, int line );             // returns 0 filled memory
 void* S_MallocDebug( int size, char* label, char* file, int line );             // returns 0 filled memory
@@ -982,7 +974,6 @@ void*    Hunk_AllocateTempMemory( int size );
 void     Hunk_FreeTempMemory( void* buf );
 int      Hunk_MemoryRemaining( void );
 void     Hunk_Log( void );
-void     Hunk_Trash( void );
 
 void Com_TouchMemory( void );
 
@@ -1003,7 +994,6 @@ CLIENT / SERVER SYSTEMS
 // client interface
 //
 void CL_InitKeyCommands( void );
-
 // the keyboard binding interface must be setup before execing
 // config files, but the rest of client startup will happen later
 
@@ -1015,7 +1005,6 @@ qboolean CL_GameCommand( void );
 void     CL_KeyEvent( int key, qboolean down, unsigned time );
 
 void CL_CharEvent( int key );
-
 // char events are for field typing, not game control
 
 void CL_MouseEvent( int dx, int dy, int time );
@@ -1027,20 +1016,17 @@ void CL_PacketEvent( netadr_t from, msg_t* msg );
 void CL_ConsolePrint( char* text );
 
 void CL_MapLoading( void );
-
 // do a screen update before starting to load a map
 // when the server is going to load a new map, the entire hunk
 // will be cleared, so the client must shutdown cgame, ui, and
 // the renderer
 
 void CL_ForwardCommandToServer( const char* string );
-
 // adds the current command line as a clc_clientCommand to the client message.
 // things like godmode, noclip, etc, are commands directed to the server,
 // so when they are typed in at the console, they will need to be forwarded.
 
 void CL_CDDialog( void );
-
 // bring up the "need a cd to play" dialog
 
 void CL_ShutdownAll( void );
@@ -1052,7 +1038,6 @@ void CL_FlushMemory( void );
 // dump all memory on an error
 
 void CL_StartHunkUsers( qboolean rendererOnly );
-
 // start all the client stuff using the hunk
 
 void CL_Snd_Restart( void );
@@ -1060,15 +1045,12 @@ void CL_Snd_Restart( void );
 // Restart sound subsystem
 
 void Key_KeynameCompletion( void ( *callback )( const char* s ) );
-
 // for keyname autocompletion
 
 void Key_WriteBindings( fileHandle_t f );
-
 // for writing the config files
 
 void S_ClearSoundBuffer( void );
-
 // call before filesystem access
 
 void SCR_DebugGraph( float value, int color ); // FIXME: move logging to common?
@@ -1156,8 +1138,10 @@ FILE*    Sys_Mkfifo( const char* ospath );
 char*    Sys_Cwd( void );
 void     Sys_SetDefaultInstallPath( const char* path );
 char*    Sys_DefaultInstallPath( void );
+char*    Sys_SteamPath( void );
+char*    Sys_GogPath( void );
 
-#ifdef MACOS_X
+#ifdef __APPLE__
 char* Sys_DefaultAppPath( void );
 #endif
 
@@ -1200,7 +1184,7 @@ qboolean Sys_WritePIDFile( void );
  * Compression book.  The ranks are not actually stored, but implicitly defined
  * by the location of a node within a doubly-linked list */
 
-#define NYT HMAX /* NYT = Not Yet Transmitted */
+#define NYT           HMAX /* NYT = Not Yet Transmitted */
 #define INTERNAL_NODE ( HMAX + 1 )
 
 typedef struct nodetype
@@ -1258,9 +1242,9 @@ extern huffman_t clientHuffTables;
 #define CL_DECODE_START 4
 
 // flags for sv_allowDownload and cl_allowDownload
-#define DLF_ENABLE 1
-#define DLF_NO_REDIRECT 2
-#define DLF_NO_UDP 4
+#define DLF_ENABLE        1
+#define DLF_NO_REDIRECT   2
+#define DLF_NO_UDP        4
 #define DLF_NO_DISCONNECT 8
 
 #endif // _QCOMMON_H_

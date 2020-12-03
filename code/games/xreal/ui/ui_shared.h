@@ -28,92 +28,92 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "keycodes.h"
 #include "menudef.h"
 
-#define MAX_MENUNAME 32
-#define MAX_ITEMTEXT 64
-#define MAX_ITEMACTION 64
-#define MAX_MENUDEFFILE 4096
-#define MAX_MENUFILE 32768
-#define MAX_MENUS 256
-#define MAX_MENUITEMS 128
+#define MAX_MENUNAME     32
+#define MAX_ITEMTEXT     64
+#define MAX_ITEMACTION   64
+#define MAX_MENUDEFFILE  4096
+#define MAX_MENUFILE     32768
+#define MAX_MENUS        256
+#define MAX_MENUITEMS    128
 #define MAX_COLOR_RANGES 10
-#define MAX_OPEN_MENUS 16
+#define MAX_OPEN_MENUS   16
 
-#define WINDOW_MOUSEOVER 0x00000001     // mouse is over it, non exclusive
-#define WINDOW_HASFOCUS 0x00000002      // has cursor focus, exclusive
-#define WINDOW_VISIBLE 0x00000004       // is visible
-#define WINDOW_GREY 0x00000008          // is visible but grey ( non-active )
-#define WINDOW_DECORATION 0x00000010    // for decoration only, no mouse, keyboard, etc..
-#define WINDOW_FADINGOUT 0x00000020     // fading out, non-active
-#define WINDOW_FADINGIN 0x00000040      // fading in
+#define WINDOW_MOUSEOVER     0x00000001 // mouse is over it, non exclusive
+#define WINDOW_HASFOCUS      0x00000002 // has cursor focus, exclusive
+#define WINDOW_VISIBLE       0x00000004 // is visible
+#define WINDOW_GREY          0x00000008 // is visible but grey ( non-active )
+#define WINDOW_DECORATION    0x00000010 // for decoration only, no mouse, keyboard, etc..
+#define WINDOW_FADINGOUT     0x00000020 // fading out, non-active
+#define WINDOW_FADINGIN      0x00000040 // fading in
 #define WINDOW_MOUSEOVERTEXT 0x00000080 // mouse is over it, non exclusive
-#define WINDOW_INTRANSITION 0x00000100  // window is in transition
-#define WINDOW_FORECOLORSET 0x00000200  // forecolor was explicitly set ( used to color alpha images or not )
-#define WINDOW_HORIZONTAL 0x00000400    // for list boxes and sliders, vertical is default this is set of horizontal
-#define WINDOW_LB_UPARROW 0x00000800    // mouse is over up arrow
-#define WINDOW_LB_DOWNARROW 0x00001000  // mouse is over down arrow
-#define WINDOW_LB_THUMB 0x00002000      // mouse is over thumb
-#define WINDOW_LB_PGUP 0x00004000       // mouse is over page up
-#define WINDOW_LB_PGDN 0x00008000       // mouse is over page down
-#define WINDOW_ORBITING 0x00010000      // item is in orbit
-#define WINDOW_OOB_CLICK 0x00020000     // close on out of bounds click
-#define WINDOW_WRAPPED 0x00080000       // wrap text
-#define WINDOW_FORCED 0x00100000        // forced open
-#define WINDOW_POPUP 0x00200000         // popup
-#define WINDOW_BACKCOLORSET 0x00400000  // backcolor was explicitly set
-#define WINDOW_TIMEDVISIBLE 0x00800000  // visibility timing ( NOT implemented )
+#define WINDOW_INTRANSITION  0x00000100 // window is in transition
+#define WINDOW_FORECOLORSET  0x00000200 // forecolor was explicitly set ( used to color alpha images or not )
+#define WINDOW_HORIZONTAL    0x00000400 // for list boxes and sliders, vertical is default this is set of horizontal
+#define WINDOW_LB_UPARROW    0x00000800 // mouse is over up arrow
+#define WINDOW_LB_DOWNARROW  0x00001000 // mouse is over down arrow
+#define WINDOW_LB_THUMB      0x00002000 // mouse is over thumb
+#define WINDOW_LB_PGUP       0x00004000 // mouse is over page up
+#define WINDOW_LB_PGDN       0x00008000 // mouse is over page down
+#define WINDOW_ORBITING      0x00010000 // item is in orbit
+#define WINDOW_OOB_CLICK     0x00020000 // close on out of bounds click
+#define WINDOW_WRAPPED       0x00080000 // wrap text
+#define WINDOW_FORCED        0x00100000 // forced open
+#define WINDOW_POPUP         0x00200000 // popup
+#define WINDOW_BACKCOLORSET  0x00400000 // backcolor was explicitly set
+#define WINDOW_TIMEDVISIBLE  0x00800000 // visibility timing ( NOT implemented )
 
 // CGAME cursor type bits
-#define CURSOR_NONE 0x00000001
+#define CURSOR_NONE  0x00000001
 #define CURSOR_ARROW 0x00000002
 #define CURSOR_SIZER 0x00000004
 
 #ifdef CGAME
-#define STRING_POOL_SIZE 128 * 1024
+	#define STRING_POOL_SIZE 128 * 1024
 #else
-#define STRING_POOL_SIZE 384 * 1024
+	#define STRING_POOL_SIZE 384 * 1024
 #endif
 #define MAX_STRING_HANDLES 4096
 
-#define MAX_SCRIPT_ARGS 12
-#define MAX_EDITFIELD 256
+#define MAX_SCRIPT_ARGS   12
+#define MAX_EDITFIELD     256
 #define ITEM_VALUE_OFFSET 8
 
-#define ART_FX_BASE "menu/art/fx_base"
-#define ART_FX_BLUE "menu/art/fx_blue"
-#define ART_FX_CYAN "menu/art/fx_cyan"
-#define ART_FX_GREEN "menu/art/fx_grn"
-#define ART_FX_RED "menu/art/fx_red"
-#define ART_FX_TEAL "menu/art/fx_teal"
-#define ART_FX_WHITE "menu/art/fx_white"
+#define ART_FX_BASE   "menu/art/fx_base"
+#define ART_FX_BLUE   "menu/art/fx_blue"
+#define ART_FX_CYAN   "menu/art/fx_cyan"
+#define ART_FX_GREEN  "menu/art/fx_grn"
+#define ART_FX_RED    "menu/art/fx_red"
+#define ART_FX_TEAL   "menu/art/fx_teal"
+#define ART_FX_WHITE  "menu/art/fx_white"
 #define ART_FX_YELLOW "menu/art/fx_yel"
 
-#define ASSET_GRADIENTBAR "ui/assets/gradientbar2.tga"
-#define ASSET_SCROLLBAR "ui/assets/scrollbar.tga"
-#define ASSET_SCROLLBAR_ARROWDOWN "ui/assets/scrollbar_arrow_dwn_a.tga"
-#define ASSET_SCROLLBAR_ARROWUP "ui/assets/scrollbar_arrow_up_a.tga"
-#define ASSET_SCROLLBAR_ARROWLEFT "ui/assets/scrollbar_arrow_left.tga"
+#define ASSET_GRADIENTBAR          "ui/assets/gradientbar2.tga"
+#define ASSET_SCROLLBAR            "ui/assets/scrollbar.tga"
+#define ASSET_SCROLLBAR_ARROWDOWN  "ui/assets/scrollbar_arrow_dwn_a.tga"
+#define ASSET_SCROLLBAR_ARROWUP    "ui/assets/scrollbar_arrow_up_a.tga"
+#define ASSET_SCROLLBAR_ARROWLEFT  "ui/assets/scrollbar_arrow_left.tga"
 #define ASSET_SCROLLBAR_ARROWRIGHT "ui/assets/scrollbar_arrow_right.tga"
-#define ASSET_SCROLL_THUMB "ui/assets/scrollbar_thumb.tga"
-#define ASSET_SLIDER_BAR "ui/assets/slider2.tga"
-#define ASSET_SLIDER_THUMB "ui/assets/sliderbutt_1.tga"
+#define ASSET_SCROLL_THUMB         "ui/assets/scrollbar_thumb.tga"
+#define ASSET_SLIDER_BAR           "ui/assets/slider2.tga"
+#define ASSET_SLIDER_THUMB         "ui/assets/sliderbutt_1.tga"
 
-#define SCROLLBAR_ARROW_SIZE 16.0f
-#define SCROLLBAR_ARROW_WIDTH ( SCROLLBAR_ARROW_SIZE * DC->aspectScale )
-#define SCROLLBAR_ARROW_HEIGHT SCROLLBAR_ARROW_SIZE
+#define SCROLLBAR_ARROW_SIZE        16.0f
+#define SCROLLBAR_ARROW_WIDTH       ( SCROLLBAR_ARROW_SIZE * DC->aspectScale )
+#define SCROLLBAR_ARROW_HEIGHT      SCROLLBAR_ARROW_SIZE
 #define SCROLLBAR_SLIDER_X( _item ) ( _item->window.rect.x + _item->window.rect.w - \
 	SCROLLBAR_ARROW_WIDTH - DC->aspectScale )
-#define SCROLLBAR_SLIDER_Y( _item ) ( SCROLLBAR_Y( _item ) + SCROLLBAR_ARROW_HEIGHT )
+#define SCROLLBAR_SLIDER_Y( _item )      ( SCROLLBAR_Y( _item ) + SCROLLBAR_ARROW_HEIGHT )
 #define SCROLLBAR_SLIDER_HEIGHT( _item ) ( _item->window.rect.h - ( SCROLLBAR_ARROW_HEIGHT * 2.0f ) - 2.0f )
-#define SCROLLBAR_X( _item ) ( _item->window.rect.x + DC->aspectScale )
-#define SCROLLBAR_Y( _item ) ( _item->window.rect.y + 1.0f )
-#define SCROLLBAR_W( _item ) ( SCROLLBAR_SLIDER_X( _item ) - SCROLLBAR_X( _item ) )
-#define SCROLLBAR_H( _item ) ( _item->window.rect.h - 2.0f )
+#define SCROLLBAR_X( _item )             ( _item->window.rect.x + DC->aspectScale )
+#define SCROLLBAR_Y( _item )             ( _item->window.rect.y + 1.0f )
+#define SCROLLBAR_W( _item )             ( SCROLLBAR_SLIDER_X( _item ) - SCROLLBAR_X( _item ) )
+#define SCROLLBAR_H( _item )             ( _item->window.rect.h - 2.0f )
 
-#define SLIDER_WIDTH ( 96.0f * DC->aspectScale )
-#define SLIDER_HEIGHT 16.0f
-#define SLIDER_THUMB_WIDTH ( 12.0f * DC->aspectScale )
+#define SLIDER_WIDTH        ( 96.0f * DC->aspectScale )
+#define SLIDER_HEIGHT       16.0f
+#define SLIDER_THUMB_WIDTH  ( 12.0f * DC->aspectScale )
 #define SLIDER_THUMB_HEIGHT 20.0f
-#define NUM_CROSSHAIRS 10
+#define NUM_CROSSHAIRS      10
 
 typedef struct
 {
@@ -244,10 +244,10 @@ typedef struct modelDef_s
 	int    rotationSpeed;
 } modelDef_t;
 
-#define CVAR_ENABLE 0x00000001
+#define CVAR_ENABLE  0x00000001
 #define CVAR_DISABLE 0x00000002
-#define CVAR_SHOW 0x00000004
-#define CVAR_HIDE 0x00000008
+#define CVAR_SHOW    0x00000004
+#define CVAR_HIDE    0x00000008
 
 typedef enum
 {
@@ -293,7 +293,8 @@ typedef struct itemDef_s
 	colorRangeDef_t colorRanges[ MAX_COLOR_RANGES ];
 	int             feederID;  // where to get data for this item
 	int             cursorPos; // cursor position in characters
-	union {
+	union
+	{
 		void*           data;
 		listBoxDef_t*   list;
 		editFieldDef_t* edit;

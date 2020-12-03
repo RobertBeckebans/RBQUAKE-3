@@ -25,17 +25,17 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define __TR_TYPES_H
 
 // XreaL BEGIN
-#define MAX_REF_LIGHTS 1024
+#define MAX_REF_LIGHTS   1024
 #define MAX_REF_ENTITIES 1023 // can't be increased without changing drawsurf bit packing
-#define MAX_BONES 128         // RB: same as MDX_MAX_BONES
-#define MAX_WEIGHTS 4         // GPU vertex skinning limit, never change this without rewriting many GLSL shaders
+#define MAX_BONES        128  // RB: same as MDX_MAX_BONES
+#define MAX_WEIGHTS      4    // GPU vertex skinning limit, never change this without rewriting many GLSL shaders
 // XreaL END
 
 // renderfx flags
-#define RF_MINLIGHT 0x0001     // allways have some light (viewmodel, some items)
+#define RF_MINLIGHT     0x0001 // allways have some light (viewmodel, some items)
 #define RF_THIRD_PERSON 0x0002 // don't draw through eyes, only mirrors (player bodies, chat sprites)
 #define RF_FIRST_PERSON 0x0004 // only draw through eyes (view weapon, damage blood blob)
-#define RF_DEPTHHACK 0x0008    // for view weapon Z crunching
+#define RF_DEPTHHACK    0x0008 // for view weapon Z crunching
 
 #define RF_CROSSHAIR 0x0010 // This item is a cross hair and will draw over everything similar to
 // DEPTHHACK in stereo rendering mode, with the difference that the
@@ -49,25 +49,25 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // with their origin going solid, and allows all parts of a
 // player to get the same lighting
 #define RF_SHADOW_PLANE 0x00000040 // use refEntity->shadowPlane
-#define RF_WRAP_FRAMES 0x00000080  // mod the model frames by the maxframes to allow continuous
+#define RF_WRAP_FRAMES  0x00000080 // mod the model frames by the maxframes to allow continuous
 // animation without needing to know the frame count
-#define RF_HILIGHT 0x00000100 // more than RF_MINLIGHT.  For when an object is "Highlighted" (looked at/training identification/etc)
-#define RF_BLINK 0x00000200   // eyes in 'blink' state
+#define RF_HILIGHT    0x00000100 // more than RF_MINLIGHT.  For when an object is "Highlighted" (looked at/training identification/etc)
+#define RF_BLINK      0x00000200 // eyes in 'blink' state
 #define RF_FORCENOLOD 0x00000400
 
 // refdef flags
 #define RDF_NOWORLDMODEL ( 1 << 0 ) // used for player configuration screen
-#define RDF_NOSHADOWS ( 1 << 1 )    // force renderer to use faster lighting only path
-#define RDF_HYPERSPACE ( 1 << 2 )   // teleportation effect
+#define RDF_NOSHADOWS    ( 1 << 1 ) // force renderer to use faster lighting only path
+#define RDF_HYPERSPACE   ( 1 << 2 ) // teleportation effect
 #define RDF_SKYBOXPORTAL ( 1 << 3 )
 
-#define RDF_UNDERWATER ( 1 << 4 ) // enable automatic underwater caustics and fog
-#define RDF_DRAWINGSKY ( 1 << 5 )
+#define RDF_UNDERWATER  ( 1 << 4 ) // enable automatic underwater caustics and fog
+#define RDF_DRAWINGSKY  ( 1 << 5 )
 #define RDF_SNOOPERVIEW ( 1 << 6 )
 
 // XreaL BEGIN
 #define RDF_NOCUBEMAP ( 1 << 7 ) // RB: don't use cubemaps
-#define RDF_NOBLOOM ( 1 << 8 )   // RB: disable bloom. useful for hud models
+#define RDF_NOBLOOM   ( 1 << 8 ) // RB: disable bloom. useful for hud models
 // XreaL END
 
 typedef struct
@@ -106,7 +106,7 @@ typedef enum
 
 // RB: defining any of the following macros would break the compatibility to old ET mods
 #define USE_REFENTITY_ANIMATIONSYSTEM 1
-#define USE_REFENTITY_NOSHADOWID 1
+#define USE_REFENTITY_NOSHADOWID      1
 
 // RB: having bone names for each refEntity_t takes several MiBs
 // in backEndData_t so only use it for debugging and development
@@ -117,9 +117,9 @@ typedef enum
 #if defined( USE_REFENTITY_ANIMATIONSYSTEM )
 typedef struct
 {
-#if defined( REFBONE_NAMES )
+	#if defined( REFBONE_NAMES )
 	char name[ 64 ];
-#endif
+	#endif
 	short  parentIndex; // parent index (-1 if root)
 	vec3_t origin;
 	quat_t rotation;
@@ -255,7 +255,7 @@ typedef struct
 
 // XreaL END
 
-#define MAX_RENDER_STRINGS 8
+#define MAX_RENDER_STRINGS       8
 #define MAX_RENDER_STRING_LENGTH 32
 
 typedef struct
@@ -357,7 +357,7 @@ typedef struct
 	// synonymous with "does rendering consume the entire screen?"
 	qboolean isFullscreen;
 	qboolean stereoEnabled;
-	qboolean smpActive; // dual processor
+	qboolean smpActive; // UNUSED, present for compatibility
 } glconfig_t;
 
 // XreaL BEGIN
@@ -401,7 +401,7 @@ typedef struct
 
 // =========================================
 // Gordon, these MUST NOT exceed the values for SHADER_MAX_VERTEXES/SHADER_MAX_INDEXES
-#define MAX_PB_VERTS 1025
+#define MAX_PB_VERTS    1025
 #define MAX_PB_INDICIES ( MAX_PB_VERTS * 6 )
 
 typedef struct polyBuffer_s

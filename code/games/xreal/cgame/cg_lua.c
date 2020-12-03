@@ -26,9 +26,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #ifdef CG_LUA
 
-#include <lua.h>
-#include <lauxlib.h>
-#include <lualib.h>
+	#include <lua.h>
+	#include <lauxlib.h>
+	#include <lualib.h>
 
 static lua_State* cg_luaState = NULL;
 
@@ -76,7 +76,7 @@ void CG_InitLua()
 		CG_LoadLuaScript( filename );
 	}
 
-#if 0
+	#if 0
 	CG_DumpLuaStack();
 	
 	// run some tests
@@ -84,7 +84,7 @@ void CG_InitLua()
 	CG_RunLuaFunction( "TestVectors", "v>f", in, &out );
 	CG_Printf( "result of testVectors() is %f\n", out );
 	//CG_Printf("result of testVectors() is %i %i %i\n", (int)out[0], (int)out[1], (int)out[2]);
-#endif
+	#endif
 
 	CG_Printf( "-----------------------------------\n" );
 }
@@ -257,7 +257,7 @@ endwhile:
 
 				break;
 
-#if 0
+	#if 0
 			FIXME this causes a crash case 'v':
 				// string result
 				if( !lua_getvector( L, nres ) )
@@ -268,7 +268,7 @@ endwhile:
 				*va_arg( vl, vec_t** ) = lua_getvector( L, nres );
 				
 				break;
-#endif
+	#endif
 
 			default:
 				CG_Printf( "CG_RunLuaFunction: invalid option (%c)\n", *( sig - 1 ) );

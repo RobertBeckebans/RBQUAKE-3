@@ -24,7 +24,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define __POLYSET_H__
 
 #define POLYSET_MAXTRIANGLES 4096
-#define POLYSET_MAXPOLYSETS 64
+#define POLYSET_MAXPOLYSETS  64
 
 typedef float st_t[ 2 ];
 typedef float rgb_t[ 3 ];

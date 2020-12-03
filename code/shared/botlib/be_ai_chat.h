@@ -29,15 +29,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
  *****************************************************************************/
 
-#define MAX_MESSAGE_SIZE 256
-#define MAX_CHATTYPE_NAME 32
+#define MAX_MESSAGE_SIZE   256
+#define MAX_CHATTYPE_NAME  32
 #define MAX_MATCHVARIABLES 8
 
-#define CHAT_GENDERLESS 0
+#define CHAT_GENDERLESS   0
 #define CHAT_GENDERFEMALE 1
-#define CHAT_GENDERMALE 2
+#define CHAT_GENDERMALE   2
 
-#define CHAT_ALL 0
+#define CHAT_ALL  0
 #define CHAT_TEAM 1
 #define CHAT_TELL 2
 

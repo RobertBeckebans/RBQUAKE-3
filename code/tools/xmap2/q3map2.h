@@ -41,17 +41,17 @@ dependencies
 
 /* platform-specific */
 #if defined( __linux__ ) || defined( __APPLE__ )
-#define Q_UNIX
+	#define Q_UNIX
 #endif
 
 #ifdef Q_UNIX
-#include <unistd.h>
-#include <pwd.h>
-#include <limits.h>
+	#include <unistd.h>
+	#include <pwd.h>
+	#include <limits.h>
 #endif
 
 #ifdef WIN32
-#include <windows.h>
+	#include <windows.h>
 #endif
 
 #include <glib.h>
@@ -83,19 +83,19 @@ port-related hacks
 
 #define MAC_STATIC_HACK 0
 #if defined( __APPLE__ ) && MAC_STATIC_HACK
-#define MAC_STATIC static
+	#define MAC_STATIC static
 #else
-#define MAC_STATIC
+	#define MAC_STATIC
 #endif
 
 #if 1
-#ifdef WIN32
-#define Q_stricmp stricmp
-#define Q_strncasecmp strnicmp
-#else
-#define Q_stricmp strcasecmp
-#define Q_strncasecmp strncasecmp
-#endif
+	#ifdef WIN32
+		#define Q_stricmp     stricmp
+		#define Q_strncasecmp strnicmp
+	#else
+		#define Q_stricmp     strcasecmp
+		#define Q_strncasecmp strncasecmp
+	#endif
 #endif
 
 /* -------------------------------------------------------------------------------
@@ -107,7 +107,7 @@ constants
 /* general */
 //#define MAX_QPATH             64
 
-#define MAX_IMAGES 512
+#define MAX_IMAGES    512
 #define DEFAULT_IMAGE "*default"
 
 #define MAX_MODELS 512
@@ -117,11 +117,11 @@ constants
 
 #define DEF_RADIOSITY_BOUNCE 1.0f /* ydnar: default to 100% re-emitted light */
 
-#define MAX_SHADER_INFO 8192
+#define MAX_SHADER_INFO       8192
 #define MAX_CUST_SURFACEPARMS 64
 
 #define SHADER_MAX_VERTEXES 1000
-#define SHADER_MAX_INDEXES ( 6 * SHADER_MAX_VERTEXES )
+#define SHADER_MAX_INDEXES  ( 6 * SHADER_MAX_VERTEXES )
 
 #define MAX_JITTERS 256
 
@@ -129,65 +129,65 @@ constants
 #define CASE_INSENSITIVE_EPAIRS 1
 
 #if CASE_INSENSITIVE_EPAIRS
-#define EPAIR_STRCMP Q_stricmp
+	#define EPAIR_STRCMP Q_stricmp
 #else
-#define EPAIR_STRCMP strcmp
+	#define EPAIR_STRCMP strcmp
 #endif
 
 /* ydnar: compiler flags, because games have widely varying content/surface flags */
-#define C_SOLID 0x00000001
+#define C_SOLID       0x00000001
 #define C_TRANSLUCENT 0x00000002
-#define C_STRUCTURAL 0x00000004
-#define C_HINT 0x00000008
-#define C_NODRAW 0x00000010
-#define C_LIGHTGRID 0x00000020
+#define C_STRUCTURAL  0x00000004
+#define C_HINT        0x00000008
+#define C_NODRAW      0x00000010
+#define C_LIGHTGRID   0x00000020
 #define C_ALPHASHADOW 0x00000040
 #define C_LIGHTFILTER 0x00000080
-#define C_VERTEXLIT 0x00000100
-#define C_LIQUID 0x00000200
-#define C_FOG 0x00000400
-#define C_SKY 0x00000800
-#define C_ORIGIN 0x00001000
-#define C_AREAPORTAL 0x00002000
-#define C_ANTIPORTAL 0x00004000 /* like hint, but doesn't generate portals */
-#define C_SKIP 0x00008000       /* like hint, but skips this face (doesn't split bsp) */
-#define C_NOMARKS 0x00010000    /* no decals */
-#define C_COLLISION 0x00020000
+#define C_VERTEXLIT   0x00000100
+#define C_LIQUID      0x00000200
+#define C_FOG         0x00000400
+#define C_SKY         0x00000800
+#define C_ORIGIN      0x00001000
+#define C_AREAPORTAL  0x00002000
+#define C_ANTIPORTAL  0x00004000 /* like hint, but doesn't generate portals */
+#define C_SKIP        0x00008000 /* like hint, but skips this face (doesn't split bsp) */
+#define C_NOMARKS     0x00010000 /* no decals */
+#define C_COLLISION   0x00020000
 
 #define C_DETAIL 0x08000000 /* THIS MUST BE THE SAME AS IN RADIANT! */
 
 /* shadow flags */
 #define WORLDSPAWN_CAST_SHADOWS 1
 #define WORLDSPAWN_RECV_SHADOWS 1
-#define ENTITY_CAST_SHADOWS 0
-#define ENTITY_RECV_SHADOWS 1
+#define ENTITY_CAST_SHADOWS     0
+#define ENTITY_RECV_SHADOWS     1
 
 /* bsp */
-#define MAX_PATCH_SIZE 64 /* Tr3B: was 32 in Q3A */
+#define MAX_PATCH_SIZE  64 /* Tr3B: was 32 in Q3A */
 #define MAX_BRUSH_SIDES 1024
 #define MAX_BUILD_SIDES 1024
 
 #define MAX_EXPANDED_AXIS 128
 
-#define CLIP_EPSILON 0.1f
+#define CLIP_EPSILON      0.1f
 #define PLANESIDE_EPSILON 0.001f
-#define PLANENUM_LEAF -1
+#define PLANENUM_LEAF     -1
 
-#define HINT_PRIORITY 1000 /* ydnar: force hint splits first and antiportal/areaportal splits last */
+#define HINT_PRIORITY       1000 /* ydnar: force hint splits first and antiportal/areaportal splits last */
 #define ANTIPORTAL_PRIORITY -1000
 #define AREAPORTAL_PRIORITY -1000
-#define DETAIL_PRIORITY -3000
+#define DETAIL_PRIORITY     -3000
 
-#define PSIDE_FRONT 1
-#define PSIDE_BACK 2
-#define PSIDE_BOTH ( PSIDE_FRONT | PSIDE_BACK )
+#define PSIDE_FRONT  1
+#define PSIDE_BACK   2
+#define PSIDE_BOTH   ( PSIDE_FRONT | PSIDE_BACK )
 #define PSIDE_FACING 4
 
-#define BPRIMIT_UNDEFINED 0
+#define BPRIMIT_UNDEFINED  0
 #define BPRIMIT_OLDBRUSHES 1
 #define BPRIMIT_NEWBRUSHES 2
-#define BPRIMIT_D3BRUSHES 3
-#define BPRIMIT_Q4BRUSHES 4
+#define BPRIMIT_D3BRUSHES  3
+#define BPRIMIT_Q4BRUSHES  4
 
 /* vis */
 #define VIS_HEADER_SIZE 8
@@ -196,80 +196,80 @@ constants
 
 #define PORTALFILE "PRT1"
 
-#define MAX_PORTALS 0x20000 /* same as MAX_MAP_PORTALS */
-#define MAX_SEPERATORS MAX_POINTS_ON_WINDING
+#define MAX_PORTALS                 0x20000 /* same as MAX_MAP_PORTALS */
+#define MAX_SEPERATORS              MAX_POINTS_ON_WINDING
 #define MAX_POINTS_ON_FIXED_WINDING 24 /* ydnar: increased this from 12 at the expense of more memory */
-#define MAX_PORTALS_ON_LEAF 1024
+#define MAX_PORTALS_ON_LEAF         1024
 
 /* light */
 #define EMIT_POINT 0
-#define EMIT_AREA 1
-#define EMIT_SPOT 2
-#define EMIT_SUN 3
+#define EMIT_AREA  1
+#define EMIT_SPOT  2
+#define EMIT_SUN   3
 
-#define LIGHT_ATTEN_LINEAR 1
-#define LIGHT_ATTEN_ANGLE 2
+#define LIGHT_ATTEN_LINEAR   1
+#define LIGHT_ATTEN_ANGLE    2
 #define LIGHT_ATTEN_DISTANCE 4
-#define LIGHT_TWOSIDED 8
-#define LIGHT_GRID 16
-#define LIGHT_SURFACES 32
-#define LIGHT_DARK 64 /* probably never use this */
-#define LIGHT_FAST 256
-#define LIGHT_FAST_TEMP 512
-#define LIGHT_FAST_ACTUAL ( LIGHT_FAST | LIGHT_FAST_TEMP )
-#define LIGHT_NEGATIVE 1024
-#define LIGHT_UNNORMALIZED 2048 /* vortex: do not normalize _color */
+#define LIGHT_TWOSIDED       8
+#define LIGHT_GRID           16
+#define LIGHT_SURFACES       32
+#define LIGHT_DARK           64 /* probably never use this */
+#define LIGHT_FAST           256
+#define LIGHT_FAST_TEMP      512
+#define LIGHT_FAST_ACTUAL    ( LIGHT_FAST | LIGHT_FAST_TEMP )
+#define LIGHT_NEGATIVE       1024
+#define LIGHT_UNNORMALIZED   2048 /* vortex: do not normalize _color */
 
-#define LIGHT_SUN_DEFAULT ( LIGHT_ATTEN_ANGLE | LIGHT_GRID | LIGHT_SURFACES )
+#define LIGHT_SUN_DEFAULT  ( LIGHT_ATTEN_ANGLE | LIGHT_GRID | LIGHT_SURFACES )
 #define LIGHT_AREA_DEFAULT ( LIGHT_ATTEN_ANGLE | LIGHT_ATTEN_DISTANCE | LIGHT_GRID | LIGHT_SURFACES ) /* q3a and wolf are the same */
-#define LIGHT_Q3A_DEFAULT ( LIGHT_ATTEN_ANGLE | LIGHT_ATTEN_DISTANCE | LIGHT_GRID | LIGHT_SURFACES | LIGHT_FAST )
+#define LIGHT_Q3A_DEFAULT  ( LIGHT_ATTEN_ANGLE | LIGHT_ATTEN_DISTANCE | LIGHT_GRID | LIGHT_SURFACES | LIGHT_FAST )
 #define LIGHT_WOLF_DEFAULT ( LIGHT_ATTEN_LINEAR | LIGHT_ATTEN_DISTANCE | LIGHT_GRID | LIGHT_SURFACES | LIGHT_FAST )
 
-#define MAX_TRACE_TEST_NODES 256
+#define MAX_TRACE_TEST_NODES   256
 #define DEFAULT_INHIBIT_RADIUS 1.5f
 
-#define LUXEL_EPSILON 0.125f
+#define LUXEL_EPSILON  0.125f
 #define VERTEX_EPSILON -0.125f
-#define GRID_EPSILON 0.0f
+#define GRID_EPSILON   0.0f
 
-#define DEFAULT_LIGHTMAP_SAMPLE_SIZE 16
+#define DEFAULT_LIGHTMAP_SAMPLE_SIZE     16
 #define DEFAULT_LIGHTMAP_MIN_SAMPLE_SIZE 0
-#define DEFAULT_LIGHTMAP_SAMPLE_OFFSET 1.0f
-#define DEFAULT_SUBDIVIDE_THRESHOLD 1.0f
+#define DEFAULT_LIGHTMAP_SAMPLE_OFFSET   1.0f
+#define DEFAULT_SUBDIVIDE_THRESHOLD      1.0f
 
-#define EXTRA_SCALE 2     /* -extrawide = -super 2 */
+#define EXTRA_SCALE     2 /* -extrawide = -super 2 */
 #define EXTRAWIDE_SCALE 2 /* -extrawide = -super 2 -filter */
 
 #define CLUSTER_UNMAPPED -1
 #define CLUSTER_OCCLUDED -2
-#define CLUSTER_FLOODED -3
+#define CLUSTER_FLOODED  -3
 
-#define VERTEX_LUXEL_SIZE 3
-#define VERTEX_DELUXEL_SIZE 3
-#define BSP_LUXEL_SIZE 3
-#define RAD_LUXEL_SIZE 3
-#define SUPER_LUXEL_SIZE 4
-#define SUPER_ORIGIN_SIZE 3
-#define SUPER_NORMAL_SIZE 4
-#define SUPER_DELUXEL_SIZE 3
-#define BSP_DELUXEL_SIZE 3
+#define VERTEX_LUXEL_SIZE     3
+#define VERTEX_DELUXEL_SIZE   3
+#define BSP_LUXEL_SIZE        3
+#define RAD_LUXEL_SIZE        3
+#define SUPER_LUXEL_SIZE      4
+#define SUPER_ORIGIN_SIZE     3
+#define SUPER_NORMAL_SIZE     4
+#define SUPER_DELUXEL_SIZE    3
+#define BSP_DELUXEL_SIZE      3
 #define SUPER_FLOODLIGHT_SIZE 4
 
-#define VERTEX_LUXEL( s, v ) ( vertexLuxels[ s ] + ( ( v )*VERTEX_LUXEL_SIZE ) )
+#define VERTEX_LUXEL( s, v )     ( vertexLuxels[ s ] + ( ( v )*VERTEX_LUXEL_SIZE ) )
 #define RAD_VERTEX_LUXEL( s, v ) ( radVertexLuxels[ s ] + ( ( v )*VERTEX_LUXEL_SIZE ) )
-#define VERTEX_DELUXEL( s, v ) ( vertexDeluxels[ s ] + ( ( v )*VERTEX_DELUXEL_SIZE ) )
-#define BSP_LUXEL( s, x, y ) ( lm->bspLuxels[ s ] + ( ( ( ( y )*lm->w ) + ( x ) ) * BSP_LUXEL_SIZE ) )
-#define RAD_LUXEL( s, x, y ) ( lm->radLuxels[ s ] + ( ( ( ( y )*lm->w ) + ( x ) ) * RAD_LUXEL_SIZE ) )
-#define SUPER_LUXEL( s, x, y ) ( lm->superLuxels[ s ] + ( ( ( ( y )*lm->sw ) + ( x ) ) * SUPER_LUXEL_SIZE ) )
-#define SUPER_DELUXEL( x, y ) ( lm->superDeluxels + ( ( ( ( y )*lm->sw ) + ( x ) ) * SUPER_DELUXEL_SIZE ) )
-#define BSP_DELUXEL( x, y ) ( lm->bspDeluxels + ( ( ( ( y )*lm->w ) + ( x ) ) * BSP_DELUXEL_SIZE ) )
-#define SUPER_CLUSTER( x, y ) ( lm->superClusters + ( ( ( y )*lm->sw ) + ( x ) ) )
-#define SUPER_ORIGIN( x, y ) ( lm->superOrigins + ( ( ( ( y )*lm->sw ) + ( x ) ) * SUPER_ORIGIN_SIZE ) )
-#define SUPER_NORMAL( x, y ) ( lm->superNormals + ( ( ( ( y )*lm->sw ) + ( x ) ) * SUPER_NORMAL_SIZE ) )
-#define SUPER_DIRT( x, y ) ( lm->superNormals + ( ( ( ( y )*lm->sw ) + ( x ) ) * SUPER_NORMAL_SIZE ) + 3 ) /* stash dirtyness in normal[ 3 ] */
+#define VERTEX_DELUXEL( s, v )   ( vertexDeluxels[ s ] + ( ( v )*VERTEX_DELUXEL_SIZE ) )
+#define BSP_LUXEL( s, x, y )     ( lm->bspLuxels[ s ] + ( ( ( ( y )*lm->w ) + ( x ) ) * BSP_LUXEL_SIZE ) )
+#define RAD_LUXEL( s, x, y )     ( lm->radLuxels[ s ] + ( ( ( ( y )*lm->w ) + ( x ) ) * RAD_LUXEL_SIZE ) )
+#define SUPER_LUXEL( s, x, y )   ( lm->superLuxels[ s ] + ( ( ( ( y )*lm->sw ) + ( x ) ) * SUPER_LUXEL_SIZE ) )
+#define SUPER_DELUXEL( x, y )    ( lm->superDeluxels + ( ( ( ( y )*lm->sw ) + ( x ) ) * SUPER_DELUXEL_SIZE ) )
+#define BSP_DELUXEL( x, y )      ( lm->bspDeluxels + ( ( ( ( y )*lm->w ) + ( x ) ) * BSP_DELUXEL_SIZE ) )
+#define SUPER_CLUSTER( x, y )    ( lm->superClusters + ( ( ( y )*lm->sw ) + ( x ) ) )
+#define SUPER_ORIGIN( x, y )     ( lm->superOrigins + ( ( ( ( y )*lm->sw ) + ( x ) ) * SUPER_ORIGIN_SIZE ) )
+#define SUPER_NORMAL( x, y )     ( lm->superNormals + ( ( ( ( y )*lm->sw ) + ( x ) ) * SUPER_NORMAL_SIZE ) )
+#define SUPER_DIRT( x, y )       ( lm->superNormals + ( ( ( ( y )*lm->sw ) + ( x ) ) * SUPER_NORMAL_SIZE ) + 3 ) /* stash dirtyness in normal[ 3 ] */
 #define SUPER_FLOODLIGHT( x, y ) ( lm->superFloodLight + ( ( ( ( y )*lm->sw ) + ( x ) ) * SUPER_FLOODLIGHT_SIZE ) )
 
-#define RGBTOGRAY( v ) ( ( v )[ 0 ] * 0.3f + ( v )[ 1 ] * 0.59f + ( v )[ 2 ] * 0.11f )
+#define RGBTOGRAY( v )      ( ( v )[ 0 ] * 0.3f + ( v )[ 1 ] * 0.59f + ( v )[ 2 ] * 0.11f )
 #define RGBTOLUMINANCE( v ) ( ( v )[ 0 ] * 0.2125f + ( v )[ 1 ] * 0.7154f + ( v )[ 2 ] * 0.0721f )
 
 /* -------------------------------------------------------------------------------
@@ -279,51 +279,51 @@ abstracted bsp file
 ------------------------------------------------------------------------------- */
 
 #define EXTERNAL_OLDLIGHTMAP "lm_%04d.tga"
-#define EXTERNAL_LIGHTMAP "lm_%04d.png"
+#define EXTERNAL_LIGHTMAP    "lm_%04d.png"
 #define EXTERNAL_HDRLIGHTMAP "lm_%04d.hdr"
 
-#define MAX_LIGHTMAPS 4 /* RBSP */
-#define MAX_LIGHT_STYLES 64
+#define MAX_LIGHTMAPS       4 /* RBSP */
+#define MAX_LIGHT_STYLES    64
 #define MAX_SWITCHED_LIGHTS 32
-#define LS_NORMAL 0x00
-#define LS_UNUSED 0xFE
-#define LS_NONE 0xFF
+#define LS_NORMAL           0x00
+#define LS_UNUSED           0xFE
+#define LS_NONE             0xFF
 
 #define MAX_LIGHTMAP_SHADERS 256
 
 /* ok to increase these at the expense of more memory */
-#define MAX_MAP_ENTITIES 0x3000   // Tr3B: old 0x1000 //%	0x800	/* ydnar */
+#define MAX_MAP_ENTITIES  0x3000  // Tr3B: old 0x1000 //%	0x800	/* ydnar */
 #define MAX_MAP_ENTSTRING 0x80000 //%	0x40000	/* ydnar */
 
-#define MAX_MAP_AREAS 0x100 /* MAX_MAP_AREA_BYTES in q_shared must match! */
-#define MAX_MAP_FOGS 30     //& 0x100	/* RBSP (32 - world fog - goggles) */
-#define MAX_MAP_LEAFS 0x20000
-#define MAX_MAP_PORTALS 0x20000
-#define MAX_MAP_LIGHTING 0x800000
-#define MAX_MAP_LIGHTGRID 0x100000 //% 0x800000 /* ydnar: set to points, not bytes */
-#define MAX_MAP_VISCLUSTERS 0x4000 // <= MAX_MAP_LEAFS
-#define MAX_MAP_VISIBILITY ( VIS_HEADER_SIZE + MAX_MAP_VISCLUSTERS * ( ( ( MAX_MAP_VISCLUSTERS + 63 ) & ~63 ) >> 3 ) )
+#define MAX_MAP_AREAS       0x100 /* MAX_MAP_AREA_BYTES in q_shared must match! */
+#define MAX_MAP_FOGS        30    //& 0x100	/* RBSP (32 - world fog - goggles) */
+#define MAX_MAP_LEAFS       0x20000
+#define MAX_MAP_PORTALS     0x20000
+#define MAX_MAP_LIGHTING    0x800000
+#define MAX_MAP_LIGHTGRID   0x100000 //% 0x800000 /* ydnar: set to points, not bytes */
+#define MAX_MAP_VISCLUSTERS 0x4000   // <= MAX_MAP_LEAFS
+#define MAX_MAP_VISIBILITY  ( VIS_HEADER_SIZE + MAX_MAP_VISCLUSTERS * ( ( ( MAX_MAP_VISCLUSTERS + 63 ) & ~63 ) >> 3 ) )
 
-#define MAX_MAP_DRAW_SURFS 0x20000
-#define MAX_MAP_DRAW_VERTS 0x200000   //% 0x80000 /* Tr3B */
+#define MAX_MAP_DRAW_SURFS   0x20000
+#define MAX_MAP_DRAW_VERTS   0x200000 //% 0x80000 /* Tr3B */
 #define MAX_MAP_DRAW_INDEXES 0x200000 //% 0x80000 /* Tr3B */
 
 #define MAX_MAP_ADVERTISEMENTS 30
 
 /* key / value pair sizes in the entities lump */
-#define MAX_KEY 32
+#define MAX_KEY   32
 #define MAX_VALUE 1024
 
 /* the editor uses these predefined yaw angles to orient entities up or down */
-#define ANGLE_UP -1
+#define ANGLE_UP   -1
 #define ANGLE_DOWN -2
 
-#define LIGHTMAP_WIDTH 128
+#define LIGHTMAP_WIDTH  128
 #define LIGHTMAP_HEIGHT 128
 
 #define MIN_WORLD_COORD ( -65536 )
 #define MAX_WORLD_COORD ( 65536 )
-#define WORLD_SIZE ( MAX_WORLD_COORD - MIN_WORLD_COORD )
+#define WORLD_SIZE      ( MAX_WORLD_COORD - MIN_WORLD_COORD )
 
 typedef void ( *bspFunc )( const char* );
 
@@ -1754,11 +1754,11 @@ bsp/general global variables
 ------------------------------------------------------------------------------- */
 
 #ifdef MAIN_C
-#define Q_EXTERN
-#define Q_ASSIGN( a ) = a
+	#define Q_EXTERN
+	#define Q_ASSIGN( a ) = a
 #else
-#define Q_EXTERN extern
-#define Q_ASSIGN( a )
+	#define Q_EXTERN extern
+	#define Q_ASSIGN( a )
 #endif
 
 // *INDENT-OFF*
@@ -1769,7 +1769,7 @@ Q_EXTERN game_t games[]
 	;
 #else
 	= {
-#include "game_xreal.h"
+	#include "game_xreal.h"
 		  ,
 		  { NULL } /* null game */
 	  };

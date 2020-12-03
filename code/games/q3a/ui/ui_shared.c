@@ -24,10 +24,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "ui_shared.h"
 
-#define SCROLL_TIME_START 500
-#define SCROLL_TIME_ADJUST 150
+#define SCROLL_TIME_START        500
+#define SCROLL_TIME_ADJUST       150
 #define SCROLL_TIME_ADJUSTOFFSET 40
-#define SCROLL_TIME_FLOOR 20
+#define SCROLL_TIME_FLOOR        20
 
 typedef struct scrollInfo_s
 {
@@ -76,9 +76,9 @@ itemDef_t*      Menu_SetNextCursorItem( menuDef_t* menu );
 static qboolean Menu_OverActiveItem( menuDef_t* menu, float x, float y );
 
 #ifdef CGAME
-#define MEM_POOL_SIZE 128 * 1024
+	#define MEM_POOL_SIZE 128 * 1024
 #else
-#define MEM_POOL_SIZE 1024 * 1024
+	#define MEM_POOL_SIZE 1024 * 1024
 #endif
 
 static char memoryPool[ MEM_POOL_SIZE ];
@@ -6594,7 +6594,8 @@ qboolean MenuParse_name( itemDef_t* item, int handle )
 qboolean MenuParse_fullscreen( itemDef_t* item, int handle )
 {
 	menuDef_t* menu = ( menuDef_t* )item;
-	union {
+	union
+	{
 		qboolean b;
 		int      i;
 	} fullScreen;

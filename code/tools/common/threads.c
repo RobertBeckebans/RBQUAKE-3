@@ -22,10 +22,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #ifndef WIN32
-// The below define is necessary to use
-// pthreads extensions like pthread_mutexattr_settype
-#define _GNU_SOURCE
-#include <pthread.h>
+	// The below define is necessary to use
+	// pthreads extensions like pthread_mutexattr_settype
+	#define _GNU_SOURCE
+	#include <pthread.h>
 #endif
 
 #include "cmdlib.h"
@@ -115,9 +115,9 @@ WIN32
 */
 #ifdef WIN32
 
-#define USED
+	#define USED
 
-#include <windows.h>
+	#include <windows.h>
 
 int              numthreads = -1;
 CRITICAL_SECTION crit;
@@ -237,7 +237,7 @@ OSF1
 */
 
 #ifdef __osf__
-#define USED
+	#define USED
 
 int numthreads = 4;
 
@@ -249,7 +249,7 @@ void ThreadSetDefault( void )
 	}
 }
 
-#include <pthread.h>
+	#include <pthread.h>
 
 pthread_mutex_t* my_mutex;
 
@@ -357,12 +357,12 @@ IRIX
 */
 
 #ifdef _MIPS_ISA
-#define USED
+	#define USED
 
-#include <task.h>
-#include <abi_mutex.h>
-#include <sys/types.h>
-#include <sys/prctl.h>
+	#include <task.h>
+	#include <abi_mutex.h>
+	#include <sys/types.h>
+	#include <sys/prctl.h>
 
 int       numthreads = -1;
 abilock_t lck;
@@ -449,7 +449,7 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) )
 */
 
 #ifdef __linux__
-#define USED
+	#define USED
 
 int numthreads = 4;
 
@@ -466,7 +466,7 @@ void ThreadSetDefault( void )
 	}
 }
 
-#include <pthread.h>
+	#include <pthread.h>
 
 typedef struct pt_mutex_s
 {
@@ -591,11 +591,11 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) )
 		{
 			Error( "pthread_mutexattr_init failed" );
 		}
-#if __GLIBC_MINOR__ == 1
+	#if __GLIBC_MINOR__ == 1
 		if( pthread_mutexattr_settype( &mattrib, PTHREAD_MUTEX_FAST_NP ) != 0 )
-#else
+	#else
 		if( pthread_mutexattr_settype( &mattrib, PTHREAD_MUTEX_ADAPTIVE_NP ) != 0 )
-#endif
+	#endif
 			Error( "pthread_mutexattr_settype failed" );
 		recursive_mutex_init( mattrib );
 

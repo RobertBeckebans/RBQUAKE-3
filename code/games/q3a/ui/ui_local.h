@@ -137,48 +137,48 @@ extern vmCvar_t ui_serverStatusTimeOut;
 #define RCOLUMN_OFFSET ( BIGCHAR_WIDTH )
 #define LCOLUMN_OFFSET ( -BIGCHAR_WIDTH )
 
-#define SLIDER_RANGE 10
+#define SLIDER_RANGE  10
 #define MAX_EDIT_LINE 256
 
 #define MAX_MENUDEPTH 8
 #define MAX_MENUITEMS 96
 
-#define MTYPE_NULL 0
-#define MTYPE_SLIDER 1
-#define MTYPE_ACTION 2
+#define MTYPE_NULL        0
+#define MTYPE_SLIDER      1
+#define MTYPE_ACTION      2
 #define MTYPE_SPINCONTROL 3
-#define MTYPE_FIELD 4
+#define MTYPE_FIELD       4
 #define MTYPE_RADIOBUTTON 5
-#define MTYPE_BITMAP 6
-#define MTYPE_TEXT 7
-#define MTYPE_SCROLLLIST 8
-#define MTYPE_PTEXT 9
-#define MTYPE_BTEXT 10
+#define MTYPE_BITMAP      6
+#define MTYPE_TEXT        7
+#define MTYPE_SCROLLLIST  8
+#define MTYPE_PTEXT       9
+#define MTYPE_BTEXT       10
 
-#define QMF_BLINK 0x00000001
-#define QMF_SMALLFONT 0x00000002
-#define QMF_LEFT_JUSTIFY 0x00000004
-#define QMF_CENTER_JUSTIFY 0x00000008
-#define QMF_RIGHT_JUSTIFY 0x00000010
-#define QMF_NUMBERSONLY 0x00000020 // edit field is only numbers
-#define QMF_HIGHLIGHT 0x00000040
+#define QMF_BLINK              0x00000001
+#define QMF_SMALLFONT          0x00000002
+#define QMF_LEFT_JUSTIFY       0x00000004
+#define QMF_CENTER_JUSTIFY     0x00000008
+#define QMF_RIGHT_JUSTIFY      0x00000010
+#define QMF_NUMBERSONLY        0x00000020 // edit field is only numbers
+#define QMF_HIGHLIGHT          0x00000040
 #define QMF_HIGHLIGHT_IF_FOCUS 0x00000080 // steady focus
-#define QMF_PULSEIFFOCUS 0x00000100       // pulse if focus
-#define QMF_HASMOUSEFOCUS 0x00000200
-#define QMF_NOONOFFTEXT 0x00000400
-#define QMF_MOUSEONLY 0x00000800     // only mouse input allowed
-#define QMF_HIDDEN 0x00001000        // skips drawing
-#define QMF_GRAYED 0x00002000        // grays and disables
-#define QMF_INACTIVE 0x00004000      // disables any input
-#define QMF_NODEFAULTINIT 0x00008000 // skip default initialization
-#define QMF_OWNERDRAW 0x00010000
-#define QMF_PULSE 0x00020000
-#define QMF_LOWERCASE 0x00040000 // edit field is all lower case
-#define QMF_UPPERCASE 0x00080000 // edit field is all upper case
-#define QMF_SILENT 0x00100000
+#define QMF_PULSEIFFOCUS       0x00000100 // pulse if focus
+#define QMF_HASMOUSEFOCUS      0x00000200
+#define QMF_NOONOFFTEXT        0x00000400
+#define QMF_MOUSEONLY          0x00000800 // only mouse input allowed
+#define QMF_HIDDEN             0x00001000 // skips drawing
+#define QMF_GRAYED             0x00002000 // grays and disables
+#define QMF_INACTIVE           0x00004000 // disables any input
+#define QMF_NODEFAULTINIT      0x00008000 // skip default initialization
+#define QMF_OWNERDRAW          0x00010000
+#define QMF_PULSE              0x00020000
+#define QMF_LOWERCASE          0x00040000 // edit field is all lower case
+#define QMF_UPPERCASE          0x00080000 // edit field is all upper case
+#define QMF_SILENT             0x00100000
 
 // callback notifications
-#define QM_GOTFOCUS 1
+#define QM_GOTFOCUS  1
 #define QM_LOSTFOCUS 2
 #define QM_ACTIVATED 3
 
@@ -606,38 +606,38 @@ typedef struct
 } uiStatic_t;
 
 // new ui stuff
-#define UI_NUMFX 7
-#define MAX_HEADS 64
-#define MAX_ALIASES 64
-#define MAX_HEADNAME 32
-#define MAX_TEAMS 64
-#define MAX_GAMETYPES 16
-#define MAX_MAPS 128
-#define MAX_SPMAPS 16
-#define PLAYERS_PER_TEAM 5
-#define MAX_PINGREQUESTS 32
-#define MAX_ADDRESSLENGTH 64
-#define MAX_HOSTNAMELENGTH 22
-#define MAX_MAPNAMELENGTH 16
-#define MAX_STATUSLENGTH 64
-#define MAX_LISTBOXWIDTH 59
-#define UI_FONT_THRESHOLD 0.1
-#define MAX_DISPLAY_SERVERS 2048
-#define MAX_SERVERSTATUS_LINES 128
-#define MAX_SERVERSTATUS_TEXT 1024
+#define UI_NUMFX                7
+#define MAX_HEADS               64
+#define MAX_ALIASES             64
+#define MAX_HEADNAME            32
+#define MAX_TEAMS               64
+#define MAX_GAMETYPES           16
+#define MAX_MAPS                128
+#define MAX_SPMAPS              16
+#define PLAYERS_PER_TEAM        5
+#define MAX_PINGREQUESTS        32
+#define MAX_ADDRESSLENGTH       64
+#define MAX_HOSTNAMELENGTH      22
+#define MAX_MAPNAMELENGTH       16
+#define MAX_STATUSLENGTH        64
+#define MAX_LISTBOXWIDTH        59
+#define UI_FONT_THRESHOLD       0.1
+#define MAX_DISPLAY_SERVERS     2048
+#define MAX_SERVERSTATUS_LINES  128
+#define MAX_SERVERSTATUS_TEXT   1024
 #define MAX_FOUNDPLAYER_SERVERS 16
-#define TEAM_MEMBERS 5
-#define GAMES_ALL 0
-#define GAMES_FFA 1
-#define GAMES_TEAMPLAY 2
-#define GAMES_TOURNEY 3
-#define GAMES_CTF 4
-#define MAPS_PER_TIER 3
-#define MAX_TIERS 16
-#define MAX_MODS 64
-#define MAX_DEMOS 512
-#define MAX_MOVIES 256
-#define MAX_PLAYERMODELS 256
+#define TEAM_MEMBERS            5
+#define GAMES_ALL               0
+#define GAMES_FFA               1
+#define GAMES_TEAMPLAY          2
+#define GAMES_TOURNEY           3
+#define GAMES_CTF               4
+#define MAPS_PER_TIER           3
+#define MAX_TIERS               16
+#define MAX_MODS                64
+#define MAX_DEMOS               512
+#define MAX_MOVIES              256
+#define MAX_PLAYERMODELS        256
 
 typedef struct
 {

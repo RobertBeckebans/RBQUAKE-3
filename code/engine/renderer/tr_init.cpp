@@ -389,9 +389,9 @@ glstate_t glState;
 				glConfig2.maxCubeMapTextureSize = 0;
 			}
 
-#if defined( GLSL_COMPILE_STARTUP_ONLY )
+	#if defined( GLSL_COMPILE_STARTUP_ONLY )
 			GLSL_InitGPUShaders();
-#endif
+	#endif
 
 			glConfig.smpActive = qfalse;
 			if( r_smp->integer )
@@ -1803,9 +1803,9 @@ R_Init
 			//UINT width = rc.right - rc.left;
 			//UINT height = rc.bottom - rc.top;
 
-#ifdef _DEBUG
+	#ifdef _DEBUG
 			createDeviceFlags |= D3D10_CREATE_DEVICE_DEBUG;
-#endif
+	#endif
 
 			ZeroMemory( &sd, sizeof( sd ) );
 			sd.BufferCount                        = 1;
@@ -1820,7 +1820,7 @@ R_Init
 			sd.SampleDesc.Quality                 = 0;
 			sd.Windowed                           = TRUE;
 
-#if 1
+	#if 1
 			// Look for 'NVIDIA PerfHUD' adapter
 			// If it is present, override default settings
 			IDXGIFactory* pDXGIFactory;
@@ -1868,7 +1868,7 @@ R_Init
 			hr = D3D10CreateDeviceAndSwapChain( selectedAdapter, dx.driverType, NULL, createDeviceFlags, D3D10_SDK_VERSION, &sd, &dx.swapChain, &dx.d3dDevice );
 
 			if( FAILED( hr ) )
-#endif
+	#endif
 			{
 				ri.Printf( PRINT_ALL, "R_Init: Failed to find PerfHUD" );
 
@@ -1916,16 +1916,16 @@ R_Init
 			vp.TopLeftY = 0;
 			dx.d3dDevice->RSSetViewports( 1, &vp );
 
-#if 0
+	#if 0
 		// create the effect
 		DWORD dwShaderFlags = D3D10_SHADER_ENABLE_STRICTNESS;
-#if defined( DEBUG ) || defined( _DEBUG )
+		#if defined( DEBUG ) || defined( _DEBUG )
 		// Set the D3D10_SHADER_DEBUG flag to embed debug information in the shaders.
 		// Setting this flag improves the shader debugging experience, but still allows
 		// the shaders to be optimized and to run exactly the way they will run in
 		// the release configuration of this program.
 		dwShaderFlags |= D3D10_SHADER_DEBUG;
-#endif
+		#endif
 		
 		byte* effectBuffer;
 		int effectBufferLen;
@@ -1995,7 +1995,7 @@ R_Init
 		
 		// set primitive topology
 		dx.d3dDevice->IASetPrimitiveTopology( D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
-#endif
+	#endif
 
 			ri.Printf( PRINT_ALL, "------------------------------------\n" );
 		}
@@ -2008,9 +2008,9 @@ R_Init
 #else
 	InitOpenGL();
 
-#if !defined( GLSL_COMPILE_STARTUP_ONLY )
+	#if !defined( GLSL_COMPILE_STARTUP_ONLY )
 	GLSL_InitGPUShaders();
-#endif
+	#endif
 
 #endif
 
@@ -2247,7 +2247,7 @@ GetRefAPI
 #if defined( COMPAT_ET )
 		re.LerpTag = RE_LerpTagET;
 #else
-	re.LerpTag         = RE_LerpTagQ3A;
+	re.LerpTag = RE_LerpTagQ3A;
 #endif
 
 		re.ModelBounds = R_ModelBounds;
@@ -2259,7 +2259,7 @@ GetRefAPI
 		re.AddPolyToScene  = RE_AddPolyToSceneET;
 		re.AddPolysToScene = RE_AddPolysToScene;
 #else
-	re.AddPolyToScene  = RE_AddPolyToSceneQ3A;
+	re.AddPolyToScene = RE_AddPolyToSceneQ3A;
 #endif
 #if !defined( COMPAT_ET )
 		re.LightForPoint = R_LightForPoint;
@@ -2348,10 +2348,10 @@ GetRefAPI
 
 	// this is only here so the functions in q_shared.c and q_math.c can link
 
-#if defined( __cplusplus )
+	#if defined( __cplusplus )
 	extern "C"
 	{
-#endif
+	#endif
 		void QDECL Com_Printf( const char* msg, ... )
 		{
 			va_list argptr;
@@ -2387,9 +2387,9 @@ GetRefAPI
 
 			ri.Error( level, "%s", text );
 		}
-#if defined( __cplusplus )
+	#if defined( __cplusplus )
 	}
-#endif
+	#endif
 
 #endif
 

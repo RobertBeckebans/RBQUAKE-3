@@ -1,22 +1,21 @@
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
-Copyright (C) 2006-2009 Robert Beckebans <trebor_7@users.sourceforge.net>
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -49,7 +48,6 @@ void LAN_LoadCachedServers( void )
 {
 	int          size;
 	fileHandle_t fileIn;
-
 	cls.numglobalservers = cls.numfavoriteservers = 0;
 	cls.numGlobalServerAddresses                  = 0;
 	if( FS_SV_FOpenFileRead( "servercache.dat", &fileIn ) )
@@ -91,72 +89,6 @@ void LAN_SaveServersToCache( void )
 
 /*
 ====================
-GetNews
-====================
-*/
-qboolean GetNews( qboolean begin )
-{
-	fileHandle_t fileIn;
-	int          readSize;
-#ifdef USE_CURL
-	qboolean finished = qfalse;
-
-	if( begin )
-	{
-		// if not already using curl, start the download
-		if( !clc.downloadCURLM )
-		{
-			if( !CL_cURL_Init() )
-			{
-				Cvar_Set( "cl_newsString", "^1Error: Could not load cURL library" );
-				return qtrue;
-			}
-			clc.activeCURLNotGameRelated = qtrue;
-			CL_cURL_BeginDownload( "news.dat", "http://areslabs.com/projects/cake3/clientnews.txt" );
-			return qfalse;
-		}
-	}
-
-	if( !clc.downloadCURLM && FS_SV_FOpenFileRead( "news.dat", &fileIn ) )
-	{
-		readSize = FS_Read( clc.newsString, sizeof( clc.newsString ), fileIn );
-		FS_FCloseFile( fileIn );
-		clc.newsString[ readSize ] = '\0';
-		if( readSize > 0 )
-		{
-			finished     = qtrue;
-			clc.cURLUsed = qfalse;
-			CL_cURL_Shutdown();
-			clc.activeCURLNotGameRelated = qfalse;
-		}
-	}
-	if( !finished )
-	{
-		strcpy( clc.newsString, "Retrieving..." );
-	}
-	Cvar_Set( "cl_newsString", clc.newsString );
-	return finished;
-#else
-	if( FS_SV_FOpenFileRead( "news.dat", &fileIn ) )
-	{
-		readSize = FS_Read( clc.newsString, sizeof( clc.newsString ), fileIn );
-		FS_FCloseFile( fileIn );
-		clc.newsString[ readSize ] = '\0';
-		if( readSize > 0 )
-		{
-			Cvar_Set( "cl_newsString", clc.newsString );
-		}
-	}
-	else
-	{
-		Cvar_Set( "cl_newsString", "^1You must compile your client with CURL support to use this feature" );
-	}
-	return qtrue;
-#endif
-}
-
-/*
-====================
 LAN_ResetPings
 ====================
 */
@@ -164,8 +96,7 @@ static void LAN_ResetPings( int source )
 {
 	int           count, i;
 	serverInfo_t* servers = NULL;
-
-	count = 0;
+	count                 = 0;
 
 	switch( source )
 	{
@@ -202,9 +133,8 @@ static int LAN_AddServer( int source, const char* name, const char* address )
 	int           max, *count, i;
 	netadr_t      adr;
 	serverInfo_t* servers = NULL;
-
-	max   = MAX_OTHER_SERVERS;
-	count = NULL;
+	max                   = MAX_OTHER_SERVERS;
+	count                 = NULL;
 
 	switch( source )
 	{
@@ -255,8 +185,7 @@ static void LAN_RemoveServer( int source, const char* addr )
 {
 	int *         count, i;
 	serverInfo_t* servers = NULL;
-
-	count = NULL;
+	count                 = NULL;
 	switch( source )
 	{
 		case AS_LOCAL:
@@ -276,14 +205,12 @@ static void LAN_RemoveServer( int source, const char* addr )
 	if( servers )
 	{
 		netadr_t comp;
-
-		NET_StringToAdr( addr, &comp, NA_IP );
+		NET_StringToAdr( addr, &comp, NA_UNSPEC );
 		for( i = 0; i < *count; i++ )
 		{
 			if( NET_CompareAdr( comp, servers[ i ].adr ) )
 			{
 				int j = i;
-
 				while( j < *count - 1 )
 				{
 					Com_Memcpy( &servers[ j ], &servers[ j + 1 ], sizeof( servers[ j ] ) );
@@ -363,8 +290,7 @@ static void LAN_GetServerInfo( int source, int n, char* buf, int buflen )
 {
 	char          info[ MAX_STRING_CHARS ];
 	serverInfo_t* server = NULL;
-
-	info[ 0 ] = '\0';
+	info[ 0 ]            = '\0';
 	switch( source )
 	{
 		case AS_LOCAL:
@@ -421,7 +347,6 @@ LAN_GetServerPing
 static int LAN_GetServerPing( int source, int n )
 {
 	serverInfo_t* server = NULL;
-
 	switch( source )
 	{
 		case AS_LOCAL:
@@ -1144,14 +1069,14 @@ intptr_t CL_UISystemCalls( intptr_t* args )
 		case UI_LAN_SERVERSTATUS:
 			return LAN_GetServerStatus( VMA( 1 ), VMA( 2 ), args[ 3 ] );
 
-		case UI_GETNEWS:
-			return GetNews( args[ 1 ] );
-
 		case UI_LAN_COMPARESERVERS:
 			return LAN_CompareServers( args[ 1 ], args[ 2 ], args[ 3 ], args[ 4 ], args[ 5 ] );
 
 		case UI_MEMORY_REMAINING:
 			return Hunk_MemoryRemaining();
+
+		case UI_SET_PBCLSTATUS:
+			return 0;
 
 		case UI_R_REGISTERFONT:
 			re.RegisterFont( VMA( 1 ), args[ 2 ], VMA( 3 ) );
@@ -1290,8 +1215,6 @@ void CL_InitUI( void )
 	{
 		Cvar_SetCheatState();
 	}
-
-	clc.newsString[ 0 ] = '\0';
 }
 
 /*

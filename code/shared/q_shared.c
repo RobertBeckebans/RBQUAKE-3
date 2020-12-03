@@ -776,7 +776,8 @@ qint64 Long64NoSwap( qint64 ll )
 	return ll;
 }
 
-typedef union {
+typedef union
+{
 	float        f;
 	unsigned int i;
 } _FloatByteUnion;

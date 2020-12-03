@@ -53,10 +53,10 @@ int   WINS_AddrCompare( struct sockaddr_s* addr1, struct sockaddr_s* addr2 );
 int   WINS_GetSocketPort( struct sockaddr_s* addr );
 int   WINS_SetSocketPort( struct sockaddr_s* addr, int port );
 
-#define GetMemory malloc
+#define GetMemory  malloc
 #define FreeMemory free
 
-#define qtrue 1
+#define qtrue  1
 #define qfalse 0
 
 #ifdef _DEBUG
@@ -519,12 +519,12 @@ WIN32
 ===================================================================
 */
 #ifdef _WIN32
-#include <windows.h>
+	#include <windows.h>
 
-#define WinError WinPrint
+	#define WinError WinPrint
 
-#define qtrue 1
-#define qfalse 0
+	#define qtrue  1
+	#define qfalse 0
 
 typedef struct tag_error_struct
 {
@@ -532,13 +532,13 @@ typedef struct tag_error_struct
 	LPSTR errstr;
 } ERROR_STRUCT;
 
-#define NET_NAMELEN 64
+	#define NET_NAMELEN 64
 
 char my_tcpip_address[ NET_NAMELEN ];
 
-#define DEFAULTnet_hostport 26000
+	#define DEFAULTnet_hostport 26000
 
-#define MAXHOSTNAMELEN 256
+	#define MAXHOSTNAMELEN 256
 
 static int net_acceptsocket = -1; // socket for fielding new connections
 static int net_controlsocket;
@@ -620,11 +620,11 @@ ERROR_STRUCT errlist[] = {
 	{ -1, NULL }
 };
 
-#ifdef _DEBUG
+	#ifdef _DEBUG
 void WinPrint( char* str, ... );
-#else
+	#else
 void WinPrint( char* str, ... );
-#endif
+	#endif
 
 char* WINS_ErrorMessage( int error )
 {
@@ -1211,27 +1211,27 @@ UNIX
 ===================================================================
 */
 #if defined( __linux__ ) || defined( __APPLE__ ) || defined( __FreeBSD__ ) || defined( __sun ) || defined( __SunOS__ )
-#if defined( __sun ) || defined( __SunOS__ )
-#include <sys/filio.h>
-#endif
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/ioctl.h>
-#include <netinet/in.h>
-#include <netinet/tcp.h>
-#include <errno.h>
-#include <netdb.h>
-#include <unistd.h>
-#define SOCKET_ERROR -1
-#define INVALID_SOCKET -1
+	#if defined( __sun ) || defined( __SunOS__ )
+		#include <sys/filio.h>
+	#endif
+	#include <sys/types.h>
+	#include <sys/socket.h>
+	#include <sys/ioctl.h>
+	#include <netinet/in.h>
+	#include <netinet/tcp.h>
+	#include <errno.h>
+	#include <netdb.h>
+	#include <unistd.h>
+	#define SOCKET_ERROR   -1
+	#define INVALID_SOCKET -1
 
-#define WinError WinPrint
+	#define WinError WinPrint
 
-#define qtrue 1
-#define qfalse 0
+	#define qtrue  1
+	#define qfalse 0
 
-#define ioctlsocket ioctl
-#define closesocket close
+	#define ioctlsocket ioctl
+	#define closesocket close
 
 int WSAGetLastError()
 {
@@ -1252,13 +1252,13 @@ typedef struct tag_error_struct
 	const char* errstr;
 } ERROR_STRUCT;
 
-#define NET_NAMELEN 64
+	#define NET_NAMELEN 64
 
 static char my_tcpip_address[ NET_NAMELEN ];
 
-#define DEFAULTnet_hostport 26000
+	#define DEFAULTnet_hostport 26000
 
-#define MAXHOSTNAMELEN 256
+	#define MAXHOSTNAMELEN 256
 
 static int net_acceptsocket = -1; // socket for fielding new connections
 static int net_controlsocket;
@@ -1318,7 +1318,7 @@ int WINS_Init( void )
 	 linux doesn't have anything to initialize for the net
 	 "Windows .. built for the internet .. the internet .. built with unix"
 	 */
-#if 0
+	#if 0
 	WORD            wVersionRequested;
 	
 	wVersionRequested = MAKEWORD( 2, 2 );
@@ -1330,7 +1330,7 @@ int WINS_Init( void )
 		WinPrint( "Winsock initialization failed.\n" );
 		return -1;
 	}
-#endif
+	#endif
 	/*
 	   i = COM_CheckParm ("-udpport");
 	   if (i == 0) */

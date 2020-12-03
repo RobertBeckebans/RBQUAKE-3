@@ -389,13 +389,13 @@ static void GetChunkHeader( memStream_t* s, axChunkHeader_t* chunkHeader )
 
 static void PrintChunkHeader( axChunkHeader_t* chunkHeader )
 {
-#if 0
+	#if 0
 	ri.Printf( PRINT_ALL, "----------------------\n" );
 	ri.Printf( PRINT_ALL, "R_LoadPSA: chunk header ident: '%s'\n", chunkHeader->ident );
 	ri.Printf( PRINT_ALL, "R_LoadPSA: chunk header flags: %i\n", chunkHeader->flags );
 	ri.Printf( PRINT_ALL, "R_LoadPSA: chunk header data size: %i\n", chunkHeader->dataSize );
 	ri.Printf( PRINT_ALL, "R_LoadPSA: chunk header num items: %i\n", chunkHeader->numData );
-#endif
+	#endif
 }
 
 static void GetBone( memStream_t* s, axBone_t* bone )
@@ -498,7 +498,7 @@ static qboolean R_LoadPSA( skelAnimation_t* skelAnim, void* buffer, int bufferSi
 
 		GetBone( stream, &refBone->bone );
 
-#if 0
+	#if 0
 		ri.Printf( PRINT_ALL, "R_LoadPSA: axReferenceBone_t(%i):\n"
 				   "axReferenceBone_t::name: '%s'\n"
 				   "axReferenceBone_t::flags: %i\n"
@@ -521,7 +521,7 @@ static qboolean R_LoadPSA( skelAnimation_t* skelAnim, void* buffer, int bufferSi
 				   refBone->bone.xSize,
 				   refBone->bone.ySize,
 				   refBone->bone.zSize );
-#endif
+	#endif
 	}
 
 	// load animation info
@@ -598,7 +598,7 @@ static qboolean R_LoadPSA( skelAnimation_t* skelAnim, void* buffer, int bufferSi
 		animInfo->firstRawFrame = MemStreamGetLong( stream );
 		animInfo->numRawFrames  = MemStreamGetLong( stream );
 
-#if 0
+	#if 0
 		ri.Printf( PRINT_ALL, "R_LoadPSA: axAnimationInfo_t(%i):\n"
 				   "axAnimationInfo_t::name: '%s'\n"
 				   "axAnimationInfo_t::group: '%s'\n"
@@ -625,7 +625,7 @@ static qboolean R_LoadPSA( skelAnimation_t* skelAnim, void* buffer, int bufferSi
 				   animInfo->startBoneIndex,
 				   animInfo->firstRawFrame,
 				   animInfo->numRawFrames );
-#endif
+	#endif
 	}
 
 	// load the animation frame keys
@@ -1057,7 +1057,7 @@ void R_AddMD5Interactions( trRefEntity_t* ent, trRefLight_t* light )
 	}
 
 	// avoid drawing of certain objects
-#if defined( USE_REFENTITY_NOSHADOWID )
+	#if defined( USE_REFENTITY_NOSHADOWID )
 	if( light->l.inverseShadows )
 	{
 		if( iaType != IA_LIGHTONLY && ( light->l.noShadowID && ( light->l.noShadowID != ent->e.noShadowID ) ) )
@@ -1072,7 +1072,7 @@ void R_AddMD5Interactions( trRefEntity_t* ent, trRefLight_t* light )
 			return;
 		}
 	}
-#endif
+	#endif
 
 	// don't add third_person objects if not in a portal
 	personalModel = ( ent->e.renderfx & RF_THIRD_PERSON ) && !tr.viewParms.isPortal;
@@ -1418,13 +1418,13 @@ int RE_BuildSkeleton( refSkeleton_t* skel, qhandle_t hAnim, int startFrame, int 
 			QuatCalcW( newQuat );
 			QuatNormalize( newQuat );
 
-#if 1
+	#if 1
 			VectorLerp( oldOrigin, newOrigin, frac, lerpedOrigin );
 			QuatSlerp( oldQuat, newQuat, frac, lerpedQuat );
-#else
+	#else
 			VectorCopy( newOrigin, lerpedOrigin );
 			QuatCopy( newQuat, lerpedQuat );
-#endif
+	#endif
 
 			// copy lerped information to the bone + extra data
 			skel->bones[ i ].parentIndex = channel->parentIndex;
@@ -1445,9 +1445,9 @@ int RE_BuildSkeleton( refSkeleton_t* skel, qhandle_t hAnim, int startFrame, int 
 
 			QuatCopy( lerpedQuat, skel->bones[ i ].rotation );
 
-#if defined( REFBONE_NAMES )
+	#if defined( REFBONE_NAMES )
 			Q_strncpyz( skel->bones[ i ].name, channel->name, sizeof( skel->bones[ i ].name ) );
-#endif
+	#endif
 		}
 
 		skel->numBones = anim->numChannels;
@@ -1511,9 +1511,9 @@ int RE_BuildSkeleton( refSkeleton_t* skel, qhandle_t hAnim, int startFrame, int 
 
 			QuatCopy( lerpedQuat, skel->bones[ i ].rotation );
 
-#if defined( REFBONE_NAMES )
+	#if defined( REFBONE_NAMES )
 			Q_strncpyz( skel->bones[ i ].name, refBone->name, sizeof( skel->bones[ i ].name ) );
-#endif
+	#endif
 
 			// calculate absolute values for the bounding box approximation
 			VectorCopy( skel->bones[ i ].origin, skeleton.bones[ i ].origin );

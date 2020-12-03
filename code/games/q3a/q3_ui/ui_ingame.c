@@ -34,15 +34,15 @@ INGAME MENU
 //#define INGAME_FRAME					"menu/art/cut_frame"
 #define INGAME_MENU_VERTICAL_SPACING 28
 
-#define ID_TEAM 10
-#define ID_ADDBOTS 11
+#define ID_TEAM       10
+#define ID_ADDBOTS    11
 #define ID_REMOVEBOTS 12
-#define ID_SETUP 13
+#define ID_SETUP      13
 #define ID_SERVERINFO 14
 #define ID_LEAVEARENA 15
-#define ID_RESTART 16
-#define ID_QUIT 17
-#define ID_RESUME 18
+#define ID_RESTART    16
+#define ID_QUIT       17
+#define ID_RESUME     18
 #define ID_TEAMORDERS 19
 
 typedef struct

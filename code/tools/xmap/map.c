@@ -77,7 +77,7 @@ PlaneEqual
 ================
 */
 #define NORMAL_EPSILON 0.00001
-#define DIST_EPSILON 0.01
+#define DIST_EPSILON   0.01
 qboolean PlaneEqual( plane_t* p, vec3_t normal, vec_t dist )
 {
 #if 1

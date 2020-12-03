@@ -180,10 +180,10 @@ void BotMapScripts( bot_state_t* bs );
 
 //ctf flags
 #define CTF_FLAG_NONE 0
-#define CTF_FLAG_RED 1
+#define CTF_FLAG_RED  1
 #define CTF_FLAG_BLUE 2
 //CTF skins
-#define CTF_SKIN_REDTEAM "red"
+#define CTF_SKIN_REDTEAM  "red"
 #define CTF_SKIN_BLUETEAM "blue"
 
 extern int gametype;   //game type

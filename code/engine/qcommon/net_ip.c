@@ -24,70 +24,70 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "../qcommon/qcommon.h"
 
 #ifdef _WIN32
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#if WINVER < 0x501
-#ifdef __MINGW32__
-// wspiapi.h isn't available on MinGW, so if it's
-// present it's because the end user has added it
-// and we should look for it in our tree
-#include "wspiapi.h"
-#else
-#include <wspiapi.h>
-#endif
-#else
-#include <ws2spi.h>
-#endif
+	#include <winsock2.h>
+	#include <ws2tcpip.h>
+	#if WINVER < 0x501
+		#ifdef __MINGW32__
+			// wspiapi.h isn't available on MinGW, so if it's
+			// present it's because the end user has added it
+			// and we should look for it in our tree
+			#include "wspiapi.h"
+		#else
+			#include <wspiapi.h>
+		#endif
+	#else
+		#include <ws2spi.h>
+	#endif
 
 typedef int socklen_t;
 
-#ifdef ADDRESS_FAMILY
-#define sa_family_t ADDRESS_FAMILY
-#else
+	#ifdef ADDRESS_FAMILY
+		#define sa_family_t ADDRESS_FAMILY
+	#else
 typedef unsigned short sa_family_t;
-#endif
+	#endif
 
-#define EAGAIN WSAEWOULDBLOCK
-#define EADDRNOTAVAIL WSAEADDRNOTAVAIL
-#define EAFNOSUPPORT WSAEAFNOSUPPORT
-#define ECONNRESET WSAECONNRESET
-#define socketError WSAGetLastError()
+	#define EAGAIN        WSAEWOULDBLOCK
+	#define EADDRNOTAVAIL WSAEADDRNOTAVAIL
+	#define EAFNOSUPPORT  WSAEAFNOSUPPORT
+	#define ECONNRESET    WSAECONNRESET
+	#define socketError   WSAGetLastError()
 
 static WSADATA  winsockdata;
 static qboolean winsockInitialized = qfalse;
 
 #else
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED == 1020
-// needed for socklen_t on OSX 10.2
-#define _BSD_SOCKLEN_T_
-#endif
+	#if MAC_OS_X_VERSION_MIN_REQUIRED == 1020
+		// needed for socklen_t on OSX 10.2
+		#define _BSD_SOCKLEN_T_
+	#endif
 
-#include <arpa/inet.h>
-#include <errno.h>
-#include <netdb.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <net/if.h>
-#include <sys/ioctl.h>
-#include <sys/types.h>
-#include <sys/time.h>
-#include <unistd.h>
-#if !defined( __sun ) && !defined( __sgi )
-#include <ifaddrs.h>
-#endif
+	#include <arpa/inet.h>
+	#include <errno.h>
+	#include <netdb.h>
+	#include <netinet/in.h>
+	#include <sys/socket.h>
+	#include <net/if.h>
+	#include <sys/ioctl.h>
+	#include <sys/types.h>
+	#include <sys/time.h>
+	#include <unistd.h>
+	#if !defined( __sun ) && !defined( __sgi )
+		#include <ifaddrs.h>
+	#endif
 
-#ifdef __sun
-#include <sys/filio.h>
-#endif
+	#ifdef __sun
+		#include <sys/filio.h>
+	#endif
 
 typedef int SOCKET;
 
-#define INVALID_SOCKET -1
-#define SOCKET_ERROR -1
-#define closesocket close
-#define ioctlsocket ioctl
-#define socketError errno
+	#define INVALID_SOCKET -1
+	#define SOCKET_ERROR   -1
+	#define closesocket    close
+	#define ioctlsocket    ioctl
+	#define socketError    errno
 
 #endif
 
@@ -123,7 +123,7 @@ static struct ipv6_mreq curgroup;
 static struct sockaddr_in6 boundto;
 
 #ifndef IF_NAMESIZE
-#define IF_NAMESIZE 16
+	#define IF_NAMESIZE 16
 #endif
 
 // use an admin local address per default so that network admins can decide on how to handle quake3 traffic.
@@ -1534,8 +1534,8 @@ static void NET_GetLocalAddress( void )
 #else
 static void NET_GetLocalAddress( void )
 {
-	char             hostname[ 256 ];
-	struct addrinfo  hint;
+	char hostname[ 256 ];
+	struct addrinfo hint;
 	struct addrinfo* res = NULL;
 
 	if( gethostname( hostname, 256 ) == SOCKET_ERROR )
@@ -1547,14 +1547,14 @@ static void NET_GetLocalAddress( void )
 
 	memset( &hint, 0, sizeof( hint ) );
 
-	hint.ai_family   = AF_UNSPEC;
+	hint.ai_family = AF_UNSPEC;
 	hint.ai_socktype = SOCK_DGRAM;
 
 	if( !getaddrinfo( hostname, NULL, &hint, &res ) )
 	{
-		struct sockaddr_in  mask4;
+		struct sockaddr_in mask4;
 		struct sockaddr_in6 mask6;
-		struct addrinfo*    search;
+		struct addrinfo* search;
 
 		/* On operating systems where it's more difficult to find out the configured interfaces, we'll just assume a
 		 * netmask with all bits set. */
@@ -1683,7 +1683,7 @@ static qboolean NET_GetCvars( void )
 #else
 	/* End users have it enabled so they can connect to ipv6-only hosts, but ipv4 will be
 	 * used if available due to ping */
-	net_enabled     = Cvar_Get( "net_enabled", "3", CVAR_LATCH | CVAR_ARCHIVE );
+	net_enabled = Cvar_Get( "net_enabled", "3", CVAR_LATCH | CVAR_ARCHIVE );
 #endif
 	modified              = net_enabled->modified;
 	net_enabled->modified = qfalse;

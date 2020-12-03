@@ -92,7 +92,8 @@ void LoadJPG( const char* filename, unsigned char** pic, int* width, int* height
 	unsigned int sindex, dindex;
 	byte*        out;
 	int          len;
-	union {
+	union
+	{
 		byte* b;
 		void* v;
 	} fbuffer;

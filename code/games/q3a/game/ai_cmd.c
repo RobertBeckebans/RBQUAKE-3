@@ -98,7 +98,7 @@ void BotPrintTeamGoal( bot_state_t* bs )
 			BotAI_Print( PRT_MESSAGE, "%s: I'm gonna try to return the flag for %1.0f secs\n", netname, t );
 			break;
 		}
-#ifdef MISSIONPACK
+	#ifdef MISSIONPACK
 		case LTG_ATTACKENEMYBASE:
 		{
 			BotAI_Print( PRT_MESSAGE, "%s: I'm gonna attack the enemy base for %1.0f secs\n", netname, t );
@@ -109,7 +109,7 @@ void BotPrintTeamGoal( bot_state_t* bs )
 			BotAI_Print( PRT_MESSAGE, "%s: I'm gonna harvest for %1.0f secs\n", netname, t );
 			break;
 		}
-#endif
+	#endif
 		case LTG_DEFENDKEYAREA:
 		{
 			BotAI_Print( PRT_MESSAGE, "%s: I'm gonna defend a key area for %1.0f secs\n", netname, t );
@@ -1187,9 +1187,9 @@ void BotMatch_Harvest( bot_state_t* bs, bot_match_t* match )
 	BotSetTeamStatus( bs );
 	// remember last ordered task
 	BotRememberLastOrderedTask( bs );
-#ifdef DEBUG
+	#ifdef DEBUG
 	BotPrintTeamGoal( bs );
-#endif //DEBUG
+	#endif //DEBUG
 }
 #endif
 

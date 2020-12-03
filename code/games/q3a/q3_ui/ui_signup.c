@@ -28,16 +28,16 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #define SIGNUP_FRAME "menu/art/cut_frame"
 
-#define ID_NAME 100
-#define ID_NAME_BOX 101
-#define ID_PASSWORD 102
+#define ID_NAME         100
+#define ID_NAME_BOX     101
+#define ID_PASSWORD     102
 #define ID_PASSWORD_BOX 103
-#define ID_AGAIN 104
-#define ID_AGAIN_BOX 105
-#define ID_EMAIL 106
-#define ID_EMAIL_BOX 107
-#define ID_SIGNUP 108
-#define ID_CANCEL 109
+#define ID_AGAIN        104
+#define ID_AGAIN_BOX    105
+#define ID_EMAIL        106
+#define ID_EMAIL_BOX    107
+#define ID_SIGNUP       108
+#define ID_CANCEL       109
 
 typedef struct
 {

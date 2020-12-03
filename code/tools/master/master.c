@@ -25,8 +25,8 @@
 #include <ctype.h>
 
 #ifndef WIN32
-#include <pwd.h>
-#include <unistd.h>
+	#include <pwd.h>
+	#include <unistd.h>
 #endif
 
 #include "common.h"
@@ -46,11 +46,11 @@
 #define MIN_PACKET_SIZE 5
 
 #ifndef WIN32
-// Default path we use for chroot
-#define DEFAULT_JAIL_PATH "/var/empty/"
+	// Default path we use for chroot
+	#define DEFAULT_JAIL_PATH "/var/empty/"
 
-// User we use by default for dropping super-user privileges
-#define DEFAULT_LOW_PRIV_USER "nobody"
+	// User we use by default for dropping super-user privileges
+	#define DEFAULT_LOW_PRIV_USER "nobody"
 #endif
 
 // ---------- Types ---------- //

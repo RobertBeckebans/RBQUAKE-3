@@ -26,15 +26,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define __CMDLIB__
 
 #ifdef _MSC_VER
-#pragma warning( disable : 4244 ) // MIPS
-#pragma warning( disable : 4136 ) // X86
-#pragma warning( disable : 4051 ) // ALPHA
+	#pragma warning( disable : 4244 ) // MIPS
+	#pragma warning( disable : 4136 ) // X86
+	#pragma warning( disable : 4051 ) // ALPHA
 
-#pragma warning( disable : 4018 ) // signed/unsigned mismatch
-#pragma warning( disable : 4305 ) // truncate from double to float
-#pragma warning( disable : 4996 ) // deprecated functions
-#define _CRT_SECURE_NO_DEPRECATE
-#pragma check_stack( off )
+	#pragma warning( disable : 4018 ) // signed/unsigned mismatch
+	#pragma warning( disable : 4305 ) // truncate from double to float
+	#pragma warning( disable : 4996 ) // deprecated functions
+	#define _CRT_SECURE_NO_DEPRECATE
+	#pragma check_stack( off )
 #endif
 
 #include <stdio.h>
@@ -46,11 +46,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include <stdarg.h>
 
 #ifdef _MSC_VER
-#pragma intrinsic( memset, memcpy )
+	#pragma intrinsic( memset, memcpy )
 #endif
 
 #ifndef __BYTEBOOL__
-#define __BYTEBOOL__
+	#define __BYTEBOOL__
 typedef enum
 {
 	qfalse,
@@ -61,9 +61,9 @@ typedef unsigned char byte;
 
 #define MAX_QPATH 256 // max length of a quake game pathname, formerly 64
 #ifdef PATH_MAX
-#define MAX_OSPATH PATH_MAX
+	#define MAX_OSPATH PATH_MAX
 #else
-#define MAX_OSPATH 256 // max length of a filesystem pathname
+	#define MAX_OSPATH 256 // max length of a filesystem pathname
 #endif
 
 #define MEM_BLOCKSIZE 4096
@@ -76,7 +76,7 @@ typedef unsigned char byte;
 void* safe_malloc( size_t size );
 void* safe_malloc_info( size_t size, char* info );
 #else
-#define safe_malloc( a ) malloc( a )
+	#define safe_malloc( a ) malloc( a )
 #endif /* SAFE_MALLOC */
 
 // set these before calling CheckParm

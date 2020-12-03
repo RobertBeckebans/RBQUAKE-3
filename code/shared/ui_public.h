@@ -1,22 +1,21 @@
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
-Copyright (C) 2006 Robert Beckebans <trebor_7@users.sourceforge.net>
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -56,7 +55,6 @@ typedef enum
 	UI_FS_WRITE,
 	UI_FS_FCLOSEFILE,
 	UI_FS_GETFILELIST,
-
 	UI_R_REGISTERMODEL,
 	UI_R_REGISTERANIMATION,
 	UI_R_RESETSKELETON,
@@ -130,8 +128,7 @@ typedef enum
 	UI_LAN_COMPARESERVERS,
 	// 1.32
 	UI_FS_SEEK,
-
-	UI_GETNEWS,
+	UI_SET_PBCLSTATUS,
 
 	UI_MEMSET = 100,
 	UI_MEMCPY,
@@ -167,16 +164,16 @@ typedef enum
 	UI_GETAPIVERSION = 0, // system reserved
 
 	UI_INIT,
-	//  void    UI_Init( void );
+	//	void	UI_Init( void );
 
 	UI_SHUTDOWN,
-	//  void    UI_Shutdown( void );
+	//	void	UI_Shutdown( void );
 
 	UI_KEY_EVENT,
-	//  void    UI_KeyEvent( int key );
+	//	void	UI_KeyEvent( int key );
 
 	UI_MOUSE_EVENT,
-	//  void    UI_MouseEvent( int dx, int dy );
+	//	void	UI_MouseEvent( int dx, int dy );
 
 	UI_MOUSE_POSITION,
 	//  int   UI_MousePosition( void );
@@ -185,19 +182,19 @@ typedef enum
 	//  void  UI_SetMousePosition( int x, int y );
 
 	UI_REFRESH,
-	//  void    UI_Refresh( int time );
+	//	void	UI_Refresh( int time );
 
 	UI_IS_FULLSCREEN,
-	//  qboolean UI_IsFullscreen( void );
+	//	qboolean UI_IsFullscreen( void );
 
 	UI_SET_ACTIVE_MENU,
-	//  void    UI_SetActiveMenu( uiMenuCommand_t menu );
+	//	void	UI_SetActiveMenu( uiMenuCommand_t menu );
 
 	UI_CONSOLE_COMMAND,
-	//  qboolean UI_ConsoleCommand( int realTime );
+	//	qboolean UI_ConsoleCommand( int realTime );
 
 	UI_DRAW_CONNECT_SCREEN
-	//  void    UI_DrawConnectScreen( qboolean overlay );
+	//	void	UI_DrawConnectScreen( qboolean overlay );
 	// if !overlay, the background will be drawn, otherwise it will be
 	// overlayed over whatever the cgame has drawn.
 	// a GetClientState syscall will be made to get the current strings

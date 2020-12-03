@@ -30,23 +30,23 @@ SOUND OPTIONS MENU
 
 #include "ui_local.h"
 
-#define ART_FRAMEL "menu/art/frame2_l"
-#define ART_FRAMER "menu/art/frame1_r"
-#define ART_BACK0 "menu/art/back_0"
-#define ART_BACK1 "menu/art/back_1"
+#define ART_FRAMEL  "menu/art/frame2_l"
+#define ART_FRAMER  "menu/art/frame1_r"
+#define ART_BACK0   "menu/art/back_0"
+#define ART_BACK1   "menu/art/back_1"
 #define ART_ACCEPT0 "menu/art/accept_0"
 #define ART_ACCEPT1 "menu/art/accept_1"
 
-#define ID_GRAPHICS 10
-#define ID_DISPLAY 11
-#define ID_SOUND 12
-#define ID_NETWORK 13
+#define ID_GRAPHICS      10
+#define ID_DISPLAY       11
+#define ID_SOUND         12
+#define ID_NETWORK       13
 #define ID_EFFECTSVOLUME 14
-#define ID_MUSICVOLUME 15
-#define ID_QUALITY 16
-#define ID_SOUNDSYSTEM 17
+#define ID_MUSICVOLUME   15
+#define ID_QUALITY       16
+#define ID_SOUNDSYSTEM   17
 //#define ID_A3D				18
-#define ID_BACK 19
+#define ID_BACK  19
 #define ID_APPLY 20
 
 #define DEFAULT_SDL_SND_SPEED 22050
@@ -55,7 +55,7 @@ static const char* quality_items[] = {
 	"Low", "Medium", "High", NULL
 };
 
-#define UISND_SDL 0
+#define UISND_SDL    0
 #define UISND_OPENAL 1
 
 static const char* soundSystem_items[] = {

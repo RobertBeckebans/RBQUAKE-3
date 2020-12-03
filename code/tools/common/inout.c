@@ -38,26 +38,26 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include <sys/stat.h>
 
 #ifdef WIN32
-#include <direct.h>
-#include <windows.h>
+	#include <direct.h>
+	#include <windows.h>
 #endif
 
 #if defined( USE_XML )
-// network broadcasting
-#include "../xrealradiant/include/stream_version.h"
+	// network broadcasting
+	#include "../xrealradiant/include/stream_version.h"
 
-#include "libxml/parser.h"
-#include "libxml/tree.h"
+	#include "libxml/parser.h"
+	#include "libxml/tree.h"
 
-// utf8 conversion
-#include <glib/gconvert.h>
-#include <glib/gmem.h>
+	// utf8 conversion
+	#include <glib/gconvert.h>
+	#include <glib/gmem.h>
 
-#ifdef WIN32
+	#ifdef WIN32
 HWND     hwndOut             = NULL;
 qboolean lookedForServer     = qfalse;
 UINT     wm_BroadcastCommand = -1;
-#endif
+    #endif
 
 socket_t*    brdcst_socket;
 netmessage_t msg;
@@ -122,7 +122,7 @@ void xml_SendNode( xmlNodePtr node )
 			pos += size;
 		}
 
-#if 0
+	#if 0
 		// NOTE: the NMSG_WriteString is limited to MAX_NETMESSAGE
 		// we will need to split into chunks
 		// (we could also go lower level, in the end it's using send and receiv which are not size limited)
@@ -148,7 +148,7 @@ void xml_SendNode( xmlNodePtr node )
 		NMSG_Clear( &msg );
 		NMSG_WriteString( &msg, xmlbuf );
 		Net_Send( brdcst_socket, &msg );
-#endif
+	#endif
 
 		xmlBufferFree( xml_buf );
 	}
@@ -207,7 +207,7 @@ void xml_Point( char* msg, vec3_t pt )
 	Error( buf );
 }
 
-#define WINDING_BUFSIZE 2048
+	#define WINDING_BUFSIZE 2048
 void xml_Winding( char* msg, vec3_t p[], int numpoints, qboolean die )
 {
 	xmlNodePtr node, winding;

@@ -28,21 +28,21 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #define MAX_LISTBOXITEMS 128
 #define MAX_LISTBOXWIDTH 40
-#define MAX_LEAGUENAME 80
+#define MAX_LEAGUENAME   80
 
-#define SPECIFYLEAGUE_FRAMEL "menu/art/frame2_l"
-#define SPECIFYLEAGUE_FRAMER "menu/art/frame1_r"
-#define SPECIFYLEAGUE_BACK0 "menu/art/back_0"
-#define SPECIFYLEAGUE_BACK1 "menu/art/back_1"
-#define SPECIFYLEAGUE_ARROWS0 "menu/art/arrows_vert_0"
-#define SPECIFYLEAGUE_UP "menu/art/arrows_vert_top"
-#define SPECIFYLEAGUE_DOWN "menu/art/arrows_vert_bot"
-#define GLOBALRANKINGS_LOGO "menu/art/gr/grlogo"
+#define SPECIFYLEAGUE_FRAMEL   "menu/art/frame2_l"
+#define SPECIFYLEAGUE_FRAMER   "menu/art/frame1_r"
+#define SPECIFYLEAGUE_BACK0    "menu/art/back_0"
+#define SPECIFYLEAGUE_BACK1    "menu/art/back_1"
+#define SPECIFYLEAGUE_ARROWS0  "menu/art/arrows_vert_0"
+#define SPECIFYLEAGUE_UP       "menu/art/arrows_vert_top"
+#define SPECIFYLEAGUE_DOWN     "menu/art/arrows_vert_bot"
+#define GLOBALRANKINGS_LOGO    "menu/art/gr/grlogo"
 #define GLOBALRANKINGS_LETTERS "menu/art/gr/grletters"
 
 #define ID_SPECIFYLEAGUENAME 100
 #define ID_SPECIFYLEAGUELIST 101
-#define ID_SPECIFYLEAGUEUP 102
+#define ID_SPECIFYLEAGUEUP   102
 #define ID_SPECIFYLEAGUEDOWN 103
 #define ID_SPECIFYLEAGUEBACK 104
 

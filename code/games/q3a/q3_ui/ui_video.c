@@ -34,8 +34,8 @@ DRIVER INFORMATION MENU
 
 #define DRIVERINFO_FRAMEL "menu/art/frame2_l"
 #define DRIVERINFO_FRAMER "menu/art/frame1_r"
-#define DRIVERINFO_BACK0 "menu/art/back_0"
-#define DRIVERINFO_BACK1 "menu/art/back_1"
+#define DRIVERINFO_BACK0  "menu/art/back_0"
+#define DRIVERINFO_BACK1  "menu/art/back_1"
 
 static char* driverinfo_artlist[] = {
 	DRIVERINFO_FRAMEL,
@@ -244,23 +244,23 @@ GRAPHICS OPTIONS MENU
 =======================================================================
 */
 
-#define GRAPHICSOPTIONS_FRAMEL "menu/art/frame2_l"
-#define GRAPHICSOPTIONS_FRAMER "menu/art/frame1_r"
-#define GRAPHICSOPTIONS_BACK0 "menu/art/back_0"
-#define GRAPHICSOPTIONS_BACK1 "menu/art/back_1"
+#define GRAPHICSOPTIONS_FRAMEL  "menu/art/frame2_l"
+#define GRAPHICSOPTIONS_FRAMER  "menu/art/frame1_r"
+#define GRAPHICSOPTIONS_BACK0   "menu/art/back_0"
+#define GRAPHICSOPTIONS_BACK1   "menu/art/back_1"
 #define GRAPHICSOPTIONS_ACCEPT0 "menu/art/accept_0"
 #define GRAPHICSOPTIONS_ACCEPT1 "menu/art/accept_1"
 
-#define ID_BACK2 101
+#define ID_BACK2      101
 #define ID_FULLSCREEN 102
-#define ID_LIST 103
-#define ID_MODE 104
+#define ID_LIST       103
+#define ID_MODE       104
 #define ID_DRIVERINFO 105
-#define ID_GRAPHICS 106
-#define ID_DISPLAY 107
-#define ID_SOUND 108
-#define ID_NETWORK 109
-#define ID_RATIO 110
+#define ID_GRAPHICS   106
+#define ID_DISPLAY    107
+#define ID_SOUND      108
+#define ID_NETWORK    109
+#define ID_RATIO      110
 
 typedef struct
 {

@@ -178,7 +178,8 @@ static void ConvertOriginBrush( FILE* f, int num, vec3_t origin )
 	};
 	int i;
 
-#define S( a, b, c ) ( pattern[ a ][ b ][ c ] == '+' ? +1 : pattern[ a ][ b ][ c ] == '-' ? -1 : 0 )
+#define S( a, b, c ) ( pattern[ a ][ b ][ c ] == '+' ? +1 : pattern[ a ][ b ][ c ] == '-' ? -1 : \
+                                                                                            0 )
 #define FRAC( x ) ( ( x )-floor( x ) )
 
 	/* start brush */

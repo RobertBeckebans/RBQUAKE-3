@@ -32,62 +32,62 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #define POWERUP_BLINKS 5
 
-#define POWERUP_BLINK_TIME 1000
-#define FADE_TIME 200
-#define PULSE_TIME 200
+#define POWERUP_BLINK_TIME  1000
+#define FADE_TIME           200
+#define PULSE_TIME          200
 #define DAMAGE_DEFLECT_TIME 100
-#define DAMAGE_RETURN_TIME 400
-#define DAMAGE_TIME 500
-#define LAND_DEFLECT_TIME 150
-#define LAND_RETURN_TIME 300
-#define STEP_TIME 200
-#define DUCK_TIME 100
-#define PAIN_TWITCH_TIME 200
-#define WEAPON_SELECT_TIME 1400
-#define ITEM_SCALEUP_TIME 1000
-#define ZOOM_TIME 150
-#define ITEM_BLOB_TIME 200
-#define MUZZLE_FLASH_TIME 20
-#define SINK_TIME 1000 // time for fragments to sink into ground before going away
-#define ATTACKER_HEAD_TIME 10000
-#define REWARD_TIME 3000
+#define DAMAGE_RETURN_TIME  400
+#define DAMAGE_TIME         500
+#define LAND_DEFLECT_TIME   150
+#define LAND_RETURN_TIME    300
+#define STEP_TIME           200
+#define DUCK_TIME           100
+#define PAIN_TWITCH_TIME    200
+#define WEAPON_SELECT_TIME  1400
+#define ITEM_SCALEUP_TIME   1000
+#define ZOOM_TIME           150
+#define ITEM_BLOB_TIME      200
+#define MUZZLE_FLASH_TIME   20
+#define SINK_TIME           1000 // time for fragments to sink into ground before going away
+#define ATTACKER_HEAD_TIME  10000
+#define REWARD_TIME         3000
 
 #define PULSE_SCALE 1.5 // amount to scale up the icons when activating
 
 #define MAX_STEP_CHANGE 32
 
 #define MAX_VERTS_ON_POLY 10
-#define MAX_MARK_POLYS 256
+#define MAX_MARK_POLYS    256
 
 #define STAT_MINUS 10 // num frame for '-' stats digit
 
-#define ICON_SIZE 48
-#define CHAR_WIDTH 32
-#define CHAR_HEIGHT 48
+#define ICON_SIZE       48
+#define CHAR_WIDTH      32
+#define CHAR_HEIGHT     48
 #define TEXT_ICON_SPACE 4
 
-#define TEAMCHAT_WIDTH 80
+#define TEAMCHAT_WIDTH  80
 #define TEAMCHAT_HEIGHT 8
 
 // very large characters
-#define GIANT_WIDTH 32
+#define GIANT_WIDTH  32
 #define GIANT_HEIGHT 48
 
 #define NUM_CROSSHAIRS 10
 
-#define TEAM_OVERLAY_MAXNAME_WIDTH 12
+#define TEAM_OVERLAY_MAXNAME_WIDTH     12
 #define TEAM_OVERLAY_MAXLOCATION_WIDTH 16
 
 #define DEFAULT_MODEL "sarge"
 #ifdef MISSIONPACK
-#define DEFAULT_TEAM_MODEL "james"
-#define DEFAULT_TEAM_HEAD "*james"
+	#define DEFAULT_TEAM_MODEL "james"
+	#define DEFAULT_TEAM_HEAD  "*james"
 #else
-#define DEFAULT_TEAM_MODEL "sarge"
-#define DEFAULT_TEAM_HEAD "sarge"
+	#define DEFAULT_TEAM_MODEL "sarge"
+	#define DEFAULT_TEAM_HEAD  "sarge"
 #endif
 
-#define DEFAULT_REDTEAM_NAME "Stroggs"
+#define DEFAULT_REDTEAM_NAME  "Stroggs"
 #define DEFAULT_BLUETEAM_NAME "Pagans"
 
 typedef enum

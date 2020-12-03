@@ -31,15 +31,15 @@ MAIN MENU
 #include "ui_local.h"
 
 #define ID_SINGLEPLAYER 10
-#define ID_MULTIPLAYER 11
-#define ID_SETUP 12
-#define ID_DEMOS 13
-#define ID_CINEMATICS 14
-#define ID_TEAMARENA 15
-#define ID_MODS 16
-#define ID_EXIT 17
+#define ID_MULTIPLAYER  11
+#define ID_SETUP        12
+#define ID_DEMOS        13
+#define ID_CINEMATICS   14
+#define ID_TEAMARENA    15
+#define ID_MODS         16
+#define ID_EXIT         17
 
-#define MAIN_BANNER_MODEL "models/mapobjects/banner/banner5.md3"
+#define MAIN_BANNER_MODEL          "models/mapobjects/banner/banner5.md3"
 #define MAIN_MENU_VERTICAL_SPACING 34
 
 typedef struct

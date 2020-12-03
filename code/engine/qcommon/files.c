@@ -156,8 +156,8 @@ or configs will never get loaded from disk!
 
 */
 
-#define MAX_ZPATH 256
-#define MAX_SEARCH_PATHS 4096
+#define MAX_ZPATH         256
+#define MAX_SEARCH_PATHS  4096
 #define MAX_FILEHASH_SIZE 1024
 
 typedef struct fileInPack_s
@@ -219,7 +219,8 @@ static int           fs_packFiles = 0; // total number of files in packs
 
 static int fs_checksumFeed;
 
-typedef union qfile_gus {
+typedef union qfile_gus
+{
 	FILE*   o;
 	unzFile z;
 } qfile_gut;
@@ -269,7 +270,7 @@ FILE* missingFiles = NULL;
 
 /* C99 defines __func__ */
 #ifndef __func__
-#define __func__ "(unknown)"
+	#define __func__ "(unknown)"
 #endif
 
 /*

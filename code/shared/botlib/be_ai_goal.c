@@ -48,7 +48,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 //#define DEBUG_AI_GOAL
 #ifdef RANDOMIZE
-#define UNDECIDEDFUZZY
+	#define UNDECIDEDFUZZY
 #endif //RANDOMIZE
 #define DROPPEDWEIGHT
 //minimum avoid goal time
@@ -60,11 +60,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //
 #define TRAVELTIME_SCALE 0.01
 //item flags
-#define IFL_NOTFREE 1   //not in free for all
-#define IFL_NOTTEAM 2   //not in team play
-#define IFL_NOTSINGLE 4 //not in single player
-#define IFL_NOTBOT 8    //bot should never go for this
-#define IFL_ROAM 16     //bot roam goal
+#define IFL_NOTFREE   1  //not in free for all
+#define IFL_NOTTEAM   2  //not in team play
+#define IFL_NOTSINGLE 4  //not in single player
+#define IFL_NOTBOT    8  //bot should never go for this
+#define IFL_ROAM      16 //bot roam goal
 
 //location in the map "target_location"
 typedef struct maplocation_s

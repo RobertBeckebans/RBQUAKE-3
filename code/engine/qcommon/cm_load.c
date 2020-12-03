@@ -27,9 +27,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // to allow boxes to be treated as brush models, we allocate
 // some extra indexes along with those needed by the map
 #define BOX_BRUSHES 1
-#define BOX_SIDES 6
-#define BOX_LEAFS 2
-#define BOX_PLANES 12
+#define BOX_SIDES   6
+#define BOX_LEAFS   2
+#define BOX_PLANES  12
 
 #define LL( x ) x = LittleLong( x )
 
@@ -711,7 +711,7 @@ void CMod_LoadVisibility( lump_t* l )
 CMod_LoadSurfaces
 =================
 */
-#define MAX_PATCH_SIZE 64
+#define MAX_PATCH_SIZE  64
 #define MAX_PATCH_VERTS ( MAX_PATCH_SIZE * MAX_PATCH_SIZE )
 void CMod_LoadSurfaces( lump_t* surfs, lump_t* verts, lump_t* indexesLump )
 {

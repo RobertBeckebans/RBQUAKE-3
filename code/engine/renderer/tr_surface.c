@@ -744,13 +744,13 @@ static void VectorArrayNormalize( vec4_t* normals, unsigned int count )
 			components += 4;
 			B = x * x + y * y + z * z;
 
-#ifdef __GNUC__
+	#ifdef __GNUC__
 			asm( "frsqrte %0,%1"
 				 : "=f"( y0 )
 				 : "f"( B ) );
-#else
+	#else
 			y0 = __frsqrte( B );
-#endif
+	#endif
 			y1 = y0 + half * y0 * ( one - B * y0 * y0 );
 
 			x                = x * y1;
@@ -1415,7 +1415,7 @@ static void Tess_SurfaceBeam( void )
 	// TODO rewrite without glBegin/glEnd
 
 #else
-#define NUM_BEAM_SEGS 6
+	#define NUM_BEAM_SEGS 6
 	refEntity_t* e;
 	int          i;
 	vec3_t       perpvec;
@@ -2345,7 +2345,7 @@ static void Tess_SurfaceVBOMD5Mesh( srfVBOMD5Mesh_t* srf )
 			backEnd.currentEntity->e.skeleton.scale[ 1 ],
 			backEnd.currentEntity->e.skeleton.scale[ 2 ] );
 
-#if 0
+	#if 0
 		// convert bones back to matrices
 		for( i = 0; i < model->numBones; i++ )
 		{
@@ -2361,7 +2361,7 @@ static void Tess_SurfaceVBOMD5Mesh( srfVBOMD5Mesh_t* srf )
 			MatrixMultiply2( tess.boneMatrices[i], model->bones[i].inverseTransform );
 		}
 
-#else
+	#else
 		for( i = 0; i < srf->numBoneRemap; i++ )
 		{
 			MatrixSetupTransformFromQuat( m2, backEnd.currentEntity->e.skeleton.bones[ srf->boneRemapInverse[ i ] ].rotation, backEnd.currentEntity->e.skeleton.bones[ srf->boneRemapInverse[ i ] ].origin );
@@ -2369,7 +2369,7 @@ static void Tess_SurfaceVBOMD5Mesh( srfVBOMD5Mesh_t* srf )
 			MatrixMultiply( m2, m, tess.boneMatrices[ i ] );
 			MatrixMultiply2( tess.boneMatrices[ i ], model->bones[ srf->boneRemapInverse[ i ] ].inverseTransform );
 		}
-#endif
+	#endif
 	}
 	else
 #endif

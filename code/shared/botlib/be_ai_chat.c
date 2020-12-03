@@ -55,17 +55,17 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 //match piece types
 #define MT_VARIABLE 1 //variable match piece
-#define MT_STRING 2   //string match piece
+#define MT_STRING   2 //string match piece
 //reply chat key flags
-#define RCKFL_AND 1           //key must be present
-#define RCKFL_NOT 2           //key must be absent
-#define RCKFL_NAME 4          //name of bot must be present
-#define RCKFL_STRING 8        //key is a string
-#define RCKFL_VARIABLES 16    //key is a match template
-#define RCKFL_BOTNAMES 32     //key is a series of botnames
-#define RCKFL_GENDERFEMALE 64 //bot must be female
-#define RCKFL_GENDERMALE 128  //bot must be male
-#define RCKFL_GENDERLESS 256  //bot must be genderless
+#define RCKFL_AND          1   //key must be present
+#define RCKFL_NOT          2   //key must be absent
+#define RCKFL_NAME         4   //name of bot must be present
+#define RCKFL_STRING       8   //key is a string
+#define RCKFL_VARIABLES    16  //key is a match template
+#define RCKFL_BOTNAMES     32  //key is a series of botnames
+#define RCKFL_GENDERFEMALE 64  //bot must be female
+#define RCKFL_GENDERMALE   128 //bot must be male
+#define RCKFL_GENDERLESS   256 //bot must be genderless
 //time to ignore a chat message after using it
 #define CHATMESSAGE_RECENTTIME 20
 

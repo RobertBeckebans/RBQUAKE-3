@@ -33,13 +33,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // on disk representation of a face
 
 #define FLOAT_START 99999.0
-#define FLOAT_END -FLOAT_START
-#define MAGIC 123322
+#define FLOAT_END   -FLOAT_START
+#define MAGIC       123322
 
 //#define NOISY 1
 
 #if defined( __linux__ ) || defined( __APPLE__ ) || defined( __FreeBSD__ )
-#define strlwr strlower
+	#define strlwr strlower
 #endif
 
 typedef struct

@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #ifndef MISSIONPACK
-#error This file not be used for classic Q3A.
+	#error This file not be used for classic Q3A.
 #endif
 
 #include "cg_local.h"

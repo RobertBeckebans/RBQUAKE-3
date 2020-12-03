@@ -26,8 +26,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define __NETLIB__
 
 #ifdef _MSC_VER
-#pragma warning( disable : 4996 ) // deprecated functions
-#define _CRT_SECURE_NO_DEPRECATE
+	#pragma warning( disable : 4996 ) // deprecated functions
+	#define _CRT_SECURE_NO_DEPRECATE
 #endif
 
 //++timo FIXME: the l_net code understands that as the max size for the netmessage_s structure
@@ -37,7 +37,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define MAX_NETADDRESS 32
 
 #ifndef __BYTEBOOL__
-#define __BYTEBOOL__
+	#define __BYTEBOOL__
 typedef enum
 {
 	qfalse,

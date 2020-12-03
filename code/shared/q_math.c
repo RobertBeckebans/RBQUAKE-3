@@ -480,7 +480,8 @@ Don't pass doubles to this
 */
 int Q_isnan( float x )
 {
-	union {
+	union
+	{
 		float        f;
 		unsigned int i;
 	} t;
@@ -772,12 +773,12 @@ float AngleNormalize180( float angle )
 		angle -= 360.0;
 	}
 
-#if 1
+	#if 1
 	if( angle < -180.0 )
 	{
 		angle += 360.0;
 	}
-#endif
+	#endif
 
 #else
 	while( angle > 180.0 )
@@ -973,7 +974,7 @@ int BoxOnPlaneSide( vec3_t emins, vec3_t emaxs, struct cplane_s* p )
 	return sides;
 }
 #else
-#pragma warning( disable : 4035 )
+	#pragma warning( disable : 4035 )
 
 // *INDENT-OFF*
 __declspec( naked ) int BoxOnPlaneSide( vec3_t emins, vec3_t emaxs, struct cplane_s* p )
@@ -1205,8 +1206,8 @@ Lerror:
 		int 3
 	}
 }
-// *INDENT-ON*
-#pragma warning( default : 4035 )
+	// *INDENT-ON*
+	#pragma warning( default : 4035 )
 
 #endif
 

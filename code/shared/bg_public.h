@@ -33,19 +33,19 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define XPPM 1
 
 #if defined( XPPM )
-#define DEFAULT_MODEL "shina"
-#define DEFAULT_HEADMODEL "shina"
+	#define DEFAULT_MODEL     "shina"
+	#define DEFAULT_HEADMODEL "shina"
 #else
-#define DEFAULT_MODEL "visor"
-#define DEFAULT_HEADMODEL "visor"
+	#define DEFAULT_MODEL     "visor"
+	#define DEFAULT_HEADMODEL "visor"
 #endif
-#define DEFAULT_REDTEAM_NAME "Stroggs"
+#define DEFAULT_REDTEAM_NAME  "Stroggs"
 #define DEFAULT_BLUETEAM_NAME "Pagans"
 
 #if 0 //def XPPM
-#define GIB_HEALTH 0
+	#define GIB_HEALTH 0
 #else
-#define GIB_HEALTH -40
+	#define GIB_HEALTH -40
 #endif
 #define ARMOR_PROTECTION 0.66
 
@@ -54,7 +54,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define RANK_TIED_FLAG 0x4000
 
 #define DEFAULT_SHOTGUN_SPREAD 700
-#define DEFAULT_SHOTGUN_COUNT 11
+#define DEFAULT_SHOTGUN_COUNT  11
 
 #define ITEM_RADIUS 15 // item sizes are needed for client side pickup detection
 
@@ -65,17 +65,17 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define VOTE_TIME 30000 // 30 seconds before vote times out
 
 #if defined( STANDALONE )
-// Tr3B: changed to HL 2 / Quake 4 properties
-#define STEPSIZE 18
-#define DEFAULT_VIEWHEIGHT 44 // 68	// Tr3B: was 26
-#define CROUCH_VIEWHEIGHT 16  // 32	// Tr3B: was 12
-#define CROUCH_HEIGHT 20      // 38	// Tr3B: was 16
-#define DEAD_VIEWHEIGHT -16   // Tr3B: was -16
+	// Tr3B: changed to HL 2 / Quake 4 properties
+	#define STEPSIZE           18
+	#define DEFAULT_VIEWHEIGHT 44  // 68	// Tr3B: was 26
+	#define CROUCH_VIEWHEIGHT  16  // 32	// Tr3B: was 12
+	#define CROUCH_HEIGHT      20  // 38	// Tr3B: was 16
+	#define DEAD_VIEWHEIGHT    -16 // Tr3B: was -16
 #else
-#define MINS_Z -24
-#define DEFAULT_VIEWHEIGHT 26
-#define CROUCH_VIEWHEIGHT 12
-#define DEAD_VIEWHEIGHT -16
+	#define MINS_Z             -24
+	#define DEFAULT_VIEWHEIGHT 26
+	#define CROUCH_VIEWHEIGHT  12
+	#define DEAD_VIEWHEIGHT    -16
 #endif
 
 //
@@ -84,41 +84,41 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //
 
 // CS_SERVERINFO and CS_SYSTEMINFO are defined in q_shared.h
-#define CS_MUSIC 2
-#define CS_MESSAGE 3 // from the map worldspawn's message field
-#define CS_MOTD 4    // g_motd string for server message of the day
-#define CS_WARMUP 5  // server time when the match will be restarted
-#define CS_SCORES1 6
-#define CS_SCORES2 7
-#define CS_VOTE_TIME 8
+#define CS_MUSIC       2
+#define CS_MESSAGE     3 // from the map worldspawn's message field
+#define CS_MOTD        4 // g_motd string for server message of the day
+#define CS_WARMUP      5 // server time when the match will be restarted
+#define CS_SCORES1     6
+#define CS_SCORES2     7
+#define CS_VOTE_TIME   8
 #define CS_VOTE_STRING 9
-#define CS_VOTE_YES 10
-#define CS_VOTE_NO 11
+#define CS_VOTE_YES    10
+#define CS_VOTE_NO     11
 
-#define CS_TEAMVOTE_TIME 12
+#define CS_TEAMVOTE_TIME   12
 #define CS_TEAMVOTE_STRING 14
-#define CS_TEAMVOTE_YES 16
-#define CS_TEAMVOTE_NO 18
+#define CS_TEAMVOTE_YES    16
+#define CS_TEAMVOTE_NO     18
 
-#define CS_GAME_VERSION 20
+#define CS_GAME_VERSION     20
 #define CS_LEVEL_START_TIME 21 // so the timer only shows the current level
-#define CS_INTERMISSION 22     // when 1, fraglimit/timelimit has been hit and intermission will start in a second or two
-#define CS_FLAGSTATUS 23       // string indicating flag status in CTF
-#define CS_SHADERSTATE 24
-#define CS_BOTINFO 25
+#define CS_INTERMISSION     22 // when 1, fraglimit/timelimit has been hit and intermission will start in a second or two
+#define CS_FLAGSTATUS       23 // string indicating flag status in CTF
+#define CS_SHADERSTATE      24
+#define CS_BOTINFO          25
 
 #define CS_ITEMS 27 // string of 0's and 1's that tell which items are present
 
-#define CS_MODELS 32
-#define CS_SOUNDS ( CS_MODELS + MAX_MODELS )
-#define CS_PLAYERS ( CS_SOUNDS + MAX_SOUNDS )
+#define CS_MODELS    32
+#define CS_SOUNDS    ( CS_MODELS + MAX_MODELS )
+#define CS_PLAYERS   ( CS_SOUNDS + MAX_SOUNDS )
 #define CS_LOCATIONS ( CS_PLAYERS + MAX_CLIENTS )
-#define CS_EFFECTS ( CS_LOCATIONS + MAX_LOCATIONS )
+#define CS_EFFECTS   ( CS_LOCATIONS + MAX_LOCATIONS )
 
 #define CS_MAX ( CS_EFFECTS + MAX_EFFECTS )
 
 #if( CS_MAX ) > MAX_CONFIGSTRINGS
-#error overflow: (CS_MAX) > MAX_CONFIGSTRINGS
+	#error overflow: (CS_MAX) > MAX_CONFIGSTRINGS
 #endif
 
 typedef enum
@@ -177,19 +177,19 @@ typedef enum
 } weaponstate_t;
 
 // pmove->pm_flags
-#define PMF_DUCKED 1
-#define PMF_JUMP_HELD 2
-#define PMF_BACKWARDS_JUMP 8   // go into backwards land
-#define PMF_BACKWARDS_RUN 16   // coast down to backwards run
-#define PMF_TIME_LAND 32       // pm_time is time before rejump
-#define PMF_TIME_KNOCKBACK 64  // pm_time is an air-accelerate only time
+#define PMF_DUCKED         1
+#define PMF_JUMP_HELD      2
+#define PMF_BACKWARDS_JUMP 8 // go into backwards land
+#define PMF_BACKWARDS_RUN  16 // coast down to backwards run
+#define PMF_TIME_LAND      32 // pm_time is time before rejump
+#define PMF_TIME_KNOCKBACK 64 // pm_time is an air-accelerate only time
 #define PMF_TIME_WATERJUMP 256 // pm_time is waterjump
-#define PMF_RESPAWNED 512      // clear after attack and jump buttons come up
-#define PMF_USE_ITEM_HELD 1024
-#define PMF_GRAPPLE_PULL 2048 // pull towards grapple location
-#define PMF_FOLLOW 4096       // spectate following another player
-#define PMF_SCOREBOARD 8192   // spectate as a scoreboard
-#define PMF_INVULEXPAND 16384 // invulnerability sphere set to full size
+#define PMF_RESPAWNED      512 // clear after attack and jump buttons come up
+#define PMF_USE_ITEM_HELD  1024
+#define PMF_GRAPPLE_PULL   2048 // pull towards grapple location
+#define PMF_FOLLOW         4096 // spectate following another player
+#define PMF_SCOREBOARD     8192 // spectate as a scoreboard
+#define PMF_INVULEXPAND    16384 // invulnerability sphere set to full size
 
 #define PMF_ALL_TIMES ( PMF_TIME_WATERJUMP | PMF_TIME_LAND | PMF_TIME_KNOCKBACK )
 
@@ -281,27 +281,27 @@ typedef enum
 // entityState_t->eFlags
 #define EF_DEAD 0x00000001 // don't draw a foe marker over players with EF_DEAD
 #ifdef MISSIONPACK
-#define EF_TICKING 0x00000002 // used to make players play the prox mine ticking sound
+	#define EF_TICKING 0x00000002 // used to make players play the prox mine ticking sound
 #endif
-#define EF_TELEPORT_BIT 0x00000004    // toggled every time the origin abruptly changes
-#define EF_AWARD_EXCELLENT 0x00000008 // draw an excellent sprite
-#define EF_PLAYER_EVENT 0x00000010
-#define EF_BOUNCE 0x00000010         // for missiles
-#define EF_BOUNCE_HALF 0x00000020    // for missiles
-#define EF_AWARD_GAUNTLET 0x00000040 // draw a gauntlet sprite
-#define EF_NODRAW 0x00000080         // may have an event, but no model (unspawned items)
-#define EF_FIRING 0x00000100         // for lightning gun
-#define EF_KAMIKAZE 0x00000200
-#define EF_MOVER_STOP 0x00000400       // will push otherwise
-#define EF_AWARD_CAP 0x00000800        // draw the capture sprite
-#define EF_TALK 0x00001000             // draw a talk balloon
-#define EF_CONNECTION 0x00002000       // draw a connection trouble sprite
-#define EF_VOTED 0x00004000            // already cast a vote
+#define EF_TELEPORT_BIT     0x00000004 // toggled every time the origin abruptly changes
+#define EF_AWARD_EXCELLENT  0x00000008 // draw an excellent sprite
+#define EF_PLAYER_EVENT     0x00000010
+#define EF_BOUNCE           0x00000010 // for missiles
+#define EF_BOUNCE_HALF      0x00000020 // for missiles
+#define EF_AWARD_GAUNTLET   0x00000040 // draw a gauntlet sprite
+#define EF_NODRAW           0x00000080 // may have an event, but no model (unspawned items)
+#define EF_FIRING           0x00000100 // for lightning gun
+#define EF_KAMIKAZE         0x00000200
+#define EF_MOVER_STOP       0x00000400 // will push otherwise
+#define EF_AWARD_CAP        0x00000800 // draw the capture sprite
+#define EF_TALK             0x00001000 // draw a talk balloon
+#define EF_CONNECTION       0x00002000 // draw a connection trouble sprite
+#define EF_VOTED            0x00004000 // already cast a vote
 #define EF_AWARD_IMPRESSIVE 0x00008000 // draw an impressive sprite
-#define EF_AWARD_DEFEND 0x00010000     // draw a defend sprite
-#define EF_AWARD_ASSIST 0x00020000     // draw a assist sprite
-#define EF_AWARD_DENIED 0x00040000     // denied
-#define EF_TEAMVOTED 0x00080000        // already cast a team vote
+#define EF_AWARD_DEFEND     0x00010000 // draw a defend sprite
+#define EF_AWARD_ASSIST     0x00020000 // draw a assist sprite
+#define EF_AWARD_DENIED     0x00040000 // denied
+#define EF_TEAMVOTED        0x00080000 // already cast a team vote
 
 // NOTE: may not have more than 16
 typedef enum
@@ -365,9 +365,9 @@ typedef enum
 } weapon_t;
 
 // reward sounds (stored in ps->persistant[PERS_PLAYEREVENTS])
-#define PLAYEREVENT_DENIEDREWARD 0x0001
+#define PLAYEREVENT_DENIEDREWARD   0x0001
 #define PLAYEREVENT_GAUNTLETREWARD 0x0002
-#define PLAYEREVENT_HOLYSHIT 0x0004
+#define PLAYEREVENT_HOLYSHIT       0x0004
 
 // entityState_t->event values
 // entity events are for effects that take place relative
@@ -767,19 +767,19 @@ gitem_t* BG_FindItemForHoldable( holdable_t pw );
 qboolean BG_CanItemBeGrabbed( int gametype, const entityState_t* ent, const playerState_t* ps );
 
 // g_dmflags->integer flags
-#define DF_NO_FALLING 8
-#define DF_FIXED_FOV 16
+#define DF_NO_FALLING   8
+#define DF_FIXED_FOV    16
 #define DF_NO_FOOTSTEPS 32
 
 // content masks
-#define MASK_ALL ( -1 )
-#define MASK_SOLID ( CONTENTS_SOLID )
+#define MASK_ALL         ( -1 )
+#define MASK_SOLID       ( CONTENTS_SOLID )
 #define MASK_PLAYERSOLID ( CONTENTS_SOLID | CONTENTS_PLAYERCLIP | CONTENTS_BODY )
-#define MASK_BOTSOLID ( CONTENTS_SOLID | CONTENTS_PLAYERCLIP | CONTENTS_BODY | CONTENTS_BOTCLIP )
-#define MASK_DEADSOLID ( CONTENTS_SOLID | CONTENTS_PLAYERCLIP )
-#define MASK_WATER ( CONTENTS_WATER | CONTENTS_LAVA | CONTENTS_SLIME )
-#define MASK_OPAQUE ( CONTENTS_SOLID | CONTENTS_SLIME | CONTENTS_LAVA )
-#define MASK_SHOT ( CONTENTS_SOLID | CONTENTS_BODY | CONTENTS_CORPSE | CONTENTS_SHOOTABLE )
+#define MASK_BOTSOLID    ( CONTENTS_SOLID | CONTENTS_PLAYERCLIP | CONTENTS_BODY | CONTENTS_BOTCLIP )
+#define MASK_DEADSOLID   ( CONTENTS_SOLID | CONTENTS_PLAYERCLIP )
+#define MASK_WATER       ( CONTENTS_WATER | CONTENTS_LAVA | CONTENTS_SLIME )
+#define MASK_OPAQUE      ( CONTENTS_SOLID | CONTENTS_SLIME | CONTENTS_LAVA )
+#define MASK_SHOT        ( CONTENTS_SOLID | CONTENTS_BODY | CONTENTS_CORPSE | CONTENTS_SHOOTABLE )
 
 //
 // entityState_t->eType
@@ -820,30 +820,30 @@ void BG_PlayerStateToEntityStateExtraPolate( playerState_t* ps, entityState_t* s
 qboolean BG_PlayerTouchesItem( playerState_t* ps, entityState_t* item, int atTime );
 
 #define ARENAS_PER_TIER 4
-#define MAX_ARENAS 1024
+#define MAX_ARENAS      1024
 #define MAX_ARENAS_TEXT 8192
 
-#define MAX_BOTS 1024
+#define MAX_BOTS      1024
 #define MAX_BOTS_TEXT 8192
 
 // Kamikaze
 
 // 1st shockwave times
-#define KAMI_SHOCKWAVE_STARTTIME 0
+#define KAMI_SHOCKWAVE_STARTTIME     0
 #define KAMI_SHOCKWAVEFADE_STARTTIME 1500
-#define KAMI_SHOCKWAVE_ENDTIME 2000
+#define KAMI_SHOCKWAVE_ENDTIME       2000
 // explosion/implosion times
 #define KAMI_EXPLODE_STARTTIME 250
 #define KAMI_IMPLODE_STARTTIME 2000
-#define KAMI_IMPLODE_ENDTIME 2250
+#define KAMI_IMPLODE_ENDTIME   2250
 // 2nd shockwave times
-#define KAMI_SHOCKWAVE2_STARTTIME 2000
+#define KAMI_SHOCKWAVE2_STARTTIME     2000
 #define KAMI_SHOCKWAVE2FADE_STARTTIME 2500
-#define KAMI_SHOCKWAVE2_ENDTIME 3000
+#define KAMI_SHOCKWAVE2_ENDTIME       3000
 // radius of the models without scaling
-#define KAMI_SHOCKWAVEMODEL_RADIUS 88
+#define KAMI_SHOCKWAVEMODEL_RADIUS  88
 #define KAMI_BOOMSPHEREMODEL_RADIUS 72
 // maximum radius of the models during the effect
-#define KAMI_SHOCKWAVE_MAXRADIUS 1320
+#define KAMI_SHOCKWAVE_MAXRADIUS  1320
 #define KAMI_BOOMSPHERE_MAXRADIUS 720
 #define KAMI_SHOCKWAVE2_MAXRADIUS 704

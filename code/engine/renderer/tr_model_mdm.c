@@ -693,12 +693,12 @@ qboolean R_LoadMDM( model_t* mod, void* buffer, const char* modName )
 				t1 = surf->verts[tri->indexes[1]].texCoords;
 				t2 = surf->verts[tri->indexes[2]].texCoords;
 
-#if 1
+	#if 1
 				R_CalcTangentSpace( tangent, binormal, normal, v0, v1, v2, t0, t1, t2 );
-#else
+	#else
 				R_CalcNormalForTriangle( normal, v0, v1, v2 );
 				R_CalcTangentsForTriangle( tangent, binormal, v0, v1, v2, t0, t1, t2 );
-#endif
+	#endif
 				
 				for( k = 0; k < 3; k++ )
 				{
@@ -777,7 +777,7 @@ qboolean R_LoadMDM( model_t* mod, void* buffer, const char* modName )
 					VectorNormalize( dv[ k ]->binormal );
 
 					// calculate the normal as cross product N=TxB
-#if 0
+	#if 0
 					CrossProduct( dv[k]->tangent, dv[k]->binormal, dv[k]->normal );
 					VectorNormalize( dv[k]->normal );
 		
@@ -792,20 +792,20 @@ qboolean R_LoadMDM( model_t* mod, void* buffer, const char* modName )
 						//VectorInverse(dv[k]->tangent);
 						//VectorInverse(dv[k]->binormal);
 					}
-#else
-					//VectorAdd(dv[k]->normal, faceNormal, dv[k]->normal);
-#endif
+	#else
+						//VectorAdd(dv[k]->normal, faceNormal, dv[k]->normal);
+	#endif
 				}
 			}
 
-#if 1
+	#if 1
 			for( j = 0, v = surf->verts; j < surf->numVerts; j++, v++ )
 			{
 				//VectorNormalize(v->tangent);
 				//VectorNormalize(v->binormal);
 				//VectorNormalize(v->normal);
 			}
-#endif
+	#endif
 		}
 #endif
 

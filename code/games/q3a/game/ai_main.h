@@ -35,55 +35,55 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #define MAX_ITEMS 256
 //bot flags
-#define BFL_STRAFERIGHT 1    //strafe to the right
-#define BFL_ATTACKED 2       //bot has attacked last ai frame
-#define BFL_ATTACKJUMPED 4   //bot jumped during attack last frame
-#define BFL_AIMATENEMY 8     //bot aimed at the enemy this frame
-#define BFL_AVOIDRIGHT 16    //avoid obstacles by going to the right
-#define BFL_IDEALVIEWSET 32  //bot has ideal view angles set
+#define BFL_STRAFERIGHT   1  //strafe to the right
+#define BFL_ATTACKED      2  //bot has attacked last ai frame
+#define BFL_ATTACKJUMPED  4  //bot jumped during attack last frame
+#define BFL_AIMATENEMY    8  //bot aimed at the enemy this frame
+#define BFL_AVOIDRIGHT    16 //avoid obstacles by going to the right
+#define BFL_IDEALVIEWSET  32 //bot has ideal view angles set
 #define BFL_FIGHTSUICIDAL 64 //bot is in a suicidal fight
 //long term goal types
-#define LTG_TEAMHELP 1         //help a team mate
-#define LTG_TEAMACCOMPANY 2    //accompany a team mate
-#define LTG_DEFENDKEYAREA 3    //defend a key area
-#define LTG_GETFLAG 4          //get the enemy flag
-#define LTG_RUSHBASE 5         //rush to the base
-#define LTG_RETURNFLAG 6       //return the flag
-#define LTG_CAMP 7             //camp somewhere
-#define LTG_CAMPORDER 8        //ordered to camp somewhere
-#define LTG_PATROL 9           //patrol
-#define LTG_GETITEM 10         //get an item
-#define LTG_KILL 11            //kill someone
-#define LTG_HARVEST 12         //harvest skulls
+#define LTG_TEAMHELP        1  //help a team mate
+#define LTG_TEAMACCOMPANY   2  //accompany a team mate
+#define LTG_DEFENDKEYAREA   3  //defend a key area
+#define LTG_GETFLAG         4  //get the enemy flag
+#define LTG_RUSHBASE        5  //rush to the base
+#define LTG_RETURNFLAG      6  //return the flag
+#define LTG_CAMP            7  //camp somewhere
+#define LTG_CAMPORDER       8  //ordered to camp somewhere
+#define LTG_PATROL          9  //patrol
+#define LTG_GETITEM         10 //get an item
+#define LTG_KILL            11 //kill someone
+#define LTG_HARVEST         12 //harvest skulls
 #define LTG_ATTACKENEMYBASE 13 //attack the enemy base
-#define LTG_MAKELOVE_UNDER 14
-#define LTG_MAKELOVE_ONTOP 15
+#define LTG_MAKELOVE_UNDER  14
+#define LTG_MAKELOVE_ONTOP  15
 //some goal dedication times
-#define TEAM_HELP_TIME 60             //1 minute teamplay help time
-#define TEAM_ACCOMPANY_TIME 600       //10 minutes teamplay accompany time
-#define TEAM_DEFENDKEYAREA_TIME 600   //10 minutes ctf defend base time
-#define TEAM_CAMP_TIME 600            //10 minutes camping time
-#define TEAM_PATROL_TIME 600          //10 minutes patrolling time
-#define TEAM_LEAD_TIME 600            //10 minutes taking the lead
-#define TEAM_GETITEM_TIME 60          //1 minute
-#define TEAM_KILL_SOMEONE 180         //3 minute to kill someone
+#define TEAM_HELP_TIME            60  //1 minute teamplay help time
+#define TEAM_ACCOMPANY_TIME       600 //10 minutes teamplay accompany time
+#define TEAM_DEFENDKEYAREA_TIME   600 //10 minutes ctf defend base time
+#define TEAM_CAMP_TIME            600 //10 minutes camping time
+#define TEAM_PATROL_TIME          600 //10 minutes patrolling time
+#define TEAM_LEAD_TIME            600 //10 minutes taking the lead
+#define TEAM_GETITEM_TIME         60  //1 minute
+#define TEAM_KILL_SOMEONE         180 //3 minute to kill someone
 #define TEAM_ATTACKENEMYBASE_TIME 600 //10 minutes
-#define TEAM_HARVEST_TIME 120         //2 minutes
-#define CTF_GETFLAG_TIME 600          //10 minutes ctf get flag time
-#define CTF_RUSHBASE_TIME 120         //2 minutes ctf rush base time
-#define CTF_RETURNFLAG_TIME 180       //3 minutes to return the flag
-#define CTF_ROAM_TIME 60              //1 minute ctf roam time
+#define TEAM_HARVEST_TIME         120 //2 minutes
+#define CTF_GETFLAG_TIME          600 //10 minutes ctf get flag time
+#define CTF_RUSHBASE_TIME         120 //2 minutes ctf rush base time
+#define CTF_RETURNFLAG_TIME       180 //3 minutes to return the flag
+#define CTF_ROAM_TIME             60  //1 minute ctf roam time
 //patrol flags
-#define PATROL_LOOP 1
+#define PATROL_LOOP    1
 #define PATROL_REVERSE 2
-#define PATROL_BACK 4
+#define PATROL_BACK    4
 //teamplay task preference
 #define TEAMTP_DEFENDER 1
 #define TEAMTP_ATTACKER 2
 //CTF strategy
 #define CTFS_AGRESSIVE 1
 //copied from the aas file header
-#define PRESENCE_NONE 1
+#define PRESENCE_NONE   1
 #define PRESENCE_NORMAL 2
 #define PRESENCE_CROUCH 4
 //

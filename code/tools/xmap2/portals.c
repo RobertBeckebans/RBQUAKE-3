@@ -280,7 +280,7 @@ void MakeHeadnodePortals( tree_t* tree )
 BaseWindingForNode
 ================
 */
-#define BASE_WINDING_EPSILON 0.001
+#define BASE_WINDING_EPSILON  0.001
 #define SPLIT_WINDING_EPSILON 0.001
 
 winding_t* BaseWindingForNode( node_t* node )

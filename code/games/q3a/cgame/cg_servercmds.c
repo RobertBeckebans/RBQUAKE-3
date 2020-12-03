@@ -26,7 +26,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "cg_local.h"
 #ifdef MISSIONPACK
-#include "../../ui/menudef.h"
+	#include "../../ui/menudef.h"
 
 typedef struct
 {
@@ -573,12 +573,12 @@ static void CG_MapRestart( void )
 
 #ifdef MISSIONPACK
 
-#define MAX_VOICEFILESIZE 16384
-#define MAX_VOICEFILES 8
-#define MAX_VOICECHATS 64
-#define MAX_VOICESOUNDS 64
-#define MAX_CHATSIZE 64
-#define MAX_HEADMODELS 64
+	#define MAX_VOICEFILESIZE 16384
+	#define MAX_VOICEFILES    8
+	#define MAX_VOICECHATS    64
+	#define MAX_VOICESOUNDS   64
+	#define MAX_CHATSIZE      64
+	#define MAX_HEADMODELS    64
 
 typedef struct voiceChat_s
 {
@@ -939,7 +939,7 @@ voiceChatList_t* CG_VoiceChatListForClient( int clientNum )
 	return &voiceChatLists[ 0 ];
 }
 
-#define MAX_VOICECHATBUFFER 32
+	#define MAX_VOICECHATBUFFER 32
 
 typedef struct bufferedVoiceChat_s
 {

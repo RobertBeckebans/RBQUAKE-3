@@ -326,12 +326,12 @@ qboolean R_LoadMD3( model_t* mod, int lod, void* buffer, int bufferSize, const c
 						t1 = surf->st[ tri->indexes[ 1 ] ].st;
 						t2 = surf->st[ tri->indexes[ 2 ] ].st;
 
-#if 1
+	#if 1
 						R_CalcTangentSpace( tangent, binormal, normal, v0, v1, v2, t0, t1, t2 );
-#else
+	#else
 						R_CalcNormalForTriangle( normal, v0, v1, v2 );
 						R_CalcTangentsForTriangle( tangent, binormal, v0, v1, v2, t0, t1, t2 );
-#endif
+	#endif
 
 						for( k = 0; k < 3; k++ )
 						{

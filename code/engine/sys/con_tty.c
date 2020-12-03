@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "sys_local.h"
 
 #ifndef DEDICATED
-#include "../client/client.h"
+	#include "../client/client.h"
 #endif
 
 #include <unistd.h>
@@ -66,11 +66,11 @@ static field_t ttyEditLines[ CON_HISTORY ];
 static int     hist_current = -1, hist_count = 0;
 
 #ifndef DEDICATED
-// Don't use "]" as it would be the same as in-game console,
-//   this makes it clear where input came from.
-#define TTY_CONSOLE_PROMPT "tty]"
+	// Don't use "]" as it would be the same as in-game console,
+	//   this makes it clear where input came from.
+	#define TTY_CONSOLE_PROMPT "tty]"
 #else
-#define TTY_CONSOLE_PROMPT "]"
+	#define TTY_CONSOLE_PROMPT "]"
 #endif
 
 /*

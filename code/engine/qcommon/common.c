@@ -1,22 +1,21 @@
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
-Copyright (C) 2006-2009 Robert Beckebans <trebor_7@users.sourceforge.net>
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -24,13 +23,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "q_shared.h"
 #include "qcommon.h"
-
 #include <setjmp.h>
 #ifndef _WIN32
-#include <netinet/in.h>
-#include <sys/stat.h> // umask
+	#include <netinet/in.h>
+	#include <sys/stat.h> // umask
 #else
-#include <winsock.h>
+	#include <winsock.h>
 #endif
 
 int demo_protocols[] = { PROTOCOL_VERSION, 0 };
@@ -38,11 +36,11 @@ int demo_protocols[] = { PROTOCOL_VERSION, 0 };
 #define MAX_NUM_ARGVS 50
 
 #define MIN_DEDICATED_COMHUNKMEGS 1
-#define MIN_COMHUNKMEGS 96
+#define MIN_COMHUNKMEGS           96
 #if defined( _WIN32 )
-#define DEF_COMHUNKMEGS 256
+	#define DEF_COMHUNKMEGS 256
 #else
-#define DEF_COMHUNKMEGS 512
+	#define DEF_COMHUNKMEGS 512
 #endif
 #define DEF_COMZONEMEGS 96
 //#define XSTRING(x)		STRING(x)
@@ -149,7 +147,7 @@ void Com_EndRedirect( void )
 Com_Printf
 
 Both client and server can use this, and it will output
-to the apropriate place.
+to the appropriate place.
 
 A raw string should NEVER be passed as fmt, because of "%f" type crashers.
 =============
@@ -183,7 +181,7 @@ void QDECL Com_Printf( const char* fmt, ... )
 #endif
 
 	// echo to dedicated console and early console
-	//	Sys_Print(msg);
+	//Sys_Print( msg );
 
 	// logfile
 	if( com_logfile && com_logfile->integer )
@@ -355,14 +353,13 @@ void QDECL Com_Error( int code, const char* fmt, ... )
 Com_Quit_f
 
 Both client and server can use this, and it will
-do the apropriate things.
+do the appropriate things.
 =============
 */
 void Com_Quit_f( void )
 {
 	// don't try to shutdown if we are in a recursive error
 	char* p = Cmd_Args();
-
 	if( !com_errorEntered )
 	{
 		SV_Shutdown( p[ 0 ] ? p : "Server quit" );
@@ -378,14 +375,14 @@ void Com_Quit_f( void )
 
 COMMAND LINE FUNCTIONS
 
-+ characters seperate the commandLine string into multiple console
++ characters separate the commandLine string into multiple console
 command lines.
 
 All of these are valid:
 
-xreal +set test blah +map test
-xreal set test blah+map test
-xreal set test blah + map test
+quake3 +set test blah +map test
+quake3 set test blah+map test
+quake3 set test blah + map test
 
 ============================================================================
 */
@@ -403,8 +400,7 @@ Break it up into multiple console lines
 */
 void Com_ParseCommandLine( char* commandLine )
 {
-	int inq = 0;
-
+	int inq               = 0;
 	com_consoleLines[ 0 ] = commandLine;
 	com_numConsoleLines   = 1;
 
@@ -414,7 +410,7 @@ void Com_ParseCommandLine( char* commandLine )
 		{
 			inq = !inq;
 		}
-		// look for a + seperating character
+		// look for a + separating character
 		// if commandLine came from a file, we might have real line seperators
 		if( ( *commandLine == '+' && !inq ) || *commandLine == '\n' || *commandLine == '\r' )
 		{
@@ -467,9 +463,8 @@ be after execing the config and default.
 */
 void Com_StartupVariable( const char* match )
 {
-	int     i;
-	char*   s;
-	cvar_t* cv;
+	int   i;
+	char* s;
 
 	for( i = 0; i < com_numConsoleLines; i++ )
 	{
@@ -480,12 +475,17 @@ void Com_StartupVariable( const char* match )
 		}
 
 		s = Cmd_Argv( 1 );
+
 		if( !match || !strcmp( s, match ) )
 		{
-			Cvar_Set( s, Cmd_Argv( 2 ) );
-			cv = Cvar_Get( s, "", 0 );
-			cv->flags |= CVAR_USER_CREATED;
-			//          com_consoleLines[i] = 0;
+			if( Cvar_Flags( s ) == CVAR_NONEXISTENT )
+			{
+				Cvar_Get( s, Cmd_ArgsFrom( 2 ), CVAR_USER_CREATED );
+			}
+			else
+			{
+				Cvar_Set2( s, Cmd_ArgsFrom( 2 ), qfalse );
+			}
 		}
 	}
 }
@@ -495,7 +495,7 @@ void Com_StartupVariable( const char* match )
 Com_AddStartupCommands
 
 Adds command line parameters as script statements
-Commands are seperated by + signs
+Commands are separated by + signs
 
 Returns qtrue if any late commands were added, which
 will keep the demoloop from immediately starting
@@ -516,7 +516,7 @@ qboolean Com_AddStartupCommands( void )
 		}
 
 		// set commands already added with Com_StartupVariable
-		if( !Q_stricmpn( com_consoleLines[ i ], "set", 3 ) )
+		if( !Q_stricmpn( com_consoleLines[ i ], "set ", 4 ) )
 		{
 			continue;
 		}
@@ -533,8 +533,8 @@ qboolean Com_AddStartupCommands( void )
 
 void Info_Print( const char* s )
 {
-	char  key[ 512 ];
-	char  value[ 512 ];
+	char  key[ BIG_INFO_KEY ];
+	char  value[ BIG_INFO_VALUE ];
 	char* o;
 	int   l;
 
@@ -560,7 +560,7 @@ void Info_Print( const char* s )
 		{
 			*o = 0;
 		}
-		Com_Printf( "%s", key );
+		Com_Printf( "%s ", key );
 
 		if( !*s )
 		{
@@ -687,7 +687,8 @@ int Com_Filter( char* filter, char* name, int casesensitive )
 					}
 					else
 					{
-						if( toupper( *name ) >= toupper( *filter ) && toupper( *name ) <= toupper( *( filter + 2 ) ) )
+						if( toupper( *name ) >= toupper( *filter ) &&
+							toupper( *name ) <= toupper( *( filter + 2 ) ) )
 						{
 							found = qtrue;
 						}
@@ -835,7 +836,7 @@ all big things are allocated on the hunk.
 ==============================================================================
 */
 
-#define ZONEID 0x1d4a11
+#define ZONEID      0x1d4a11
 #define MINFRAGMENT 64
 
 typedef struct zonedebug_s
@@ -866,32 +867,32 @@ typedef struct
 } memzone_t;
 
 // main zone for all "dynamic" memory allocation
-memzone_t* mainzone;
-
+static memzone_t* mainzone;
 // we also have a small zone for small allocations that would only
 // fragment the main zone (think of cvar and cmd strings)
-memzone_t* smallzone;
+static memzone_t* smallzone;
 
-void Z_CheckHeap( void );
+static void Z_CheckHeap( void );
 
 /*
 ========================
 Z_ClearZone
 ========================
 */
-void Z_ClearZone( memzone_t* zone, int size )
+static void Z_ClearZone( memzone_t* zone, int size )
 {
 	memblock_t* block;
 
 	// set the entire zone to one free block
 
-	zone->blocklist.next = zone->blocklist.prev = block = ( memblock_t* )( ( byte* )zone + sizeof( memzone_t ) );
-	zone->blocklist.tag                                 = 1; // in use block
-	zone->blocklist.id                                  = 0;
-	zone->blocklist.size                                = 0;
-	zone->rover                                         = block;
-	zone->size                                          = size;
-	zone->used                                          = 0;
+	zone->blocklist.next = zone->blocklist.prev = block =
+		( memblock_t* )( ( byte* )zone + sizeof( memzone_t ) );
+	zone->blocklist.tag  = 1; // in use block
+	zone->blocklist.id   = 0;
+	zone->blocklist.size = 0;
+	zone->rover          = block;
+	zone->size           = size;
+	zone->used           = 0;
 
 	block->prev = block->next = &zone->blocklist;
 	block->tag                = 0; // free block
@@ -904,7 +905,7 @@ void Z_ClearZone( memzone_t* zone, int size )
 Z_AvailableZoneMemory
 ========================
 */
-int Z_AvailableZoneMemory( memzone_t* zone )
+static int Z_AvailableZoneMemory( memzone_t* zone )
 {
 	return zone->size - zone->used;
 }
@@ -994,10 +995,6 @@ void Z_Free( void* ptr )
 		block->size += other->size;
 		block->next       = other->next;
 		block->next->prev = block;
-		if( other == zone->rover )
-		{
-			zone->rover = block;
-		}
 	}
 }
 
@@ -1008,7 +1005,6 @@ Z_FreeTags
 */
 void Z_FreeTags( int tag )
 {
-	int        count;
 	memzone_t* zone;
 
 	if( tag == TAG_SMALL )
@@ -1019,7 +1015,6 @@ void Z_FreeTags( int tag )
 	{
 		zone = mainzone;
 	}
-	count = 0;
 	// use the rover as our pointer, because
 	// Z_Free automatically adjusts it
 	zone->rover = zone->blocklist.next;
@@ -1027,7 +1022,6 @@ void Z_FreeTags( int tag )
 	{
 		if( zone->rover->tag == tag )
 		{
-			count++;
 			Z_Free( ( void* )( zone->rover + 1 ) );
 			continue;
 		}
@@ -1043,11 +1037,12 @@ Z_TagMalloc
 #ifdef ZONE_DEBUG
 void* Z_TagMallocDebug( int size, int tag, char* label, char* file, int line )
 {
+	int allocSize;
 #else
 void* Z_TagMalloc( int size, int tag )
 {
 #endif
-	int         extra, allocSize;
+	int         extra;
 	memblock_t *start, *rover, *new, *base;
 	memzone_t*  zone;
 
@@ -1065,7 +1060,9 @@ void* Z_TagMalloc( int size, int tag )
 		zone = mainzone;
 	}
 
+#ifdef ZONE_DEBUG
 	allocSize = size;
+#endif
 	//
 	// scan through the block list looking for the first free block
 	// of sufficient size
@@ -1081,11 +1078,14 @@ void* Z_TagMalloc( int size, int tag )
 	{
 		if( rover == start )
 		{
+			// scaned all the way around the list
 #ifdef ZONE_DEBUG
 			Z_LogHeap();
-#endif
-			// scaned all the way around the list
+
+			Com_Error( ERR_FATAL, "Z_Malloc: failed on allocation of %i bytes from the %s zone: %s, line: %d (%s)", size, zone == smallzone ? "small" : "main", file, line, label );
+#else
 			Com_Error( ERR_FATAL, "Z_Malloc: failed on allocation of %i bytes from the %s zone", size, zone == smallzone ? "small" : "main" );
+#endif
 			return NULL;
 		}
 		if( rover->tag )
@@ -1150,7 +1150,7 @@ void* Z_Malloc( int size )
 #endif
 	void* buf;
 
-	//Z_CheckHeap (); // DEBUG
+	//Z_CheckHeap ();	// DEBUG
 
 #ifdef ZONE_DEBUG
 	buf = Z_TagMallocDebug( size, TAG_GENERAL, label, file, line );
@@ -1179,7 +1179,7 @@ void* S_Malloc( int size )
 Z_CheckHeap
 ========================
 */
-void Z_CheckHeap( void )
+static void Z_CheckHeap( void )
 {
 	memblock_t* block;
 
@@ -1191,15 +1191,15 @@ void Z_CheckHeap( void )
 		}
 		if( ( byte* )block + block->size != ( byte* )block->next )
 		{
-			Com_Error( ERR_FATAL, "Z_CheckHeap: block size does not touch the next block\n" );
+			Com_Error( ERR_FATAL, "Z_CheckHeap: block size does not touch the next block" );
 		}
 		if( block->next->prev != block )
 		{
-			Com_Error( ERR_FATAL, "Z_CheckHeap: next block doesn't have proper back link\n" );
+			Com_Error( ERR_FATAL, "Z_CheckHeap: next block doesn't have proper back link" );
 		}
 		if( !block->tag && !block->next->tag )
 		{
-			Com_Error( ERR_FATAL, "Z_CheckHeap: two consecutive free blocks\n" );
+			Com_Error( ERR_FATAL, "Z_CheckHeap: two consecutive free blocks" );
 		}
 	}
 }
@@ -1223,7 +1223,10 @@ void Z_LogZoneHeap( memzone_t* zone, char* name )
 	{
 		return;
 	}
-	size = allocSize = numBlocks = 0;
+	size = numBlocks = 0;
+#ifdef ZONE_DEBUG
+	allocSize = 0;
+#endif
 	Com_sprintf( buf, sizeof( buf ), "\r\n================\r\n%s log\r\n================\r\n", name );
 	FS_Write( buf, strlen( buf ), logfile );
 	for( block = zone->blocklist.next; block->next != &zone->blocklist; block = block->next )
@@ -1329,7 +1332,7 @@ char* CopyString( const char* in )
 ==============================================================================
 
 Goals:
-	reproducable without history effects -- no out of memory errors on weird map to map changes
+	reproducible without history effects -- no out of memory errors on weird map to map changes
 	allow restarting of the client without fragmentation
 	minimize total pages in use at run time
 	minimize total pages needed during load time
@@ -1359,7 +1362,7 @@ Goals:
 ==============================================================================
 */
 
-#define HUNK_MAGIC 0x89537892
+#define HUNK_MAGIC      0x89537892
 #define HUNK_FREE_MAGIC 0x89537893
 
 typedef struct
@@ -1406,7 +1409,7 @@ void Com_Meminfo_f( void )
 {
 	memblock_t* block;
 	int         zoneBytes, zoneBlocks;
-	int         smallZoneBytes, smallZoneBlocks;
+	int         smallZoneBytes;
 	int         botlibBytes, rendererBytes;
 	int         unused;
 
@@ -1418,7 +1421,10 @@ void Com_Meminfo_f( void )
 	{
 		if( Cmd_Argc() != 1 )
 		{
-			Com_Printf( "block:%p    size:%7i    tag:%3i\n", ( void* )block, block->size, block->tag );
+			Com_Printf( "block:%p    size:%7i    tag:%3i\n",
+				( void* )block,
+				block->size,
+				block->tag );
 		}
 		if( block->tag )
 		{
@@ -1452,14 +1458,12 @@ void Com_Meminfo_f( void )
 		}
 	}
 
-	smallZoneBytes  = 0;
-	smallZoneBlocks = 0;
+	smallZoneBytes = 0;
 	for( block = smallzone->blocklist.next;; block = block->next )
 	{
 		if( block->tag )
 		{
 			smallZoneBytes += block->size;
-			smallZoneBlocks++;
 		}
 
 		if( block->next == &smallzone->blocklist )
@@ -1517,7 +1521,7 @@ void Com_TouchMemory( void )
 {
 	int         start, end;
 	int         i, j;
-	int         sum;
+	unsigned    sum;
 	memblock_t* block;
 
 	Z_CheckHeap();
@@ -1527,17 +1531,15 @@ void Com_TouchMemory( void )
 	sum = 0;
 
 	j = hunk_low.permanent >> 2;
-	for( i = 0; i < j; i += 64 )
+	for( i = 0; i < j; i += 64 ) // only need to touch each page
 	{
-		// only need to touch each page
 		sum += ( ( int* )s_hunkData )[ i ];
 	}
 
 	i = ( s_hunkTotal - hunk_high.permanent ) >> 2;
 	j = hunk_high.permanent >> 2;
-	for( ; i < j; i += 64 )
+	for( ; i < j; i += 64 ) // only need to touch each page
 	{
-		// only need to touch each page
 		sum += ( ( int* )s_hunkData )[ i ];
 	}
 
@@ -1546,9 +1548,8 @@ void Com_TouchMemory( void )
 		if( block->tag )
 		{
 			j = block->size >> 2;
-			for( i = 0; i < j; i += 64 )
+			for( i = 0; i < j; i += 64 ) // only need to touch each page
 			{
-				// only need to touch each page
 				sum += ( ( int* )block )[ i ];
 			}
 		}
@@ -1577,8 +1578,6 @@ void Com_InitSmallZoneMemory( void )
 		Com_Error( ERR_FATAL, "Small zone data failed to allocate %1.1f megs", ( float )s_smallZoneTotal / ( 1024 * 1024 ) );
 	}
 	Z_ClearZone( smallzone, s_smallZoneTotal );
-
-	return;
 }
 
 void Com_InitZoneMemory( void )
@@ -1874,7 +1873,8 @@ static void Hunk_SwapBanks( void )
 
 	// if we have a larger highwater mark on this side, start making
 	// our permanent allocations here and use the other side for temp
-	if( hunk_temp->tempHighwater - hunk_temp->permanent > hunk_permanent->tempHighwater - hunk_permanent->permanent )
+	if( hunk_temp->tempHighwater - hunk_temp->permanent >
+		hunk_permanent->tempHighwater - hunk_permanent->permanent )
 	{
 		swap           = hunk_temp;
 		hunk_temp      = hunk_permanent;
@@ -1932,8 +1932,11 @@ void* Hunk_Alloc( int size, ha_pref preference )
 #ifdef HUNK_DEBUG
 		Hunk_Log();
 		Hunk_SmallLog();
-#endif
+
+		Com_Error( ERR_DROP, "Hunk_Alloc failed on %i: %s, line: %d (%s)", size, file, line, label );
+#else
 		Com_Error( ERR_DROP, "Hunk_Alloc failed on %i", size );
+#endif
 	}
 
 	if( hunk_permanent == &hunk_low )
@@ -1997,10 +2000,6 @@ void* Hunk_AllocateTempMemory( int size )
 
 	if( hunk_temp->temp + hunk_permanent->permanent + size > s_hunkTotal )
 	{
-#ifdef HUNK_DEBUG
-		Hunk_Log();
-		Hunk_SmallLog();
-#endif
 		Com_Error( ERR_DROP, "Hunk_AllocateTempMemory: failed on %i", size );
 	}
 
@@ -2101,54 +2100,6 @@ void Hunk_ClearTempMemory( void )
 }
 
 /*
-=================
-Hunk_Trash
-=================
-*/
-void Hunk_Trash( void )
-{
-	int   length, i, rnd;
-	char *buf, value;
-
-	return;
-
-	if( s_hunkData == NULL )
-	{
-		return;
-	}
-
-#ifdef _DEBUG
-	Com_Error( ERR_DROP, "hunk trashed\n" );
-	return;
-#endif
-
-	Cvar_Set( "com_jp", "1" );
-	Hunk_SwapBanks();
-
-	if( hunk_permanent == &hunk_low )
-	{
-		buf = ( void* )( s_hunkData + hunk_permanent->permanent );
-	}
-	else
-	{
-		buf = ( void* )( s_hunkData + s_hunkTotal - hunk_permanent->permanent );
-	}
-	length = hunk_permanent->permanent;
-
-	if( length > 0x7FFFF )
-	{
-		//randomly trash data within buf
-		rnd   = random() * ( length - 0x7FFFF );
-		value = 31;
-		for( i = 0; i < 0x7FFFF; i++ )
-		{
-			value *= 109;
-			buf[ rnd + i ] ^= value;
-		}
-	}
-}
-
-/*
 ===================================================================
 
 EVENTS AND JOURNALING
@@ -2207,7 +2158,7 @@ EVENT LOOP
 ========================================================================
 */
 
-#define MAX_QUEUED_EVENTS 256
+#define MAX_QUEUED_EVENTS  256
 #define MASK_QUEUED_EVENTS ( MAX_QUEUED_EVENTS - 1 )
 
 static sysEvent_t eventQueue[ MAX_QUEUED_EVENTS ];
@@ -2668,7 +2619,7 @@ A way to force a bus error for development reasons
 */
 static void Com_Crash_f( void )
 {
-	*( int* )0 = 0x12345678;
+	*( volatile int* )0 = 0x12345678;
 }
 
 /*
@@ -2789,14 +2740,14 @@ void Com_GameRestart_f( void )
 
 #ifndef STANDALONE
 
-// TTimo: centralizing the cl_cdkey stuff after I discovered a buffer overflow problem with the dedicated server version
-//   not sure it's necessary to have different defaults for regular and dedicated, but I don't want to risk it
-//   https://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=470
-#ifndef DEDICATED
+	// TTimo: centralizing the cl_cdkey stuff after I discovered a buffer overflow problem with the dedicated server version
+	//   not sure it's necessary to have different defaults for regular and dedicated, but I don't want to risk it
+	//   https://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=470
+	#ifndef DEDICATED
 char cl_cdkey[ 34 ] = "                                ";
-#else
+	#else
 char cl_cdkey[ 34 ] = "123456789";
-#endif
+	#endif
 
 /*
 =================
@@ -2869,7 +2820,7 @@ void Com_AppendCDKey( const char* filename )
 	}
 }
 
-#ifndef DEDICATED
+	#ifndef DEDICATED
 /*
 =================
 Com_WriteCDKey
@@ -2881,9 +2832,9 @@ static void Com_WriteCDKey( const char* filename, const char* ikey )
 	char         fbuffer[ MAX_OSPATH ];
 	char         key[ 17 ];
 
-#ifndef _WIN32
+		#ifndef _WIN32
 	mode_t savedumask;
-#endif
+		#endif
 
 	Com_sprintf( fbuffer, sizeof( fbuffer ), "%s/q3key", filename );
 
@@ -2894,9 +2845,9 @@ static void Com_WriteCDKey( const char* filename, const char* ikey )
 		return;
 	}
 
-#ifndef _WIN32
+		#ifndef _WIN32
 	savedumask = umask( 0077 );
-#endif
+		#endif
 	f = FS_SV_FOpenFileWrite( fbuffer );
 	if( !f )
 	{
@@ -2912,12 +2863,12 @@ static void Com_WriteCDKey( const char* filename, const char* ikey )
 
 	FS_FCloseFile( f );
 out:
-#ifndef _WIN32
+		#ifndef _WIN32
 	umask( savedumask );
-#endif
+		#endif
 	return;
 }
-#endif
+	#endif
 
 #endif // STANDALONE
 
@@ -3747,7 +3698,7 @@ void Com_Init( char* commandLine )
 	// cvar and command buffer management
 	Com_ParseCommandLine( commandLine );
 
-	//  Swap_Init ();
+	//	Swap_Init ();
 	Cbuf_Init();
 
 	// override anything from the config files with command line args
@@ -3980,7 +3931,7 @@ void Com_WriteConfiguration( void )
 	// not needed for dedicated
 #ifndef DEDICATED
 	fs = Cvar_Get( "fs_game", "", CVAR_INIT | CVAR_SYSTEMINFO );
-#ifndef STANDALONE
+	#ifndef STANDALONE
 	if( !Cvar_VariableIntegerValue( "com_standalone" ) )
 	{
 		if( UI_usesUniqueCDKey() && fs && fs->string[ 0 ] != 0 )
@@ -3992,7 +3943,7 @@ void Com_WriteConfiguration( void )
 			Com_WriteCDKey( BASEGAME, cl_cdkey );
 		}
 	}
-#endif
+	#endif
 #endif
 }
 

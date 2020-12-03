@@ -788,8 +788,8 @@ __inline void SLerp_Normal( vec3_t from, vec3_t to, float tt, vec3_t out )
 // ydnar
 
 #define FUNCTABLE_SHIFT ( 16 - FUNCTABLE_SIZE2 )
-#define SIN_TABLE( i ) tr.sinTable[ ( i ) >> FUNCTABLE_SHIFT ];
-#define COS_TABLE( i ) tr.sinTable[ ( ( ( i ) >> FUNCTABLE_SHIFT ) + ( FUNCTABLE_SIZE / 4 ) ) & FUNCTABLE_MASK ];
+#define SIN_TABLE( i )  tr.sinTable[ ( i ) >> FUNCTABLE_SHIFT ];
+#define COS_TABLE( i )  tr.sinTable[ ( ( ( i ) >> FUNCTABLE_SHIFT ) + ( FUNCTABLE_SIZE / 4 ) ) & FUNCTABLE_MASK ];
 
 static __inline void LocalIngleVector( int ingles[ 3 ], vec3_t forward )
 {
@@ -1778,11 +1778,11 @@ static void R_CalcBones( const refEntity_t* refent, int* boneList, int numBones 
 }
 
 #ifdef DBG_PROFILE_BONES
-#define DBG_SHOWTIME                                                  \
-	Com_Printf( "%i: %i, ", di++, ( dt = ri.Milliseconds() ) - ldt ); \
-	ldt = dt;
+	#define DBG_SHOWTIME                                                  \
+		Com_Printf( "%i: %i, ", di++, ( dt = ri.Milliseconds() ) - ldt ); \
+		ldt = dt;
 #else
-#define DBG_SHOWTIME ;
+	#define DBG_SHOWTIME ;
 #endif
 
 /*
@@ -1802,12 +1802,12 @@ void Tess_MDM_SurfaceAnim( mdmSurfaceIntern_t* surface )
 	int            baseIndex, baseVertex;
 	float *        tmpPosition, *tmpNormal, *tmpTangent, *tmpBinormal;
 
-#ifdef DBG_PROFILE_BONES
+	#ifdef DBG_PROFILE_BONES
 	int di = 0, dt, ldt;
 
 	dt  = ri.Milliseconds();
 	ldt = dt;
-#endif
+	#endif
 
 	refent   = &backEnd.currentEntity->e;
 	boneList = surface->boneReferences;
@@ -1828,12 +1828,12 @@ void Tess_MDM_SurfaceAnim( mdmSurfaceIntern_t* surface )
 	// debug code
 	// lodScale = r_lodTest->value;
 
-//DBG_SHOWTIME
+	//DBG_SHOWTIME
 
-//----(SA)  modification to allow dead skeletal bodies to go below minlod (experiment)
-#if 0
+	//----(SA)  modification to allow dead skeletal bodies to go below minlod (experiment)
+	#if 0
 	render_count = surface->numVerts;
-#else
+	#else
 	if( refent->reFlags & REFLAG_DEAD_LOD )
 	{
 		if( lodScale < 0.35 )
@@ -1854,7 +1854,7 @@ void Tess_MDM_SurfaceAnim( mdmSurfaceIntern_t* surface )
 			}
 		}
 	}
-#endif
+	#endif
 	//----(SA)  end
 
 	if( render_count > surface->numVerts )
@@ -1875,7 +1875,7 @@ void Tess_MDM_SurfaceAnim( mdmSurfaceIntern_t* surface )
 
 	// setup triangle list
 
-#if 0
+	#if 0
 	for( i = 0, tri = surface->triangles; i < surface->numTriangles; i++, tri++ )
 	{
 		tess.indexes[tess.numIndexes + i * 3 + 0] = tess.numVertexes + tri->indexes[0];
@@ -1886,7 +1886,7 @@ void Tess_MDM_SurfaceAnim( mdmSurfaceIntern_t* surface )
 	tess.numIndexes += surface->numTriangles * 3;
 	tess.numVertexes += render_count;
 
-#else
+	#else
 
 	if( render_count == surface->numVerts )
 	{
@@ -1941,7 +1941,7 @@ void Tess_MDM_SurfaceAnim( mdmSurfaceIntern_t* surface )
 
 		tess.numVertexes += render_count;
 	}
-#endif
+	#endif
 
 	// deform the vertexes by the lerped bones
 	v           = surface->verts;
@@ -1978,7 +1978,7 @@ void Tess_MDM_SurfaceAnim( mdmSurfaceIntern_t* surface )
 
 	DBG_SHOWTIME
 
-#if 0
+	#if 0
 	if( r_showSkeleton->integer )
 	{
 		GL_State( GLS_POLYMODE_LINE | GLS_DEPTHMASK_TRUE );
@@ -2198,7 +2198,7 @@ void Tess_MDM_SurfaceAnim( mdmSurfaceIntern_t* surface )
 			glEnd();
 		}
 	}
-#endif
+	#endif
 
 	/*	if( r_showmodelbounds->integer ) {
 			vec3_t diff, v1, v2, v3, v4, v5, v6;
@@ -2267,9 +2267,9 @@ void Tess_MDM_SurfaceAnim( mdmSurfaceIntern_t* surface )
 		return;
 	}
 
-#ifdef DBG_PROFILE_BONES
+	#ifdef DBG_PROFILE_BONES
 	Com_Printf( "\n" );
-#endif
+	#endif
 
 #endif // entire function block
 }

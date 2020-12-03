@@ -35,12 +35,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   movers and respawn appropriately.
 */
 
-#define RESPAWN_ARMOR 25
-#define RESPAWN_HEALTH 35
-#define RESPAWN_AMMO 40
-#define RESPAWN_HOLDABLE 60
+#define RESPAWN_ARMOR      25
+#define RESPAWN_HEALTH     35
+#define RESPAWN_AMMO       40
+#define RESPAWN_HOLDABLE   60
 #define RESPAWN_MEGAHEALTH 35 //120
-#define RESPAWN_POWERUP 120
+#define RESPAWN_POWERUP    120
 
 //======================================================================
 

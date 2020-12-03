@@ -26,7 +26,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "cg_local.h"
 
 #ifdef MISSIONPACK
-#include "../ui/ui_shared.h"
+	#include "../ui/ui_shared.h"
 
 // used for scoreboard
 extern displayContextDef_t cgDC;
@@ -1537,8 +1537,8 @@ static void CG_DrawTeamInfo( void )
 	vec4_t hcolor;
 	int    chatHeight;
 
-#define CHATLOC_Y 420 // bottom end
-#define CHATLOC_X 0
+	#define CHATLOC_Y 420 // bottom end
+	#define CHATLOC_X 0
 
 	if( cg_teamChatHeight.integer < TEAMCHAT_HEIGHT )
 	{
@@ -1627,12 +1627,12 @@ static void CG_DrawHoldableItem( void )
 #endif // MISSIONPACK
 
 #ifdef MISSIONPACK
-/*
+	/*
 ===================
 CG_DrawPersistantPowerup
 ===================
 */
-#if 0 // sos001208 - DEAD
+	#if 0 // sos001208 - DEAD
 static void CG_DrawPersistantPowerup( void )
 {
 	int		value;
@@ -1644,7 +1644,7 @@ static void CG_DrawPersistantPowerup( void )
 		CG_DrawPic( 640 - ICON_SIZE, ( SCREEN_HEIGHT - ICON_SIZE ) / 2 - ICON_SIZE, ICON_SIZE, ICON_SIZE, cg_items[ value ].icon );
 	}
 }
-#endif
+	#endif
 #endif // MISSIONPACK
 
 /*
@@ -1835,7 +1835,7 @@ static void CG_DrawDisconnect( void )
 	CG_DrawPic( x, y, 48, 48, trap_R_RegisterShader( "gfx/2d/net.tga" ) );
 }
 
-#define MAX_LAGOMETER_PING 900
+#define MAX_LAGOMETER_PING  900
 #define MAX_LAGOMETER_RANGE 300
 
 /*

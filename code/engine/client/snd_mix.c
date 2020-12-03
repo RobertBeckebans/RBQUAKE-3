@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "client.h"
 #include "snd_local.h"
 #if idppc_altivec && !defined( MACOS_X )
-#include <altivec.h>
+	#include <altivec.h>
 #endif
 
 static portable_samplepair_t paintbuffer[ PAINTBUFFER_SIZE ];

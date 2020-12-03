@@ -2,20 +2,20 @@
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -24,8 +24,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "q_shared.h"
 #include "qcommon.h"
 
-#define MAX_CMD_BUFFER 16384
-#define MAX_CMD_LINE 1024
+#define MAX_CMD_BUFFER 128 * 1024
+#define MAX_CMD_LINE   1024
 
 typedef struct
 {
@@ -186,6 +186,11 @@ void Cbuf_Execute( void )
 	char  line[ MAX_CMD_LINE ];
 	int   quotes;
 
+	// This will keep // style comments all on one line by not breaking on
+	// a semicolon.  It will keep /* ... */ style comments all on one line by not
+	// breaking it for semicolon or newline.
+	qboolean in_star_comment  = qfalse;
+	qboolean in_slash_comment = qfalse;
 	while( cmd_text.cursize )
 	{
 		if( cmd_wait > 0 )
@@ -196,7 +201,7 @@ void Cbuf_Execute( void )
 			break;
 		}
 
-		// find a \n or ; line break
+		// find a \n or ; line break or comment: // or /* */
 		text = ( char* )cmd_text.data;
 
 		quotes = 0;
@@ -206,12 +211,37 @@ void Cbuf_Execute( void )
 			{
 				quotes++;
 			}
-			if( !( quotes & 1 ) && text[ i ] == ';' )
+
+			if( !( quotes & 1 ) )
 			{
-				break; // don't break if inside a quoted string
+				if( i < cmd_text.cursize - 1 )
+				{
+					if( !in_star_comment && text[ i ] == '/' && text[ i + 1 ] == '/' )
+					{
+						in_slash_comment = qtrue;
+					}
+					else if( !in_slash_comment && text[ i ] == '/' && text[ i + 1 ] == '*' )
+					{
+						in_star_comment = qtrue;
+					}
+					else if( in_star_comment && text[ i ] == '*' && text[ i + 1 ] == '/' )
+					{
+						in_star_comment = qfalse;
+						// If we are in a star comment, then the part after it is valid
+						// Note: This will cause it to NUL out the terminating '/'
+						// but ExecuteString doesn't require it anyway.
+						i++;
+						break;
+					}
+				}
+				if( !in_slash_comment && !in_star_comment && text[ i ] == ';' )
+				{
+					break;
+				}
 			}
-			if( text[ i ] == '\n' || text[ i ] == '\r' )
+			if( !in_star_comment && ( text[ i ] == '\n' || text[ i ] == '\r' ) )
 			{
+				in_slash_comment = qfalse;
 				break;
 			}
 		}
@@ -260,28 +290,36 @@ Cmd_Exec_f
 */
 void Cmd_Exec_f( void )
 {
-	union {
+	qboolean quiet;
+	union
+	{
 		char* c;
 		void* v;
 	} f;
-	int  len;
 	char filename[ MAX_QPATH ];
+
+	quiet = !Q_stricmp( Cmd_Argv( 0 ), "execq" );
 
 	if( Cmd_Argc() != 2 )
 	{
-		Com_Printf( "exec <filename> : execute a script file\n" );
+		Com_Printf( "exec%s <filename> : execute a script file%s\n",
+			quiet ? "q" : "",
+			quiet ? " without notification" : "" );
 		return;
 	}
 
 	Q_strncpyz( filename, Cmd_Argv( 1 ), sizeof( filename ) );
 	Com_DefaultExtension( filename, sizeof( filename ), ".cfg" );
-	len = FS_ReadFile( filename, &f.v );
+	FS_ReadFile( filename, &f.v );
 	if( !f.c )
 	{
-		Com_Printf( "couldn't exec %s\n", Cmd_Argv( 1 ) );
+		Com_Printf( "couldn't exec %s\n", filename );
 		return;
 	}
-	Com_Printf( "execing %s\n", Cmd_Argv( 1 ) );
+	if( !quiet )
+	{
+		Com_Printf( "execing %s\n", filename );
+	}
 
 	Cbuf_InsertText( f.c );
 
@@ -466,7 +504,9 @@ char* Cmd_Cmd( void )
    Replace command separators with space to prevent interpretation
    This is a hack to protect buggy qvms
    https://bugzilla.icculus.org/show_bug.cgi?id=3593
+   https://bugzilla.icculus.org/show_bug.cgi?id=4769
 */
+
 void Cmd_Args_Sanitize( void )
 {
 	int i;
@@ -474,6 +514,11 @@ void Cmd_Args_Sanitize( void )
 	for( i = 1; i < cmd_argc; i++ )
 	{
 		char* c = cmd_argv[ i ];
+
+		if( strlen( c ) > MAX_CVAR_VALUE_STRING - 1 )
+		{
+			c[ MAX_CVAR_VALUE_STRING - 1 ] = '\0';
+		}
 
 		while( ( c = strpbrk( c, "\n\r;" ) ) )
 		{
@@ -488,8 +533,8 @@ void Cmd_Args_Sanitize( void )
 Cmd_TokenizeString
 
 Parses the given string into command line tokens.
-The text is copied to a seperate buffer and 0 characters
-are inserted in the apropriate place, The argv array
+The text is copied to a separate buffer and 0 characters
+are inserted in the appropriate place, The argv array
 will point into this temporary buffer.
 ============
 */
@@ -639,6 +684,22 @@ void Cmd_TokenizeStringIgnoreQuotes( const char* text_in )
 
 /*
 ============
+Cmd_FindCommand
+============
+*/
+cmd_function_t* Cmd_FindCommand( const char* cmd_name )
+{
+	cmd_function_t* cmd;
+	for( cmd = cmd_functions; cmd; cmd = cmd->next )
+		if( !Q_stricmp( cmd_name, cmd->name ) )
+		{
+			return cmd;
+		}
+	return NULL;
+}
+
+/*
+============
 Cmd_AddCommand
 ============
 */
@@ -647,17 +708,14 @@ void Cmd_AddCommand( const char* cmd_name, xcommand_t function )
 	cmd_function_t* cmd;
 
 	// fail if the command already exists
-	for( cmd = cmd_functions; cmd; cmd = cmd->next )
+	if( Cmd_FindCommand( cmd_name ) )
 	{
-		if( !strcmp( cmd_name, cmd->name ) )
+		// allow completion-only commands to be silently doubled
+		if( function != NULL )
 		{
-			// allow completion-only commands to be silently doubled
-			if( function != NULL )
-			{
-				Com_Printf( "Cmd_AddCommand: %s already defined\n", cmd_name );
-			}
-			return;
+			Com_Printf( "Cmd_AddCommand: %s already defined\n", cmd_name );
 		}
+		return;
 	}
 
 	// use a small malloc to avoid zone fragmentation
@@ -683,6 +741,7 @@ void Cmd_SetCommandCompletionFunc( const char* command, completionFunc_t complet
 		if( !Q_stricmp( command, cmd->name ) )
 		{
 			cmd->complete = complete;
+			return;
 		}
 	}
 }
@@ -721,6 +780,32 @@ void Cmd_RemoveCommand( const char* cmd_name )
 
 /*
 ============
+Cmd_RemoveCommandSafe
+
+Only remove commands with no associated function
+============
+*/
+void Cmd_RemoveCommandSafe( const char* cmd_name )
+{
+	cmd_function_t* cmd = Cmd_FindCommand( cmd_name );
+
+	if( !cmd )
+	{
+		return;
+	}
+	if( cmd->function )
+	{
+		Com_Error( ERR_DROP, "Restricted source tried to remove "
+							 "system command \"%s\"",
+			cmd_name );
+		return;
+	}
+
+	Cmd_RemoveCommand( cmd_name );
+}
+
+/*
+============
 Cmd_CommandCompletion
 ============
 */
@@ -745,33 +830,15 @@ void Cmd_CompleteArgument( const char* command, char* args, int argNum )
 
 	for( cmd = cmd_functions; cmd; cmd = cmd->next )
 	{
-		if( !Q_stricmp( command, cmd->name ) && cmd->complete )
+		if( !Q_stricmp( command, cmd->name ) )
 		{
-			cmd->complete( args, argNum );
+			if( cmd->complete )
+			{
+				cmd->complete( args, argNum );
+			}
+			return;
 		}
 	}
-}
-
-/*
-============
-Cmd_GetCommandFunction
-
-Return the function registered for the command (may be NULL.
-Return NULL if the command is not registered.
-============
-*/
-xcommand_t Cmd_GetCommandFunction( const char* cmdName )
-{
-	cmd_function_t* cmd;
-
-	for( cmd = cmd_functions; cmd; cmd = cmd->next )
-	{
-		if( !strcmp( cmdName, cmd->name ) )
-		{
-			return cmd->function;
-		}
-	}
-	return NULL;
 }
 
 /*
@@ -890,7 +957,7 @@ void Cmd_CompleteCfgName( char* args, int argNum )
 {
 	if( argNum == 2 )
 	{
-		Field_CompleteFilename( "", "cfg", qfalse );
+		Field_CompleteFilename( "", "cfg", qfalse, qtrue );
 	}
 }
 
@@ -903,7 +970,9 @@ void Cmd_Init( void )
 {
 	Cmd_AddCommand( "cmdlist", Cmd_List_f );
 	Cmd_AddCommand( "exec", Cmd_Exec_f );
+	Cmd_AddCommand( "execq", Cmd_Exec_f );
 	Cmd_SetCommandCompletionFunc( "exec", Cmd_CompleteCfgName );
+	Cmd_SetCommandCompletionFunc( "execq", Cmd_CompleteCfgName );
 	Cmd_AddCommand( "vstr", Cmd_Vstr_f );
 	Cmd_SetCommandCompletionFunc( "vstr", Cvar_CompleteCvarName );
 	Cmd_AddCommand( "echo", Cmd_Echo_f );

@@ -26,9 +26,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 //#define WOLF_PARTICLES
 
-#define BLOODRED 2
+#define BLOODRED    2
 #define EMISIVEFADE 3
-#define GREY75 4
+#define GREY75      4
 
 typedef struct particle_s
 {
@@ -90,7 +90,7 @@ typedef enum
 	P_SPRITE
 } particle_type_t;
 
-#define MAX_SHADER_ANIMS 32
+#define MAX_SHADER_ANIMS       32
 #define MAX_SHADER_ANIM_FRAMES 64
 
 #ifndef WOLF_PARTICLES
@@ -139,9 +139,9 @@ static float shaderAnimSTRatio[ MAX_SHADER_ANIMS ] = {
 #define PARTICLE_GRAVITY 40
 
 #ifdef WOLF_PARTICLES
-#define MAX_PARTICLES 1024 * 8
+	#define MAX_PARTICLES 1024 * 8
 #else
-#define MAX_PARTICLES 1024
+	#define MAX_PARTICLES 1024
 #endif
 
 cparticle_t *active_particles, *free_particles;
@@ -1895,7 +1895,7 @@ void CG_BloodPool( localEntity_t* le, qhandle_t pshader, trace_t* tr )
 }
 
 #define NORMALSIZE 16
-#define LARGESIZE 32
+#define LARGESIZE  32
 
 void CG_ParticleBloodCloud( centity_t* cent, vec3_t origin, vec3_t dir )
 {

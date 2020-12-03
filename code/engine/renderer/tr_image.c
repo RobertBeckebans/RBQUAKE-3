@@ -2171,7 +2171,7 @@ image_t* R_FindImageFile( const char* imageName, int bits, filterType_t filterTy
 #if defined( USE_D3D10 )
 	// TODO
 #else
-#ifdef USE_DDS
+	#ifdef USE_DDS
 	if( glConfig.textureCompression == TC_S3TC && !( bits & IF_NOCOMPRESSION ) && Q_stricmpn( imageName, "fonts", 5 ) )
 	{
 		Q_strncpyz( ddsName, imageName, sizeof( ddsName ) );
@@ -2186,7 +2186,7 @@ image_t* R_FindImageFile( const char* imageName, int bits, filterType_t filterTy
 			return image;
 		}
 	}
-#endif
+	#endif
 #endif
 
 #if 0
@@ -2483,7 +2483,7 @@ image_t* R_FindCubeImage( const char* imageName, int bits, filterType_t filterTy
 #if defined( USE_D3D10 )
 	// TODO
 #else
-#ifdef USE_DDS
+	#ifdef USE_DDS
 	if( glConfig.textureCompression == TC_S3TC && !( bits & IF_NOCOMPRESSION ) && Q_stricmpn( imageName, "fonts", 5 ) )
 	{
 		Q_strncpyz( ddsName, imageName, sizeof( ddsName ) );
@@ -2498,7 +2498,7 @@ image_t* R_FindCubeImage( const char* imageName, int bits, filterType_t filterTy
 			return image;
 		}
 	}
-#endif
+	#endif
 #endif
 
 #if 0

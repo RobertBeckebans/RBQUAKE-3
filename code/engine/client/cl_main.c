@@ -28,7 +28,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "../sys/sys_loadlib.h"
 
 #ifdef USE_MUMBLE
-#include "libmumblelink.h"
+	#include "libmumblelink.h"
 #endif
 
 #ifdef USE_MUMBLE
@@ -139,7 +139,7 @@ serverStatus_t cl_serverStatusList[ MAX_SERVERSTATUSREQUESTS ];
 int            serverStatusCount;
 
 #if defined __USEA3D && defined __A3D_GEOM
-void                            hA3Dg_ExportRenderGeom( refexport_t* incoming_re );
+void hA3Dg_ExportRenderGeom( refexport_t* incoming_re );
 #endif
 
 extern void SV_BotFrame( int time );
@@ -343,13 +343,13 @@ static void CL_CaptureVoip( void )
 	qboolean       initialFrame = qfalse;
 	qboolean       finalFrame   = qfalse;
 
-#if USE_MUMBLE
+	#if USE_MUMBLE
 	// if we're using Mumble, don't try to handle VoIP transmission ourselves.
 	if( cl_useMumble->integer )
 	{
 		return;
 	}
-#endif
+	#endif
 
 	if( !clc.speexInitialized )
 	{
@@ -510,7 +510,7 @@ static void CL_CaptureVoip( void )
 
 				Com_DPrintf( "VoIP: Send %d frames, %d bytes, %f power\n", speexFrames, wpos, clc.voipPower );
 
-#if 0
+	#if 0
 				static FILE*    encio = NULL;
 				
 				if( encio == NULL )
@@ -533,7 +533,7 @@ static void CL_CaptureVoip( void )
 					fwrite( sampbuffer, speexFrames * clc.speexFrameSize * 2, 1, decio );
 					fflush( decio );
 				}
-#endif
+	#endif
 			}
 		}
 	}
@@ -3358,18 +3358,18 @@ void CL_InitRef( void )
 
 #if !defined( REF_HARD_LINKED )
 
-#ifdef _WIN32
+	#ifdef _WIN32
 	Q_snprintf( dllName, sizeof( dllName ), "renderer%s" DLL_EXT, cl_renderer->string );
-#else
+	#else
 	Q_snprintf( dllName, sizeof( dllName ), "renderer%s" ARCH_STRING DLL_EXT, cl_renderer->string );
-#endif
+	#endif
 
 	Com_Printf( "Loading \"%s\"...", dllName );
 	if( ( rendererLib = Sys_LoadLibrary( dllName ) ) == 0 )
 	{
-#ifdef _WIN32
+	#ifdef _WIN32
 		Com_Printf( "failed:\n\"%s\"\n", Sys_LibraryError() );
-#else
+	#else
 		char fn[ 1024 ];
 
 		Q_strncpyz( fn, Sys_Cwd(), sizeof( fn ) );
@@ -3381,7 +3381,7 @@ void CL_InitRef( void )
 		{
 			Com_Error( ERR_FATAL, "failed:\n\"%s\"", Sys_LibraryError() );
 		}
-#endif /* _WIN32 */
+	#endif /* _WIN32 */
 	}
 
 	Com_Printf( "done\n" );
@@ -3409,7 +3409,7 @@ void CL_InitRef( void )
 #ifdef ZONE_DEBUG
 	ri.Z_MallocDebug = CL_RefMallocDebug;
 #else
-	ri.Z_Malloc   = CL_RefMalloc;
+	ri.Z_Malloc = CL_RefMalloc;
 #endif
 	ri.Free = Z_Free;
 
@@ -3710,7 +3710,7 @@ void CL_Init( void )
 	// Input is jittery on OS X w/o this
 	m_filter = Cvar_Get( "m_filter", "1", CVAR_ARCHIVE );
 #else
-	m_filter      = Cvar_Get( "m_filter", "0", CVAR_ARCHIVE );
+	m_filter = Cvar_Get( "m_filter", "0", CVAR_ARCHIVE );
 #endif
 
 	j_pitch   = Cvar_Get( "j_pitch", "0.022", CVAR_ARCHIVE );

@@ -23,10 +23,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "ui_shared.h"
 
-#define SCROLL_TIME_START 500
-#define SCROLL_TIME_ADJUST 150
+#define SCROLL_TIME_START        500
+#define SCROLL_TIME_ADJUST       150
 #define SCROLL_TIME_ADJUSTOFFSET 40
-#define SCROLL_TIME_FLOOR 20
+#define SCROLL_TIME_FLOOR        20
 
 typedef struct scrollInfo_s
 {
@@ -122,9 +122,9 @@ void UI_RemoveCaptureFunc( void )
 }
 
 #ifdef CGAME
-#define MEM_POOL_SIZE 128 * 1024
+	#define MEM_POOL_SIZE 128 * 1024
 #else
-#define MEM_POOL_SIZE 1024 * 1024
+	#define MEM_POOL_SIZE 1024 * 1024
 #endif
 
 static char UI_memoryPool[ MEM_POOL_SIZE ];
@@ -440,7 +440,8 @@ typedef enum
 typedef struct exprToken_s
 {
 	exprType_t type;
-	union {
+	union
+	{
 		char  op;
 		float val;
 	} u;
@@ -496,7 +497,7 @@ static qboolean PC_Expression_Parse( int handle, float* f )
 	exprToken_t value;
 	qboolean    expectingNumber = qtrue;
 
-#define FULL( a ) ( a.b >= ( MAX_EXPR_ELEMENTS - 1 ) )
+#define FULL( a )  ( a.b >= ( MAX_EXPR_ELEMENTS - 1 ) )
 #define EMPTY( a ) ( a.f > a.b )
 
 #define PUSH_VAL( a, v )               \
@@ -525,7 +526,7 @@ static qboolean PC_Expression_Parse( int handle, float* f )
 		a.b--;              \
 	}
 
-#define PEEK_STACK_OP( a ) ( a.l[ a.b ].u.op )
+#define PEEK_STACK_OP( a )  ( a.l[ a.b ].u.op )
 #define PEEK_STACK_VAL( a ) ( a.l[ a.b ].u.val )
 
 #define POP_FIFO( a )       \
@@ -3503,7 +3504,7 @@ qboolean Item_Multi_HandleKey( itemDef_t* item, int key )
 	return qfalse;
 }
 
-#define MIN_FIELD_WIDTH 10
+#define MIN_FIELD_WIDTH   10
 #define EDIT_CURSOR_WIDTH 10
 
 static void Item_TextField_CalcPaintOffset( itemDef_t* item, char* buff )
@@ -4824,7 +4825,7 @@ const char* Item_Text_Wrap( const char* text, float scale, float width )
 
 #define MAX_WRAP_CACHE 16
 #define MAX_WRAP_LINES 32
-#define MAX_WRAP_TEXT 512
+#define MAX_WRAP_TEXT  512
 
 typedef struct
 {

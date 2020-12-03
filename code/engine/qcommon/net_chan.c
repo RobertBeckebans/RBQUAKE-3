@@ -104,7 +104,7 @@ A probably futile attempt to make proxy hacking somewhat
 more difficult.
 ==============
 */
-#define SCRAMBLE_START 6
+	#define SCRAMBLE_START 6
 static void Netchan_ScramblePacket( msg_t* buf )
 {
 	unsigned        seed;

@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // cg_syscalls.c -- this file is only included when building a dll
 // cg_syscalls.asm is included instead when building a qvm
 #ifdef Q3_VM
-#error "Do not use in VM build"
+	#error "Do not use in VM build"
 #endif
 
 #include "cg_local.h"
@@ -130,11 +130,6 @@ void trap_SendConsoleCommand( const char* text )
 void trap_AddCommand( const char* cmdName )
 {
 	syscall( CG_ADDCOMMAND, cmdName );
-}
-
-void trap_AddCommandAlias( const char* cmdName, const char* cmdOther )
-{
-	syscall( CG_ADDCOMMANDALIAS, cmdName, cmdOther );
 }
 
 void trap_RemoveCommand( const char* cmdName )

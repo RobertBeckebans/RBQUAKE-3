@@ -44,14 +44,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //accuracy when aiming
 #define CHARACTERISTIC_AIM_ACCURACY 7 //float [0, 1]
 //weapon specific aim accuracy
-#define CHARACTERISTIC_AIM_ACCURACY_MACHINEGUN 8       //float [0, 1]
-#define CHARACTERISTIC_AIM_ACCURACY_SHOTGUN 9          //float [0, 1]
-#define CHARACTERISTIC_AIM_ACCURACY_ROCKETLAUNCHER 10  //float [0, 1]
+#define CHARACTERISTIC_AIM_ACCURACY_MACHINEGUN      8  //float [0, 1]
+#define CHARACTERISTIC_AIM_ACCURACY_SHOTGUN         9  //float [0, 1]
+#define CHARACTERISTIC_AIM_ACCURACY_ROCKETLAUNCHER  10 //float [0, 1]
 #define CHARACTERISTIC_AIM_ACCURACY_GRENADELAUNCHER 11 //float [0, 1]
-#define CHARACTERISTIC_AIM_ACCURACY_LIGHTNING 12
-#define CHARACTERISTIC_AIM_ACCURACY_PLASMAGUN 13 //float [0, 1]
-#define CHARACTERISTIC_AIM_ACCURACY_RAILGUN 14
-#define CHARACTERISTIC_AIM_ACCURACY_BFG10K 15 //float [0, 1]
+#define CHARACTERISTIC_AIM_ACCURACY_LIGHTNING       12
+#define CHARACTERISTIC_AIM_ACCURACY_PLASMAGUN       13 //float [0, 1]
+#define CHARACTERISTIC_AIM_ACCURACY_RAILGUN         14
+#define CHARACTERISTIC_AIM_ACCURACY_BFG10K          15 //float [0, 1]
 //skill when aiming
 // >  0.0 && <  0.9 = aim is affected by enemy movement
 // >  0.4 && <= 0.8 = enemy linear leading
@@ -60,10 +60,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // >  0.6 && <= 1.0 = splash damage by shooting nearby geometry
 #define CHARACTERISTIC_AIM_SKILL 16 //float [0, 1]
 //weapon specific aim skill
-#define CHARACTERISTIC_AIM_SKILL_ROCKETLAUNCHER 17  //float [0, 1]
+#define CHARACTERISTIC_AIM_SKILL_ROCKETLAUNCHER  17 //float [0, 1]
 #define CHARACTERISTIC_AIM_SKILL_GRENADELAUNCHER 18 //float [0, 1]
-#define CHARACTERISTIC_AIM_SKILL_PLASMAGUN 19       //float [0, 1]
-#define CHARACTERISTIC_AIM_SKILL_BFG10K 20          //float [0, 1]
+#define CHARACTERISTIC_AIM_SKILL_PLASMAGUN       19 //float [0, 1]
+#define CHARACTERISTIC_AIM_SKILL_BFG10K          20 //float [0, 1]
 //========================================================
 //chat
 //========================================================

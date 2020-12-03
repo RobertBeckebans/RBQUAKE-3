@@ -26,24 +26,24 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "snd_public.h"
 
 #if USE_OPENAL
-#ifdef _MSC_VER
-// MSVC users must install the OpenAL SDK which doesn't use the AL/*.h scheme.
-#include <al.h>
-#include <alc.h>
-#elif defined( MACOS_X )
-#include <OpenAL/al.h>
-#include <OpenAL/alc.h>
-#else
-#include <AL/al.h>
-#include <AL/alc.h>
-#endif
+	#ifdef _MSC_VER
+		// MSVC users must install the OpenAL SDK which doesn't use the AL/*.h scheme.
+		#include <al.h>
+		#include <alc.h>
+	#elif defined( MACOS_X )
+		#include <OpenAL/al.h>
+		#include <OpenAL/alc.h>
+	#else
+		#include <AL/al.h>
+		#include <AL/alc.h>
+	#endif
 #endif
 
 #define PAINTBUFFER_SIZE 4096 // this is in samples
 
-#define SND_CHUNK_SIZE 1024                         // samples
+#define SND_CHUNK_SIZE       1024                   // samples
 #define SND_CHUNK_SIZE_FLOAT ( SND_CHUNK_SIZE / 2 ) // floats
-#define SND_CHUNK_SIZE_BYTE ( SND_CHUNK_SIZE * 2 )  // floats
+#define SND_CHUNK_SIZE_BYTE  ( SND_CHUNK_SIZE * 2 ) // floats
 
 typedef struct
 {

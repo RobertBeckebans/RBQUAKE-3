@@ -1,22 +1,21 @@
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
-Copyright (C) 2006 Robert Beckebans <trebor_7@users.sourceforge.net>
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -42,9 +41,8 @@ BASIC MATH
 RotatePoint
 ================
 */
-void RotatePoint( vec3_t point, /*const */ vec3_t matrix[ 3 ] )
+void RotatePoint( vec3_t point, /*const*/ vec3_t matrix[ 3 ] ) // FIXME
 {
-	// FIXME
 	vec3_t tvec;
 
 	VectorCopy( point, tvec );
@@ -58,11 +56,9 @@ void RotatePoint( vec3_t point, /*const */ vec3_t matrix[ 3 ] )
 TransposeMatrix
 ================
 */
-void TransposeMatrix( /*const */ vec3_t matrix[ 3 ], vec3_t transpose[ 3 ] )
+void TransposeMatrix( /*const*/ vec3_t matrix[ 3 ], vec3_t transpose[ 3 ] ) // FIXME
 {
-	// FIXME
 	int i, j;
-
 	for( i = 0; i < 3; i++ )
 	{
 		for( j = 0; j < 3; j++ )
@@ -109,7 +105,8 @@ float CM_DistanceFromLineSquared( vec3_t p, vec3_t lp1, vec3_t lp2, vec3_t dir )
 
 	CM_ProjectPointOntoVector( p, lp1, dir, proj );
 	for( j = 0; j < 3; j++ )
-		if( ( proj[ j ] > lp1[ j ] && proj[ j ] > lp2[ j ] ) || ( proj[ j ] < lp1[ j ] && proj[ j ] < lp2[ j ] ) )
+		if( ( proj[ j ] > lp1[ j ] && proj[ j ] > lp2[ j ] ) ||
+			( proj[ j ] < lp1[ j ] && proj[ j ] < lp2[ j ] ) )
 		{
 			break;
 		}
@@ -205,7 +202,7 @@ static void CM_TestBoxInBrush( traceWork_t* tw, cbrush_t* brush )
 			side  = brush->sides + i;
 			plane = side->plane;
 
-			// adjust the plane distance apropriately for radius
+			// adjust the plane distance appropriately for radius
 			dist = plane->dist + tw->sphere.radius;
 			// find the closest point on the capsule to the plane
 			t = DotProduct( plane->normal, tw->sphere.offset );
@@ -234,7 +231,7 @@ static void CM_TestBoxInBrush( traceWork_t* tw, cbrush_t* brush )
 			side  = brush->sides + i;
 			plane = side->plane;
 
-			// adjust the plane distance apropriately for mins/maxs
+			// adjust the plane distance appropriately for mins/maxs
 			dist = plane->dist - DotProduct( tw->offsets[ plane->signbits ], plane->normal );
 
 			d1 = DotProduct( tw->start, plane->normal ) - dist;
@@ -504,7 +501,8 @@ void CM_TestCapsuleInCapsule( traceWork_t* tw, clipHandle_t model )
 		tw->trace.fraction                        = 0;
 	}
 	// if between cylinder up and lower bounds
-	if( ( top[ 2 ] >= p1[ 2 ] && top[ 2 ] <= p2[ 2 ] ) || ( bottom[ 2 ] >= p1[ 2 ] && bottom[ 2 ] <= p2[ 2 ] ) )
+	if( ( top[ 2 ] >= p1[ 2 ] && top[ 2 ] <= p2[ 2 ] ) ||
+		( bottom[ 2 ] >= p1[ 2 ] && bottom[ 2 ] <= p2[ 2 ] ) )
 	{
 		// 2d coordinates
 		top[ 2 ] = p1[ 2 ] = 0;
@@ -1146,9 +1144,8 @@ void CM_TraceThroughBrush( traceWork_t* tw, cbrush_t* brush )
 			brush->collided = qtrue;
 
 			// crosses face
-			if( d1 > d2 )
+			if( d1 > d2 ) // enter
 			{
-				// enter
 				f = ( d1 - SURFACE_CLIP_EPSILON ) / ( d1 - d2 );
 				if( f < 0 )
 				{
@@ -1161,9 +1158,8 @@ void CM_TraceThroughBrush( traceWork_t* tw, cbrush_t* brush )
 					leadside  = side;
 				}
 			}
-			else
+			else // leave
 			{
-				// leave
 				f = ( d1 + SURFACE_CLIP_EPSILON ) / ( d1 - d2 );
 				if( f > 1 )
 				{
@@ -1218,9 +1214,8 @@ void CM_TraceThroughBrush( traceWork_t* tw, cbrush_t* brush )
 			brush->collided = qtrue;
 
 			// crosses face
-			if( d1 > d2 )
+			if( d1 > d2 ) // enter
 			{
-				// enter
 				f = ( d1 - SURFACE_CLIP_EPSILON ) / ( d1 - d2 );
 				if( f < 0 )
 				{
@@ -1233,9 +1228,8 @@ void CM_TraceThroughBrush( traceWork_t* tw, cbrush_t* brush )
 					leadside  = side;
 				}
 			}
-			else
+			else // leave
 			{
-				// leave
 				f = ( d1 + SURFACE_CLIP_EPSILON ) / ( d1 - d2 );
 				if( f > 1 )
 				{
@@ -1253,9 +1247,8 @@ void CM_TraceThroughBrush( traceWork_t* tw, cbrush_t* brush )
 	// all planes have been checked, and the trace was not
 	// completely outside the brush
 	//
-	if( !startout )
+	if( !startout ) // original point was inside brush
 	{
-		// original point was inside brush
 		tw->trace.startsolid = qtrue;
 		if( !getout )
 		{
@@ -1523,8 +1516,9 @@ get the first intersection of the ray with the sphere
 */
 void CM_TraceThroughSphere( traceWork_t* tw, vec3_t origin, float radius, vec3_t start, vec3_t end )
 {
-	float  l1, l2, length, scale, fraction;
-	float  a, b, c, d, sqrtd;
+	float l1, l2, length, scale, fraction;
+	//float a;
+	float  b, c, d, sqrtd;
 	vec3_t v1, dir, intersection;
 
 	// if inside the sphere
@@ -1556,14 +1550,14 @@ void CM_TraceThroughSphere( traceWork_t* tw, vec3_t origin, float radius, vec3_t
 		return;
 	}
 	//
-	//  | origin - (start + t * dir) | = radius
-	//  a = dir[0]^2 + dir[1]^2 + dir[2]^2;
-	//  b = 2 * (dir[0] * (start[0] - origin[0]) + dir[1] * (start[1] - origin[1]) + dir[2] * (start[2] - origin[2]));
-	//  c = (start[0] - origin[0])^2 + (start[1] - origin[1])^2 + (start[2] - origin[2])^2 - radius^2;
+	//	| origin - (start + t * dir) | = radius
+	//	a = dir[0]^2 + dir[1]^2 + dir[2]^2;
+	//	b = 2 * (dir[0] * (start[0] - origin[0]) + dir[1] * (start[1] - origin[1]) + dir[2] * (start[2] - origin[2]));
+	//	c = (start[0] - origin[0])^2 + (start[1] - origin[1])^2 + (start[2] - origin[2])^2 - radius^2;
 	//
 	VectorSubtract( start, origin, v1 );
 	// dir is normalized so a = 1
-	a = 1.0f; //dir[0] * dir[0] + dir[1] * dir[1] + dir[2] * dir[2];
+	//a = 1.0f;//dir[0] * dir[0] + dir[1] * dir[1] + dir[2] * dir[2];
 	b = 2.0f * ( dir[ 0 ] * v1[ 0 ] + dir[ 1 ] * v1[ 1 ] + dir[ 2 ] * v1[ 2 ] );
 	c = v1[ 0 ] * v1[ 0 ] + v1[ 1 ] * v1[ 1 ] + v1[ 2 ] * v1[ 2 ] - ( radius + RADIUS_EPSILON ) * ( radius + RADIUS_EPSILON );
 
@@ -1621,8 +1615,9 @@ the cylinder extends halfheight above and below the origin
 */
 void CM_TraceThroughVerticalCylinder( traceWork_t* tw, vec3_t origin, float radius, float halfheight, vec3_t start, vec3_t end )
 {
-	float  length, scale, fraction, l1, l2;
-	float  a, b, c, d, sqrtd;
+	float length, scale, fraction, l1, l2;
+	//float a;
+	float  b, c, d, sqrtd;
 	vec3_t v1, dir, start2d, end2d, org2d, intersection;
 
 	// 2d coordinates
@@ -1630,7 +1625,8 @@ void CM_TraceThroughVerticalCylinder( traceWork_t* tw, vec3_t origin, float radi
 	VectorSet( end2d, end[ 0 ], end[ 1 ], 0 );
 	VectorSet( org2d, origin[ 0 ], origin[ 1 ], 0 );
 	// if between lower and upper cylinder bounds
-	if( start[ 2 ] <= origin[ 2 ] + halfheight && start[ 2 ] >= origin[ 2 ] - halfheight )
+	if( start[ 2 ] <= origin[ 2 ] + halfheight &&
+		start[ 2 ] >= origin[ 2 ] - halfheight )
 	{
 		// if inside the cylinder
 		VectorSubtract( start2d, org2d, dir );
@@ -1665,13 +1661,13 @@ void CM_TraceThroughVerticalCylinder( traceWork_t* tw, vec3_t origin, float radi
 	// (start[0] - origin[0] - t * dir[0]) ^ 2 + (start[1] - origin[1] - t * dir[1]) ^ 2 = radius ^ 2
 	// (v1[0] + t * dir[0]) ^ 2 + (v1[1] + t * dir[1]) ^ 2 = radius ^ 2;
 	// v1[0] ^ 2 + 2 * v1[0] * t * dir[0] + (t * dir[0]) ^ 2 +
-	//                      v1[1] ^ 2 + 2 * v1[1] * t * dir[1] + (t * dir[1]) ^ 2 = radius ^ 2
+	//						v1[1] ^ 2 + 2 * v1[1] * t * dir[1] + (t * dir[1]) ^ 2 = radius ^ 2
 	// t ^ 2 * (dir[0] ^ 2 + dir[1] ^ 2) + t * (2 * v1[0] * dir[0] + 2 * v1[1] * dir[1]) +
-	//                      v1[0] ^ 2 + v1[1] ^ 2 - radius ^ 2 = 0
+	//						v1[0] ^ 2 + v1[1] ^ 2 - radius ^ 2 = 0
 	//
 	VectorSubtract( start, origin, v1 );
 	// dir is normalized so we can use a = 1
-	a = 1.0f; // * (dir[0] * dir[0] + dir[1] * dir[1]);
+	//a = 1.0f;// * (dir[0] * dir[0] + dir[1] * dir[1]);
 	b = 2.0f * ( v1[ 0 ] * dir[ 0 ] + v1[ 1 ] * dir[ 1 ] );
 	c = v1[ 0 ] * v1[ 0 ] + v1[ 1 ] * v1[ 1 ] - ( radius + RADIUS_EPSILON ) * ( radius + RADIUS_EPSILON );
 
@@ -1695,7 +1691,8 @@ void CM_TraceThroughVerticalCylinder( traceWork_t* tw, vec3_t origin, float radi
 			VectorSubtract( end, start, dir );
 			VectorMA( start, fraction, dir, intersection );
 			// if the intersection is between the cylinder lower and upper bound
-			if( intersection[ 2 ] <= origin[ 2 ] + halfheight && intersection[ 2 ] >= origin[ 2 ] - halfheight )
+			if( intersection[ 2 ] <= origin[ 2 ] + halfheight &&
+				intersection[ 2 ] >= origin[ 2 ] - halfheight )
 			{
 				//
 				tw->trace.fraction = fraction;
@@ -1821,7 +1818,6 @@ void CM_TraceBoundingBoxThroughCapsule( traceWork_t* tw, clipHandle_t model )
 
 	// replace the capsule with the bounding box
 	h = CM_TempBoxModel( tw->size[ 0 ], tw->size[ 1 ], qfalse );
-
 	// calculate collision
 	cmod = CM_ClipHandleToModel( h );
 	CM_TraceThroughLeaf( tw, &cmod->leaf );
@@ -1863,13 +1859,13 @@ static void CM_TraceThroughTree( traceWork_t* tw, int num, float p1f, float p2f,
 	}
 
 	//
-	// find the point distances to the seperating plane
+	// find the point distances to the separating plane
 	// and the offset for the size of the box
 	//
 	node  = cm.nodes + num;
 	plane = node->plane;
 
-	// adjust the plane distance apropriately for mins/maxs
+	// adjust the plane distance appropriately for mins/maxs
 	if( plane->type < 3 )
 	{
 		t1     = p1[ plane->type ] - plane->dist;
@@ -1886,7 +1882,7 @@ static void CM_TraceThroughTree( traceWork_t* tw, int num, float p1f, float p2f,
 		}
 		else
 		{
-			// FIXME: this is silly !!!
+			// this is silly
 			offset = 2048;
 		}
 	}
@@ -2034,7 +2030,7 @@ static void CM_Trace( trace_t* results, const vec3_t start, const vec3_t end, ve
 
 	tw.maxOffset = tw.size[ 1 ][ 0 ] + tw.size[ 1 ][ 1 ] + tw.size[ 1 ][ 2 ];
 
-	// tw.offsets[signbits] = vector to apropriate corner from origin
+	// tw.offsets[signbits] = vector to appropriate corner from origin
 	tw.offsets[ 0 ][ 0 ] = tw.size[ 0 ][ 0 ];
 	tw.offsets[ 0 ][ 1 ] = tw.size[ 0 ][ 1 ];
 	tw.offsets[ 0 ][ 2 ] = tw.size[ 0 ][ 2 ];
@@ -2409,24 +2405,24 @@ void CM_TransformedBoxTrace( trace_t* results, const vec3_t start, const vec3_t 
 		MatrixTransformPoint( inverse, end_l, endRotated );
 
 		// extract up vector from the rotation matrix as rotated sphere offset for capsule
-#if 0
+	#if 0
 		sphere.offset[0] = matrix[0][2] * t;
 		sphere.offset[1] = -matrix[1][2] * t;
 		sphere.offset[2] = matrix[2][2] * t;
-#elif 0
+	#elif 0
 		sphere.offset[ 0 ] = rotation[ 2 ] * t;
 		sphere.offset[ 1 ] = -rotation[ 6 ] * t;
 		sphere.offset[ 2 ] = rotation[ 10 ] * t;
-#elif 0
+	#elif 0
 		sphere.offset[ 0 ] = inverse[ 2 ] * t;
 		sphere.offset[ 1 ] = -inverse[ 6 ] * t;
 		sphere.offset[ 2 ] = inverse[ 10 ] * t;
 
-#else
+	#else
 		sphere.offset[ 0 ] = rotation[ 8 ] * t;
 		sphere.offset[ 1 ] = rotation[ 9 ] * t;
 		sphere.offset[ 2 ] = rotation[ 10 ] * t;
-#endif
+	#endif
 	}
 	else
 	{

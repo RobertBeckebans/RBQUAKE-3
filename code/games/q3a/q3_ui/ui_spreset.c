@@ -31,7 +31,7 @@ RESET MENU
 
 #define ART_FRAME "menu/art/cut_frame"
 
-#define ID_NO 100
+#define ID_NO  100
 #define ID_YES 101
 
 typedef struct

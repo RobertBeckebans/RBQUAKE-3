@@ -144,7 +144,7 @@ extern bmhd_t bmhd; // will be in native byte order
 
 #define FORMID ( 'F' + ( 'O' << 8 ) + ( ( int )'R' << 16 ) + ( ( int )'M' << 24 ) )
 #define ILBMID ( 'I' + ( 'L' << 8 ) + ( ( int )'B' << 16 ) + ( ( int )'M' << 24 ) )
-#define PBMID ( 'P' + ( 'B' << 8 ) + ( ( int )'M' << 16 ) + ( ( int )' ' << 24 ) )
+#define PBMID  ( 'P' + ( 'B' << 8 ) + ( ( int )'M' << 16 ) + ( ( int )' ' << 24 ) )
 #define BMHDID ( 'B' + ( 'M' << 8 ) + ( ( int )'H' << 16 ) + ( ( int )'D' << 24 ) )
 #define BODYID ( 'B' + ( 'O' << 8 ) + ( ( int )'D' << 16 ) + ( ( int )'Y' << 24 ) )
 #define CMAPID ( 'C' + ( 'M' << 8 ) + ( ( int )'A' << 16 ) + ( ( int )'P' << 24 ) )

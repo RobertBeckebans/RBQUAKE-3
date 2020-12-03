@@ -1,22 +1,21 @@
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
-Copyright (C) 2006 Robert Beckebans <trebor_7@users.sourceforge.net>
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -25,8 +24,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "qcommon.h"
 #include "cm_polylib.h"
 
-#define MAX_SUBMODELS MAX_MODELS                   // was 256
-#define BOX_MODEL_HANDLE ( MAX_SUBMODELS - 1 )     // was 255
+#define MAX_SUBMODELS        MAX_MODELS            // was 256
+#define BOX_MODEL_HANDLE     ( MAX_SUBMODELS - 1 ) // was 255
 #define CAPSULE_MODEL_HANDLE ( MAX_SUBMODELS - 2 ) // was 254
 
 typedef struct
@@ -278,7 +277,7 @@ degenerate a few triangles.  Completely degenerate rows and columns are handled
 properly.
 */
 
-#define MAX_FACETS 1024
+#define MAX_FACETS       1024
 #define MAX_PATCH_PLANES 4096
 
 #define MAX_GRID_SIZE 129
@@ -293,7 +292,7 @@ typedef struct
 } cGrid_t;
 
 #define SUBDIVIDE_DISTANCE 16 //4 // never more than this units away from curve
-#define PLANE_TRI_EPSILON 0.1
+#define PLANE_TRI_EPSILON  0.1
 #define WRAP_POINT_EPSILON 0.1
 
 cSurfaceCollide_t* CM_GeneratePatchCollide( int width, int height, vec3_t* points );

@@ -23,8 +23,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #ifdef MISSIONPACK
 
-#include "cg_local.h"
-#include "../ui/ui_shared.h"
+	#include "cg_local.h"
+	#include "../ui/ui_shared.h"
 
 extern displayContextDef_t cgDC;
 
@@ -238,7 +238,7 @@ static void CG_DrawPlayerArmorValue( rectDef_t* rect, float scale, vec4_t color,
 	}
 }
 
-#ifndef MISSIONPACK
+	#ifndef MISSIONPACK
 static float healthColors[ 4 ][ 4 ] = {
 	//      { 0.2, 1.0, 0.2, 1.0 } , { 1.0, 0.2, 0.2, 1.0 }, {0.5, 0.5, 0.5, 1} };
 	{ 1.0f, 0.69f, 0.0f, 1.0f }, // normal
@@ -246,7 +246,7 @@ static float healthColors[ 4 ][ 4 ] = {
 	{ 0.5f, 0.5f, 0.5f, 1.0f },  // weapon firing
 	{ 1.0f, 1.0f, 1.0f, 1.0f }
 }; // health > 100
-#endif
+	#endif
 
 static void CG_DrawPlayerAmmoIcon( rectDef_t* rect, qboolean draw2D )
 {
@@ -1575,7 +1575,7 @@ static void CG_Text_Paint_Limit( float* maxX, float x, float y, float scale, vec
 	}
 }
 
-#define PIC_WIDTH 12
+	#define PIC_WIDTH 12
 
 void CG_DrawNewTeamInfo( rectDef_t* rect, float text_x, float text_y, float scale, vec4_t color, qhandle_t shader )
 {
@@ -1655,8 +1655,8 @@ void CG_DrawNewTeamInfo( rectDef_t* rect, float text_x, float text_y, float scal
 			// draw weapon icon
 			xx += PIC_WIDTH + 1;
 
-// weapon used is not that useful, use the space for task
-#if 0
+	// weapon used is not that useful, use the space for task
+	#if 0
 			if( cg_weapons[ci->curWeapon].weaponIcon )
 			{
 				CG_DrawPic( xx, y, PIC_WIDTH, PIC_WIDTH, cg_weapons[ci->curWeapon].weaponIcon );
@@ -1665,7 +1665,7 @@ void CG_DrawNewTeamInfo( rectDef_t* rect, float text_x, float text_y, float scal
 			{
 				CG_DrawPic( xx, y, PIC_WIDTH, PIC_WIDTH, cgs.media.deferShader );
 			}
-#endif
+	#endif
 
 			trap_R_SetColor( NULL );
 			if( cgs.orderPending )

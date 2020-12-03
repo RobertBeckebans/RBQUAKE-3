@@ -35,13 +35,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //#define BSPC
 
 #ifdef SCREWUP
-#include <stdio.h>
-#include <stdlib.h>
-#include <limits.h>
-#include <string.h>
-#include <stdarg.h>
-#include "l_memory.h"
-#include "l_script.h"
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <limits.h>
+	#include <string.h>
+	#include <stdarg.h>
+	#include "l_memory.h"
+	#include "l_script.h"
 
 typedef enum
 {
@@ -52,35 +52,35 @@ typedef enum
 #endif //SCREWUP
 
 #ifdef BOTLIB
-//include files for usage in the bot library
-#include "../qcommon/q_shared.h"
-#include "botlib.h"
-#include "be_interface.h"
-#include "l_script.h"
-#include "l_memory.h"
-#include "l_log.h"
-#include "l_libvar.h"
+	//include files for usage in the bot library
+	#include "../qcommon/q_shared.h"
+	#include "botlib.h"
+	#include "be_interface.h"
+	#include "l_script.h"
+	#include "l_memory.h"
+	#include "l_log.h"
+	#include "l_libvar.h"
 #endif //BOTLIB
 
 #ifdef MEQCC
-//include files for usage in MrElusive's QuakeC Compiler
-#include "qcc.h"
-#include "l_script.h"
-#include "l_memory.h"
-#include "l_log.h"
+	//include files for usage in MrElusive's QuakeC Compiler
+	#include "qcc.h"
+	#include "l_script.h"
+	#include "l_memory.h"
+	#include "l_log.h"
 
-#define qtrue true
-#define qfalse false
+	#define qtrue  true
+	#define qfalse false
 #endif //MEQCC
 
 #ifdef BSPC
-//include files for usage in the BSP Converter
-#include "../bspc/qbsp.h"
-#include "../bspc/l_log.h"
-#include "../bspc/l_mem.h"
+	//include files for usage in the BSP Converter
+	#include "../bspc/qbsp.h"
+	#include "../bspc/l_log.h"
+	#include "../bspc/l_mem.h"
 
-#define qtrue true
-#define qfalse false
+	#define qtrue  true
+	#define qfalse false
 #endif //BSPC
 
 #define PUNCTABLE
@@ -807,8 +807,8 @@ int PS_ReadNumber( script_t* script, token_t* token )
 			c = *script->script_p;
 		} //end while
 		token->subtype |= TT_BINARY;
-	}    //end if
-#endif   //BINARYNUMBERS
+	} //end if
+#endif //BINARYNUMBERS
 	else //decimal or octal integer or floating point number
 	{
 		octal = qfalse;

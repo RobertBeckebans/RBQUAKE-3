@@ -29,7 +29,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define RANKSTATUS_FRAME "menu/art/cut_frame"
 
 #define ID_MESSAGE 100
-#define ID_OK 101
+#define ID_OK      101
 
 typedef struct
 {

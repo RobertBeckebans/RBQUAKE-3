@@ -85,8 +85,8 @@ static cPlane_t planes[ SHADER_MAX_TRIANGLES ];
 static int      numFacets;
 static cFacet_t facets[ SHADER_MAX_TRIANGLES ];
 
-#define NORMAL_EPSILON 0.0001
-#define DIST_EPSILON 0.02
+#define NORMAL_EPSILON    0.0001
+#define DIST_EPSILON      0.02
 #define PLANE_TRI_EPSILON 0.1
 
 /*

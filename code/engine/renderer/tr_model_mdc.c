@@ -308,18 +308,18 @@ static float r_anormals[ NUMMDCVERTEXNORMALS ][ 3 ] = {
 
 // note: we are locked in at 8 or less bits since changing to byte-encoded normals
 #define MDC_BITS_PER_AXIS 8
-#define MDC_MAX_OFS 127.0 // to be safe
+#define MDC_MAX_OFS       127.0 // to be safe
 
 #define MDC_MAX_DIST ( MDC_MAX_OFS * MDC_DIST_SCALE )
 
 #if 0
 void            R_MDC_DecodeXyzCompressed( mdcXyzCompressed_t* xyzComp, vec3_t out, vec3_t normal );
 #else // optimized version
-#define R_MDC_DecodeXyzCompressed( ofsVec, out, normal )                                   \
-	( out )[ 0 ] = ( ( float )( ( ofsVec )&255 ) - MDC_MAX_OFS ) * MDC_DIST_SCALE;         \
-	( out )[ 1 ] = ( ( float )( ( ofsVec >> 8 ) & 255 ) - MDC_MAX_OFS ) * MDC_DIST_SCALE;  \
-	( out )[ 2 ] = ( ( float )( ( ofsVec >> 16 ) & 255 ) - MDC_MAX_OFS ) * MDC_DIST_SCALE; \
-	VectorCopy( ( r_anormals )[ ( ofsVec >> 24 ) ], normal );
+	#define R_MDC_DecodeXyzCompressed( ofsVec, out, normal )                                   \
+		( out )[ 0 ] = ( ( float )( ( ofsVec )&255 ) - MDC_MAX_OFS ) * MDC_DIST_SCALE;         \
+		( out )[ 1 ] = ( ( float )( ( ofsVec >> 8 ) & 255 ) - MDC_MAX_OFS ) * MDC_DIST_SCALE;  \
+		( out )[ 2 ] = ( ( float )( ( ofsVec >> 16 ) & 255 ) - MDC_MAX_OFS ) * MDC_DIST_SCALE; \
+		VectorCopy( ( r_anormals )[ ( ofsVec >> 24 ) ], normal );
 #endif
 
 /*
@@ -681,12 +681,12 @@ qboolean R_LoadMDC( model_t* mod, int lod, void* buffer, int bufferSize, const c
 						t1 = surf->st[ tri->indexes[ 1 ] ].st;
 						t2 = surf->st[ tri->indexes[ 2 ] ].st;
 
-#if 1
+	#if 1
 						R_CalcTangentSpace( tangent, binormal, normal, v0, v1, v2, t0, t1, t2 );
-#else
+	#else
 						R_CalcNormalForTriangle( normal, v0, v1, v2 );
 						R_CalcTangentsForTriangle( tangent, binormal, v0, v1, v2, t0, t1, t2 );
-#endif
+	#endif
 
 						for( k = 0; k < 3; k++ )
 						{

@@ -34,14 +34,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "mesh.h"
 
 #ifdef _MSC_VER
-//Improve floating-point consistency.
-#pragma optimize( "p", on )
+	//Improve floating-point consistency.
+	#pragma optimize( "p", on )
 #endif
 
 #define MAX_CLUSTERS 16384
-#define MAX_PORTALS 32768
-#define MAX_FACETS 65536
-#define MAX_LIGHTS 16384
+#define MAX_PORTALS  32768
+#define MAX_FACETS   65536
+#define MAX_LIGHTS   16384
 
 #define LIGHTMAP_SIZE 128
 
@@ -121,7 +121,7 @@ typedef struct lsurfaceTest_s
 } lsurfaceTest_t;
 
 //volume types
-#define VOLUME_NORMAL 0
+#define VOLUME_NORMAL   0
 #define VOLUME_DIRECTED 1
 
 #define MAX_TRANSLUCENTFACETS 32
@@ -152,21 +152,21 @@ typedef struct lightvolume_s
 } lightVolume_t;
 
 //light types
-#define LIGHT_POINTRADIAL 1
-#define LIGHT_POINTSPOT 2
+#define LIGHT_POINTRADIAL      1
+#define LIGHT_POINTSPOT        2
 #define LIGHT_POINTFAKESURFACE 3
-#define LIGHT_SURFACEDIRECTED 4
-#define LIGHT_SURFACERADIAL 5
-#define LIGHT_SURFACESPOT 6
+#define LIGHT_SURFACEDIRECTED  4
+#define LIGHT_SURFACERADIAL    5
+#define LIGHT_SURFACESPOT      6
 
 //light distance attenuation types
 #define LDAT_QUADRATIC 0
-#define LDAT_LINEAR 1
-#define LDAT_NOSCALE 2
+#define LDAT_LINEAR    1
+#define LDAT_NOSCALE   2
 
 //light angle attenuation types
-#define LAAT_NORMAL 0
-#define LAAT_QUADRATIC 1
+#define LAAT_NORMAL          0
+#define LAAT_QUADRATIC       1
 #define LAAT_DOUBLEQUADRATIC 2
 
 typedef struct vlight_s
@@ -255,7 +255,7 @@ void Draw_Scene( void ( *drawFunc )( void ) );
 //#define DEBUGNET
 
 #ifdef DEBUGNET
-#include "../common/netlib.h"
+	#include "../common/netlib.h"
 
 socket_t* debug_socket;
 
@@ -1231,7 +1231,7 @@ Plane_Equal
 =============
 */
 #define NORMAL_EPSILON 0.0001
-#define DIST_EPSILON 0.02
+#define DIST_EPSILON   0.02
 
 int Plane_Equal( plane_t* a, plane_t* b, int flip )
 {
@@ -3034,9 +3034,9 @@ void VL_DrawLightWindings( void )
 
 	for( i = 0; i < numlightwindings; i++ )
 	{
-#ifdef DEBUGNET
+	#ifdef DEBUGNET
 		DebugNet_DrawWinding( lightwindings[ i ], 1 );
-#endif
+	#endif
 		Draw_Winding( lightwindings[ i ] );
 	}
 }

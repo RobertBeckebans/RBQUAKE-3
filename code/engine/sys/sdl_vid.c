@@ -21,20 +21,20 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #ifdef USE_LOCAL_HEADERS
-#include "SDL.h"
+	#include "SDL.h"
 #else
-#include <SDL.h>
+	#include <SDL.h>
 #endif
 
 #if !SDL_VERSION_ATLEAST( 1, 2, 10 )
-#define SDL_GL_ACCELERATED_VISUAL 15
-#define SDL_GL_SWAP_CONTROL 16
+	#define SDL_GL_ACCELERATED_VISUAL 15
+	#define SDL_GL_SWAP_CONTROL       16
 #elif MINSDL_PATCH >= 10
-#error Code block no longer necessary, please remove
+	#error Code block no longer necessary, please remove
 #endif
 
 #ifdef SMP
-#include <SDL_thread.h>
+	#include <SDL_thread.h>
 #endif
 
 #include <stdarg.h>
@@ -375,17 +375,17 @@ static int GLimp_SetMode( int mode, qboolean fullscreen )
 				CLIENT_WINDOW_ICON.height,
 				CLIENT_WINDOW_ICON.bytes_per_pixel * 8,
 				CLIENT_WINDOW_ICON.bytes_per_pixel * CLIENT_WINDOW_ICON.width,
-#ifdef Q3_LITTLE_ENDIAN
+	#ifdef Q3_LITTLE_ENDIAN
 				0x000000FF,
 				0x0000FF00,
 				0x00FF0000,
 				0xFF000000
-#else
+	#else
 				0xFF000000,
 				0x00FF0000,
 				0x0000FF00,
 				0x000000FF
-#endif
+	#endif
 			);
 
 			SDL_WM_SetIcon( icon, NULL );

@@ -30,15 +30,15 @@ CD KEY MENU
 
 #include "ui_local.h"
 
-#define ART_FRAME "menu/art/cut_frame"
+#define ART_FRAME   "menu/art/cut_frame"
 #define ART_ACCEPT0 "menu/art/accept_0"
 #define ART_ACCEPT1 "menu/art/accept_1"
-#define ART_BACK0 "menu/art/back_0"
-#define ART_BACK1 "menu/art/back_1"
+#define ART_BACK0   "menu/art/back_0"
+#define ART_BACK1   "menu/art/back_1"
 
-#define ID_CDKEY 10
+#define ID_CDKEY  10
 #define ID_ACCEPT 11
-#define ID_BACK 12
+#define ID_BACK   12
 
 typedef struct
 {

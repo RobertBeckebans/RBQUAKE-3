@@ -26,35 +26,35 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define SCOREBOARD_X ( 0 )
 
 #define SB_HEADER 86
-#define SB_TOP ( SB_HEADER + 32 )
+#define SB_TOP    ( SB_HEADER + 32 )
 
 // Where the status bar starts, so we don't overwrite it
 #define SB_STATUSBAR 420
 
 #define SB_NORMAL_HEIGHT 40
-#define SB_INTER_HEIGHT 16 // interleaved height
+#define SB_INTER_HEIGHT  16 // interleaved height
 
 #define SB_MAXCLIENTS_NORMAL ( ( SB_STATUSBAR - SB_TOP ) / SB_NORMAL_HEIGHT )
-#define SB_MAXCLIENTS_INTER ( ( SB_STATUSBAR - SB_TOP ) / SB_INTER_HEIGHT - 1 )
+#define SB_MAXCLIENTS_INTER  ( ( SB_STATUSBAR - SB_TOP ) / SB_INTER_HEIGHT - 1 )
 
 // Used when interleaved
 
-#define SB_LEFT_BOTICON_X ( SCOREBOARD_X + 0 )
-#define SB_LEFT_HEAD_X ( SCOREBOARD_X + 32 )
+#define SB_LEFT_BOTICON_X  ( SCOREBOARD_X + 0 )
+#define SB_LEFT_HEAD_X     ( SCOREBOARD_X + 32 )
 #define SB_RIGHT_BOTICON_X ( SCOREBOARD_X + 64 )
-#define SB_RIGHT_HEAD_X ( SCOREBOARD_X + 96 )
+#define SB_RIGHT_HEAD_X    ( SCOREBOARD_X + 96 )
 // Normal
 #define SB_BOTICON_X ( SCOREBOARD_X + 32 )
-#define SB_HEAD_X ( SCOREBOARD_X + 64 )
+#define SB_HEAD_X    ( SCOREBOARD_X + 64 )
 
 #define SB_SCORELINE_X 112
 
-#define SB_RATING_WIDTH ( 6 * BIGCHAR_WIDTH )                 // width 6
-#define SB_SCORE_X ( SB_SCORELINE_X + BIGCHAR_WIDTH )         // width 6
-#define SB_RATING_X ( SB_SCORELINE_X + 6 * BIGCHAR_WIDTH )    // width 6
-#define SB_PING_X ( SB_SCORELINE_X + 12 * BIGCHAR_WIDTH + 8 ) // width 5
-#define SB_TIME_X ( SB_SCORELINE_X + 17 * BIGCHAR_WIDTH + 8 ) // width 5
-#define SB_NAME_X ( SB_SCORELINE_X + 22 * BIGCHAR_WIDTH )     // width 15
+#define SB_RATING_WIDTH ( 6 * BIGCHAR_WIDTH )                       // width 6
+#define SB_SCORE_X      ( SB_SCORELINE_X + BIGCHAR_WIDTH )          // width 6
+#define SB_RATING_X     ( SB_SCORELINE_X + 6 * BIGCHAR_WIDTH )      // width 6
+#define SB_PING_X       ( SB_SCORELINE_X + 12 * BIGCHAR_WIDTH + 8 ) // width 5
+#define SB_TIME_X       ( SB_SCORELINE_X + 17 * BIGCHAR_WIDTH + 8 ) // width 5
+#define SB_NAME_X       ( SB_SCORELINE_X + 22 * BIGCHAR_WIDTH )     // width 15
 
 // The new and improved score board
 //

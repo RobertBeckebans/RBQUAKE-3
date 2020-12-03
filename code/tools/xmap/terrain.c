@@ -23,11 +23,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "qbsp.h"
 #include <assert.h>
 
-#define SURF_WIDTH 2048
+#define SURF_WIDTH  2048
 #define SURF_HEIGHT 2048
 
-#define GROW_VERTS 512
-#define GROW_INDICES 512
+#define GROW_VERTS    512
+#define GROW_INDICES  512
 #define GROW_SURFACES 128
 
 void QuakeTextureVecs( plane_t* plane, vec_t shift[ 2 ], vec_t rotate, vec_t scale[ 2 ], vec_t mappingVecs[ 2 ][ 4 ] );

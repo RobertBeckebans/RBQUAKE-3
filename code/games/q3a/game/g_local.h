@@ -35,21 +35,21 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #define INFINITE 1000000
 
-#define FRAMETIME 100 // msec
+#define FRAMETIME           100 // msec
 #define CARNAGE_REWARD_TIME 3000
-#define REWARD_SPRITE_TIME 2000
+#define REWARD_SPRITE_TIME  2000
 
-#define INTERMISSION_DELAY_TIME 1000
+#define INTERMISSION_DELAY_TIME    1000
 #define SP_INTERMISSION_DELAY_TIME 5000
 
 // gentity->flags
-#define FL_GODMODE 0x00000010
-#define FL_NOTARGET 0x00000020
-#define FL_TEAMSLAVE 0x00000400 // not the first on the team
-#define FL_NO_KNOCKBACK 0x00000800
-#define FL_DROPPED_ITEM 0x00001000
-#define FL_NO_BOTS 0x00002000       // spawn point not for bot use
-#define FL_NO_HUMANS 0x00004000     // spawn point just for bots
+#define FL_GODMODE       0x00000010
+#define FL_NOTARGET      0x00000020
+#define FL_TEAMSLAVE     0x00000400 // not the first on the team
+#define FL_NO_KNOCKBACK  0x00000800
+#define FL_DROPPED_ITEM  0x00001000
+#define FL_NO_BOTS       0x00002000 // spawn point not for bot use
+#define FL_NO_HUMANS     0x00004000 // spawn point just for bots
 #define FL_FORCE_GESTURE 0x00008000 // force gesture on client
 
 // movers are things like doors, plats, buttons, etc
@@ -233,7 +233,7 @@ typedef struct
 } clientSession_t;
 
 //
-#define MAX_NETNAME 36
+#define MAX_NETNAME    36
 #define MAX_VOTE_COUNT 3
 
 // client data that stays across multiple respawns, but is cleared
@@ -329,7 +329,7 @@ struct gclient_s
 //
 // this structure is cleared as each map is entered
 //
-#define MAX_SPAWN_VARS 64
+#define MAX_SPAWN_VARS       64
 #define MAX_SPAWN_VARS_CHARS 4096
 
 typedef struct
@@ -506,12 +506,12 @@ void TossClientPersistantPowerups( gentity_t* self );
 void TossClientCubes( gentity_t* self );
 
 // damage flags
-#define DAMAGE_RADIUS 0x00000001        // damage was indirect
-#define DAMAGE_NO_ARMOR 0x00000002      // armour does not protect from this damage
-#define DAMAGE_NO_KNOCKBACK 0x00000004  // do not affect velocity, just view angles
+#define DAMAGE_RADIUS        0x00000001 // damage was indirect
+#define DAMAGE_NO_ARMOR      0x00000002 // armour does not protect from this damage
+#define DAMAGE_NO_KNOCKBACK  0x00000004 // do not affect velocity, just view angles
 #define DAMAGE_NO_PROTECTION 0x00000008 // armor, shields, invulnerability, and godmode have no effect
 #ifdef MISSIONPACK
-#define DAMAGE_NO_TEAM_PROTECTION 0x00000010 // armor, shields, invulnerability, and godmode have no effect
+	#define DAMAGE_NO_TEAM_PROTECTION 0x00000010 // armor, shields, invulnerability, and godmode have no effect
 #endif
 
 //

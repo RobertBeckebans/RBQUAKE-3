@@ -1,22 +1,21 @@
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
-Copyright (C) 2006 Robert Beckebans <trebor_7@users.sourceforge.net>
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -33,12 +32,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "snd_public.h"
 
 #ifdef USE_CURL
-#include "cl_curl.h"
+	#include "cl_curl.h"
 #endif /* USE_CURL */
 
 #ifdef USE_VOIP
-#include "speex/speex.h"
-#include "speex/speex_preprocess.h"
+	#include <opus.h>
 #endif
 
 // file full of random crap that gets used to create cl_guid
@@ -169,6 +167,7 @@ typedef struct
 	int lastPacketSentTime; // for retransmits during connection
 	int lastPacketTime;     // for timeouts
 
+	char     servername[ MAX_OSPATH ]; // name of server from original connect (used by reconnect)
 	netadr_t serverAddress;
 	int      connectTime;                        // for connection retransmits
 	int      connectPacketCount;                 // for display on connection dialog
@@ -206,7 +205,6 @@ typedef struct
 	char     downloadURL[ MAX_OSPATH ];
 	CURL*    downloadCURL;
 	CURLM*   downloadCURLM;
-	qboolean activeCURLNotGameRelated;
 #endif /* USE_CURL */
 	int      sv_allowDownload;
 	char     sv_dlURL[ MAX_CVAR_VALUE_STRING ];
@@ -216,7 +214,6 @@ typedef struct
 	int      downloadSize;                    // how many bytes we got
 	char     downloadList[ MAX_INFO_STRING ]; // list of paks we need to download
 	qboolean downloadRestart;                 // if true, we need to do another FS_Restart because we downloaded a pak
-	char     newsString[ MAX_NEWS_STRING ];
 
 	// demo information
 	char         demoName[ MAX_QPATH ];
@@ -237,33 +234,30 @@ typedef struct
 	unsigned char timeDemoDurations[ MAX_TIMEDEMO_DURATIONS ]; // log of frame durations
 
 #ifdef USE_VOIP
-	qboolean speexInitialized;
-	int      speexFrameSize;
-	int      speexSampleRate;
+	qboolean voipEnabled;
+	qboolean voipCodecInitialized;
 
 	// incoming data...
 	// !!! FIXME: convert from parallel arrays to array of a struct.
-	SpeexBits speexDecoderBits[ MAX_CLIENTS ];
-	void*     speexDecoder[ MAX_CLIENTS ];
-	byte      voipIncomingGeneration[ MAX_CLIENTS ];
-	int       voipIncomingSequence[ MAX_CLIENTS ];
-	float     voipGain[ MAX_CLIENTS ];
-	qboolean  voipIgnore[ MAX_CLIENTS ];
-	qboolean  voipMuteAll;
+	OpusDecoder* opusDecoder[ MAX_CLIENTS ];
+	byte         voipIncomingGeneration[ MAX_CLIENTS ];
+	int          voipIncomingSequence[ MAX_CLIENTS ];
+	float        voipGain[ MAX_CLIENTS ];
+	qboolean     voipIgnore[ MAX_CLIENTS ];
+	qboolean     voipMuteAll;
 
 	// outgoing data...
-	int                   voipTarget1; // these three ints make up a bit mask of 92 bits.
-	int                   voipTarget2; //  the bits say who a VoIP pack is addressed to:
-	int                   voipTarget3; //  (1 << clientnum). See cl_voipSendTarget cvar.
-	SpeexPreprocessState* speexPreprocessor;
-	SpeexBits             speexEncoderBits;
-	void*                 speexEncoder;
-	int                   voipOutgoingDataSize;
-	int                   voipOutgoingDataFrames;
-	int                   voipOutgoingSequence;
-	byte                  voipOutgoingGeneration;
-	byte                  voipOutgoingData[ 1024 ];
-	float                 voipPower;
+	// if voipTargets[i / 8] & (1 << (i % 8)),
+	// then we are sending to clientnum i.
+	uint8_t      voipTargets[ ( MAX_CLIENTS + 7 ) / 8 ];
+	uint8_t      voipFlags;
+	OpusEncoder* opusEncoder;
+	int          voipOutgoingDataSize;
+	int          voipOutgoingDataFrames;
+	int          voipOutgoingSequence;
+	byte         voipOutgoingGeneration;
+	byte         voipOutgoingData[ 1024 ];
+	float        voipPower;
 #endif
 
 	// big stuff at end of structure so most offsets are 15 bits or less
@@ -277,6 +271,7 @@ extern clientConnection_t clc;
 
 the clientStatic_t structure is never wiped, and is used even when
 no client connection is active at all
+(except when CL_Shutdown is called)
 
 ==================================================================
 */
@@ -348,6 +343,8 @@ typedef struct
 	char     updateInfoString[ MAX_INFO_STRING ];
 
 	netadr_t authorizeServer;
+
+	netadr_t rconAddress;
 
 	// rendering info
 	glconfig_t  glconfig;
@@ -450,6 +447,13 @@ extern cvar_t* cl_voipGainDuringCapture;
 extern cvar_t* cl_voipCaptureMult;
 extern cvar_t* cl_voipShowMeter;
 extern cvar_t* cl_voip;
+
+	// 20ms at 48k
+	#define VOIP_MAX_FRAME_SAMPLES ( 20 * 48 )
+
+	// 3 frame is 60ms of audio, the max opus will encode at once
+	#define VOIP_MAX_PACKET_FRAMES  3
+	#define VOIP_MAX_PACKET_SAMPLES ( VOIP_MAX_FRAME_SAMPLES * VOIP_MAX_PACKET_FRAMES )
 #endif
 
 //=================================================
@@ -538,8 +542,7 @@ extern int cl_connectedToPureServer;
 extern int cl_connectedToCheatServer;
 
 #ifdef USE_VOIP
-extern int cl_connectedToVoipServer;
-void       CL_Voip_f( void );
+void CL_Voip_f( void );
 #endif
 
 void CL_SystemInfoChanged( void );

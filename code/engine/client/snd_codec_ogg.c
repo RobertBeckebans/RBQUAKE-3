@@ -25,17 +25,17 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // OGG support is enabled by this define
 #ifdef USE_CODEC_VORBIS
 
-// includes for the Q3 sound system
-#include "client.h"
-#include "snd_codec.h"
+	// includes for the Q3 sound system
+	#include "client.h"
+	#include "snd_codec.h"
 
-// includes for the OGG codec
-#include <errno.h>
-#include <vorbis/vorbisfile.h>
+	// includes for the OGG codec
+	#include <errno.h>
+	#include <vorbis/vorbisfile.h>
 
-// The OGG codec can return the samples in a number of different formats,
-// we use the standard signed short format.
-#define OGG_SAMPLEWIDTH 2
+	// The OGG codec can return the samples in a number of different formats,
+	// we use the standard signed short format.
+	#define OGG_SAMPLEWIDTH 2
 
 // Q3 OGG codec
 snd_codec_t ogg_codec = {
@@ -365,9 +365,9 @@ int S_OGG_CodecReadStream( snd_stream_t* stream, int bytes, void* buffer )
 	// big endian machines want their samples in big endian order
 	int IsBigEndian = 0;
 
-#ifdef Q3_BIG_ENDIAN
+	#ifdef Q3_BIG_ENDIAN
 	IsBigEndian = 1;
-#endif // Q3_BIG_ENDIAN
+	#endif // Q3_BIG_ENDIAN
 
 	// check if input is valid
 	if( !( stream && buffer ) )

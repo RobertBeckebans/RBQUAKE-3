@@ -65,7 +65,7 @@ typedef unsigned short glIndex_t;
 // parallel on a dual cpu machine
 #define SMP_FRAMES 2
 
-#define MAX_SHADERS ( 1 << 12 )
+#define MAX_SHADERS  ( 1 << 12 )
 #define SHADERS_MASK ( MAX_SHADERS - 1 )
 
 #define MAX_SHADER_TABLES 1024
@@ -76,13 +76,13 @@ typedef unsigned short glIndex_t;
 #define MAX_FBOS 64
 
 #define MAX_VISCOUNTS 5
-#define MAX_VIEWS 10
+#define MAX_VIEWS     10
 
 #define MAX_SHADOWMAPS 5
 
 //#define VOLUMETRIC_LIGHTING 1
 
-#define DEBUG_OPTIMIZEVERTICES 0
+#define DEBUG_OPTIMIZEVERTICES     0
 #define CALC_REDUNDANT_SHADOWVERTS 0
 
 #if !defined( USE_D3D10 )
@@ -118,7 +118,7 @@ typedef enum
 
 #define HDR_ENABLED() ( ( r_hdrRendering->integer && glConfig2.textureFloatAvailable && glConfig2.framebufferObjectAvailable && glConfig2.framebufferBlitAvailable && glConfig.driverType != GLDRV_MESA ) )
 
-#define REF_CUBEMAP_SIZE 32
+#define REF_CUBEMAP_SIZE       32
 #define REF_CUBEMAP_STORE_SIZE 1024
 #define REF_CUBEMAP_STORE_SIDE ( REF_CUBEMAP_STORE_SIZE / REF_CUBEMAP_SIZE )
 
@@ -307,8 +307,8 @@ static ID_INLINE void* DeQueue( link_t* l )
 #if 1
 	RemoveLink( tail );
 #else
-	tail->next->prev      = tail->prev;
-	tail->prev->next      = tail->next;
+	tail->next->prev = tail->prev;
+	tail->prev->next = tail->next;
 
 	tail->prev = tail->next = NULL;
 #endif
@@ -849,7 +849,7 @@ typedef enum
 	TMOD_ROTATE2
 } texMod_t;
 
-#define MAX_SHADER_DEFORMS 3
+#define MAX_SHADER_DEFORMS      3
 #define MAX_SHADER_DEFORM_PARMS ( 1 + MAX_SHADER_DEFORMS + MAX_SHADER_DEFORMS * 8 )
 typedef struct
 {
@@ -1506,7 +1506,7 @@ typedef struct shaderProgram_s
 //
 // Tr3B: these are fire wall functions to avoid expensive redundant glUniform* calls
 #define USE_UNIFORM_FIREWALL 1
-#define LOG_GLSL_UNIFORMS 1
+#define LOG_GLSL_UNIFORMS    1
 
 #if defined( LOG_GLSL_UNIFORMS )
 extern cvar_t* r_logFile; // number of frames to emit GL logs
@@ -2604,7 +2604,7 @@ extern shadowState_t shadowState;
 #define MAX_FACE_POINTS 64
 
 #define MAX_PATCH_SIZE 64 // max dimensions of a patch mesh in map file
-#define MAX_GRID_SIZE 65  // max dimensions of a grid mesh in memory
+#define MAX_GRID_SIZE  65 // max dimensions of a grid mesh in memory
 
 // when cgame directly specifies a polygon, it becomes a srfPoly_t
 // as soon as it is called
@@ -2625,8 +2625,8 @@ typedef struct srfPolyBuffer_s
 } srfPolyBuffer_t;
 
 // ydnar: decals
-#define MAX_DECAL_VERTS 10 // worst case is triangle clipped by 6 planes
-#define MAX_WORLD_DECALS 1024
+#define MAX_DECAL_VERTS   10 // worst case is triangle clipped by 6 planes
+#define MAX_WORLD_DECALS  1024
 #define MAX_ENTITY_DECALS 128
 typedef struct srfDecal_s
 {
@@ -3159,7 +3159,7 @@ MD5 MODELS - in memory representation
 ==============================================================================
 */
 #define MD5_IDENTSTRING "MD5Version"
-#define MD5_VERSION 10
+#define MD5_VERSION     10
 
 typedef struct
 {
@@ -3420,11 +3420,11 @@ void R_Modellist_f( void );
 //====================================================
 extern refimport_t ri;
 
-#define MAX_MOD_KNOWN 1024
+#define MAX_MOD_KNOWN      1024
 #define MAX_ANIMATIONFILES 4096
 
 #define MAX_LIGHTMAPS 256
-#define MAX_SKINS 1024
+#define MAX_SKINS     1024
 
 #define MAX_DRAWSURFS 0x10000
 #define DRAWSURF_MASK ( MAX_DRAWSURFS - 1 )
@@ -3475,10 +3475,10 @@ typedef struct
 	int c_decalProjectors, c_decalTestSurfaces, c_decalClipSurfaces, c_decalSurfaces, c_decalSurfacesCreated;
 } frontEndCounters_t;
 
-#define FOG_TABLE_SIZE 256
-#define FUNCTABLE_SIZE 1024
+#define FOG_TABLE_SIZE  256
+#define FUNCTABLE_SIZE  1024
 #define FUNCTABLE_SIZE2 10
-#define FUNCTABLE_MASK ( FUNCTABLE_SIZE - 1 )
+#define FUNCTABLE_MASK  ( FUNCTABLE_SIZE - 1 )
 
 #define MAX_GLSTACK 5
 
@@ -4772,8 +4772,8 @@ void            R_MakeAnimModel(model_t * model);
 void            R_AddAnimSurfaces(trRefEntity_t * ent);
 void            RB_SurfaceAnim(mdsSurface_t * surfType);
 int             R_GetBoneTag(orientation_t * outTag, mdsHeader_t * mds, int startTagIndex, const refEntity_t * refent,
-					 const char *tagName);
-					 */
+				 const char *tagName);
+				 */
 
 /*
 =============================================================
@@ -4961,8 +4961,8 @@ typedef enum
 // ydnar: max decal projectors per frame, each can generate lots of polys
 #define MAX_DECAL_PROJECTORS 32 // uses bitmasks, don't increase
 #define DECAL_PROJECTOR_MASK ( MAX_DECAL_PROJECTORS - 1 )
-#define MAX_DECALS 1024
-#define DECAL_MASK ( MAX_DECALS - 1 )
+#define MAX_DECALS           1024
+#define DECAL_MASK           ( MAX_DECALS - 1 )
 
 // all of the information needed by the back end must be
 // contained in a backEndData_t.  This entire structure is

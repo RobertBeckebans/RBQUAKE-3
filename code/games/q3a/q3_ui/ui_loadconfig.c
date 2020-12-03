@@ -30,26 +30,26 @@ LOAD CONFIG MENU
 
 #include "ui_local.h"
 
-#define ART_BACK0 "menu/art/back_0"
-#define ART_BACK1 "menu/art/back_1"
-#define ART_FIGHT0 "menu/art/load_0"
-#define ART_FIGHT1 "menu/art/load_1"
-#define ART_FRAMEL "menu/art/frame2_l"
-#define ART_FRAMER "menu/art/frame1_r"
-#define ART_ARROWS "menu/art/arrows_horz_0"
-#define ART_ARROWLEFT "menu/art/arrows_horz_left"
+#define ART_BACK0      "menu/art/back_0"
+#define ART_BACK1      "menu/art/back_1"
+#define ART_FIGHT0     "menu/art/load_0"
+#define ART_FIGHT1     "menu/art/load_1"
+#define ART_FRAMEL     "menu/art/frame2_l"
+#define ART_FRAMER     "menu/art/frame1_r"
+#define ART_ARROWS     "menu/art/arrows_horz_0"
+#define ART_ARROWLEFT  "menu/art/arrows_horz_left"
 #define ART_ARROWRIGHT "menu/art/arrows_horz_right"
 
 #define MAX_CONFIGS 128
 #define NAMEBUFSIZE ( MAX_CONFIGS * 16 )
 
-#define ID_BACK 10
-#define ID_GO 11
-#define ID_LIST 12
-#define ID_LEFT 13
+#define ID_BACK  10
+#define ID_GO    11
+#define ID_LIST  12
+#define ID_LEFT  13
 #define ID_RIGHT 14
 
-#define ARROWS_WIDTH 128
+#define ARROWS_WIDTH  128
 #define ARROWS_HEIGHT 48
 
 typedef struct

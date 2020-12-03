@@ -21,15 +21,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #ifdef USE_LOCAL_HEADERS
-#include "SDL.h"
+	#include "SDL.h"
 #else
-#include <SDL.h>
+	#include <SDL.h>
 #endif
 
 #define USE_SMP
 
 #ifdef USE_SMP
-#include <SDL_thread.h>
+	#include <SDL_thread.h>
 #endif
 
 #include <stdarg.h>
@@ -157,7 +157,7 @@ static void GLimp_DetectAvailableModes( void )
 {
 	int      i;
 	char     buf[ MAX_STRING_CHARS ] = { 0 };
-	SDL_Rect modes[ 128 ];
+	SDL_Rect modes[ 256 ];
 	int      numModes = 0;
 
 	int             display = SDL_GetWindowDisplayIndex( SDL_window );

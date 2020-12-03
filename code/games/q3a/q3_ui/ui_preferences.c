@@ -32,23 +32,23 @@ GAME OPTIONS MENU
 
 #define ART_FRAMEL "menu/art/frame2_l"
 #define ART_FRAMER "menu/art/frame1_r"
-#define ART_BACK0 "menu/art/back_0"
-#define ART_BACK1 "menu/art/back_1"
+#define ART_BACK0  "menu/art/back_0"
+#define ART_BACK1  "menu/art/back_1"
 
 #define PREFERENCES_X_POS 360
 
-#define ID_CROSSHAIR 127
-#define ID_SIMPLEITEMS 128
-#define ID_HIGHQUALITYSKY 129
-#define ID_EJECTINGBRASS 130
-#define ID_WALLMARKS 131
-#define ID_DYNAMICLIGHTS 132
-#define ID_IDENTIFYTARGET 133
-#define ID_SYNCEVERYFRAME 134
-#define ID_FORCEMODEL 135
+#define ID_CROSSHAIR       127
+#define ID_SIMPLEITEMS     128
+#define ID_HIGHQUALITYSKY  129
+#define ID_EJECTINGBRASS   130
+#define ID_WALLMARKS       131
+#define ID_DYNAMICLIGHTS   132
+#define ID_IDENTIFYTARGET  133
+#define ID_SYNCEVERYFRAME  134
+#define ID_FORCEMODEL      135
 #define ID_DRAWTEAMOVERLAY 136
-#define ID_ALLOWDOWNLOAD 137
-#define ID_BACK 138
+#define ID_ALLOWDOWNLOAD   137
+#define ID_BACK            138
 
 #define NUM_CROSSHAIRS 10
 

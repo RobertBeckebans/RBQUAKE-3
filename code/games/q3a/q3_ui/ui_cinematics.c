@@ -22,24 +22,24 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //
 #include "ui_local.h"
 
-#define ART_BACK0 "menu/art/back_0"
-#define ART_BACK1 "menu/art/back_1"
+#define ART_BACK0  "menu/art/back_0"
+#define ART_BACK1  "menu/art/back_1"
 #define ART_FRAMEL "menu/art/frame2_l"
 #define ART_FRAMER "menu/art/frame1_r"
 
 #define VERTICAL_SPACING 30
 
-#define ID_BACK 10
+#define ID_BACK       10
 #define ID_CIN_IDLOGO 11
-#define ID_CIN_INTRO 12
-#define ID_CIN_TIER1 13
-#define ID_CIN_TIER2 14
-#define ID_CIN_TIER3 15
-#define ID_CIN_TIER4 16
-#define ID_CIN_TIER5 17
-#define ID_CIN_TIER6 18
-#define ID_CIN_TIER7 19
-#define ID_CIN_END 20
+#define ID_CIN_INTRO  12
+#define ID_CIN_TIER1  13
+#define ID_CIN_TIER2  14
+#define ID_CIN_TIER3  15
+#define ID_CIN_TIER4  16
+#define ID_CIN_TIER5  17
+#define ID_CIN_TIER6  18
+#define ID_CIN_TIER7  19
+#define ID_CIN_END    20
 
 typedef struct
 {
