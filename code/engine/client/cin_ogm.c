@@ -329,7 +329,7 @@ static qboolean loadAudio( void )
 				vorbis_synthesis_read( &g_ogm.vd, i );
 
 				//              S_RawSamples( ssize, 22050, 2, 2, (byte *)sbuf, 1.0f );
-				S_RawSamples( 0, i, g_ogm.vi.rate, 2, 2, rawBuffer, 1.0f );
+				S_RawSamples( 0, i, g_ogm.vi.rate, 2, 2, rawBuffer, 1.0f, -1 );
 
 				anyDataTransferred = qtrue;
 			}

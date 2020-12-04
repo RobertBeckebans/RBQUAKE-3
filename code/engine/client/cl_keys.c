@@ -1,22 +1,21 @@
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
-Copyright (C) 2006-2009 Robert Beckebans <trebor_7@users.sourceforge.net>
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -286,27 +285,32 @@ keyname_t keynames[] = {
 	{ "EURO", K_EURO },
 	{ "UNDO", K_UNDO },
 
-	{ "XBOX360_A", K_XBOX360_A },
-	{ "XBOX360_B", K_XBOX360_B },
-	{ "XBOX360_X", K_XBOX360_X },
-	{ "XBOX360_Y", K_XBOX360_Y },
-	{ "XBOX360_LB", K_XBOX360_LB },
-	{ "XBOX360_RB", K_XBOX360_RB },
-	{ "XBOX360_START", K_XBOX360_START },
-	{ "XBOX360_GUIDE", K_XBOX360_GUIDE },
-	{ "XBOX360_LS", K_XBOX360_LS },
-	{ "XBOX360_RS", K_XBOX360_RS },
-	{ "XBOX360_BACK", K_XBOX360_BACK },
-	{ "XBOX360_LT", K_XBOX360_LT },
-	{ "XBOX360_RT", K_XBOX360_RT },
-	{ "XBOX360_DPAD_UP", K_XBOX360_DPAD_UP },
-	{ "XBOX360_DPAD_RIGHT", K_XBOX360_DPAD_RIGHT },
-	{ "XBOX360_DPAD_DOWN", K_XBOX360_DPAD_DOWN },
-	{ "XBOX360_DPAD_LEFT", K_XBOX360_DPAD_LEFT },
-	{ "XBOX360_DPAD_RIGHTUP", K_XBOX360_DPAD_RIGHTUP },
-	{ "XBOX360_DPAD_RIGHTDOWN", K_XBOX360_DPAD_RIGHTDOWN },
-	{ "XBOX360_DPAD_LEFTUP", K_XBOX360_DPAD_LEFTUP },
-	{ "XBOX360_DPAD_LEFTDOWN", K_XBOX360_DPAD_LEFTDOWN },
+	{ "PAD0_A", K_PAD0_A },
+	{ "PAD0_B", K_PAD0_B },
+	{ "PAD0_X", K_PAD0_X },
+	{ "PAD0_Y", K_PAD0_Y },
+	{ "PAD0_BACK", K_PAD0_BACK },
+	{ "PAD0_GUIDE", K_PAD0_GUIDE },
+	{ "PAD0_START", K_PAD0_START },
+	{ "PAD0_LEFTSTICK_CLICK", K_PAD0_LEFTSTICK_CLICK },
+	{ "PAD0_RIGHTSTICK_CLICK", K_PAD0_RIGHTSTICK_CLICK },
+	{ "PAD0_LEFTSHOULDER", K_PAD0_LEFTSHOULDER },
+	{ "PAD0_RIGHTSHOULDER", K_PAD0_RIGHTSHOULDER },
+	{ "PAD0_DPAD_UP", K_PAD0_DPAD_UP },
+	{ "PAD0_DPAD_DOWN", K_PAD0_DPAD_DOWN },
+	{ "PAD0_DPAD_LEFT", K_PAD0_DPAD_LEFT },
+	{ "PAD0_DPAD_RIGHT", K_PAD0_DPAD_RIGHT },
+
+	{ "PAD0_LEFTSTICK_LEFT", K_PAD0_LEFTSTICK_LEFT },
+	{ "PAD0_LEFTSTICK_RIGHT", K_PAD0_LEFTSTICK_RIGHT },
+	{ "PAD0_LEFTSTICK_UP", K_PAD0_LEFTSTICK_UP },
+	{ "PAD0_LEFTSTICK_DOWN", K_PAD0_LEFTSTICK_DOWN },
+	{ "PAD0_RIGHTSTICK_LEFT", K_PAD0_RIGHTSTICK_LEFT },
+	{ "PAD0_RIGHTSTICK_RIGHT", K_PAD0_RIGHTSTICK_RIGHT },
+	{ "PAD0_RIGHTSTICK_UP", K_PAD0_RIGHTSTICK_UP },
+	{ "PAD0_RIGHTSTICK_DOWN", K_PAD0_RIGHTSTICK_DOWN },
+	{ "PAD0_LEFTTRIGGER", K_PAD0_LEFTTRIGGER },
+	{ "PAD0_RIGHTTRIGGER", K_PAD0_RIGHTTRIGGER },
 
 	{ NULL, 0 }
 };
@@ -336,7 +340,7 @@ void Field_VariableSizeDraw( field_t* edit, int x, int y, int width, int size, q
 	vec4_t color;
 	int    style;
 
-	if( con_conshadow->value > 0 )
+	if( con_shadow->value > 0 )
 	{
 		style = UI_DROPSHADOW;
 	}
@@ -558,25 +562,22 @@ void Field_CharEvent( field_t* edit, int ch )
 {
 	int len;
 
-	if( ch == 'v' - 'a' + 1 )
+	if( ch == 'v' - 'a' + 1 ) // ctrl-v is paste
 	{
-		// ctrl-v is paste
 		Field_Paste( edit );
 		return;
 	}
 
-	if( ch == 'c' - 'a' + 1 )
+	if( ch == 'c' - 'a' + 1 ) // ctrl-c clears the field
 	{
-		// ctrl-c clears the field
 		Field_Clear( edit );
 		return;
 	}
 
 	len = strlen( edit->buffer );
 
-	if( ch == 'h' - 'a' + 1 )
+	if( ch == 'h' - 'a' + 1 ) // ctrl-h is backspace
 	{
-		// ctrl-h is backspace
 		if( edit->cursor > 0 )
 		{
 			memmove( edit->buffer + edit->cursor - 1, edit->buffer + edit->cursor, len + 1 - edit->cursor );
@@ -589,17 +590,15 @@ void Field_CharEvent( field_t* edit, int ch )
 		return;
 	}
 
-	if( ch == 'a' - 'a' + 1 )
+	if( ch == 'a' - 'a' + 1 ) // ctrl-a is home
 	{
-		// ctrl-a is home
 		edit->cursor = 0;
 		edit->scroll = 0;
 		return;
 	}
 
-	if( ch == 'e' - 'a' + 1 )
+	if( ch == 'e' - 'a' + 1 ) // ctrl-e is end
 	{
-		// ctrl-e is end
 		edit->cursor = len;
 		edit->scroll = edit->cursor - edit->widthInChars;
 		return;
@@ -615,21 +614,24 @@ void Field_CharEvent( field_t* edit, int ch )
 
 	if( key_overstrikeMode )
 	{
-		if( edit->cursor == MAX_EDIT_LINE - 1 )
+		// - 2 to leave room for the leading slash and trailing \0
+		if( edit->cursor == MAX_EDIT_LINE - 2 )
 		{
 			return;
 		}
 		edit->buffer[ edit->cursor ] = ch;
 		edit->cursor++;
 	}
-	else
+	else // insert mode
 	{
-		// insert mode
-		if( len == MAX_EDIT_LINE - 1 )
+		// - 2 to leave room for the leading slash and trailing \0
+		if( len == MAX_EDIT_LINE - 2 )
 		{
 			return; // all full
 		}
-		memmove( edit->buffer + edit->cursor + 1, edit->buffer + edit->cursor, len + 1 - edit->cursor );
+		memmove( edit->buffer + edit->cursor + 1,
+			edit->buffer + edit->cursor,
+			len + 1 - edit->cursor );
 		edit->buffer[ edit->cursor ] = ch;
 		edit->cursor++;
 	}
@@ -673,7 +675,10 @@ void Console_Key( int key )
 	if( key == K_ENTER || key == K_KP_ENTER )
 	{
 		// if not in the game explicitly prepend a slash if needed
-		if( clc.state != CA_ACTIVE && g_consoleField.buffer[ 0 ] != '\\' && g_consoleField.buffer[ 0 ] != '/' )
+		if( clc.state != CA_ACTIVE && con_autochat->integer &&
+			g_consoleField.buffer[ 0 ] &&
+			g_consoleField.buffer[ 0 ] != '\\' &&
+			g_consoleField.buffer[ 0 ] != '/' )
 		{
 			char temp[ MAX_EDIT_LINE - 1 ];
 
@@ -699,7 +704,11 @@ void Console_Key( int key )
 			}
 			else
 			{
-				Cbuf_AddText( "cmd say " );
+				if( con_autochat->integer )
+				{
+					Cbuf_AddText( "cmd say " );
+				}
+
 				Cbuf_AddText( g_consoleField.buffer );
 				Cbuf_AddText( "\n" );
 			}
@@ -772,26 +781,22 @@ void Console_Key( int key )
 		return;
 	}
 
-	if( key == K_MWHEELUP )
+	if( key == K_MWHEELUP ) //----(SA)	added some mousewheel functionality to the console
 	{
-		//----(SA)  added some mousewheel functionality to the console
 		Con_PageUp();
-		if( keys[ K_CTRL ].down )
+		if( keys[ K_CTRL ].down ) // hold <ctrl> to accelerate scrolling
 		{
-			// hold <ctrl> to accelerate scrolling
 			Con_PageUp();
 			Con_PageUp();
 		}
 		return;
 	}
 
-	if( key == K_MWHEELDOWN )
+	if( key == K_MWHEELDOWN ) //----(SA)	added some mousewheel functionality to the console
 	{
-		//----(SA)  added some mousewheel functionality to the console
 		Con_PageDown();
-		if( keys[ K_CTRL ].down )
+		if( keys[ K_CTRL ].down ) // hold <ctrl> to accelerate scrolling
 		{
-			// hold <ctrl> to accelerate scrolling
 			Con_PageDown();
 			Con_PageDown();
 		}
@@ -909,6 +914,7 @@ to be configured even if they don't have defined names.
 int Key_StringToKeynum( char* str )
 {
 	keyname_t* kn;
+	int        n;
 
 	if( !str || !str[ 0 ] )
 	{
@@ -916,18 +922,14 @@ int Key_StringToKeynum( char* str )
 	}
 	if( !str[ 1 ] )
 	{
-		return str[ 0 ];
+		return tolower( str[ 0 ] );
 	}
 
 	// check for hex code
-	if( strlen( str ) == 4 )
+	n = Com_HexStrToInt( str );
+	if( n >= 0 && n < MAX_KEYS )
 	{
-		int n = Com_HexStrToInt( str );
-
-		if( n >= 0 )
-		{
-			return n;
-		}
+		return n;
 	}
 
 	// scan for a text match
@@ -1018,7 +1020,7 @@ void Key_SetBinding( int keynum, const char* binding )
 	keys[ keynum ].binding = CopyString( binding );
 
 	// consider this like modifying an archived cvar, so the
-	// file write will be triggered at the next oportunity
+	// file write will be triggered at the next opportunity
 	cvar_modifiedFlags |= CVAR_ARCHIVE;
 }
 
@@ -1127,13 +1129,13 @@ void Key_Bind_f( void )
 
 	if( c == 2 )
 	{
-		if( keys[ b ].binding )
+		if( keys[ b ].binding && keys[ b ].binding[ 0 ] )
 		{
-			Com_Printf( "\"%s\" = \"%s\"\n", Cmd_Argv( 1 ), keys[ b ].binding );
+			Com_Printf( "\"%s\" = \"%s\"\n", Key_KeynumToString( b ), keys[ b ].binding );
 		}
 		else
 		{
-			Com_Printf( "\"%s\" is not bound\n", Cmd_Argv( 1 ) );
+			Com_Printf( "\"%s\" is not bound\n", Key_KeynumToString( b ) );
 		}
 		return;
 	}
@@ -1386,7 +1388,14 @@ void CL_KeyDownEvent( int key, unsigned time )
 
 	if( keys[ K_ALT ].down && key == K_ENTER )
 	{
-		Cvar_SetValue( "r_fullscreen", !Cvar_VariableIntegerValue( "r_fullscreen" ) );
+		// don't repeat fullscreen toggle when keys are held down
+		if( keys[ K_ENTER ].repeats > 1 )
+		{
+			return;
+		}
+
+		Cvar_SetValue( "r_fullscreen",
+			!Cvar_VariableIntegerValue( "r_fullscreen" ) );
 		return;
 	}
 
@@ -1448,7 +1457,7 @@ void CL_KeyDownEvent( int key, unsigned time )
 	// send the bound action
 	CL_ParseBinding( key, qtrue, time );
 
-	// distribute the key down event to the apropriate handler
+	// distribute the key down event to the appropriate handler
 	if( Key_GetCatcher() & KEYCATCH_CONSOLE )
 	{
 		Console_Key( key );
@@ -1488,10 +1497,7 @@ void CL_KeyUpEvent( int key, unsigned time )
 {
 	keys[ key ].repeats = 0;
 	keys[ key ].down    = qfalse;
-	if( key != K_SCROLLOCK && key != K_KP_NUMLOCK && key != K_CAPSLOCK )
-	{
-		anykeydown--;
-	}
+	anykeydown--;
 
 	if( anykeydown < 0 )
 	{
@@ -1560,7 +1566,7 @@ void CL_CharEvent( int key )
 		return;
 	}
 
-	// distribute the key down event to the apropriate handler
+	// distribute the key down event to the appropriate handler
 	if( Key_GetCatcher() & KEYCATCH_CONSOLE )
 	{
 		Field_CharEvent( &g_consoleField, key );
@@ -1592,11 +1598,6 @@ void Key_ClearStates( void )
 
 	for( i = 0; i < MAX_KEYS; i++ )
 	{
-		if( i == K_SCROLLOCK || i == K_KP_NUMLOCK || i == K_CAPSLOCK )
-		{
-			continue;
-		}
-
 		if( keys[ i ].down )
 		{
 			CL_KeyEvent( i, qfalse, 0 );
@@ -1660,10 +1661,11 @@ void CL_LoadConsoleHistory( void )
 		return;
 	}
 
-	if( consoleSaveBufferSize <= MAX_CONSOLE_SAVE_BUFFER &&
+	if( consoleSaveBufferSize < MAX_CONSOLE_SAVE_BUFFER &&
 		FS_Read( consoleSaveBuffer, consoleSaveBufferSize, f ) == consoleSaveBufferSize )
 	{
-		text_p = consoleSaveBuffer;
+		consoleSaveBuffer[ consoleSaveBufferSize ] = '\0';
+		text_p                                     = consoleSaveBuffer;
 
 		for( i = COMMAND_HISTORY - 1; i >= 0; i-- )
 		{
@@ -1688,12 +1690,14 @@ void CL_LoadConsoleHistory( void )
 
 			numChars = atoi( token );
 			text_p++;
-			if( ( numChars > ( strlen( consoleSaveBuffer ) - ( text_p - consoleSaveBuffer ) ) ) || ( numChars >= MAX_EDIT_LINE ) )
+			if( numChars > ( strlen( consoleSaveBuffer ) - ( text_p - consoleSaveBuffer ) ) )
 			{
 				Com_DPrintf( S_COLOR_YELLOW "WARNING: probable corrupt history\n" );
 				break;
 			}
-			Com_Memcpy( historyEditLines[ i ].buffer, text_p, numChars );
+			Com_Memcpy( historyEditLines[ i ].buffer,
+				text_p,
+				numChars );
 			historyEditLines[ i ].buffer[ numChars ] = '\0';
 			text_p += numChars;
 

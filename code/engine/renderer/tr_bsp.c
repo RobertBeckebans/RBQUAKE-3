@@ -446,7 +446,7 @@ void LoadRGBEToFloats( const char* name, float** pic, int* width, int* height, q
 	//float           blue;
 	//float           max;
 	//float           inv, dif;
-	float exposure = 1.6;
+	float exposure = 1.6f;
 	//float           exposureGain = 1.0;
 	const vec3_t LUMINANCE_VECTOR = { 0.2125f, 0.7154f, 0.0721f };
 	float        luminance;
@@ -762,7 +762,7 @@ static void LoadRGBEToBytes( const char* name, byte** ldrImage, int* width, int*
 	*width  = w;
 	*height = h;
 
-	*ldrImage = ri.Z_Malloc( w * h * 4 );
+	*ldrImage = ri.Malloc( w * h * 4 );
 	pixbuf    = *ldrImage;
 
 	floatbuf = hdrImage;
@@ -9189,10 +9189,10 @@ void R_BuildCubeMaps( void )
 
 	for( i = 0; i < 6; i++ )
 	{
-		tr.cubeTemp[ i ] = ri.Z_Malloc( REF_CUBEMAP_SIZE * REF_CUBEMAP_SIZE * 4 );
+		tr.cubeTemp[ i ] = ri.Malloc( REF_CUBEMAP_SIZE * REF_CUBEMAP_SIZE * 4 );
 	}
 
-	//	fileBuf = ri.Z_Malloc(REF_CUBEMAP_STORE_SIZE * REF_CUBEMAP_STORE_SIZE * 4);
+	//	fileBuf = ri.Malloc(REF_CUBEMAP_STORE_SIZE * REF_CUBEMAP_STORE_SIZE * 4);
 
 	// calculate origins for our probes
 	Com_InitGrowList( &tr.cubeProbes, 4000 );

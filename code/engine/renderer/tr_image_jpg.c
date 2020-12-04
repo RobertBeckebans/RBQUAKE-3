@@ -175,7 +175,7 @@ void LoadJPG( const char* filename, unsigned char** pic, int* width, int* height
 	memcount   = pixelcount * 4;
 	row_stride = cinfo.output_width * cinfo.output_components;
 
-	out = ri.Z_Malloc( memcount );
+	out = ri.Malloc( memcount );
 
 	*width  = cinfo.output_width;
 	*height = cinfo.output_height;

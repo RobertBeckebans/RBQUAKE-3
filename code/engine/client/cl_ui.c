@@ -939,7 +939,7 @@ intptr_t CL_UISystemCalls( intptr_t* args )
 			return 0;
 
 		case UI_S_REGISTERSOUND:
-			return S_RegisterSound( VMA( 1 ) );
+			return S_RegisterSound( VMA( 1 ), qfalse );
 
 		case UI_S_STARTLOCALSOUND:
 			S_StartLocalSound( args[ 1 ], args[ 2 ] );

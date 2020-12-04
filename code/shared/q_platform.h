@@ -2,20 +2,20 @@
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -33,11 +33,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #endif
 
 // this is for determining if we have an asm version of a C function
+#define idx64 0
+
 #ifdef Q3_VM
 
 	#define id386         0
 	#define idppc         0
 	#define idppc_altivec 0
+	#define idsparc       0
 
 #else
 
@@ -67,7 +70,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		#define idppc 1
 		#if defined( __VEC__ )
 			#define idppc_altivec 1
-			#ifdef MACOS_X // Apple's GCC does this differently than the FSF.
+			#ifdef __APPLE__ // Apple's GCC does this differently than the FSF.
 				#define VECCONST_UINT8( a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p ) \
 					( vector unsigned char )( a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p )
 			#else
@@ -82,6 +85,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		#define idppc_altivec 0
 	#endif
 
+	#if defined( __sparc__ ) && !defined( C_ONLY )
+		#define idsparc 1
+	#else
+		#define idsparc 0
+	#endif
+
 #endif
 
 #ifndef __ASM_I386__ // don't include the C bits if included from qasm.h
@@ -92,10 +101,16 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 	//================================================================= WIN64/32 ===
 
-	#ifdef __WIN64__
+	#if defined( _WIN64 ) || defined( __WIN64__ )
+
+		#undef idx64
+		#define idx64 1
 
 		#undef QDECL
 		#define QDECL __cdecl
+
+		#undef QCALL
+		#define QCALL __stdcall
 
 		#if defined( _MSC_VER )
 			#define OS_STRING "win_msvc64"
@@ -147,12 +162,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 	//============================================================== MAC OS X ===
 
-	#if defined( MACOS_X ) || defined( __APPLE_CC__ )
-
-		// make sure this is defined, just for sanity's sake...
-		#ifndef MACOS_X
-			#define MACOS_X
-		#endif
+	#if defined( __APPLE__ ) || defined( __APPLE_CC__ )
 
 		#define OS_STRING "macosx"
 		#define ID_INLINE inline
@@ -162,9 +172,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			#define ARCH_STRING "ppc"
 			#define Q3_BIG_ENDIAN
 		#elif defined __i386__
-			#define ARCH_STRING "i386"
+			#define ARCH_STRING "x86"
 			#define Q3_LITTLE_ENDIAN
 		#elif defined __x86_64__
+			#undef idx64
+			#define idx64       1
 			#define ARCH_STRING "x86_64"
 			#define Q3_LITTLE_ENDIAN
 		#endif
@@ -178,13 +190,21 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 	//================================================================= LINUX ===
 
-	#ifdef __linux__
+	#if defined( __linux__ ) || defined( __FreeBSD_kernel__ ) || defined( __GNU__ )
 
 		#include <endian.h>
 
-		#define OS_STRING "linux"
+		#if defined( __linux__ )
+			#define OS_STRING "linux"
+		#elif defined( __FreeBSD_kernel__ )
+			#define OS_STRING "kFreeBSD"
+		#else
+			#define OS_STRING "GNU"
+		#endif
+
 		#define ID_INLINE inline
-		#define PATH_SEP  '/'
+
+		#define PATH_SEP '/'
 
 		#if defined __i386__
 			#define ARCH_STRING "i386"
@@ -249,9 +269,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		#define PATH_SEP  '/'
 
 		#ifdef __i386__
-			#define ARCH_STRING "i386"
+			#define ARCH_STRING "x86"
 		#elif defined __amd64__
-			#define ARCH_STRING "amd64"
+			#undef idx64
+			#define idx64       1
+			#define ARCH_STRING "x86_64"
 		#elif defined __axp__
 			#define ARCH_STRING "alpha"
 		#endif
@@ -278,7 +300,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		#define PATH_SEP  '/'
 
 		#ifdef __i386__
-			#define ARCH_STRING "i386"
+			#define ARCH_STRING "x86"
 		#elif defined __sparc
 			#define ARCH_STRING "sparc"
 		#endif
@@ -347,6 +369,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	#endif
 
 //endianness
+void  CopyShortSwap( void* dest, void* src );
+void  CopyLongSwap( void* dest, void* src );
 short ShortSwap( short l );
 int   LongSwap( int l );
 float FloatSwap( const float* f );
@@ -355,15 +379,19 @@ float FloatSwap( const float* f );
 		#error "Endianness defined as both big and little"
 	#elif defined( Q3_BIG_ENDIAN )
 
-		#define LittleShort( x ) ShortSwap( x )
-		#define LittleLong( x )  LongSwap( x )
-		#define LittleFloat( x ) FloatSwap( &x )
+		#define CopyLittleShort( dest, src ) CopyShortSwap( dest, src )
+		#define CopyLittleLong( dest, src )  CopyLongSwap( dest, src )
+		#define LittleShort( x )             ShortSwap( x )
+		#define LittleLong( x )              LongSwap( x )
+		#define LittleFloat( x )             FloatSwap( &x )
 		#define BigShort
 		#define BigLong
 		#define BigFloat
 
 	#elif defined( Q3_LITTLE_ENDIAN )
 
+		#define CopyLittleShort( dest, src ) Com_Memcpy( dest, src, 2 )
+		#define CopyLittleLong( dest, src )  Com_Memcpy( dest, src, 4 )
 		#define LittleShort
 		#define LittleLong
 		#define LittleFloat

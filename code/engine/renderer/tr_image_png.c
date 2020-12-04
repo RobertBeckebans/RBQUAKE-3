@@ -163,7 +163,7 @@ void LoadPNG( const char* name, byte** pic, int* width, int* height, byte alphaB
 	// allocate the memory to hold the image
 	*width  = w;
 	*height = h;
-	*pic = out = ( byte* )ri.Z_Malloc( w * h * 4 );
+	*pic = out = ( byte* )ri.Malloc( w * h * 4 );
 
 	row_pointers = ( png_bytep* )ri.Hunk_AllocateTempMemory( sizeof( png_bytep ) * h );
 

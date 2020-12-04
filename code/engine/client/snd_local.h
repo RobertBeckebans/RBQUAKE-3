@@ -1,22 +1,21 @@
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
-Copyright (C) 2006 Robert Beckebans <trebor_7@users.sourceforge.net>
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -24,20 +23,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include <q_shared.h>
 #include "../qcommon/qcommon.h"
 #include "snd_public.h"
-
-#if USE_OPENAL
-	#ifdef _MSC_VER
-		// MSVC users must install the OpenAL SDK which doesn't use the AL/*.h scheme.
-		#include <al.h>
-		#include <alc.h>
-	#elif defined( MACOS_X )
-		#include <OpenAL/al.h>
-		#include <OpenAL/alc.h>
-	#else
-		#include <AL/al.h>
-		#include <AL/alc.h>
-	#endif
-#endif
 
 #define PAINTBUFFER_SIZE 4096 // this is in samples
 
@@ -68,9 +53,12 @@ typedef struct sndBuffer_s
 typedef struct sfx_s
 {
 	sndBuffer*    soundData;
-	qboolean      defaultSound; // couldn't be loaded, so use buzz
-	qboolean      inMemory;     // not in Memory
+	qboolean      defaultSound;    // couldn't be loaded, so use buzz
+	qboolean      inMemory;        // not in Memory
+	qboolean      soundCompressed; // not in Memory
+	int           soundCompressionMethod;
 	int           soundLength;
+	int           soundChannels;
 	char          soundName[ MAX_QPATH ];
 	int           lastTimeUsed;
 	struct sfx_s* next;
@@ -80,8 +68,10 @@ typedef struct
 {
 	int   channels;
 	int   samples;          // mono samples in buffer
+	int   fullsamples;      // samples with all channels in buffer (samples divided by channels)
 	int   submission_chunk; // don't mix less than this #
 	int   samplebits;
+	int   isfloat;
 	int   speed;
 	byte* buffer;
 } dma_t;
@@ -89,6 +79,8 @@ typedef struct
 #define START_SAMPLE_IMMEDIATE 0x7fffffff
 
 #define MAX_DOPPLER_SCALE 50.0f //arbitrary
+
+#define THIRD_PERSON_THRESHOLD_SQ ( 48.0f * 48.0f )
 
 typedef struct loopSound_s
 {
@@ -119,6 +111,7 @@ typedef struct
 	qboolean fixed_origin; // use origin instead of fetching entnum's origin
 	sfx_t*   thesfx;       // sfx structure
 	qboolean doppler;
+	qboolean fullVolume;
 } channel_t;
 
 #define WAV_FORMAT_PCM 1
@@ -141,7 +134,7 @@ typedef struct
 	void ( *StartLocalSound )( sfxHandle_t sfx, int channelNum );
 	void ( *StartBackgroundTrack )( const char* intro, const char* loop );
 	void ( *StopBackgroundTrack )( void );
-	void ( *RawSamples )( int stream, int samples, int rate, int width, int channels, const byte* data, float volume );
+	void ( *RawSamples )( int stream, int samples, int rate, int width, int channels, const byte* data, float volume, int entityNum );
 	void ( *StopAllSounds )( void );
 	void ( *ClearLoopingSounds )( qboolean killall );
 	void ( *AddLoopingSound )( int entityNum, const vec3_t origin, const vec3_t velocity, sfxHandle_t sfx );
@@ -152,7 +145,7 @@ typedef struct
 	void ( *Update )( void );
 	void ( *DisableSounds )( void );
 	void ( *BeginRegistration )( void );
-	sfxHandle_t ( *RegisterSound )( const char* sample );
+	sfxHandle_t ( *RegisterSound )( const char* sample, qboolean compressed );
 	void ( *ClearSoundBuffer )( void );
 	void ( *SoundInfo )( void );
 	void ( *SoundList )( void );
@@ -186,6 +179,14 @@ void SNDDMA_BeginPainting( void );
 
 void SNDDMA_Submit( void );
 
+#ifdef USE_VOIP
+void SNDDMA_StartCapture( void );
+int  SNDDMA_AvailableCaptureSamples( void );
+void SNDDMA_Capture( int samples, byte* data );
+void SNDDMA_StopCapture( void );
+void SNDDMA_MasterGain( float val );
+#endif
+
 //====================================================================
 
 #define MAX_CHANNELS 96
@@ -201,7 +202,7 @@ extern vec3_t listener_up;
 extern dma_t  dma;
 
 #define MAX_RAW_SAMPLES 16384
-#define MAX_RAW_STREAMS 128
+#define MAX_RAW_STREAMS ( MAX_CLIENTS * 2 + 1 )
 extern portable_samplepair_t s_rawsamples[ MAX_RAW_STREAMS ][ MAX_RAW_SAMPLES ];
 extern int                   s_rawend[ MAX_RAW_STREAMS ];
 
@@ -217,15 +218,38 @@ qboolean S_LoadSound( sfx_t* sfx );
 void       SND_free( sndBuffer* v );
 sndBuffer* SND_malloc( void );
 void       SND_setup( void );
+void       SND_shutdown( void );
 
 void S_PaintChannels( int endtime );
 
 void S_memoryLoad( sfx_t* sfx );
 
-void S_FreeOldestSound( void );
-
 // spatializes a channel
 void S_Spatialize( channel_t* ch );
+
+// adpcm functions
+int  S_AdpcmMemoryNeeded( const wavinfo_t* info );
+void S_AdpcmEncodeSound( sfx_t* sfx, short* samples );
+void S_AdpcmGetSamples( sndBuffer* chunk, short* to );
+
+// wavelet function
+
+#define SENTINEL_MULAW_ZERO_RUN     127
+#define SENTINEL_MULAW_FOUR_BIT_RUN 126
+
+void S_FreeOldestSound( void );
+
+#define NXStream byte
+
+void encodeWavelet( sfx_t* sfx, short* packets );
+void decodeWavelet( sndBuffer* stream, short* packets );
+
+void         encodeMuLaw( sfx_t* sfx, short* packets );
+extern short mulawToShort[ 256 ];
+
+extern short* sfxScratchBuffer;
+extern sfx_t* sfxScratchPointer;
+extern int    sfxScratchIndex;
 
 qboolean S_Base_Init( soundInterface_t* si );
 
@@ -242,3 +266,7 @@ typedef enum
 typedef int srcHandle_t;
 
 qboolean S_AL_Init( soundInterface_t* si );
+
+#ifdef idppc_altivec
+void S_PaintChannelFrom16_altivec( portable_samplepair_t paintbuffer[ PAINTBUFFER_SIZE ], int snd_vol, channel_t* ch, const sfx_t* sc, int count, int sampleOffset, int bufferOffset );
+#endif

@@ -35,7 +35,6 @@ static void byteReverse( unsigned char* buf, unsigned longs );
 static void byteReverse( unsigned char* buf, unsigned longs )
 {
 	uint32_t t;
-
 	do
 	{
 		t                 = ( uint32_t )( ( unsigned )buf[ 3 ] << 8 | buf[ 2 ] ) << 16 | ( ( unsigned )buf[ 1 ] << 8 | buf[ 0 ] );
@@ -59,7 +58,6 @@ static void MD5Init( struct MD5Context* ctx )
 	ctx->bits[ 0 ] = 0;
 	ctx->bits[ 1 ] = 0;
 }
-
 /* The four core functions - F1 is optimized somewhat */
 
 /* #define F1(x, y, z) (x & y | ~x & z) */
@@ -79,7 +77,7 @@ static void MD5Init( struct MD5Context* ctx )
  */
 static void MD5Transform( uint32_t buf[ 4 ], uint32_t const in[ 16 ] )
 {
-	register uint32_t a, b, c, d;
+	uint32_t a, b, c, d;
 
 	a = buf[ 0 ];
 	b = buf[ 1 ];
@@ -262,7 +260,7 @@ static void MD5Final( struct MD5Context* ctx, unsigned char* digest )
 	{
 		memcpy( digest, ctx->buf, 16 );
 	}
-	memset( ctx, 0, sizeof( ctx ) ); /* In case it's sensitive */
+	memset( ctx, 0, sizeof( *ctx ) ); /* In case it's sensitive */
 }
 
 char* Com_MD5File( const char* fn, int length, const char* prefix, int prefix_len )
@@ -304,7 +302,7 @@ char* Com_MD5File( const char* fn, int length, const char* prefix, int prefix_le
 
 	for( ;; )
 	{
-		r = FS_Read2( buffer, sizeof( buffer ), f );
+		r = FS_Read( buffer, sizeof( buffer ), f );
 		if( r < 1 )
 		{
 			break;

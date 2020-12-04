@@ -2204,8 +2204,13 @@ GetRefAPI
 	//#if defined(__cplusplus)
 	//extern "C" {
 	//#endif
-	refexport_t* GetRefAPI( int apiVersion, refimport_t* rimp )
+#ifdef USE_RENDERER_DLOPEN
+	Q_EXPORT refexport_t* QDECL GetRefAPI( int apiVersion, refimport_t* rimp )
 	{
+#else
+refexport_t* GetRefAPI( int apiVersion, refimport_t* rimp )
+{
+#endif
 		static refexport_t re;
 
 		ri = *rimp;

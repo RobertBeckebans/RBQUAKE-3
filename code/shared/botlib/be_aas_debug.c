@@ -462,8 +462,8 @@ void AAS_ShowArea( int areanum, int groundfacesonly )
 				areaedges[ numareaedges++ ] = edgenum;
 			} //end if
 		}     //end for
-		//AAS_ShowFace(facenum);
-	} //end for
+			  //AAS_ShowFace(facenum);
+	}         //end for
 	//draw all the edges
 	for( n = 0; n < numareaedges; n++ )
 	{

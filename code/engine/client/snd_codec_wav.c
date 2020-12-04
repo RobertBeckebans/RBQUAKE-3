@@ -3,20 +3,20 @@
 Copyright (C) 1999-2005 Id Software, Inc.
 Copyright (C) 2005 Stuart Dalton (badcdev@gmail.com)
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -144,7 +144,6 @@ S_ReadRIFFHeader
 static qboolean S_ReadRIFFHeader( fileHandle_t file, snd_info_t* info )
 {
 	char dump[ 16 ];
-	int  wav_format;
 	int  bits;
 	int  fmtlen = 0;
 
@@ -159,7 +158,7 @@ static qboolean S_ReadRIFFHeader( fileHandle_t file, snd_info_t* info )
 	}
 
 	// Save the parameters
-	wav_format     = FGetLittleShort( file );
+	FGetLittleShort( file ); // wav_format
 	info->channels = FGetLittleShort( file );
 	info->rate     = FGetLittleLong( file );
 	FGetLittleLong( file );
@@ -195,7 +194,7 @@ static qboolean S_ReadRIFFHeader( fileHandle_t file, snd_info_t* info )
 
 // WAV codec
 snd_codec_t wav_codec = {
-	".wav",
+	"wav",
 	S_WAV_CodecLoad,
 	S_WAV_CodecOpenStream,
 	S_WAV_CodecReadStream,
@@ -217,7 +216,6 @@ void* S_WAV_CodecLoad( const char* filename, snd_info_t* info )
 	FS_FOpenFileRead( filename, &file, qtrue );
 	if( !file )
 	{
-		Com_Printf( S_COLOR_RED "ERROR: Could not open \"%s\"\n", filename );
 		return NULL;
 	}
 
@@ -225,16 +223,18 @@ void* S_WAV_CodecLoad( const char* filename, snd_info_t* info )
 	if( !S_ReadRIFFHeader( file, info ) )
 	{
 		FS_FCloseFile( file );
-		Com_Printf( S_COLOR_RED "ERROR: Incorrect/unsupported format in \"%s\"\n", filename );
+		Com_Printf( S_COLOR_RED "ERROR: Incorrect/unsupported format in \"%s\"\n",
+			filename );
 		return NULL;
 	}
 
 	// Allocate some memory
-	buffer = Z_Malloc( info->size );
+	buffer = Hunk_AllocateTempMemory( info->size );
 	if( !buffer )
 	{
 		FS_FCloseFile( file );
-		Com_Printf( S_COLOR_RED "ERROR: Out of memory reading \"%s\"\n", filename );
+		Com_Printf( S_COLOR_RED "ERROR: Out of memory reading \"%s\"\n",
+			filename );
 		return NULL;
 	}
 

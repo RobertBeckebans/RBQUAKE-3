@@ -2,20 +2,20 @@
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -92,8 +92,8 @@ typedef struct
 	qboolean     looping, holdAtEnd, dirty, alterGameState, silent, shader;
 	fileHandle_t iFile;
 	e_status     status;
-	unsigned int startTime;
-	unsigned int lastTime;
+	int          startTime;
+	int          lastTime;
 	long         tfps;
 	long         RoQPlayed;
 	long         ROQSize;
@@ -169,9 +169,9 @@ extern int CL_ScaledMilliseconds( void );
 //
 // Allocates and initializes the square table.
 //
-// Parameters:  None
+// Parameters:	None
 //
-// Returns:     Nothing
+// Returns:		Nothing
 //-----------------------------------------------------------------------------
 static void RllSetupTable( void )
 {
@@ -189,13 +189,13 @@ static void RllSetupTable( void )
 //
 // Decode mono source data into a mono buffer.
 //
-// Parameters:  from -> buffer holding encoded data
-//              to ->   buffer to hold decoded data
-//              size =  number of bytes of input (= # of shorts of output)
-//              signedOutput = 0 for unsigned output, non-zero for signed output
-//              flag = flags from asset header
+// Parameters:	from -> buffer holding encoded data
+//				to ->	buffer to hold decoded data
+//				size =	number of bytes of input (= # of shorts of output)
+//				signedOutput = 0 for unsigned output, non-zero for signed output
+//				flag = flags from asset header
 //
-// Returns:     Number of samples placed in output buffer
+// Returns:		Number of samples placed in output buffer
 //-----------------------------------------------------------------------------
 long RllDecodeMonoToMono( unsigned char* from, short* to, unsigned int size, char signedOutput, unsigned short flag )
 {
@@ -224,13 +224,13 @@ long RllDecodeMonoToMono( unsigned char* from, short* to, unsigned int size, cha
 // Decode mono source data into a stereo buffer. Output is 4 times the number
 // of bytes in the input.
 //
-// Parameters:  from -> buffer holding encoded data
-//              to ->   buffer to hold decoded data
-//              size =  number of bytes of input (= 1/4 # of bytes of output)
-//              signedOutput = 0 for unsigned output, non-zero for signed output
-//              flag = flags from asset header
+// Parameters:	from -> buffer holding encoded data
+//				to ->	buffer to hold decoded data
+//				size =	number of bytes of input (= 1/4 # of bytes of output)
+//				signedOutput = 0 for unsigned output, non-zero for signed output
+//				flag = flags from asset header
 //
-// Returns:     Number of samples placed in output buffer
+// Returns:		Number of samples placed in output buffer
 //-----------------------------------------------------------------------------
 long RllDecodeMonoToStereo( unsigned char* from, short* to, unsigned int size, char signedOutput, unsigned short flag )
 {
@@ -260,13 +260,13 @@ long RllDecodeMonoToStereo( unsigned char* from, short* to, unsigned int size, c
 //
 // Decode stereo source data into a stereo buffer.
 //
-// Parameters:  from -> buffer holding encoded data
-//              to ->   buffer to hold decoded data
-//              size =  number of bytes of input (= 1/2 # of bytes of output)
-//              signedOutput = 0 for unsigned output, non-zero for signed output
-//              flag = flags from asset header
+// Parameters:	from -> buffer holding encoded data
+//				to ->	buffer to hold decoded data
+//				size =	number of bytes of input (= 1/2 # of bytes of output)
+//				signedOutput = 0 for unsigned output, non-zero for signed output
+//				flag = flags from asset header
 //
-// Returns:     Number of samples placed in output buffer
+// Returns:		Number of samples placed in output buffer
 //-----------------------------------------------------------------------------
 long RllDecodeStereoToStereo( unsigned char* from, short* to, unsigned int size, char signedOutput, unsigned short flag )
 {
@@ -301,13 +301,13 @@ long RllDecodeStereoToStereo( unsigned char* from, short* to, unsigned int size,
 //
 // Decode stereo source data into a mono buffer.
 //
-// Parameters:  from -> buffer holding encoded data
-//              to ->   buffer to hold decoded data
-//              size =  number of bytes of input (= # of bytes of output)
-//              signedOutput = 0 for unsigned output, non-zero for signed output
-//              flag = flags from asset header
+// Parameters:	from -> buffer holding encoded data
+//				to ->	buffer to hold decoded data
+//				size =	number of bytes of input (= # of bytes of output)
+//				signedOutput = 0 for unsigned output, non-zero for signed output
+//				flag = flags from asset header
 //
-// Returns:     Number of samples placed in output buffer
+// Returns:		Number of samples placed in output buffer
 //-----------------------------------------------------------------------------
 long RllDecodeStereoToMono( unsigned char* from, short* to, unsigned int size, char signedOutput, unsigned short flag )
 {
@@ -489,9 +489,8 @@ static void blitVQQuad32fs( byte** status, unsigned char* data )
 					code = ( unsigned short )( celdata & 0xc000 );
 					celdata <<= 2;
 
-					switch( code )
+					switch( code ) // code in top two bits of code
 					{
-						// code in top two bits of code
 						case 0x8000: // 4x4 vq code
 							blit4_32( ( byte* )&vq4[ ( *data ) * 32 ], status[ index ], spl );
 							data++;
@@ -734,7 +733,7 @@ static unsigned int yuv_to_rgb24( long y, long u, long v )
 		b = 255;
 	}
 
-	return LittleLong( ( r ) | ( g << 8 ) | ( b << 16 ) | ( 255 << 24 ) );
+	return LittleLong( ( unsigned long )( ( r ) | ( g << 8 ) | ( b << 16 ) ) | ( 255UL << 24 ) );
 }
 
 /******************************************************************************
@@ -1100,13 +1099,10 @@ static void recurseQuad( long startX, long startY, long quadSize, long xOff, lon
 		bigy = cinTable[ currentHandle ].CIN_HEIGHT;
 	}
 
-	if( ( startX >= lowx ) && ( startX + quadSize ) <= ( bigx ) && ( startY + quadSize ) <= ( bigy ) && ( startY >= lowy ) &&
-		quadSize <= MAXSIZE )
+	if( ( startX >= lowx ) && ( startX + quadSize ) <= ( bigx ) && ( startY + quadSize ) <= ( bigy ) && ( startY >= lowy ) && quadSize <= MAXSIZE )
 	{
-		useY = startY;
-		scroff =
-			cin.linbuf + ( useY + ( ( cinTable[ currentHandle ].CIN_HEIGHT - bigy ) >> 1 ) + yOff ) * ( cinTable[ currentHandle ].samplesPerLine ) +
-			( ( ( startX + xOff ) ) * cinTable[ currentHandle ].samplesPerPixel );
+		useY   = startY;
+		scroff = cin.linbuf + ( useY + ( ( cinTable[ currentHandle ].CIN_HEIGHT - bigy ) >> 1 ) + yOff ) * ( cinTable[ currentHandle ].samplesPerLine ) + ( ( ( startX + xOff ) ) * cinTable[ currentHandle ].samplesPerPixel );
 
 		cin.qStatus[ 0 ][ cinTable[ currentHandle ].onQuad ]   = scroff;
 		cin.qStatus[ 1 ][ cinTable[ currentHandle ].onQuad++ ] = scroff + offset;
@@ -1363,9 +1359,8 @@ redump:
 				cinTable[ currentHandle ].VQ0( ( byte* )cin.qStatus[ 0 ], framedata );
 				cinTable[ currentHandle ].buf = cin.linbuf;
 			}
-			if( cinTable[ currentHandle ].numQuads == 0 )
+			if( cinTable[ currentHandle ].numQuads == 0 ) // first frame
 			{
-				// first frame
 				Com_Memcpy( cin.linbuf + cinTable[ currentHandle ].screenDelta, cin.linbuf, cinTable[ currentHandle ].samplesPerLine * cinTable[ currentHandle ].ysize );
 			}
 			cinTable[ currentHandle ].numQuads++;
@@ -1377,9 +1372,8 @@ redump:
 		case ZA_SOUND_MONO:
 			if( !cinTable[ currentHandle ].silent )
 			{
-				ssize =
-					RllDecodeMonoToStereo( framedata, sbuf, cinTable[ currentHandle ].RoQFrameSize, 0, ( unsigned short )cinTable[ currentHandle ].roq_flags );
-				S_RawSamples( 0, ssize, 22050, 2, 1, ( byte* )sbuf, 1.0f );
+				ssize = RllDecodeMonoToStereo( framedata, sbuf, cinTable[ currentHandle ].RoQFrameSize, 0, ( unsigned short )cinTable[ currentHandle ].roq_flags );
+				S_RawSamples( 0, ssize, 22050, 2, 1, ( byte* )sbuf, 1.0f, -1 );
 			}
 			break;
 		case ZA_SOUND_STEREO:
@@ -1390,9 +1384,8 @@ redump:
 					S_Update();
 					s_rawend[ 0 ] = s_soundtime;
 				}
-				ssize =
-					RllDecodeStereoToStereo( framedata, sbuf, cinTable[ currentHandle ].RoQFrameSize, 0, ( unsigned short )cinTable[ currentHandle ].roq_flags );
-				S_RawSamples( 0, ssize, 22050, 2, 2, ( byte* )sbuf, 1.0f );
+				ssize = RllDecodeStereoToStereo( framedata, sbuf, cinTable[ currentHandle ].RoQFrameSize, 0, ( unsigned short )cinTable[ currentHandle ].roq_flags );
+				S_RawSamples( 0, ssize, 22050, 2, 2, ( byte* )sbuf, 1.0f, -1 );
 			}
 			break;
 		case ROQ_QUAD_INFO:
@@ -1471,8 +1464,8 @@ redump:
 	//
 	// one more frame hits the dust
 	//
-	//  assert(cinTable[currentHandle].RoQFrameSize <= 65536);
-	//  r = FS_Read( cin.file, cinTable[currentHandle].RoQFrameSize+8, cinTable[currentHandle].iFile );
+	//	assert(cinTable[currentHandle].RoQFrameSize <= 65536);
+	//	r = FS_Read( cin.file, cinTable[currentHandle].RoQFrameSize+8, cinTable[currentHandle].iFile );
 	cinTable[ currentHandle ].RoQPlayed += cinTable[ currentHandle ].RoQFrameSize + 8;
 }
 
@@ -1787,7 +1780,7 @@ int CIN_PlayCinematic( const char* arg, int x, int y, int w, int h, int systemBi
 		}
 	}
 
-	Com_DPrintf( "SCR_PlayCinematic( %s )\n", arg );
+	Com_DPrintf( "CIN_PlayCinematic( %s )\n", arg );
 
 	Com_Memset( &cin, 0, sizeof( cinematics_t ) );
 	currentHandle = CIN_HandleForVideo();
@@ -1798,6 +1791,7 @@ int CIN_PlayCinematic( const char* arg, int x, int y, int w, int h, int systemBi
 
 	strcpy( cinTable[ currentHandle ].fileName, name );
 
+#if 0
 	fileextPtr = S_FileExtension( name ); // using the function from soundfile/audiocodec-detection
 	if( !Q_stricmp( fileextPtr, ".ogm" ) || !Q_stricmp( fileextPtr, ".ogv" ) )
 	{
@@ -1847,6 +1841,7 @@ int CIN_PlayCinematic( const char* arg, int x, int y, int w, int h, int systemBi
 
 		return currentHandle;
 	}
+#endif
 
 	cinTable[ currentHandle ].ROQSize = 0;
 	cinTable[ currentHandle ].ROQSize = FS_FOpenFileRead( cinTable[ currentHandle ].fileName, &cinTable[ currentHandle ].iFile, qtrue );

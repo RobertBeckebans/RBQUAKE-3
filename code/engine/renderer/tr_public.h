@@ -156,11 +156,7 @@ typedef struct
 	void ( *Hunk_FreeTempMemory )( void* block );
 
 	// dynamic memory allocator for things that need to be freed
-#ifdef ZONE_DEBUG
-	void* ( *Z_MallocDebug )( int bytes, char* label, char* file, int line );
-#else
-	void* ( *Z_Malloc )( int bytes );
-#endif
+	void* ( *Malloc )( int bytes );
 	void ( *Free )( void* buf );
 	void ( *Tag_Free )( void );
 
@@ -216,8 +212,18 @@ typedef struct
 // this is the only function actually exported at the linker level
 // If the module can't init to a valid rendering state, NULL will be
 // returned.
+#ifdef USE_RENDERER_DLOPEN
+typedef refexport_t*( QDECL* GetRefAPI_t )( int apiVersion, refimport_t* rimp );
+#else
+	#if defined( __cplusplus )
+extern "C"
+{
+	#endif
+	refexport_t* GetRefAPI( int apiVersion, refimport_t* rimp );
+	#if defined( __cplusplus )
+}
+	#endif
 
-// RB: changed to GetRefAPI_t
-typedef refexport_t* ( *GetRefAPI_t )( int apiVersion, refimport_t* rimp );
+#endif
 
 #endif // __TR_PUBLIC_H

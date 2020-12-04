@@ -16,7 +16,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Foobar; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -207,11 +207,11 @@ void S_StopBackgroundTrack( void )
 S_RawSamples
 =================
 */
-void S_RawSamples( int stream, int samples, int rate, int width, int channels, const byte* data, float volume )
+void S_RawSamples( int stream, int samples, int rate, int width, int channels, const byte* data, float volume, int entityNum )
 {
 	if( si.RawSamples )
 	{
-		si.RawSamples( stream, samples, rate, width, channels, data, volume );
+		si.RawSamples( stream, samples, rate, width, channels, data, volume, entityNum );
 	}
 }
 
@@ -315,7 +315,8 @@ void S_Update( void )
 {
 	if( s_muted->integer )
 	{
-		if( !( s_muteWhenMinimized->integer && com_minimized->integer ) && !( s_muteWhenUnfocused->integer && com_unfocused->integer ) )
+		if( !( s_muteWhenMinimized->integer && com_minimized->integer ) &&
+			!( s_muteWhenUnfocused->integer && com_unfocused->integer ) )
 		{
 			s_muted->integer  = qfalse;
 			s_muted->modified = qtrue;
@@ -323,7 +324,8 @@ void S_Update( void )
 	}
 	else
 	{
-		if( ( s_muteWhenMinimized->integer && com_minimized->integer ) || ( s_muteWhenUnfocused->integer && com_unfocused->integer ) )
+		if( ( s_muteWhenMinimized->integer && com_minimized->integer ) ||
+			( s_muteWhenUnfocused->integer && com_unfocused->integer ) )
 		{
 			s_muted->integer  = qtrue;
 			s_muted->modified = qtrue;
@@ -367,11 +369,11 @@ void S_BeginRegistration( void )
 S_RegisterSound
 =================
 */
-sfxHandle_t S_RegisterSound( const char* sample )
+sfxHandle_t S_RegisterSound( const char* sample, qboolean compressed )
 {
 	if( si.RegisterSound )
 	{
-		return si.RegisterSound( sample );
+		return si.RegisterSound( sample, compressed );
 	}
 	else
 	{
@@ -496,31 +498,30 @@ S_Play_f
 void S_Play_f( void )
 {
 	int         i;
+	int         c;
 	sfxHandle_t h;
-	char        name[ 256 ];
 
 	if( !si.RegisterSound || !si.StartLocalSound )
 	{
 		return;
 	}
 
-	i = 1;
-	while( i < Cmd_Argc() )
+	c = Cmd_Argc();
+
+	if( c < 2 )
 	{
-		if( !Q_strrchr( Cmd_Argv( i ), '.' ) )
-		{
-			Com_sprintf( name, sizeof( name ), "%s.wav", Cmd_Argv( 1 ) );
-		}
-		else
-		{
-			Q_strncpyz( name, Cmd_Argv( i ), sizeof( name ) );
-		}
-		h = si.RegisterSound( name );
+		Com_Printf( "Usage: play <sound filename> [sound filename] [sound filename] ...\n" );
+		return;
+	}
+
+	for( i = 1; i < c; i++ )
+	{
+		h = si.RegisterSound( Cmd_Argv( i ), qfalse );
+
 		if( h )
 		{
 			si.StartLocalSound( h, CHAN_LOCAL_SOUND );
 		}
-		i++;
 	}
 }
 
@@ -550,7 +551,7 @@ void S_Music_f( void )
 	}
 	else
 	{
-		Com_Printf( "music <musicfile> [loopfile]\n" );
+		Com_Printf( "Usage: music <musicfile> [loopfile]\n" );
 		return;
 	}
 }
@@ -608,7 +609,7 @@ void S_Init( void )
 		Cmd_AddCommand( "s_stop", S_StopAllSounds );
 		Cmd_AddCommand( "s_info", S_SoundInfo );
 
-		cv = Cvar_Get( "s_useOpenAL", "1", CVAR_ARCHIVE );
+		cv = Cvar_Get( "s_useOpenAL", "1", CVAR_ARCHIVE | CVAR_LATCH );
 		if( cv->integer )
 		{
 			//OpenAL
@@ -626,7 +627,7 @@ void S_Init( void )
 		{
 			if( !S_ValidSoundInterface( &si ) )
 			{
-				Com_Error( ERR_FATAL, "Sound interface invalid." );
+				Com_Error( ERR_FATAL, "Sound interface invalid" );
 			}
 
 			S_SoundInfo();

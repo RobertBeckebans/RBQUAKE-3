@@ -80,6 +80,10 @@ extern "C"
 #define CLIENT_WINDOW_MIN_TITLE PRODUCT_NAME_LOWER
 // 1.32 released 7-10-2002
 
+#ifndef PRODUCT_DATE
+	#define PRODUCT_DATE __DATE__
+#endif
+
 //#if !defined( STANDALONE )
 //#define STANDALONE
 //#endif
@@ -486,19 +490,19 @@ extern vec4_t colorLtGrey;
 extern vec4_t colorMdGrey;
 extern vec4_t colorDkGrey;
 
-#define Q_COLOR_ESCAPE       '^'
-#define Q_IsColorString( p ) ( p && *( p ) == Q_COLOR_ESCAPE && *( ( p ) + 1 ) && *( ( p ) + 1 ) != Q_COLOR_ESCAPE ) // ^[0-9a-zA-Z]
+#define Q_COLOR_ESCAPE '^'
+qboolean Q_IsColorString( const char* p ); // ^[0-9a-zA-Z]
 
-#define COLOR_BLACK   '0'
-#define COLOR_RED     '1'
-#define COLOR_GREEN   '2'
-#define COLOR_YELLOW  '3'
-#define COLOR_BLUE    '4'
-#define COLOR_CYAN    '5'
-#define COLOR_MAGENTA '6'
-#define COLOR_WHITE   '7'
-
-#define ColorIndex( c ) ( ( ( c ) - '0' ) & 0x07 )
+#define COLOR_BLACK              '0'
+#define COLOR_RED                '1'
+#define COLOR_GREEN              '2'
+#define COLOR_YELLOW             '3'
+#define COLOR_BLUE               '4'
+#define COLOR_CYAN               '5'
+#define COLOR_MAGENTA            '6'
+#define COLOR_WHITE              '7'
+#define ColorIndexForNumber( c ) ( ( c )&0x07 )
+#define ColorIndex( c )          ( ColorIndexForNumber( ( c ) - '0' ) )
 
 #define S_COLOR_BLACK   "^0"
 #define S_COLOR_RED     "^1"
@@ -1191,6 +1195,14 @@ void VectorAxisMultiply( const vec3_t p, vec3_t m[ 3 ], vec3_t out );
 
 void PerpendicularVector( vec3_t dst, const vec3_t src );
 
+#ifndef MAX
+	#define MAX( x, y ) ( ( x ) > ( y ) ? ( x ) : ( y ) )
+#endif
+
+#ifndef MIN
+	#define MIN( x, y ) ( ( x ) < ( y ) ? ( x ) : ( y ) )
+#endif
+
 void GetPerpendicularViewVector( const vec3_t point, const vec3_t p1, const vec3_t p2, vec3_t up );
 void ProjectPointOntoVector( vec3_t point, vec3_t vStart, vec3_t vEnd, vec3_t vProj );
 
@@ -1474,7 +1486,7 @@ void Com_Parse2DMatrix( char** buf_p, int y, int x, float* m );
 void Com_Parse3DMatrix( char** buf_p, int z, int y, int x, float* m );
 int  Com_HexStrToInt( const char* str );
 
-void QDECL Com_sprintf( char* dest, int size, const char* fmt, ... );
+int QDECL Com_sprintf( char* dest, int size, const char* fmt, ... ) __attribute__( ( format( printf, 3, 4 ) ) );
 
 char* Com_SkipTokens( char* s, int numTokens, char* sep );
 char* Com_SkipCharset( char* s, char* sep );

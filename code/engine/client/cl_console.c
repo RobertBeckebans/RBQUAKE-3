@@ -25,9 +25,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 int g_console_field_width = 78;
 
-#define NUM_CON_TIMES 4
+#define NUM_CON_TIMES 5
 
 #define CON_TEXTSIZE 32768
+#define CON_LINESTEP 2
+
 typedef struct
 {
 	qboolean initialized;
@@ -54,11 +56,14 @@ typedef struct
 
 console_t con;
 
+cvar_t* con_shadow;
 cvar_t* con_conspeed;
 cvar_t* con_autoclear;
 cvar_t* con_notifytime;
 
 #define DEFAULT_CONSOLE_WIDTH 78
+
+vec4_t console_color = { 1.0, 1.0, 1.0, 1.0 };
 
 /*
 ================
@@ -390,6 +395,7 @@ void Con_Init( void )
 	con_notifytime = Cvar_Get( "con_notifytime", "3", 0 );
 	con_conspeed   = Cvar_Get( "scr_conspeed", "3", 0 );
 	con_autoclear  = Cvar_Get( "con_autoclear", "1", CVAR_ARCHIVE );
+	con_shadow     = Cvar_Get( "con_shadow", "1", CVAR_ARCHIVE );
 
 	Field_Clear( &g_consoleField );
 	g_consoleField.widthInChars = g_console_field_width;
@@ -588,22 +594,31 @@ Con_DrawInput
 Draw the editline after a ] prompt
 ================
 */
-void Con_DrawInput( void )
+void Con_DrawInput( vec4_t color )
 {
-	int y;
+	int style;
 
 	if( clc.state != CA_DISCONNECTED && !( Key_GetCatcher() & KEYCATCH_CONSOLE ) )
 	{
 		return;
 	}
 
-	y = con.vislines - ( SMALLCHAR_HEIGHT * 2 );
+	if( con_shadow->value > 0 )
+	{
+		style = UI_DROPSHADOW;
+	}
+	else
+	{
+		style = 0;
+	}
 
-	re.SetColor( con.color );
+	//y = con.vislines - (SMALLCHAR_HEIGHT * 2);
 
-	SCR_DrawSmallChar( con.xadjust + 1 * SMALLCHAR_WIDTH, y, ']' );
+	//re.SetColor(con.color);
 
-	Field_Draw( &g_consoleField, con.xadjust + 2 * SMALLCHAR_WIDTH, y, SCREEN_WIDTH - 3 * SMALLCHAR_WIDTH, qtrue, qtrue );
+	SCR_Text_Paint( 20, 234, 0.15f, color, "]", 0, 0, style | UI_PULSE, &cls.consoleFont );
+
+	Field_Draw( &g_consoleField, 26, 234, SCREEN_WIDTH - 3 * SMALLCHAR_WIDTH, qtrue, qtrue );
 }
 
 /*
@@ -621,11 +636,14 @@ void Con_DrawNotify( void )
 	int    time;
 	int    skip;
 	int    currentColor;
+	vec4_t color;
+	float  alpha;
+	int    offset;
 
 	currentColor = 7;
 	re.SetColor( g_color_table[ currentColor ] );
 
-	v = 0;
+	v = 10;
 	for( i = con.current - NUM_CON_TIMES + 1; i <= con.current; i++ )
 	{
 		if( i < 0 )
@@ -642,6 +660,9 @@ void Con_DrawNotify( void )
 		{
 			continue;
 		}
+
+		alpha = 1.0f - ( 1.0f / ( con_notifytime->value * 1000 ) * time );
+
 		text = con.text + ( i % con.totallines ) * con.linewidth;
 
 		if( cl.snap.ps.pm_type != PM_INTERMISSION && Key_GetCatcher() & ( KEYCATCH_UI | KEYCATCH_CGAME ) )
@@ -660,10 +681,19 @@ void Con_DrawNotify( void )
 				currentColor = ColorIndexForNumber( text[ x ] >> 8 );
 				re.SetColor( g_color_table[ currentColor ] );
 			}
-			SCR_DrawSmallChar( cl_conXOffset->integer + con.xadjust + ( x + 1 ) * SMALLCHAR_WIDTH, v, text[ x ] & 0xff );
+			//SCR_DrawSmallChar( cl_conXOffset->integer + con.xadjust + ( x + 1 ) * SMALLCHAR_WIDTH, v, text[ x ] & 0xff );
+
+			Vector4Copy( g_color_table[ currentColor ], color );
+
+			color[ 3 ] = alpha;
+
+			//offset = 8 - (alpha * 8); otty: good idea, but looks strange
+			offset = 0;
+
+			SCR_Text_PaintSingleChar( cl_conXOffset->integer + con.xadjust + ( x + 1 ) * 5, v - offset, 0.15f, color, text[ x ] & 0xff, 0, 0, UI_DROPSHADOW, &cls.consoleFont );
 		}
 
-		v += SMALLCHAR_HEIGHT;
+		v += 8;
 	}
 
 	re.SetColor( NULL );
@@ -676,18 +706,23 @@ void Con_DrawNotify( void )
 	// draw the chat line
 	if( Key_GetCatcher() & KEYCATCH_MESSAGE )
 	{
+		const char* s;
+
 		if( chat_team )
 		{
-			SCR_DrawBigString( 8, v, "say_team:", 1.0f, qfalse );
-			skip = 10;
+			s = "say_team:";
 		}
 		else
 		{
-			SCR_DrawBigString( 8, v, "say:", 1.0f, qfalse );
-			skip = 5;
+			s = "say:";
 		}
 
-		Field_BigDraw( &chatField, skip * BIGCHAR_WIDTH, v, SCREEN_WIDTH - ( skip + 1 ) * BIGCHAR_WIDTH, qtrue, qtrue );
+		SCR_Text_PaintAligned( 8, v, s, 0.25f, UI_LEFT, colorWhite, &cls.consoleFont );
+		skip = SCR_Text_Width( s, 0.25f, 0, &cls.consoleFont ) + 7;
+
+		Field_BigDraw( &chatField, skip, v + SCR_Text_Height( s, 0.25f, 0, &cls.consoleFont ) / 2, SCREEN_WIDTH - ( skip + 1 ), qtrue, qtrue );
+
+		v += BIGCHAR_HEIGHT;
 	}
 }
 
@@ -814,7 +849,7 @@ void Con_DrawSolidConsole( float frac )
 	}
 
 	// draw the input prompt, user text, and cursor if desired
-	Con_DrawInput();
+	Con_DrawInput( color );
 
 	re.SetColor( NULL );
 }

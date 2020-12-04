@@ -3640,7 +3640,7 @@ void CL_InitRef( void )
 	ri.Error             = Com_Error;
 	ri.Milliseconds      = CL_ScaledMilliseconds;
 	ri.RealTime          = Com_RealTime;
-	ri.Z_Malloc          = CL_RefMalloc;
+	ri.Malloc            = CL_RefMalloc;
 	ri.Free              = Z_Free;
 
 #ifdef HUNK_DEBUG
@@ -3671,6 +3671,7 @@ void CL_InitRef( void )
 	ri.Cvar_VariableIntegerValue = Cvar_VariableIntegerValue;
 
 	// cinematic stuff
+
 	ri.CIN_UploadCinematic = CIN_UploadCinematic;
 	ri.CIN_PlayCinematic   = CIN_PlayCinematic;
 	ri.CIN_RunCinematic    = CIN_RunCinematic;

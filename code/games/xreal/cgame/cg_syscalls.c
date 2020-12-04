@@ -563,16 +563,6 @@ qboolean trap_getCameraInfo( int time, vec3_t *origin, vec3_t *angles) {
 }
 */
 
-int trap_GetDemoState( void )
-{
-	return syscall( CG_GETDEMOSTATE );
-}
-
-int trap_GetDemoPos( void )
-{
-	return syscall( CG_GETDEMOPOS );
-}
-
 qboolean trap_GetEntityToken( char* buffer, int bufferSize )
 {
 	return syscall( CG_GET_ENTITY_TOKEN, buffer, bufferSize );
@@ -581,11 +571,6 @@ qboolean trap_GetEntityToken( char* buffer, int bufferSize )
 qboolean trap_R_inPVS( const vec3_t p1, const vec3_t p2 )
 {
 	return syscall( CG_R_INPVS, p1, p2 );
-}
-
-void trap_GetDemoName( char* buffer, int size )
-{
-	syscall( CG_GETDEMONAME, buffer, size );
 }
 
 void trap_Key_KeynumToStringBuf( int keynum, char* buf, int buflen )
