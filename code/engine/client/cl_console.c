@@ -43,6 +43,7 @@ typedef struct
 	int totallines; // total lines in console scrollback
 
 	float xadjust; // for wide aspect screens
+	float yadjust; // for narrow aspect screens
 
 	float displayFrac; // aproaches finalFrac at scr_conspeed
 	float finalFrac;   // 0.0 to 1.0 lines of console to display
@@ -356,10 +357,7 @@ void Con_CheckResize( void )
 			for( j = 0; j < numchars; j++ )
 			{
 				con.text[ ( con.totallines - 1 - i ) * con.linewidth + j ] =
-					tbuf[ ( ( con.current - i + oldtotallines ) %
-							  oldtotallines ) *
-							oldwidth +
-						j ];
+					tbuf[ ( ( con.current - i + oldtotallines ) % oldtotallines ) * oldwidth + j ];
 			}
 		}
 
@@ -740,9 +738,13 @@ void Con_DrawSolidConsole( float frac )
 	short* text;
 	int    row;
 	int    lines;
-	//	qhandle_t		conShader;
 	int    currentColor;
 	vec4_t color;
+	vec4_t fontColor;
+	vec4_t fontColorHighlight;
+	float  alpha;
+	int    style;
+	int    rowOffset = 0;
 
 	lines = cls.glconfig.vidHeight * frac;
 	if( lines <= 0 )
@@ -755,12 +757,23 @@ void Con_DrawSolidConsole( float frac )
 		lines = cls.glconfig.vidHeight;
 	}
 
+	if( con_shadow->value > 0 )
+	{
+		style = UI_DROPSHADOW;
+	}
+	else
+	{
+		style = 0;
+	}
+
 	// on wide screens, we will center the text
 	con.xadjust = 0;
-	SCR_AdjustFrom640( &con.xadjust, NULL, NULL, NULL );
+	con.yadjust = 0;
+	SCR_AdjustFrom640( &con.xadjust, &con.yadjust, NULL, NULL );
 
 	// draw the background
-	y = frac * SCREEN_HEIGHT;
+	alpha = frac;
+	y     = frac * SCREEN_HEIGHT;
 	if( y < 1 )
 	{
 		y = 0;
@@ -780,35 +793,56 @@ void Con_DrawSolidConsole( float frac )
 
 	re.SetColor( g_color_table[ ColorIndex( COLOR_RED ) ] );
 
+	Vector4Set( fontColor, 1.0f, 1.0f, 1.0f, alpha );
+	Vector4Set( fontColorHighlight, 1.0f, 1.0f, 1.0f, alpha * 1.5f );
+
 	i = strlen( Q3_VERSION );
 
+#if 1
 	for( x = 0; x < i; x++ )
 	{
 		SCR_DrawSmallChar( cls.glconfig.vidWidth - ( i - x + 1 ) * SMALLCHAR_WIDTH,
 			lines - SMALLCHAR_HEIGHT,
 			Q3_VERSION[ x ] );
 	}
+#else
+	// version string
+	SCR_Text_PaintAligned( 626, y, Q3_VERSION, 0.1f, UI_RIGHT | style, fontColorHighlight, &cls.consoleFont );
+	y -= 10;
+#endif
 
 	// draw the text
 	con.vislines = lines;
 	rows         = ( lines - SMALLCHAR_HEIGHT ) / SMALLCHAR_HEIGHT; // rows of text to draw
 
 	y = lines - ( SMALLCHAR_HEIGHT * 3 );
+	y = 222;
 
 	// draw from the bottom up
 	if( con.display != con.current )
 	{
 		// draw arrows to show the buffer is backscrolled
 		re.SetColor( g_color_table[ ColorIndex( COLOR_RED ) ] );
-		for( x = 0; x < con.linewidth; x += 4 )
+
+		//for( x = 0; x < con.linewidth; x += 4 )
+		if( y >= con.yadjust )
 		{
-			SCR_DrawSmallChar( con.xadjust + ( x + 1 ) * SMALLCHAR_WIDTH, y, '^' );
+			//SCR_DrawSmallChar( con.xadjust + ( x + 1 ) * SMALLCHAR_WIDTH, y, '^' );
+			for( x = 0; x < con.linewidth - 12; x += 3 )
+			{
+				SCR_Text_PaintSingleChar( con.xadjust + ( x + 1 ) * SMALLCHAR_WIDTH + 15, y, 0.15f, fontColorHighlight, '^', 0, 0, style, &cls.consoleBoldFont );
+			}
+
+			y -= SMALLCHAR_HEIGHT;
+			rows -= CON_LINESTEP;
+			rowOffset = CON_LINESTEP;
 		}
-		y -= SMALLCHAR_HEIGHT;
-		rows--;
+		//y -= SMALLCHAR_HEIGHT;
+		//rows--;
 	}
 
 	row = con.display;
+	row -= rowOffset;
 
 	if( con.x == 0 )
 	{
@@ -818,12 +852,13 @@ void Con_DrawSolidConsole( float frac )
 	currentColor = 7;
 	re.SetColor( g_color_table[ currentColor ] );
 
-	for( i = 0; i < rows; i++, y -= SMALLCHAR_HEIGHT, row-- )
+	for( i = 0; i < rows; i++, y -= 8, row-- )
 	{
-		if( row < 0 )
+		if( row < con.yadjust )
 		{
 			break;
 		}
+
 		if( con.current - row >= con.totallines )
 		{
 			// past scrollback wrap point
@@ -844,7 +879,12 @@ void Con_DrawSolidConsole( float frac )
 				currentColor = ColorIndexForNumber( text[ x ] >> 8 );
 				re.SetColor( g_color_table[ currentColor ] );
 			}
-			SCR_DrawSmallChar( con.xadjust + ( x + 1 ) * SMALLCHAR_WIDTH, y, text[ x ] & 0xff );
+			//SCR_DrawSmallChar( con.xadjust + ( x + 1 ) * SMALLCHAR_WIDTH, y, text[ x ] & 0xff );
+
+			Vector4Copy( g_color_table[ currentColor ], color );
+			color[ 3 ] = alpha * 1.5f;
+
+			SCR_Text_PaintSingleChar( 15 + con.xadjust + ( x + 1 ) * 5, y, 0.15f, color, text[ x ] & 0xff, 0, 0, style, &cls.consoleFont );
 		}
 	}
 

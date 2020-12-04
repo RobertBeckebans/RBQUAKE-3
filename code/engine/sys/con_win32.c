@@ -205,7 +205,7 @@ static void CON_Show( void )
 	GetConsoleScreenBufferInfo( qconsole_hout, &binfo );
 
 	// if we're in the middle of printf, don't bother writing the buffer
-	if( !qconsole_drawinput )
+	if( !qconsole_drawinput || !qconsole_hout )
 	{
 		return;
 	}
