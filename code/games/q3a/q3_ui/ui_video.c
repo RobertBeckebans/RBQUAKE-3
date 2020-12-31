@@ -350,7 +350,7 @@ static const char* knownRatios[][ 2 ] = {
 	{ NULL, NULL }
 };
 
-#define MAX_RESOLUTIONS 32
+#define MAX_RESOLUTIONS 128
 
 static const char* ratios[ MAX_RESOLUTIONS ];
 static char        ratioBuf[ MAX_RESOLUTIONS ][ 8 ];

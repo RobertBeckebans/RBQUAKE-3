@@ -1351,7 +1351,7 @@ R_Register
 		r_ext_framebuffer_blit           = ri.Cvar_Get( "r_ext_framebuffer_blit", "1", CVAR_CHEAT | CVAR_LATCH );
 
 		r_collapseStages = ri.Cvar_Get( "r_collapseStages", "1", CVAR_LATCH | CVAR_CHEAT );
-		r_picmip         = ri.Cvar_Get( "r_picmip", "1", CVAR_ARCHIVE | CVAR_LATCH );
+		r_picmip         = ri.Cvar_Get( "r_picmip", "0", CVAR_ARCHIVE | CVAR_LATCH );
 		AssertCvarRange( r_picmip, 0, 3, qtrue );
 		r_roundImagesDown         = ri.Cvar_Get( "r_roundImagesDown", "1", CVAR_ARCHIVE | CVAR_LATCH );
 		r_colorMipLevels          = ri.Cvar_Get( "r_colorMipLevels", "0", CVAR_LATCH );

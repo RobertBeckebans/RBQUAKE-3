@@ -103,11 +103,13 @@ Sys_DefaultInstallPath
 */
 char* Sys_DefaultInstallPath( void )
 {
+#if 0
 	if( *installPath )
 	{
 		return installPath;
 	}
 	else
+#endif
 	{
 		return Sys_Cwd();
 	}
