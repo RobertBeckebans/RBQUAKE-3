@@ -1518,7 +1518,7 @@ qboolean CG_Load_Menu( char** p )
 {
 	char* token;
 
-	token = COM_ParseExt( p, qtrue );
+	token = Com_ParseExt( p, qtrue );
 
 	if( token[ 0 ] != '{' )
 	{
@@ -1527,7 +1527,7 @@ qboolean CG_Load_Menu( char** p )
 
 	while( 1 )
 	{
-		token = COM_ParseExt( p, qtrue );
+		token = Com_ParseExt( p, qtrue );
 
 		if( Q_stricmp( token, "}" ) == 0 )
 		{
@@ -1584,7 +1584,7 @@ void CG_LoadMenus( const char* menuFile )
 
 	while( 1 )
 	{
-		token = COM_ParseExt( &p, qtrue );
+		token = Com_ParseExt( &p, qtrue );
 		if( !token[ 0 ] )
 		{
 			break;

@@ -1231,7 +1231,7 @@ static void Controls_InitWeapons( void )
 		{
 			continue;
 		}
-		trap_R_RegisterModel( item->world_model[ 0 ] );
+		trap_R_RegisterModel( item->models[ 0 ] );
 	}
 }
 

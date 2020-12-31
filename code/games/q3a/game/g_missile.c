@@ -377,7 +377,7 @@ void G_MissileImpact( gentity_t* ent, trace_t* trace )
 		ent->think     = ProximityMine_Activate;
 		ent->nextthink = level.time + 2000;
 
-		vectoangles( trace->plane.normal, ent->s.angles );
+		VectorToAngles( trace->plane.normal, ent->s.angles );
 		ent->s.angles[ 0 ] += 90;
 
 		// link the prox mine to the other entity

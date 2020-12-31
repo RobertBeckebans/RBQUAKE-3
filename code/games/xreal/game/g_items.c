@@ -1,22 +1,21 @@
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
-Copyright (C) 2006 Robert Beckebans <trebor_7@users.sourceforge.net>
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -33,7 +32,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
   Respawnable items don't actually go away when picked up, they are
   just made invisible and untouchable.  This allows them to ride
-  movers and respawn apropriately.
+  movers and respawn appropriately.
 */
 
 #define RESPAWN_ARMOR      25
@@ -348,9 +347,8 @@ int Pickup_Health( gentity_t* ent, gentity_t* other )
 	}
 	other->client->ps.stats[ STAT_HEALTH ] = other->health;
 
-	if( ent->item->quantity == 100 )
+	if( ent->item->quantity == 100 ) // mega health respawns slow
 	{
-		// mega health respawns slow
 		return RESPAWN_MEGAHEALTH;
 	}
 
@@ -399,6 +397,11 @@ RespawnItem
 */
 void RespawnItem( gentity_t* ent )
 {
+	if( !ent )
+	{
+		return;
+	}
+
 	// randomly select from teamed entities
 	if( ent->team )
 	{
@@ -417,8 +420,13 @@ void RespawnItem( gentity_t* ent )
 
 		choice = rand() % count;
 
-		for( count = 0, ent = master; count < choice; ent = ent->teamchain, count++ )
+		for( count = 0, ent = master; ent && count < choice; ent = ent->teamchain, count++ )
 			;
+	}
+
+	if( !ent )
+	{
+		return;
 	}
 
 	ent->r.contents = CONTENTS_TRIGGER;
@@ -510,11 +518,11 @@ void Touch_Item( gentity_t* ent, gentity_t* other, trace_t* trace )
 	{
 		case IT_WEAPON:
 			respawn = Pickup_Weapon( ent, other );
-			//      predict = qfalse;
+			//		predict = qfalse;
 			break;
 		case IT_AMMO:
 			respawn = Pickup_Ammo( ent, other );
-			//      predict = qfalse;
+			//		predict = qfalse;
 			break;
 		case IT_ARMOR:
 			respawn = Pickup_Armor( ent, other );
@@ -673,21 +681,18 @@ gentity_t* LaunchItem( gitem_t* item, vec3_t origin, vec3_t velocity )
 
 	dropped->s.eFlags |= EF_BOUNCE_HALF;
 #ifdef MISSIONPACK
-	if( ( g_gametype.integer == GT_CTF || g_gametype.integer == GT_1FCTF ) && item->giType == IT_TEAM )
+	if( ( g_gametype.integer == GT_CTF || g_gametype.integer == GT_1FCTF ) && item->giType == IT_TEAM ) // Special case for CTF flags
 	{
-		// Special case for CTF flags
 #else
-	if( g_gametype.integer == GT_CTF && item->giType == IT_TEAM )
+	if( g_gametype.integer == GT_CTF && item->giType == IT_TEAM ) // Special case for CTF flags
 	{
-		// Special case for CTF flags
 #endif
 		dropped->think     = Team_DroppedFlagThink;
 		dropped->nextthink = level.time + 30000;
 		Team_CheckDroppedItem( dropped );
 	}
-	else
+	else // auto-remove after 30 seconds
 	{
-		// auto-remove after 30 seconds
 		dropped->think     = G_FreeEntity;
 		dropped->nextthink = level.time + 30000;
 	}
@@ -758,7 +763,7 @@ void FinishSpawningItem( gentity_t* ent )
 
 	ent->r.contents = CONTENTS_TRIGGER;
 	ent->touch      = Touch_Item;
-	// useing an item causes it to respawn
+	// using an item causes it to respawn
 	ent->use = Use_Item;
 
 	if( ent->suspended )

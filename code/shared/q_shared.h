@@ -45,7 +45,6 @@ extern "C"
 	
 	#define ENGINE_NAME    		 "XreaL Engine"
 	#define ENGINE_VERSION		 "0.9.7"
-	
 	#define STEAMPATH_NAME          "Quake 3 Arena"
 	#define STEAMPATH_APPID         "2200"
 	#define GOGPATH_ID              "1441704920"
@@ -59,7 +58,9 @@ extern "C"
 #define LEGACY_MASTER_GAMENAME      "Quake3Arena"
 #define LEGACY_HEARTBEAT_FOR_MASTER "QuakeArena-1"
 
-#if 0
+#define BASETA "missionpack"
+
+#if !defined( STANDALONE )
 #if !defined( COMPAT_Q3A )
 #define COMPAT_Q3A 1
 #endif
@@ -85,10 +86,11 @@ extern "C"
 #endif
 
 //#if !defined( STANDALONE )
-//#define STANDALONE
+//#define BASEGAME            "baseq3"
+//#else 
+#define BASEGAME            "base"
 //#endif
 
-#define BASEGAME            "base"
 #define GAMENAME_FOR_MASTER PRODUCT_NAME_UPPPER // must NOT contain whitespaces
 
 /*

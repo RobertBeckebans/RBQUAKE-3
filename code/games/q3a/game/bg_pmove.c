@@ -27,6 +27,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "bg_public.h"
 #include "bg_local.h"
 
+const vec3_t playerMins = { -15, -15, -24 };
+const vec3_t playerMaxs = { 15, 15, 32 };
+
 pmove_t* pm;
 pml_t    pml;
 
@@ -845,7 +848,7 @@ static void PM_WalkMove( void )
 		wishvel[ i ] = pml.forward[ i ] * fmove + pml.right[ i ] * smove;
 	}
 	// when going up or down slopes the wish velocity should Not be zero
-	//	wishvel[2] = 0;
+	//  wishvel[2] = 0;
 
 	VectorCopy( wishvel, wishdir );
 	wishspeed = VectorNormalize( wishdir );
@@ -896,7 +899,7 @@ static void PM_WalkMove( void )
 	else
 	{
 		// don't reset the z velocity for slopes
-		//		pm->ps->velocity[2] = 0;
+		//      pm->ps->velocity[2] = 0;
 	}
 
 	vel = VectorLength( pm->ps->velocity );
@@ -2102,11 +2105,8 @@ void PM_UpdateViewAngles( playerState_t* ps, const usercmd_t* cmd )
 /*
 ================
 PmoveSingle
-
 ================
 */
-void trap_SnapVector( float* v );
-
 void PmoveSingle( pmove_t* pmove )
 {
 	pm = pmove;
@@ -2153,8 +2153,7 @@ void PmoveSingle( pmove_t* pmove )
 	}
 
 	// clear the respawned flag if attack and use are cleared
-	if( pm->ps->stats[ STAT_HEALTH ] > 0 &&
-		!( pm->cmd.buttons & ( BUTTON_ATTACK | BUTTON_USE_HOLDABLE ) ) )
+	if( pm->ps->stats[ STAT_HEALTH ] > 0 && !( pm->cmd.buttons & ( BUTTON_ATTACK | BUTTON_USE_HOLDABLE ) ) )
 	{
 		pm->ps->pm_flags &= ~PMF_RESPAWNED;
 	}
@@ -2322,7 +2321,7 @@ void PmoveSingle( pmove_t* pmove )
 	PM_WaterEvents();
 
 	// snap some parts of playerstate to save network bandwidth
-	trap_SnapVector( pm->ps->velocity );
+	SnapVector( pm->ps->velocity );
 }
 
 /*

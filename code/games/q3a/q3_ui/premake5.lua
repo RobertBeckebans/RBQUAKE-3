@@ -13,6 +13,21 @@ project "q3a-ui"
 		"../../../shared/surfaceflags.h",
 		
 		"**.c", "**.cpp", "**.h",
+		
+		"../ui/**.c", "../ui/**.h",
+		--"../game/bg_lib.c", "../game/bg_lib.h",
+		"../game/bg_misc.c",
+	}
+	excludes
+	{
+		"ui_login.c",
+		"ui_rankings.c",
+		"ui_rankstatus.c",
+		"ui_signup.c",
+		"ui_specifyleague.c",
+		
+		-- ignore TA stuff
+		-- "../ui/ui_local.h",
 	}
 	includedirs
 	{

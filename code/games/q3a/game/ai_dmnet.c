@@ -549,7 +549,7 @@ int BotGetLongTermGoal( bot_state_t* bs, int tfl, int retreat, bot_goal_t* goal 
 				if( bs->arrive_time > FloatTime() - 2 )
 				{
 					VectorSubtract( entinfo.origin, bs->origin, dir );
-					vectoangles( dir, bs->ideal_viewangles );
+					VectorToAngles( dir, bs->ideal_viewangles );
 					bs->ideal_viewangles[ 2 ] *= 0.5;
 				}
 				//else look strategically around for enemies
@@ -557,7 +557,7 @@ int BotGetLongTermGoal( bot_state_t* bs, int tfl, int retreat, bot_goal_t* goal 
 				{
 					BotRoamGoal( bs, target );
 					VectorSubtract( target, bs->origin, dir );
-					vectoangles( dir, bs->ideal_viewangles );
+					VectorToAngles( dir, bs->ideal_viewangles );
 					bs->ideal_viewangles[ 2 ] *= 0.5;
 				}
 				//check if the bot wants to go for air
@@ -764,7 +764,7 @@ int BotGetLongTermGoal( bot_state_t* bs, int tfl, int retreat, bot_goal_t* goal 
 			{
 				BotRoamGoal( bs, target );
 				VectorSubtract( target, bs->origin, dir );
-				vectoangles( dir, bs->ideal_viewangles );
+				VectorToAngles( dir, bs->ideal_viewangles );
 				bs->ideal_viewangles[ 2 ] *= 0.5;
 			}
 			//check if the bot wants to crouch
@@ -1376,7 +1376,7 @@ int BotLongTermGoal( bot_state_t* bs, int tfl, int retreat, bot_goal_t* goal )
 				}
 				//look at the team mate
 				VectorSubtract( entinfo.origin, bs->origin, dir );
-				vectoangles( dir, bs->ideal_viewangles );
+				VectorToAngles( dir, bs->ideal_viewangles );
 				bs->ideal_viewangles[ 2 ] *= 0.5;
 				//just wait for the team mate
 				return qfalse;
@@ -1660,7 +1660,7 @@ void BotClearPath( bot_state_t* bs, bot_moveresult_t* moveresult )
 			VectorCopy( state.pos.trBase, target );
 			target[ 2 ] += 8;
 			VectorSubtract( target, bs->eye, dir );
-			vectoangles( dir, moveresult->ideal_viewangles );
+			VectorToAngles( dir, moveresult->ideal_viewangles );
 			//
 			moveresult->weapon = BotSelectActivateWeapon( bs );
 			if( moveresult->weapon == -1 )
@@ -1723,7 +1723,7 @@ void BotClearPath( bot_state_t* bs, bot_moveresult_t* moveresult )
 			VectorCopy( state.pos.trBase, target );
 			target[ 2 ] += 2;
 			VectorSubtract( target, bs->eye, dir );
-			vectoangles( dir, moveresult->ideal_viewangles );
+			VectorToAngles( dir, moveresult->ideal_viewangles );
 			// if the bot has a weapon that does splash damage
 			if( bs->inventory[ INVENTORY_PLASMAGUN ] > 0 && bs->inventory[ INVENTORY_CELLS ] > 0 )
 			{
@@ -1850,7 +1850,7 @@ int AINode_Seek_ActivateEntity( bot_state_t* bs )
 			if( bs->cur_ps.weapon == bs->activatestack->weapon )
 			{
 				VectorSubtract( bs->activatestack->target, bs->eye, dir );
-				vectoangles( dir, ideal_viewangles );
+				VectorToAngles( dir, ideal_viewangles );
 				// if the bot is pretty close with its aim
 				if( InFieldOfVision( bs->viewangles, 20, ideal_viewangles ) )
 				{
@@ -1948,7 +1948,7 @@ int AINode_Seek_ActivateEntity( bot_state_t* bs )
 		if( !( moveresult.flags & MOVERESULT_MOVEMENTVIEW ) )
 		{
 			VectorSubtract( bs->activatestack->target, bs->eye, dir );
-			vectoangles( dir, moveresult.ideal_viewangles );
+			VectorToAngles( dir, moveresult.ideal_viewangles );
 			moveresult.flags |= MOVERESULT_MOVEMENTVIEW;
 		}
 		// if there's no weapon yet used for the movement
@@ -1977,7 +1977,7 @@ int AINode_Seek_ActivateEntity( bot_state_t* bs )
 		{
 			BotRoamGoal( bs, target );
 			VectorSubtract( target, bs->origin, dir );
-			vectoangles( dir, bs->ideal_viewangles );
+			VectorToAngles( dir, bs->ideal_viewangles );
 			bs->ideal_viewangles[ 2 ] *= 0.5;
 		}
 	}
@@ -1986,11 +1986,11 @@ int AINode_Seek_ActivateEntity( bot_state_t* bs )
 		if( trap_BotMovementViewTarget( bs->ms, goal, bs->tfl, 300, target ) )
 		{
 			VectorSubtract( target, bs->origin, dir );
-			vectoangles( dir, bs->ideal_viewangles );
+			VectorToAngles( dir, bs->ideal_viewangles );
 		}
 		else
 		{
-			vectoangles( moveresult.movedir, bs->ideal_viewangles );
+			VectorToAngles( moveresult.movedir, bs->ideal_viewangles );
 		}
 		bs->ideal_viewangles[ 2 ] *= 0.5;
 	}
@@ -2145,7 +2145,7 @@ int AINode_Seek_NBG( bot_state_t* bs )
 		{
 			BotRoamGoal( bs, target );
 			VectorSubtract( target, bs->origin, dir );
-			vectoangles( dir, bs->ideal_viewangles );
+			VectorToAngles( dir, bs->ideal_viewangles );
 			bs->ideal_viewangles[ 2 ] *= 0.5;
 		}
 	}
@@ -2158,12 +2158,12 @@ int AINode_Seek_NBG( bot_state_t* bs )
 		if( trap_BotMovementViewTarget( bs->ms, &goal, bs->tfl, 300, target ) )
 		{
 			VectorSubtract( target, bs->origin, dir );
-			vectoangles( dir, bs->ideal_viewangles );
+			VectorToAngles( dir, bs->ideal_viewangles );
 		}
 		//FIXME: look at cluster portals?
 		else
 		{
-			vectoangles( moveresult.movedir, bs->ideal_viewangles );
+			VectorToAngles( moveresult.movedir, bs->ideal_viewangles );
 		}
 		bs->ideal_viewangles[ 2 ] *= 0.5;
 	}
@@ -2395,7 +2395,7 @@ int AINode_Seek_LTG( bot_state_t* bs )
 		{
 			BotRoamGoal( bs, target );
 			VectorSubtract( target, bs->origin, dir );
-			vectoangles( dir, bs->ideal_viewangles );
+			VectorToAngles( dir, bs->ideal_viewangles );
 			bs->ideal_viewangles[ 2 ] *= 0.5;
 		}
 	}
@@ -2404,18 +2404,18 @@ int AINode_Seek_LTG( bot_state_t* bs )
 		if( trap_BotMovementViewTarget( bs->ms, &goal, bs->tfl, 300, target ) )
 		{
 			VectorSubtract( target, bs->origin, dir );
-			vectoangles( dir, bs->ideal_viewangles );
+			VectorToAngles( dir, bs->ideal_viewangles );
 		}
 		//FIXME: look at cluster portals?
 		else if( VectorLengthSquared( moveresult.movedir ) )
 		{
-			vectoangles( moveresult.movedir, bs->ideal_viewangles );
+			VectorToAngles( moveresult.movedir, bs->ideal_viewangles );
 		}
 		else if( random() < bs->thinktime * 0.8 )
 		{
 			BotRoamGoal( bs, target );
 			VectorSubtract( target, bs->origin, dir );
-			vectoangles( dir, bs->ideal_viewangles );
+			VectorToAngles( dir, bs->ideal_viewangles );
 			bs->ideal_viewangles[ 2 ] *= 0.5;
 		}
 		bs->ideal_viewangles[ 2 ] *= 0.5;
@@ -2798,11 +2798,11 @@ int AINode_Battle_Chase( bot_state_t* bs )
 			if( trap_BotMovementViewTarget( bs->ms, &goal, bs->tfl, 300, target ) )
 			{
 				VectorSubtract( target, bs->origin, dir );
-				vectoangles( dir, bs->ideal_viewangles );
+				VectorToAngles( dir, bs->ideal_viewangles );
 			}
 			else
 			{
-				vectoangles( moveresult.movedir, bs->ideal_viewangles );
+				VectorToAngles( moveresult.movedir, bs->ideal_viewangles );
 			}
 		}
 		bs->ideal_viewangles[ 2 ] *= 0.5;
@@ -3038,11 +3038,11 @@ int AINode_Battle_Retreat( bot_state_t* bs )
 			if( trap_BotMovementViewTarget( bs->ms, &goal, bs->tfl, 300, target ) )
 			{
 				VectorSubtract( target, bs->origin, dir );
-				vectoangles( dir, bs->ideal_viewangles );
+				VectorToAngles( dir, bs->ideal_viewangles );
 			}
 			else
 			{
-				vectoangles( moveresult.movedir, bs->ideal_viewangles );
+				VectorToAngles( moveresult.movedir, bs->ideal_viewangles );
 			}
 			bs->ideal_viewangles[ 2 ] *= 0.5;
 		}
@@ -3219,11 +3219,11 @@ int AINode_Battle_NBG( bot_state_t* bs )
 			if( trap_BotMovementViewTarget( bs->ms, &goal, bs->tfl, 300, target ) )
 			{
 				VectorSubtract( target, bs->origin, dir );
-				vectoangles( dir, bs->ideal_viewangles );
+				VectorToAngles( dir, bs->ideal_viewangles );
 			}
 			else
 			{
-				vectoangles( moveresult.movedir, bs->ideal_viewangles );
+				VectorToAngles( moveresult.movedir, bs->ideal_viewangles );
 			}
 			bs->ideal_viewangles[ 2 ] *= 0.5;
 		}

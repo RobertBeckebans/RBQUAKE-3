@@ -514,6 +514,8 @@ CON_WindowsColorPrint
 Set text colors based on Q3 color codes
 =================
 */
+
+// RB: replaced fputs nonsense with OutputDebugStringA
 void CON_WindowsColorPrint( const char* msg )
 {
 	static char buffer[ MAXPRINTMSG ];
@@ -529,7 +531,7 @@ void CON_WindowsColorPrint( const char* msg )
 			if( length > 0 )
 			{
 				buffer[ length ] = '\0';
-				fputs( buffer, stderr );
+				OutputDebugStringA( buffer );
 				length = 0;
 			}
 
@@ -537,7 +539,7 @@ void CON_WindowsColorPrint( const char* msg )
 			{
 				// Reset color and then add the newline
 				SetConsoleTextAttribute( qconsole_hout, CON_ColorCharToAttrib( COLOR_WHITE ) );
-				fputs( "\n", stderr );
+				OutputDebugStringA( "\n" );
 				msg++;
 			}
 			else
@@ -564,7 +566,7 @@ void CON_WindowsColorPrint( const char* msg )
 	if( length > 0 )
 	{
 		buffer[ length ] = '\0';
-		fputs( buffer, stderr );
+		OutputDebugStringA( buffer );
 	}
 }
 

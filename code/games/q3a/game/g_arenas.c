@@ -129,7 +129,10 @@ void UpdateTournamentInfo( void )
 		Com_sprintf( msg, sizeof( msg ), "postgame %i %i %i %i %i %i %i %i %i %i %i %i %i %i", level.numNonSpectatorClients, playerClientNum, accuracy, player->client->ps.persistant[ PERS_IMPRESSIVE_COUNT ], player->client->ps.persistant[ PERS_EXCELLENT_COUNT ], player->client->ps.persistant[ PERS_DEFEND_COUNT ], player->client->ps.persistant[ PERS_ASSIST_COUNT ], player->client->ps.persistant[ PERS_GAUNTLET_FRAG_COUNT ], player->client->ps.persistant[ PERS_SCORE ], perfect, score1, score2, level.time, player->client->ps.persistant[ PERS_CAPTURES ] );
 
 #else
-		perfect = ( level.clients[ playerClientNum ].ps.persistant[ PERS_RANK ] == 0 && player->client->ps.persistant[ PERS_KILLED ] == 0 ) ? 1 : 0;
+		perfect = ( level.clients[ playerClientNum ].ps.persistant[ PERS_RANK ] == 0 &&
+					  player->client->ps.persistant[ PERS_KILLED ] == 0 ) ?
+            1 :
+            0;
 		Com_sprintf( msg, sizeof( msg ), "postgame %i %i %i %i %i %i %i %i", level.numNonSpectatorClients, playerClientNum, accuracy, player->client->ps.persistant[ PERS_IMPRESSIVE_COUNT ], player->client->ps.persistant[ PERS_EXCELLENT_COUNT ], player->client->ps.persistant[ PERS_GAUNTLET_FRAG_COUNT ], player->client->ps.persistant[ PERS_SCORE ], perfect );
 #endif
 	}
@@ -198,7 +201,7 @@ static gentity_t* SpawnModelOnVictoryPad( gentity_t* pad, vec3_t offset, gentity
 	body->takedamage = qfalse;
 
 	VectorSubtract( level.intermission_origin, pad->r.currentOrigin, vec );
-	vectoangles( vec, body->s.apos.trBase );
+	VectorToAngles( vec, body->s.apos.trBase );
 	body->s.apos.trBase[ PITCH ] = 0;
 	body->s.apos.trBase[ ROLL ]  = 0;
 
@@ -266,7 +269,7 @@ static void PodiumPlacementThink( gentity_t* podium )
 	if( podium1 )
 	{
 		VectorSubtract( level.intermission_origin, podium->r.currentOrigin, vec );
-		vectoangles( vec, podium1->s.apos.trBase );
+		VectorToAngles( vec, podium1->s.apos.trBase );
 		podium1->s.apos.trBase[ PITCH ] = 0;
 		podium1->s.apos.trBase[ ROLL ]  = 0;
 
@@ -281,7 +284,7 @@ static void PodiumPlacementThink( gentity_t* podium )
 	if( podium2 )
 	{
 		VectorSubtract( level.intermission_origin, podium->r.currentOrigin, vec );
-		vectoangles( vec, podium2->s.apos.trBase );
+		VectorToAngles( vec, podium2->s.apos.trBase );
 		podium2->s.apos.trBase[ PITCH ] = 0;
 		podium2->s.apos.trBase[ ROLL ]  = 0;
 
@@ -296,7 +299,7 @@ static void PodiumPlacementThink( gentity_t* podium )
 	if( podium3 )
 	{
 		VectorSubtract( level.intermission_origin, podium->r.currentOrigin, vec );
-		vectoangles( vec, podium3->s.apos.trBase );
+		VectorToAngles( vec, podium3->s.apos.trBase );
 		podium3->s.apos.trBase[ PITCH ] = 0;
 		podium3->s.apos.trBase[ ROLL ]  = 0;
 

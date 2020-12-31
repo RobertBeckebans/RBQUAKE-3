@@ -1,22 +1,21 @@
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
-Copyright (C) 2006 Robert Beckebans <trebor_7@users.sourceforge.net>
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -34,11 +33,17 @@ DeathmatchScoreboardMessage
 void DeathmatchScoreboardMessage( gentity_t* ent )
 {
 	char       entry[ 1024 ];
-	char       string[ 1400 ];
+	char       string[ 1000 ];
 	int        stringlength;
 	int        i, j;
 	gclient_t* cl;
 	int        numSorted, scoreFlags, accuracy, perfect;
+
+	// don't send scores to bots, they don't parse it
+	if( ent->r.svFlags & SVF_BOT )
+	{
+		return;
+	}
 
 	// send the latest information on all clients
 	string[ 0 ]  = 0;
@@ -453,7 +458,8 @@ void Cmd_LevelShot_f( gentity_t* ent )
 {
 	if( !ent->client->pers.localClient )
 	{
-		trap_SendServerCommand( ent - g_entities, "print \"The levelshot command must be executed by a local client\n\"" );
+		trap_SendServerCommand( ent - g_entities,
+			"print \"The levelshot command must be executed by a local client\n\"" );
 		return;
 	}
 
@@ -465,7 +471,8 @@ void Cmd_LevelShot_f( gentity_t* ent )
 	// doesn't work in single player
 	if( g_gametype.integer == GT_SINGLE_PLAYER )
 	{
-		trap_SendServerCommand( ent - g_entities, "print \"Must not be in singleplayer mode for levelshot\n\"" );
+		trap_SendServerCommand( ent - g_entities,
+			"print \"Must not be in singleplayer mode for levelshot\n\"" );
 		return;
 	}
 
@@ -520,7 +527,7 @@ void Cmd_Kill_f( gentity_t* ent )
 
 /*
 =================
-BroadCastTeamChange
+BroadcastTeamChange
 
 Let everyone know about a team change
 =================
@@ -607,7 +614,7 @@ void SetTeam( gentity_t* ent, char* s )
 			team = PickTeam( clientNum );
 		}
 
-		if( g_teamForceBalance.integer )
+		if( g_teamForceBalance.integer && !client->pers.localClient && !( ent->r.svFlags & SVF_BOT ) )
 		{
 			int counts[ TEAM_NUM_TEAMS ];
 
@@ -617,12 +624,14 @@ void SetTeam( gentity_t* ent, char* s )
 			// We allow a spread of two
 			if( team == TEAM_RED && counts[ TEAM_RED ] - counts[ TEAM_BLUE ] > 1 )
 			{
-				trap_SendServerCommand( clientNum, "cp \"Red team has too many players.\n\"" );
+				trap_SendServerCommand( clientNum,
+					"cp \"Red team has too many players.\n\"" );
 				return; // ignore the request
 			}
 			if( team == TEAM_BLUE && counts[ TEAM_BLUE ] - counts[ TEAM_RED ] > 1 )
 			{
-				trap_SendServerCommand( clientNum, "cp \"Blue team has too many players.\n\"" );
+				trap_SendServerCommand( clientNum,
+					"cp \"Blue team has too many players.\n\"" );
 				return; // ignore the request
 			}
 
@@ -640,7 +649,8 @@ void SetTeam( gentity_t* ent, char* s )
 	{
 		team = TEAM_SPECTATOR;
 	}
-	else if( g_maxGameClients.integer > 0 && level.numNonSpectatorClients >= g_maxGameClients.integer )
+	else if( g_maxGameClients.integer > 0 &&
+		level.numNonSpectatorClients >= g_maxGameClients.integer )
 	{
 		team = TEAM_SPECTATOR;
 	}
@@ -658,8 +668,8 @@ void SetTeam( gentity_t* ent, char* s )
 	// execute the team change
 	//
 
-	// if the player was dead leave the body
-	if( client->ps.stats[ STAT_HEALTH ] <= 0 )
+	// if the player was dead leave the body, but only if they're actually in game
+	if( client->ps.stats[ STAT_HEALTH ] <= 0 && client->pers.connected == CON_CONNECTED )
 	{
 		CopyToBodyQue( ent );
 	}
@@ -702,7 +712,7 @@ void SetTeam( gentity_t* ent, char* s )
 
 	BroadcastTeamChange( client, oldTeam );
 
-	// get and distribute relevent paramters
+	// get and distribute relevant parameters
 	ClientUserinfoChanged( clientNum );
 
 	ClientBegin( clientNum );
@@ -980,9 +990,13 @@ void G_Say( gentity_t* ent, gentity_t* target, int mode, const char* chatText )
 			if( target && target->inuse && target->client && g_gametype.integer >= GT_TEAM &&
 				target->client->sess.sessionTeam == ent->client->sess.sessionTeam &&
 				Team_GetLocationMsg( ent, location, sizeof( location ) ) )
+			{
 				Com_sprintf( name, sizeof( name ), EC "[%s%c%c" EC "] (%s)" EC ": ", ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE, location );
+			}
 			else
+			{
 				Com_sprintf( name, sizeof( name ), EC "[%s%c%c" EC "]" EC ": ", ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE );
+			}
 			color = COLOR_MAGENTA;
 			break;
 	}
@@ -1001,11 +1015,24 @@ void G_Say( gentity_t* ent, gentity_t* target, int mode, const char* chatText )
 		G_Printf( "%s%s\n", name, text );
 	}
 
-	// send it to all the apropriate clients
+	// send it to all the appropriate clients
 	for( j = 0; j < level.maxclients; j++ )
 	{
 		other = &g_entities[ j ];
 		G_SayTo( ent, other, mode, color, name, text );
+	}
+}
+
+static void SanitizeChatText( char* text )
+{
+	int i;
+
+	for( i = 0; text[ i ]; i++ )
+	{
+		if( text[ i ] == '\n' || text[ i ] == '\r' )
+		{
+			text[ i ] = ' ';
+		}
 	}
 }
 
@@ -1031,6 +1058,8 @@ static void Cmd_Say_f( gentity_t* ent, int mode, qboolean arg0 )
 	{
 		p = ConcatArgs( 1 );
 	}
+
+	SanitizeChatText( p );
 
 	G_Say( ent, NULL, mode, p );
 }
@@ -1067,6 +1096,8 @@ static void Cmd_Tell_f( gentity_t* ent )
 	}
 
 	p = ConcatArgs( 2 );
+
+	SanitizeChatText( p );
 
 	G_LogPrintf( "tell: %s to %s: %s\n", ent->client->pers.netname, target->client->pers.netname, p );
 	G_Say( ent, target, SAY_TELL, p );
@@ -1147,7 +1178,7 @@ void G_Voice( gentity_t* ent, gentity_t* target, int mode, const char* id, qbool
 		G_Printf( "voice: %s %s\n", ent->client->pers.netname, id );
 	}
 
-	// send it to all the apropriate clients
+	// send it to all the appropriate clients
 	for( j = 0; j < level.maxclients; j++ )
 	{
 		other = &g_entities[ j ];
@@ -1177,6 +1208,8 @@ static void Cmd_Voice_f( gentity_t* ent, int mode, qboolean arg0, qboolean voice
 	{
 		p = ConcatArgs( 1 );
 	}
+
+	SanitizeChatText( p );
 
 	G_Voice( ent, NULL, mode, p, voiceonly );
 }
@@ -1214,6 +1247,8 @@ static void Cmd_VoiceTell_f( gentity_t* ent, qboolean voiceonly )
 	}
 
 	id = ConcatArgs( 2 );
+
+	SanitizeChatText( id );
 
 	G_LogPrintf( "vtell: %s to %s: %s\n", ent->client->pers.netname, target->client->pers.netname, id );
 	G_Voice( ent, target, SAY_TELL, id, voiceonly );
@@ -1486,6 +1521,13 @@ void Cmd_CallVote_f( gentity_t* ent )
 	// if there is still a vote to be executed
 	if( level.voteExecuteTime )
 	{
+		// don't start a vote when map change or restart is in progress
+		if( !Q_stricmpn( level.voteString, "map", 3 ) || !Q_stricmpn( level.voteString, "nextmap", 7 ) )
+		{
+			trap_SendServerCommand( ent - g_entities, "print \"Vote after map change.\n\"" );
+			return;
+		}
+
 		level.voteExecuteTime = 0;
 		trap_SendConsoleCommand( EXEC_APPEND, va( "%s\n", level.voteString ) );
 	}
@@ -1541,7 +1583,7 @@ void Cmd_CallVote_f( gentity_t* ent )
 
 	trap_SendServerCommand( -1, va( "print \"%s called a vote.\n\"", ent->client->pers.netname ) );
 
-	// start the voting, the caller autoamtically votes yes
+	// start the voting, the caller automatically votes yes
 	level.voteTime = level.time;
 	level.voteYes  = 1;
 	level.voteNo   = 0;
@@ -1611,9 +1653,10 @@ Cmd_CallTeamVote_f
 */
 void Cmd_CallTeamVote_f( gentity_t* ent )
 {
-	int  i, team, cs_offset;
-	char arg1[ MAX_STRING_TOKENS ];
-	char arg2[ MAX_STRING_TOKENS ];
+	char* c;
+	int   i, team, cs_offset;
+	char  arg1[ MAX_STRING_TOKENS ];
+	char  arg2[ MAX_STRING_TOKENS ];
 
 	team = ent->client->sess.sessionTeam;
 	if( team == TEAM_RED )
@@ -1663,10 +1706,18 @@ void Cmd_CallTeamVote_f( gentity_t* ent )
 		trap_Argv( i, &arg2[ strlen( arg2 ) ], sizeof( arg2 ) - strlen( arg2 ) );
 	}
 
-	if( strchr( arg1, ';' ) || strchr( arg2, ';' ) )
+	// check for command separators in arg2
+	for( c = arg2; *c; ++c )
 	{
-		trap_SendServerCommand( ent - g_entities, "print \"Invalid vote string.\n\"" );
-		return;
+		switch( *c )
+		{
+			case '\n':
+			case '\r':
+			case ';':
+				trap_SendServerCommand( ent - g_entities, "print \"Invalid vote string.\n\"" );
+				return;
+				break;
+		}
 	}
 
 	if( !Q_stricmp( arg1, "leader" ) )
@@ -1753,7 +1804,7 @@ void Cmd_CallTeamVote_f( gentity_t* ent )
 		}
 	}
 
-	// start the voting, the caller autoamtically votes yes
+	// start the voting, the caller automatically votes yes
 	level.teamVoteTime[ cs_offset ] = level.time;
 	level.teamVoteYes[ cs_offset ]  = 1;
 	level.teamVoteNo[ cs_offset ]   = 0;

@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
 //
-#include "ui_local.h"
+#include "../q3_ui/ui_local.h"
 
 // this file is only included when building a dll
 // syscalls.asm is included instead when building a qvm
@@ -393,12 +393,12 @@ int trap_MemoryRemaining( void )
 
 void trap_GetCDKey( char* buf, int buflen )
 {
-	syscall( UI_GET_CDKEY, buf, buflen );
+	// NOTHING
 }
 
 void trap_SetCDKey( char* buf )
 {
-	syscall( UI_SET_CDKEY, buf );
+	// NOTHING
 }
 
 int trap_PC_AddGlobalDefine( char* define )
@@ -479,7 +479,7 @@ void trap_R_RemapShader( const char* oldShader, const char* newShader, const cha
 
 qboolean trap_VerifyCDKey( const char* key, const char* chksum )
 {
-	return syscall( UI_VERIFY_CDKEY, key, chksum );
+	return qtrue;
 }
 
 void trap_SetPbClStatus( int status )

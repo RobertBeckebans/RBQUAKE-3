@@ -133,14 +133,14 @@ static qboolean CG_ParseAnimationFile( const char* filename, clientInfo_t* ci )
 	while( 1 )
 	{
 		prev  = text_p; // so we can unget
-		token = COM_Parse( &text_p );
+		token = Com_Parse( &text_p );
 		if( !token[ 0 ] )
 		{
 			break;
 		}
 		if( !Q_stricmp( token, "footsteps" ) )
 		{
-			token = COM_Parse( &text_p );
+			token = Com_Parse( &text_p );
 			if( !token[ 0 ] )
 			{
 				break;
@@ -175,7 +175,7 @@ static qboolean CG_ParseAnimationFile( const char* filename, clientInfo_t* ci )
 		{
 			for( i = 0; i < 3; i++ )
 			{
-				token = COM_Parse( &text_p );
+				token = Com_Parse( &text_p );
 				if( !token[ 0 ] )
 				{
 					break;
@@ -186,7 +186,7 @@ static qboolean CG_ParseAnimationFile( const char* filename, clientInfo_t* ci )
 		}
 		else if( !Q_stricmp( token, "sex" ) )
 		{
-			token = COM_Parse( &text_p );
+			token = Com_Parse( &text_p );
 			if( !token[ 0 ] )
 			{
 				break;
@@ -228,7 +228,7 @@ static qboolean CG_ParseAnimationFile( const char* filename, clientInfo_t* ci )
 	// read information for each frame
 	for( i = 0; i < MAX_ANIMATIONS; i++ )
 	{
-		token = COM_Parse( &text_p );
+		token = Com_Parse( &text_p );
 		if( !token[ 0 ] )
 		{
 			if( i >= TORSO_GETFLAG && i <= TORSO_NEGATIVE )
@@ -255,7 +255,7 @@ static qboolean CG_ParseAnimationFile( const char* filename, clientInfo_t* ci )
 			animations[ i ].firstFrame -= skip;
 		}
 
-		token = COM_Parse( &text_p );
+		token = Com_Parse( &text_p );
 		if( !token[ 0 ] )
 		{
 			break;
@@ -271,14 +271,14 @@ static qboolean CG_ParseAnimationFile( const char* filename, clientInfo_t* ci )
 			animations[ i ].reversed  = qtrue;
 		}
 
-		token = COM_Parse( &text_p );
+		token = Com_Parse( &text_p );
 		if( !token[ 0 ] )
 		{
 			break;
 		}
 		animations[ i ].loopFrames = atoi( token );
 
-		token = COM_Parse( &text_p );
+		token = Com_Parse( &text_p );
 		if( !token[ 0 ] )
 		{
 			break;
@@ -1561,7 +1561,7 @@ static void CG_SwingAngles( float destination, float swingTolerance, float clamp
 			move      = swing;
 			*swinging = qfalse;
 		}
-		*angle = AngleMod( *angle + move );
+		*angle = AngleNormalize360( *angle + move );
 	}
 	else if( swing < 0 )
 	{
@@ -1571,18 +1571,18 @@ static void CG_SwingAngles( float destination, float swingTolerance, float clamp
 			move      = swing;
 			*swinging = qfalse;
 		}
-		*angle = AngleMod( *angle + move );
+		*angle = AngleNormalize360( *angle + move );
 	}
 
 	// clamp to no more than tolerance
 	swing = AngleSubtract( destination, *angle );
 	if( swing > clampTolerance )
 	{
-		*angle = AngleMod( destination - ( clampTolerance - 1 ) );
+		*angle = AngleNormalize360( destination - ( clampTolerance - 1 ) );
 	}
 	else if( swing < -clampTolerance )
 	{
-		*angle = AngleMod( destination + ( clampTolerance - 1 ) );
+		*angle = AngleNormalize360( destination + ( clampTolerance - 1 ) );
 	}
 }
 
@@ -1639,7 +1639,7 @@ static void CG_PlayerAngles( centity_t* cent, vec3_t legs[ 3 ], vec3_t torso[ 3 
 	clientInfo_t* ci;
 
 	VectorCopy( cent->lerpAngles, headAngles );
-	headAngles[ YAW ] = AngleMod( headAngles[ YAW ] );
+	headAngles[ YAW ] = AngleNormalize360( headAngles[ YAW ] );
 	VectorClear( legsAngles );
 	VectorClear( torsoAngles );
 
@@ -1995,7 +1995,7 @@ static void CG_PlayerFlag( centity_t* cent, qhandle_t hSkin, refEntity_t* torso 
 				angles[ YAW ] -= 360;
 			}
 
-			//vectoangles( cent->currentState.pos.trDelta, tmpangles );
+			//VectorToAngles( cent->currentState.pos.trDelta, tmpangles );
 			//angles[YAW] = tmpangles[YAW] + 45 - cent->pe.torso.yawAngle;
 			// change the yaw angle
 			CG_SwingAngles( angles[ YAW ], 25, 90, 0.15f, &cent->pe.flag.yawAngle, &cent->pe.flag.yawing );

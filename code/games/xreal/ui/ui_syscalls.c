@@ -1,26 +1,25 @@
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
-Copyright (C) 2006 Robert Beckebans <trebor_7@users.sourceforge.net>
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
-// ui_syscalls.c -- this file is only included when building a dll
+//
 #include "ui_local.h"
 
 static intptr_t( QDECL* syscall )( intptr_t arg, ... ) = ( intptr_t( QDECL* )( intptr_t, ... ) ) - 1;
@@ -422,35 +421,29 @@ int trap_MemoryRemaining( void )
 	return syscall( UI_MEMORY_REMAINING );
 }
 
-int Parse_AddGlobalDefine( char* string );
-int Parse_LoadSourceHandle( const char* filename );
-int Parse_FreeSourceHandle( int handle );
-int Parse_ReadTokenHandle( int handle, pc_token_t* pc_token );
-int Parse_SourceFileAndLine( int handle, char* filename, int* line );
-
 int trap_Parse_AddGlobalDefine( char* define )
 {
-	return Parse_AddGlobalDefine( define );
+	return syscall( UI_PC_ADD_GLOBAL_DEFINE, define );
 }
 
 int trap_Parse_LoadSource( const char* filename )
 {
-	return Parse_LoadSourceHandle( filename );
+	return syscall( UI_PC_LOAD_SOURCE, filename );
 }
 
 int trap_Parse_FreeSource( int handle )
 {
-	return Parse_FreeSourceHandle( handle );
+	return syscall( UI_PC_FREE_SOURCE, handle );
 }
 
 int trap_Parse_ReadToken( int handle, pc_token_t* pc_token )
 {
-	return Parse_ReadTokenHandle( handle, pc_token );
+	return syscall( UI_PC_READ_TOKEN, handle, pc_token );
 }
 
 int trap_Parse_SourceFileAndLine( int handle, char* filename, int* line )
 {
-	return Parse_SourceFileAndLine( handle, filename, line );
+	return syscall( UI_PC_SOURCE_FILE_AND_LINE, handle, filename, line );
 }
 
 void trap_S_StopBackgroundTrack( void )

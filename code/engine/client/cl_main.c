@@ -3506,7 +3506,7 @@ void CL_InitRenderer( void )
 	cls.charSetShader = re.RegisterShader( "gfx/2d/bigchars" );
 	cls.whiteShader   = re.RegisterShader( "white" );
 
-#ifdef STANDALONE
+#if 1 //def STANDALONE
 	// true type fonts
 	re.RegisterFont( "fonts/VeraMono.ttf", 24, &cls.consoleFont );
 	re.RegisterFont( "fonts/VeraMoBd.ttf", 24, &cls.consoleBoldFont );

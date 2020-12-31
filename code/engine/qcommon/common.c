@@ -192,7 +192,7 @@ void QDECL Com_Printf( const char* fmt, ... )
 #endif
 
 	// echo to dedicated console and early console
-	//Sys_Print( msg );
+	Sys_Print( msg );
 
 	// logfile
 	if( com_logfile && com_logfile->integer )
@@ -3969,7 +3969,7 @@ void Com_WriteConfiguration( void )
 	Com_WriteConfigToFile( Q3CONFIG_CFG );
 
 	// not needed for dedicated or standalone
-#if !defined( DEDICATED ) && !defined( STANDALONE )
+#if 0 // !defined( DEDICATED ) && !defined( STANDALONE )
 	if( !com_standalone->integer )
 	{
 		const char* gamedir;

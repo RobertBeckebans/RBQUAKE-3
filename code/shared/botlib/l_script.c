@@ -53,7 +53,7 @@ typedef enum
 
 #ifdef BOTLIB
 	//include files for usage in the bot library
-	#include "../qcommon/q_shared.h"
+	#include "../shared/q_shared.h"
 	#include "botlib.h"
 	#include "be_interface.h"
 	#include "l_script.h"

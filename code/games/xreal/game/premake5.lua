@@ -106,7 +106,7 @@ project "xreal-game"
 			"USE_BULLET"
 		}
 		
-	configuration "with-acebot"
+	configuration "acebot"
 		files
 		{
 			"acebot/**.c", "acebot/**.cpp", "acebot/**.h",
@@ -120,7 +120,7 @@ project "xreal-game"
 			"ACEBOT"
 		}
 		
-	configuration "with-brainworks"
+	configuration "brainworks"
 		files
 		{
 			"brainworks/**.c", "brainworks/**.cpp", "brainworks/**.h",

@@ -1102,6 +1102,16 @@ intptr_t CL_UISystemCalls( intptr_t* args )
 		case UI_CEIL:
 			return FloatAsInt( ceil( VMF( 1 ) ) );
 
+		case UI_PC_ADD_GLOBAL_DEFINE:
+			return Parse_AddGlobalDefine( VMA( 1 ) );
+		case UI_PC_LOAD_SOURCE:
+			return Parse_LoadSourceHandle( VMA( 1 ) );
+		case UI_PC_FREE_SOURCE:
+			return Parse_FreeSourceHandle( args[ 1 ] );
+		case UI_PC_READ_TOKEN:
+			return Parse_ReadTokenHandle( args[ 1 ], VMA( 2 ) );
+		case UI_PC_SOURCE_FILE_AND_LINE:
+			return Parse_SourceFileAndLine( args[ 1 ], VMA( 2 ), VMA( 3 ) );
 		case UI_S_STOPBACKGROUNDTRACK:
 			S_StopBackgroundTrack();
 			return 0;

@@ -4478,7 +4478,7 @@ void FS_InitFilesystem( void )
 	// try to start up normally
 	FS_Startup( com_basegame->string );
 
-#ifndef STANDALONE
+#if 0 //ndef STANDALONE
 	FS_CheckPak0();
 #endif
 
@@ -4518,7 +4518,7 @@ void FS_Restart( int checksumFeed )
 	FS_Startup( com_basegame->string );
 
 #ifndef STANDALONE
-	FS_CheckPak0();
+	//FS_CheckPak0();
 #endif
 
 	// if we can't find default.cfg, assume that the paths are

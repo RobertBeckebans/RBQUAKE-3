@@ -78,7 +78,7 @@ tryagain:
 
 	if( item->classname )
 	{
-		pi->weaponModel = trap_R_RegisterModel( item->world_model[ 0 ] );
+		pi->weaponModel = trap_R_RegisterModel( item->models[ 0 ] );
 	}
 
 	if( pi->weaponModel == 0 )
@@ -94,12 +94,12 @@ tryagain:
 
 	if( weaponNum == WP_MACHINEGUN || weaponNum == WP_GAUNTLET || weaponNum == WP_BFG )
 	{
-		COM_StripExtension( item->world_model[ 0 ], path, sizeof( path ) );
+		Com_StripExtension( item->models[ 0 ], path, sizeof( path ) );
 		Q_strcat( path, sizeof( path ), "_barrel.md3" );
 		pi->barrelModel = trap_R_RegisterModel( path );
 	}
 
-	COM_StripExtension( item->world_model[ 0 ], path, sizeof( path ) );
+	Com_StripExtension( item->models[ 0 ], path, sizeof( path ) );
 	Q_strcat( path, sizeof( path ), "_flash.md3" );
 	pi->flashModel = trap_R_RegisterModel( path );
 
@@ -325,7 +325,7 @@ static void UI_PositionEntityOnTag( refEntity_t* entity, const refEntity_t* pare
 	}
 
 	// cast away const because of compiler problems
-	MatrixMultiply( lerped.axis, ( ( refEntity_t* )parent )->axis, entity->axis );
+	AxisMultiply( lerped.axis, ( ( refEntity_t* )parent )->axis, entity->axis );
 	entity->backlerp = parent->backlerp;
 }
 
@@ -351,8 +351,8 @@ static void UI_PositionRotatedEntityOnTag( refEntity_t* entity, const refEntity_
 	}
 
 	// cast away const because of compiler problems
-	MatrixMultiply( entity->axis, lerped.axis, tempAxis );
-	MatrixMultiply( tempAxis, ( ( refEntity_t* )parent )->axis, entity->axis );
+	AxisMultiply( entity->axis, lerped.axis, tempAxis );
+	AxisMultiply( tempAxis, ( ( refEntity_t* )parent )->axis, entity->axis );
 }
 
 /*
@@ -571,7 +571,7 @@ static void UI_SwingAngles( float destination, float swingTolerance, float clamp
 			move      = swing;
 			*swinging = qfalse;
 		}
-		*angle = AngleMod( *angle + move );
+		*angle = AngleNormalize360( *angle + move );
 	}
 	else if( swing < 0 )
 	{
@@ -581,18 +581,18 @@ static void UI_SwingAngles( float destination, float swingTolerance, float clamp
 			move      = swing;
 			*swinging = qfalse;
 		}
-		*angle = AngleMod( *angle + move );
+		*angle = AngleNormalize360( *angle + move );
 	}
 
 	// clamp to no more than tolerance
 	swing = AngleSubtract( destination, *angle );
 	if( swing > clampTolerance )
 	{
-		*angle = AngleMod( destination - ( clampTolerance - 1 ) );
+		*angle = AngleNormalize360( destination - ( clampTolerance - 1 ) );
 	}
 	else if( swing < -clampTolerance )
 	{
-		*angle = AngleMod( destination + ( clampTolerance - 1 ) );
+		*angle = AngleNormalize360( destination + ( clampTolerance - 1 ) );
 	}
 }
 
@@ -661,7 +661,7 @@ static void UI_PlayerAngles( playerInfo_t* pi, vec3_t legs[ 3 ], vec3_t torso[ 3
 	float  adjust;
 
 	VectorCopy( pi->viewAngles, headAngles );
-	headAngles[ YAW ] = AngleMod( headAngles[ YAW ] );
+	headAngles[ YAW ] = AngleNormalize360( headAngles[ YAW ] );
 	VectorClear( legsAngles );
 	VectorClear( torsoAngles );
 
@@ -777,7 +777,7 @@ float UI_MachinegunSpinAngle( playerInfo_t* pi )
 	if( pi->barrelSpinning == !( torsoAnim == TORSO_ATTACK ) )
 	{
 		pi->barrelTime     = dp_realtime;
-		pi->barrelAngle    = AngleMod( angle );
+		pi->barrelAngle    = AngleNormalize360( angle );
 		pi->barrelSpinning = !!( torsoAnim == TORSO_ATTACK );
 	}
 
@@ -1092,14 +1092,14 @@ static qboolean UI_ParseAnimationFile( const char* filename, playerInfo_t* pi )
 	while( 1 )
 	{
 		prev  = text_p; // so we can unget
-		token = COM_Parse( &text_p );
+		token = Com_Parse( &text_p );
 		if( !token[ 0 ] )
 		{
 			break;
 		}
 		if( !Q_stricmp( token, "footsteps" ) )
 		{
-			token = COM_Parse( &text_p );
+			token = Com_Parse( &text_p );
 			if( !token[ 0 ] )
 			{
 				break;
@@ -1110,7 +1110,7 @@ static qboolean UI_ParseAnimationFile( const char* filename, playerInfo_t* pi )
 		{
 			for( i = 0; i < 3; i++ )
 			{
-				token = COM_Parse( &text_p );
+				token = Com_Parse( &text_p );
 				if( !token[ 0 ] )
 				{
 					break;
@@ -1120,7 +1120,7 @@ static qboolean UI_ParseAnimationFile( const char* filename, playerInfo_t* pi )
 		}
 		else if( !Q_stricmp( token, "sex" ) )
 		{
-			token = COM_Parse( &text_p );
+			token = Com_Parse( &text_p );
 			if( !token[ 0 ] )
 			{
 				break;
@@ -1151,7 +1151,7 @@ static qboolean UI_ParseAnimationFile( const char* filename, playerInfo_t* pi )
 	// read information for each frame
 	for( i = 0; i < MAX_ANIMATIONS; i++ )
 	{
-		token = COM_Parse( &text_p );
+		token = Com_Parse( &text_p );
 		if( !token[ 0 ] )
 		{
 			if( i >= TORSO_GETFLAG && i <= TORSO_NEGATIVE )
@@ -1178,7 +1178,7 @@ static qboolean UI_ParseAnimationFile( const char* filename, playerInfo_t* pi )
 			animations[ i ].firstFrame -= skip;
 		}
 
-		token = COM_Parse( &text_p );
+		token = Com_Parse( &text_p );
 		if( !token[ 0 ] )
 		{
 			break;
@@ -1194,14 +1194,14 @@ static qboolean UI_ParseAnimationFile( const char* filename, playerInfo_t* pi )
 			animations[ i ].reversed  = qtrue;
 		}
 
-		token = COM_Parse( &text_p );
+		token = Com_Parse( &text_p );
 		if( !token[ 0 ] )
 		{
 			break;
 		}
 		animations[ i ].loopFrames = atoi( token );
 
-		token = COM_Parse( &text_p );
+		token = Com_Parse( &text_p );
 		if( !token[ 0 ] )
 		{
 			break;

@@ -872,7 +872,7 @@ int G_InvulnerabilityEffect( gentity_t* targ, vec3_t dir, vec3_t point, vec3_t i
 	{
 		impact = G_TempEntity( targ->client->ps.origin, EV_INVUL_IMPACT );
 		VectorSubtract( intersections[ 0 ], targ->client->ps.origin, vec );
-		vectoangles( vec, impact->s.angles );
+		VectorToAngles( vec, impact->s.angles );
 		impact->s.angles[ 0 ] += 90;
 		if( impact->s.angles[ 0 ] > 360 )
 		{

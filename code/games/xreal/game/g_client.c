@@ -1,22 +1,21 @@
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
-Copyright (C) 2006 Robert Beckebans <trebor_7@users.sourceforge.net>
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -41,7 +40,6 @@ void SP_info_player_deathmatch( gentity_t* ent )
 	{
 		ent->flags |= FL_NO_BOTS;
 	}
-
 	G_SpawnInt( "nohumans", "0", &i );
 	if( i )
 	{
@@ -56,7 +54,7 @@ void SP_info_player_deathmatch( gentity_t* ent )
 }
 
 /*QUAKED info_player_start (1 0 0) (-16 -16 -24) (16 16 32)
-equivelant to info_player_deathmatch
+equivalent to info_player_deathmatch
 */
 void SP_info_player_start( gentity_t* ent )
 {
@@ -176,7 +174,8 @@ gentity_t* SelectRandomDeathmatchSpawnPoint( qboolean isbot )
 			continue;
 		}
 
-		if( ( ( spot->flags & FL_NO_BOTS ) && isbot ) || ( ( spot->flags & FL_NO_HUMANS ) && !isbot ) )
+		if( ( ( spot->flags & FL_NO_BOTS ) && isbot ) ||
+			( ( spot->flags & FL_NO_HUMANS ) && !isbot ) )
 		{
 			// spot is not for this human/bot player
 			continue;
@@ -186,9 +185,8 @@ gentity_t* SelectRandomDeathmatchSpawnPoint( qboolean isbot )
 		count++;
 	}
 
-	if( !count )
+	if( !count ) // no spots that won't telefrag
 	{
-		// no spots that won't telefrag
 		return G_Find( NULL, FOFS( classname ), "info_player_deathmatch" );
 	}
 
@@ -222,7 +220,8 @@ gentity_t* SelectRandomFurthestSpawnPoint( vec3_t avoidPoint, vec3_t origin, vec
 			continue;
 		}
 
-		if( ( ( spot->flags & FL_NO_BOTS ) && isbot ) || ( ( spot->flags & FL_NO_HUMANS ) && !isbot ) )
+		if( ( ( spot->flags & FL_NO_BOTS ) && isbot ) ||
+			( ( spot->flags & FL_NO_HUMANS ) && !isbot ) )
 		{
 			// spot is not for this human/bot player
 			continue;
@@ -299,32 +298,32 @@ gentity_t* SelectSpawnPoint( vec3_t avoidPoint, vec3_t origin, vec3_t angles, qb
 	return SelectRandomFurthestSpawnPoint( avoidPoint, origin, angles, isbot );
 
 	/*
-	   gentity_t    *spot;
-	   gentity_t    *nearestSpot;
+	gentity_t	*spot;
+	gentity_t	*nearestSpot;
 	
-	   nearestSpot = SelectNearestDeathmatchSpawnPoint( avoidPoint );
+	nearestSpot = SelectNearestDeathmatchSpawnPoint( avoidPoint );
 	
-	   spot = SelectRandomDeathmatchSpawnPoint ( );
-	   if ( spot == nearestSpot ) {
-	   // roll again if it would be real close to point of death
-	   spot = SelectRandomDeathmatchSpawnPoint ( );
-	   if ( spot == nearestSpot ) {
-	   // last try
-	   spot = SelectRandomDeathmatchSpawnPoint ( );
-	   }
-	   }
+	spot = SelectRandomDeathmatchSpawnPoint ( );
+	if ( spot == nearestSpot ) {
+		// roll again if it would be real close to point of death
+		spot = SelectRandomDeathmatchSpawnPoint ( );
+		if ( spot == nearestSpot ) {
+			// last try
+			spot = SelectRandomDeathmatchSpawnPoint ( );
+		}
+	}
 	
-	   // find a single player start spot
-	   if (!spot) {
-	   G_Error( "Couldn't find a spawn point" );
-	   }
+	// find a single player start spot
+	if (!spot) {
+		G_Error( "Couldn't find a spawn point" );
+	}
 	
-	   VectorCopy (spot->s.origin, origin);
-	   origin[2] += 9;
-	   VectorCopy (spot->s.angles, angles);
+	VectorCopy (spot->s.origin, origin);
+	origin[2] += 9;
+	VectorCopy (spot->s.angles, angles);
 	
-	   return spot;
-	 */
+	return spot;
+	*/
 }
 
 /*
@@ -343,7 +342,8 @@ gentity_t* SelectInitialSpawnPoint( vec3_t origin, vec3_t angles, qboolean isbot
 
 	while( ( spot = G_Find( spot, FOFS( classname ), "info_player_deathmatch" ) ) != NULL )
 	{
-		if( ( ( spot->flags & FL_NO_BOTS ) && isbot ) || ( ( spot->flags & FL_NO_HUMANS ) && !isbot ) )
+		if( ( ( spot->flags & FL_NO_BOTS ) && isbot ) ||
+			( ( spot->flags & FL_NO_HUMANS ) && !isbot ) )
 		{
 			continue;
 		}
@@ -414,7 +414,7 @@ void InitBodyQue( void )
 =============
 BodySink
 
-After sitting around for five seconds, fall into the ground and dissapear
+After sitting around for five seconds, fall into the ground and disappear
 =============
 */
 void BodySink( gentity_t* ent )
@@ -703,7 +703,7 @@ static void ForceClientSkin( gclient_t *client, char *model, const char *skin ) 
 
 /*
 ===========
-ClientCheckName
+ClientCleanName
 ============
 */
 static void ClientCleanName( const char* in, char* out, int outSize )
@@ -1126,7 +1126,8 @@ char* ClientConnect( int clientNum, qboolean firstTime, qboolean isBot )
 		trap_SendServerCommand( -1, va( "print \"%s" S_COLOR_WHITE " connected\n\"", client->pers.netname ) );
 	}
 
-	if( g_gametype.integer >= GT_TEAM && client->sess.sessionTeam != TEAM_SPECTATOR )
+	if( g_gametype.integer >= GT_TEAM &&
+		client->sess.sessionTeam != TEAM_SPECTATOR )
 	{
 		BroadcastTeamChange( client, -1 );
 	}
@@ -1135,9 +1136,9 @@ char* ClientConnect( int clientNum, qboolean firstTime, qboolean isBot )
 	CalculateRanks();
 
 	// for statistics
-	//  client->areabits = areabits;
-	//  if ( !client->areabits )
-	//      client->areabits = G_Alloc( (trap_AAS_PointReachabilityAreaIndex( NULL ) + 7) / 8 );
+	//	client->areabits = areabits;
+	//	if ( !client->areabits )
+	//		client->areabits = G_Alloc( (trap_AAS_PointReachabilityAreaIndex( NULL ) + 7) / 8 );
 
 	return NULL;
 }
@@ -1277,7 +1278,7 @@ void ClientSpawn( gentity_t* ent )
 	saved     = client->pers;
 	savedSess = client->sess;
 	savedPing = client->ps.ping;
-	//  savedAreaBits = client->areabits;
+	//	savedAreaBits = client->areabits;
 	accuracy_hits  = client->accuracy_hits;
 	accuracy_shots = client->accuracy_shots;
 	for( i = 0; i < MAX_PERSISTANT; i++ )
@@ -1291,7 +1292,7 @@ void ClientSpawn( gentity_t* ent )
 	client->pers    = saved;
 	client->sess    = savedSess;
 	client->ps.ping = savedPing;
-	//  client->areabits = savedAreaBits;
+	//	client->areabits = savedAreaBits;
 	client->accuracy_hits     = accuracy_hits;
 	client->accuracy_shots    = accuracy_shots;
 	client->lastkilled_client = -1;

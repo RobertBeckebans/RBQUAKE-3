@@ -1,22 +1,21 @@
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
-Copyright (C) 2006 Robert Beckebans <trebor_7@users.sourceforge.net>
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -557,11 +556,11 @@ static void PM_WaterMove( void )
 	{
 		if( pm->ps->velocity[2] > -300 )
 		{
-			if( pm->watertype == CONTENTS_WATER )
+			if( pm->watertype & CONTENTS_WATER )
 			{
 				pm->ps->velocity[2] = 100;
 			}
-			else if( pm->watertype == CONTENTS_SLIME )
+			else if( pm->watertype & CONTENTS_SLIME )
 			{
 				pm->ps->velocity[2] = 80;
 			}
@@ -919,6 +918,8 @@ static void PM_WalkMove( void )
 	}
 
 	PM_StepSlideMove( qfalse );
+
+	//Com_Printf("velocity2 = %1.1f\n", VectorLength(pm->ps->velocity));
 }
 
 /*
@@ -1021,7 +1022,7 @@ static void PM_NoclipMove( void )
 ================
 PM_FootstepForSurface
 
-Returns an event number apropriate for the groundsurface
+Returns an event number appropriate for the groundsurface
 ================
 */
 static int PM_FootstepForSurface( void )
@@ -1592,7 +1593,7 @@ static void PM_Footsteps( void )
 	old              = pm->ps->bobCycle;
 	pm->ps->bobCycle = ( int )( old + bobmove * pml.msec ) & 255;
 
-	// if we just crossed a cycle boundary, play an apropriate footstep event
+	// if we just crossed a cycle boundary, play an appropriate footstep event
 	if( ( ( old + 64 ) ^ ( pm->ps->bobCycle + 64 ) ) & 128 )
 	{
 		if( pm->waterlevel == 0 )
@@ -2059,7 +2060,7 @@ static void PM_DropTimers( void )
 PM_UpdateViewAngles
 
 This can be used as another entry point when only the viewangles
-are being updated isntead of a full move
+are being updated instead of a full move
 ================
 */
 void PM_UpdateViewAngles( playerState_t* ps, const usercmd_t* cmd )

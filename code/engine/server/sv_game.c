@@ -24,7 +24,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "server.h"
 
 #ifdef BOTLIB
-	#include "../botlib/botlib.h"
+	#include "../../shared/botlib/botlib.h"
 
 botlib_export_t* botlib_export;
 #endif

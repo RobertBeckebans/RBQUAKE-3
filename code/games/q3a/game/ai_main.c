@@ -891,8 +891,8 @@ float BotChangeViewAngle( float angle, float ideal_angle, float speed )
 {
 	float move;
 
-	angle       = AngleMod( angle );
-	ideal_angle = AngleMod( ideal_angle );
+	angle       = AngleNormalize360( angle );
+	ideal_angle = AngleNormalize360( ideal_angle );
 	if( angle == ideal_angle )
 	{
 		return angle;
@@ -926,7 +926,7 @@ float BotChangeViewAngle( float angle, float ideal_angle, float speed )
 			move = -speed;
 		}
 	}
-	return AngleMod( angle + move );
+	return AngleNormalize360( angle + move );
 }
 
 /*
@@ -978,8 +978,8 @@ void BotChangeViewAngles( bot_state_t* bs, float thinktime )
 		else
 		{
 			//over reaction view model
-			bs->viewangles[ i ]       = AngleMod( bs->viewangles[ i ] );
-			bs->ideal_viewangles[ i ] = AngleMod( bs->ideal_viewangles[ i ] );
+			bs->viewangles[ i ]       = AngleNormalize360( bs->viewangles[ i ] );
+			bs->ideal_viewangles[ i ] = AngleNormalize360( bs->ideal_viewangles[ i ] );
 			diff                      = AngleDifference( bs->viewangles[ i ], bs->ideal_viewangles[ i ] );
 			disired_speed             = diff * factor;
 			bs->viewanglespeed[ i ] += ( bs->viewanglespeed[ i ] - disired_speed );
@@ -1001,7 +1001,7 @@ void BotChangeViewAngles( bot_state_t* bs, float thinktime )
 				anglespeed = -maxchange;
 			}
 			bs->viewangles[ i ] += anglespeed;
-			bs->viewangles[ i ] = AngleMod( bs->viewangles[ i ] );
+			bs->viewangles[ i ] = AngleNormalize360( bs->viewangles[ i ] );
 			//demping
 			bs->viewanglespeed[ i ] *= 0.45 * ( 1 - factor );
 		}
@@ -1192,7 +1192,7 @@ void BotUpdateInput( bot_state_t* bs, int time, int elapsed_time )
 	//add the delta angles to the bot's current view angles
 	for( j = 0; j < 3; j++ )
 	{
-		bs->viewangles[ j ] = AngleMod( bs->viewangles[ j ] + SHORT2ANGLE( bs->cur_ps.delta_angles[ j ] ) );
+		bs->viewangles[ j ] = AngleNormalize360( bs->viewangles[ j ] + SHORT2ANGLE( bs->cur_ps.delta_angles[ j ] ) );
 	}
 	//change the bot view angles
 	BotChangeViewAngles( bs, ( float )elapsed_time / 1000 );
@@ -1211,7 +1211,7 @@ void BotUpdateInput( bot_state_t* bs, int time, int elapsed_time )
 	//subtract the delta angles
 	for( j = 0; j < 3; j++ )
 	{
-		bs->viewangles[ j ] = AngleMod( bs->viewangles[ j ] - SHORT2ANGLE( bs->cur_ps.delta_angles[ j ] ) );
+		bs->viewangles[ j ] = AngleNormalize360( bs->viewangles[ j ] - SHORT2ANGLE( bs->cur_ps.delta_angles[ j ] ) );
 	}
 }
 
@@ -1346,7 +1346,7 @@ int BotAI( int client, float thinktime )
 	//add the delta angles to the bot's current view angles
 	for( j = 0; j < 3; j++ )
 	{
-		bs->viewangles[ j ] = AngleMod( bs->viewangles[ j ] + SHORT2ANGLE( bs->cur_ps.delta_angles[ j ] ) );
+		bs->viewangles[ j ] = AngleNormalize360( bs->viewangles[ j ] + SHORT2ANGLE( bs->cur_ps.delta_angles[ j ] ) );
 	}
 	//increase the local time of the bot
 	bs->ltime += thinktime;
@@ -1366,7 +1366,7 @@ int BotAI( int client, float thinktime )
 	//subtract the delta angles
 	for( j = 0; j < 3; j++ )
 	{
-		bs->viewangles[ j ] = AngleMod( bs->viewangles[ j ] - SHORT2ANGLE( bs->cur_ps.delta_angles[ j ] ) );
+		bs->viewangles[ j ] = AngleNormalize360( bs->viewangles[ j ] - SHORT2ANGLE( bs->cur_ps.delta_angles[ j ] ) );
 	}
 	//everything was ok
 	return qtrue;

@@ -1,22 +1,21 @@
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
-Copyright (C) 2006 Robert Beckebans <trebor_7@users.sourceforge.net>
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -70,7 +69,7 @@ void AddScore( gentity_t* ent, vec3_t origin, int score )
 
 	// show score plum
 	ScorePlum( ent, origin, score );
-
+	//
 	ent->client->ps.persistant[ PERS_SCORE ] += score;
 	if( g_gametype.integer == GT_TEAM )
 	{
@@ -113,7 +112,8 @@ void TossClientItems( gentity_t* self )
 		}
 	}
 
-	if( weapon > WP_MACHINEGUN && weapon != WP_GRAPPLING_HOOK && self->client->ps.ammo[ weapon ] )
+	if( weapon > WP_MACHINEGUN && weapon != WP_GRAPPLING_HOOK &&
+		self->client->ps.ammo[ weapon ] )
 	{
 		// find the item type for this weapon
 		item = BG_FindItemForWeapon( weapon );
@@ -831,16 +831,18 @@ int RaySphereIntersections( vec3_t origin, float radius, vec3_t point, vec3_t di
 {
 	float b, c, d, t;
 
-	//  | origin - (point + t * dir) | = radius
-	//  a = dir[0]^2 + dir[1]^2 + dir[2]^2;
-	//  b = 2 * (dir[0] * (point[0] - origin[0]) + dir[1] * (point[1] - origin[1]) + dir[2] * (point[2] - origin[2]));
-	//  c = (point[0] - origin[0])^2 + (point[1] - origin[1])^2 + (point[2] - origin[2])^2 - radius^2;
+	//	| origin - (point + t * dir) | = radius
+	//	a = dir[0]^2 + dir[1]^2 + dir[2]^2;
+	//	b = 2 * (dir[0] * (point[0] - origin[0]) + dir[1] * (point[1] - origin[1]) + dir[2] * (point[2] - origin[2]));
+	//	c = (point[0] - origin[0])^2 + (point[1] - origin[1])^2 + (point[2] - origin[2])^2 - radius^2;
 
 	// normalize dir so a = 1
 	VectorNormalize( dir );
 	b = 2 * ( dir[ 0 ] * ( point[ 0 ] - origin[ 0 ] ) + dir[ 1 ] * ( point[ 1 ] - origin[ 1 ] ) + dir[ 2 ] * ( point[ 2 ] - origin[ 2 ] ) );
 	c = ( point[ 0 ] - origin[ 0 ] ) * ( point[ 0 ] - origin[ 0 ] ) +
-		( point[ 1 ] - origin[ 1 ] ) * ( point[ 1 ] - origin[ 1 ] ) + ( point[ 2 ] - origin[ 2 ] ) * ( point[ 2 ] - origin[ 2 ] ) - radius * radius;
+		( point[ 1 ] - origin[ 1 ] ) * ( point[ 1 ] - origin[ 1 ] ) +
+		( point[ 2 ] - origin[ 2 ] ) * ( point[ 2 ] - origin[ 2 ] ) -
+		radius * radius;
 
 	d = b * b - 4 * c;
 	if( d > 0 )
@@ -909,7 +911,7 @@ int G_InvulnerabilityEffect( gentity_t* targ, vec3_t dir, vec3_t point, vec3_t i
 #endif
 /*
 ============
-T_Damage
+G_Damage
 
 targ		entity that is being damaged
 inflictor	entity that is causing the damage
@@ -938,7 +940,6 @@ void G_Damage( gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_
 	int        asave;
 	int        knockback;
 	int        max;
-
 #ifdef MISSIONPACK
 	vec3_t bouncedir, impactpoint;
 #endif
@@ -948,7 +949,7 @@ void G_Damage( gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_
 		return;
 	}
 
-	// the intermission has allready been qualified for, so don't
+	// the intermission has already been qualified for, so don't
 	// allow any extra scoring
 	if( level.intermissionQueued )
 	{
@@ -1343,7 +1344,7 @@ qboolean CanDamage( gentity_t* targ, vec3_t origin )
 
 	VectorCopy( midpoint, dest );
 	dest[ 0 ] += offsetmins[ 0 ];
-	dest[ 1 ] += offsetmins[ 2 ];
+	dest[ 1 ] += offsetmins[ 1 ];
 	dest[ 2 ] += offsetmins[ 2 ];
 	trap_Trace( &tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID );
 

@@ -38,10 +38,10 @@ project "q3a-game"
 		-- "g_utils.c",
 		-- "g_weapon.c",
 	}
-	--excludes
-	--{
-	--	"g_rankings.c",
-	--}
+	excludes
+	{
+		"g_rankings.c",
+	}
 	includedirs
 	{
 		"../../../shared",
@@ -51,14 +51,14 @@ project "q3a-game"
 		"QAGAME",
 	}
 	
-	if not _OPTIONS["standalone"] then
+	configuration "gladiator"
 		defines
 		{
-			"BOTLIB"
+			"BOTLIB",
+			"GLADIATOR",
 		}
-	end
 		
-	configuration "with-brainworks"
+	configuration "brainworks"
 		files
 		{
 			"brainworks/**.c", "brainworks/**.cpp", "brainworks/**.h",
@@ -68,7 +68,8 @@ project "q3a-game"
 			"../game/brainworks"
 		}
 		defines
-		{ 
+		{
+			"BOTLIB",
 			"BRAINWORKS"
 		}		
 	

@@ -24,9 +24,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 // g_client.c -- client functions that don't happen every frame
 
-vec3_t playerMins = { -15, -15, -24 };
-vec3_t playerMaxs = { 15, 15, 32 };
-
 /*QUAKED info_player_deathmatch (1 0 1) (-16 -16 -24) (16 16 32) initial
 potential spawning position for deathmatch games.
 The first time a player enters the game, they will be at an 'initial' spot.
@@ -677,7 +674,7 @@ Forces a client's skin (for teamplay)
 static void ForceClientSkin( gclient_t *client, char *model, const char *skin ) {
 	char *p;
 
-	if ((p = strrchr(model, '/')) != 0) {
+	if ((p = Q_strrchr(model, '/')) != 0) {
 		*p = 0;
 	}
 

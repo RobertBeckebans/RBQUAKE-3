@@ -983,6 +983,7 @@ void G_Say( gentity_t* ent, gentity_t* target, int mode, const char* chatText )
 	gentity_t* other;
 	int        color;
 	char       name[ 64 ];
+
 	// don't let text be too long for malicious reasons
 	char text[ MAX_SAY_TEXT ];
 	char location[ 64 ];
@@ -1250,7 +1251,8 @@ static void Cmd_VoiceTell_f( gentity_t* ent, qboolean voiceonly )
 
 	if( trap_Argc() < 3 )
 	{
-		trap_SendServerCommand( ent - g_entities, va( "print \"Usage: %s <player id> <voice id>\n\"", voiceonly ? "votell" : "vtell" ) );
+		trap_SendServerCommand( ent - g_entities,
+			va( "print \"Usage: %s <player id> <voice id>\n\"", voiceonly ? "votell" : "vtell" ) );
 		return;
 	}
 

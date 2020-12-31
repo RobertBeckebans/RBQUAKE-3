@@ -1,22 +1,21 @@
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
-Copyright (C) 2006 Robert Beckebans <trebor_7@users.sourceforge.net>
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -76,7 +75,7 @@ void P_DamageFeedback( gentity_t* player )
 		client->ps.damageYaw   = angles[ YAW ] / 360.0 * 256;
 	}
 
-	// play an apropriate pain sound
+	// play an appropriate pain sound
 	if( ( level.time > player->pain_debounce_time ) && !( player->flags & FL_GODMODE ) )
 	{
 		player->pain_debounce_time = level.time + 700;
@@ -310,7 +309,7 @@ void G_TouchTriggers( gentity_t* ent )
 			}
 		}
 
-		// use seperate code for determining if an item is picked up
+		// use separate code for determining if an item is picked up
 		// so you don't have to actually contact its bounding box
 		if( hit->s.eType == ET_ITEM )
 		{
@@ -411,7 +410,9 @@ qboolean ClientInactivityTimer( gclient_t* client )
 		client->inactivityWarning = qfalse;
 	}
 	else if( client->pers.cmd.forwardmove ||
-		client->pers.cmd.rightmove || client->pers.cmd.upmove || ( client->pers.cmd.buttons & BUTTON_ATTACK ) )
+		client->pers.cmd.rightmove ||
+		client->pers.cmd.upmove ||
+		( client->pers.cmd.buttons & BUTTON_ATTACK ) )
 	{
 		client->inactivityTime    = level.time + g_inactivity.integer * 1000;
 		client->inactivityWarning = qfalse;
@@ -442,7 +443,6 @@ Actions that happen once a second
 void ClientTimerActions( gentity_t* ent, int msec )
 {
 	gclient_t* client;
-
 #ifdef MISSIONPACK
 	int maxHealth;
 #endif
@@ -662,8 +662,7 @@ void ClientEvents( gentity_t* ent, int oldEventSequence )
 	gclient_t* client;
 	int        damage;
 	vec3_t     origin, angles;
-
-	//  qboolean    fired;
+	//	qboolean	fired;
 	gitem_t*   item;
 	gentity_t* drop;
 
@@ -942,12 +941,12 @@ void ClientThink_real( gentity_t* ent )
 	if( ucmd->serverTime > level.time + 200 )
 	{
 		ucmd->serverTime = level.time + 200;
-		//      G_Printf("serverTime <<<<<\n" );
+		//		G_Printf("serverTime <<<<<\n" );
 	}
 	if( ucmd->serverTime < level.time - 1000 )
 	{
 		ucmd->serverTime = level.time - 1000;
-		//      G_Printf("serverTime >>>>>\n" );
+		//		G_Printf("serverTime >>>>>\n" );
 	}
 
 	msec = ucmd->serverTime - client->ps.commandTime;
@@ -965,17 +964,19 @@ void ClientThink_real( gentity_t* ent )
 	if( pmove_msec.integer < 8 )
 	{
 		trap_Cvar_Set( "pmove_msec", "8" );
+		trap_Cvar_Update( &pmove_msec );
 	}
 	else if( pmove_msec.integer > 33 )
 	{
 		trap_Cvar_Set( "pmove_msec", "33" );
+		trap_Cvar_Update( &pmove_msec );
 	}
 
 	if( pmove_fixed.integer || client->pers.pmoveFixed )
 	{
 		ucmd->serverTime = ( ( ucmd->serverTime + pmove_msec.integer - 1 ) / pmove_msec.integer ) * pmove_msec.integer;
 		//if (ucmd->serverTime - client->ps.commandTime <= 0)
-		//  return;
+		//	return;
 	}
 
 	//
@@ -1007,8 +1008,7 @@ void ClientThink_real( gentity_t* ent )
 	// clear the rewards if time
 	if( level.time > client->rewardTime )
 	{
-		client->ps.eFlags &=
-			~( EF_AWARD_IMPRESSIVE | EF_AWARD_EXCELLENT | EF_AWARD_GAUNTLET | EF_AWARD_ASSIST | EF_AWARD_DEFEND | EF_AWARD_CAP );
+		client->ps.eFlags &= ~( EF_AWARD_IMPRESSIVE | EF_AWARD_EXCELLENT | EF_AWARD_GAUNTLET | EF_AWARD_ASSIST | EF_AWARD_DEFEND | EF_AWARD_CAP );
 	}
 
 	if( client->noclip )
@@ -1042,7 +1042,8 @@ void ClientThink_real( gentity_t* ent )
 	}
 
 	// Let go of the hook if we aren't firing
-	if( client->ps.weapon == WP_GRAPPLING_HOOK && client->hook && !( ucmd->buttons & BUTTON_ATTACK ) )
+	if( client->ps.weapon == WP_GRAPPLING_HOOK &&
+		client->hook && !( ucmd->buttons & BUTTON_ATTACK ) )
 	{
 		Weapon_HookFree( client->hook );
 	}
@@ -1216,7 +1217,8 @@ void ClientThink_real( gentity_t* ent )
 		if( level.time > client->respawnTime )
 		{
 			// forcerespawn is to prevent users from waiting out powerups
-			if( g_forcerespawn.integer > 0 && ( level.time - client->respawnTime ) > g_forcerespawn.integer * 1000 )
+			if( g_forcerespawn.integer > 0 &&
+				( level.time - client->respawnTime ) > g_forcerespawn.integer * 1000 )
 			{
 				ClientRespawn( ent );
 				return;
@@ -1321,15 +1323,17 @@ void SpectatorClientEndFrame( gentity_t* ent )
 				ent->client->ps.eFlags = flags;
 				return;
 			}
-			else
+		}
+
+		if( ent->client->ps.pm_flags & PMF_FOLLOW )
+		{
+			// drop them to free spectators unless they are dedicated camera followers
+			if( ent->client->sess.spectatorClient >= 0 )
 			{
-				// drop them to free spectators unless they are dedicated camera followers
-				if( ent->client->sess.spectatorClient >= 0 )
-				{
-					ent->client->sess.spectatorState = SPECTATOR_FREE;
-					ClientBegin( ent->client - level.clients );
-				}
+				ent->client->sess.spectatorState = SPECTATOR_FREE;
 			}
+
+			ClientBegin( ent->client - level.clients );
 		}
 	}
 
@@ -1445,6 +1449,6 @@ void ClientEndFrame( gentity_t* ent )
 	SendPendingPredictableEvents( &ent->client->ps );
 
 	// set the bit for the reachability area the client is currently in
-	//  i = trap_AAS_PointReachabilityAreaIndex( ent->client->ps.origin );
-	//  ent->client->areabits[i >> 3] |= 1 << (i & 7);
+	//	i = trap_AAS_PointReachabilityAreaIndex( ent->client->ps.origin );
+	//	ent->client->areabits[i >> 3] |= 1 << (i & 7);
 }

@@ -27,9 +27,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "tr_types.h"
 //NOTE: include the ui_public.h from the new UI
 #include "ui_public.h"
+
+// RB: WTF
 //redefine to old API version
-#undef UI_API_VERSION
-#define UI_API_VERSION 4
+//#undef UI_API_VERSION
+//#define UI_API_VERSION 4
+
 #include "keycodes.h"
 #include "bg_public.h"
 

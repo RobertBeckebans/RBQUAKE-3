@@ -57,7 +57,7 @@ typedef enum
 #endif //SCREWUP
 
 #ifdef BOTLIB
-	#include "../qcommon/q_shared.h"
+	#include "../shared/q_shared.h"
 	#include "botlib.h"
 	#include "be_interface.h"
 	#include "l_memory.h"

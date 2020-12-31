@@ -1775,6 +1775,7 @@ int AAS_Reachability_Step_Barrier_WaterJump_WalkOffLedge( int area1num, int area
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
+#if 0
 float VectorDistance( vec3_t v1, vec3_t v2 )
 {
 	vec3_t dir;
@@ -1782,6 +1783,7 @@ float VectorDistance( vec3_t v1, vec3_t v2 )
 	VectorSubtract( v2, v1, dir );
 	return VectorLength( dir );
 } //end of the function VectorDistance
+#endif
 //===========================================================================
 // returns true if the first vector is between the last two vectors
 //

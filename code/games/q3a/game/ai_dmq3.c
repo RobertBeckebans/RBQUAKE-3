@@ -3573,8 +3573,8 @@ qboolean InFieldOfVision( vec3_t viewangles, float fov, vec3_t angles )
 
 	for( i = 0; i < 2; i++ )
 	{
-		angle       = AngleMod( viewangles[ i ] );
-		angles[ i ] = AngleMod( angles[ i ] );
+		angle       = AngleNormalize360( viewangles[ i ] );
+		angles[ i ] = AngleNormalize360( angles[ i ] );
 		diff        = angles[ i ] - angle;
 		if( angles[ i ] > angle )
 		{
@@ -3635,7 +3635,7 @@ float BotEntityVisible( int viewer, vec3_t eye, vec3_t viewangles, float fov, in
 	VectorAdd( entinfo.origin, middle, middle );
 	//check if entity is within field of vision
 	VectorSubtract( middle, eye, dir );
-	vectoangles( dir, entangles );
+	VectorToAngles( dir, entangles );
 	if( !InFieldOfVision( viewangles, fov, entangles ) )
 	{
 		return 0;
@@ -3905,7 +3905,7 @@ int BotFindEnemy( bot_state_t* bs, int curenemy )
 		{
 			//check if we can avoid this enemy
 			VectorSubtract( bs->origin, entinfo.origin, dir );
-			vectoangles( dir, angles );
+			VectorToAngles( dir, angles );
 			//if the bot isn't in the fov of the enemy
 			if( !InFieldOfVision( entinfo.angles, 90, angles ) )
 			{
@@ -4268,7 +4268,7 @@ void BotAimAtEnemy( bot_state_t* bs )
 #endif
 		//aim at the obelisk
 		VectorSubtract( target, bs->eye, dir );
-		vectoangles( dir, bs->ideal_viewangles );
+		VectorToAngles( dir, bs->ideal_viewangles );
 		//set the aim target before trying to attack
 		VectorCopy( target, bs->aimtarget );
 		return;
@@ -4565,12 +4565,12 @@ void BotAimAtEnemy( bot_state_t* bs )
 		}
 	}
 	//set the ideal view angles
-	vectoangles( dir, bs->ideal_viewangles );
+	VectorToAngles( dir, bs->ideal_viewangles );
 	//take the weapon spread into account for lower skilled bots
 	bs->ideal_viewangles[ PITCH ] += 6 * wi.vspread * crandom() * ( 1 - aim_accuracy );
-	bs->ideal_viewangles[ PITCH ] = AngleMod( bs->ideal_viewangles[ PITCH ] );
+	bs->ideal_viewangles[ PITCH ] = AngleNormalize360( bs->ideal_viewangles[ PITCH ] );
 	bs->ideal_viewangles[ YAW ] += 6 * wi.hspread * crandom() * ( 1 - aim_accuracy );
-	bs->ideal_viewangles[ YAW ] = AngleMod( bs->ideal_viewangles[ YAW ] );
+	bs->ideal_viewangles[ YAW ] = AngleNormalize360( bs->ideal_viewangles[ YAW ] );
 	//if the bots should be really challenging
 	if( bot_challenge.integer )
 	{
@@ -4679,7 +4679,7 @@ void BotCheckAttack( bot_state_t* bs )
 		fov = 50;
 	}
 	//
-	vectoangles( dir, angles );
+	VectorToAngles( dir, angles );
 	if( !InFieldOfVision( bs->viewangles, fov, angles ) )
 	{
 		return;
@@ -4835,12 +4835,12 @@ void BotMapScripts( bot_state_t* bs )
 		{
 			bs->flags |= BFL_IDEALVIEWSET;
 			VectorSubtract( buttonorg, bs->eye, dir );
-			vectoangles( dir, bs->ideal_viewangles );
+			VectorToAngles( dir, bs->ideal_viewangles );
 			aim_accuracy = trap_Characteristic_BFloat( bs->character, CHARACTERISTIC_AIM_ACCURACY, 0, 1 );
 			bs->ideal_viewangles[ PITCH ] += 8 * crandom() * ( 1 - aim_accuracy );
-			bs->ideal_viewangles[ PITCH ] = AngleMod( bs->ideal_viewangles[ PITCH ] );
+			bs->ideal_viewangles[ PITCH ] = AngleNormalize360( bs->ideal_viewangles[ PITCH ] );
 			bs->ideal_viewangles[ YAW ] += 8 * crandom() * ( 1 - aim_accuracy );
-			bs->ideal_viewangles[ YAW ] = AngleMod( bs->ideal_viewangles[ YAW ] );
+			bs->ideal_viewangles[ YAW ] = AngleNormalize360( bs->ideal_viewangles[ YAW ] );
 			//
 			if( InFieldOfVision( bs->viewangles, 20, bs->ideal_viewangles ) )
 			{

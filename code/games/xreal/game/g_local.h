@@ -1,30 +1,30 @@
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
-Copyright (C) 2006 Robert Beckebans <trebor_7@users.sourceforge.net>
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
+//
+// g_local.h -- local definitions for game module
 
 #ifndef __G_LOCAL_H
 #define __G_LOCAL_H
 
-// g_local.h -- local definitions for game module
 #include "q_shared.h"
 #include "bg_public.h"
 #include "g_public.h"
@@ -36,7 +36,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //==================================================================
 
 // the "gameversion" client command will print this plus compile date
-
 #define GAMEVERSION "XreaL"
 
 #define BODY_QUEUE_SIZE 8
@@ -900,9 +899,10 @@ extern vmCvar_t ace_spSkill;
 extern vmCvar_t ace_botsFile;
 #endif
 
-void     trap_Printf( const char* fmt );
-void     trap_Error( const char* fmt );
+void     trap_Printf( const char* text );
+void     trap_Error( const char* text );
 int      trap_Milliseconds( void );
+int      trap_RealTime( qtime_t* qtime );
 int      trap_Argc( void );
 void     trap_Argv( int n, char* buffer, int bufferLength );
 void     trap_Args( char* buffer, int bufferLength );
@@ -950,8 +950,6 @@ void     trap_BotUserCommand( int client, usercmd_t* ucmd );                 // 
 void     trap_BotClientCommand( int clientNum, char* command );              // NO BOTLIB
 void     trap_GetUsercmd( int clientNum, usercmd_t* cmd );
 qboolean trap_GetEntityToken( char* buffer, int bufferSize );
-
-int trap_RealTime( qtime_t* qtime );
 
 #if defined( USE_BULLET )
 

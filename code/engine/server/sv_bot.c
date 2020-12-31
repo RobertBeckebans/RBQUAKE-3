@@ -24,7 +24,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "server.h"
 
 #ifdef BOTLIB
-	#include "../botlib/botlib.h"
+	#include "../../shared/botlib/botlib.h"
 
 typedef struct bot_debugpoly_s
 {
@@ -640,7 +640,7 @@ void SV_BotInitBotLib( void )
 
 	// file system access
 	botlib_import.FS_FOpenFile  = FS_FOpenFileByMode;
-	botlib_import.FS_Read       = FS_Read2;
+	botlib_import.FS_Read       = FS_Read;
 	botlib_import.FS_Write      = FS_Write;
 	botlib_import.FS_FCloseFile = FS_FCloseFile;
 	botlib_import.FS_Seek       = FS_Seek;

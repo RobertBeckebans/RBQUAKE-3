@@ -79,21 +79,21 @@ void Sys_SetDefaultInstallPath( const char* path )
 {
 	Q_strncpyz( installPath, path, sizeof( installPath ) );
 
-	Q_strreplace( installPath, sizeof( installPath ), "bin32", "" );
-	Q_strreplace( installPath, sizeof( installPath ), "bin64", "" );
+	//Q_strreplace( installPath, sizeof( installPath ), "bin32", "" );
+	//Q_strreplace( installPath, sizeof( installPath ), "bin64", "" );
 
 	//Q_strreplace(installPath, sizeof(installPath), "code/engine", "");
 	//Q_strreplace(installPath, sizeof(installPath), "code\\engine", "");
 
-	Q_strreplace( installPath, sizeof( installPath ), "bin/win32", "" );
-	Q_strreplace( installPath, sizeof( installPath ), "bin\\win32", "" );
+	//Q_strreplace( installPath, sizeof( installPath ), "bin/win32", "" );
+	//Q_strreplace( installPath, sizeof( installPath ), "bin\\win32", "" );
 
-	Q_strreplace( installPath, sizeof( installPath ), "bin/win64", "" );
-	Q_strreplace( installPath, sizeof( installPath ), "bin\\win64", "" );
+	//Q_strreplace( installPath, sizeof( installPath ), "bin/win64", "" );
+	//Q_strreplace( installPath, sizeof( installPath ), "bin\\win64", "" );
 
-	Q_strreplace( installPath, sizeof( installPath ), "bin/linux-x86_64", "" );
-	Q_strreplace( installPath, sizeof( installPath ), "bin/linux-x86", "" );
-	Q_strreplace( installPath, sizeof( installPath ), "bin/linux-native", "" );
+	//Q_strreplace( installPath, sizeof( installPath ), "bin/linux-x86_64", "" );
+	//Q_strreplace( installPath, sizeof( installPath ), "bin/linux-x86", "" );
+	//Q_strreplace( installPath, sizeof( installPath ), "bin/linux-native", "" );
 }
 
 /*

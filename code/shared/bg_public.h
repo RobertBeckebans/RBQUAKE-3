@@ -30,9 +30,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define DEFAULT_GRAVITY 800
 
 // Tr3B: define this to use the new Quake4 like player model system
-#define XPPM 1
 
-#if defined( XPPM )
+#if defined( STANDALONE )
+	#define XPPM 1
+#else
+	#define XPPM 0
+#endif
+
+#if XPPM
 	#define DEFAULT_MODEL     "shina"
 	#define DEFAULT_HEADMODEL "shina"
 #else
@@ -72,6 +77,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	#define CROUCH_HEIGHT      20  // 38	// Tr3B: was 16
 	#define DEAD_VIEWHEIGHT    -16 // Tr3B: was -16
 #else
+	#define STEPSIZE           18
 	#define MINS_Z             -24
 	#define DEFAULT_VIEWHEIGHT 26
 	#define CROUCH_VIEWHEIGHT  12
