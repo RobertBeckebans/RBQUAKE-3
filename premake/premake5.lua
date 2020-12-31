@@ -44,6 +44,7 @@ solution "RBQUAKE-3"
 		}
 		exceptionhandling "Off"
 		editandcontinue "Off"
+		systemversion "latest"
 		buildoptions
 		{
 			-- multi processor support
@@ -131,14 +132,20 @@ newoption
 
 newoption
 {
-	trigger = "with-bullet",
+	trigger = "bullet",
 	description = "Compile with Bullet physics game code support"
 }
 
 newoption
 {
-	trigger = "with-acebot",
+	trigger = "acebot",
 	description = "Compile with AceBot game code support"
+}
+
+newoption
+{
+	trigger = "gladiator",
+	description = "Compile with default Quake 3 gladiator bot support"
 }
 
 --newoption
@@ -198,6 +205,7 @@ project "RBQuake3"
 		"../code/engine/qcommon/vm.c",
 		"../code/engine/qcommon/net_*.c",
 		"../code/engine/qcommon/unzip.c",
+		"../code/engine/qcommon/parse.c",  -- by Tremulous to avoid botlib dependency
 
 		"../code/engine/qcommon/cm_load.c",
 		"../code/engine/qcommon/cm_patch.c",
@@ -346,7 +354,7 @@ project "RBQuake3"
 	}
 	defines
 	{ 
-		"STANDALONE",
+		--"STANDALONE",
 		"REF_HARD_LINKED",
 		"GLEW_STATIC",
 		"BUILD_FREETYPE",
@@ -402,18 +410,18 @@ project "RBQuake3"
 			"STANDALONE"
 		}
 		
-	if not _OPTIONS["standalone"] then
+	configuration "gladiator"
 		defines
 		{
-			"BOTLIB"
+			"BOTLIB",
+			"GLADIATOR",
 		}
 		files
 		{
 			"../code/shared/botlib/*.c", "../code/shared/botlib/*.h",
 		}
-	end
 	
-	configuration "with-bullet"
+	configuration "bullet"
 		defines
 		{
 			"USE_BULLET"
