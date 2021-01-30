@@ -193,6 +193,8 @@ project "RBQuake3"
 		"../code/engine/client/**.c", "../code/engine/client/**.h",
 		"../code/engine/server/**.c", "../code/engine/server/**.h",
 		
+		"../code/engine/sound/**.c", "../code/engine/sound/**.h",
+		
 		"../code/engine/qcommon/**.h", 
 		"../code/engine/qcommon/cmd.c",
 		"../code/engine/qcommon/common.c",
