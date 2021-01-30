@@ -30,7 +30,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #endif
 
 #include <q_shared.h>
-#include "../client/snd_local.h"
+#include "../sound/snd_local.h"
 
 qboolean snd_inited = qfalse;
 
