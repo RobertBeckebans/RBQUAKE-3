@@ -52,6 +52,12 @@ project "q3a-cgame"
 		"CGAME",
 	}
 	
+	configuration "standalone"
+		defines
+		{
+			"STANDALONE"
+		}
+	
 	--
 	-- Platform Configurations
 	--

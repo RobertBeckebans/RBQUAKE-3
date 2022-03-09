@@ -85,11 +85,11 @@ extern "C"
 	#define PRODUCT_DATE __DATE__
 #endif
 
-//#if !defined( STANDALONE )
-//#define BASEGAME            "baseq3"
-//#else 
-#define BASEGAME            "base"
-//#endif
+#if defined( STANDALONE )
+	#define BASEGAME            "base"
+#else 
+	#define BASEGAME            "baseq3"
+#endif
 
 #define GAMENAME_FOR_MASTER PRODUCT_NAME_UPPPER // must NOT contain whitespaces
 

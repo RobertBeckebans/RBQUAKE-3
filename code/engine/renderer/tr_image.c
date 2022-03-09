@@ -3649,6 +3649,7 @@ R_InitImages
 */
 void R_InitImages( void )
 {
+#if defined( STANDALONE )
 	const char* charsetImage  = "gfx/2d/charset-bezerk-plain-rc2.png";
 	const char* grainImage    = "gfx/2d/camera/grain.png";
 	const char* vignetteImage = "gfx/2d/camera/vignette.png";
@@ -3683,6 +3684,31 @@ void R_InitImages( void )
 	{
 		ri.Error( ERR_FATAL, "R_InitImages: could not load '%s'", vignetteImage );
 	}
+#else
+	const char* charsetImage = "gfx/2d/bigchars.tga";
+
+	ri.Printf( PRINT_DEVELOPER, "------- R_InitImages -------\n" );
+
+	Com_Memset( r_imageHashTable, 0, sizeof( r_imageHashTable ) );
+	Com_InitGrowList( &tr.images, 4096 );
+	Com_InitGrowList( &tr.lightmaps, 128 );
+	Com_InitGrowList( &tr.deluxemaps, 128 );
+
+	// build brightness translation tables
+	R_SetColorMappings();
+
+	// create default texture and white texture
+	R_CreateBuiltinImages();
+
+	tr.charsetImage = R_FindImageFile( charsetImage, IF_NOCOMPRESSION | IF_NOPICMIP, FT_DEFAULT, WT_CLAMP, NULL );
+	if( !tr.charsetImage )
+	{
+		ri.Error( ERR_FATAL, "R_InitImages: could not load '%s'", charsetImage );
+	}
+
+	tr.grainImage = NULL;
+	tr.vignetteImage = NULL;
+#endif
 }
 
 /*

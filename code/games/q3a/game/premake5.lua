@@ -51,6 +51,12 @@ project "q3a-game"
 		"QAGAME",
 	}
 	
+	configuration "standalone"
+		defines
+		{
+			"STANDALONE"
+		}
+	
 	configuration "gladiator"
 		defines
 		{

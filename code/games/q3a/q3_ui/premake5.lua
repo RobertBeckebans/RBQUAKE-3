@@ -38,6 +38,12 @@ project "q3a-ui"
 		"UI",
 	}
 	
+	configuration "standalone"
+		defines
+		{
+			"STANDALONE"
+		}
+	
 	--
 	-- Platform Configurations
 	--

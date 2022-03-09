@@ -652,7 +652,7 @@ aas_trace_t AAS_TraceClientBBox( vec3_t start, vec3_t end, int presencetype, int
 			VectorCopy( tstack_p->start, trace.endpos );
 			trace.ent  = 0;
 			trace.area = 0; //hit solid leaf
-							//			VectorSubtract(end, start, v1);
+				//			VectorSubtract(end, start, v1);
 			trace.planenum = tstack_p->planenum;
 			//always take the plane with normal facing towards the trace start
 			plane = &aasworld.planes[ trace.planenum ];

@@ -1,30 +1,30 @@
 /*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
-Copyright (C) 2006-2008 Robert Beckebans <trebor_7@users.sourceforge.net>
+Copyright (C) 2006-2008 Robert Beckebans
 
-This file is part of XreaL source code.
+This file is part of Quake III Arena source code.
 
-XreaL source code is free software; you can redistribute it
+Quake III Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-XreaL source code is distributed in the hope that it will be
+Quake III Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XreaL source code; if not, write to the Free Software
+along with Foobar; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
-// tr_curve.c
+
 #include "tr_local.h"
 
 /*
-======================================================================================
+
 This file does all of the processing necessary to turn a raw grid of points
 read from the map file into a srfGridMesh_t ready for rendering.
 
@@ -33,7 +33,7 @@ distance from the true curve.
 
 Only a single entry point:
 R_SubdividePatchToGrid(int width, int height, srfVert_t points[MAX_PATCH_SIZE*MAX_PATCH_SIZE])
-======================================================================================
+
 */
 
 /*
@@ -285,43 +285,6 @@ static void MakeMeshTangentVectors( int width, int height, srfVert_t ctrl[ MAX_G
 		R_CalcTangentVectors( dv );
 	}
 
-#if 0
-	for( i = 0; i < ( width * height ); i++ )
-	{
-		dv0 = &ctrl2[i];
-		
-		VectorNormalize( dv0->normal );
-	#if 0
-		VectorNormalize( dv0->tangent );
-		VectorNormalize( dv0->binormal );
-	#else
-		d = DotProduct( dv0->tangent, dv0->normal );
-		VectorMA( dv0->tangent, -d, dv0->normal, dv0->tangent );
-		VectorNormalize( dv0->tangent );
-		
-		d = DotProduct( dv0->binormal, dv0->normal );
-		VectorMA( dv0->binormal, -d, dv0->normal, dv0->binormal );
-		VectorNormalize( dv0->binormal );
-	#endif
-	}
-#endif
-
-#if 0
-	// do another extra smoothing for normals to avoid flat shading
-	for( i = 0; i < ( width * height ); i++ )
-	{
-		for( j = 0; j < ( width * height ); j++ )
-		{
-			if( R_CompareVert( &ctrl2[i], &ctrl2[j], qfalse ) )
-			{
-				VectorAdd( ctrl2[i].normal, ctrl2[j].normal, ctrl2[i].normal );
-			}
-		}
-		
-		VectorNormalize( ctrl2[i].normal );
-	}
-#endif
-
 	for( i = 0; i < width; i++ )
 	{
 		for( j = 0; j < height; j++ )
@@ -386,118 +349,6 @@ static int MakeMeshTriangles( int width, int height, srfVert_t ctrl[ MAX_GRID_SI
 
 	return numTriangles;
 }
-
-/*static void MakeTangentSpaces(int width, int height, srfVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE], int numTriangles,
-							  srfTriangle_t triangles[SHADER_MAX_TRIANGLES])
-{
-	int             i, j;
-	float          *v;
-	const float    *v0, *v1, *v2;
-	const float    *t0, *t1, *t2;
-	vec3_t          tangent;
-	vec3_t          binormal;
-	vec3_t          normal;
-	vec_t           d;
-	srfVert_t      *dv0, *dv1, *dv2;
-	srfVert_t       ctrl2[MAX_GRID_SIZE * MAX_GRID_SIZE];
-	srfTriangle_t  *tri;
-
-	// FIXME: use more elegant way
-	for(i = 0; i < width; i++)
-	{
-		for(j = 0; j < height; j++)
-		{
-			dv0 = &ctrl2[j * width + i];
-			*dv0 = ctrl[j][i];
-		}
-	}
-
-	for(i = 0; i < (width * height); i++)
-	{
-		dv0 = &ctrl2[i];
-
-		VectorClear(dv0->tangent);
-		VectorClear(dv0->binormal);
-		VectorClear(dv0->normal);
-	}
-
-	for(i = 0, tri = triangles; i < numTriangles; i++, tri++)
-	{
-		dv0 = &ctrl2[tri->indexes[0]];
-		dv1 = &ctrl2[tri->indexes[1]];
-		dv2 = &ctrl2[tri->indexes[2]];
-
-		v0 = dv0->xyz;
-		v1 = dv1->xyz;
-		v2 = dv2->xyz;
-
-		t0 = dv0->st;
-		t1 = dv1->st;
-		t2 = dv2->st;
-
-		R_CalcTangentSpace2(tangent, binormal, normal, v0, v1, v2, t0, t1, t2);
-
-		for(j = 0; j < 3; j++)
-		{
-			dv0 = &ctrl2[tri->indexes[j]];
-
-			v = dv0->tangent;
-			VectorAdd(v, tangent, v);
-
-			v = dv0->binormal;
-			VectorAdd(v, binormal, v);
-
-			v = dv0->normal;
-			VectorAdd(v, normal, v);
-		}
-	}
-
-	for(i = 0; i < (width * height); i++)
-	{
-		dv0 = &ctrl2[i];
-
-		VectorNormalize(dv0->normal);
-#if 0
-		VectorNormalize(dv0->tangent);
-		VectorNormalize(dv0->binormal);
-#else
-		d = DotProduct(dv0->tangent, dv0->normal);
-		VectorMA(dv0->tangent, -d, dv0->normal, dv0->tangent);
-		VectorNormalize(dv0->tangent);
-
-		d = DotProduct(dv0->binormal, dv0->normal);
-		VectorMA(dv0->binormal, -d, dv0->normal, dv0->binormal);
-		VectorNormalize(dv0->binormal);
-#endif
-	}
-
-	// do another extra smoothing for normals to avoid flat shading
-	for(i = 0; i < (width * height); i++)
-	{
-		for(j = 0; j < (width * height); j++)
-		{
-			if(R_CompareVert(&ctrl2[i], &ctrl2[j], qfalse))
-			{
-				VectorAdd(ctrl2[i].normal, ctrl2[j].normal, ctrl2[i].normal);
-			}
-		}
-
-		VectorNormalize(ctrl2[i].normal);
-	}
-
-	for(i = 0; i < width; i++)
-	{
-		for(j = 0; j < height; j++)
-		{
-			dv0 = &ctrl2[j * width + i];
-			dv1 = &ctrl[j][i];
-
-			VectorCopy(dv0->tangent, dv1->tangent);
-			VectorCopy(dv0->binormal, dv1->binormal);
-			VectorCopy(dv0->normal, dv1->normal);
-		}
-	}
-}*/
 
 /*
 ============
@@ -850,9 +701,6 @@ srfGridMesh_t* R_SubdividePatchToGrid( int width, int height, srfVert_t points[ 
 	MakeMeshNormals( width, height, ctrl );
 	MakeMeshTangentVectors( width, height, ctrl, numTriangles, triangles );
 
-	// calculate tangent spaces
-	//MakeTangentSpaces(width, height, ctrl, numTriangles, triangles);
-
 	return R_CreateSurfaceGridMesh( width, height, ctrl, errorTable, numTriangles, triangles );
 }
 
@@ -916,9 +764,6 @@ srfGridMesh_t* R_GridInsertColumn( srfGridMesh_t* grid, int column, int row, vec
 	// calculate normals
 	MakeMeshNormals( width, height, ctrl );
 	MakeMeshTangentVectors( width, height, ctrl, numTriangles, triangles );
-
-	// calculate tangent spaces
-	//MakeTangentSpaces(width, height, ctrl, numTriangles, triangles);
 
 	VectorCopy( grid->lodOrigin, lodOrigin );
 	lodRadius = grid->lodRadius;
@@ -990,9 +835,6 @@ srfGridMesh_t* R_GridInsertRow( srfGridMesh_t* grid, int row, int column, vec3_t
 	// calculate normals
 	MakeMeshNormals( width, height, ctrl );
 	MakeMeshTangentVectors( width, height, ctrl, numTriangles, triangles );
-
-	// calculate tangent spaces
-	//MakeTangentSpaces(width, height, ctrl, numTriangles, triangles);
 
 	VectorCopy( grid->lodOrigin, lodOrigin );
 	lodRadius = grid->lodRadius;
