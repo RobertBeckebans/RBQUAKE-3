@@ -8,6 +8,12 @@ neo/ipch
 *.exe
 *.7z
 *.zip
+*.vcxproj*
+*.sln
+*.exp
+*.ilk
+*.lib
+*.pdb
 .DS_Store
 imgui.ini
 
