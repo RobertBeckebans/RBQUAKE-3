@@ -288,7 +288,7 @@ smooths together coincident vertex normals across the bsp
 #define THETA_EPSILON		 0.000001
 #define EQUAL_NORMAL_EPSILON 0.01
 
-void SmoothNormals( void )
+void SmoothNormals()
 {
 	int				  i, j, k, f, cs, numVerts, numVotes, fOld, start;
 	float			  shadeAngle, defaultShadeAngle, maxShadeAngle, dot, testAngle;
@@ -1590,7 +1590,7 @@ sets up dirtmap (ambient occlusion)
 static vec3_t dirtVectors[DIRT_NUM_VECTORS];
 static int	  numDirtVectors = 0;
 
-void		  SetupDirt( void )
+void		  SetupDirt()
 {
 	int	  i, j;
 	float angle, elevation, angleStep, elevationStep;
@@ -3403,7 +3403,7 @@ SetupBrushes()
 determines opaque brushes in the world and find sky shaders for sunlight calculations
 */
 
-void SetupBrushes( void )
+void SetupBrushes()
 {
 	int				i, j, b, compileFlags;
 	qboolean		inside;
@@ -4340,7 +4340,7 @@ void CreateTraceLightsForSurface( int num, trace_t* trace )
 static vec3_t floodVectors[FLOODLIGHT_NUM_VECTORS];
 static int	  numFloodVectors = 0;
 
-void		  SetupFloodLight( void )
+void		  SetupFloodLight()
 {
 	int			i, j;
 	float		angle, elevation, angleStep, elevationStep;

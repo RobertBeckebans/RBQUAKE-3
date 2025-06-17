@@ -31,16 +31,16 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #ifdef AASINTERN
 // initialize the AAS routing
-void			   AAS_InitRouting( void );
+void			   AAS_InitRouting();
 // free the AAS routing caches
-void			   AAS_FreeRoutingCaches( void );
+void			   AAS_FreeRoutingCaches();
 // returns the travel time from start to end in the given area
 unsigned short int AAS_AreaTravelTime( int areanum, vec3_t start, vec3_t end );
 //
-void			   AAS_CreateAllRoutingCache( void );
-void			   AAS_WriteRouteCache( void );
+void			   AAS_CreateAllRoutingCache();
+void			   AAS_WriteRouteCache();
 //
-void			   AAS_RoutingInfo( void );
+void			   AAS_RoutingInfo();
 #endif // AASINTERN
 
 // returns the travel flag for the given travel type

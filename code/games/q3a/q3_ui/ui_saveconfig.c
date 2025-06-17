@@ -126,7 +126,7 @@ static void UI_SaveConfigMenu_SavenameDraw( void* self )
 UI_SaveConfigMenu_Init
 =================
 */
-static void UI_SaveConfigMenu_Init( void )
+static void UI_SaveConfigMenu_Init()
 {
 	memset( &saveConfig, 0, sizeof( saveConfig ) );
 
@@ -195,7 +195,7 @@ static void UI_SaveConfigMenu_Init( void )
 UI_SaveConfigMenu_Cache
 =================
 */
-void UI_SaveConfigMenu_Cache( void )
+void UI_SaveConfigMenu_Cache()
 {
 	trap_R_RegisterShaderNoMip( ART_BACK0 );
 	trap_R_RegisterShaderNoMip( ART_BACK1 );
@@ -209,7 +209,7 @@ void UI_SaveConfigMenu_Cache( void )
 UI_SaveConfigMenu
 ===============
 */
-void UI_SaveConfigMenu( void )
+void UI_SaveConfigMenu()
 {
 	UI_SaveConfigMenu_Init();
 	UI_PushMenu( &saveConfig.menu );

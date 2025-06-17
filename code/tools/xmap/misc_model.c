@@ -873,7 +873,7 @@ void AddTriangleModel( entity_t* entity, qboolean applyTransform )
 AddTriangleModels
 =====================
 */
-void AddTriangleModels( void )
+void AddTriangleModels()
 {
 	int		  i;
 	entity_t* entity;

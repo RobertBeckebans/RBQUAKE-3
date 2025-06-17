@@ -1161,7 +1161,7 @@ R_RotateForViewer
 Sets up the modelview matrix for a given viewParm
 =================
 */
-void R_RotateForViewer( void )
+void R_RotateForViewer()
 {
 	matrix_t transformMatrix;
 	//	axis_t			viewAxis;
@@ -1284,7 +1284,7 @@ void R_RotateForViewer( void )
 /*
 ** SetFarClip
 */
-static void SetFarClip( void )
+static void SetFarClip()
 {
 	float farthestCornerDistance;
 	int	  i, j;
@@ -1602,7 +1602,7 @@ R_SetupUnprojection
 create a matrix with similar functionality like gluUnproject, project from window space to world space
 =================
 */
-static void R_SetupUnprojection( void )
+static void R_SetupUnprojection()
 {
 	float* unprojectMatrix = tr.viewParms.unprojectionMatrix;
 
@@ -1626,7 +1626,7 @@ R_SetupFrustum
 Setup that culling frustum planes for the current view
 =================
 */
-static void R_SetupFrustum( void )
+static void R_SetupFrustum()
 {
 	int	   i;
 	float  xs, xc;
@@ -1750,7 +1750,7 @@ static void CopyPlane( const cplane_t* in, cplane_t* out )
 	out->pad[1]	  = in->pad[1];
 }
 
-static void R_SetupSplitFrustums( void )
+static void R_SetupSplitFrustums()
 {
 	int	   i, j;
 	float  lambda;
@@ -2432,7 +2432,7 @@ static int DrawSurfCompare( const void* a, const void* b )
 R_SortDrawSurfs
 =================
 */
-static void R_SortDrawSurfs( void )
+static void R_SortDrawSurfs()
 {
 	drawSurf_t* drawSurf;
 	shader_t*	shader;
@@ -2519,7 +2519,7 @@ static void R_SortDrawSurfs( void )
 R_AddEntitySurfaces
 =============
 */
-void R_AddEntitySurfaces( void )
+void R_AddEntitySurfaces()
 {
 	int			   i;
 	trRefEntity_t* ent;
@@ -3335,7 +3335,7 @@ R_DebugGraphics
 Visualization aid for movement clipping debugging
 ====================
 */
-static void R_DebugGraphics( void )
+static void R_DebugGraphics()
 {
 #if defined( USE_D3D10 )
 	// TODO

@@ -30,10 +30,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *****************************************************************************/
 
 #ifdef AASINTERN
-void		 AAS_InitAASLinkHeap( void );
-void		 AAS_InitAASLinkedEntities( void );
-void		 AAS_FreeAASLinkHeap( void );
-void		 AAS_FreeAASLinkedEntities( void );
+void		 AAS_InitAASLinkHeap();
+void		 AAS_InitAASLinkedEntities();
+void		 AAS_FreeAASLinkHeap();
+void		 AAS_FreeAASLinkedEntities();
 aas_face_t*	 AAS_AreaGroundFace( int areanum, vec3_t point );
 aas_face_t*	 AAS_TraceEndFace( aas_trace_t* trace );
 aas_plane_t* AAS_PlaneFromNum( int planenum );

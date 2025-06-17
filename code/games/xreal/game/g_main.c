@@ -211,7 +211,7 @@ static int gameCvarTableSize = ARRAY_LEN( gameCvarTable );
 void	   G_InitGame( int levelTime, int randomSeed, int restart );
 void	   G_RunFrame( int levelTime );
 void	   G_ShutdownGame( int restart );
-void	   CheckExitRules( void );
+void	   CheckExitRules();
 
 /*
 ================
@@ -306,7 +306,7 @@ All but the first will have the FL_TEAMSLAVE flag set and teammaster field set
 All but the last will have the teamchain field set to the next one
 ================
 */
-void G_FindTeams( void )
+void G_FindTeams()
 {
 	gentity_t *e, *e2;
 	int		   i, j;
@@ -366,7 +366,7 @@ void G_FindTeams( void )
 	G_Printf( "%i teams with %i entities\n", c, c2 );
 }
 
-void G_RemapTeamShaders( void )
+void G_RemapTeamShaders()
 {
 #ifdef MISSIONPACK
 	char  string[1024];
@@ -387,7 +387,7 @@ void G_RemapTeamShaders( void )
 G_RegisterCvars
 =================
 */
-void G_RegisterCvars( void )
+void G_RegisterCvars()
 {
 	int			 i;
 	cvarTable_t* cv;
@@ -428,7 +428,7 @@ void G_RegisterCvars( void )
 G_UpdateCvars
 =================
 */
-void G_UpdateCvars( void )
+void G_UpdateCvars()
 {
 	int			 i;
 	cvarTable_t* cv;
@@ -675,7 +675,7 @@ If there are less than two tournament players, put a
 spectator in the game and restart
 =============
 */
-void AddTournamentPlayer( void )
+void AddTournamentPlayer()
 {
 	int		   i;
 	gclient_t* client;
@@ -766,7 +766,7 @@ RemoveTournamentLoser
 Make the loser a spectator at the back of the line
 =======================
 */
-void RemoveTournamentLoser( void )
+void RemoveTournamentLoser()
 {
 	int clientNum;
 
@@ -791,7 +791,7 @@ void RemoveTournamentLoser( void )
 RemoveTournamentWinner
 =======================
 */
-void RemoveTournamentWinner( void )
+void RemoveTournamentWinner()
 {
 	int clientNum;
 
@@ -816,7 +816,7 @@ void RemoveTournamentWinner( void )
 AdjustTournamentScores
 =======================
 */
-void AdjustTournamentScores( void )
+void AdjustTournamentScores()
 {
 	int clientNum;
 
@@ -911,7 +911,7 @@ This will be called on every client connect, begin, disconnect, death,
 and team change.
 ============
 */
-void CalculateRanks( void )
+void CalculateRanks()
 {
 	int		   i;
 	int		   rank;
@@ -1073,7 +1073,7 @@ Do this at BeginIntermission time and whenever ranks are recalculated
 due to enters/exits/forced team changes
 ========================
 */
-void SendScoreboardMessageToAllClients( void )
+void SendScoreboardMessageToAllClients()
 {
 	int i;
 
@@ -1129,7 +1129,7 @@ FindIntermissionPoint
 This is also used for spectator spawns
 ==================
 */
-void FindIntermissionPoint( void )
+void FindIntermissionPoint()
 {
 	gentity_t *ent, *target;
 	vec3_t	   dir;
@@ -1163,7 +1163,7 @@ void FindIntermissionPoint( void )
 BeginIntermission
 ==================
 */
-void BeginIntermission( void )
+void BeginIntermission()
 {
 	int		   i;
 	gentity_t* client;
@@ -1222,7 +1222,7 @@ or moved to a new level based on the "nextmap" cvar
 
 =============
 */
-void ExitLevel( void )
+void ExitLevel()
 {
 	int		   i;
 	gclient_t* cl;
@@ -1417,7 +1417,7 @@ If one or more players have not acknowledged the continue, the game will
 wait 10 seconds before going on.
 =================
 */
-void CheckIntermissionExit( void )
+void CheckIntermissionExit()
 {
 	int		   ready, notReady, playerCount;
 	int		   i;
@@ -1519,7 +1519,7 @@ void CheckIntermissionExit( void )
 ScoreIsTied
 =============
 */
-qboolean ScoreIsTied( void )
+qboolean ScoreIsTied()
 {
 	int a, b;
 
@@ -1548,7 +1548,7 @@ and the time everyone is moved to the intermission spot, so you
 can see the last frag.
 =================
 */
-void CheckExitRules( void )
+void CheckExitRules()
 {
 	int		   i;
 	gclient_t* cl;
@@ -1668,7 +1668,7 @@ CheckTournament
 Once a frame, check for changes in tournement player state
 =============
 */
-void CheckTournament( void )
+void CheckTournament()
 {
 	// check because we run 3 game frames before calling Connect and/or ClientBegin
 	// for clients on a map_restart
@@ -1816,7 +1816,7 @@ void CheckTournament( void )
 CheckVote
 ==================
 */
-void CheckVote( void )
+void CheckVote()
 {
 	if( level.voteExecuteTime && level.voteExecuteTime < level.time )
 	{
@@ -2027,7 +2027,7 @@ void CheckTeamVote( int team )
 CheckCvars
 ==================
 */
-void CheckCvars( void )
+void CheckCvars()
 {
 	static int lastMod = -1;
 

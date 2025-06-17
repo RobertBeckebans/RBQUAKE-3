@@ -31,9 +31,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #ifdef AASINTERN
 // loads the given BSP file
-int			AAS_LoadBSPFile( void );
+int			AAS_LoadBSPFile();
 // dump the loaded BSP data
-void		AAS_DumpBSPData( void );
+void		AAS_DumpBSPData();
 // unlink the given entity from the bsp tree leaves
 void		AAS_UnlinkFromBSPLeaves( bsp_link_t* leaves );
 // link the given entity to the bsp tree leaves of the given model

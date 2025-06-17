@@ -176,7 +176,7 @@ SwapBSPFile()
 byte swaps all data in the abstract bsp
 */
 
-void SwapBSPFile( void )
+void SwapBSPFile()
 {
 	int i, j;
 
@@ -398,7 +398,7 @@ PrintBSPFileSizes()
 dumps info about current file
 */
 
-void PrintBSPFileSizes( void )
+void PrintBSPFileSizes()
 {
 	/* parse entities first */
 	if( numEntities <= 0 )
@@ -463,7 +463,7 @@ ParseEpair()
 parses a single quoted "key" "value" pair into an epair struct
 */
 
-epair_t* ParseEPair( void )
+epair_t* ParseEPair()
 {
 	epair_t* e;
 
@@ -500,7 +500,7 @@ ParseEntity()
 parses an entity's epairs
 */
 
-qboolean ParseEntity( void )
+qboolean ParseEntity()
 {
 	epair_t* e;
 
@@ -547,7 +547,7 @@ ParseEntities()
 parses the bsp entity data string into entities
 */
 
-void ParseEntities( void )
+void ParseEntities()
 {
 	numEntities = 0;
 	ParseFromMemory( bspEntData, bspEntDataSize );
@@ -614,7 +614,7 @@ this allows the utilities to add or remove key/value
 pairs to the data created by the map editor
 */
 
-void UnparseEntities( void )
+void UnparseEntities()
 {
 	int			i;
 	char *		buf, *end;

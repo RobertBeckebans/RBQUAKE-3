@@ -124,7 +124,7 @@ static void DrawTree_r( node_t* node )
 }
 
 static tree_t* drawTree = NULL;
-static void	   DrawTree( void )
+static void	   DrawTree()
 {
 	DrawTree_r( drawTree->headnode );
 }
@@ -134,7 +134,7 @@ static void	   DrawTree( void )
 ProcessWorldModel
 ============
 */
-void ProcessWorldModel( void )
+void ProcessWorldModel()
 {
 	int			s;
 	entity_t*	e;
@@ -377,7 +377,7 @@ void ProcessSubModel( int entityNum )
 ProcessModels
 ============
 */
-void ProcessModels( void )
+void ProcessModels()
 {
 	int			i;
 	entity_t*	entity;
@@ -455,7 +455,7 @@ void Bspinfo( int count, char** fileNames )
 OnlyEnts
 ============
 */
-void OnlyEnts( void )
+void OnlyEnts()
 {
 	char out[1024];
 
@@ -476,7 +476,7 @@ void OnlyEnts( void )
 OnlyTextures
 ============
 */
-void OnlyTextures( void )
+void OnlyTextures()
 {
 	// FIXME!!!
 	char out[1024];

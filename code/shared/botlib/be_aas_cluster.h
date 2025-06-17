@@ -31,7 +31,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #ifdef AASINTERN
 // initialize the AAS clustering
-void AAS_InitClustering( void );
+void AAS_InitClustering();
 //
-void AAS_SetViewPortalsAsClusterPortals( void );
+void AAS_SetViewPortalsAsClusterPortals();
 #endif // AASINTERN

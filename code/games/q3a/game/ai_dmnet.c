@@ -69,7 +69,7 @@ char nodeswitch[MAX_NODESWITCHES + 1][144];
 BotResetNodeSwitches
 ==================
 */
-void BotResetNodeSwitches( void )
+void BotResetNodeSwitches()
 {
 	numnodeswitches = 0;
 }

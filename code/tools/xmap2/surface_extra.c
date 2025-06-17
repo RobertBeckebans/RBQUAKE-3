@@ -62,7 +62,7 @@ AllocSurfaceExtra()
 allocates a new extra storage
 */
 
-static surfaceExtra_t* AllocSurfaceExtra( void )
+static surfaceExtra_t* AllocSurfaceExtra()
 {
 	surfaceExtra_t* se;
 

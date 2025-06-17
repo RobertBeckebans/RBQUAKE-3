@@ -760,7 +760,7 @@ CreateMapFogs() - ydnar
 generates a list of map fogs
 */
 
-void CreateMapFogs( void )
+void CreateMapFogs()
 {
 	int			i;
 	entity_t*	entity;

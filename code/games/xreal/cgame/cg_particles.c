@@ -41,7 +41,7 @@ static float		oldtime;
 CG_InitParticles
 ===============
 */
-void				CG_InitParticles( void )
+void				CG_InitParticles()
 {
 	int i;
 
@@ -821,7 +821,7 @@ Slide off of the impacting surface
 CG_AddParticles
 ===============
 */
-void CG_AddParticles( void )
+void CG_AddParticles()
 {
 	cparticle_t *p, *next;
 	float		 time, time2;
@@ -2719,7 +2719,7 @@ void CG_ParticleRailRick( vec3_t org, vec3_t dir, vec3_t clientColor )
 CG_TestParticles_f
 =================
 */
-void CG_TestParticles_f( void )
+void CG_TestParticles_f()
 {
 	vec3_t start, end;
 

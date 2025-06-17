@@ -875,7 +875,7 @@ void		Com_BeginParseSession( const char* name )
 	Q_strncpyz( com_parsename, name, sizeof( com_parsename ) );
 }
 
-int Com_GetCurrentParseLine( void )
+int Com_GetCurrentParseLine()
 {
 	return com_lines;
 }

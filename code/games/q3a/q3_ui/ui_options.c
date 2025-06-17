@@ -100,7 +100,7 @@ static void			 Options_Event( void* ptr, int event )
 SystemConfig_Cache
 ===============
 */
-void SystemConfig_Cache( void )
+void SystemConfig_Cache()
 {
 	trap_R_RegisterShaderNoMip( ART_FRAMEL );
 	trap_R_RegisterShaderNoMip( ART_FRAMER );
@@ -113,7 +113,7 @@ void SystemConfig_Cache( void )
 Options_MenuInit
 ===============
 */
-void Options_MenuInit( void )
+void Options_MenuInit()
 {
 	int				y;
 	uiClientState_t cstate;
@@ -227,7 +227,7 @@ void Options_MenuInit( void )
 UI_SystemConfigMenu
 ===============
 */
-void UI_SystemConfigMenu( void )
+void UI_SystemConfigMenu()
 {
 	Options_MenuInit();
 	UI_PushMenu( &s_options.menu );

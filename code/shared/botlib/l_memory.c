@@ -266,7 +266,7 @@ void FreeMemory( void* ptr )
 // Returns:				-
 // Changes Globals:		-
 //===========================================================================
-int AvailableMemory( void )
+int AvailableMemory()
 {
 	return botimport.AvailableMemory();
 } // end of the function AvailableMemory
@@ -293,7 +293,7 @@ int MemoryByteSize( void* ptr )
 // Returns:				-
 // Changes Globals:		-
 //===========================================================================
-void PrintUsedMemorySize( void )
+void PrintUsedMemorySize()
 {
 	botimport.Print( PRT_MESSAGE, "total allocated memory: %d KB\n", allocatedmemory >> 10 );
 	botimport.Print( PRT_MESSAGE, "total botlib memory: %d KB\n", totalmemorysize >> 10 );
@@ -305,7 +305,7 @@ void PrintUsedMemorySize( void )
 // Returns:				-
 // Changes Globals:		-
 //===========================================================================
-void PrintMemoryLabels( void )
+void PrintMemoryLabels()
 {
 	memoryblock_t* block;
 	int			   i;
@@ -335,7 +335,7 @@ void PrintMemoryLabels( void )
 // Returns:				-
 // Changes Globals:		-
 //===========================================================================
-void DumpMemory( void )
+void DumpMemory()
 {
 	memoryblock_t* block;
 
@@ -462,7 +462,7 @@ void FreeMemory( void* ptr )
 // Returns:				-
 // Changes Globals:		-
 //===========================================================================
-int AvailableMemory( void )
+int AvailableMemory()
 {
 	return botimport.AvailableMemory();
 } // end of the function AvailableMemory
@@ -472,7 +472,7 @@ int AvailableMemory( void )
 // Returns:				-
 // Changes Globals:		-
 //===========================================================================
-void PrintUsedMemorySize( void )
+void PrintUsedMemorySize()
 {
 } // end of the function PrintUsedMemorySize
 //===========================================================================
@@ -481,7 +481,7 @@ void PrintUsedMemorySize( void )
 // Returns:				-
 // Changes Globals:		-
 //===========================================================================
-void PrintMemoryLabels( void )
+void PrintMemoryLabels()
 {
 } // end of the function PrintMemoryLabels
 

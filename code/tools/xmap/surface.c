@@ -39,7 +39,7 @@ DRAWSURF CONSTRUCTION
 AllocDrawSurf
 =================
 */
-drawSurface_t* AllocDrawSurf( void )
+drawSurface_t* AllocDrawSurf()
 {
 	drawSurface_t* ds;
 

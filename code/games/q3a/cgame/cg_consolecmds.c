@@ -29,7 +29,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 extern menuDef_t* menuScoreboard;
 #endif
 
-void CG_TargetCommand_f( void )
+void CG_TargetCommand_f()
 {
 	int	 targetNum;
 	char test[4];
@@ -51,7 +51,7 @@ CG_SizeUp_f
 Keybinding command
 =================
 */
-static void CG_SizeUp_f( void )
+static void CG_SizeUp_f()
 {
 	trap_Cvar_Set( "cg_viewsize", va( "%i", ( int )( cg_viewsize.integer + 10 ) ) );
 }
@@ -63,7 +63,7 @@ CG_SizeDown_f
 Keybinding command
 =================
 */
-static void CG_SizeDown_f( void )
+static void CG_SizeDown_f()
 {
 	trap_Cvar_Set( "cg_viewsize", va( "%i", ( int )( cg_viewsize.integer - 10 ) ) );
 }
@@ -75,12 +75,12 @@ CG_Viewpos_f
 Debugging command to print the current position
 =============
 */
-static void CG_Viewpos_f( void )
+static void CG_Viewpos_f()
 {
 	CG_Printf( "(%i %i %i) : %i\n", ( int )cg.refdef.vieworg[0], ( int )cg.refdef.vieworg[1], ( int )cg.refdef.vieworg[2], ( int )cg.refdefViewAngles[YAW] );
 }
 
-static void CG_ScoresDown_f( void )
+static void CG_ScoresDown_f()
 {
 #ifdef MISSIONPACK
 	CG_BuildSpectatorString();
@@ -108,7 +108,7 @@ static void CG_ScoresDown_f( void )
 	}
 }
 
-static void CG_ScoresUp_f( void )
+static void CG_ScoresUp_f()
 {
 	if( cg.showScores )
 	{
@@ -119,9 +119,9 @@ static void CG_ScoresUp_f( void )
 
 #ifdef MISSIONPACK
 extern menuDef_t* menuScoreboard;
-void			  Menu_Reset( void ); // FIXME: add to right include file
+void			  Menu_Reset(); // FIXME: add to right include file
 
-static void		  CG_LoadHud_f( void )
+static void		  CG_LoadHud_f()
 {
 	char		buff[1024];
 	const char* hudSet;
@@ -141,7 +141,7 @@ static void		  CG_LoadHud_f( void )
 	menuScoreboard = NULL;
 }
 
-static void CG_scrollScoresDown_f( void )
+static void CG_scrollScoresDown_f()
 {
 	if( menuScoreboard && cg.scoreBoardShowing )
 	{
@@ -151,7 +151,7 @@ static void CG_scrollScoresDown_f( void )
 	}
 }
 
-static void CG_scrollScoresUp_f( void )
+static void CG_scrollScoresUp_f()
 {
 	if( menuScoreboard && cg.scoreBoardShowing )
 	{
@@ -161,7 +161,7 @@ static void CG_scrollScoresUp_f( void )
 	}
 }
 
-static void CG_spWin_f( void )
+static void CG_spWin_f()
 {
 	trap_Cvar_Set( "cg_cameraOrbit", "2" );
 	trap_Cvar_Set( "cg_cameraOrbitDelay", "35" );
@@ -173,7 +173,7 @@ static void CG_spWin_f( void )
 	CG_CenterPrint( "YOU WIN!", SCREEN_HEIGHT * .30, 0 );
 }
 
-static void CG_spLose_f( void )
+static void CG_spLose_f()
 {
 	trap_Cvar_Set( "cg_cameraOrbit", "2" );
 	trap_Cvar_Set( "cg_cameraOrbitDelay", "35" );
@@ -187,7 +187,7 @@ static void CG_spLose_f( void )
 
 #endif
 
-static void CG_TellTarget_f( void )
+static void CG_TellTarget_f()
 {
 	int	 clientNum;
 	char command[128];
@@ -204,7 +204,7 @@ static void CG_TellTarget_f( void )
 	trap_SendClientCommand( command );
 }
 
-static void CG_TellAttacker_f( void )
+static void CG_TellAttacker_f()
 {
 	int	 clientNum;
 	char command[128];
@@ -222,7 +222,7 @@ static void CG_TellAttacker_f( void )
 }
 
 #ifdef MISSIONPACK
-static void CG_VoiceTellTarget_f( void )
+static void CG_VoiceTellTarget_f()
 {
 	int	 clientNum;
 	char command[128];
@@ -239,7 +239,7 @@ static void CG_VoiceTellTarget_f( void )
 	trap_SendClientCommand( command );
 }
 
-static void CG_VoiceTellAttacker_f( void )
+static void CG_VoiceTellAttacker_f()
 {
 	int	 clientNum;
 	char command[128];
@@ -256,19 +256,19 @@ static void CG_VoiceTellAttacker_f( void )
 	trap_SendClientCommand( command );
 }
 
-static void CG_NextTeamMember_f( void )
+static void CG_NextTeamMember_f()
 {
 	CG_SelectNextPlayer();
 }
 
-static void CG_PrevTeamMember_f( void )
+static void CG_PrevTeamMember_f()
 {
 	CG_SelectPrevPlayer();
 }
 
 // ASS U ME's enumeration order as far as task specific orders, OFFENSE is zero, CAMP is last
 //
-static void CG_NextOrder_f( void )
+static void CG_NextOrder_f()
 {
 	clientInfo_t* ci = cgs.clientinfo + cg.snap->ps.clientNum;
 	if( ci )
@@ -306,7 +306,7 @@ static void CG_NextOrder_f( void )
 	cgs.orderTime	 = cg.time + 3000;
 }
 
-static void CG_ConfirmOrder_f( void )
+static void CG_ConfirmOrder_f()
 {
 	trap_SendConsoleCommand( va( "cmd vtell %d %s\n", cgs.acceptLeader, VOICECHAT_YES ) );
 	trap_SendConsoleCommand( "+button5; wait; -button5" );
@@ -317,7 +317,7 @@ static void CG_ConfirmOrder_f( void )
 	}
 }
 
-static void CG_DenyOrder_f( void )
+static void CG_DenyOrder_f()
 {
 	trap_SendConsoleCommand( va( "cmd vtell %d %s\n", cgs.acceptLeader, VOICECHAT_NO ) );
 	trap_SendConsoleCommand( "+button6; wait; -button6" );
@@ -327,7 +327,7 @@ static void CG_DenyOrder_f( void )
 	}
 }
 
-static void CG_TaskOffense_f( void )
+static void CG_TaskOffense_f()
 {
 	if( cgs.gametype == GT_CTF || cgs.gametype == GT_1FCTF )
 	{
@@ -340,73 +340,73 @@ static void CG_TaskOffense_f( void )
 	trap_SendClientCommand( va( "teamtask %d\n", TEAMTASK_OFFENSE ) );
 }
 
-static void CG_TaskDefense_f( void )
+static void CG_TaskDefense_f()
 {
 	trap_SendConsoleCommand( va( "cmd vsay_team %s\n", VOICECHAT_ONDEFENSE ) );
 	trap_SendClientCommand( va( "teamtask %d\n", TEAMTASK_DEFENSE ) );
 }
 
-static void CG_TaskPatrol_f( void )
+static void CG_TaskPatrol_f()
 {
 	trap_SendConsoleCommand( va( "cmd vsay_team %s\n", VOICECHAT_ONPATROL ) );
 	trap_SendClientCommand( va( "teamtask %d\n", TEAMTASK_PATROL ) );
 }
 
-static void CG_TaskCamp_f( void )
+static void CG_TaskCamp_f()
 {
 	trap_SendConsoleCommand( va( "cmd vsay_team %s\n", VOICECHAT_ONCAMPING ) );
 	trap_SendClientCommand( va( "teamtask %d\n", TEAMTASK_CAMP ) );
 }
 
-static void CG_TaskFollow_f( void )
+static void CG_TaskFollow_f()
 {
 	trap_SendConsoleCommand( va( "cmd vsay_team %s\n", VOICECHAT_ONFOLLOW ) );
 	trap_SendClientCommand( va( "teamtask %d\n", TEAMTASK_FOLLOW ) );
 }
 
-static void CG_TaskRetrieve_f( void )
+static void CG_TaskRetrieve_f()
 {
 	trap_SendConsoleCommand( va( "cmd vsay_team %s\n", VOICECHAT_ONRETURNFLAG ) );
 	trap_SendClientCommand( va( "teamtask %d\n", TEAMTASK_RETRIEVE ) );
 }
 
-static void CG_TaskEscort_f( void )
+static void CG_TaskEscort_f()
 {
 	trap_SendConsoleCommand( va( "cmd vsay_team %s\n", VOICECHAT_ONFOLLOWCARRIER ) );
 	trap_SendClientCommand( va( "teamtask %d\n", TEAMTASK_ESCORT ) );
 }
 
-static void CG_TaskOwnFlag_f( void )
+static void CG_TaskOwnFlag_f()
 {
 	trap_SendConsoleCommand( va( "cmd vsay_team %s\n", VOICECHAT_IHAVEFLAG ) );
 }
 
-static void CG_TauntKillInsult_f( void )
+static void CG_TauntKillInsult_f()
 {
 	trap_SendConsoleCommand( "cmd vsay kill_insult\n" );
 }
 
-static void CG_TauntPraise_f( void )
+static void CG_TauntPraise_f()
 {
 	trap_SendConsoleCommand( "cmd vsay praise\n" );
 }
 
-static void CG_TauntTaunt_f( void )
+static void CG_TauntTaunt_f()
 {
 	trap_SendConsoleCommand( "cmd vtaunt\n" );
 }
 
-static void CG_TauntDeathInsult_f( void )
+static void CG_TauntDeathInsult_f()
 {
 	trap_SendConsoleCommand( "cmd vsay death_insult\n" );
 }
 
-static void CG_TauntGauntlet_f( void )
+static void CG_TauntGauntlet_f()
 {
 	trap_SendConsoleCommand( "cmd vsay kill_gauntlet\n" );
 }
 
-static void CG_TaskSuicide_f( void )
+static void CG_TaskSuicide_f()
 {
 	int	 clientNum;
 	char command[128];
@@ -427,7 +427,7 @@ CG_TeamMenu_f
 ==================
 */
 /*
-static void CG_TeamMenu_f( void ) {
+static void CG_TeamMenu_f() {
   if (trap_Key_GetCatcher() & KEYCATCH_CGAME) {
 	CG_EventHandling(CGAME_EVENT_NONE);
 	trap_Key_SetCatcher(0);
@@ -444,7 +444,7 @@ CG_EditHud_f
 ==================
 */
 /*
-static void CG_EditHud_f( void ) {
+static void CG_EditHud_f() {
   //cls.keyCatchers ^= KEYCATCH_CGAME;
   //VM_Call (cgvm, CG_EVENT_HANDLING, (cls.keyCatchers & KEYCATCH_CGAME) ? CGAME_EVENT_EDITHUD : CGAME_EVENT_NONE);
 }
@@ -458,7 +458,7 @@ CG_StartOrbit_f
 ==================
 */
 
-static void CG_StartOrbit_f( void )
+static void CG_StartOrbit_f()
 {
 	char var[MAX_TOKEN_CHARS];
 
@@ -482,7 +482,7 @@ static void CG_StartOrbit_f( void )
 }
 
 /*
-static void CG_Camera_f( void ) {
+static void CG_Camera_f() {
 	char name[1024];
 	trap_Argv( 1, name, sizeof(name));
 	if (trap_loadCamera(name)) {
@@ -497,7 +497,7 @@ static void CG_Camera_f( void ) {
 typedef struct
 {
 	char* cmd;
-	void ( *function )( void );
+	void ( *function )();
 } consoleCommand_t;
 
 static consoleCommand_t commands[] = { { "testgun", CG_TestGun_f },
@@ -559,7 +559,7 @@ The string has been tokenized and can be retrieved with
 Cmd_Argc() / Cmd_Argv()
 =================
 */
-qboolean CG_ConsoleCommand( void )
+qboolean CG_ConsoleCommand()
 {
 	const char* cmd;
 	int			i;
@@ -586,7 +586,7 @@ Let the client system know about all of our commands
 so it can perform tab completion
 =================
 */
-void CG_InitConsoleCommands( void )
+void CG_InitConsoleCommands()
 {
 	int i;
 

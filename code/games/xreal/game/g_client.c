@@ -301,13 +301,13 @@ gentity_t* SelectSpawnPoint( vec3_t avoidPoint, vec3_t origin, vec3_t angles, qb
 
 	nearestSpot = SelectNearestDeathmatchSpawnPoint( avoidPoint );
 
-	spot = SelectRandomDeathmatchSpawnPoint ( );
+	spot = SelectRandomDeathmatchSpawnPoint ();
 	if ( spot == nearestSpot ) {
 		// roll again if it would be real close to point of death
-		spot = SelectRandomDeathmatchSpawnPoint ( );
+		spot = SelectRandomDeathmatchSpawnPoint ();
 		if ( spot == nearestSpot ) {
 			// last try
-			spot = SelectRandomDeathmatchSpawnPoint ( );
+			spot = SelectRandomDeathmatchSpawnPoint ();
 		}
 	}
 
@@ -392,7 +392,7 @@ BODYQUE
 InitBodyQue
 ===============
 */
-void InitBodyQue( void )
+void InitBodyQue()
 {
 	int		   i;
 	gentity_t* ent;

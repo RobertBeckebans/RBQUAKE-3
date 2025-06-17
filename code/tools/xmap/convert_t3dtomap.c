@@ -742,7 +742,7 @@ static qboolean ParseActorClassPlayerStart()
 ParseActor
 ================
 */
-qboolean ParseActor( void )
+qboolean ParseActor()
 {
 	int			i;
 	entity_t*	otherEnt;

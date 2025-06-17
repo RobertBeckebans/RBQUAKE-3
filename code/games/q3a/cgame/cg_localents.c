@@ -38,7 +38,7 @@ CG_InitLocalEntities
 This is called at startup and for tournement restarts
 ===================
 */
-void		   CG_InitLocalEntities( void )
+void		   CG_InitLocalEntities()
 {
 	int i;
 
@@ -80,7 +80,7 @@ CG_AllocLocalEntity
 Will always succeed, even if it requires freeing an old active entity
 ===================
 */
-localEntity_t* CG_AllocLocalEntity( void )
+localEntity_t* CG_AllocLocalEntity()
 {
 	localEntity_t* le;
 
@@ -878,7 +878,7 @@ CG_AddLocalEntities
 
 ===================
 */
-void CG_AddLocalEntities( void )
+void CG_AddLocalEntities()
 {
 	localEntity_t *le, *next;
 

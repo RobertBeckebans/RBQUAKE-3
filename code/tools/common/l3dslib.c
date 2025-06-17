@@ -56,7 +56,7 @@ triangle_t* ptri;
 // Alias stores triangles as 3 explicit vertices in .tri files, so even though we
 // start out with a vertex pool and vertex indices for triangles, we have to convert
 // to raw, explicit triangles
-void		StoreAliasTriangles( void )
+void		StoreAliasTriangles()
 {
 	int i, j, k;
 

@@ -104,7 +104,7 @@ static void			   RankStatus_MenuEvent( void* ptr, int event )
 RankStatus_MenuInit
 ===============
 */
-void RankStatus_MenuInit( void )
+void RankStatus_MenuInit()
 {
 	int y;
 
@@ -155,7 +155,7 @@ void RankStatus_MenuInit( void )
 RankStatus_Cache
 ===============
 */
-void RankStatus_Cache( void )
+void RankStatus_Cache()
 {
 	trap_R_RegisterShaderNoMip( RANKSTATUS_FRAME );
 }
@@ -165,7 +165,7 @@ void RankStatus_Cache( void )
 UI_RankStatusMenu
 ===============
 */
-void UI_RankStatusMenu( void )
+void UI_RankStatusMenu()
 {
 	s_status = ( grank_status_t )trap_Cvar_VariableValue( "client_status" );
 

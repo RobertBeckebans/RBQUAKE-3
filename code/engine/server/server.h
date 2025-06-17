@@ -343,11 +343,11 @@ qboolean			 SVC_RateLimitAddress( netadr_t from, int burst, int period );
 void				 SV_FinalMessage( char* message );
 void QDECL			 SV_SendServerCommand( client_t* cl, const char* fmt, ... ) __attribute__( ( format( printf, 2, 3 ) ) );
 
-void				 SV_AddOperatorCommands( void );
-void				 SV_RemoveOperatorCommands( void );
+void				 SV_AddOperatorCommands();
+void				 SV_RemoveOperatorCommands();
 
-void				 SV_MasterHeartbeat( void );
-void				 SV_MasterShutdown( void );
+void				 SV_MasterHeartbeat();
+void				 SV_MasterShutdown();
 int					 SV_RateMsec( client_t* client );
 
 //
@@ -360,7 +360,7 @@ void				 SV_UpdateConfigstrings( client_t* client );
 void				 SV_SetUserinfo( int index, const char* val );
 void				 SV_GetUserinfo( int index, char* buffer, int bufferSize );
 
-void				 SV_ChangeMaxClients( void );
+void				 SV_ChangeMaxClients();
 void				 SV_SpawnServer( char* server, qboolean killBots );
 
 //
@@ -385,13 +385,13 @@ void			SV_ExecuteClientCommand( client_t* cl, const char* s, qboolean clientOK )
 void			SV_ClientThink( client_t* cl, usercmd_t* cmd );
 
 int				SV_WriteDownloadToClient( client_t* cl, msg_t* msg );
-int				SV_SendDownloadMessages( void );
-int				SV_SendQueuedMessages( void );
+int				SV_SendDownloadMessages();
+int				SV_SendQueuedMessages();
 
 //
 // sv_ccmds.c
 //
-void			SV_Heartbeat_f( void );
+void			SV_Heartbeat_f();
 
 //
 // sv_snapshot.c
@@ -400,7 +400,7 @@ void			SV_AddServerCommand( client_t* client, const char* cmd );
 void			SV_UpdateServerCommandsToClient( client_t* client, msg_t* msg );
 void			SV_WriteFrameToClient( client_t* client, msg_t* msg );
 void			SV_SendMessageToClient( msg_t* msg, client_t* client );
-void			SV_SendClientMessages( void );
+void			SV_SendClientMessages();
 void			SV_SendClientSnapshot( client_t* client );
 
 //
@@ -411,21 +411,21 @@ sharedEntity_t* SV_GentityNum( int num );
 playerState_t*	SV_GameClientNum( int num );
 svEntity_t*		SV_SvEntityForGentity( sharedEntity_t* gEnt );
 sharedEntity_t* SV_GEntityForSvEntity( svEntity_t* svEnt );
-void			SV_InitGameProgs( void );
-void			SV_ShutdownGameProgs( void );
-void			SV_RestartGameProgs( void );
+void			SV_InitGameProgs();
+void			SV_ShutdownGameProgs();
+void			SV_RestartGameProgs();
 qboolean		SV_inPVS( const vec3_t p1, const vec3_t p2 );
 
 //
 // sv_bot.c
 //
 void			SV_BotFrame( int time );
-int				SV_BotAllocateClient( void );
+int				SV_BotAllocateClient();
 void			SV_BotFreeClient( int clientNum );
 
-void			SV_BotInitCvars( void );
-int				SV_BotLibSetup( void );
-int				SV_BotLibShutdown( void );
+void			SV_BotInitCvars();
+int				SV_BotLibSetup();
+int				SV_BotLibShutdown();
 int				SV_BotGetSnapshotEntity( int client, int ent );
 int				SV_BotGetConsoleMessage( int client, char* buf, int size );
 void			SV_BotClientCommand( int client, char* command );
@@ -433,14 +433,14 @@ void			SV_BotClientCommand( int client, char* command );
 int				BotImport_DebugPolygonCreate( int color, int numPoints, vec3_t* points );
 void			BotImport_DebugPolygonDelete( int id );
 
-void			SV_BotInitBotLib( void );
+void			SV_BotInitBotLib();
 
 //============================================================
 //
 // high level object sorting to reduce interaction tests
 //
 
-void			SV_ClearWorld( void );
+void			SV_ClearWorld();
 // called after the world model has been loaded, before linking any entities
 
 void			SV_UnlinkEntity( sharedEntity_t* ent );
@@ -456,7 +456,7 @@ void			SV_LinkEntity( sharedEntity_t* ent );
 
 clipHandle_t	SV_ClipHandleForEntity( const sharedEntity_t* ent );
 
-void			SV_SectorList_f( void );
+void			SV_SectorList_f();
 
 int				SV_AreaEntities( const vec3_t mins, const vec3_t maxs, int* entityList, int maxcount );
 // fills in a table of entity numbers with entities that have bounding boxes

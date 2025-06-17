@@ -717,7 +717,7 @@ CG_DrawStatusBar
 ================
 */
 #ifndef MISSIONPACK
-static void CG_DrawStatusBar( void )
+static void CG_DrawStatusBar()
 {
 	int			   color;
 	centity_t*	   cent;
@@ -1233,7 +1233,7 @@ CG_DrawUpperRight
 
 =====================
 */
-static void CG_DrawUpperRight( void )
+static void CG_DrawUpperRight()
 {
 	float y;
 
@@ -1565,7 +1565,7 @@ CG_DrawLowerRight
 =====================
 */
 #ifndef MISSIONPACK
-static void CG_DrawLowerRight( void )
+static void CG_DrawLowerRight()
 {
 	float y;
 
@@ -1623,7 +1623,7 @@ CG_DrawLowerLeft
 =====================
 */
 #ifndef MISSIONPACK
-static void CG_DrawLowerLeft( void )
+static void CG_DrawLowerLeft()
 {
 	float y;
 
@@ -1646,7 +1646,7 @@ CG_DrawTeamInfo
 =================
 */
 #ifndef MISSIONPACK
-static void CG_DrawTeamInfo( void )
+static void CG_DrawTeamInfo()
 {
 	int	   h;
 	int	   i;
@@ -1722,7 +1722,7 @@ CG_DrawHoldableItem
 ===================
 */
 #ifndef MISSIONPACK
-static void CG_DrawHoldableItem( void )
+static void CG_DrawHoldableItem()
 {
 	int value;
 
@@ -1740,7 +1740,7 @@ static void CG_DrawHoldableItem( void )
 CG_DrawReward
 ===================
 */
-static void CG_DrawReward( void )
+static void CG_DrawReward()
 {
 	float* color;
 	int	   i, count;
@@ -1828,7 +1828,7 @@ CG_AddLagometerFrameInfo
 Adds the current interpolate / extrapolate bar for this frame
 ==============
 */
-void		CG_AddLagometerFrameInfo( void )
+void		CG_AddLagometerFrameInfo()
 {
 	int offset;
 
@@ -1870,7 +1870,7 @@ CG_DrawDisconnect
 Should we draw something differnet for long lag vs no packets?
 ==============
 */
-static void CG_DrawDisconnect( void )
+static void CG_DrawDisconnect()
 {
 	float		x, y;
 	int			cmdNum;
@@ -1912,7 +1912,7 @@ static void CG_DrawDisconnect( void )
 CG_DrawLagometer
 ==============
 */
-static void CG_DrawLagometer( void )
+static void CG_DrawLagometer()
 {
 	int	  a, x, y, i;
 	float v;
@@ -2085,7 +2085,7 @@ void CG_CenterPrint( const char* str, int y, int charWidth )
 CG_DrawCenterString
 ===================
 */
-static void CG_DrawCenterString( void )
+static void CG_DrawCenterString()
 {
 	char* start;
 	int	  l;
@@ -2169,7 +2169,7 @@ CROSSHAIR
 CG_DrawCrosshair
 =================
 */
-static void CG_DrawCrosshair( void )
+static void CG_DrawCrosshair()
 {
 	qhandle_t dot;
 	qhandle_t circle;
@@ -2268,7 +2268,7 @@ static void CG_DrawCrosshair( void )
 CG_ScanForCrosshairEntity
 =================
 */
-static void CG_ScanForCrosshairEntity( void )
+static void CG_ScanForCrosshairEntity()
 {
 	trace_t trace;
 	vec3_t	start, end;
@@ -2306,7 +2306,7 @@ static void CG_ScanForCrosshairEntity( void )
 CG_DrawCrosshairNames
 =====================
 */
-static void CG_DrawCrosshairNames( void )
+static void CG_DrawCrosshairNames()
 {
 	float* color;
 	char*  name;
@@ -2355,7 +2355,7 @@ static void CG_DrawCrosshairNames( void )
 CG_DrawSpectator
 =================
 */
-static void CG_DrawSpectator( void )
+static void CG_DrawSpectator()
 {
 	CG_DrawBigString( 320 - 9 * 8, 440, "SPECTATOR", 1.0F );
 	if( cgs.gametype == GT_TOURNAMENT )
@@ -2373,7 +2373,7 @@ static void CG_DrawSpectator( void )
 CG_DrawVote
 =================
 */
-static void CG_DrawVote( void )
+static void CG_DrawVote()
 {
 	char* s;
 	int	  sec;
@@ -2411,7 +2411,7 @@ static void CG_DrawVote( void )
 CG_DrawTeamVote
 =================
 */
-static void CG_DrawTeamVote( void )
+static void CG_DrawTeamVote()
 {
 	char* s;
 	int	  sec, cs_offset;
@@ -2450,7 +2450,7 @@ static void CG_DrawTeamVote( void )
 	CG_DrawSmallString( 0, 90, s, 1.0F );
 }
 
-static qboolean CG_DrawScoreboard( void )
+static qboolean CG_DrawScoreboard()
 {
 #ifdef MISSIONPACK
 	static qboolean firstTime = qtrue;
@@ -2534,7 +2534,7 @@ static qboolean CG_DrawScoreboard( void )
 CG_DrawIntermission
 =================
 */
-static void CG_DrawIntermission( void )
+static void CG_DrawIntermission()
 {
 //  int key;
 #ifdef MISSIONPACK
@@ -2558,7 +2558,7 @@ static void CG_DrawIntermission( void )
 CG_DrawFollow
 =================
 */
-static qboolean CG_DrawFollow( void )
+static qboolean CG_DrawFollow()
 {
 	float		x;
 	vec4_t		color;
@@ -2589,7 +2589,7 @@ static qboolean CG_DrawFollow( void )
 CG_DrawAmmoWarning
 =================
 */
-static void CG_DrawAmmoWarning( void )
+static void CG_DrawAmmoWarning()
 {
 	const char* s;
 	int			w;
@@ -2622,7 +2622,7 @@ static void CG_DrawAmmoWarning( void )
 CG_DrawProxWarning
 =================
 */
-static void CG_DrawProxWarning( void )
+static void CG_DrawProxWarning()
 {
 	char	   s[32];
 	int		   w;
@@ -2668,7 +2668,7 @@ static void CG_DrawProxWarning( void )
 CG_DrawWarmup
 =================
 */
-static void CG_DrawWarmup( void )
+static void CG_DrawWarmup()
 {
 	int w;
 	int sec;
@@ -2860,7 +2860,7 @@ static void CG_DrawWarmup( void )
 CG_DrawTimedMenus
 =================
 */
-void CG_DrawTimedMenus( void )
+void CG_DrawTimedMenus()
 {
 	if( cg.voiceTime )
 	{
@@ -2880,7 +2880,7 @@ void CG_DrawTimedMenus( void )
 CG_Draw2D
 =================
 */
-static void CG_Draw2D( void )
+static void CG_Draw2D()
 {
 #ifdef MISSIONPACK
 	if( cgs.orderPending && cg.time > cgs.orderTime )
@@ -2987,7 +2987,7 @@ static void CG_Draw2D( void )
 	}
 }
 
-static void CG_DrawTourneyScoreboard( void )
+static void CG_DrawTourneyScoreboard()
 {
 #ifndef MISSIONPACK
 	CG_DrawOldTourneyScoreboard();

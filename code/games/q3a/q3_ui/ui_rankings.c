@@ -283,7 +283,7 @@ static void Rankings_MenuEvent( void* ptr, int event )
 Rankings_MenuInit
 ===============
 */
-void Rankings_MenuInit( void )
+void Rankings_MenuInit()
 {
 	grank_status_t status;
 	int			   y;
@@ -404,7 +404,7 @@ void Rankings_MenuInit( void )
 Rankings_Cache
 ===============
 */
-void Rankings_Cache( void )
+void Rankings_Cache()
 {
 	trap_R_RegisterShaderNoMip( RANKINGS_FRAME );
 }
@@ -414,7 +414,7 @@ void Rankings_Cache( void )
 UI_RankingsMenu
 ===============
 */
-void UI_RankingsMenu( void )
+void UI_RankingsMenu()
 {
 	Rankings_MenuInit();
 	UI_PushMenu( &s_rankings.menu );

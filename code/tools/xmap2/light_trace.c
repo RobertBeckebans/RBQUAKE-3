@@ -159,7 +159,7 @@ AllocTraceNode() - ydnar
 allocates a new trace node
 */
 
-static int AllocTraceNode( void )
+static int AllocTraceNode()
 {
 	traceNode_t* temp;
 
@@ -1233,7 +1233,7 @@ PopulateTraceNodes() - ydnar
 fills the raytracing tree with world and entity occluders
 */
 
-static void PopulateTraceNodes( void )
+static void PopulateTraceNodes()
 {
 	int			 i, m, frame, castShadows;
 	float		 temp;
@@ -1389,7 +1389,7 @@ SetupTraceNodes() - ydnar
 creates a balanced bsp with axis-aligned splits for efficient raytracing
 */
 
-void SetupTraceNodes( void )
+void SetupTraceNodes()
 {
 	/* note it */
 	Sys_FPrintf( SYS_VRB, "--- SetupTraceNodes ---\n" );

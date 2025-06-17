@@ -1031,7 +1031,7 @@ and the scoreboard is up
 so deferred players can be loaded
 ======================
 */
-void CG_LoadDeferredPlayers( void )
+void CG_LoadDeferredPlayers()
 {
 	int			  i;
 	clientInfo_t* ci;

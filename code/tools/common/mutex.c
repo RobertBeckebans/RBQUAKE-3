@@ -62,7 +62,7 @@ void MutexUnlock( mutex_t* m )
 	LeaveCriticalSection( crit );
 }
 
-mutex_t* MutexAlloc( void )
+mutex_t* MutexAlloc()
 {
 	CRITICAL_SECTION* crit;
 
@@ -114,7 +114,7 @@ void MutexUnlock( mutex_t* m )
 	pthread_mutex_unlock( my_mutex );
 }
 
-mutex_t* MutexAlloc( void )
+mutex_t* MutexAlloc()
 {
 	pthread_mutex_t*	my_mutex;
 	pthread_mutexattr_t mattrib;
@@ -181,7 +181,7 @@ void MutexUnlock( mutex_t* m )
 	release_lock( lck );
 }
 
-mutex_t* MutexAlloc( void )
+mutex_t* MutexAlloc()
 {
 	abilock_t* lck;
 
@@ -214,7 +214,7 @@ void MutexUnlock( mutex_t* m )
 {
 }
 
-mutex_t* MutexAlloc( void )
+mutex_t* MutexAlloc()
 {
 	return NULL;
 }

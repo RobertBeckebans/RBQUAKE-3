@@ -237,7 +237,7 @@ bot_chatstate_t*	  BotChatStateFromHandle( int handle )
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-void InitConsoleMessageHeap( void )
+void InitConsoleMessageHeap()
 {
 	int i, max_messages;
 
@@ -267,7 +267,7 @@ void InitConsoleMessageHeap( void )
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-bot_consolemessage_t* AllocConsoleMessage( void )
+bot_consolemessage_t* AllocConsoleMessage()
 {
 	bot_consolemessage_t* message;
 	message = freeconsolemessages;
@@ -3367,7 +3367,7 @@ void BotSetChatName( int chatstate, char* name, int client )
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-void BotResetChatAI( void )
+void BotResetChatAI()
 {
 	bot_replychat_t*   rchat;
 	bot_chatmessage_t* m;
@@ -3386,7 +3386,7 @@ void BotResetChatAI( void )
 // Returns:					-
 // Changes Globals:		-
 //========================================================================
-int BotAllocChatState( void )
+int BotAllocChatState()
 {
 	int i;
 
@@ -3440,7 +3440,7 @@ void BotFreeChatState( int handle )
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-int BotSetupChatAI( void )
+int BotSetupChatAI()
 {
 	char* file;
 
@@ -3474,7 +3474,7 @@ int BotSetupChatAI( void )
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-void BotShutdownChatAI( void )
+void BotShutdownChatAI()
 {
 	int i;
 

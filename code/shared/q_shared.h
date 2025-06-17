@@ -1449,7 +1449,7 @@ void        Com_DefaultExtension( char* path, int maxSize, const char* extension
 int Com_HashKey( char* string, int maxlength );
 
 void  Com_BeginParseSession( const char* name );
-int   Com_GetCurrentParseLine( void );
+int   Com_GetCurrentParseLine();
 char* Com_Parse( char** data_p );
 char* Com_ParseExt( char** data_p, qboolean allowLineBreak );
 int   Com_Compress( char* data_p );
@@ -1580,7 +1580,7 @@ qint64  LittleLong64 (qint64 l);
 float	BigFloat (const float *l);
 float	LittleFloat (const float *l);
 
-void	Swap_Init (void);
+void	Swap_Init ();
 */
 char* QDECL va( char* format, ... ) __attribute__( ( format( printf, 1, 2 ) ) );
 

@@ -59,9 +59,9 @@ int			c_mergedFuncStatics;
 // removed before the final brush is allocated
 bspBrush_t* buildBrush;
 
-void		TestExpandBrushes( void );
-void		SetTerrainTextures( void );
-void		ParseTerrain( void );
+void		TestExpandBrushes();
+void		SetTerrainTextures();
+void		ParseTerrain();
 
 /*
 =============================================================================
@@ -406,7 +406,7 @@ Adds any additional planes necessary to allow the brush being
 built to be expanded against axial bounding boxes
 =================
 */
-void AddBrushBevels( void )
+void AddBrushBevels()
 {
 	int		axis, dir;
 	int		i, order;
@@ -587,7 +587,7 @@ AddBackSides
 fog volumes need to have inside faces created
 ===============
 */
-void AddBackSides( void )
+void AddBackSides()
 {
 	/*
 		bspBrush_t	*b;
@@ -627,7 +627,7 @@ Produces a final brush based on the buildBrush->sides array
 and links it to the current entity
 ===============
 */
-bspBrush_t* FinishBrush( void )
+bspBrush_t* FinishBrush()
 {
 	bspBrush_t* b;
 
@@ -1119,7 +1119,7 @@ ParseBrush
   qboolean parameter to true -> parse new brush primitive format ( else use old format )
 =================
 */
-void ParseBrush( void )
+void ParseBrush()
 {
 	bspBrush_t* b;
 
@@ -1251,7 +1251,7 @@ void AdjustPatchesForOrigin( entity_t* ent )
 ParseMapEntity
 ================
 */
-qboolean ParseMapEntity( void )
+qboolean ParseMapEntity()
 {
 	int			i;
 	entity_t*	otherEnt;
@@ -1658,7 +1658,7 @@ Expands all the brush planes and saves a new map out to
 allow visual inspection of the clipping bevels
 ================
 */
-void TestExpandBrushes( void )
+void TestExpandBrushes()
 {
 	side_t*		s;
 	int			i, j;

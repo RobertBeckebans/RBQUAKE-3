@@ -55,7 +55,7 @@ static char gogPath[MAX_OSPATH] = { 0 };
 Sys_DefaultHomePath
 ==================
 */
-char*		Sys_DefaultHomePath( void )
+char*		Sys_DefaultHomePath()
 {
 	char* p;
 
@@ -96,7 +96,7 @@ char*		Sys_DefaultHomePath( void )
 Sys_SteamPath
 ================
 */
-char* Sys_SteamPath( void )
+char* Sys_SteamPath()
 {
 	// Disabled since Steam doesn't let you install Quake 3 on Mac/Linux
 #if 0 // #ifdef STEAMPATH_NAME
@@ -121,7 +121,7 @@ char* Sys_SteamPath( void )
 Sys_GogPath
 ================
 */
-char* Sys_GogPath( void )
+char* Sys_GogPath()
 {
 	// GOG also doesn't let you install Quake 3 on Mac/Linux
 	return gogPath;
@@ -142,7 +142,7 @@ unsigned long sys_timeBase = 0;
    although timeval:tv_usec is an int, I'm not sure wether it is actually used as an unsigned int
 	 (which would affect the wrap period) */
 int			  curtime;
-int			  Sys_Milliseconds( void )
+int			  Sys_Milliseconds()
 {
 	struct timeval tp;
 
@@ -191,7 +191,7 @@ qboolean Sys_RandomBytes( byte* string, int len )
 Sys_GetCurrentUser
 ==================
 */
-char* Sys_GetCurrentUser( void )
+char* Sys_GetCurrentUser()
 {
 	struct passwd* p;
 
@@ -207,7 +207,7 @@ char* Sys_GetCurrentUser( void )
 Sys_GetClipboardData
 ==================
 */
-char* Sys_GetClipboardData( void )
+char* Sys_GetClipboardData()
 {
 	return NULL;
 }
@@ -221,7 +221,7 @@ Sys_LowPhysicalMemory
 TODO
 ==================
 */
-qboolean Sys_LowPhysicalMemory( void )
+qboolean Sys_LowPhysicalMemory()
 {
 	return qfalse;
 }
@@ -320,7 +320,7 @@ FILE* Sys_Mkfifo( const char* ospath )
 Sys_Cwd
 ==================
 */
-char* Sys_Cwd( void )
+char* Sys_Cwd()
 {
 	static char cwd[MAX_OSPATH];
 
@@ -669,7 +669,7 @@ static int	 execArgc;
 Sys_ClearExecBuffer
 ==============
 */
-static void	 Sys_ClearExecBuffer( void )
+static void	 Sys_ClearExecBuffer()
 {
 	execBufferPointer = execBuffer;
 	Com_Memset( execArgv, 0, sizeof( execArgv ) );
@@ -702,7 +702,7 @@ static void Sys_AppendToExecBuffer( const char* text )
 Sys_Exec
 ==============
 */
-static int Sys_Exec( void )
+static int Sys_Exec()
 {
 	pid_t pid = fork();
 
@@ -922,7 +922,7 @@ Sys_GLimpSafeInit
 Unix specific "safe" GL implementation initialisation
 ==============
 */
-void Sys_GLimpSafeInit( void )
+void Sys_GLimpSafeInit()
 {
 	// NOP
 }
@@ -934,12 +934,12 @@ Sys_GLimpInit
 Unix specific GL implementation initialisation
 ==============
 */
-void Sys_GLimpInit( void )
+void Sys_GLimpInit()
 {
 	// NOP
 }
 
-void Sys_SetFloatEnv( void )
+void Sys_SetFloatEnv()
 {
 	// rounding toward nearest
 	fesetround( FE_TONEAREST );
@@ -952,7 +952,7 @@ Sys_PlatformInit
 Unix specific initialisation
 ==============
 */
-void Sys_PlatformInit( void )
+void Sys_PlatformInit()
 {
 	const char* term = getenv( "TERM" );
 
@@ -972,7 +972,7 @@ Sys_PlatformExit
 Unix specific deinitialisation
 ==============
 */
-void Sys_PlatformExit( void )
+void Sys_PlatformExit()
 {
 }
 
@@ -1001,7 +1001,7 @@ void Sys_SetEnv( const char* name, const char* value )
 Sys_PID
 ==============
 */
-int Sys_PID( void )
+int Sys_PID()
 {
 	return getpid();
 }

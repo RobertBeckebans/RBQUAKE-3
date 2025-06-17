@@ -31,11 +31,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #ifdef AASINTERN
 // invalidates all entity infos
-void AAS_InvalidateEntities( void );
+void AAS_InvalidateEntities();
 // unlink not updated entities
-void AAS_UnlinkInvalidEntities( void );
+void AAS_UnlinkInvalidEntities();
 // resets the entity AAS and BSP links (sets areas and leaves pointers to NULL)
-void AAS_ResetEntityLinks( void );
+void AAS_ResetEntityLinks();
 // updates an entity
 int	 AAS_UpdateEntity( int ent, bot_entitystate_t* state );
 // gives the entity data used for collision detection

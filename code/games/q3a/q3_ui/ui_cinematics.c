@@ -109,7 +109,7 @@ static void UI_CinematicsMenu_Event( void* ptr, int event )
 UI_CinematicsMenu_Init
 ===============
 */
-static void UI_CinematicsMenu_Init( void )
+static void UI_CinematicsMenu_Init()
 {
 	int y;
 
@@ -319,7 +319,7 @@ static void UI_CinematicsMenu_Init( void )
 UI_CinematicsMenu_Cache
 =================
 */
-void UI_CinematicsMenu_Cache( void )
+void UI_CinematicsMenu_Cache()
 {
 	trap_R_RegisterShaderNoMip( ART_BACK0 );
 	trap_R_RegisterShaderNoMip( ART_BACK1 );
@@ -332,7 +332,7 @@ void UI_CinematicsMenu_Cache( void )
 UI_CinematicsMenu
 ===============
 */
-void UI_CinematicsMenu( void )
+void UI_CinematicsMenu()
 {
 	UI_CinematicsMenu_Init();
 	UI_PushMenu( &cinematicsMenuInfo.menu );
@@ -343,7 +343,7 @@ void UI_CinematicsMenu( void )
 UI_CinematicsMenu_f
 ===============
 */
-void UI_CinematicsMenu_f( void )
+void UI_CinematicsMenu_f()
 {
 	int n;
 

@@ -198,7 +198,7 @@ static void UI_CDKeyMenu_DrawKey( void* self )
 UI_CDKeyMenu_Init
 ===============
 */
-static void UI_CDKeyMenu_Init( void )
+static void UI_CDKeyMenu_Init()
 {
 	trap_Cvar_Set( "ui_cdkeychecked", "1" );
 
@@ -275,7 +275,7 @@ static void UI_CDKeyMenu_Init( void )
 UI_CDKeyMenu_Cache
 =================
 */
-void UI_CDKeyMenu_Cache( void )
+void UI_CDKeyMenu_Cache()
 {
 	trap_R_RegisterShaderNoMip( ART_ACCEPT0 );
 	trap_R_RegisterShaderNoMip( ART_ACCEPT1 );
@@ -289,7 +289,7 @@ void UI_CDKeyMenu_Cache( void )
 UI_CDKeyMenu
 ===============
 */
-void UI_CDKeyMenu( void )
+void UI_CDKeyMenu()
 {
 	UI_CDKeyMenu_Init();
 	UI_PushMenu( &cdkeyMenuInfo.menu );
@@ -300,7 +300,7 @@ void UI_CDKeyMenu( void )
 UI_CDKeyMenu_f
 ===============
 */
-void UI_CDKeyMenu_f( void )
+void UI_CDKeyMenu_f()
 {
 	UI_CDKeyMenu();
 }

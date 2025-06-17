@@ -88,7 +88,7 @@ static void			   Setup_ResetDefaults_Action( qboolean result )
 Setup_ResetDefaults_Draw
 =================
 */
-static void Setup_ResetDefaults_Draw( void )
+static void Setup_ResetDefaults_Draw()
 {
 	UI_DrawProportionalString( SCREEN_WIDTH / 2, 356 + PROP_HEIGHT * 0, "WARNING: This will reset *ALL*", UI_CENTER | UI_SMALLFONT, color_yellow );
 	UI_DrawProportionalString( SCREEN_WIDTH / 2, 356 + PROP_HEIGHT * 1, "options to their default values.", UI_CENTER | UI_SMALLFONT, color_yellow );
@@ -151,7 +151,7 @@ static void UI_SetupMenu_Event( void* ptr, int event )
 UI_SetupMenu_Init
 ===============
 */
-static void UI_SetupMenu_Init( void )
+static void UI_SetupMenu_Init()
 {
 	int y;
 
@@ -310,7 +310,7 @@ static void UI_SetupMenu_Init( void )
 UI_SetupMenu_Cache
 =================
 */
-void UI_SetupMenu_Cache( void )
+void UI_SetupMenu_Cache()
 {
 	trap_R_RegisterShaderNoMip( ART_BACK0 );
 	trap_R_RegisterShaderNoMip( ART_BACK1 );
@@ -323,7 +323,7 @@ void UI_SetupMenu_Cache( void )
 UI_SetupMenu
 ===============
 */
-void UI_SetupMenu( void )
+void UI_SetupMenu()
 {
 	UI_SetupMenu_Init();
 	UI_PushMenu( &setupMenuInfo.menu );

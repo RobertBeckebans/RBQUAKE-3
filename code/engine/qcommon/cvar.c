@@ -840,7 +840,7 @@ Cvar_SetCheatState
 Any testing variables will be reset to the safe values
 ============
 */
-void Cvar_SetCheatState( void )
+void Cvar_SetCheatState()
 {
 	cvar_t* var;
 
@@ -871,7 +871,7 @@ Cvar_Command
 Handles variable inspection and changing from the console
 ============
 */
-qboolean Cvar_Command( void )
+qboolean Cvar_Command()
 {
 	cvar_t* v;
 
@@ -902,7 +902,7 @@ Prints the contents of a cvar
 (preferred over Cvar_Command where cvar names and commands conflict)
 ============
 */
-void Cvar_Print_f( void )
+void Cvar_Print_f()
 {
 	char*	name;
 	cvar_t* cv;
@@ -935,7 +935,7 @@ Toggles a cvar for easy single key binding, optionally through a list of
 given values
 ============
 */
-void Cvar_Toggle_f( void )
+void Cvar_Toggle_f()
 {
 	int	  i, c = Cmd_Argc();
 	char* curval;
@@ -983,7 +983,7 @@ Allows setting and defining of arbitrary cvars from console, even if they
 weren't declared in C code.
 ============
 */
-void Cvar_Set_f( void )
+void Cvar_Set_f()
 {
 	int		c;
 	char*	cmd;
@@ -1039,7 +1039,7 @@ void Cvar_Set_f( void )
 Cvar_Reset_f
 ============
 */
-void Cvar_Reset_f( void )
+void Cvar_Reset_f()
 {
 	if( Cmd_Argc() != 2 )
 	{
@@ -1104,7 +1104,7 @@ void Cvar_WriteVariables( fileHandle_t f )
 Cvar_List_f
 ============
 */
-void Cvar_List_f( void )
+void Cvar_List_f()
 {
 	cvar_t* var;
 	int		i;
@@ -1212,7 +1212,7 @@ void Cvar_List_f( void )
 Cvar_ListModified_f
 ============
 */
-void Cvar_ListModified_f( void )
+void Cvar_ListModified_f()
 {
 	cvar_t* var;
 	int		totalModified;
@@ -1403,7 +1403,7 @@ Unsets a userdefined cvar
 ============
 */
 
-void Cvar_Unset_f( void )
+void Cvar_Unset_f()
 {
 	cvar_t* cv;
 
@@ -1471,7 +1471,7 @@ Cvar_Restart_f
 Resets all cvars to their hardcoded values
 ============
 */
-void Cvar_Restart_f( void )
+void Cvar_Restart_f()
 {
 	Cvar_Restart( qfalse );
 }
@@ -1702,7 +1702,7 @@ Cvar_Init
 Reads in all archived cvars
 ============
 */
-void Cvar_Init( void )
+void Cvar_Init()
 {
 	Com_Memset( cvar_indexes, '\0', sizeof( cvar_indexes ) );
 	Com_Memset( hashTable, '\0', sizeof( hashTable ) );

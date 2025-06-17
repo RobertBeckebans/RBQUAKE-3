@@ -27,7 +27,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "bspfile.h"
 #include "scriplib.h"
 
-void		 GetLeafNums( void );
+void		 GetLeafNums();
 
 //=============================================================================
 
@@ -109,7 +109,7 @@ SwapBSPFile
 Byte swaps all data in a bsp file.
 =============
 */
-void SwapBSPFile( void )
+void SwapBSPFile()
 {
 	int i;
 
@@ -344,7 +344,7 @@ PrintBSPFileSizes
 Dumps info about current file
 =============
 */
-void PrintBSPFileSizes( void )
+void PrintBSPFileSizes()
 {
 	if( !numEntities )
 	{
@@ -395,7 +395,7 @@ void	 StripTrailing( char* e )
 ParseEpair
 =================
 */
-epair_t* ParseEpair( void )
+epair_t* ParseEpair()
 {
 	epair_t* e;
 
@@ -427,7 +427,7 @@ epair_t* ParseEpair( void )
 ParseEntity
 ================
 */
-qboolean ParseEntity( void )
+qboolean ParseEntity()
 {
 	epair_t*  e;
 	entity_t* mapent;
@@ -473,7 +473,7 @@ ParseEntities
 Parses the dentdata string into entities
 ================
 */
-void ParseEntities( void )
+void ParseEntities()
 {
 	numEntities = 0;
 	ParseFromMemory( dentdata, entDataSize );
@@ -492,7 +492,7 @@ This allows the utilities to add or remove key/value pairs
 to the data created by the map editor.
 ================
 */
-void UnparseEntities( void )
+void UnparseEntities()
 {
 	char *	 buf, *end;
 	epair_t* ep;

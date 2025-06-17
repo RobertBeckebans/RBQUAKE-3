@@ -393,7 +393,7 @@ InitSurfacesForTesting
 Builds structures to speed the ray tracing against surfaces
 =====================
 */
-void InitSurfacesForTesting( void )
+void InitSurfacesForTesting()
 {
 	int			   i, j;
 	dsurface_t*	   dsurf;
@@ -671,7 +671,7 @@ InitTrace
 Loads the node structure out of a .bsp file to be used for light occlusion
 =============
 */
-void InitTrace( void )
+void InitTrace()
 {
 	// 32 byte align the structs
 	tnodes	= malloc( ( MAX_TNODES + 1 ) * sizeof( tnode_t ) );

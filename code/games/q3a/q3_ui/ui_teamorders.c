@@ -275,7 +275,7 @@ static void UI_TeamOrdersMenu_ListEvent( void* ptr, int event )
 UI_TeamOrdersMenu_BuildBotList
 ===============
 */
-static void UI_TeamOrdersMenu_BuildBotList( void )
+static void UI_TeamOrdersMenu_BuildBotList()
 {
 	uiClientState_t cs;
 	int				numPlayers;
@@ -332,7 +332,7 @@ static void UI_TeamOrdersMenu_BuildBotList( void )
 UI_TeamOrdersMenu_Init
 ===============
 */
-static void UI_TeamOrdersMenu_Init( void )
+static void UI_TeamOrdersMenu_Init()
 {
 	UI_TeamOrdersMenu_Cache();
 
@@ -390,7 +390,7 @@ static void UI_TeamOrdersMenu_Init( void )
 UI_TeamOrdersMenu_Cache
 =================
 */
-void UI_TeamOrdersMenu_Cache( void )
+void UI_TeamOrdersMenu_Cache()
 {
 	trap_R_RegisterShaderNoMip( ART_FRAME );
 	trap_R_RegisterShaderNoMip( ART_BACK0 );
@@ -402,7 +402,7 @@ void UI_TeamOrdersMenu_Cache( void )
 UI_TeamOrdersMenu
 ===============
 */
-void UI_TeamOrdersMenu( void )
+void UI_TeamOrdersMenu()
 {
 	UI_TeamOrdersMenu_Init();
 	UI_PushMenu( &teamOrdersMenuInfo.menu );
@@ -413,7 +413,7 @@ void UI_TeamOrdersMenu( void )
 UI_TeamOrdersMenu_f
 ===============
 */
-void UI_TeamOrdersMenu_f( void )
+void UI_TeamOrdersMenu_f()
 {
 	uiClientState_t cs;
 	char			info[MAX_INFO_STRING];

@@ -86,7 +86,7 @@ static void		  TeamMain_MenuEvent( void* ptr, int event )
 TeamMain_MenuInit
 ===============
 */
-void TeamMain_MenuInit( void )
+void TeamMain_MenuInit()
 {
 	int	 y;
 	int	 gametype;
@@ -184,7 +184,7 @@ void TeamMain_MenuInit( void )
 TeamMain_Cache
 ===============
 */
-void TeamMain_Cache( void )
+void TeamMain_Cache()
 {
 	trap_R_RegisterShaderNoMip( TEAMMAIN_FRAME );
 }
@@ -194,7 +194,7 @@ void TeamMain_Cache( void )
 UI_TeamMainMenu
 ===============
 */
-void UI_TeamMainMenu( void )
+void UI_TeamMainMenu()
 {
 	TeamMain_MenuInit();
 	UI_PushMenu( &s_teammain.menu );

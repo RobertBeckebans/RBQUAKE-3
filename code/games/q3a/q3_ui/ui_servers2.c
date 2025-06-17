@@ -226,7 +226,7 @@ static int			  g_fullservers;
 ArenaServers_MaxPing
 =================
 */
-static int			  ArenaServers_MaxPing( void )
+static int			  ArenaServers_MaxPing()
 {
 	int maxPing;
 
@@ -317,7 +317,7 @@ ArenaServers_SourceForLAN
 Convert ui's g_servertype to AS_* used by trap calls.
 =================
 */
-int ArenaServers_SourceForLAN( void )
+int ArenaServers_SourceForLAN()
 {
 	switch( g_servertype )
 	{
@@ -341,7 +341,7 @@ int ArenaServers_SourceForLAN( void )
 ArenaServers_Go
 =================
 */
-static void ArenaServers_Go( void )
+static void ArenaServers_Go()
 {
 	servernode_t* servernode;
 
@@ -357,7 +357,7 @@ static void ArenaServers_Go( void )
 ArenaServers_UpdatePicture
 =================
 */
-static void ArenaServers_UpdatePicture( void )
+static void ArenaServers_UpdatePicture()
 {
 	static char	  picname[64];
 	servernode_t* servernodeptr;
@@ -382,7 +382,7 @@ static void ArenaServers_UpdatePicture( void )
 ArenaServers_UpdateMenu
 =================
 */
-static void ArenaServers_UpdateMenu( void )
+static void ArenaServers_UpdateMenu()
 {
 	int			  i;
 	int			  j;
@@ -589,7 +589,7 @@ static void ArenaServers_UpdateMenu( void )
 ArenaServers_Remove
 =================
 */
-static void ArenaServers_Remove( void )
+static void ArenaServers_Remove()
 {
 	int			  i;
 	servernode_t* servernodeptr;
@@ -742,7 +742,7 @@ ArenaServers_LoadFavorites
 Load cvar address book entries into local lists.
 =================
 */
-void ArenaServers_LoadFavorites( void )
+void ArenaServers_LoadFavorites()
 {
 	int			 i;
 	int			 j;
@@ -813,7 +813,7 @@ void ArenaServers_LoadFavorites( void )
 ArenaServers_StopRefresh
 =================
 */
-static void ArenaServers_StopRefresh( void )
+static void ArenaServers_StopRefresh()
 {
 	if( !g_arenaservers.refreshservers )
 	// not currently refreshing
@@ -841,7 +841,7 @@ static void ArenaServers_StopRefresh( void )
 ArenaServers_DoRefresh
 =================
 */
-static void ArenaServers_DoRefresh( void )
+static void ArenaServers_DoRefresh()
 {
 	int	 i;
 	int	 j;
@@ -1021,7 +1021,7 @@ static void ArenaServers_DoRefresh( void )
 ArenaServers_StartRefresh
 =================
 */
-static void ArenaServers_StartRefresh( void )
+static void ArenaServers_StartRefresh()
 {
 	int	 i;
 	char myargs[32], protocol[32];
@@ -1106,7 +1106,7 @@ static void ArenaServers_StartRefresh( void )
 ArenaServers_SaveChanges
 =================
 */
-void ArenaServers_SaveChanges( void )
+void ArenaServers_SaveChanges()
 {
 	int i;
 
@@ -1352,7 +1352,7 @@ static void ArenaServers_Event( void* ptr, int event )
 ArenaServers_MenuDraw
 =================
 */
-static void ArenaServers_MenuDraw( void )
+static void ArenaServers_MenuDraw()
 {
 	if( g_arenaservers.refreshservers )
 	{
@@ -1396,7 +1396,7 @@ static sfxHandle_t ArenaServers_MenuKey( int key )
 ArenaServers_MenuInit
 =================
 */
-static void ArenaServers_MenuInit( void )
+static void ArenaServers_MenuInit()
 {
 	int			i;
 	int			y;
@@ -1675,7 +1675,7 @@ static void ArenaServers_MenuInit( void )
 ArenaServers_Cache
 =================
 */
-void ArenaServers_Cache( void )
+void ArenaServers_Cache()
 {
 	trap_R_RegisterShaderNoMip( ART_BACK0 );
 	trap_R_RegisterShaderNoMip( ART_BACK1 );
@@ -1699,7 +1699,7 @@ void ArenaServers_Cache( void )
 UI_ArenaServersMenu
 =================
 */
-void UI_ArenaServersMenu( void )
+void UI_ArenaServersMenu()
 {
 	ArenaServers_MenuInit();
 	UI_PushMenu( &g_arenaservers.menu );

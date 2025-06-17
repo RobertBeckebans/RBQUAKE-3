@@ -54,7 +54,7 @@ void trap_Error( const char* fmt )
 	exit( 1 );
 }
 
-int trap_Milliseconds( void )
+int trap_Milliseconds()
 {
 	return syscall( CG_MILLISECONDS );
 }
@@ -79,7 +79,7 @@ void trap_Cvar_VariableStringBuffer( const char* var_name, char* buffer, int buf
 	syscall( CG_CVAR_VARIABLESTRINGBUFFER, var_name, buffer, bufsize );
 }
 
-int trap_Argc( void )
+int trap_Argc()
 {
 	return syscall( CG_ARGC );
 }
@@ -139,7 +139,7 @@ void trap_SendClientCommand( const char* s )
 	syscall( CG_SENDCLIENTCOMMAND, s );
 }
 
-void trap_UpdateScreen( void )
+void trap_UpdateScreen()
 {
 	syscall( CG_UPDATESCREEN );
 }
@@ -149,7 +149,7 @@ void trap_CM_LoadMap( const char* mapname )
 	syscall( CG_CM_LOADMAP, mapname );
 }
 
-int trap_CM_NumInlineModels( void )
+int trap_CM_NumInlineModels()
 {
 	return syscall( CG_CM_NUMINLINEMODELS );
 }
@@ -286,7 +286,7 @@ void trap_R_RegisterFont( const char* fontName, int pointSize, fontInfo_t* font 
 	syscall( CG_R_REGISTERFONT, fontName, pointSize, font );
 }
 
-void trap_R_ClearScene( void )
+void trap_R_ClearScene()
 {
 	syscall( CG_R_CLEARSCENE );
 }
@@ -377,7 +377,7 @@ qboolean trap_GetServerCommand( int serverCommandNumber )
 	return syscall( CG_GETSERVERCOMMAND, serverCommandNumber );
 }
 
-int trap_GetCurrentCmdNumber( void )
+int trap_GetCurrentCmdNumber()
 {
 	return syscall( CG_GETCURRENTCMDNUMBER );
 }
@@ -402,7 +402,7 @@ void testPrintFloat( char* string, float f )
 	syscall( CG_TESTPRINTFLOAT, string, PASSFLOAT( f ) );
 }
 
-int trap_MemoryRemaining( void )
+int trap_MemoryRemaining()
 {
 	return syscall( CG_MEMORY_REMAINING );
 }
@@ -412,7 +412,7 @@ qboolean trap_Key_IsDown( int keynum )
 	return syscall( CG_KEY_ISDOWN, keynum );
 }
 
-int trap_Key_GetCatcher( void )
+int trap_Key_GetCatcher()
 {
 	return syscall( CG_KEY_GETCATCHER );
 }
@@ -452,7 +452,7 @@ int trap_PC_SourceFileAndLine( int handle, char* filename, int* line )
 	return syscall( CG_PC_SOURCE_FILE_AND_LINE, handle, filename, line );
 }
 
-void trap_S_StopBackgroundTrack( void )
+void trap_S_StopBackgroundTrack()
 {
 	syscall( CG_S_STOPBACKGROUNDTRACK );
 }

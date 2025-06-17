@@ -36,7 +36,7 @@ vec3_t					 debugBlockPoints[4];
 CM_ClearLevelPatches
 =================
 */
-void					 CM_ClearLevelPatches( void )
+void					 CM_ClearLevelPatches()
 {
 	debugSurfaceCollide = NULL;
 	debugFacet			= NULL;

@@ -106,7 +106,7 @@ char*			ExpandGamePath( const char* path );
 char*			ExpandPathAndArchive( const char* path );
 void			ExpandWildcards( int* argc, char*** argv );
 
-double			I_FloatTime( void );
+double			I_FloatTime();
 
 void			Error( const char* error, ... );
 int				CheckParm( const char* check );

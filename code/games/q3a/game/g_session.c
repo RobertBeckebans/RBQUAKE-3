@@ -172,7 +172,7 @@ G_InitWorldSession
 
 ==================
 */
-void G_InitWorldSession( void )
+void G_InitWorldSession()
 {
 	char s[MAX_STRING_CHARS];
 	int	 gt;
@@ -195,7 +195,7 @@ G_WriteSessionData
 
 ==================
 */
-void G_WriteSessionData( void )
+void G_WriteSessionData()
 {
 	int i;
 

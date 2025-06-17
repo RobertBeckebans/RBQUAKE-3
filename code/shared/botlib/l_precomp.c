@@ -248,7 +248,7 @@ void PC_PushScript( source_t* source, script_t* script )
 // Returns:				-
 // Changes Globals:		-
 //============================================================================
-void PC_InitTokenHeap( void )
+void PC_InitTokenHeap()
 {
 	/*
 	int i;
@@ -1551,7 +1551,7 @@ int PC_RemoveGlobalDefine( char* name )
 // Returns:					-
 // Changes Globals:		-
 //============================================================================
-void PC_RemoveAllGlobalDefines( void )
+void PC_RemoveAllGlobalDefines()
 {
 	define_t* define;
 
@@ -3708,7 +3708,7 @@ void PC_SetBaseFolder( char* path )
 // Returns:				-
 // Changes Globals:		-
 //============================================================================
-void PC_CheckOpenSourceHandles( void )
+void PC_CheckOpenSourceHandles()
 {
 	int i;
 

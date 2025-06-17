@@ -53,12 +53,12 @@ void*		G_Alloc( int size )
 	return p;
 }
 
-void G_InitMemory( void )
+void G_InitMemory()
 {
 	allocPoint = 0;
 }
 
-void Svcmd_GameMem_f( void )
+void Svcmd_GameMem_f()
 {
 	G_Printf( "Game memory status: %i out of %i bytes allocated\n", allocPoint, POOLSIZE );
 }

@@ -507,7 +507,7 @@ void R_BindVBO( VBO_t* vbo )
 R_BindNullVBO
 ============
 */
-void R_BindNullVBO( void )
+void R_BindNullVBO()
 {
 	GLimp_LogComment( "--- R_BindNullVBO ---\n" );
 
@@ -555,7 +555,7 @@ void R_BindIBO( IBO_t* ibo )
 R_BindNullIBO
 ============
 */
-void R_BindNullIBO( void )
+void R_BindNullIBO()
 {
 	GLimp_LogComment( "--- R_BindNullIBO ---\n" );
 
@@ -614,7 +614,7 @@ static void R_InitUnitCubeVBO()
 R_InitVBOs
 ============
 */
-void R_InitVBOs( void )
+void R_InitVBOs()
 {
 	int	  dataSize;
 	byte* data;
@@ -670,7 +670,7 @@ void R_InitVBOs( void )
 R_ShutdownVBOs
 ============
 */
-void R_ShutdownVBOs( void )
+void R_ShutdownVBOs()
 {
 	int	   i, j;
 	VBO_t* vbo;
@@ -736,7 +736,7 @@ void R_ShutdownVBOs( void )
 R_VBOList_f
 ============
 */
-void R_VBOList_f( void )
+void R_VBOList_f()
 {
 	int	   i;
 	VBO_t* vbo;

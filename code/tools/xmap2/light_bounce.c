@@ -39,7 +39,7 @@ RadFreeLights()
 deletes any existing lights, freeing up memory for the next bounce
 */
 
-void RadFreeLights( void )
+void RadFreeLights()
 {
 	light_t *light, *next;
 
@@ -928,7 +928,7 @@ creates lights for unbounced light on surfaces in the bsp
 
 int	 iterations = 0;
 
-void RadCreateDiffuseLights( void )
+void RadCreateDiffuseLights()
 {
 	/* startup */
 	Sys_FPrintf( SYS_VRB, "--- RadCreateDiffuseLights ---\n" );

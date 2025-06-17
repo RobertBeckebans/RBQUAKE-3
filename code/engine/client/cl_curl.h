@@ -44,9 +44,9 @@ extern cvar_t* cl_cURLLib;
 #endif
 
 #ifdef USE_CURL_DLOPEN
-extern char* ( *qcurl_version )( void );
+extern char* ( *qcurl_version )();
 
-extern CURL* ( *qcurl_easy_init )( void );
+extern CURL* ( *qcurl_easy_init )();
 extern CURLcode ( *qcurl_easy_setopt )( CURL* curl, CURLoption option, ... );
 extern CURLcode ( *qcurl_easy_perform )( CURL* curl );
 extern void ( *qcurl_easy_cleanup )( CURL* curl );
@@ -54,7 +54,7 @@ extern CURLcode ( *qcurl_easy_getinfo )( CURL* curl, CURLINFO info, ... );
 extern void ( *qcurl_easy_reset )( CURL* curl );
 extern const char* ( *qcurl_easy_strerror )( CURLcode );
 
-extern CURLM* ( *qcurl_multi_init )( void );
+extern CURLM* ( *qcurl_multi_init )();
 extern CURLMcode ( *qcurl_multi_add_handle )( CURLM* multi_handle, CURL* curl_handle );
 extern CURLMcode ( *qcurl_multi_remove_handle )( CURLM* multi_handle, CURL* curl_handle );
 extern CURLMcode ( *qcurl_multi_fdset )( CURLM* multi_handle, fd_set* read_fd_set, fd_set* write_fd_set, fd_set* exc_fd_set, int* max_fd );
@@ -84,9 +84,9 @@ extern const char* ( *qcurl_multi_strerror )( CURLMcode );
 	#define qcurl_multi_strerror	  curl_multi_strerror
 #endif
 
-qboolean CL_cURL_Init( void );
-void	 CL_cURL_Shutdown( void );
+qboolean CL_cURL_Init();
+void	 CL_cURL_Shutdown();
 void	 CL_cURL_BeginDownload( const char* localName, const char* remoteURL );
-void	 CL_cURL_PerformDownload( void );
-void	 CL_cURL_Cleanup( void );
+void	 CL_cURL_PerformDownload();
+void	 CL_cURL_Cleanup();
 #endif // __QCURL_H__

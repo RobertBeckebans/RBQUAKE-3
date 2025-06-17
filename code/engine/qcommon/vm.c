@@ -41,7 +41,7 @@ vm_t		vmTable[MAX_VM];
 VM_VmInfo_f
 ==============
 */
-static void VM_VmInfo_f( void )
+static void VM_VmInfo_f()
 {
 	vm_t* vm;
 	int	  i;
@@ -76,7 +76,7 @@ static void VM_VmInfo_f( void )
 VM_Init
 ==============
 */
-void VM_Init( void )
+void VM_Init()
 {
 	Cvar_Get( "vm_cgame", "1", CVAR_ARCHIVE );
 	Cvar_Get( "vm_game", "1", CVAR_ARCHIVE );
@@ -114,11 +114,11 @@ vm_t* VM_Restart( vm_t* vm )
 	return vm;
 }
 
-void VM_Forced_Unload_Start( void )
+void VM_Forced_Unload_Start()
 {
 }
 
-void VM_Forced_Unload_Done( void )
+void VM_Forced_Unload_Done()
 {
 }
 
@@ -149,7 +149,7 @@ void VM_Free( vm_t* vm )
 	lastVM	  = NULL;
 }
 
-void VM_Clear( void )
+void VM_Clear()
 {
 	int i;
 

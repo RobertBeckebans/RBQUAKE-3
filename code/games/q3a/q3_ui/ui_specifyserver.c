@@ -97,7 +97,7 @@ static void			   SpecifyServer_Event( void* ptr, int event )
 SpecifyServer_MenuInit
 =================
 */
-void SpecifyServer_MenuInit( void )
+void SpecifyServer_MenuInit()
 {
 	// zero set all our globals
 	memset( &s_specifyserver, 0, sizeof( specifyserver_t ) );
@@ -184,7 +184,7 @@ void SpecifyServer_MenuInit( void )
 SpecifyServer_Cache
 =================
 */
-void SpecifyServer_Cache( void )
+void SpecifyServer_Cache()
 {
 	int i;
 
@@ -204,7 +204,7 @@ void SpecifyServer_Cache( void )
 UI_SpecifyServerMenu
 =================
 */
-void UI_SpecifyServerMenu( void )
+void UI_SpecifyServerMenu()
 {
 	SpecifyServer_MenuInit();
 	UI_PushMenu( &s_specifyserver.menu );

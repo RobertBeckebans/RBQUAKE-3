@@ -169,10 +169,10 @@ typedef enum
 	UI_GETAPIVERSION = 0, // system reserved
 
 	UI_INIT,
-	//	void	UI_Init( void );
+	//	void	UI_Init();
 
 	UI_SHUTDOWN,
-	//	void	UI_Shutdown( void );
+	//	void	UI_Shutdown();
 
 	UI_KEY_EVENT,
 	//	void	UI_KeyEvent( int key );
@@ -181,7 +181,7 @@ typedef enum
 	//	void	UI_MouseEvent( int dx, int dy );
 
 	UI_MOUSE_POSITION,
-	//  int   UI_MousePosition( void );
+	//  int   UI_MousePosition();
 
 	UI_SET_MOUSE_POSITION,
 	//  void  UI_SetMousePosition( int x, int y );
@@ -190,7 +190,7 @@ typedef enum
 	//	void	UI_Refresh( int time );
 
 	UI_IS_FULLSCREEN,
-	//	qboolean UI_IsFullscreen( void );
+	//	qboolean UI_IsFullscreen();
 
 	UI_SET_ACTIVE_MENU,
 	//	void	UI_SetActiveMenu( uiMenuCommand_t menu );

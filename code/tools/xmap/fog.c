@@ -508,7 +508,7 @@ before tjunction fixing
 before lightmap allocation
 =====================
 */
-void FogDrawSurfs( void )
+void FogDrawSurfs()
 {
 	int			   i, j, k;
 	drawSurface_t* ds;

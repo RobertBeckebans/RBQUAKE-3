@@ -112,7 +112,7 @@ static void		 LoadConfig_MenuEvent( void* ptr, int event )
 LoadConfig_MenuInit
 ===============
 */
-static void LoadConfig_MenuInit( void )
+static void LoadConfig_MenuInit()
 {
 	int	  i;
 	int	  len;
@@ -256,7 +256,7 @@ static void LoadConfig_MenuInit( void )
 UI_LoadConfig_Cache
 =================
 */
-void UI_LoadConfig_Cache( void )
+void UI_LoadConfig_Cache()
 {
 	trap_R_RegisterShaderNoMip( ART_BACK0 );
 	trap_R_RegisterShaderNoMip( ART_BACK1 );
@@ -274,7 +274,7 @@ void UI_LoadConfig_Cache( void )
 UI_LoadConfigMenu
 ===============
 */
-void UI_LoadConfigMenu( void )
+void UI_LoadConfigMenu()
 {
 	LoadConfig_MenuInit();
 	UI_PushMenu( &s_configs.menu );

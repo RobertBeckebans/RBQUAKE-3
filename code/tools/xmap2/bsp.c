@@ -43,7 +43,7 @@ ProcessAdvertisements()
 copies advertisement info into the BSP structures
 */
 
-static void ProcessAdvertisements( void )
+static void ProcessAdvertisements()
 {
 	int				  i;
 	const char*		  className;
@@ -126,7 +126,7 @@ SetCloneModelNumbers() - ydnar
 sets the model numbers for brush entities
 */
 
-static void SetCloneModelNumbers( void )
+static void SetCloneModelNumbers()
 {
 	int			i, j;
 	entity_t*	ent;
@@ -366,7 +366,7 @@ static void DrawTreePortals_r( node_t* node )
 
 static tree_t* drawTree = NULL;
 static int	   drawTreeNodesNum;
-static void	   DrawTreePortals( void )
+static void	   DrawTreePortals()
 {
 	DrawTreePortals_r( drawTree->headnode );
 }
@@ -425,13 +425,13 @@ static void DrawTreeNodes_r( node_t* node )
 	DrawTreeNodes_r( node->children[0] );
 	DrawTreeNodes_r( node->children[1] );
 }
-static void DrawNodes( void )
+static void DrawNodes()
 {
 	drawTreeNodesNum = 0;
 	DrawTreeNodes_r( drawTree->headnode );
 }
 
-static void DrawTree( void )
+static void DrawTree()
 {
 	DrawNodes();
 }
@@ -441,7 +441,7 @@ ProcessWorldModel()
 creates a full bsp + surfaces for the worldspawn entity
 */
 
-void ProcessWorldModel( void )
+void ProcessWorldModel()
 {
 	int		  i, s;
 	entity_t* e;
@@ -723,7 +723,7 @@ ProcessSubModel()
 creates bsp + surfaces for other brush models
 */
 
-void ProcessSubModel( void )
+void ProcessSubModel()
 {
 	entity_t* e;
 	tree_t*	  tree;
@@ -807,7 +807,7 @@ ProcessModels()
 process world + other models into the bsp
 */
 
-void ProcessModels( void )
+void ProcessModels()
 {
 	qboolean	oldVerbose;
 	entity_t*	entity;
@@ -868,7 +868,7 @@ OnlyEnts()
 this is probably broken unless teamed with a radiant version that preserves entity order
 */
 
-void OnlyEnts( void )
+void OnlyEnts()
 {
 	char		out[1024];
 

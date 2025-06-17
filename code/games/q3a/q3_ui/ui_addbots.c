@@ -141,7 +141,7 @@ static void UI_AddBotsMenu_BackEvent( void* ptr, int event )
 UI_AddBotsMenu_SetBotNames
 =================
 */
-static void UI_AddBotsMenu_SetBotNames( void )
+static void UI_AddBotsMenu_SetBotNames()
 {
 	int			n;
 	const char* info;
@@ -214,7 +214,7 @@ static int QDECL UI_AddBotsMenu_SortCompare( const void* arg1, const void* arg2 
 	return Q_stricmp( name1, name2 );
 }
 
-static void UI_AddBotsMenu_GetSortedBotNums( void )
+static void UI_AddBotsMenu_GetSortedBotNums()
 {
 	int n;
 
@@ -238,7 +238,7 @@ static const char* teamNames1[] = { "Free", NULL };
 
 static const char* teamNames2[] = { "Red", "Blue", NULL };
 
-static void		   UI_AddBotsMenu_Init( void )
+static void		   UI_AddBotsMenu_Init()
 {
 	int	 n;
 	int	 y;
@@ -391,7 +391,7 @@ static void		   UI_AddBotsMenu_Init( void )
 UI_AddBots_Cache
 =================
 */
-void UI_AddBots_Cache( void )
+void UI_AddBots_Cache()
 {
 	trap_R_RegisterShaderNoMip( ART_BACK0 );
 	trap_R_RegisterShaderNoMip( ART_BACK1 );
@@ -408,7 +408,7 @@ void UI_AddBots_Cache( void )
 UI_AddBotsMenu
 =================
 */
-void UI_AddBotsMenu( void )
+void UI_AddBotsMenu()
 {
 	UI_AddBotsMenu_Init();
 	UI_PushMenu( &addBotsMenuInfo.menu );

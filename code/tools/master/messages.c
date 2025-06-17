@@ -141,7 +141,7 @@ BuildChallenge
 Build a challenge string for a "getinfo" message
 ====================
 */
-static const char* BuildChallenge( void )
+static const char* BuildChallenge()
 {
 	static char challenge[CHALLENGE_MAX_LENGTH];
 	size_t		ind;

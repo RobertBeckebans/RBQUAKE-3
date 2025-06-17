@@ -457,7 +457,7 @@ built to be expanded against axial bounding boxes
 ydnar 2003-01-20: added mrelusive fixes
 */
 
-void AddBrushBevels( void )
+void AddBrushBevels()
 {
 	int		   axis, dir;
 	int		   i, j, k, l, order;
@@ -712,7 +712,7 @@ static void MergeOrigin( entity_t* ent, vec3_t origin )
 	SetKeyValue( ent, "origin", string );
 }
 
-brush_t* FinishBrush( void )
+brush_t* FinishBrush()
 {
 	brush_t* b;
 

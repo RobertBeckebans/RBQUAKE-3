@@ -318,7 +318,7 @@ FS_Initialized
 ==============
 */
 
-qboolean FS_Initialized( void )
+qboolean FS_Initialized()
 {
 	return ( fs_searchpaths != NULL );
 }
@@ -355,7 +355,7 @@ FS_LoadStack
 return load stack
 =================
 */
-int FS_LoadStack( void )
+int FS_LoadStack()
 {
 	return fs_loadStack;
 }
@@ -396,7 +396,7 @@ static long FS_HashFileName( const char* fname, int hashSize )
 	return hash;
 }
 
-static fileHandle_t FS_HandleForFile( void )
+static fileHandle_t FS_HandleForFile()
 {
 	int i;
 
@@ -2896,7 +2896,7 @@ int FS_GetModList( char* listbuf, int bufsize )
 FS_Dir_f
 ================
 */
-void FS_Dir_f( void )
+void FS_Dir_f()
 {
 	char*  path;
 	char*  extension;
@@ -3035,7 +3035,7 @@ void FS_SortFileList( char** filelist, int numfiles )
 FS_NewDir_f
 ================
 */
-void FS_NewDir_f( void )
+void FS_NewDir_f()
 {
 	char*  filter;
 	char** dirnames;
@@ -3072,7 +3072,7 @@ FS_Path_f
 
 ============
 */
-void FS_Path_f( void )
+void FS_Path_f()
 {
 	searchpath_t* s;
 	int			  i;
@@ -3116,7 +3116,7 @@ void FS_Path_f( void )
 FS_TouchFile_f
 ============
 */
-void FS_TouchFile_f( void )
+void FS_TouchFile_f()
 {
 	fileHandle_t f;
 
@@ -3165,7 +3165,7 @@ qboolean FS_Which( const char* filename, void* searchPath )
 FS_Which_f
 ============
 */
-void FS_Which_f( void )
+void FS_Which_f()
 {
 	searchpath_t* search;
 	char*		  filename;
@@ -3624,7 +3624,7 @@ NOTE TTimo: the reordering that happens here is not reflected in the cvars (\cva
   this can lead to misleading situations, see https://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=540
 ================
 */
-static void FS_ReorderPurePaks( void )
+static void FS_ReorderPurePaks()
 {
 	searchpath_t*  s;
 	int			   i;
@@ -3841,7 +3841,7 @@ Q3 media pak0.pk3, you'll want to remove this by defining
 STANDALONE in q_shared.h
 ===================
 */
-static void FS_CheckPak0( void )
+static void FS_CheckPak0()
 {
 	searchpath_t* path;
 	pack_t*		  curpack;
@@ -4050,7 +4050,7 @@ FS_GamePureChecksum
 Returns the checksum of the pk3 from which the server loaded the qagame.qvm
 =====================
 */
-const char* FS_GamePureChecksum( void )
+const char* FS_GamePureChecksum()
 {
 	static char	  info[MAX_STRING_TOKENS];
 	searchpath_t* search;
@@ -4080,7 +4080,7 @@ Returns a space separated string containing the checksums of all loaded pk3 file
 Servers with sv_pure set will get this string and pass it to clients.
 =====================
 */
-const char* FS_LoadedPakChecksums( void )
+const char* FS_LoadedPakChecksums()
 {
 	static char	  info[BIG_INFO_STRING];
 	searchpath_t* search;
@@ -4109,7 +4109,7 @@ Returns a space separated string containing the names of all loaded pk3 files.
 Servers with sv_pure set will get this string and pass it to clients.
 =====================
 */
-const char* FS_LoadedPakNames( void )
+const char* FS_LoadedPakNames()
 {
 	static char	  info[BIG_INFO_STRING];
 	searchpath_t* search;
@@ -4143,7 +4143,7 @@ Servers with sv_pure use these checksums to compare with the checksums the clien
 back to the server.
 =====================
 */
-const char* FS_LoadedPakPureChecksums( void )
+const char* FS_LoadedPakPureChecksums()
 {
 	static char	  info[BIG_INFO_STRING];
 	searchpath_t* search;
@@ -4172,7 +4172,7 @@ Returns a space separated string containing the checksums of all referenced pk3 
 The server will send this to the clients so they can check which files should be auto-downloaded.
 =====================
 */
-const char* FS_ReferencedPakChecksums( void )
+const char* FS_ReferencedPakChecksums()
 {
 	static char	  info[BIG_INFO_STRING];
 	searchpath_t* search;
@@ -4204,7 +4204,7 @@ Servers with sv_pure set will get this string back from clients for pure validat
 The string has a specific order, "cgame ui @ ref1 ref2 ref3 ..."
 =====================
 */
-const char* FS_ReferencedPakPureChecksums( void )
+const char* FS_ReferencedPakPureChecksums()
 {
 	static char	  info[BIG_INFO_STRING];
 	searchpath_t* search;
@@ -4255,7 +4255,7 @@ Returns a space separated string containing the names of all referenced pk3 file
 The server will send this to the clients so they can check which files should be auto-downloaded.
 =====================
 */
-const char* FS_ReferencedPakNames( void )
+const char* FS_ReferencedPakNames()
 {
 	static char	  info[BIG_INFO_STRING];
 	searchpath_t* search;
@@ -4448,7 +4448,7 @@ Called only at initial startup, not when the filesystem
 is resetting due to a game change
 ================
 */
-void FS_InitFilesystem( void )
+void FS_InitFilesystem()
 {
 	// allow command line parms to override our defaults
 	// we have to specially handle this, because normal command
@@ -4692,7 +4692,7 @@ void FS_FilenameCompletion( const char* dir, const char* ext, qboolean stripExt,
 	FS_FreeFileList( filenames );
 }
 
-const char* FS_GetCurrentGameDir( void )
+const char* FS_GetCurrentGameDir()
 {
 	if( fs_gamedirvar->string[0] )
 	{

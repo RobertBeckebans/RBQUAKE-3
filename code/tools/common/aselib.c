@@ -125,7 +125,7 @@ typedef struct
 static char	 s_token[1024];
 static ase_t ase;
 
-static void	 ASE_Process( void );
+static void	 ASE_Process();
 static void	 ASE_FreeGeomObject( int ndx );
 
 #if defined( __linux__ ) || defined( __APPLE__ ) || defined( __FreeBSD__ ) || defined( __sun )
@@ -187,7 +187,7 @@ qboolean ASE_Load( const char* filename, qboolean verbose, qboolean grabAnims )
 /*
 ** ASE_Free
 */
-void ASE_Free( void )
+void ASE_Free()
 {
 	int i;
 
@@ -200,7 +200,7 @@ void ASE_Free( void )
 /*
 ** ASE_GetNumSurfaces
 */
-int ASE_GetNumSurfaces( void )
+int ASE_GetNumSurfaces()
 {
 	return ase.currentObject;
 }
@@ -358,7 +358,7 @@ static void ASE_FreeGeomObject( int ndx )
 	memset( pObject, 0, sizeof( *pObject ) );
 }
 
-static aseMesh_t* ASE_GetCurrentMesh( void )
+static aseMesh_t* ASE_GetCurrentMesh()
 {
 	aseGeomObject_t* pObject;
 
@@ -459,7 +459,7 @@ static void ASE_ParseBracedBlock( void ( *parser )( const char* token ) )
 	}
 }
 
-static void ASE_SkipEnclosingBraces( void )
+static void ASE_SkipEnclosingBraces()
 {
 	int indent = 0;
 
@@ -484,7 +484,7 @@ static void ASE_SkipEnclosingBraces( void )
 	}
 }
 
-static void ASE_SkipRestOfLine( void )
+static void ASE_SkipRestOfLine()
 {
 	ASE_GetToken( qtrue );
 }
@@ -1063,7 +1063,7 @@ static void ConcatenateObjects( aseGeomObject_t* pObjA, aseGeomObject_t* pObjB )
 {
 }
 
-static void CollapseObjects( void )
+static void CollapseObjects()
 {
 	int i;
 	int numObjects = ase.currentObject;
@@ -1103,7 +1103,7 @@ static void CollapseObjects( void )
 /*
 ** ASE_Process
 */
-static void ASE_Process( void )
+static void ASE_Process()
 {
 	while( ASE_GetToken( qfalse ) )
 	{

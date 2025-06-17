@@ -67,7 +67,7 @@ There is no oportunity to discard planes, because all of the original
 brushes will be saved in the map.
 ============
 */
-void EmitPlanes( void )
+void EmitPlanes()
 {
 	int		  i;
 	dplane_t* dp;
@@ -210,7 +210,7 @@ int EmitDrawNode_r( node_t* node )
 SetModelNumbers
 ============
 */
-void SetModelNumbers( void )
+void SetModelNumbers()
 {
 	int			i;
 	entity_t*	ent;
@@ -243,7 +243,7 @@ void SetModelNumbers( void )
 BeginBSPFile
 ==================
 */
-void BeginBSPFile( void )
+void BeginBSPFile()
 {
 	// these values may actually be initialized
 	// if the file existed when loaded, so clear them explicitly
@@ -263,7 +263,7 @@ void BeginBSPFile( void )
 EndBSPFile
 ============
 */
-void EndBSPFile( void )
+void EndBSPFile()
 {
 	char path[1024];
 

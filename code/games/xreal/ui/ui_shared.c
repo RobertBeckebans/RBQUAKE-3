@@ -78,11 +78,11 @@ static int				  lastListBoxClickTime = 0;
 
 itemDataType_t			  Item_DataType( itemDef_t* item );
 void					  Item_RunScript( itemDef_t* item, const char* s );
-void					  Item_SetupKeywordHash( void );
+void					  Item_SetupKeywordHash();
 static ID_INLINE qboolean Item_IsEditField( itemDef_t* item );
 static ID_INLINE qboolean Item_IsListBox( itemDef_t* item );
 static void				  Item_ListBox_SetStartPos( itemDef_t* item, int startPos );
-void					  Menu_SetupKeywordHash( void );
+void					  Menu_SetupKeywordHash();
 int						  BindingIDFromName( const char* name );
 qboolean				  Item_Bind_HandleKey( itemDef_t* item, int key, qboolean down );
 itemDef_t*				  Menu_SetPrevCursorItem( menuDef_t* menu );
@@ -114,7 +114,7 @@ void					  UI_InstallCaptureFunc( CaptureFunc* f, void* data, int timeout )
 UI_RemoveCaptureFunc
 ===============
 */
-void UI_RemoveCaptureFunc( void )
+void UI_RemoveCaptureFunc()
 {
 	captureFunc		  = voidFunction;
 	captureData		  = NULL;
@@ -164,7 +164,7 @@ void*		UI_Alloc( int size )
 UI_InitMemory
 ===============
 */
-void UI_InitMemory( void )
+void UI_InitMemory()
 {
 	allocPoint	= 0;
 	outOfMemory = qfalse;
@@ -287,7 +287,7 @@ const char*			String_Alloc( const char* p )
 	}
 }
 
-void String_Report( void )
+void String_Report()
 {
 	float f;
 	Com_Printf( "Memory/String Pool Info\n" );
@@ -307,7 +307,7 @@ void String_Report( void )
 String_Init
 =================
 */
-void String_Init( void )
+void String_Init()
 {
 	int i;
 
@@ -1694,7 +1694,7 @@ void Menus_CloseByName( const char* p )
 	Menus_Close( Menus_FindByName( p ) );
 }
 
-void Menus_CloseAll( void )
+void Menus_CloseAll()
 {
 	int i;
 
@@ -2285,7 +2285,7 @@ void UI_SetClipRegion( float x, float y, float w, float h )
 UI_ClearClipRegion
 =================
 */
-void UI_ClearClipRegion( void )
+void UI_ClearClipRegion()
 {
 	trap_R_SetClipRegion( NULL );
 }
@@ -4112,7 +4112,7 @@ static void Menu_CloseCinematics( menuDef_t* menu )
 	}
 }
 
-static void Display_CloseCinematics( void )
+static void Display_CloseCinematics()
 {
 	int i;
 
@@ -4243,7 +4243,7 @@ qboolean Menus_ReplaceActive( menuDef_t* menu )
 	return qtrue;
 }
 
-int Display_VisibleMenuCount( void )
+int Display_VisibleMenuCount()
 {
 	int i, count;
 	count = 0;
@@ -4841,7 +4841,7 @@ static void UI_AddCacheEntryLine( const char* text, float x, float y )
 	cacheEntry->numLines++;
 }
 
-static void UI_FinishCacheEntry( void )
+static void UI_FinishCacheEntry()
 {
 	cacheWriteIndex = ( cacheWriteIndex + 1 ) % MAX_WRAP_CACHE;
 }
@@ -5420,7 +5420,7 @@ static void			Controls_GetKeyAssignment( char* command, int* twokeys )
 Controls_GetConfig
 =================
 */
-void Controls_GetConfig( void )
+void Controls_GetConfig()
 {
 	int i;
 	int twokeys[2];
@@ -5468,7 +5468,7 @@ void Controls_SetConfig( qboolean restart )
 Controls_SetDefaults
 =================
 */
-void Controls_SetDefaults( void )
+void Controls_SetDefaults()
 {
 	int i;
 
@@ -5626,7 +5626,7 @@ void Item_Bind_Paint( itemDef_t* item )
 		UI_Text_Paint( item->textRect.x, item->textRect.y, item->textscale, newColor, ( value != 0 ) ? "FIXME" : "FIXME", 0, maxChars, item->textStyle );
 }
 
-qboolean Display_KeyBindPending( void )
+qboolean Display_KeyBindPending()
 {
 	return g_waitingForKey;
 }
@@ -6459,7 +6459,7 @@ itemDef_t* Menu_GetFocusedItem( menuDef_t* menu )
 	return NULL;
 }
 
-menuDef_t* Menu_GetFocused( void )
+menuDef_t* Menu_GetFocused()
 {
 	int i;
 
@@ -6532,7 +6532,7 @@ void Menu_SetFeederSelection( menuDef_t* menu, int feeder, int index, const char
 	}
 }
 
-qboolean Menus_AnyFullScreenVisible( void )
+qboolean Menus_AnyFullScreenVisible()
 {
 	int i;
 
@@ -7886,7 +7886,7 @@ keywordHash_t* itemParseKeywordHash[KEYWORDHASH_SIZE];
 Item_SetupKeywordHash
 ===============
 */
-void		   Item_SetupKeywordHash( void )
+void		   Item_SetupKeywordHash()
 {
 	int i;
 
@@ -8442,7 +8442,7 @@ keywordHash_t* menuParseKeywordHash[KEYWORDHASH_SIZE];
 Menu_SetupKeywordHash
 ===============
 */
-void		   Menu_SetupKeywordHash( void )
+void		   Menu_SetupKeywordHash()
 {
 	int i;
 
@@ -8528,12 +8528,12 @@ void Menu_New( int handle )
 	}
 }
 
-int Menu_Count( void )
+int Menu_Count()
 {
 	return menuCount;
 }
 
-void Menu_UpdateAll( void )
+void Menu_UpdateAll()
 {
 	int i;
 
@@ -8543,7 +8543,7 @@ void Menu_UpdateAll( void )
 	}
 }
 
-void Menu_PaintAll( void )
+void Menu_PaintAll()
 {
 	int i;
 
@@ -8580,12 +8580,12 @@ void Menu_PaintAll( void )
 	}
 }
 
-void Menu_Reset( void )
+void Menu_Reset()
 {
 	menuCount = 0;
 }
 
-displayContextDef_t* Display_GetContext( void )
+displayContextDef_t* Display_GetContext()
 {
 	return DC;
 }
@@ -8713,7 +8713,7 @@ static void Menu_CacheContents( menuDef_t* menu )
 	}
 }
 
-void Display_CacheAll( void )
+void Display_CacheAll()
 {
 	int i;
 

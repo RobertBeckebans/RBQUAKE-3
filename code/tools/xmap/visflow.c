@@ -1601,7 +1601,7 @@ void CreatePassages( int portalnum )
 	}
 }
 
-void PassageMemory( void )
+void PassageMemory()
 {
 	int		   i, j, totalmem, totalportals;
 	vportal_t *portal, *target;

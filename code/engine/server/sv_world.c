@@ -81,7 +81,7 @@ int			  sv_numworldSectors;
 SV_SectorList_f
 ===============
 */
-void		  SV_SectorList_f( void )
+void		  SV_SectorList_f()
 {
 	int			   i, c;
 	worldSector_t* sec;
@@ -153,7 +153,7 @@ SV_ClearWorld
 
 ===============
 */
-void SV_ClearWorld( void )
+void SV_ClearWorld()
 {
 	clipHandle_t h;
 	vec3_t		 mins, maxs;

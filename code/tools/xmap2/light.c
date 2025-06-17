@@ -214,7 +214,7 @@ CreateEntityLights()
 creates lights from light entities
 */
 
-void CreateEntityLights( void )
+void CreateEntityLights()
 {
 	int			i, j;
 	light_t *	light, *light2;
@@ -577,7 +577,7 @@ this hijacks the radiosity code to generate surface lights for first pass
 
 #define APPROX_BOUNCE 1.0f
 
-void CreateSurfaceLights( void )
+void CreateSurfaceLights()
 {
 	int				  i;
 	bspDrawSurface_t* ds;
@@ -684,7 +684,7 @@ SetEntityOrigins()
 find the offset values for inline models
 */
 
-void SetEntityOrigins( void )
+void SetEntityOrigins()
 {
 	int				  i, j, k, f;
 	entity_t*		  e;
@@ -1926,7 +1926,7 @@ SetupGrid()
 calculates the size of the lightgrid and allocates memory
 */
 
-void SetupGrid( void )
+void SetupGrid()
 {
 	size_t		i, j;
 	vec3_t		maxs, oldGridSize;
@@ -2032,7 +2032,7 @@ LightWorld()
 does what it says...
 */
 
-void LightWorld( void )
+void LightWorld()
 {
 	vec3_t		color;
 	float		f;

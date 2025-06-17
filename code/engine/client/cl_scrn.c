@@ -568,7 +568,7 @@ int SCR_GetBigStringWidth( const char* str )
 SCR_DrawDemoRecording
 =================
 */
-void SCR_DrawDemoRecording( void )
+void SCR_DrawDemoRecording()
 {
 	char string[1024];
 	int	 pos;
@@ -594,7 +594,7 @@ void SCR_DrawDemoRecording( void )
 SCR_DrawVoipMeter
 =================
 */
-void SCR_DrawVoipMeter( void )
+void SCR_DrawVoipMeter()
 {
 	char buffer[16];
 	char string[256];
@@ -680,7 +680,7 @@ void			   SCR_DebugGraph( float value, int color )
 SCR_DrawDebugGraph
 ==============
 */
-void SCR_DrawDebugGraph( void )
+void SCR_DrawDebugGraph()
 {
 	int	  a, x, y, w, i, h;
 	float v;
@@ -719,7 +719,7 @@ void SCR_DrawDebugGraph( void )
 SCR_Init
 ==================
 */
-void SCR_Init( void )
+void SCR_Init()
 {
 	cl_timegraph	 = Cvar_Get( "timegraph", "0", CVAR_CHEAT );
 	cl_debuggraph	 = Cvar_Get( "debuggraph", "0", CVAR_CHEAT );
@@ -834,7 +834,7 @@ This is called every frame, and can also be called explicitly to flush
 text to the screen.
 ==================
 */
-void SCR_UpdateScreen( void )
+void SCR_UpdateScreen()
 {
 	static int recursive;
 

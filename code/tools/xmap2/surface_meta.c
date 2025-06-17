@@ -59,7 +59,7 @@ ClearMetaVertexes()
 called before staring a new entity to clear out the triangle list
 */
 
-void				   ClearMetaTriangles( void )
+void				   ClearMetaTriangles()
 {
 	numMetaVerts	 = 0;
 	numMetaTriangles = 0;
@@ -111,7 +111,7 @@ AddMetaTriangle()
 adds a new meta triangle, allocating more memory if necessary
 */
 
-static int AddMetaTriangle( void )
+static int AddMetaTriangle()
 {
 	metaTriangle_t* temp;
 
@@ -848,7 +848,7 @@ fixes t-junctions on meta triangles
 #define TJ_EDGE_EPSILON	 ( 1.0f / 8.0f )
 #define TJ_POINT_EPSILON ( 1.0f / 8.0f )
 
-void FixMetaTJunctions( void )
+void FixMetaTJunctions()
 {
 	int				i, j, k, f, fOld, start, vertIndex, triIndex, numTJuncs;
 	metaTriangle_t *tri, *newTri;
@@ -1051,7 +1051,7 @@ averages coincident vertex normals in the meta triangles
 #define THETA_EPSILON		 0.000001
 #define EQUAL_NORMAL_EPSILON 0.01
 
-void SmoothMetaTriangles( void )
+void SmoothMetaTriangles()
 {
 	int				i, j, k, f, fOld, start, cs, numVerts, numVotes, numSmoothed;
 	float			shadeAngle, defaultShadeAngle, maxShadeAngle, dot, testAngle;
@@ -1806,7 +1806,7 @@ MergeMetaTriangles()
 merges meta triangles into drawsurfaces
 */
 
-void MergeMetaTriangles( void )
+void MergeMetaTriangles()
 {
 	int				i, j, fOld, start, numAdded;
 	metaTriangle_t *head, *end;

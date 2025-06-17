@@ -81,7 +81,7 @@ static removeBotsMenuInfo_t removeBotsMenuInfo;
 UI_RemoveBotsMenu_SetBotNames
 =================
 */
-static void					UI_RemoveBotsMenu_SetBotNames( void )
+static void					UI_RemoveBotsMenu_SetBotNames()
 {
 	int	 n;
 	char info[MAX_INFO_STRING];
@@ -183,7 +183,7 @@ static void UI_RemoveBotsMenu_DownEvent( void* ptr, int event )
 UI_RemoveBotsMenu_GetBots
 =================
 */
-static void UI_RemoveBotsMenu_GetBots( void )
+static void UI_RemoveBotsMenu_GetBots()
 {
 	int	 numPlayers;
 	int	 isBot;
@@ -214,7 +214,7 @@ static void UI_RemoveBotsMenu_GetBots( void )
 UI_RemoveBots_Cache
 =================
 */
-void UI_RemoveBots_Cache( void )
+void UI_RemoveBots_Cache()
 {
 	trap_R_RegisterShaderNoMip( ART_BACKGROUND );
 	trap_R_RegisterShaderNoMip( ART_BACK0 );
@@ -228,7 +228,7 @@ void UI_RemoveBots_Cache( void )
 UI_RemoveBotsMenu_Init
 =================
 */
-static void UI_RemoveBotsMenu_Init( void )
+static void UI_RemoveBotsMenu_Init()
 {
 	int n;
 	int count;
@@ -344,7 +344,7 @@ static void UI_RemoveBotsMenu_Init( void )
 UI_RemoveBotsMenu
 =================
 */
-void UI_RemoveBotsMenu( void )
+void UI_RemoveBotsMenu()
 {
 	UI_RemoveBotsMenu_Init();
 	UI_PushMenu( &removeBotsMenuInfo.menu );

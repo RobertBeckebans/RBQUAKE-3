@@ -56,7 +56,7 @@ void BotClientCommand( int client, char* command )
 SV_BotAllocateClient
 ==================
 */
-int SV_BotAllocateClient( void )
+int SV_BotAllocateClient()
 {
 	int		  i;
 	client_t* cl;
@@ -286,7 +286,7 @@ static int BotImport_inPVS( vec3_t p1, vec3_t p2 )
 BotImport_BSPEntityData
 ==================
 */
-static char* BotImport_BSPEntityData( void )
+static char* BotImport_BSPEntityData()
 {
 	return CM_EntityString();
 }
@@ -439,7 +439,7 @@ void BotImport_DebugPolygonDelete( int id )
 BotImport_DebugLineCreate
 ==================
 */
-static int BotImport_DebugLineCreate( void )
+static int BotImport_DebugLineCreate()
 {
 	vec3_t points[1];
 
@@ -521,7 +521,7 @@ void SV_BotFrame( int time )
 SV_BotLibSetup
 ===============
 */
-int SV_BotLibSetup( void )
+int SV_BotLibSetup()
 {
 #ifdef BOTLIB
 	if( !bot_enable )
@@ -551,7 +551,7 @@ Called when either the entire server is being killed, or
 it is changing to a different game directory.
 ===============
 */
-int SV_BotLibShutdown( void )
+int SV_BotLibShutdown()
 {
 #ifdef BOTLIB
 	if( !botlib_export )
@@ -570,7 +570,7 @@ int SV_BotLibShutdown( void )
 SV_BotInitCvars
 ==================
 */
-void SV_BotInitCvars( void )
+void SV_BotInitCvars()
 {
 #ifdef BOTLIB
 	Cvar_Get( "bot_enable", "1", 0 );					  // enable the bot
@@ -611,7 +611,7 @@ void SV_BotInitCvars( void )
 SV_BotInitBotLib
 ==================
 */
-void SV_BotInitBotLib( void )
+void SV_BotInitBotLib()
 {
 #ifdef BOTLIB
 	botlib_import_t botlib_import;

@@ -94,7 +94,7 @@ typedef struct
 
 static cin_ogm_t g_ogm;
 
-int				 nextNeededVFrame( void );
+int				 nextNeededVFrame();
 
 	/* ####################### #######################
 
@@ -205,7 +205,7 @@ static int shutdown_xvid()
   return:
   !0 -> no data transferred
 */
-static int loadBlockToSync( void )
+static int loadBlockToSync()
 {
 	int	  r = -1;
 	char* buffer;
@@ -229,7 +229,7 @@ static int loadBlockToSync( void )
   return:
   !0 -> no data transferred (or not for all Streams)
 */
-static int loadPagesToStreams( void )
+static int loadPagesToStreams()
 {
 	int				  r			 = -1;
 	int				  AudioPages = 0;
@@ -279,7 +279,7 @@ static byte rawBuffer[SIZEOF_RAWBUFF];
 
   return: audio wants more packets
 */
-static qboolean loadAudio( void )
+static qboolean loadAudio()
 {
 	qboolean	 anyDataTransferred = qtrue;
 	float**		 pcm;
@@ -449,7 +449,7 @@ static int findSizeShift( int x, int y )
 	return -1;
 }
 
-static int loadVideoFrameTheora( void )
+static int loadVideoFrameTheora()
 {
 	int		   r = 0;
 	ogg_packet op;
@@ -567,7 +567,7 @@ static int loadVideoFrameTheora( void )
 			0	-> no new Frame
 			<0	-> error
 */
-static int loadVideoFrame( void )
+static int loadVideoFrame()
 {
 	#ifdef USE_CIN_XVID
 	if( g_ogm.videoStreamIsXvid )
@@ -598,7 +598,7 @@ static int loadVideoFrame( void )
 
   return: qtrue => noDataTransferred
 */
-static qboolean loadFrame( void )
+static qboolean loadFrame()
 {
 	qboolean anyDataTransferred = qtrue;
 	qboolean needVOutputData	= qtrue;
@@ -938,7 +938,7 @@ int Cin_OGM_Init( const char* filename )
 	return 0;
 }
 
-int nextNeededVFrame( void )
+int nextNeededVFrame()
 {
 	return ( int )( g_ogm.currentTime * ( ogg_int64_t )10000 / g_ogm.Vtime_unit );
 }

@@ -216,11 +216,11 @@ typedef enum
 	// demos, tourney restarts, or vid_restarts
 
 	CG_SHUTDOWN,
-	//	void (*CG_Shutdown)( void );
+	//	void (*CG_Shutdown)();
 	// opportunity to flush and close any open files
 
 	CG_CONSOLE_COMMAND,
-	//	qboolean (*CG_ConsoleCommand)( void );
+	//	qboolean (*CG_ConsoleCommand)();
 	// a console command has been issued locally that is not recognized by the
 	// main game system.
 	// use Cmd_Argc() / Cmd_Argv() to read the command, return qfalse if the
@@ -232,10 +232,10 @@ typedef enum
 	// If demoPlayback is set, local movement prediction will not be enabled
 
 	CG_CROSSHAIR_PLAYER,
-	//	int (*CG_CrosshairPlayer)( void );
+	//	int (*CG_CrosshairPlayer)();
 
 	CG_LAST_ATTACKER,
-	//	int (*CG_LastAttacker)( void );
+	//	int (*CG_LastAttacker)();
 
 	CG_KEY_EVENT,
 	//	void	(*CG_KeyEvent)( int key, qboolean down );

@@ -326,7 +326,7 @@ void CG_DumpLuaStack()
 CG_RestartLua_f
 =================
 */
-void CG_RestartLua_f( void )
+void CG_RestartLua_f()
 {
 	CG_ShutdownLua();
 	CG_InitLua();

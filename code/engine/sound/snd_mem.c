@@ -58,7 +58,7 @@ void			  SND_free( sndBuffer* v )
 	inUse += sizeof( sndBuffer );
 }
 
-sndBuffer* SND_malloc( void )
+sndBuffer* SND_malloc()
 {
 	sndBuffer* v;
 redo:
@@ -77,7 +77,7 @@ redo:
 	return v;
 }
 
-void SND_setup( void )
+void SND_setup()
 {
 	sndBuffer *p, *q;
 	cvar_t*	   cv;
@@ -107,7 +107,7 @@ void SND_setup( void )
 	Com_Printf( "Sound memory manager started\n" );
 }
 
-void SND_shutdown( void )
+void SND_shutdown()
 {
 	free( sfxScratchBuffer );
 	free( buffer );
@@ -303,7 +303,7 @@ qboolean S_LoadSound( sfx_t* sfx )
 	return qtrue;
 }
 
-void S_DisplayFreeMemory( void )
+void S_DisplayFreeMemory()
 {
 	Com_Printf( "%d bytes free sound buffer memory, %d total used\n", inUse, totalInUse );
 }

@@ -56,5 +56,5 @@ int	 AINode_Battle_Chase( bot_state_t* bs );
 int	 AINode_Battle_Retreat( bot_state_t* bs );
 int	 AINode_Battle_NBG( bot_state_t* bs );
 
-void BotResetNodeSwitches( void );
+void BotResetNodeSwitches();
 void BotDumpNodeSwitches( bot_state_t* bs );

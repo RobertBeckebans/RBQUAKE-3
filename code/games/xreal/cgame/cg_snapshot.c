@@ -129,7 +129,7 @@ CG_TransitionSnapshot
 The transition point from snap to nextSnap has passed
 ===================
 */
-static void CG_TransitionSnapshot( void )
+static void CG_TransitionSnapshot()
 {
 	centity_t*	cent;
 	snapshot_t* oldFrame;
@@ -275,7 +275,7 @@ times if the client system fails to return a
 valid snapshot.
 ========================
 */
-static snapshot_t* CG_ReadNextSnapshot( void )
+static snapshot_t* CG_ReadNextSnapshot()
 {
 	qboolean	r;
 	snapshot_t* dest;
@@ -349,7 +349,7 @@ of an interpolating one)
 
 ============
 */
-void CG_ProcessSnapshots( void )
+void CG_ProcessSnapshots()
 {
 	snapshot_t* snap;
 	int			n;

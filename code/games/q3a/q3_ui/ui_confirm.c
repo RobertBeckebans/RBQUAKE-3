@@ -44,7 +44,7 @@ typedef struct
 
 	int				slashX;
 	const char*		question;
-	void ( *draw )( void );
+	void ( *draw )();
 	void ( *action )( qboolean result );
 
 	int			 style;
@@ -119,7 +119,7 @@ static sfxHandle_t ConfirmMenu_Key( int key )
 MessaheMenu_Draw
 =================
 */
-static void MessageMenu_Draw( void )
+static void MessageMenu_Draw()
 {
 	int i, y;
 
@@ -145,7 +145,7 @@ static void MessageMenu_Draw( void )
 ConfirmMenu_Draw
 =================
 */
-static void ConfirmMenu_Draw( void )
+static void ConfirmMenu_Draw()
 {
 	UI_DrawNamedPic( 142, 118, 359, 256, ART_CONFIRM_FRAME );
 	UI_DrawProportionalString( 320, 204, s_confirm.question, s_confirm.style, color_red );
@@ -164,7 +164,7 @@ static void ConfirmMenu_Draw( void )
 ConfirmMenu_Cache
 =================
 */
-void ConfirmMenu_Cache( void )
+void ConfirmMenu_Cache()
 {
 	trap_R_RegisterShaderNoMip( ART_CONFIRM_FRAME );
 }
@@ -174,7 +174,7 @@ void ConfirmMenu_Cache( void )
 UI_ConfirmMenu_Stlye
 =================
 */
-void UI_ConfirmMenu_Style( const char* question, int style, void ( *draw )( void ), void ( *action )( qboolean result ) )
+void UI_ConfirmMenu_Style( const char* question, int style, void ( *draw )(), void ( *action )( qboolean result ) )
 {
 	uiClientState_t cstate;
 	int				n1, n2, n3;
@@ -245,7 +245,7 @@ void UI_ConfirmMenu_Style( const char* question, int style, void ( *draw )( void
 UI_ConfirmMenu
 =================
 */
-void UI_ConfirmMenu( const char* question, void ( *draw )( void ), void ( *action )( qboolean result ) )
+void UI_ConfirmMenu( const char* question, void ( *draw )(), void ( *action )( qboolean result ) )
 {
 	UI_ConfirmMenu_Style( question, UI_CENTER | UI_INVERSE, draw, action );
 }

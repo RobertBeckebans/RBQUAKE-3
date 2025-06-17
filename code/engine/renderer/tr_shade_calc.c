@@ -763,7 +763,7 @@ Assuming all the triangles for this shader are independant
 quads, rebuild them as forward facing sprites
 =====================
 */
-static void AutospriteDeform( void )
+static void AutospriteDeform()
 {
 	int	   i;
 	int	   oldVerts;
@@ -849,7 +849,7 @@ Autosprite2 will pivot a rectangular quad along the center of its long axis
 */
 int			edgeVerts[6][2] = { { 0, 1 }, { 0, 2 }, { 0, 3 }, { 1, 2 }, { 1, 3 }, { 2, 3 } };
 
-static void Autosprite2Deform( void )
+static void Autosprite2Deform()
 {
 	int	   i, j, k;
 	int	   indexes;
@@ -1007,7 +1007,7 @@ qboolean ShaderRequiresCPUDeforms( const shader_t* shader )
 Tess_DeformGeometry
 =====================
 */
-void Tess_DeformGeometry( void )
+void Tess_DeformGeometry()
 {
 	int			   i;
 	deformStage_t* ds;

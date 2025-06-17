@@ -170,7 +170,7 @@ void GL_BindProgram( shaderProgram_t* program )
 	}
 }
 
-void GL_BindNullProgram( void )
+void GL_BindNullProgram()
 {
 	if( r_logFile->integer )
 	{
@@ -1221,7 +1221,7 @@ RB_Hyperspace
 A player has predicted a teleport, but hasn't arrived yet
 ================
 */
-static void RB_Hyperspace( void )
+static void RB_Hyperspace()
 {
 	float c;
 
@@ -1237,7 +1237,7 @@ static void RB_Hyperspace( void )
 	backEnd.isHyperspace = qtrue;
 }
 
-static void SetViewportAndScissor( void )
+static void SetViewportAndScissor()
 {
 	GL_LoadProjectionMatrix( backEnd.viewParms.projectionMatrix );
 
@@ -1252,7 +1252,7 @@ static void SetViewportAndScissor( void )
 RB_SetGL2D
 ================
 */
-static void RB_SetGL2D( void )
+static void RB_SetGL2D()
 {
 	matrix_t proj;
 
@@ -6356,7 +6356,7 @@ static void RB_RenderInteractionsDeferredShadowMapped()
 	}
 }
 
-void RB_RenderScreenSpaceAmbientOcclusion( void )
+void RB_RenderScreenSpaceAmbientOcclusion()
 {
 	//  int             i;
 	//  vec3_t          viewOrigin;
@@ -6876,7 +6876,7 @@ void RB_RenderBloom()
 	GL_CheckErrors();
 }
 
-void RB_RenderMotionBlur( void )
+void RB_RenderMotionBlur()
 {
 	static vec4_t quadVerts[4] = { { -1.0f, -1.0f, 0.0f, 1.0f }, { 1.0f, -1.0f, 0.0f, 1.0f }, { 1.0f, 1.0f, 0.0f, 1.0f }, { -1.0f, 1.0f, 0.0f, 1.0f } };
 
@@ -6911,7 +6911,7 @@ void RB_RenderMotionBlur( void )
 	GL_CheckErrors();
 }
 
-void RB_CameraPostFX( void )
+void RB_CameraPostFX()
 {
 	matrix_t ortho;
 	matrix_t grain;
@@ -10246,7 +10246,7 @@ static void RB_RenderDebugUtils()
 RB_RenderView
 ==================
 */
-static void RB_RenderView( void )
+static void RB_RenderView()
 {
 	if( r_logFile->integer )
 	{
@@ -11602,7 +11602,7 @@ was there.  This is used to test for texture thrashing.
 Also called by RE_EndRegistration
 ===============
 */
-void RB_ShowImages( void )
+void RB_ShowImages()
 {
 	int		 i;
 	image_t* image;
@@ -11882,7 +11882,7 @@ void RB_ExecuteRenderCommands( const void* data )
 RB_RenderThread
 ================
 */
-void RB_RenderThread( void )
+void RB_RenderThread()
 {
 	const void* data;
 

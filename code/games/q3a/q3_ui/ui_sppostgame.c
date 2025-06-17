@@ -301,7 +301,7 @@ static void UI_SPPostgameMenu_MenuDrawScoreLine( int n, int y )
 UI_SPPostgameMenu_MenuDraw
 =================
 */
-static void UI_SPPostgameMenu_MenuDraw( void )
+static void UI_SPPostgameMenu_MenuDraw()
 {
 	int	 timer;
 	int	 serverId;
@@ -423,7 +423,7 @@ static void UI_SPPostgameMenu_MenuDraw( void )
 UI_SPPostgameMenu_Cache
 =================
 */
-void UI_SPPostgameMenu_Cache( void )
+void UI_SPPostgameMenu_Cache()
 {
 	int		 n;
 	qboolean buildscript;
@@ -455,7 +455,7 @@ void UI_SPPostgameMenu_Cache( void )
 UI_SPPostgameMenu_Init
 =================
 */
-static void UI_SPPostgameMenu_Init( void )
+static void UI_SPPostgameMenu_Init()
 {
 	postgameMenuInfo.menu.wrapAround = qtrue;
 	postgameMenuInfo.menu.key		 = UI_SPPostgameMenu_MenuKey;
@@ -527,7 +527,7 @@ static void Prepname( int index )
 UI_SPPostgameMenu_f
 =================
 */
-void UI_SPPostgameMenu_f( void )
+void UI_SPPostgameMenu_f()
 {
 	int			playerGameRank;
 	int			playerClientNum;

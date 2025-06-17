@@ -39,7 +39,7 @@ Random()
 returns a pseudorandom number between 0 and 1
 */
 
-vec_t		  Random( void )
+vec_t		  Random()
 {
 	return ( vec_t )rand() / RAND_MAX;
 }
@@ -49,7 +49,7 @@ ExitQ3Map()
 cleanup routine
 */
 
-static void ExitQ3Map( void )
+static void ExitQ3Map()
 {
 	BSPFilesCleanup();
 	if( mapDrawSurfs != NULL )
@@ -372,7 +372,7 @@ MiniMapSetupBrushes()
 determines solid non-sky brushes in the world
 */
 
-void MiniMapSetupBrushes( void )
+void MiniMapSetupBrushes()
 {
 	int			  i, b, compileFlags;
 	bspBrush_t*	  brush;

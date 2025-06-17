@@ -2243,7 +2243,7 @@ This function assumes that all patches in one group are nicely stitched together
 If this is not the case this function will still do its job but won't fix the highest LoD cracks.
 =================
 */
-void R_FixSharedVertexLodError( void )
+void R_FixSharedVertexLodError()
 {
 	int			   i;
 	srfGridMesh_t* grid1;
@@ -2986,7 +2986,7 @@ int R_TryStitchingPatch( int grid1num )
 R_StitchAllPatches
 ===============
 */
-void R_StitchAllPatches( void )
+void R_StitchAllPatches()
 {
 	int			   i, stitched, numstitches;
 	srfGridMesh_t* grid1;
@@ -3026,7 +3026,7 @@ void R_StitchAllPatches( void )
 R_MovePatchSurfacesToHunk
 ===============
 */
-void R_MovePatchSurfacesToHunk( void )
+void R_MovePatchSurfacesToHunk()
 {
 	int			   i, size;
 	srfGridMesh_t *grid, *hunkgrid;
@@ -8929,7 +8929,7 @@ unsigned int VertexCoordGenerateHash( const vec3_t xyz )
 	return hash;
 }
 
-vertexHash_t** NewVertexHashTable( void )
+vertexHash_t** NewVertexHashTable()
 {
 	vertexHash_t** hashTable = Com_Allocate( HASHTABLE_SIZE * sizeof( vertexHash_t* ) );
 
@@ -9152,7 +9152,7 @@ void R_FindTwoNearestCubeMaps( const vec3_t position, cubemapProbe_t** cubeProbe
 	// ri.Printf(PRINT_ALL, "iterated through %i cubeprobes\n", j);
 }
 
-void R_BuildCubeMaps( void )
+void R_BuildCubeMaps()
 {
 #if 1
 	int				i, j, k;

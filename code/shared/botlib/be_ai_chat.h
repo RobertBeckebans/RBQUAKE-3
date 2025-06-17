@@ -67,11 +67,11 @@ typedef struct bot_match_s
 } bot_match_t;
 
 // setup the chat AI
-int	 BotSetupChatAI( void );
+int	 BotSetupChatAI();
 // shutdown the chat AI
-void BotShutdownChatAI( void );
+void BotShutdownChatAI();
 // returns the handle to a newly allocated chat state
-int	 BotAllocChatState( void );
+int	 BotAllocChatState();
 // frees the chatstate
 void BotFreeChatState( int handle );
 // adds a console message to the chat state

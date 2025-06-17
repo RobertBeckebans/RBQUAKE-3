@@ -1061,7 +1061,7 @@ void G_RankClientDisconnect( int self )
 G_RankGameOver
 ================
 */
-void G_RankGameOver( void )
+void G_RankGameOver()
 {
 	int	 i;
 	char str[MAX_INFO_VALUE];

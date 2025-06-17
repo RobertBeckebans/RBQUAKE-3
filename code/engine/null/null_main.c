@@ -42,17 +42,17 @@ void Sys_Error( char* error, ... )
 	exit( 1 );
 }
 
-void Sys_Quit( void )
+void Sys_Quit()
 {
 	exit( 0 );
 }
 
-char* Sys_GetClipboardData( void )
+char* Sys_GetClipboardData()
 {
 	return NULL;
 }
 
-int Sys_Milliseconds( void )
+int Sys_Milliseconds()
 {
 	return 0;
 }
@@ -66,7 +66,7 @@ void Sys_Mkdir( char* path )
 {
 }
 
-void Sys_Init( void )
+void Sys_Init()
 {
 }
 

@@ -360,7 +360,7 @@ WriteMapShaderFile() - ydnar
 writes a shader to the map shader script
 */
 #if 0
-void WriteMapShaderFile( void )
+void WriteMapShaderFile()
 {
 	FILE*           file;
 	shaderInfo_t*   si;
@@ -619,7 +619,7 @@ AllocShaderInfo()
 allocates and initializes a new shader
 */
 
-static shaderInfo_t* AllocShaderInfo( void )
+static shaderInfo_t* AllocShaderInfo()
 {
 	shaderInfo_t* si;
 
@@ -2200,7 +2200,7 @@ ParseCustomInfoParms() - rr2do2
 loads custom info parms file for mods
 */
 
-static void ParseCustomInfoParms( void )
+static void ParseCustomInfoParms()
 {
 	qboolean parsedContent, parsedSurface;
 
@@ -2285,7 +2285,7 @@ on linux there's an additional twist, we actually merge the stuff from ~/.q3a/ a
 
 #define MAX_SHADER_FILES 1024
 
-void LoadShaderInfo( void )
+void LoadShaderInfo()
 {
 	int	  i, j, numShaderFiles, count;
 	char  filename[1024];

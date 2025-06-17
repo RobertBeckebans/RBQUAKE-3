@@ -245,7 +245,7 @@ ImageInit()
 implicitly called by every function to set up image list
 */
 
-static void ImageInit( void )
+static void ImageInit()
 {
 	int i;
 

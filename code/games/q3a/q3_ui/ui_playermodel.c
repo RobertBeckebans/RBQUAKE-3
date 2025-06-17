@@ -96,7 +96,7 @@ static playermodel_t s_playermodel;
 PlayerModel_UpdateGrid
 =================
 */
-static void			 PlayerModel_UpdateGrid( void )
+static void			 PlayerModel_UpdateGrid()
 {
 	int i;
 	int j;
@@ -164,7 +164,7 @@ static void			 PlayerModel_UpdateGrid( void )
 PlayerModel_UpdateModel
 =================
 */
-static void PlayerModel_UpdateModel( void )
+static void PlayerModel_UpdateModel()
 {
 	vec3_t viewangles;
 	vec3_t moveangles;
@@ -185,7 +185,7 @@ static void PlayerModel_UpdateModel( void )
 PlayerModel_SaveChanges
 =================
 */
-static void PlayerModel_SaveChanges( void )
+static void PlayerModel_SaveChanges()
 {
 	trap_Cvar_Set( "model", s_playermodel.modelskin );
 	trap_Cvar_Set( "headmodel", s_playermodel.modelskin );
@@ -393,7 +393,7 @@ static void PlayerModel_DrawPlayer( void* self )
 PlayerModel_BuildList
 =================
 */
-static void PlayerModel_BuildList( void )
+static void PlayerModel_BuildList()
 {
 	int		 numdirs;
 	int		 numfiles;
@@ -468,7 +468,7 @@ static void PlayerModel_BuildList( void )
 PlayerModel_SetMenuItems
 =================
 */
-static void PlayerModel_SetMenuItems( void )
+static void PlayerModel_SetMenuItems()
 {
 	int	  i;
 	int	  maxlen;
@@ -538,7 +538,7 @@ static void PlayerModel_SetMenuItems( void )
 PlayerModel_MenuInit
 =================
 */
-static void PlayerModel_MenuInit( void )
+static void PlayerModel_MenuInit()
 {
 	int			i;
 	int			j;
@@ -731,7 +731,7 @@ static void PlayerModel_MenuInit( void )
 PlayerModel_Cache
 =================
 */
-void PlayerModel_Cache( void )
+void PlayerModel_Cache()
 {
 	int i;
 
@@ -747,7 +747,7 @@ void PlayerModel_Cache( void )
 	}
 }
 
-void UI_PlayerModelMenu( void )
+void UI_PlayerModelMenu()
 {
 	PlayerModel_MenuInit();
 

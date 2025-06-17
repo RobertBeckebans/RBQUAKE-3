@@ -80,4 +80,4 @@ void  AAS_SetMovedir( vec3_t angles, vec3_t movedir );
 //
 int	  AAS_DropToFloor( vec3_t origin, vec3_t mins, vec3_t maxs );
 //
-void  AAS_InitSettings( void );
+void  AAS_InitSettings();

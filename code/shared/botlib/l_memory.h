@@ -65,12 +65,12 @@ void* GetClearedHunkMemory( unsigned long size );
 // free the given memory block
 void FreeMemory( void* ptr );
 // returns the amount available memory
-int	 AvailableMemory( void );
+int	 AvailableMemory();
 // prints the total used memory size
-void PrintUsedMemorySize( void );
+void PrintUsedMemorySize();
 // print all memory blocks with label
-void PrintMemoryLabels( void );
+void PrintMemoryLabels();
 // returns the size of the memory block in bytes
 int	 MemoryByteSize( void* ptr );
 // free all allocated memory
-void DumpMemory( void );
+void DumpMemory();

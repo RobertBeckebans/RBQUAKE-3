@@ -156,7 +156,7 @@ void InGame_Event( void* ptr, int notification )
 InGame_MenuInit
 =================
 */
-void InGame_MenuInit( void )
+void InGame_MenuInit()
 {
 	int				y;
 	uiClientState_t cs;
@@ -333,7 +333,7 @@ void InGame_MenuInit( void )
 InGame_Cache
 =================
 */
-void InGame_Cache( void )
+void InGame_Cache()
 {
 	trap_R_RegisterShaderNoMip( INGAME_FRAME );
 }
@@ -343,7 +343,7 @@ void InGame_Cache( void )
 UI_InGameMenu
 =================
 */
-void UI_InGameMenu( void )
+void UI_InGameMenu()
 {
 	// force as top level menu
 	uis.menusp = 0;

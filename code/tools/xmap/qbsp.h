@@ -295,10 +295,10 @@ void			   LoadMapFile( char* filename );
 int				   MapPlaneFromPoints( vec3_t p0, vec3_t p1, vec3_t p2 );
 int				   FindFloatPlane( vec3_t normal, vec_t dist );
 int				   PlaneTypeForNormal( vec3_t normal );
-bspBrush_t*		   FinishBrush( void );
+bspBrush_t*		   FinishBrush();
 void			   AdjustBrushesForOrigin( entity_t* ent, vec3_t origin );
 
-drawSurface_t*	   AllocDrawSurf( void );
+drawSurface_t*	   AllocDrawSurf();
 drawSurface_t*	   DrawSurfaceForSide( bspBrush_t* b, side_t* s, winding_t* w );
 
 //=============================================================================
@@ -311,7 +311,7 @@ extern qboolean	   drawFlag;
 
 void			   Draw_Winding( winding_t* w );
 void			   Draw_AuxWinding( winding_t* w );
-void			   Draw_Scene( void ( *drawFunc )( void ) );
+void			   Draw_Scene( void ( *drawFunc )() );
 
 //=============================================================================
 
@@ -333,8 +333,8 @@ qboolean			 WindingIsTiny( winding_t* w );
 
 void				 SplitBrush( bspBrush_t* brush, int planenum, bspBrush_t** front, bspBrush_t** back );
 
-tree_t*				 AllocTree( void );
-node_t*				 AllocNode( void );
+tree_t*				 AllocTree();
+node_t*				 AllocNode();
 
 tree_t*				 BrushBSP( bspBrush_t* brushlist, vec3_t mins, vec3_t maxs );
 
@@ -380,13 +380,13 @@ void				 WritePortalFile( tree_t* tree );
 
 // writebsp.c
 
-void				 SetModelNumbers( void );
+void				 SetModelNumbers();
 
 int					 EmitShader( const char* shader );
 void				 EmitBrushes( bspBrush_t* brushes );
 
-void				 BeginBSPFile( void );
-void				 EndBSPFile( void );
+void				 BeginBSPFile();
+void				 EndBSPFile();
 
 void				 BeginModel( entity_t* e );
 void				 EndModel( entity_t* e, node_t* headnode );
@@ -427,7 +427,7 @@ void				 FixTJunctions( entity_t* e );
 
 // fog.c
 
-void				 FogDrawSurfs( void );
+void				 FogDrawSurfs();
 winding_t*			 WindingFromDrawSurf( drawSurface_t* ds );
 
 //=============================================================================
@@ -451,7 +451,7 @@ extern int			 c_triangleVertexes;
 extern int			 c_triangleIndexes;
 
 void				 AddTriangleModel( entity_t* e, qboolean applyTransform );
-void				 AddTriangleModels( void );
+void				 AddTriangleModels();
 
 //=============================================================================
 
@@ -460,7 +460,7 @@ void				 AddTriangleModels( void );
 extern drawSurface_t mapDrawSurfs[MAX_MAP_DRAW_SURFS];
 extern int			 numMapDrawSurfs;
 
-drawSurface_t*		 AllocDrawSurf( void );
+drawSurface_t*		 AllocDrawSurf();
 void				 MergeSides( entity_t* e, tree_t* tree );
 void				 SubdivideDrawSurfs( entity_t* e, tree_t* tree );
 void				 MakeDrawSurfaces( bspBrush_t* b );

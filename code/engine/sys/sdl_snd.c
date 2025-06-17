@@ -141,7 +141,7 @@ static void SNDDMA_PrintAudiospec( const char* str, const SDL_AudioSpec* spec )
 SNDDMA_Init
 ===============
 */
-qboolean SNDDMA_Init( void )
+qboolean SNDDMA_Init()
 {
 	SDL_AudioSpec desired;
 	SDL_AudioSpec obtained;
@@ -278,7 +278,7 @@ qboolean SNDDMA_Init( void )
 SNDDMA_GetDMAPos
 ===============
 */
-int SNDDMA_GetDMAPos( void )
+int SNDDMA_GetDMAPos()
 {
 	return dmapos;
 }
@@ -288,7 +288,7 @@ int SNDDMA_GetDMAPos( void )
 SNDDMA_Shutdown
 ===============
 */
-void SNDDMA_Shutdown( void )
+void SNDDMA_Shutdown()
 {
 	Com_Printf( "Closing SDL audio device...\n" );
 	SDL_PauseAudio( 1 );
@@ -308,7 +308,7 @@ SNDDMA_Submit
 Send sound to device if buffer isn't really the dma buffer
 ===============
 */
-void SNDDMA_Submit( void )
+void SNDDMA_Submit()
 {
 	SDL_UnlockAudio();
 }
@@ -318,7 +318,7 @@ void SNDDMA_Submit( void )
 SNDDMA_BeginPainting
 ===============
 */
-void SNDDMA_BeginPainting( void )
+void SNDDMA_BeginPainting()
 {
 	SDL_LockAudio();
 }

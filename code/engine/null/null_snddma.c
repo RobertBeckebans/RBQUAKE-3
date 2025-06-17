@@ -25,34 +25,34 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "../client/client.h"
 
-qboolean SNDDMA_Init( void )
+qboolean SNDDMA_Init()
 {
 	return qfalse;
 }
 
-int SNDDMA_GetDMAPos( void )
+int SNDDMA_GetDMAPos()
 {
 	return 0;
 }
 
-void SNDDMA_Shutdown( void )
+void SNDDMA_Shutdown()
 {
 }
 
-void SNDDMA_BeginPainting( void )
+void SNDDMA_BeginPainting()
 {
 }
 
-void SNDDMA_Submit( void )
+void SNDDMA_Submit()
 {
 }
 
 #ifdef USE_VOIP
-void SNDDMA_StartCapture( void )
+void SNDDMA_StartCapture()
 {
 }
 
-int SNDDMA_AvailableCaptureSamples( void )
+int SNDDMA_AvailableCaptureSamples()
 {
 	return 0;
 }
@@ -61,7 +61,7 @@ void SNDDMA_Capture( int samples, byte* data )
 {
 }
 
-void SNDDMA_StopCapture( void )
+void SNDDMA_StopCapture()
 {
 }
 
@@ -79,6 +79,6 @@ void S_StartLocalSound( sfxHandle_t sfxHandle, int channelNum )
 {
 }
 
-void S_ClearSoundBuffer( void )
+void S_ClearSoundBuffer()
 {
 }

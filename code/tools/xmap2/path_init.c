@@ -55,7 +55,7 @@ PathLokiGetHomeDir()
 gets the user's home dir (for ~/.q3a)
 */
 
-char* LokiGetHomeDir( void )
+char* LokiGetHomeDir()
 {
 #ifndef Q_UNIX
 	return NULL;

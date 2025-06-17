@@ -41,14 +41,14 @@ void			LoadScriptFile( const char* filename, int index );
 void			ParseFromMemory( char* buffer, int size );
 
 qboolean		GetToken( qboolean crossline );
-int				GetLine( void );
-void			UnGetToken( void );
-qboolean		TokenAvailable( void );
+int				GetLine();
+void			UnGetToken();
+qboolean		TokenAvailable();
 
 void			MatchToken( char* match );
 
-void			SkipBracedSection( void );
-void			SkipRestOfLine( void );
+void			SkipBracedSection();
+void			SkipRestOfLine();
 
 void			Parse1DMatrix( int x, vec_t* m );
 void			Parse2DMatrix( int y, int x, vec_t* m );

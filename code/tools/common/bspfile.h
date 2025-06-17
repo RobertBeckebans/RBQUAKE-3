@@ -77,7 +77,7 @@ extern dfog_t		dfogs[MAX_MAP_FOGS];
 
 void				LoadBSPFile( const char* filename );
 void				WriteBSPFile( const char* filename );
-void				PrintBSPFileSizes( void );
+void				PrintBSPFileSizes();
 
 //===============
 
@@ -100,8 +100,8 @@ typedef struct
 extern int		numEntities;
 extern entity_t entities[MAX_MAP_ENTITIES];
 
-void			ParseEntities( void );
-void			UnparseEntities( void );
+void			ParseEntities();
+void			UnparseEntities();
 
 void			SetKeyValue( entity_t* ent, const char* key, const char* value );
 const char*		ValueForKey( const entity_t* ent, const char* key );
@@ -113,7 +113,7 @@ void			RemoveKey( entity_t* ent, const char* key );
 vec_t			FloatForKey( const entity_t* ent, const char* key );
 void			GetVectorForKey( const entity_t* ent, const char* key, vec3_t vec );
 
-epair_t*		ParseEpair( void );
+epair_t*		ParseEpair();
 
 void			PrintEntity( const entity_t* ent );
 

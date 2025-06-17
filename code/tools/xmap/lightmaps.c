@@ -37,7 +37,7 @@ int			   allocated[LIGHTMAP_WIDTH];
 int			   numLightmaps = 1;
 int			   c_exactLightmap;
 
-void		   PrepareNewLightmap( void )
+void		   PrepareNewLightmap()
 {
 	memset( allocated, 0, sizeof( allocated ) );
 	numLightmaps++;

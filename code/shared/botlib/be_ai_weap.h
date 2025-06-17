@@ -87,9 +87,9 @@ typedef struct weaponinfo_s
 } weaponinfo_t;
 
 // setup the weapon AI
-int	 BotSetupWeaponAI( void );
+int	 BotSetupWeaponAI();
 // shut down the weapon AI
-void BotShutdownWeaponAI( void );
+void BotShutdownWeaponAI();
 // returns the best weapon to fight with
 int	 BotChooseBestFightWeapon( int weaponstate, int* inventory );
 // returns the information of the current weapon
@@ -97,7 +97,7 @@ void BotGetWeaponInfo( int weaponstate, int weapon, weaponinfo_t* weaponinfo );
 // loads the weapon weights
 int	 BotLoadWeaponWeights( int weaponstate, char* filename );
 // returns a handle to a newly allocated weapon state
-int	 BotAllocWeaponState( void );
+int	 BotAllocWeaponState();
 // frees the weapon state
 void BotFreeWeaponState( int weaponstate );
 // resets the whole weapon state

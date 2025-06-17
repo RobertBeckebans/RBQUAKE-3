@@ -91,7 +91,7 @@ static fielddef_t  projectileinfo_fields[] = { { "name", PROJECTILE_OFS( name ),
 	 { "bounce", PROJECTILE_OFS( bounce ), FT_FLOAT },										  // amount the projectile bounces
 	 { "bouncefric", PROJECTILE_OFS( bouncefric ), FT_FLOAT },								  // amount the bounce decreases per bounce
 	 { "bouncestop", PROJECTILE_OFS( bouncestop ), FT_FLOAT },								  // minimum bounce value before bouncing stops
-															   // recurive projectile definition??
+																							  // recurive projectile definition??
 	 { NULL, 0, 0, 0 } };
 
 static structdef_t weaponinfo_struct	 = { sizeof( weaponinfo_t ), weaponinfo_fields };
@@ -480,7 +480,7 @@ void BotResetWeaponState( int weaponstate )
 // Returns:					-
 // Changes Globals:		-
 //========================================================================
-int BotAllocWeaponState( void )
+int BotAllocWeaponState()
 {
 	int i;
 
@@ -522,7 +522,7 @@ void BotFreeWeaponState( int handle )
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-int BotSetupWeaponAI( void )
+int BotSetupWeaponAI()
 {
 	char* file;
 
@@ -546,7 +546,7 @@ int BotSetupWeaponAI( void )
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-void BotShutdownWeaponAI( void )
+void BotShutdownWeaponAI()
 {
 	int i;
 

@@ -80,4 +80,4 @@ void			EvolveWeightConfig( weightconfig_t* config );
 // interbreed the weight configurations and stores the interbreeded one in configout
 void			InterbreedWeightConfigs( weightconfig_t* config1, weightconfig_t* config2, weightconfig_t* configout );
 // frees cached weight configurations
-void			BotShutdownWeights( void );
+void			BotShutdownWeights();

@@ -60,7 +60,7 @@ void		  AddRemap( const char* oldShader, const char* newShader, float timeOffset
 	}
 }
 
-const char* BuildShaderStateConfig( void )
+const char* BuildShaderStateConfig()
 {
 	static char buff[MAX_STRING_CHARS * 4];
 	char		out[( MAX_QPATH * 2 ) + 5];
@@ -521,7 +521,7 @@ instead of being removed and recreated, which can cause interpolated
 angles and bad trails.
 =================
 */
-gentity_t* G_Spawn( void )
+gentity_t* G_Spawn()
 {
 	int		   i, force;
 	gentity_t* e;
@@ -580,7 +580,7 @@ gentity_t* G_Spawn( void )
 G_EntitiesFree
 =================
 */
-qboolean G_EntitiesFree( void )
+qboolean G_EntitiesFree()
 {
 	int		   i;
 	gentity_t* e;

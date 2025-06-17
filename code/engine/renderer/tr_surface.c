@@ -635,7 +635,7 @@ void Tess_InstantQuad( vec4_t quadVerts[4] )
 Tess_SurfaceSplash
 ==============
 */
-static void Tess_SurfaceSplash( void )
+static void Tess_SurfaceSplash()
 {
 	vec3_t left, up;
 	float  radius;
@@ -666,7 +666,7 @@ static void Tess_SurfaceSplash( void )
 Tess_SurfaceSprite
 ==============
 */
-static void Tess_SurfaceSprite( void )
+static void Tess_SurfaceSprite()
 {
 	vec3_t left, up;
 	float  radius;
@@ -1394,7 +1394,7 @@ static void Tess_SurfaceTriangles( srfTriangles_t* srf )
 Tess_SurfaceBeam
 ==============
 */
-static void Tess_SurfaceBeam( void )
+static void Tess_SurfaceBeam()
 {
 #if 1
 
@@ -1607,7 +1607,7 @@ static void Tess_DoRailDiscs( int numSegs, const vec3_t start, const vec3_t dir,
 Tess_SurfaceRailRings
 ==============
 */
-static void Tess_SurfaceRailRings( void )
+static void Tess_SurfaceRailRings()
 {
 	refEntity_t* e;
 	int			 numSegs;
@@ -1643,7 +1643,7 @@ static void Tess_SurfaceRailRings( void )
 Tess_SurfaceRailCore
 ==============
 */
-static void Tess_SurfaceRailCore( void )
+static void Tess_SurfaceRailCore()
 {
 	refEntity_t* e;
 	int			 len;
@@ -1678,7 +1678,7 @@ static void Tess_SurfaceRailCore( void )
 Tess_SurfaceLightningBolt
 ==============
 */
-static void Tess_SurfaceLightningBolt( void )
+static void Tess_SurfaceLightningBolt()
 {
 	refEntity_t* e;
 	int			 len;
@@ -2059,7 +2059,7 @@ Tess_SurfaceAxis
 Draws x/y/z lines from the origin for orientation debugging
 ===================
 */
-static void Tess_SurfaceAxis( void )
+static void Tess_SurfaceAxis()
 {
 	// int             k;
 	// vec4_t          verts[3];

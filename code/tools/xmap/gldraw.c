@@ -65,7 +65,7 @@ static void Reshape( int width, int height )
 	glTranslatef( -drawOrigin[0], -drawOrigin[1], -drawOrigin[2] );
 }
 
-static void Draw_BeginScene( void )
+static void Draw_BeginScene()
 {
 	int			w, h, g;
 	vec_t		mx, my;
@@ -166,14 +166,14 @@ static void Draw_BeginScene( void )
 	glFlush();
 }
 
-static void Draw_EndScene( void )
+static void Draw_EndScene()
 {
 	// Sys_FPrintf(SYS_VRB, "Draw_EndScene()\n");
 
 	SDL_GL_SwapBuffers();
 }
 
-static void Draw_Shutdown( void )
+static void Draw_Shutdown()
 {
 	Sys_FPrintf( SYS_VRB, "Draw_Shutdown()\n" );
 
@@ -181,7 +181,7 @@ static void Draw_Shutdown( void )
 	drawInit = qfalse;
 }
 
-void Draw_SetRed( void )
+void Draw_SetRed()
 {
 	if( !drawInit )
 	{
@@ -191,7 +191,7 @@ void Draw_SetRed( void )
 	glColor3f( 1, 0, 0 );
 }
 
-void Draw_SetGrey( void )
+void Draw_SetGrey()
 {
 	if( !drawInit )
 	{
@@ -201,7 +201,7 @@ void Draw_SetGrey( void )
 	glColor3f( 0.5, 0.5, 0.5 );
 }
 
-void Draw_SetBlack( void )
+void Draw_SetBlack()
 {
 	if( !drawInit )
 	{
@@ -269,7 +269,7 @@ void Draw_AuxWinding( winding_t* w )
 	glFlush();
 }
 
-void Draw_Scene( void ( *drawFunc )( void ) )
+void Draw_Scene( void ( *drawFunc )() )
 {
 	Uint8*	 keys;
 	matrix_t rotation;

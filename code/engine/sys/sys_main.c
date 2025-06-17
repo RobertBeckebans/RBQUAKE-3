@@ -65,7 +65,7 @@ void		Sys_SetBinaryPath( const char* path )
 Sys_BinaryPath
 =================
 */
-char* Sys_BinaryPath( void )
+char* Sys_BinaryPath()
 {
 	return binaryPath;
 }
@@ -101,7 +101,7 @@ void Sys_SetDefaultInstallPath( const char* path )
 Sys_DefaultInstallPath
 =================
 */
-char* Sys_DefaultInstallPath( void )
+char* Sys_DefaultInstallPath()
 {
 #if 0
 	if( *installPath )
@@ -120,7 +120,7 @@ char* Sys_DefaultInstallPath( void )
 Sys_DefaultAppPath
 =================
 */
-char* Sys_DefaultAppPath( void )
+char* Sys_DefaultAppPath()
 {
 	return Sys_BinaryPath();
 }
@@ -132,7 +132,7 @@ Sys_In_Restart_f
 Restart the input subsystem
 =================
 */
-void Sys_In_Restart_f( void )
+void Sys_In_Restart_f()
 {
 	IN_Restart();
 }
@@ -144,7 +144,7 @@ Sys_ConsoleInput
 Handle new console input
 =================
 */
-char* Sys_ConsoleInput( void )
+char* Sys_ConsoleInput()
 {
 	return CON_Input();
 }
@@ -310,7 +310,7 @@ static __attribute__( ( noreturn ) ) void Sys_Exit( int exitCode )
 Sys_Quit
 =================
 */
-void Sys_Quit( void )
+void Sys_Quit()
 {
 	Sys_Exit( 0 );
 }
@@ -320,7 +320,7 @@ void Sys_Quit( void )
 Sys_GetProcessorFeatures
 =================
 */
-cpuFeatures_t Sys_GetProcessorFeatures( void )
+cpuFeatures_t Sys_GetProcessorFeatures()
 {
 	cpuFeatures_t features = 0;
 
@@ -351,7 +351,7 @@ cpuFeatures_t Sys_GetProcessorFeatures( void )
 Sys_Init
 =================
 */
-void Sys_Init( void )
+void Sys_Init()
 {
 	Cmd_AddCommand( "in_restart", Sys_In_Restart_f );
 	Cvar_Set( "arch", OS_STRING " " ARCH_STRING );

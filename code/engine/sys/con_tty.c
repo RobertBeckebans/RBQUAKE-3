@@ -84,7 +84,7 @@ send "\b \b"
 (FIXME there may be a way to find out if '\b' alone would work though)
 ==================
 */
-static void CON_Back( void )
+static void CON_Back()
 {
 	char			  key;
 	size_t UNUSED_VAR size;
@@ -105,7 +105,7 @@ Clear the display of the line currently edited
 bring cursor back to beginning of line
 ==================
 */
-static void CON_Hide( void )
+static void CON_Hide()
 {
 	if( ttycon_on )
 	{
@@ -139,7 +139,7 @@ Show the current line
 FIXME need to position the cursor if needed?
 ==================
 */
-static void CON_Show( void )
+static void CON_Show()
 {
 	if( ttycon_on )
 	{
@@ -169,7 +169,7 @@ CON_Shutdown
 Never exit without calling this, or your terminal will be left in a pretty bad state
 ==================
 */
-void CON_Shutdown( void )
+void CON_Shutdown()
 {
 	if( ttycon_on )
 	{
@@ -218,7 +218,7 @@ void Hist_Add( field_t* field )
 Hist_Prev
 ==================
 */
-field_t* Hist_Prev( void )
+field_t* Hist_Prev()
 {
 	int hist_prev;
 	assert( hist_count <= CON_HISTORY );
@@ -239,7 +239,7 @@ field_t* Hist_Prev( void )
 Hist_Next
 ==================
 */
-field_t* Hist_Next( void )
+field_t* Hist_Next()
 {
 	assert( hist_count <= CON_HISTORY );
 	assert( hist_count >= 0 );
@@ -276,7 +276,7 @@ CON_Init
 Initialize the console input (tty mode if possible)
 ==================
 */
-void CON_Init( void )
+void CON_Init()
 {
 	struct termios tc;
 
@@ -333,7 +333,7 @@ void CON_Init( void )
 CON_Input
 ==================
 */
-char* CON_Input( void )
+char* CON_Input()
 {
 	// we use this when sending back commands
 	static char		  text[MAX_EDIT_LINE];

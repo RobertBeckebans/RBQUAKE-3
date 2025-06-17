@@ -42,7 +42,7 @@ int		c_faceNodes;
 AllocBspFace
 ================
 */
-face_t* AllocBspFace( void )
+face_t* AllocBspFace()
 {
 	face_t* f;
 
@@ -370,7 +370,7 @@ static void	   DrawPartitions()
 	}
 }
 
-static void DrawAll( void )
+static void DrawAll()
 {
 	DrawPartitions();
 	DrawNodes();

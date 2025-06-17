@@ -24,15 +24,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 qboolean ( *qwglSwapIntervalEXT )( int interval );
 void ( *qglActiveTextureARB )( GLenum texture );
 
-void GLimp_EndFrame( void )
+void GLimp_EndFrame()
 {
 }
 
-void GLimp_Init( void )
+void GLimp_Init()
 {
 }
 
-void GLimp_Shutdown( void )
+void GLimp_Shutdown()
 {
 }
 
@@ -49,7 +49,7 @@ qboolean QGL_Init( const char* dllname )
 	return qtrue;
 }
 
-void QGL_Shutdown( void )
+void QGL_Shutdown()
 {
 }
 
@@ -57,6 +57,6 @@ void GLimp_SetGamma( unsigned char red[256], unsigned char green[256], unsigned 
 {
 }
 
-void GLimp_Minimize( void )
+void GLimp_Minimize()
 {
 }

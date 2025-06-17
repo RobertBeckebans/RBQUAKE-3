@@ -175,7 +175,7 @@ void					SV_RankBegin( char* gamekey )
 SV_RankEnd
 ================
 */
-void SV_RankEnd( void )
+void SV_RankEnd()
 {
 	GR_STATUS status;
 	int		  i;
@@ -231,7 +231,7 @@ void SV_RankEnd( void )
 SV_RankPoll
 ================
 */
-void SV_RankPoll( void )
+void SV_RankPoll()
 {
 	GRankPoll();
 }
@@ -241,7 +241,7 @@ void SV_RankPoll( void )
 SV_RankCheckInit
 ================
 */
-qboolean SV_RankCheckInit( void )
+qboolean SV_RankCheckInit()
 {
 	return ( s_rankings_contexts > 0 );
 }
@@ -251,7 +251,7 @@ qboolean SV_RankCheckInit( void )
 SV_RankActive
 ================
 */
-qboolean SV_RankActive( void )
+qboolean SV_RankActive()
 {
 	return s_rankings_active;
 }
@@ -782,7 +782,7 @@ void SV_RankReportStr( int index1, int index2, int key, char* value )
 SV_RankQuit
 ================
 */
-void SV_RankQuit( void )
+void SV_RankQuit()
 {
 	int i;
 	int j = 0;

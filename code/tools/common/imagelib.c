@@ -1401,7 +1401,7 @@ void LoadJPGBuffer( const char* filename, byte* fbuffer, int fbufferSize, byte**
 
 	/* Step 3: read file parameters with jpeg_read_header() */
 
-	( void )jpeg_read_header( &cinfo, TRUE );
+	() jpeg_read_header( &cinfo, TRUE );
 	/* We can ignore the return value from jpeg_read_header since
 	 *   (a) suspension is not possible with the stdio data source, and
 	 *   (b) we passed TRUE to reject a tables-only JPEG file as an error.
@@ -1418,7 +1418,7 @@ void LoadJPGBuffer( const char* filename, byte* fbuffer, int fbufferSize, byte**
 
 	/* Step 5: Start decompressor */
 
-	( void )jpeg_start_decompress( &cinfo );
+	() jpeg_start_decompress( &cinfo );
 	/* We can ignore the return value since suspension is not possible
 	 * with the stdio data source.
 	 */
@@ -1457,7 +1457,7 @@ void LoadJPGBuffer( const char* filename, byte* fbuffer, int fbufferSize, byte**
 		 */
 		bbuf   = ( ( out + ( row_stride * cinfo.output_scanline ) ) );
 		buffer = &bbuf;
-		( void )jpeg_read_scanlines( &cinfo, buffer, 1 );
+		() jpeg_read_scanlines( &cinfo, buffer, 1 );
 	}
 
 	// If we are processing an 8-bit JPEG (greyscale), we'll have to convert
@@ -1503,7 +1503,7 @@ void LoadJPGBuffer( const char* filename, byte* fbuffer, int fbufferSize, byte**
 
 	/* Step 7: Finish decompression */
 
-	( void )jpeg_finish_decompress( &cinfo );
+	() jpeg_finish_decompress( &cinfo );
 	/* We can ignore the return value since suspension is not possible
 	 * with the stdio data source.
 	 */

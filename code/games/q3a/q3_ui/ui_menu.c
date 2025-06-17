@@ -137,7 +137,7 @@ void Main_MenuEvent( void* ptr, int event )
 MainMenu_Cache
 ===============
 */
-void MainMenu_Cache( void )
+void MainMenu_Cache()
 {
 	s_main.bannerModel = trap_R_RegisterModel( MAIN_BANNER_MODEL );
 }
@@ -156,7 +156,7 @@ TTimo: this function is common to the main menu and errorMessage menu
 ===============
 */
 
-static void Main_MenuDraw( void )
+static void Main_MenuDraw()
 {
 	refdef_t	refdef;
 	refEntity_t ent;
@@ -239,7 +239,7 @@ static void Main_MenuDraw( void )
 UI_TeamArenaExists
 ===============
 */
-static qboolean UI_TeamArenaExists( void )
+static qboolean UI_TeamArenaExists()
 {
 	int	  numdirs;
 	char  dirlist[2048];
@@ -272,7 +272,7 @@ so make sure that the attract loop server is down
 and that local cinematics are killed
 ===============
 */
-void UI_MainMenu( void )
+void UI_MainMenu()
 {
 	int		 y;
 	qboolean teamArena = qfalse;

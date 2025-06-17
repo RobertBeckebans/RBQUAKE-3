@@ -32,7 +32,7 @@ displayContextDef_t cgDC;
 int		 forceModelModificationCount = -1;
 
 void	 CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum );
-void	 CG_Shutdown( void );
+void	 CG_Shutdown();
 
 /*
 ================
@@ -330,7 +330,7 @@ static int cvarTableSize = ARRAY_LEN( cvarTable );
 CG_RegisterCvars
 =================
 */
-void	   CG_RegisterCvars( void )
+void	   CG_RegisterCvars()
 {
 	int			 i;
 	cvarTable_t* cv;
@@ -358,7 +358,7 @@ void	   CG_RegisterCvars( void )
 CG_ForceModelChange
 ===================
 */
-static void CG_ForceModelChange( void )
+static void CG_ForceModelChange()
 {
 	int i;
 
@@ -380,7 +380,7 @@ static void CG_ForceModelChange( void )
 CG_UpdateCvars
 =================
 */
-void CG_UpdateCvars( void )
+void CG_UpdateCvars()
 {
 	int			 i;
 	cvarTable_t* cv;
@@ -416,7 +416,7 @@ void CG_UpdateCvars( void )
 	}
 }
 
-int CG_CrosshairPlayer( void )
+int CG_CrosshairPlayer()
 {
 	if( cg.time > ( cg.crosshairClientTime + 1000 ) )
 	{
@@ -425,7 +425,7 @@ int CG_CrosshairPlayer( void )
 	return cg.crosshairClientNum;
 }
 
-int CG_LastAttacker( void )
+int CG_LastAttacker()
 {
 	if( !cg.attackerTime )
 	{
@@ -561,7 +561,7 @@ CG_RegisterSounds
 called during a precache command
 =================
 */
-static void CG_RegisterSounds( void )
+static void CG_RegisterSounds()
 {
 	int			i;
 	char		items[MAX_ITEMS + 1];
@@ -833,7 +833,7 @@ CG_RegisterGraphics
 This function may execute for a couple of minutes with a slow disk.
 =================
 */
-static void CG_RegisterGraphics( void )
+static void CG_RegisterGraphics()
 {
 	int			 i;
 	char		 items[MAX_ITEMS + 1];
@@ -1150,7 +1150,7 @@ CG_BuildSpectatorString
 
 =======================
 */
-void CG_BuildSpectatorString( void )
+void CG_BuildSpectatorString()
 {
 	int i;
 	cg.spectatorList[0] = 0;
@@ -1174,7 +1174,7 @@ void CG_BuildSpectatorString( void )
 CG_RegisterClients
 ===================
 */
-static void CG_RegisterClients( void )
+static void CG_RegisterClients()
 {
 	int i;
 
@@ -1225,7 +1225,7 @@ CG_StartMusic
 
 ======================
 */
-void CG_StartMusic( void )
+void CG_StartMusic()
 {
 	char* s;
 	char  parm1[MAX_QPATH], parm2[MAX_QPATH];
@@ -1931,7 +1931,7 @@ CG_LoadHudMenu();
 
 =================
 */
-void CG_LoadHudMenu( void )
+void CG_LoadHudMenu()
 {
 	char		buff[1024];
 	const char* hudSet;
@@ -2000,7 +2000,7 @@ void CG_LoadHudMenu( void )
 	CG_LoadMenus( hudSet );
 }
 
-void CG_AssetCache( void )
+void CG_AssetCache()
 {
 	// if (Assets.textFont == NULL) {
 	//   trap_R_RegisterFont("fonts/arial.ttf", 72, &Assets.textFont);
@@ -2147,7 +2147,7 @@ CG_Shutdown
 Called before every level change or subsystem restart
 =================
 */
-void CG_Shutdown( void )
+void CG_Shutdown()
 {
 	// some mods may need to do cleanup work here,
 	// like closing files or archiving session data

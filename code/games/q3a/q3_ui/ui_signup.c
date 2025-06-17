@@ -116,7 +116,7 @@ static void			   Signup_MenuEvent( void* ptr, int event )
 Signup_MenuInit
 ===============
 */
-void Signup_MenuInit( void )
+void Signup_MenuInit()
 {
 	grank_status_t status;
 	int			   y;
@@ -265,7 +265,7 @@ void Signup_MenuInit( void )
 Signup_Cache
 ===============
 */
-void Signup_Cache( void )
+void Signup_Cache()
 {
 	trap_R_RegisterShaderNoMip( SIGNUP_FRAME );
 }
@@ -275,7 +275,7 @@ void Signup_Cache( void )
 UI_SignupMenu
 ===============
 */
-void UI_SignupMenu( void )
+void UI_SignupMenu()
 {
 	Signup_MenuInit();
 	UI_PushMenu( &s_signup.menu );

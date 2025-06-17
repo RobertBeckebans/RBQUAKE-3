@@ -127,7 +127,7 @@ static void ACESP_LoadArenasFromFile( char* filename )
 	g_numArenas += ACESP_ParseInfos( buf, MAX_ARENAS - g_numArenas, &g_arenaInfos[g_numArenas] );
 }
 
-static void ACESP_LoadArenas( void )
+static void ACESP_LoadArenas()
 {
 	int		 numdirs;
 	vmCvar_t arenasFile;
@@ -264,7 +264,7 @@ static void ACESP_LoadBotsFromFile( char* filename )
 	g_numBots += ACESP_ParseInfos( buf, MAX_BOTS - g_numBots, &g_botInfos[g_numBots] );
 }
 
-static void ACESP_LoadBots( void )
+static void ACESP_LoadBots()
 {
 	int	  numdirs;
 	char  filename[128];

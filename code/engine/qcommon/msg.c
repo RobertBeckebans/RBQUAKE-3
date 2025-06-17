@@ -39,7 +39,7 @@ Handles byte ordering and avoids alignment errors
 
 int				 oldsize = 0;
 
-void			 MSG_initHuffman( void );
+void			 MSG_initHuffman();
 
 void			 MSG_Init( msg_t* buf, byte* data, int length )
 {
@@ -985,7 +985,7 @@ MSG_ReportChangeVectors_f
 Prints out a table from the current statistics for copying to code
 =================
 */
-void MSG_ReportChangeVectors_f( void )
+void MSG_ReportChangeVectors_f()
 {
 	int i;
 
@@ -2064,7 +2064,7 @@ int msg_hData[256] = {
 	13504,	// 255
 };
 
-void MSG_initHuffman( void )
+void MSG_initHuffman()
 {
 	int i, j;
 

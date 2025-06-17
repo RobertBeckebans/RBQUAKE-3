@@ -34,17 +34,17 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //
 // ui_main.c
 //
-void UI_Report( void );
-void UI_Load( void );
+void UI_Report();
+void UI_Load();
 void UI_LoadMenus( const char* menuFile, qboolean reset );
 int	 UI_AdjustTimeByGame( int time );
-void UI_ClearScores( void );
-void UI_LoadArenas( void );
-void UI_ServerInfo( void );
+void UI_ClearScores();
+void UI_LoadArenas();
+void UI_ServerInfo();
 void UI_UpdateNews( qboolean );
 
-void UI_RegisterCvars( void );
-void UI_UpdateCvars( void );
+void UI_RegisterCvars();
+void UI_UpdateCvars();
 void UI_DrawConnectScreen( qboolean overlay );
 
 // new ui stuff
@@ -238,7 +238,7 @@ void			UI_FillRect( float x, float y, float width, float height, const float* co
 //
 void			trap_Print( const char* string );
 void			trap_Error( const char* string ) __attribute__( ( noreturn ) );
-int				trap_Milliseconds( void );
+int				trap_Milliseconds();
 void			trap_Cvar_Register( vmCvar_t* vmCvar, const char* varName, const char* defaultValue, int flags );
 void			trap_Cvar_Update( vmCvar_t* vmCvar );
 void			trap_Cvar_Set( const char* var_name, const char* value );
@@ -248,7 +248,7 @@ void			trap_Cvar_SetValue( const char* var_name, float value );
 void			trap_Cvar_Reset( const char* name );
 void			trap_Cvar_Create( const char* var_name, const char* var_value, int flags );
 void			trap_Cvar_InfoStringBuffer( int bit, char* buffer, int bufsize );
-int				trap_Argc( void );
+int				trap_Argc();
 void			trap_Argv( int n, char* buffer, int bufferLength );
 void			trap_Cmd_ExecuteText( int exec_when, const char* text ); // don't use EXEC_NOW!
 int				trap_FS_FOpenFile( const char* qpath, fileHandle_t* f, fsMode_t mode );
@@ -260,7 +260,7 @@ int				trap_FS_Seek( fileHandle_t f, long offset, int origin ); // fsOrigin_t
 qhandle_t		trap_R_RegisterModel( const char* name );
 qhandle_t		trap_R_RegisterSkin( const char* name );
 qhandle_t		trap_R_RegisterShaderNoMip( const char* name );
-void			trap_R_ClearScene( void );
+void			trap_R_ClearScene();
 void			trap_R_AddRefEntityToScene( const refEntity_t* re );
 void			trap_R_AddPolyToScene( qhandle_t hShader, int numVerts, const polyVert_t* verts );
 void			trap_R_AddLightToScene( const vec3_t org, float intensity, float r, float g, float b );
@@ -269,7 +269,7 @@ void			trap_R_SetColor( const float* rgba );
 void			trap_R_SetClipRegion( const float* region );
 void			trap_R_DrawStretchPic( float x, float y, float w, float h, float s1, float t1, float s2, float t2, qhandle_t hShader );
 void			trap_R_ModelBounds( clipHandle_t model, vec3_t mins, vec3_t maxs );
-void			trap_UpdateScreen( void );
+void			trap_UpdateScreen();
 int				trap_CM_LerpTag( orientation_t* tag, clipHandle_t mod, int startFrame, int endFrame, float frac, const char* tagName );
 void			trap_S_StartLocalSound( sfxHandle_t sfx, int channelNum );
 sfxHandle_t		trap_S_RegisterSound( const char* sample );
@@ -277,10 +277,10 @@ void			trap_Key_KeynumToStringBuf( int keynum, char* buf, int buflen );
 void			trap_Key_GetBindingBuf( int keynum, char* buf, int buflen );
 void			trap_Key_SetBinding( int keynum, const char* binding );
 qboolean		trap_Key_IsDown( int keynum );
-qboolean		trap_Key_GetOverstrikeMode( void );
+qboolean		trap_Key_GetOverstrikeMode();
 void			trap_Key_SetOverstrikeMode( qboolean state );
-void			trap_Key_ClearStates( void );
-int				trap_Key_GetCatcher( void );
+void			trap_Key_ClearStates();
+int				trap_Key_GetCatcher();
 void			trap_Key_SetCatcher( int catcher );
 void			trap_GetClipboardData( char* buf, int bufsize );
 void			trap_GetClientState( uiClientState_t* state );
@@ -290,12 +290,12 @@ int				trap_LAN_GetServerCount( int source );
 void			trap_LAN_GetServerAddressString( int source, int n, char* buf, int buflen );
 void			trap_LAN_GetServerInfo( int source, int n, char* buf, int buflen );
 int				trap_LAN_GetServerPing( int source, int n );
-int				trap_LAN_GetPingQueueCount( void );
+int				trap_LAN_GetPingQueueCount();
 void			trap_LAN_ClearPing( int n );
 void			trap_LAN_GetPing( int n, char* buf, int buflen, int* pingtime );
 void			trap_LAN_GetPingInfo( int n, char* buf, int buflen );
-void			trap_LAN_LoadCachedServers( void );
-void			trap_LAN_SaveCachedServers( void );
+void			trap_LAN_LoadCachedServers();
+void			trap_LAN_SaveCachedServers();
 void			trap_LAN_MarkServerVisible( int source, int n, qboolean visible );
 int				trap_LAN_ServerIsVisible( int source, int n );
 qboolean		trap_LAN_UpdateVisiblePings( int source );
@@ -304,9 +304,9 @@ void			trap_LAN_RemoveServer( int source, const char* addr );
 void			trap_LAN_ResetPings( int n );
 int				trap_LAN_ServerStatus( const char* serverAddress, char* serverStatus, int maxLen );
 int				trap_LAN_CompareServers( int source, int sortKey, int sortDir, int s1, int s2 );
-int				trap_MemoryRemaining( void );
+int				trap_MemoryRemaining();
 void			trap_R_RegisterFont( const char* pFontname, int pointSize, fontInfo_t* font );
-void			trap_S_StopBackgroundTrack( void );
+void			trap_S_StopBackgroundTrack();
 void			trap_S_StartBackgroundTrack( const char* intro, const char* loop );
 int				trap_CIN_PlayCinematic( const char* arg0, int xpos, int ypos, int width, int height, int bits );
 e_status		trap_CIN_StopCinematic( int handle );

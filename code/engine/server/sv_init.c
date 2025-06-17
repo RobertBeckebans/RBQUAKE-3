@@ -235,7 +235,7 @@ to the clients -- only the fields that differ from the
 baseline will be transmitted
 ================
 */
-static void SV_CreateBaseline( void )
+static void SV_CreateBaseline()
 {
 	sharedEntity_t* svent;
 	int				entnum;
@@ -289,7 +289,7 @@ NOT cause this to be called, unless the game is exited to
 the menu system first.
 ===============
 */
-static void SV_Startup( void )
+static void SV_Startup()
 {
 	if( svs.initialized )
 	{
@@ -326,7 +326,7 @@ static void SV_Startup( void )
 SV_ChangeMaxClients
 ==================
 */
-void SV_ChangeMaxClients( void )
+void SV_ChangeMaxClients()
 {
 	int		  oldMaxClients;
 	int		  i;
@@ -406,7 +406,7 @@ void SV_ChangeMaxClients( void )
 SV_ClearServer
 ================
 */
-static void SV_ClearServer( void )
+static void SV_ClearServer()
 {
 	int i;
 
@@ -427,7 +427,7 @@ SV_TouchCGame
   touch the cgame.vm so that a pure client can load it if it's in a seperate pk3
 ================
 */
-static void SV_TouchCGame( void )
+static void SV_TouchCGame()
 {
 #ifdef USE_LLVM
 	fileHandle_t f;
@@ -697,7 +697,7 @@ SV_Init
 Only called at main exe startup, not for each game
 ===============
 */
-void SV_Init( void )
+void SV_Init()
 {
 	int index;
 

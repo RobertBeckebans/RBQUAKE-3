@@ -1942,7 +1942,7 @@ sfxHandle_t Menu_DefaultKey( menuframework_s* m, int key )
 Menu_Cache
 =================
 */
-void Menu_Cache( void )
+void Menu_Cache()
 {
 	uis.charset			= trap_R_RegisterShaderNoMip( "gfx/2d/bigchars" );
 	uis.charsetProp		= trap_R_RegisterShaderNoMip( "menu/art/font1_prop.tga" );

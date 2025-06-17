@@ -307,7 +307,7 @@ CG_TileClear
 Clear around a sized down screen
 ==============
 */
-void CG_TileClear( void )
+void CG_TileClear()
 {
 	int top, bottom, left, right;
 	int w, h;

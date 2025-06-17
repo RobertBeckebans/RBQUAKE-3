@@ -165,7 +165,7 @@ static qhandle_t PlayerIconHandle( const char* modelAndSkin )
 UI_SPLevelMenu_SetBots
 =================
 */
-static void UI_SPLevelMenu_SetBots( void )
+static void UI_SPLevelMenu_SetBots()
 {
 	char* p;
 	char* bot;
@@ -265,7 +265,7 @@ static void UI_SPLevelMenu_SetMenuArena( int n, int level, const char* arenaInfo
 	levelMenuInfo.item_maps[n].generic.flags &= ~QMF_INACTIVE;
 }
 
-static void UI_SPLevelMenu_SetMenuItems( void )
+static void UI_SPLevelMenu_SetMenuItems()
 {
 	int			n;
 	int			level;
@@ -381,7 +381,7 @@ static void UI_SPLevelMenu_SetMenuItems( void )
 UI_SPLevelMenu_ResetEvent
 =================
 */
-static void UI_SPLevelMenu_ResetDraw( void )
+static void UI_SPLevelMenu_ResetDraw()
 {
 	UI_DrawProportionalString( SCREEN_WIDTH / 2, 356 + PROP_HEIGHT * 0, "WARNING: This resets all of the", UI_CENTER | UI_SMALLFONT, color_yellow );
 	UI_DrawProportionalString( SCREEN_WIDTH / 2, 356 + PROP_HEIGHT * 1, "single player game variables.", UI_CENTER | UI_SMALLFONT, color_yellow );
@@ -588,7 +588,7 @@ UI_SPLevelMenu_MenuDraw
 */
 #define LEVEL_DESC_LEFT_MARGIN 332
 
-static void UI_SPLevelMenu_MenuDraw( void )
+static void UI_SPLevelMenu_MenuDraw()
 {
 	int	   n, i;
 	int	   x, y;
@@ -744,7 +744,7 @@ static void UI_SPLevelMenu_MenuDraw( void )
 UI_SPLevelMenu_Cache
 =================
 */
-void UI_SPLevelMenu_Cache( void )
+void UI_SPLevelMenu_Cache()
 {
 	int n;
 
@@ -787,7 +787,7 @@ void UI_SPLevelMenu_Cache( void )
 UI_SPLevelMenu_Init
 =================
 */
-static void UI_SPLevelMenu_Init( void )
+static void UI_SPLevelMenu_Init()
 {
 	int	 skill;
 	int	 n;
@@ -1020,7 +1020,7 @@ static void UI_SPLevelMenu_Init( void )
 UI_SPLevelMenu
 =================
 */
-void UI_SPLevelMenu( void )
+void UI_SPLevelMenu()
 {
 	int			level;
 	int			trainingLevel;
@@ -1085,7 +1085,7 @@ void UI_SPLevelMenu( void )
 UI_SPLevelMenu_f
 =================
 */
-void UI_SPLevelMenu_f( void )
+void UI_SPLevelMenu_f()
 {
 	trap_Key_SetCatcher( KEYCATCH_UI );
 	uis.menusp = 0;
@@ -1097,7 +1097,7 @@ void UI_SPLevelMenu_f( void )
 UI_SPLevelMenu_ReInit
 =================
 */
-void UI_SPLevelMenu_ReInit( void )
+void UI_SPLevelMenu_ReInit()
 {
 	levelMenuInfo.reinit = qtrue;
 }

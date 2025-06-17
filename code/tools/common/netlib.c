@@ -31,16 +31,16 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //++timo FIXME: the WINS_ things are not necessary, they can be made portable arther easily
 char* WINS_ErrorMessage( int error );
 
-int	  WINS_Init( void );
-void  WINS_Shutdown( void );
-char* WINS_MyAddress( void );
+int	  WINS_Init();
+void  WINS_Shutdown();
+char* WINS_MyAddress();
 int	  WINS_Listen( int socket );
 int	  WINS_Accept( int socket, struct sockaddr_s* addr );
 int	  WINS_OpenSocket( int port );
 int	  WINS_OpenReliableSocket( int port );
 int	  WINS_CloseSocket( int socket );
 int	  WINS_Connect( int socket, struct sockaddr_s* addr );
-int	  WINS_CheckNewConnections( void );
+int	  WINS_CheckNewConnections();
 int	  WINS_Read( int socket, byte* buf, int len, struct sockaddr_s* addr );
 int	  WINS_Write( int socket, byte* buf, int len, struct sockaddr_s* addr );
 int	  WINS_Broadcast( int socket, byte* buf, int len );
@@ -180,7 +180,7 @@ int Net_Receive( socket_t* sock, netmessage_t* msg )
 	return 0;
 } // end of the function Net_Receive
 
-socket_t* Net_AllocSocket( void )
+socket_t* Net_AllocSocket()
 {
 	socket_t* sock;
 
@@ -301,7 +301,7 @@ void Net_MyAddress( address_t* address )
 	strcpy( address->ip, WINS_MyAddress() );
 } // end of the function Net_MyAddress
 
-int Net_Setup( void )
+int Net_Setup()
 {
 	WINS_Init();
 	//
@@ -310,7 +310,7 @@ int Net_Setup( void )
 	return qtrue;
 } // end of the function Net_Setup
 
-void Net_Shutdown( void )
+void Net_Shutdown()
 {
 	WINS_Shutdown();
 } // end of the function Net_Shutdown
@@ -644,7 +644,7 @@ char* WINS_ErrorMessage( int error )
 	return "Unknown error";
 } // end of the function WINS_ErrorMessage
 
-int WINS_Init( void )
+int WINS_Init()
 {
 	int				  i;
 	struct hostent*	  local;
@@ -724,12 +724,12 @@ int WINS_Init( void )
 	return net_controlsocket;
 } // end of the function WINS_Init
 
-char* WINS_MyAddress( void )
+char* WINS_MyAddress()
 {
 	return my_tcpip_address;
 } // end of the function WINS_MyAddress
 
-void WINS_Shutdown( void )
+void WINS_Shutdown()
 {
 	// WINS_Listen(0);
 	WINS_CloseSocket( net_controlsocket );
@@ -943,7 +943,7 @@ int WINS_Connect( int socket, struct sockaddr_s* addr )
 	return 0;
 } // end of the function WINS_Connect
 
-int WINS_CheckNewConnections( void )
+int WINS_CheckNewConnections()
 {
 	char buf[4];
 
@@ -1302,7 +1302,7 @@ char*					 WINS_ErrorMessage( int error )
 	return "Unknown error";
 } // end of the function WINS_ErrorMessage
 
-int WINS_Init( void )
+int WINS_Init()
 {
 	int				  i;
 	struct hostent*	  local;
@@ -1388,12 +1388,12 @@ int WINS_Init( void )
 	return net_controlsocket;
 } // end of the function WINS_Init
 
-char* WINS_MyAddress( void )
+char* WINS_MyAddress()
 {
 	return my_tcpip_address;
 } // end of the function WINS_MyAddress
 
-void WINS_Shutdown( void )
+void WINS_Shutdown()
 {
 	// WINS_Listen(0);
 	WINS_CloseSocket( net_controlsocket );
@@ -1607,7 +1607,7 @@ int WINS_Connect( int socket, struct sockaddr_s* addr )
 	return 0;
 } // end of the function WINS_Connect
 
-int WINS_CheckNewConnections( void )
+int WINS_CheckNewConnections()
 {
 	char buf[4];
 

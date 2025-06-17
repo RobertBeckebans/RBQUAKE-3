@@ -241,16 +241,16 @@ extern vec3_t	gridSize;
 
 float			PointToPolygonFormFactor( const vec3_t point, const vec3_t normal, const winding_t* w );
 void			ColorToBytes( const float* color, byte* colorBytes );
-void			CountLightmaps( void );
-void			GridAndVertexLighting( void );
-void			SetEntityOrigins( void );
+void			CountLightmaps();
+void			GridAndVertexLighting();
+void			SetEntityOrigins();
 
 // from gldraw.c
 extern qboolean drawFlag;
 
 void			Draw_Winding( winding_t* w );
 void			Draw_AuxWinding( winding_t* w );
-void			Draw_Scene( void ( *drawFunc )( void ) );
+void			Draw_Scene( void ( *drawFunc )() );
 
 // #define DEBUGNET
 
@@ -264,7 +264,7 @@ socket_t* debug_socket;
 DebugNet_Setup
 =====================
 */
-void	  DebugNet_Setup( void )
+void	  DebugNet_Setup()
 {
 	address_t address;
 	int		  i;
@@ -286,7 +286,7 @@ void	  DebugNet_Setup( void )
 DebugNet_Shutdown
 =====================
 */
-void DebugNet_Shutdown( void )
+void DebugNet_Shutdown()
 {
 	netmessage_t msg;
 
@@ -306,7 +306,7 @@ void DebugNet_Shutdown( void )
 DebugNet_RemoveAllPolys
 =====================
 */
-void DebugNet_RemoveAllPolys( void )
+void DebugNet_RemoveAllPolys()
 {
 	netmessage_t msg;
 
@@ -519,7 +519,7 @@ void VL_DrawLightmapPixel( int surfaceNum, int x, int y, int color )
 VL_DrawPortals
 ============
 */
-void VL_DrawPortals( void )
+void VL_DrawPortals()
 {
 	int		   j;
 	lportal_t* p;
@@ -800,7 +800,7 @@ VL_LinkSurfaces
 maybe link each facet seperately instead of the test surfaces?
 =====================
 */
-void VL_LinkSurfaces( void )
+void VL_LinkSurfaces()
 {
 	int				i, j;
 	lsurfaceTest_t* test;
@@ -1623,7 +1623,7 @@ void VL_FacetsForPatch( dsurface_t* dsurf, int surfaceNum, shaderInfo_t* si, lsu
 VL_InitSurfacesForTesting
 =====================
 */
-void VL_InitSurfacesForTesting( void )
+void VL_InitSurfacesForTesting()
 {
 	int				i, j, k;
 	dsurface_t*		dsurf;
@@ -2022,7 +2022,7 @@ VL_CalcVisibleLightmapPixelArea
 nice brute force ;)
 =============
 */
-void VL_CalcVisibleLightmapPixelArea( void )
+void VL_CalcVisibleLightmapPixelArea()
 {
 	int				i, j, x, y, k;
 	dsurface_t*		ds;
@@ -2218,7 +2218,7 @@ VL_SmoothenLightmapEdges
 this code is used to smoothen lightmaps across surface edges
 =============
 */
-void VL_SmoothenLightmapEdges( void )
+void VL_SmoothenLightmapEdges()
 {
 	int				i, j, k, coords1[2][2];
 	float			coords2[2][2];
@@ -2441,7 +2441,7 @@ void VL_SmoothenLightmapEdges( void )
 VL_FixLightmapEdges
 =============
 */
-void VL_FixLightmapEdges( void )
+void VL_FixLightmapEdges()
 {
 	int				i, j, x, y, k, foundvalue, height, width, index;
 	int				pos, top, bottom;
@@ -2789,7 +2789,7 @@ void VL_FixLightmapEdges( void )
 VL_ShiftPatchLightmaps
 =============
 */
-void VL_ShiftPatchLightmaps( void )
+void VL_ShiftPatchLightmaps()
 {
 	int				i, j, x, y, k;
 	drawVert_t*		verts;
@@ -2852,7 +2852,7 @@ void VL_ShiftPatchLightmaps( void )
 VL_StoreLightmap
 =============
 */
-void VL_StoreLightmap( void )
+void VL_StoreLightmap()
 {
 	int				i, x, y, k;
 	dsurface_t*		ds;
@@ -3031,7 +3031,7 @@ int		   numlightwindings;
 VL_DrawLightWindings
 =============
 */
-void	   VL_DrawLightWindings( void )
+void	   VL_DrawLightWindings()
 {
 	int i;
 
@@ -5270,7 +5270,7 @@ void VL_FloodLightThread( int num )
 VL_TestLightLeafs
 =============
 */
-void VL_TestLightLeafs( void )
+void VL_TestLightLeafs()
 {
 	int		  leafnum, i;
 	vlight_t* light;
@@ -5349,7 +5349,7 @@ void VL_DoForcedTraceLight( int num )
 VL_DoForcedTraceLightSurfaces
 =============
 */
-void VL_DoForcedTraceLightSurfaces( void )
+void VL_DoForcedTraceLightSurfaces()
 {
 	Sys_Printf( "forced trace light\n" );
 	RunThreadsOnIndividual( numDrawSurfaces, qtrue, VL_DoForcedTraceLight );
@@ -5449,7 +5449,7 @@ VL_Radiosity
 this aint working real well but it's fun to play with.
 =============
 */
-void VL_Radiosity( void )
+void VL_Radiosity()
 {
 	oldLightFloats = lightFloats;
 	lightFloats	   = ( float* )malloc( numLightBytes * sizeof( float ) );
@@ -5464,7 +5464,7 @@ void VL_Radiosity( void )
 VL_LightWorld
 =============
 */
-void VL_LightWorld( void )
+void VL_LightWorld()
 {
 	int	  i, numcastedvolumes, numvlightsinsolid;
 	float f;
@@ -5523,7 +5523,7 @@ VL_CreateEntityLights
 */
 entity_t* FindTargetEntity( const char* target );
 
-void	  VL_CreateEntityLights( void )
+void	  VL_CreateEntityLights()
 {
 	int			i, c_entityLights;
 	vlight_t*	dl;
@@ -5751,7 +5751,7 @@ void VL_SubdivideAreaLight( shaderInfo_t* ls, winding_t* w, vec3_t normal, float
 VL_CreateFakeSurfaceLights
 ==================
 */
-void VL_CreateFakeSurfaceLights( void )
+void VL_CreateFakeSurfaceLights()
 {
 	int			  i, j, side;
 	dsurface_t*	  ds;
@@ -5931,7 +5931,7 @@ winding_t* VL_WindingForBrushSide( dbrush_t* brush, int side, winding_t* w )
 VL_CreateSkyLights
 ==================
 */
-void VL_CreateSkyLights( void )
+void VL_CreateSkyLights()
 {
 	int			  i, j, c_skyLights;
 	dbrush_t*	  b;

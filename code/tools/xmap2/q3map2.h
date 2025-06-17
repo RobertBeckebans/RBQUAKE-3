@@ -1362,7 +1362,7 @@ prototypes
 ------------------------------------------------------------------------------- */
 
 /* main.c */
-vec_t	Random( void );
+vec_t	Random();
 int		BSPInfo( int count, char** fileNames );
 int		ScaleBSPMain( int argc, char** argv );
 int		ConvertMain( int argc, char** argv );
@@ -1417,8 +1417,8 @@ qboolean			 WindingIsTiny( winding_t* w );
 
 void				 SplitBrush( brush_t* brush, int planenum, brush_t** front, brush_t** back );
 
-tree_t*				 AllocTree( void );
-node_t*				 AllocNode( void );
+tree_t*				 AllocTree();
+node_t*				 AllocNode();
 
 /* mesh.c */
 void				 LerpDrawVert( bspDrawVert_t* a, bspDrawVert_t* b, bspDrawVert_t* out );
@@ -1442,8 +1442,8 @@ void				 MakeNormalVectors( vec3_t forward, vec3_t right, vec3_t up );
 void				 LoadMapFile( char* filename, qboolean onlyLights );
 int					 FindFloatPlane( vec3_t normal, vec_t dist, int numPoints, vec3_t* points );
 int					 PlaneTypeForNormal( vec3_t normal );
-void				 AddBrushBevels( void );
-brush_t*			 FinishBrush( void );
+void				 AddBrushBevels();
+brush_t*			 FinishBrush();
 
 /* portals.c */
 winding_t*			 BaseWindingForNode( node_t* node );
@@ -1473,17 +1473,17 @@ void			  NumberClusters( tree_t* tree );
 void			  WritePortalFile( tree_t* tree );
 
 /* writebsp.c */
-void			  SetModelNumbers( void );
-//% void        SetLightStyles(void);
+void			  SetModelNumbers();
+//% void        SetLightStyles();
 
 int				  EmitShader( const char* shader, int* contentFlags, int* surfaceFlags );
 
-void			  BeginBSPFile( void );
-void			  EndBSPFile( void );
+void			  BeginBSPFile();
+void			  EndBSPFile();
 void			  EmitBrushes( brush_t* brushes, int* firstBrush, int* numBrushes );
-void			  EmitFogs( void );
+void			  EmitFogs();
 
-void			  BeginModel( void );
+void			  BeginModel();
 void			  EndModel( entity_t* e, node_t* headnode );
 
 /* tree.c */
@@ -1506,7 +1506,7 @@ winding_t*		  WindingFromDrawSurf( mapDrawSurface_t* ds );
 void			  FogDrawSurfaces( entity_t* e );
 int				  FogForPoint( vec3_t point, float epsilon );
 int				  FogForBounds( vec3_t mins, vec3_t maxs, float epsilon );
-void			  CreateMapFogs( void );
+void			  CreateMapFogs();
 
 /* facebsp.c */
 face_t*			  MakeStructuralBSPFaceList( brush_t* list );
@@ -1569,12 +1569,12 @@ void			  Fur( mapDrawSurface_t* src );
 void			  Foliage( mapDrawSurface_t* src );
 
 /* ydnar: surface_meta.c */
-void			  ClearMetaTriangles( void );
+void			  ClearMetaTriangles();
 int				  FindMetaTriangle( metaTriangle_t* src, bspDrawVert_t* a, bspDrawVert_t* b, bspDrawVert_t* c, int planeNum );
 void			  MakeEntityMetaTriangles( entity_t* e );
-void			  FixMetaTJunctions( void );
-void			  SmoothMetaTriangles( void );
-void			  MergeMetaTriangles( void );
+void			  FixMetaTJunctions();
+void			  SmoothMetaTriangles();
+void			  MergeMetaTriangles();
 void			  EmitMetaStats(); // vortex: print meta statistics even in no-verbose mode
 
 /* surface_extra.c */
@@ -1596,7 +1596,7 @@ void			  WriteSurfaceExtraFile( const char* path );
 void			  LoadSurfaceExtraFile( const char* path );
 
 /* decals.c */
-void			  ProcessDecals( void );
+void			  ProcessDecals();
 void			  MakeEntityDecals( entity_t* e );
 
 /* brush_primit.c */
@@ -1610,7 +1610,7 @@ int				  VisMain( int argc, char** argv );
 int				  CountBits( byte* bits, int numbits );
 void			  PassageFlow( int portalnum );
 void			  CreatePassages( int portalnum );
-void			  PassageMemory( void );
+void			  PassageMemory();
 void			  BasePortalVis( int portalnum );
 void			  BetterPortalVis( int portalnum );
 void			  PortalFlow( int portalnum );
@@ -1624,7 +1624,7 @@ int				  LightContributionToPoint( trace_t* trace );
 int				  LightMain( int argc, char** argv );
 
 /* light_trace.c */
-void			  SetupTraceNodes( void );
+void			  SetupTraceNodes();
 void			  TraceLine( trace_t* trace );
 float			  SetupTrace( trace_t* trace );
 
@@ -1632,14 +1632,14 @@ float			  SetupTrace( trace_t* trace );
 qboolean		  RadSampleImage( byte* pixels, int width, int height, float st[2], float color[4] );
 void			  RadLightForTriangles( int num, int lightmapNum, rawLightmap_t* lm, shaderInfo_t* si, float scale, float subdivide, clipWork_t* cw );
 void			  RadLightForPatch( int num, int lightmapNum, rawLightmap_t* lm, shaderInfo_t* si, float scale, float subdivide, clipWork_t* cw );
-void			  RadCreateDiffuseLights( void );
+void			  RadCreateDiffuseLights();
 void			  RadFreeLights();
 
 /* light_ydnar.c */
 void			  ColorToBytes( const float* color, byte* colorBytes, float scale );
 void			  ColorToFloats( const float* color, float* colorFloats, float scale );
 void			  ColorToRGBE( const float* color, unsigned char rgbe[4] );
-void			  SmoothNormals( void );
+void			  SmoothNormals();
 
 void			  MapRawLightmap( int num );
 
@@ -1656,8 +1656,8 @@ void			  FloodLightRawLightmap( int num );
 void			  IlluminateRawLightmap( int num );
 void			  IlluminateVertexes( int num );
 
-void			  SetupBrushes( void );
-void			  SetupClusters( void );
+void			  SetupBrushes();
+void			  SetupClusters();
 qboolean		  ClusterVisible( int a, int b );
 qboolean		  ClusterVisibleToPoint( vec3_t point, int cluster );
 int				  ClusterForPoint( vec3_t point );
@@ -1670,14 +1670,14 @@ void			  CreateTraceLightsForBounds( vec3_t mins, vec3_t maxs, vec3_t normal, in
 void			  CreateTraceLightsForSurface( int num, trace_t* trace );
 
 /* lightmaps_ydnar.c */
-void			  ExportLightmaps( void );
+void			  ExportLightmaps();
 
 int				  ExportLightmapsMain( int argc, char** argv );
 int				  ImportLightmapsMain( int argc, char** argv );
 
-void			  SetupSurfaceLightmaps( void );
-void			  StitchSurfaceLightmaps( void );
-void			  StoreSurfaceLightmaps( void );
+void			  SetupSurfaceLightmaps();
+void			  StitchSurfaceLightmaps();
+void			  StoreSurfaceLightmaps();
 
 /* image.c */
 void			  ImageFree( image_t* image );
@@ -1697,11 +1697,11 @@ void			  TCModRotate( tcMod_t mod, float euler );
 qboolean		  ApplySurfaceParm( char* name, int* contentFlags, int* surfaceFlags, int* compileFlags );
 
 void			  BeginMapShaderFile( const char* mapFile );
-void			  WriteMapShaderFile( void );
+void			  WriteMapShaderFile();
 shaderInfo_t*	  CustomShader( shaderInfo_t* si, char* find, char* replace );
 //% void                    EmitVertexRemapShader( char *from, char *to );
 
-void			  LoadShaderInfo( void );
+void			  LoadShaderInfo();
 shaderInfo_t*	  ShaderInfoForShader( const char* shader );
 
 /* bspfile_abstract.c */
@@ -1722,11 +1722,11 @@ void			  AddLump( FILE* file, bspHeader_t* header, int lumpNum, const void* data
 
 void			  LoadBSPFile( const char* filename );
 void			  WriteBSPFile( const char* filename );
-void			  PrintBSPFileSizes( void );
+void			  PrintBSPFileSizes();
 
-epair_t*		  ParseEPair( void );
-void			  ParseEntities( void );
-void			  UnparseEntities( void );
+epair_t*		  ParseEPair();
+void			  ParseEntities();
+void			  UnparseEntities();
 void			  PrintEntity( const entity_t* ent );
 const char*		  UniqueEntityName( const entity_t* ent, const char* suggestion );
 void			  SetKeyValue( entity_t* ent, const char* key, const char* value );
@@ -1755,7 +1755,7 @@ void			  WriteXBSPFile( const char* filename );
 /* gldraw.c */
 void			  Draw_Winding( winding_t* w, float r, float g, float b, float a );
 void			  Draw_AABB( const vec3_t origin, const vec3_t mins, const vec3_t maxs, vec4_t color );
-void			  Draw_Scene( void ( *drawFunc )( void ) );
+void			  Draw_Scene( void ( *drawFunc )() );
 
 /* -------------------------------------------------------------------------------
 

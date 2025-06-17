@@ -447,7 +447,7 @@ void R_BindFBO( FBO_t* fbo )
 R_BindNullFBO
 ============
 */
-void R_BindNullFBO( void )
+void R_BindNullFBO()
 {
 #if defined( USE_D3D10 )
 	// TODO
@@ -471,7 +471,7 @@ void R_BindNullFBO( void )
 R_InitFBOs
 ============
 */
-void R_InitFBOs( void )
+void R_InitFBOs()
 {
 	int i;
 	int width, height;
@@ -752,7 +752,7 @@ void R_InitFBOs( void )
 				R_AttachFBOTextureDepth( tr.sunShadowMapFBOImage[i]->texnum );
 
 				/*
-				Since we don’t have a color attachment the framebuffer will be considered incomplete.
+				Since we donÂ’t have a color attachment the framebuffer will be considered incomplete.
 				Consequently, we must inform the driver that we do not wish to render to the color buffer.
 				We do this with a call to set the draw-buffer and read-buffer to GL_NONE:
 				*/
@@ -930,7 +930,7 @@ void R_InitFBOs( void )
 R_ShutdownFBOs
 ============
 */
-void R_ShutdownFBOs( void )
+void R_ShutdownFBOs()
 {
 	int	   i, j;
 	FBO_t* fbo;
@@ -984,7 +984,7 @@ void R_ShutdownFBOs( void )
 R_FBOList_f
 ============
 */
-void R_FBOList_f( void )
+void R_FBOList_f()
 {
 	int	   i;
 	FBO_t* fbo;

@@ -684,7 +684,7 @@ void FilterStructuralBrushesIntoTree( entity_t* e, tree_t* tree )
 AllocTree
 ================
 */
-tree_t* AllocTree( void )
+tree_t* AllocTree()
 {
 	tree_t* tree;
 
@@ -700,7 +700,7 @@ tree_t* AllocTree( void )
 AllocNode
 ================
 */
-node_t* AllocNode( void )
+node_t* AllocNode()
 {
 	node_t* node;
 

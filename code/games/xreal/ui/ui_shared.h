@@ -377,7 +377,7 @@ typedef struct
 	void ( *drawRect )( float x, float y, float w, float h, float size, const vec4_t color );
 	void ( *drawSides )( float x, float y, float w, float h, float size );
 	void ( *drawTopBottom )( float x, float y, float w, float h, float size );
-	void ( *clearScene )( void );
+	void ( *clearScene )();
 	void ( *addRefEntityToScene )( const refEntity_t* re );
 	void ( *renderScene )( const refdef_t* fd );
 	void ( *registerFont )( const char* pFontname, int pointSize, fontInfo_t* font );
@@ -406,7 +406,7 @@ typedef struct
 	void ( *setCVar )( const char* cvar, const char* value );
 	void ( *drawTextWithCursor )( float x, float y, float scale, vec4_t color, const char* text, int cursorPos, char cursor, int limit, int style );
 	void ( *setOverstrikeMode )( qboolean b );
-	qboolean ( *getOverstrikeMode )( void );
+	qboolean ( *getOverstrikeMode )();
 	void ( *startLocalSound )( sfxHandle_t sfx, int channelNum );
 	qboolean ( *ownerDrawHandleKey )( int ownerDraw, int key );
 	int ( *feederCount )( int feederID );
@@ -425,7 +425,7 @@ typedef struct
 	const char* ( *ownerDrawText )( int ownerDraw );
 	sfxHandle_t ( *registerSound )( const char* name );
 	void ( *startBackgroundTrack )( const char* intro, const char* loop );
-	void ( *stopBackgroundTrack )( void );
+	void ( *stopBackgroundTrack )();
 	int ( *playCinematic )( const char* name, float x, float y, float w, float h );
 	void ( *stopCinematic )( int handle );
 	void ( *drawCinematic )( int handle, float x, float y, float w, float h );
@@ -452,14 +452,14 @@ typedef struct
 } displayContextDef_t;
 
 const char*			 String_Alloc( const char* p );
-void				 String_Init( void );
-void				 String_Report( void );
+void				 String_Init();
+void				 String_Report();
 void				 Init_Display( displayContextDef_t* dc );
 void				 Display_ExpandMacros( char* buff );
 void				 Menu_Init( menuDef_t* menu );
 void				 Item_Init( itemDef_t* item );
 void				 Menu_PostParse( menuDef_t* menu );
-menuDef_t*			 Menu_GetFocused( void );
+menuDef_t*			 Menu_GetFocused();
 void				 Menu_HandleKey( menuDef_t* menu, int key, qboolean down );
 void				 Menu_HandleMouseMove( menuDef_t* menu, float x, float y );
 void				 Menu_ScrollFeeder( menuDef_t* menu, int feeder, qboolean down );
@@ -475,44 +475,44 @@ qboolean			 PC_Int_Parse( int handle, int* i );
 qboolean			 PC_Rect_Parse( int handle, rectDef_t* r );
 qboolean			 PC_String_Parse( int handle, const char** out );
 qboolean			 PC_Script_Parse( int handle, const char** out );
-int					 Menu_Count( void );
+int					 Menu_Count();
 void				 Menu_New( int handle );
-void				 Menu_UpdateAll( void );
-void				 Menu_PaintAll( void );
+void				 Menu_UpdateAll();
+void				 Menu_PaintAll();
 menuDef_t*			 Menus_ActivateByName( const char* p );
 menuDef_t*			 Menus_ReplaceActiveByName( const char* p );
-void				 Menu_Reset( void );
-qboolean			 Menus_AnyFullScreenVisible( void );
+void				 Menu_Reset();
+qboolean			 Menus_AnyFullScreenVisible();
 void				 Menus_Activate( menuDef_t* menu );
 qboolean			 Menus_ReplaceActive( menuDef_t* menu );
 
-displayContextDef_t* Display_GetContext( void );
+displayContextDef_t* Display_GetContext();
 void*				 Display_CaptureItem( int x, int y );
 qboolean			 Display_MouseMove( void* p, float x, float y );
 int					 Display_CursorType( int x, int y );
-qboolean			 Display_KeyBindPending( void );
+qboolean			 Display_KeyBindPending();
 menuDef_t*			 Menus_FindByName( const char* p );
 void				 Menus_CloseByName( const char* p );
 void				 Display_HandleKey( int key, qboolean down, int x, int y );
 void				 LerpColor( vec4_t a, vec4_t b, vec4_t c, float t );
-void				 Menus_CloseAll( void );
+void				 Menus_CloseAll();
 void				 Menu_Update( menuDef_t* menu );
 void				 Menu_Paint( menuDef_t* menu, qboolean forcePaint );
 void				 Menu_SetFeederSelection( menuDef_t* menu, int feeder, int index, const char* name );
-void				 Display_CacheAll( void );
+void				 Display_CacheAll();
 
 typedef void( CaptureFunc )( void* p );
 
 void		UI_InstallCaptureFunc( CaptureFunc* f, void* data, int timeout );
-void		UI_RemoveCaptureFunc( void );
+void		UI_RemoveCaptureFunc();
 
 void*		UI_Alloc( int size );
-void		UI_InitMemory( void );
-qboolean	UI_OutOfMemory( void );
+void		UI_InitMemory();
+qboolean	UI_OutOfMemory();
 
-void		Controls_GetConfig( void );
+void		Controls_GetConfig();
 void		Controls_SetConfig( qboolean restart );
-void		Controls_SetDefaults( void );
+void		Controls_SetDefaults();
 
 void		trap_R_SetClipRegion( const float* region );
 

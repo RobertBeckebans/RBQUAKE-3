@@ -331,7 +331,7 @@ void AAS_OptimizeStore( optimized_t* optimized )
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-void AAS_Optimize( void )
+void AAS_Optimize()
 {
 	int			i, sign;
 	optimized_t optimized;

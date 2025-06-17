@@ -438,7 +438,7 @@ void ACEND_PathMap( gentity_t* self )
 	#endif
 }
 
-void ACEND_InitNodes( void )
+void ACEND_InitNodes()
 {
 	// init node array (set all to INVALID)
 	numNodes = 0;
@@ -847,7 +847,7 @@ void ACEND_SaveNodes()
 }
 
 // Read from disk file
-void ACEND_LoadNodes( void )
+void ACEND_LoadNodes()
 {
 	fileHandle_t file;
 	int			 i, j;

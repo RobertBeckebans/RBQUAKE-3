@@ -33,10 +33,10 @@ void Draw_AuxWinding( winding_t* w )
 {
 }
 
-void Draw_Scene( void ( *drawFunc )( void ) )
+void Draw_Scene( void ( *drawFunc )() )
 {
 }
 
-void Draw_Shutdown( void )
+void Draw_Shutdown()
 {
 }

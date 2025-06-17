@@ -110,10 +110,10 @@ socket_t* Net_ListenSocket( int port );
 socket_t* Net_Accept( socket_t* sock );
 
 // setup networking
-int		  Net_Setup( void );
+int		  Net_Setup();
 
 // shutdown networking
-void	  Net_Shutdown( void );
+void	  Net_Shutdown();
 
 // message handling
 void	  NMSG_Clear( netmessage_t* msg );

@@ -339,7 +339,7 @@ void AAS_EntityBSPData( int entnum, bsp_entdata_t* entdata )
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-void AAS_ResetEntityLinks( void )
+void AAS_ResetEntityLinks()
 {
 	int i;
 	for( i = 0; i < aasworld.maxentities; i++ )
@@ -354,7 +354,7 @@ void AAS_ResetEntityLinks( void )
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-void AAS_InvalidateEntities( void )
+void AAS_InvalidateEntities()
 {
 	int i;
 	for( i = 0; i < aasworld.maxentities; i++ )
@@ -369,7 +369,7 @@ void AAS_InvalidateEntities( void )
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-void AAS_UnlinkInvalidEntities( void )
+void AAS_UnlinkInvalidEntities()
 {
 	int			  i;
 	aas_entity_t* ent;

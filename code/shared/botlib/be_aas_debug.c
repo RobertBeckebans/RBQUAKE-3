@@ -57,7 +57,7 @@ static int debugpolygons[MAX_DEBUGPOLYGONS];
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-void	   AAS_ClearShownPolygons( void )
+void	   AAS_ClearShownPolygons()
 {
 	int i;
 	//*
@@ -103,7 +103,7 @@ void AAS_ShowPolygon( int color, int numpoints, vec3_t* points )
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-void AAS_ClearShownDebugLines( void )
+void AAS_ClearShownDebugLines()
 {
 	int i;
 

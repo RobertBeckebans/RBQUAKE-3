@@ -466,7 +466,7 @@ static keyNum_t IN_TranslateSDLToQ3Key( SDL_Keysym* keysym, qboolean down )
 IN_GobbleMotionEvents
 ===============
 */
-static void IN_GobbleMotionEvents( void )
+static void IN_GobbleMotionEvents()
 {
 	SDL_Event dummy[1];
 
@@ -482,7 +482,7 @@ static void IN_GobbleMotionEvents( void )
 IN_ActivateMouse
 ===============
 */
-static void IN_ActivateMouse( void )
+static void IN_ActivateMouse()
 {
 	if( !mouseAvailable || !SDL_WasInit( SDL_INIT_VIDEO ) )
 	{
@@ -523,7 +523,7 @@ static void IN_ActivateMouse( void )
 IN_DeactivateMouse
 ===============
 */
-static void IN_DeactivateMouse( void )
+static void IN_DeactivateMouse()
 {
 	if( !SDL_WasInit( SDL_INIT_VIDEO ) )
 	{
@@ -579,7 +579,7 @@ struct
 IN_InitJoystick
 ===============
 */
-static void IN_InitJoystick( void )
+static void IN_InitJoystick()
 {
 	int	 i			= 0;
 	int	 total		= 0;
@@ -655,7 +655,7 @@ static void IN_InitJoystick( void )
 IN_ShutdownJoystick
 ===============
 */
-static void IN_ShutdownJoystick( void )
+static void IN_ShutdownJoystick()
 {
 	if( stick )
 	{
@@ -671,7 +671,7 @@ static void IN_ShutdownJoystick( void )
 IN_JoyMove
 ===============
 */
-static void IN_JoyMove( void )
+static void IN_JoyMove()
 {
 	qboolean	 joy_pressed[ARRAY_LEN( joy_keys )];
 	unsigned int axes  = 0;
@@ -910,7 +910,7 @@ static void IN_JoyMove( void )
 IN_ProcessEvents
 ===============
 */
-static void IN_ProcessEvents( void )
+static void IN_ProcessEvents()
 {
 	SDL_Event		e;
 	keyNum_t		key			= 0;
@@ -1093,7 +1093,7 @@ static void IN_ProcessEvents( void )
 IN_Frame
 ===============
 */
-void IN_Frame( void )
+void IN_Frame()
 {
 	qboolean loading;
 
@@ -1136,7 +1136,7 @@ void IN_Frame( void )
 IN_InitKeyLockStates
 ===============
 */
-void IN_InitKeyLockStates( void )
+void IN_InitKeyLockStates()
 {
 	const unsigned char* keystate = SDL_GetKeyboardState( NULL );
 
@@ -1194,7 +1194,7 @@ void IN_Init( void* windowData )
 IN_Shutdown
 ===============
 */
-void IN_Shutdown( void )
+void IN_Shutdown()
 {
 	SDL_StopTextInput();
 
@@ -1211,7 +1211,7 @@ void IN_Shutdown( void )
 IN_Restart
 ===============
 */
-void IN_Restart( void )
+void IN_Restart()
 {
 	IN_ShutdownJoystick();
 	IN_Init( SDL_window );

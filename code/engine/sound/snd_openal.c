@@ -167,7 +167,7 @@ S_AL_BufferFindFree
 Find a free handle
 =================
 */
-static sfxHandle_t S_AL_BufferFindFree( void )
+static sfxHandle_t S_AL_BufferFindFree()
 {
 	int i;
 
@@ -300,7 +300,7 @@ static void S_AL_BufferUnload( sfxHandle_t sfx )
 S_AL_BufferEvict
 =================
 */
-static qboolean S_AL_BufferEvict( void )
+static qboolean S_AL_BufferEvict()
 {
 	int i, oldestBuffer = -1;
 	int oldestTime = Sys_Milliseconds();
@@ -500,7 +500,7 @@ static void S_AL_BufferUse( sfxHandle_t sfx )
 S_AL_BufferInit
 =================
 */
-static qboolean S_AL_BufferInit( void )
+static qboolean S_AL_BufferInit()
 {
 	if( alBuffersInitialised )
 	{
@@ -526,7 +526,7 @@ static qboolean S_AL_BufferInit( void )
 S_AL_BufferShutdown
 =================
 */
-static void S_AL_BufferShutdown( void )
+static void S_AL_BufferShutdown()
 {
 	int i;
 
@@ -766,7 +766,7 @@ static qboolean S_AL_HearingThroughEntity( int entityNum )
 S_AL_SrcInit
 =================
 */
-static qboolean S_AL_SrcInit( void )
+static qboolean S_AL_SrcInit()
 {
 	int i;
 	int limit;
@@ -810,7 +810,7 @@ static qboolean S_AL_SrcInit( void )
 S_AL_SrcShutdown
 =================
 */
-static void S_AL_SrcShutdown( void )
+static void S_AL_SrcShutdown()
 {
 	int	   i;
 	src_t* curSource;
@@ -1535,7 +1535,7 @@ S_AL_SrcUpdate
 Update state (move things around, manage sources, and so on)
 =================
 */
-static void S_AL_SrcUpdate( void )
+static void S_AL_SrcUpdate()
 {
 	int	   i;
 	int	   entityNum;
@@ -1750,7 +1750,7 @@ static void S_AL_SrcUpdate( void )
 S_AL_SrcShutup
 =================
 */
-static void S_AL_SrcShutup( void )
+static void S_AL_SrcShutup()
 {
 	int i;
 	for( i = 0; i < srcCount; i++ )
@@ -2059,7 +2059,7 @@ static byte			 decode_buffer[MUSIC_BUFFER_SIZE];
 S_AL_MusicSourceGet
 =================
 */
-static void			 S_AL_MusicSourceGet( void )
+static void			 S_AL_MusicSourceGet()
 {
 	// Allocate a musicSource at high priority
 	musicSourceHandle = S_AL_SrcAlloc( SRCPRI_STREAM, -2, 0 );
@@ -2089,7 +2089,7 @@ static void			 S_AL_MusicSourceGet( void )
 S_AL_MusicSourceFree
 =================
 */
-static void S_AL_MusicSourceFree( void )
+static void S_AL_MusicSourceFree()
 {
 	// Release the output musicSource
 	S_AL_SrcUnlock( musicSourceHandle );
@@ -2103,7 +2103,7 @@ static void S_AL_MusicSourceFree( void )
 S_AL_CloseMusicFiles
 =================
 */
-static void S_AL_CloseMusicFiles( void )
+static void S_AL_CloseMusicFiles()
 {
 	if( intro_stream )
 	{
@@ -2123,7 +2123,7 @@ static void S_AL_CloseMusicFiles( void )
 S_AL_StopBackgroundTrack
 =================
 */
-static void S_AL_StopBackgroundTrack( void )
+static void S_AL_StopBackgroundTrack()
 {
 	if( !musicPlaying )
 	{
@@ -2316,7 +2316,7 @@ static void S_AL_StartBackgroundTrack( const char* intro, const char* loop )
 S_AL_MusicUpdate
 =================
 */
-static void S_AL_MusicUpdate( void )
+static void S_AL_MusicUpdate()
 {
 	int	  numBuffers;
 	ALint state;
@@ -2378,7 +2378,7 @@ static cvar_t*	  s_alCapture;
 S_AL_StopAllSounds
 =================
 */
-static void S_AL_StopAllSounds( void )
+static void S_AL_StopAllSounds()
 {
 	int i;
 	S_AL_SrcShutup();
@@ -2427,7 +2427,7 @@ static void S_AL_Respatialize( int entityNum, const vec3_t origin, vec3_t axis[3
 S_AL_Update
 =================
 */
-static void S_AL_Update( void )
+static void S_AL_Update()
 {
 	int i;
 
@@ -2494,7 +2494,7 @@ static void S_AL_Update( void )
 S_AL_DisableSounds
 =================
 */
-static void S_AL_DisableSounds( void )
+static void S_AL_DisableSounds()
 {
 	S_AL_StopAllSounds();
 }
@@ -2504,7 +2504,7 @@ static void S_AL_DisableSounds( void )
 S_AL_BeginRegistration
 =================
 */
-static void S_AL_BeginRegistration( void )
+static void S_AL_BeginRegistration()
 {
 	if( !numSfx )
 	{
@@ -2517,7 +2517,7 @@ static void S_AL_BeginRegistration( void )
 S_AL_ClearSoundBuffer
 =================
 */
-static void S_AL_ClearSoundBuffer( void )
+static void S_AL_ClearSoundBuffer()
 {
 }
 
@@ -2526,12 +2526,12 @@ static void S_AL_ClearSoundBuffer( void )
 S_AL_SoundList
 =================
 */
-static void S_AL_SoundList( void )
+static void S_AL_SoundList()
 {
 }
 
 	#ifdef USE_VOIP
-static void S_AL_StartCapture( void )
+static void S_AL_StartCapture()
 {
 	if( alCaptureDevice != NULL )
 	{
@@ -2539,7 +2539,7 @@ static void S_AL_StartCapture( void )
 	}
 }
 
-static int S_AL_AvailableCaptureSamples( void )
+static int S_AL_AvailableCaptureSamples()
 {
 	int retval = 0;
 	if( alCaptureDevice != NULL )
@@ -2559,7 +2559,7 @@ static void S_AL_Capture( int samples, byte* data )
 	}
 }
 
-void S_AL_StopCapture( void )
+void S_AL_StopCapture()
 {
 	if( alCaptureDevice != NULL )
 	{
@@ -2578,7 +2578,7 @@ void S_AL_MasterGain( float gain )
 S_AL_SoundInfo
 =================
 */
-static void S_AL_SoundInfo( void )
+static void S_AL_SoundInfo()
 {
 	Com_Printf( "OpenAL info:\n" );
 	Com_Printf( "  Vendor:         %s\n", qalGetString( AL_VENDOR ) );
@@ -2615,7 +2615,7 @@ static void S_AL_SoundInfo( void )
 S_AL_Shutdown
 =================
 */
-static void S_AL_Shutdown( void )
+static void S_AL_Shutdown()
 {
 	// Shut down everything
 	int i;

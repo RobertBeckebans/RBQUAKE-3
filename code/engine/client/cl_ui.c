@@ -44,7 +44,7 @@ static void GetClientState( uiClientState_t* state )
 LAN_LoadCachedServers
 ====================
 */
-void LAN_LoadCachedServers( void )
+void LAN_LoadCachedServers()
 {
 	int			 size;
 	fileHandle_t fileIn;
@@ -74,7 +74,7 @@ void LAN_LoadCachedServers( void )
 LAN_SaveServersToCache
 ====================
 */
-void LAN_SaveServersToCache( void )
+void LAN_SaveServersToCache()
 {
 	int			 size;
 	fileHandle_t fileOut = FS_SV_FOpenFileWrite( "servercache.dat" );
@@ -514,7 +514,7 @@ static int LAN_CompareServers( int source, int sortKey, int sortDir, int s1, int
 LAN_GetPingQueueCount
 ====================
 */
-static int LAN_GetPingQueueCount( void )
+static int LAN_GetPingQueueCount()
 {
 	return ( CL_GetPingQueueCount() );
 }
@@ -1156,7 +1156,7 @@ intptr_t CL_UISystemCalls( intptr_t* args )
 CL_ShutdownUI
 ====================
 */
-void CL_ShutdownUI( void )
+void CL_ShutdownUI()
 {
 	Key_SetCatcher( Key_GetCatcher() & ~KEYCATCH_UI );
 	cls.uiStarted = qfalse;
@@ -1174,7 +1174,7 @@ void CL_ShutdownUI( void )
 CL_InitUI
 ====================
 */
-void CL_InitUI( void )
+void CL_InitUI()
 {
 	int			  v;
 	vmInterpret_t interpret = VMI_NATIVE;
@@ -1224,7 +1224,7 @@ UI_GameCommand
 See if the current console command is claimed by the ui
 ====================
 */
-qboolean UI_GameCommand( void )
+qboolean UI_GameCommand()
 {
 	if( !uivm )
 	{

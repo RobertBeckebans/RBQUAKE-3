@@ -79,7 +79,7 @@ typedef char*		 va_list;
 typedef int cmp_t( const void*, const void* );
 void		qsort( void* a, size_t n, size_t es, cmp_t* cmp );
 void		srand( unsigned seed );
-int			rand( void );
+int			rand();
 
 // String functions
 size_t		strlen( const char* string );

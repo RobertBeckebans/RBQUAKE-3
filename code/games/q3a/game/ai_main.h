@@ -276,7 +276,7 @@ typedef struct bot_state_s
 // resets the whole bot state
 void		 BotResetState( bot_state_t* bs );
 // returns the number of bots in the game
-int			 NumBots( void );
+int			 NumBots();
 // returns info about the entity
 void		 BotEntityInfo( int entnum, aas_entityinfo_t* info );
 

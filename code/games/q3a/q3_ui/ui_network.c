@@ -130,7 +130,7 @@ static void					UI_NetworkOptionsMenu_Event( void* ptr, int event )
 UI_NetworkOptionsMenu_Init
 ===============
 */
-static void UI_NetworkOptionsMenu_Init( void )
+static void UI_NetworkOptionsMenu_Init()
 {
 	int y;
 	int rate;
@@ -264,7 +264,7 @@ static void UI_NetworkOptionsMenu_Init( void )
 UI_NetworkOptionsMenu_Cache
 ===============
 */
-void UI_NetworkOptionsMenu_Cache( void )
+void UI_NetworkOptionsMenu_Cache()
 {
 	trap_R_RegisterShaderNoMip( ART_FRAMEL );
 	trap_R_RegisterShaderNoMip( ART_FRAMER );
@@ -277,7 +277,7 @@ void UI_NetworkOptionsMenu_Cache( void )
 UI_NetworkOptionsMenu
 ===============
 */
-void UI_NetworkOptionsMenu( void )
+void UI_NetworkOptionsMenu()
 {
 	UI_NetworkOptionsMenu_Init();
 	UI_PushMenu( &networkOptionsInfo.menu );

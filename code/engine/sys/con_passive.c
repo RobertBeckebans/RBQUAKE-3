@@ -31,7 +31,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 CON_Shutdown
 ==================
 */
-void CON_Shutdown( void )
+void CON_Shutdown()
 {
 }
 
@@ -40,7 +40,7 @@ void CON_Shutdown( void )
 CON_Init
 ==================
 */
-void CON_Init( void )
+void CON_Init()
 {
 }
 
@@ -49,7 +49,7 @@ void CON_Init( void )
 CON_Input
 ==================
 */
-char* CON_Input( void )
+char* CON_Input()
 {
 	return NULL;
 }

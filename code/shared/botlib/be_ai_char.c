@@ -866,7 +866,7 @@ void Characteristic_String( int character, int index, char* buf, int size )
 // Returns:				-
 // Changes Globals:		-
 //===========================================================================
-void BotShutdownCharacters( void )
+void BotShutdownCharacters()
 {
 	int handle;
 

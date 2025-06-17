@@ -45,4 +45,4 @@ int	  Characteristic_BInteger( int character, int index, int min, int max );
 // returns a string characteristic
 void  Characteristic_String( int character, int index, char* buf, int size );
 // free cached bot characters
-void  BotShutdownCharacters( void );
+void  BotShutdownCharacters();

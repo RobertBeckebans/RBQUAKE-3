@@ -386,7 +386,7 @@ new information out of it.  This will happen at every
 gamestate, and possibly during gameplay.
 ==================
 */
-void CL_SystemInfoChanged( void )
+void CL_SystemInfoChanged()
 {
 	char*		systemInfo;
 	const char *s, *t;
@@ -496,7 +496,7 @@ void CL_SystemInfoChanged( void )
 CL_ParseServerInfo
 ==================
 */
-static void CL_ParseServerInfo( void )
+static void CL_ParseServerInfo()
 {
 	const char* serverInfo;
 

@@ -152,7 +152,7 @@ static int UI_MapNameCompare( const void* a, const void* b )
 UI_LoadArenas
 ===============
 */
-void UI_LoadArenas( void )
+void UI_LoadArenas()
 {
 	int	  numdirs;
 	char  filename[128];
@@ -242,7 +242,7 @@ static void UI_LoadBotsFromFile( char* filename )
 UI_LoadBots
 ===============
 */
-void UI_LoadBots( void )
+void UI_LoadBots()
 {
 	vmCvar_t botsFile;
 	int		 numdirs;
@@ -318,7 +318,7 @@ char* UI_GetBotInfoByName( const char* name )
 	return NULL;
 }
 
-int UI_GetNumBots( void )
+int UI_GetNumBots()
 {
 	return ui_numBots;
 }
@@ -334,7 +334,7 @@ char* UI_GetBotNameByNumber( int num )
 	return "Visor";
 }
 
-void UI_ServerInfo( void )
+void UI_ServerInfo()
 {
 	char info[MAX_INFO_VALUE];
 

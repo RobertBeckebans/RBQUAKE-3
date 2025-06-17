@@ -45,7 +45,7 @@ int				c_boundary_sides;
 AllocPortal
 ===========
 */
-portal_t*		AllocPortal( void )
+portal_t*		AllocPortal()
 {
 	portal_t* p;
 
@@ -667,7 +667,7 @@ static void DrawTreeNodes_r( node_t* node )
 
 static tree_t* drawTree = NULL;
 static int	   drawTreeNodesNum;
-static void	   DrawTreePortals( void )
+static void	   DrawTreePortals()
 {
 	DrawTreePortals_r( drawTree->headnode );
 	DrawTreeNodes_r( drawTree->headnode );

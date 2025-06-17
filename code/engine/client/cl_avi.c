@@ -147,7 +147,7 @@ static ID_INLINE void START_CHUNK( const char* s )
 END_CHUNK
 ===============
 */
-static ID_INLINE void END_CHUNK( void )
+static ID_INLINE void END_CHUNK()
 {
 	int endIndex = bufIndex;
 
@@ -169,7 +169,7 @@ static ID_INLINE void END_CHUNK( void )
 CL_WriteAVIHeader
 ===============
 */
-void CL_WriteAVIHeader( void )
+void CL_WriteAVIHeader()
 {
 	bufIndex		  = 0;
 	afd.chunkStackTop = 0;
@@ -597,7 +597,7 @@ void CL_WriteAVIAudioFrame( const byte* pcmBuffer, int size )
 CL_TakeVideoFrame
 ===============
 */
-void CL_TakeVideoFrame( void )
+void CL_TakeVideoFrame()
 {
 	// AVI file isn't open
 	if( !afd.fileOpen )
@@ -615,7 +615,7 @@ CL_CloseAVI
 Closes the AVI file and writes an index chunk
 ===============
 */
-qboolean CL_CloseAVI( void )
+qboolean CL_CloseAVI()
 {
 	int			indexRemainder;
 	int			indexSize	= afd.numIndices * 16;
@@ -688,7 +688,7 @@ qboolean CL_CloseAVI( void )
 CL_VideoRecording
 ===============
 */
-qboolean CL_VideoRecording( void )
+qboolean CL_VideoRecording()
 {
 	return afd.fileOpen;
 }

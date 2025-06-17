@@ -94,7 +94,7 @@ static void			   Login_MenuEvent( void* ptr, int event )
 Login_MenuInit
 ===============
 */
-void Login_MenuInit( void )
+void Login_MenuInit()
 {
 	int y;
 
@@ -188,7 +188,7 @@ void Login_MenuInit( void )
 Login_Cache
 ===============
 */
-void Login_Cache( void )
+void Login_Cache()
 {
 	trap_R_RegisterShaderNoMip( LOGIN_FRAME );
 }
@@ -198,7 +198,7 @@ void Login_Cache( void )
 UI_LoginMenu
 ===============
 */
-void UI_LoginMenu( void )
+void UI_LoginMenu()
 {
 	Login_MenuInit();
 	UI_PushMenu( &s_login.menu );

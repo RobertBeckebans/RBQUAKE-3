@@ -33,9 +33,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "snd_codec.h"
 #include "../client/client.h"
 
-void		  S_Update_( void );
-void		  S_Base_StopAllSounds( void );
-void		  S_Base_StopBackgroundTrack( void );
+void		  S_Update_();
+void		  S_Base_StopAllSounds();
+void		  S_Base_StopBackgroundTrack();
 
 snd_stream_t* s_backgroundStream = NULL;
 static char	  s_backgroundLoop[MAX_QPATH];
@@ -90,7 +90,7 @@ portable_samplepair_t s_rawsamples[MAX_RAW_STREAMS][MAX_RAW_SAMPLES];
 // User-setable variables
 // ====================================================================
 
-void				  S_Base_SoundInfo( void )
+void				  S_Base_SoundInfo()
 {
 	Com_Printf( "----- Sound Info -----\n" );
 	if( !s_soundStarted )
@@ -118,12 +118,12 @@ void				  S_Base_SoundInfo( void )
 }
 
 #ifdef USE_VOIP
-static void S_Base_StartCapture( void )
+static void S_Base_StartCapture()
 {
 	SNDDMA_StartCapture();
 }
 
-static int S_Base_AvailableCaptureSamples( void )
+static int S_Base_AvailableCaptureSamples()
 {
 	return SNDDMA_AvailableCaptureSamples();
 }
@@ -133,7 +133,7 @@ static void S_Base_Capture( int samples, byte* data )
 	SNDDMA_Capture( samples, data );
 }
 
-static void S_Base_StopCapture( void )
+static void S_Base_StopCapture()
 {
 	SNDDMA_StopCapture();
 }
@@ -149,7 +149,7 @@ static void S_Base_MasterGain( float val )
 S_Base_SoundList
 =================
 */
-void S_Base_SoundList( void )
+void S_Base_SoundList()
 {
 	int	   i;
 	sfx_t* sfx;
@@ -181,7 +181,7 @@ void S_ChannelFree( channel_t* v )
 	freelist		  = ( channel_t* )v;
 }
 
-channel_t* S_ChannelMalloc( void )
+channel_t* S_ChannelMalloc()
 {
 	channel_t* v;
 	if( freelist == NULL )
@@ -194,7 +194,7 @@ channel_t* S_ChannelMalloc( void )
 	return v;
 }
 
-void S_ChannelSetup( void )
+void S_ChannelSetup()
 {
 	channel_t *p, *q;
 
@@ -355,7 +355,7 @@ This is called when the hunk is cleared and the sounds
 are no longer valid.
 ===================
 */
-void S_Base_DisableSounds( void )
+void S_Base_DisableSounds()
 {
 	S_Base_StopAllSounds();
 	s_soundMuted = qtrue;
@@ -414,7 +414,7 @@ S_BeginRegistration
 
 =====================
 */
-void S_Base_BeginRegistration( void )
+void S_Base_BeginRegistration()
 {
 	s_soundMuted = qfalse; // we can play again
 
@@ -759,7 +759,7 @@ If we are about to perform file access, clear the buffer
 so sound doesn't stutter.
 ==================
 */
-void S_Base_ClearSoundBuffer( void )
+void S_Base_ClearSoundBuffer()
 {
 	int clear;
 
@@ -799,7 +799,7 @@ void S_Base_ClearSoundBuffer( void )
 S_StopAllSounds
 ==================
 */
-void S_Base_StopAllSounds( void )
+void S_Base_StopAllSounds()
 {
 	if( !s_soundStarted )
 	{
@@ -972,7 +972,7 @@ All sounds are on the same cycle, so any duplicates can just
 sum up the channel multipliers.
 ==================
 */
-void S_AddLoopSounds( void )
+void S_AddLoopSounds()
 {
 	int			 i, j, time;
 	int			 left_total, right_total, left, right;
@@ -1319,7 +1319,7 @@ S_ScanChannelStarts
 Returns qtrue if any new sounds were started since the last mix
 ========================
 */
-qboolean S_ScanChannelStarts( void )
+qboolean S_ScanChannelStarts()
 {
 	channel_t* ch;
 	int		   i;
@@ -1361,7 +1361,7 @@ S_Update
 Called once each time through the main loop
 ============
 */
-void S_Base_Update( void )
+void S_Base_Update()
 {
 	int		   i;
 	int		   total;
@@ -1399,7 +1399,7 @@ void S_Base_Update( void )
 	S_Update_();
 }
 
-void S_GetSoundtime( void )
+void S_GetSoundtime()
 {
 	int		   samplepos;
 	static int buffers;
@@ -1455,7 +1455,7 @@ void S_GetSoundtime( void )
 	}
 }
 
-void S_Update_( void )
+void S_Update_()
 {
 	unsigned	 endtime;
 	static float lastTime = 0.0f;
@@ -1531,7 +1531,7 @@ background music functions
 S_StopBackgroundTrack
 ======================
 */
-void S_Base_StopBackgroundTrack( void )
+void S_Base_StopBackgroundTrack()
 {
 	if( !s_backgroundStream )
 	{
@@ -1604,7 +1604,7 @@ void S_Base_StartBackgroundTrack( const char* intro, const char* loop )
 S_UpdateBackgroundTrack
 ======================
 */
-void S_UpdateBackgroundTrack( void )
+void S_UpdateBackgroundTrack()
 {
 	int	 bufferSamples;
 	int	 fileSamples;
@@ -1687,7 +1687,7 @@ S_FreeOldestSound
 ======================
 */
 
-void S_FreeOldestSound( void )
+void S_FreeOldestSound()
 {
 	int		   i, oldest, used;
 	sfx_t*	   sfx;
@@ -1725,7 +1725,7 @@ void S_FreeOldestSound( void )
 // Shutdown sound engine
 // =======================================================================
 
-void S_Base_Shutdown( void )
+void S_Base_Shutdown()
 {
 	if( !s_soundStarted )
 	{

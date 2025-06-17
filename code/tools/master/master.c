@@ -144,7 +144,7 @@ SysInit
 System dependent initializations
 ====================
 */
-static qboolean SysInit( void )
+static qboolean SysInit()
 {
 #ifdef WIN32
 	WSADATA winsockdata;
@@ -168,7 +168,7 @@ We need this intermediate step because DNS requests may not be able to resolve
 after the security initializations, due to chroot.
 ====================
 */
-static qboolean UnsecureInit( void )
+static qboolean UnsecureInit()
 {
 	// Resolve the address mapping list
 	if( !Sv_ResolveAddressMappings() )
@@ -206,7 +206,7 @@ SecInit
 Security initializations (system dependent)
 ====================
 */
-static qboolean SecInit( void )
+static qboolean SecInit()
 {
 #ifndef WIN32
 	// Should we run as a daemon?
@@ -444,7 +444,7 @@ PrintHelp
 Print the command line syntax and the available options
 ====================
 */
-static void PrintHelp( void )
+static void PrintHelp()
 {
 	MsgPrint( MSG_ERROR,
 		"Syntax: xrealmaster [options]\n"
@@ -490,7 +490,7 @@ SecureInit
 System independent initializations, called AFTER the security initializations
 ====================
 */
-static qboolean SecureInit( void )
+static qboolean SecureInit()
 {
 	struct sockaddr_in address;
 
@@ -598,7 +598,7 @@ static ignoreAddress_t* ignoreAddresses	   = NULL;
 parseIgnoreAddress
 ====================
 */
-static qboolean			parseIgnoreAddress( void )
+static qboolean			parseIgnoreAddress()
 {
 	int	  numAllocIgnoreAddresses = 1;
 	FILE* f						  = NULL;

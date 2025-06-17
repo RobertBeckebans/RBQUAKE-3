@@ -49,7 +49,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "sdl_icon.h"
 #include "SDL_syswm.h"
 
-static void GLimp_GetCurrentContext( void )
+static void GLimp_GetCurrentContext()
 {
 }
 
@@ -62,22 +62,22 @@ void GLimp_RenderThreadWrapper( void* arg )
 {
 }
 
-qboolean GLimp_SpawnRenderThread( void ( *function )( void ) )
+qboolean GLimp_SpawnRenderThread( void ( *function )() )
 {
 	ri.Printf( PRINT_WARNING, "ERROR: SMP support was disabled at compile time\n" );
 	return qfalse;
 }
 
-void GLimp_ShutdownRenderThread( void )
+void GLimp_ShutdownRenderThread()
 {
 }
 
-void* GLimp_RendererSleep( void )
+void* GLimp_RendererSleep()
 {
 	return NULL;
 }
 
-void GLimp_FrontEndSleep( void )
+void GLimp_FrontEndSleep()
 {
 }
 
@@ -105,7 +105,7 @@ cvar_t*				r_sdlDriver;
 GLimp_Shutdown
 ===============
 */
-void				GLimp_Shutdown( void )
+void				GLimp_Shutdown()
 {
 	ri.IN_Shutdown();
 
@@ -159,7 +159,7 @@ static int GLimp_CompareModes( const void* a, const void* b )
 GLimp_DetectAvailableModes
 ===============
 */
-static void GLimp_DetectAvailableModes( void )
+static void GLimp_DetectAvailableModes()
 {
 	char	   buf[MAX_STRING_CHARS] = { 0 };
 	SDL_Rect** modes;
@@ -488,7 +488,7 @@ This routine is responsible for initializing the OS specific portions
 of OpenGL
 ===============
 */
-void GLimp_Init( void )
+void GLimp_Init()
 {
 	qboolean success = qtrue;
 

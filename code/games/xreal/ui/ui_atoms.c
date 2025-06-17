@@ -82,7 +82,7 @@ float UI_ClampCvar( float min, float max, float value )
 UI_StartDemoLoop
 =================
 */
-void UI_StartDemoLoop( void )
+void UI_StartDemoLoop()
 {
 	trap_Cmd_ExecuteText( EXEC_APPEND, "d1\n" );
 }
@@ -142,12 +142,12 @@ char* UI_Cvar_VariableString( const char* var_name )
 	return buffer;
 }
 
-static void UI_Cache_f( void )
+static void UI_Cache_f()
 {
 	Display_CacheAll();
 }
 
-static void UI_Menu_f( void )
+static void UI_Menu_f()
 {
 	if( Menu_Count() > 0 )
 	{
@@ -156,7 +156,7 @@ static void UI_Menu_f( void )
 	}
 }
 
-static void UI_CloseMenus_f( void )
+static void UI_CloseMenus_f()
 {
 	if( Menu_Count() > 0 )
 	{
@@ -167,7 +167,7 @@ static void UI_CloseMenus_f( void )
 	}
 }
 
-static void UI_MessageMode_f( void )
+static void UI_MessageMode_f()
 {
 	char* arg = UI_Argv( 0 );
 
@@ -201,7 +201,7 @@ static void UI_MessageMode_f( void )
 	}
 }
 
-static void UI_Me_f( void )
+static void UI_Me_f()
 {
 	char buf[MAX_SAY_TEXT - 4];
 
@@ -213,7 +213,7 @@ static void UI_Me_f( void )
 struct uicmd
 {
 	char* cmd;
-	void ( *function )( void );
+	void ( *function )();
 } commands[] = { { "closemenus", UI_CloseMenus_f },
 	{ "me", UI_Me_f },
 	{ "menu", UI_Menu_f },

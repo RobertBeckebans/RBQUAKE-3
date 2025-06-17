@@ -139,7 +139,7 @@ GetToken (qfalse);
 could cross a line boundary.
 ==============
 */
-void UnGetToken( void )
+void UnGetToken()
 {
 	tokenready = qtrue;
 }
@@ -368,7 +368,7 @@ skipspace:
 GetLine
 ==============
 */
-int GetLine( void )
+int GetLine()
 {
 	return script->line;
 }
@@ -380,7 +380,7 @@ TokenAvailable
 Returns qtrue if there is another token on the line
 ==============
 */
-qboolean TokenAvailable( void )
+qboolean TokenAvailable()
 {
 	int		 oldLine;
 	qboolean r;

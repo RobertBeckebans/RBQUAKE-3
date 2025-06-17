@@ -812,7 +812,7 @@ qboolean itemRegistered[MAX_ITEMS];
 G_CheckTeamItems
 ==================
 */
-void	 G_CheckTeamItems( void )
+void	 G_CheckTeamItems()
 {
 	// Set up team stuff
 	Team_InitGame();
@@ -910,7 +910,7 @@ void	 G_CheckTeamItems( void )
 ClearRegisteredItems
 ==============
 */
-void ClearRegisteredItems( void )
+void ClearRegisteredItems()
 {
 	memset( itemRegistered, 0, sizeof( itemRegistered ) );
 
@@ -950,7 +950,7 @@ Write the needed items to a config string
 so the client will know which ones to precache
 ===============
 */
-void SaveRegisteredItems( void )
+void SaveRegisteredItems()
 {
 	char string[MAX_ITEMS + 1];
 	int	 i;

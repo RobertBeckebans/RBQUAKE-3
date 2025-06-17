@@ -21,6 +21,8 @@ if %ERRORLEVEL% neq 0 (
 
 astyle.exe -v --formatted --options=astyle-header.ini shared\q_shared.h
 astyle.exe -v --formatted --options=astyle-header.ini engine\renderer\tr_local.h
+astyle.exe -v --formatted --options=astyle-cpp.ini engine\renderer\tr_init.cpp
 
 echo Done!
 endlocal
+pause

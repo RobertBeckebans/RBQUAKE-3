@@ -67,7 +67,7 @@ Creates an entity in front of the current position, which
 can then be moved around
 =================
 */
-void CG_TestModel_f( void )
+void CG_TestModel_f()
 {
 	vec3_t angles;
 
@@ -109,7 +109,7 @@ CG_TestGun_f
 Replaces the current view weapon with the given model
 =================
 */
-void CG_TestGun_f( void )
+void CG_TestGun_f()
 {
 	CG_TestModel_f();
 
@@ -122,13 +122,13 @@ void CG_TestGun_f( void )
 	cg.testModelEntity.renderfx = RF_MINLIGHT | RF_DEPTHHACK | RF_FIRST_PERSON;
 }
 
-void CG_TestModelNextFrame_f( void )
+void CG_TestModelNextFrame_f()
 {
 	cg.testModelEntity.frame++;
 	CG_Printf( "frame %i\n", cg.testModelEntity.frame );
 }
 
-void CG_TestModelPrevFrame_f( void )
+void CG_TestModelPrevFrame_f()
 {
 	cg.testModelEntity.frame--;
 	if( cg.testModelEntity.frame < 0 )
@@ -138,13 +138,13 @@ void CG_TestModelPrevFrame_f( void )
 	CG_Printf( "frame %i\n", cg.testModelEntity.frame );
 }
 
-void CG_TestModelNextSkin_f( void )
+void CG_TestModelNextSkin_f()
 {
 	cg.testModelEntity.skinNum++;
 	CG_Printf( "skin %i\n", cg.testModelEntity.skinNum );
 }
 
-void CG_TestModelPrevSkin_f( void )
+void CG_TestModelPrevSkin_f()
 {
 	cg.testModelEntity.skinNum--;
 	if( cg.testModelEntity.skinNum < 0 )
@@ -154,7 +154,7 @@ void CG_TestModelPrevSkin_f( void )
 	CG_Printf( "skin %i\n", cg.testModelEntity.skinNum );
 }
 
-static void CG_AddTestModel( void )
+static void CG_AddTestModel()
 {
 	int i;
 
@@ -195,7 +195,7 @@ CG_CalcVrect
 Sets the coordinates of the rendered window
 =================
 */
-static void CG_CalcVrect( void )
+static void CG_CalcVrect()
 {
 	int size;
 
@@ -241,7 +241,7 @@ CG_OffsetThirdPersonView
 ===============
 */
 #define FOCUS_DISTANCE 512
-static void CG_OffsetThirdPersonView( void )
+static void CG_OffsetThirdPersonView()
 {
 	vec3_t		  forward, right, up;
 	vec3_t		  view;
@@ -318,7 +318,7 @@ static void CG_OffsetThirdPersonView( void )
 }
 
 // this causes a compiler bug on mac MrC compiler
-static void CG_StepOffset( void )
+static void CG_StepOffset()
 {
 	int timeDelta;
 
@@ -336,7 +336,7 @@ CG_OffsetFirstPersonView
 
 ===============
 */
-static void CG_OffsetFirstPersonView( void )
+static void CG_OffsetFirstPersonView()
 {
 	float* origin;
 	float* angles;
@@ -482,7 +482,7 @@ static void CG_OffsetFirstPersonView( void )
 
 //======================================================================
 
-void CG_ZoomDown_f( void )
+void CG_ZoomDown_f()
 {
 	if( cg.zoomed )
 	{
@@ -492,7 +492,7 @@ void CG_ZoomDown_f( void )
 	cg.zoomTime = cg.time;
 }
 
-void CG_ZoomUp_f( void )
+void CG_ZoomUp_f()
 {
 	if( !cg.zoomed )
 	{
@@ -512,7 +512,7 @@ Fixed fov at intermissions, otherwise account for fov variable and zooms.
 #define WAVE_AMPLITUDE 1
 #define WAVE_FREQUENCY 0.4
 
-static int CG_CalcFov( void )
+static int CG_CalcFov()
 {
 	float x;
 	float phase;
@@ -623,7 +623,7 @@ CG_DamageBlendBlob
 
 ===============
 */
-static void CG_DamageBlendBlob( void )
+static void CG_DamageBlendBlob()
 {
 	int			t;
 	int			maxTime;
@@ -674,7 +674,7 @@ CG_CalcViewValues
 Sets cg.refdef view values
 ===============
 */
-static int CG_CalcViewValues( void )
+static int CG_CalcViewValues()
 {
 	playerState_t* ps;
 
@@ -772,7 +772,7 @@ static int CG_CalcViewValues( void )
 CG_PowerupTimerSounds
 =====================
 */
-static void CG_PowerupTimerSounds( void )
+static void CG_PowerupTimerSounds()
 {
 	int i;
 	int t;
@@ -820,7 +820,7 @@ void CG_AddBufferedSound( sfxHandle_t sfx )
 CG_PlayBufferedSounds
 =====================
 */
-static void CG_PlayBufferedSounds( void )
+static void CG_PlayBufferedSounds()
 {
 	if( cg.soundTime < cg.time )
 	{

@@ -126,7 +126,7 @@ int	 BotMovementViewTarget( int movestate, bot_goal_t* goal, int travelflags, fl
 // predict the position of a player based on movement towards a goal
 int	 BotPredictVisiblePosition( vec3_t origin, int areanum, bot_goal_t* goal, int travelflags, vec3_t target );
 // returns the handle of a newly allocated movestate
-int	 BotAllocMoveState( void );
+int	 BotAllocMoveState();
 // frees the movestate with the given handle
 void BotFreeMoveState( int handle );
 // initialize movement state before performing any movement
@@ -134,8 +134,8 @@ void BotInitMoveState( int handle, bot_initmove_t* initmove );
 // add a spot to avoid (if type == AVOID_CLEAR all spots are removed)
 void BotAddAvoidSpot( int movestate, vec3_t origin, float radius, int type );
 // must be called every map change
-void BotSetBrushModelTypes( void );
+void BotSetBrushModelTypes();
 // setup movement AI
-int	 BotSetupMoveAI( void );
+int	 BotSetupMoveAI();
 // shutdown movement AI
-void BotShutdownMoveAI( void );
+void BotShutdownMoveAI();

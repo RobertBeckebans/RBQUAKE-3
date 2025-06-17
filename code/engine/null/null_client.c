@@ -28,7 +28,7 @@ void	CL_Shutdown( char* finalmsg, qboolean disconnect, qboolean quit )
 {
 }
 
-void CL_Init( void )
+void CL_Init()
 {
 	cl_shownet = Cvar_Get( "cl_shownet", "0", CVAR_TEMP );
 }
@@ -57,11 +57,11 @@ void CL_Disconnect( qboolean showMainMenu )
 {
 }
 
-void CL_MapLoading( void )
+void CL_MapLoading()
 {
 }
 
-qboolean CL_GameCommand( void )
+qboolean CL_GameCommand()
 {
 	return qfalse;
 }
@@ -70,7 +70,7 @@ void CL_KeyEvent( int key, qboolean down, unsigned time )
 {
 }
 
-qboolean UI_GameCommand( void )
+qboolean UI_GameCommand()
 {
 	return qfalse;
 }
@@ -87,15 +87,15 @@ void CL_JoystickEvent( int axis, int value, int time )
 {
 }
 
-void CL_InitKeyCommands( void )
+void CL_InitKeyCommands()
 {
 }
 
-void CL_CDDialog( void )
+void CL_CDDialog()
 {
 }
 
-void CL_FlushMemory( void )
+void CL_FlushMemory()
 {
 }
 
@@ -107,11 +107,11 @@ void CL_StartHunkUsers( qboolean rendererOnly )
 {
 }
 
-void CL_InitRef( void )
+void CL_InitRef()
 {
 }
 
-void CL_Snd_Shutdown( void )
+void CL_Snd_Shutdown()
 {
 }
 

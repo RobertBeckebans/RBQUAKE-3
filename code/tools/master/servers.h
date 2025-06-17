@@ -74,17 +74,17 @@ qboolean  Sv_SetHashSize( unsigned int size );
 qboolean  Sv_SetMaxNbServers( unsigned int nb );
 
 // Initialize the server list and hash table
-qboolean  Sv_Init( void );
+qboolean  Sv_Init();
 
 // Search for a particular server in the list; add it if necessary
 // NOTE: doesn't change the current position for "Sv_GetNext"
 server_t* Sv_GetByAddr( const struct sockaddr_in* address, qboolean add_it );
 
 // Get the first server in the list
-server_t* Sv_GetFirst( void );
+server_t* Sv_GetFirst();
 
 // Get the next server in the list
-server_t* Sv_GetNext( void );
+server_t* Sv_GetNext();
 
 // ---------- Public functions (address mappings) ---------- //
 
@@ -96,6 +96,6 @@ server_t* Sv_GetNext( void );
 qboolean  Sv_AddAddressMapping( const char* mapping );
 
 // Resolve the address mapping list
-qboolean  Sv_ResolveAddressMappings( void );
+qboolean  Sv_ResolveAddressMappings();
 
 #endif // _SERVERS_H_

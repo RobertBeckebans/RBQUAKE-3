@@ -33,7 +33,7 @@ int		  c_boundary_sides;
 AllocPortal
 ===========
 */
-portal_t* AllocPortal( void )
+portal_t* AllocPortal()
 {
 	portal_t* p;
 

@@ -117,13 +117,13 @@ This must be the very first function compiled into the .qvm file
 ================
 */
 void			   UI_Init( qboolean );
-void			   UI_Shutdown( void );
+void			   UI_Shutdown();
 void			   UI_KeyEvent( int key, qboolean down );
 void			   UI_MouseEvent( int dx, int dy );
-int				   UI_MousePosition( void );
+int				   UI_MousePosition();
 void			   UI_SetMousePosition( int x, int y );
 void			   UI_Refresh( int realtime );
-qboolean		   UI_IsFullscreen( void );
+qboolean		   UI_IsFullscreen();
 void			   UI_SetActiveMenu( uiMenuCommand_t menu );
 intptr_t		   vmMain( int command, int arg0, int arg1, int arg2, int arg3, int arg4, int arg5, int arg6, int arg7, int arg8, int arg9, int arg10, int arg11 )
 {
@@ -177,7 +177,7 @@ intptr_t		   vmMain( int command, int arg0, int arg1, int arg2, int arg3, int ar
 	return -1;
 }
 
-void AssetCache( void )
+void AssetCache()
 {
 	uiInfo.uiDC.Assets.gradientBar		   = trap_R_RegisterShaderNoMip( ASSET_GRADIENTBAR );
 	uiInfo.uiDC.Assets.scrollBar		   = trap_R_RegisterShaderNoMip( ASSET_SCROLLBAR );
@@ -1010,7 +1010,7 @@ static void UI_BuildServerDisplayList( qboolean force )
 UI_StopServerRefresh
 =================
 */
-static void UI_StopServerRefresh( void )
+static void UI_StopServerRefresh()
 {
 	int count;
 
@@ -1038,7 +1038,7 @@ static void UI_StopServerRefresh( void )
 UI_DoServerRefresh
 =================
 */
-static void UI_DoServerRefresh( void )
+static void UI_DoServerRefresh()
 {
 	qboolean wait = qfalse;
 
@@ -1095,7 +1095,7 @@ static void UI_DoServerRefresh( void )
 UI_UpdatePendingPings
 =================
 */
-static void UI_UpdatePendingPings( void )
+static void UI_UpdatePendingPings()
 {
 	trap_LAN_ResetPings( ui_netSource.integer );
 	uiInfo.serverStatus.refreshActive = qtrue;
@@ -1214,7 +1214,7 @@ void UI_Refresh( int realtime )
 UI_Shutdown
 =================
 */
-void UI_Shutdown( void )
+void UI_Shutdown()
 {
 	trap_LAN_SaveCachedServers();
 }
@@ -1425,7 +1425,7 @@ qboolean Asset_Parse( int handle )
 	return qfalse;
 }
 
-void UI_Report( void )
+void UI_Report()
 {
 	String_Report();
 }
@@ -1581,7 +1581,7 @@ void UI_LoadMenus( const char* menuFile, qboolean reset )
 	trap_Parse_FreeSource( handle );
 }
 
-void UI_Load( void )
+void UI_Load()
 {
 	char	   lastName[1024];
 	menuDef_t* menu = Menu_GetFocused();
@@ -1766,7 +1766,7 @@ static int UI_OwnerDrawWidth( int ownerDraw, float scale )
 UI_BuildPlayerList
 ===============
 */
-static void UI_BuildPlayerList( void )
+static void UI_BuildPlayerList()
 {
 	uiClientState_t cs;
 	int				n, count, team, team2;
@@ -2080,7 +2080,7 @@ void UI_ServersSort( int column, qboolean force )
 UI_LoadTeams
 ===============
 */
-static void UI_LoadTeams( void )
+static void UI_LoadTeams()
 {
 	/*
 	  uiInfo.teamCount = 4;
@@ -2143,7 +2143,7 @@ uiInfo.alienClassCount++;
 UI_LoadAlienClasses
 ===============
 */
-static void UI_LoadAlienClasses( void )
+static void UI_LoadAlienClasses()
 {
 	/*
 	uiInfo.alienClassCount = 0;
@@ -2152,7 +2152,7 @@ static void UI_LoadAlienClasses( void )
 	UI_AddClass( PCL_ALIEN_LEVEL0 );
 
 	if( BG_ClassIsAllowed( PCL_ALIEN_BUILDER0_UPG ) &&
-	  BG_ClassAllowedInStage( PCL_ALIEN_BUILDER0_UPG, UI_GetCurrentAlienStage( ) ) )
+	  BG_ClassAllowedInStage( PCL_ALIEN_BUILDER0_UPG, UI_GetCurrentAlienStage() ) )
 	UI_AddClass( PCL_ALIEN_BUILDER0_UPG );
 	else if( BG_ClassIsAllowed( PCL_ALIEN_BUILDER0 ) )
 	UI_AddClass( PCL_ALIEN_BUILDER0 );
@@ -2183,7 +2183,7 @@ static void UI_AddItem( weapon_t weapon )
 UI_LoadHumanItems
 ===============
 */
-static void UI_LoadHumanItems( void )
+static void UI_LoadHumanItems()
 {
 	/*
 	uiInfo.humanItemCount = 0;
@@ -2201,7 +2201,7 @@ static void UI_LoadHumanItems( void )
 UI_ParseCarriageList
 ===============
 */
-static void UI_ParseCarriageList( void )
+static void UI_ParseCarriageList()
 {
 	/*
 	int  i;
@@ -2259,14 +2259,14 @@ static void UI_ParseCarriageList( void )
 UI_LoadHumanArmouryBuys
 ===============
 */
-static void UI_LoadHumanArmouryBuys( void )
+static void UI_LoadHumanArmouryBuys()
 {
 	/*
 	int i, j = 0;
-	stage_t stage = UI_GetCurrentHumanStage( );
+	stage_t stage = UI_GetCurrentHumanStage();
 	int slots = 0;
 
-	UI_ParseCarriageList( );
+	UI_ParseCarriageList();
 
 	for( i = WP_NONE + 1; i < WP_NUM_WEAPONS; i++ )
 	{
@@ -2331,13 +2331,13 @@ static void UI_LoadHumanArmouryBuys( void )
 UI_LoadHumanArmourySells
 ===============
 */
-static void UI_LoadHumanArmourySells( void )
+static void UI_LoadHumanArmourySells()
 {
 	/*
 	int i, j = 0;
 
 	uiInfo.humanArmourySellCount = 0;
-	UI_ParseCarriageList( );
+	UI_ParseCarriageList();
 
 	for( i = WP_NONE + 1; i < WP_NUM_WEAPONS; i++ )
 	{
@@ -2384,13 +2384,13 @@ static void UI_ArmouryRefreshCb( void* data )
 	int oldWeapons  = uiInfo.weapons;
 	int oldUpgrades = uiInfo.upgrades;
 
-	UI_ParseCarriageList( );
+	UI_ParseCarriageList();
 
 	if( uiInfo.weapons != oldWeapons || uiInfo.upgrades != oldUpgrades )
 	{
-	UI_LoadHumanArmouryBuys( );
-	UI_LoadHumanArmourySells( );
-	UI_RemoveCaptureFunc( );
+	UI_LoadHumanArmouryBuys();
+	UI_LoadHumanArmourySells();
+	UI_RemoveCaptureFunc();
 	}
 	*/
 }
@@ -2400,14 +2400,14 @@ static void UI_ArmouryRefreshCb( void* data )
 UI_LoadAlienUpgrades
 ===============
 */
-static void UI_LoadAlienUpgrades( void )
+static void UI_LoadAlienUpgrades()
 {
 	/*
 	int     i, j = 0;
 
 	int     class, credits;
 	char    ui_currentClass[ MAX_STRING_CHARS ];
-	stage_t stage = UI_GetCurrentAlienStage( );
+	stage_t stage = UI_GetCurrentAlienStage();
 
 	trap_Cvar_VariableStringBuffer( "ui_currentClass", ui_currentClass, MAX_STRING_CHARS );
 
@@ -2438,14 +2438,14 @@ static void UI_LoadAlienUpgrades( void )
 UI_LoadAlienBuilds
 ===============
 */
-static void UI_LoadAlienBuilds( void )
+static void UI_LoadAlienBuilds()
 {
 	/*
 	int     i, j = 0;
 	stage_t stage;
 
-	UI_ParseCarriageList( );
-	stage = UI_GetCurrentAlienStage( );
+	UI_ParseCarriageList();
+	stage = UI_GetCurrentAlienStage();
 
 	uiInfo.alienBuildCount = 0;
 
@@ -2475,14 +2475,14 @@ static void UI_LoadAlienBuilds( void )
 UI_LoadHumanBuilds
 ===============
 */
-static void UI_LoadHumanBuilds( void )
+static void UI_LoadHumanBuilds()
 {
 	/*
 	int     i, j = 0;
 	stage_t stage;
 
-	UI_ParseCarriageList( );
-	stage = UI_GetCurrentHumanStage( );
+	UI_ParseCarriageList();
+	stage = UI_GetCurrentHumanStage();
 
 	uiInfo.humanBuildCount = 0;
 
@@ -2512,7 +2512,7 @@ static void UI_LoadHumanBuilds( void )
 UI_LoadMods
 ===============
 */
-static void UI_LoadMods( void )
+static void UI_LoadMods()
 {
 	int	  numdirs;
 	char  dirlist[2048];
@@ -2546,7 +2546,7 @@ static void UI_LoadMods( void )
 UI_LoadMovies
 ===============
 */
-static void UI_LoadMovies( void )
+static void UI_LoadMovies()
 {
 	char  movielist[4096];
 	char* moviename;
@@ -2584,7 +2584,7 @@ static void UI_LoadMovies( void )
 UI_LoadDemos
 ===============
 */
-static void UI_LoadDemos( void )
+static void UI_LoadDemos()
 {
 	char  demolist[4096];
 	char  demoExt[32];
@@ -2873,28 +2873,28 @@ static void UI_RunMenuScript( char** args )
 		}
 		/*
 		else if( Q_stricmp( name, "LoadTeams" ) == 0 )
-		  UI_LoadTeams( );
+		  UI_LoadTeams();
 		else if( Q_stricmp( name, "JoinTeam" ) == 0 )
 		{
 		  if( ( cmd = uiInfo.teamList[ uiInfo.teamIndex ].cmd ) )
 			trap_Cmd_ExecuteText( EXEC_APPEND, cmd );
 		}
 		else if( Q_stricmp( name, "LoadHumanItems" ) == 0 )
-		  UI_LoadHumanItems( );
+		  UI_LoadHumanItems();
 		else if( Q_stricmp( name, "SpawnWithHumanItem" ) == 0 )
 		{
 		  if( ( cmd = uiInfo.humanItemList[ uiInfo.humanItemIndex ].cmd ) )
 			trap_Cmd_ExecuteText( EXEC_APPEND, cmd );
 		}
 		else if( Q_stricmp( name, "LoadAlienClasses" ) == 0 )
-		  UI_LoadAlienClasses( );
+		  UI_LoadAlienClasses();
 		else if( Q_stricmp( name, "SpawnAsAlienClass" ) == 0 )
 		{
 		  if( ( cmd = uiInfo.alienClassList[ uiInfo.alienClassIndex ].cmd ) )
 			trap_Cmd_ExecuteText( EXEC_APPEND, cmd );
 		}
 		else if( Q_stricmp( name, "LoadHumanArmouryBuys" ) == 0 )
-		  UI_LoadHumanArmouryBuys( );
+		  UI_LoadHumanArmouryBuys();
 		else if( Q_stricmp( name, "BuyFromArmoury" ) == 0 )
 		{
 		  if( ( cmd = uiInfo.humanArmouryBuyList[ uiInfo.humanArmouryBuyIndex ].cmd ) )
@@ -2903,7 +2903,7 @@ static void UI_RunMenuScript( char** args )
 		  UI_InstallCaptureFunc( UI_ArmouryRefreshCb, NULL, 1000 );
 		}
 		else if( Q_stricmp( name, "LoadHumanArmourySells" ) == 0 )
-		  UI_LoadHumanArmourySells( );
+		  UI_LoadHumanArmourySells();
 		else if( Q_stricmp( name, "SellToArmoury" ) == 0 )
 		{
 		  if( ( cmd = uiInfo.humanArmourySellList[ uiInfo.humanArmourySellIndex ].cmd ) )
@@ -2913,12 +2913,12 @@ static void UI_RunMenuScript( char** args )
 		}
 		else if( Q_stricmp( name, "LoadAlienUpgrades" ) == 0 )
 		{
-		  UI_LoadAlienUpgrades( );
+		  UI_LoadAlienUpgrades();
 
 		  //disallow the menu if it would be empty
 
 		  if( uiInfo.alienUpgradeCount <= 0 )
-			Menus_CloseAll( );
+			Menus_CloseAll();
 		}
 		else if( Q_stricmp( name, "UpgradeToNewClass" ) == 0 )
 		{
@@ -2926,14 +2926,14 @@ static void UI_RunMenuScript( char** args )
 			trap_Cmd_ExecuteText( EXEC_APPEND, cmd );
 		}
 		else if( Q_stricmp( name, "LoadAlienBuilds" ) == 0 )
-		  UI_LoadAlienBuilds( );
+		  UI_LoadAlienBuilds();
 		else if( Q_stricmp( name, "BuildAlienBuildable" ) == 0 )
 		{
 		  if( ( cmd = uiInfo.alienBuildList[ uiInfo.alienBuildIndex ].cmd ) )
 			trap_Cmd_ExecuteText( EXEC_APPEND, cmd );
 		}
 		else if( Q_stricmp( name, "LoadHumanBuilds" ) == 0 )
-		  UI_LoadHumanBuilds( );
+		  UI_LoadHumanBuilds();
 		else if( Q_stricmp( name, "BuildHumanBuildable" ) == 0 )
 		{
 		  if( ( cmd = uiInfo.humanBuildList[ uiInfo.humanBuildIndex ].cmd ) )
@@ -3972,7 +3972,7 @@ static float UI_GetValue( int ownerDraw )
 UI_ParseResolutions
 =================
 */
-void UI_ParseResolutions( void )
+void UI_ParseResolutions()
 {
 	char		buf[MAX_STRING_CHARS];
 	char		w[16], h[16];
@@ -4173,7 +4173,7 @@ void UI_MouseEvent( int dx, int dy )
 UI_MousePosition
 =================
 */
-int UI_MousePosition( void )
+int UI_MousePosition()
 {
 	return ( int )Q_rint( uiInfo.uiDC.cursorx ) | ( int )Q_rint( uiInfo.uiDC.cursory ) << 16;
 }
@@ -4248,7 +4248,7 @@ void UI_SetActiveMenu( uiMenuCommand_t menu )
 	}
 }
 
-qboolean UI_IsFullscreen( void )
+qboolean UI_IsFullscreen()
 {
 	return Menus_AnyFullScreenVisible();
 }
@@ -4601,7 +4601,7 @@ void UI_DrawConnectScreen( qboolean overlay )
 UI_RegisterCvars
 =================
 */
-void UI_RegisterCvars( void )
+void UI_RegisterCvars()
 {
 	int			 i;
 	cvarTable_t* cv;
@@ -4617,7 +4617,7 @@ void UI_RegisterCvars( void )
 UI_UpdateCvars
 =================
 */
-void UI_UpdateCvars( void )
+void UI_UpdateCvars()
 {
 	int			 i;
 	cvarTable_t* cv;

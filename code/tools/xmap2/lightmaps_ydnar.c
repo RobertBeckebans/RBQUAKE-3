@@ -180,7 +180,7 @@ ExportLightmaps()
 exports the lightmaps as a list of numbered tga images
 */
 
-void ExportLightmaps( void )
+void ExportLightmaps()
 {
 	int	  i;
 	char  dirname[1024], filename[1024];
@@ -1081,7 +1081,7 @@ allocates lightmaps for every surface in the bsp that needs one
 this depends on yDrawVerts being allocated
 */
 
-void SetupSurfaceLightmaps( void )
+void SetupSurfaceLightmaps()
 {
 	int				  i, j, k, s, num, num2;
 	bspModel_t*		  model;
@@ -1382,7 +1382,7 @@ stitches lightmap edges
 #define MAX_STITCH_CANDIDATES 32
 #define MAX_STITCH_LUXELS	  64
 
-void StitchSurfaceLightmaps( void )
+void StitchSurfaceLightmaps()
 {
 	int			   i, j, x, y, x2, y2, *cluster, *cluster2, numStitched, numCandidates, numLuxels, f, fOld, start;
 	rawLightmap_t *lm, *a, *b, *c[MAX_STITCH_CANDIDATES];
@@ -2601,7 +2601,7 @@ StoreSurfaceLightmaps()
 stores the surface lightmaps into the bsp as byte rgb triplets
 */
 
-void StoreSurfaceLightmaps( void )
+void StoreSurfaceLightmaps()
 {
 	int				  i, j, k, x, y, lx, ly, sx, sy, *cluster, mappedSamples;
 	int				  style, size, lightmapNum, lightmapNum2;

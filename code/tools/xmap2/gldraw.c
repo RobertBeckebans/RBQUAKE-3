@@ -70,7 +70,7 @@ static void Reshape( int width, int height )
 	glTranslatef( -drawOrigin[0], -drawOrigin[1], -drawOrigin[2] );
 }
 
-static void Draw_BeginScene( void )
+static void Draw_BeginScene()
 {
 	const char* glString;
 
@@ -146,14 +146,14 @@ static void Draw_BeginScene( void )
 	glFlush();
 }
 
-static void Draw_EndScene( void )
+static void Draw_EndScene()
 {
 	// Sys_FPrintf(SYS_VRB, "Draw_EndScene()\n");
 
 	SDL_GL_SwapWindow( mainwindow );
 }
 
-static void Draw_Shutdown( void )
+static void Draw_Shutdown()
 {
 	Sys_FPrintf( SYS_VRB, "Draw_Shutdown()\n" );
 
@@ -163,7 +163,7 @@ static void Draw_Shutdown( void )
 
 #endif // #if defined(USE_OPENGL)
 
-void Draw_SetRed( void )
+void Draw_SetRed()
 {
 #if defined( USE_OPENGL )
 	if( !drawInit )
@@ -175,7 +175,7 @@ void Draw_SetRed( void )
 #endif
 }
 
-void Draw_SetGrey( void )
+void Draw_SetGrey()
 {
 #if defined( USE_OPENGL )
 	if( !drawInit )
@@ -187,7 +187,7 @@ void Draw_SetGrey( void )
 #endif
 }
 
-void Draw_SetBlack( void )
+void Draw_SetBlack()
 {
 #if defined( USE_OPENGL )
 	if( !drawInit )
@@ -280,7 +280,7 @@ void Draw_AABB( const vec3_t origin, const vec3_t mins, const vec3_t maxs, vec4_
 #endif
 }
 
-void Draw_Scene( void ( *drawFunc )( void ) )
+void Draw_Scene( void ( *drawFunc )() )
 {
 #if defined( USE_OPENGL )
 	Uint8*	 keys;

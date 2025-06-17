@@ -71,5 +71,5 @@ typedef struct shaderInfo_s
 	vec3_t	 sunDirection;
 } shaderInfo_t;
 
-void		  LoadShaderInfo( void );
+void		  LoadShaderInfo();
 shaderInfo_t* ShaderInfoForShader( const char* shader );

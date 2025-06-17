@@ -108,7 +108,7 @@ typedef enum
 	G_ERROR, // ( const char *string );
 			 // abort the game
 
-	G_MILLISECONDS, // ( void );
+	G_MILLISECONDS, // ();
 					// get current time for profiling reasons
 					// this should NOT be used for any game related tasks,
 					// because it is not journaled
@@ -121,7 +121,7 @@ typedef enum
 
 	G_CVAR_VARIABLE_STRING_BUFFER, // ( const char *var_name, char *buffer, int bufsize );
 
-	G_ARGC, // ( void );
+	G_ARGC, // ();
 			// ClientCommand and ServerCommand parameter access
 
 	G_ARGV, // ( int n, char *buffer, int bufferLength );
@@ -201,7 +201,7 @@ typedef enum
 					  // perform an exact check against inline brush models of non-square shape
 
 	// access for bots to get and free a server client (FIXME?)
-	G_BOT_ALLOCATE_CLIENT, // ( void );
+	G_BOT_ALLOCATE_CLIENT, // ();
 
 	G_BOT_FREE_CLIENT, // ( int clientNum );
 
@@ -223,8 +223,8 @@ typedef enum
 	// 1.32
 	G_FS_SEEK,
 
-	BOTLIB_SETUP = 200, // ( void );
-	BOTLIB_SHUTDOWN,	// ( void );
+	BOTLIB_SETUP = 200, // ();
+	BOTLIB_SHUTDOWN,	// ();
 	BOTLIB_LIBVAR_SET,
 	BOTLIB_LIBVAR_GET,
 	BOTLIB_PC_ADD_GLOBAL_DEFINE,
@@ -397,7 +397,7 @@ typedef enum
 	// The game should call G_GET_ENTITY_TOKEN to parse through all the
 	// entity configuration text and spawn gentities.
 
-	GAME_SHUTDOWN, // (void);
+	GAME_SHUTDOWN, // ();
 
 	GAME_CLIENT_CONNECT, // ( int clientNum, qboolean firstTime, qboolean isBot );
 	// return NULL if the client is allowed to connect, otherwise return
@@ -415,7 +415,7 @@ typedef enum
 
 	GAME_RUN_FRAME, // ( int levelTime );
 
-	GAME_CONSOLE_COMMAND, // ( void );
+	GAME_CONSOLE_COMMAND, // ();
 	// ConsoleCommand will be called when a command has been issued
 	// that is not recognized as a builtin function.
 	// The game can issue trap_argc() / trap_argv() commands to get the command

@@ -409,7 +409,7 @@ finds all decal entities and creates decal projectors
 
 #define PLANAR_EPSILON 0.5f
 
-void ProcessDecals( void )
+void ProcessDecals()
 {
 	int			   i, j, x, y, pw[5], r, iterations;
 	float		   distance;

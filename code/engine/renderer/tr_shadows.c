@@ -41,7 +41,7 @@ shadowState_t shadowState;
 RB_ProjectionShadowDeform
 =================
 */
-void		  RB_ProjectionShadowDeform( void )
+void		  RB_ProjectionShadowDeform()
 {
 	float* xyz;
 	int	   i;

@@ -415,7 +415,7 @@ Spawn an entity and fill in all of the level fields from
 level.spawnVars[], then call the class specific spawn function
 ===================
 */
-void G_SpawnGEntityFromSpawnVars( void )
+void G_SpawnGEntityFromSpawnVars()
 {
 	int			 i;
 	gentity_t*	 ent;
@@ -542,7 +542,7 @@ level's entity strings into level.spawnVars[]
 This does not actually spawn an entity.
 ====================
 */
-qboolean G_ParseSpawnVars( void )
+qboolean G_ParseSpawnVars()
 {
 	char keyname[MAX_TOKEN_CHARS];
 	char com_token[MAX_TOKEN_CHARS];
@@ -604,7 +604,7 @@ Every map should have exactly one worldspawn.
 "gravity"	800 is default gravity
 "message"	Text to print during connection process
 */
-void SP_worldspawn( void )
+void SP_worldspawn()
 {
 	char* s;
 
@@ -666,7 +666,7 @@ G_SpawnEntitiesFromString
 Parses textual entity definitions out of an entstring and spawns gentities.
 ==============
 */
-void G_SpawnEntitiesFromString( void )
+void G_SpawnEntitiesFromString()
 {
 	// allow calls to G_Spawn*()
 	level.spawning	   = qtrue;

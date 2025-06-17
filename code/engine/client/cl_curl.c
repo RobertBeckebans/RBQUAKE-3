@@ -27,9 +27,9 @@ cvar_t* cl_cURLLib;
 	#ifdef USE_CURL_DLOPEN
 		#include "../sys/sys_loadlib.h"
 
-char* ( *qcurl_version )( void );
+char* ( *qcurl_version )();
 
-CURL* ( *qcurl_easy_init )( void );
+CURL* ( *qcurl_easy_init )();
 
 CURLcode ( *qcurl_easy_setopt )( CURL* curl, CURLoption option, ... );
 CURLcode ( *qcurl_easy_perform )( CURL* curl );
@@ -40,7 +40,7 @@ CURL* ( *qcurl_easy_duphandle )( CURL* curl );
 void ( *qcurl_easy_reset )( CURL* curl );
 const char* ( *qcurl_easy_strerror )( CURLcode );
 
-CURLM* ( *qcurl_multi_init )( void );
+CURLM* ( *qcurl_multi_init )();
 
 CURLMcode ( *qcurl_multi_add_handle )( CURLM* multi_handle, CURL* curl_handle );
 CURLMcode ( *qcurl_multi_remove_handle )( CURLM* multi_handle, CURL* curl_handle );
@@ -158,7 +158,7 @@ qboolean CL_cURL_Init()
 CL_cURL_Shutdown
 =================
 */
-void CL_cURL_Shutdown( void )
+void CL_cURL_Shutdown()
 {
 	CL_cURL_Cleanup();
 	#ifdef USE_CURL_DLOPEN
@@ -186,7 +186,7 @@ void CL_cURL_Shutdown( void )
 	#endif /* USE_CURL_DLOPEN */
 }
 
-void CL_cURL_Cleanup( void )
+void CL_cURL_Cleanup()
 {
 	if( clc.downloadCURLM )
 	{
@@ -301,7 +301,7 @@ void CL_cURL_BeginDownload( const char* localName, const char* remoteURL )
 	}
 }
 
-void CL_cURL_PerformDownload( void )
+void CL_cURL_PerformDownload()
 {
 	CURLMcode res;
 	CURLMsg*  msg;

@@ -51,7 +51,7 @@ int		   r_numDecals;
 R_ToggleSmpFrame
 ====================
 */
-void	   R_ToggleSmpFrame( void )
+void	   R_ToggleSmpFrame()
 {
 	if( r_smp->integer )
 	{
@@ -95,7 +95,7 @@ void	   R_ToggleSmpFrame( void )
 RE_ClearScene
 ====================
 */
-void RE_ClearScene( void )
+void RE_ClearScene()
 {
 	r_firstSceneLight  = r_numLights;
 	r_firstSceneEntity = r_numEntities;
@@ -117,7 +117,7 @@ R_AddPolygonSurfaces
 Adds all the scene's polys into this view's drawsurf list
 =====================
 */
-void R_AddPolygonSurfaces( void )
+void R_AddPolygonSurfaces()
 {
 	int		   i;
 	shader_t*  sh;
@@ -144,7 +144,7 @@ R_AddPolygonSurfaces
 Adds all the scene's polys into this view's drawsurf list
 =====================
 */
-void R_AddPolygonBufferSurfaces( void )
+void R_AddPolygonBufferSurfaces()
 {
 	int				 i;
 	shader_t*		 sh;

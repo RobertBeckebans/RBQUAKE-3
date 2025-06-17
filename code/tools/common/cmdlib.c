@@ -318,7 +318,7 @@ char* copystring( const char* s )
 I_FloatTime
 ================
 */
-double I_FloatTime( void )
+double I_FloatTime()
 {
 	time_t t;
 

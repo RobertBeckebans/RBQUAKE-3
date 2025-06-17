@@ -51,7 +51,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-void AAS_SwapAASData( void )
+void AAS_SwapAASData()
 {
 	int i, j;
 	// bounding boxes
@@ -184,7 +184,7 @@ void AAS_SwapAASData( void )
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-void AAS_DumpAASData( void )
+void AAS_DumpAASData()
 {
 	aasworld.numbboxes = 0;
 	if( aasworld.bboxes )
@@ -283,7 +283,7 @@ void AAS_DumpAASData( void )
 // Changes Globals:		-
 //===========================================================================
 #ifdef AASFILEDEBUG
-void AAS_FileInfo( void )
+void AAS_FileInfo()
 {
 	int i, n, optimized;
 

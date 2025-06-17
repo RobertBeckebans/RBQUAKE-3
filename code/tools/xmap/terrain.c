@@ -612,7 +612,7 @@ terrainSurf_t* SurfaceForShader( shaderInfo_t* shader, int x, int y )
 SetTerrainTextures
 ================
 */
-void SetTerrainTextures( void )
+void SetTerrainTextures()
 {
 	int				i;
 	int				x, y;
@@ -1187,7 +1187,7 @@ Creates a drawSurface_t from the terrain text
 =================
 */
 
-void ParseTerrain( void )
+void ParseTerrain()
 {
 	int			   i, j;
 	int			   x, y;

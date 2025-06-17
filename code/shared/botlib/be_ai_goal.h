@@ -94,9 +94,9 @@ float BotAvoidGoalTime( int goalstate, int number );
 // set the avoid goal time
 void  BotSetAvoidGoalTime( int goalstate, int number, float avoidtime );
 // initializes the items in the level
-void  BotInitLevelItems( void );
+void  BotInitLevelItems();
 // regularly update dynamic entity items (dropped weapons, flags etc.)
-void  BotUpdateEntityItems( void );
+void  BotUpdateEntityItems();
 // interbreed the goal fuzzy logic
 void  BotInterbreedGoalFuzzyLogic( int parent1, int parent2, int child );
 // save the goal fuzzy logic to disk
@@ -112,6 +112,6 @@ int	  BotAllocGoalState( int client );
 // free the given goal state
 void  BotFreeGoalState( int handle );
 // setup the goal AI
-int	  BotSetupGoalAI( void );
+int	  BotSetupGoalAI();
 // shut down the goal AI
-void  BotShutdownGoalAI( void );
+void  BotShutdownGoalAI();

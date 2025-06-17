@@ -32,7 +32,7 @@ This file deals with applying shaders to surface data in the tess struct.
 =================================================================================
 */
 
-void GLSL_InitGPUShaders( void )
+void GLSL_InitGPUShaders()
 {
 	int startTime, endTime;
 
@@ -158,7 +158,7 @@ void GLSL_InitGPUShaders( void )
 	}
 }
 
-void GLSL_ShutdownGPUShaders( void )
+void GLSL_ShutdownGPUShaders()
 {
 	ri.Printf( PRINT_DEVELOPER, "------- GLSL_ShutdownGPUShaders -------\n" );
 
@@ -2827,11 +2827,11 @@ static void Render_liquid( int stage )
 	VectorCopy( tess.svars.color, fogColor );
 
 	gl_liquidShader->SetUniform_ViewOrigin( viewOrigin );
-	gl_liquidShader->SetUniform_RefractionIndex( RB_EvalExpression( &pStage->refractionIndexExp, 1.0 ) );
-	gl_liquidShader->SetUniform_FresnelPower( RB_EvalExpression( &pStage->fresnelPowerExp, 2.0 ) );
-	gl_liquidShader->SetUniform_FresnelScale( RB_EvalExpression( &pStage->fresnelScaleExp, 1.0 ) );
-	gl_liquidShader->SetUniform_FresnelBias( RB_EvalExpression( &pStage->fresnelBiasExp, 0.05 ) );
-	gl_liquidShader->SetUniform_NormalScale( RB_EvalExpression( &pStage->normalScaleExp, 0.05 ) );
+	gl_liquidShader->SetUniform_RefractionIndex( RB_EvalExpression( &pStage->refractionIndexExp, 1.0f ) );
+	gl_liquidShader->SetUniform_FresnelPower( RB_EvalExpression( &pStage->fresnelPowerExp, 2.0f ) );
+	gl_liquidShader->SetUniform_FresnelScale( RB_EvalExpression( &pStage->fresnelScaleExp, 1.0f ) );
+	gl_liquidShader->SetUniform_FresnelBias( RB_EvalExpression( &pStage->fresnelBiasExp, 0.05f ) );
+	gl_liquidShader->SetUniform_NormalScale( RB_EvalExpression( &pStage->normalScaleExp, 0.05f ) );
 	gl_liquidShader->SetUniform_FogDensity( fogDensity );
 	gl_liquidShader->SetUniform_FogColor( fogColor[0], fogColor[1], fogColor[2] );
 

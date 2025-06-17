@@ -159,7 +159,7 @@ static void SpecifyLeague_Event( void* ptr, int event )
 SpecifyLeague_MenuInit
 =================
 */
-void SpecifyLeague_MenuInit( void )
+void SpecifyLeague_MenuInit()
 {
 	int i;
 	// zero set all our globals
@@ -292,7 +292,7 @@ void SpecifyLeague_MenuInit( void )
 SpecifyLeague_Cache
 =================
 */
-void SpecifyLeague_Cache( void )
+void SpecifyLeague_Cache()
 {
 	int i;
 
@@ -312,7 +312,7 @@ void SpecifyLeague_Cache( void )
 UI_SpecifyLeagueMenu
 =================
 */
-void UI_SpecifyLeagueMenu( void )
+void UI_SpecifyLeagueMenu()
 {
 	SpecifyLeague_MenuInit();
 	UI_PushMenu( &s_specifyleague.menu );

@@ -220,7 +220,7 @@ void SubdivideAreaLight( shaderInfo_t* ls, winding_t* w, vec3_t normal, float ar
 CountLightmaps
 ===============
 */
-void CountLightmaps( void )
+void CountLightmaps()
 {
 	int			count;
 	int			i;
@@ -256,7 +256,7 @@ CreateSurfaceLights
 This creates area lights
 ===============
 */
-void CreateSurfaceLights( void )
+void CreateSurfaceLights()
 {
 	int			  i, j, side;
 	dsurface_t*	  ds;
@@ -403,7 +403,7 @@ void CreateSurfaceLights( void )
 FindSkyBrushes
 ================
 */
-void FindSkyBrushes( void )
+void FindSkyBrushes()
 {
 	int			  i, j;
 	dbrush_t*	  b;
@@ -485,7 +485,7 @@ entity_t* FindTargetEntity( const char* target )
 CreateEntityLights
 =============
 */
-void CreateEntityLights( void )
+void CreateEntityLights()
 {
 	int			i;
 	light_t*	dl;
@@ -606,7 +606,7 @@ SetEntityOrigins
 Find the offset values for inline models
 ================
 */
-void SetEntityOrigins( void )
+void SetEntityOrigins()
 {
 	int			i, j;
 	entity_t*	e;
@@ -1964,7 +1964,7 @@ void TraceGrid( int num )
 SetupGrid
 =============
 */
-void SetupGrid( void )
+void SetupGrid()
 {
 	int	   i;
 	vec3_t maxs;
@@ -1991,7 +1991,7 @@ void SetupGrid( void )
 RemoveLightsInSolid
 =============
 */
-void RemoveLightsInSolid( void )
+void RemoveLightsInSolid()
 {
 	light_t *light, *prev;
 	int		 numsolid = 0;
@@ -2038,7 +2038,7 @@ void RemoveLightsInSolid( void )
 LightWorld
 =============
 */
-void LightWorld( void )
+void LightWorld()
 {
 	float f;
 
@@ -2081,7 +2081,7 @@ This will only work for flat 3*3 patches that exactly hold one copy of the textu
 ========
 */
 #define PLANAR_PATCH_EPSILON 0.1
-void CreateFilters( void )
+void CreateFilters()
 {
 	int			  i;
 	filter_t*	  f;
@@ -2238,7 +2238,7 @@ void TriSoupLightingThread( int num )
 GridAndVertexLighting
 =============
 */
-void GridAndVertexLighting( void )
+void GridAndVertexLighting()
 {
 	SetupGrid();
 

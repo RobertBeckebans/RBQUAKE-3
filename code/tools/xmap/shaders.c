@@ -258,7 +258,7 @@ loadTga:
 AllocShaderInfo
 ===============
 */
-static shaderInfo_t* AllocShaderInfo( void )
+static shaderInfo_t* AllocShaderInfo()
 {
 	shaderInfo_t* si;
 
@@ -780,7 +780,7 @@ LoadShaderInfo
 ===============
 */
 #define MAX_SHADER_FILES 128
-void LoadShaderInfo( void )
+void LoadShaderInfo()
 {
 	char  filename[1024];
 	int	  i;

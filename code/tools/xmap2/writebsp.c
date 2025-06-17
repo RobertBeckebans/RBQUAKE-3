@@ -106,7 +106,7 @@ there is no oportunity to discard planes, because all of the original
 brushes will be saved in the map
 */
 
-void EmitPlanes( void )
+void EmitPlanes()
 {
 	int			i;
 	bspPlane_t* bp;
@@ -251,7 +251,7 @@ int EmitDrawNode_r( node_t* node )
 SetModelNumbers
 ============
 */
-void SetModelNumbers( void )
+void SetModelNumbers()
 {
 	int			i;
 	entity_t*	ent;
@@ -282,7 +282,7 @@ SetLightStyles()
 sets style keys for entity lights
 */
 #if 0
-void SetLightStyles( void )
+void SetLightStyles()
 {
 	int             i, j, style, numStyles;
 	qboolean        keepLights;
@@ -380,7 +380,7 @@ BeginBSPFile()
 starts a new bsp file
 */
 
-void BeginBSPFile( void )
+void BeginBSPFile()
 {
 	/* these values may actually be initialized if the file existed when loaded, so clear them explicitly */
 	numBSPModels	   = 0;
@@ -407,7 +407,7 @@ EndBSPFile()
 finishes a new bsp and writes to disk
 */
 
-void EndBSPFile( void )
+void EndBSPFile()
 {
 	char path[1024];
 
@@ -500,7 +500,7 @@ EmitFogs() - ydnar
 turns map fogs into bsp fogs
 */
 
-void EmitFogs( void )
+void EmitFogs()
 {
 	int i, j;
 
@@ -550,7 +550,7 @@ BeginModel()
 sets up a new brush model
 */
 
-void BeginModel( void )
+void BeginModel()
 {
 	bspModel_t* mod;
 

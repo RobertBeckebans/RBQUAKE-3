@@ -31,9 +31,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *****************************************************************************/
 
 // setup the deathmatch AI
-void	 BotSetupDeathmatchAI( void );
+void	 BotSetupDeathmatchAI();
 // shutdown the deathmatch AI
-void	 BotShutdownDeathmatchAI( void );
+void	 BotShutdownDeathmatchAI();
 // let the bot live within its deathmatch AI net
 void	 BotDeathmatchAI( bot_state_t* bs, float thinktime );
 // free waypoints
@@ -103,7 +103,7 @@ bot_moveresult_t BotAttackMove( bot_state_t* bs, int tfl );
 // returns true if the bot and the entity are in the same team
 int				 BotSameTeam( bot_state_t* bs, int entnum );
 // returns true if teamplay is on
-int				 TeamPlayIsOn( void );
+int				 TeamPlayIsOn();
 // returns the client number of the team mate flag carrier (-1 if none)
 int				 BotTeamFlagCarrier( bot_state_t* bs );
 // returns visible team mate flag carrier if available

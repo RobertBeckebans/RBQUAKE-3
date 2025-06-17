@@ -102,7 +102,7 @@ static BOOL WINAPI CON_CtrlHandler( DWORD sig )
 CON_HistAdd
 ==================
 */
-static void CON_HistAdd( void )
+static void CON_HistAdd()
 {
 	Q_strncpyz( qconsole_history[qconsole_history_oldest], qconsole_line, sizeof( qconsole_history[qconsole_history_oldest] ) );
 
@@ -128,7 +128,7 @@ static void CON_HistAdd( void )
 CON_HistPrev
 ==================
 */
-static void CON_HistPrev( void )
+static void CON_HistPrev()
 {
 	int pos;
 
@@ -151,7 +151,7 @@ static void CON_HistPrev( void )
 CON_HistNext
 ==================
 */
-static void CON_HistNext( void )
+static void CON_HistNext()
 {
 	int pos;
 
@@ -184,7 +184,7 @@ static void CON_HistNext( void )
 CON_Show
 ==================
 */
-static void CON_Show( void )
+static void CON_Show()
 {
 	CONSOLE_SCREEN_BUFFER_INFO binfo;
 	COORD					   writeSize = { MAX_EDIT_LINE, 1 };
@@ -252,7 +252,7 @@ static void CON_Show( void )
 CON_Hide
 ==================
 */
-static void CON_Hide( void )
+static void CON_Hide()
 {
 	int realLen;
 
@@ -270,7 +270,7 @@ static void CON_Hide( void )
 CON_Shutdown
 ==================
 */
-void CON_Shutdown( void )
+void CON_Shutdown()
 {
 	CON_Hide();
 	SetConsoleMode( qconsole_hin, qconsole_orig_mode );
@@ -285,7 +285,7 @@ void CON_Shutdown( void )
 CON_Init
 ==================
 */
-void CON_Init( void )
+void CON_Init()
 {
 	CONSOLE_SCREEN_BUFFER_INFO info;
 	int						   i;
@@ -333,7 +333,7 @@ void CON_Init( void )
 CON_Input
 ==================
 */
-char* CON_Input( void )
+char* CON_Input()
 {
 	INPUT_RECORD buff[MAX_EDIT_LINE];
 	DWORD		 count = 0, events = 0;

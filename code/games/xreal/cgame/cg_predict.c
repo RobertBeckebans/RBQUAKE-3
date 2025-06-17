@@ -43,7 +43,7 @@ of the entities that are actually solid, to make for more
 efficient collision detection
 ====================
 */
-void			  CG_BuildSolidList( void )
+void			  CG_BuildSolidList()
 {
 	int			   i;
 	centity_t*	   cent;
@@ -417,7 +417,7 @@ CG_TouchTriggerPrediction
 Predict push triggers and items
 =========================
 */
-static void CG_TouchTriggerPrediction( void )
+static void CG_TouchTriggerPrediction()
 {
 	int			   i;
 	trace_t		   trace;
@@ -519,7 +519,7 @@ We detect prediction errors and allow them to be decayed off over several frames
 to ease the jerk.
 =================
 */
-void CG_PredictPlayerState( void )
+void CG_PredictPlayerState()
 {
 	int			  cmdNum, current;
 	playerState_t oldPlayerState;

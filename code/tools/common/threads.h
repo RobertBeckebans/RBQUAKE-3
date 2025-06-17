@@ -23,9 +23,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 extern int numthreads;
 
-void	   ThreadSetDefault( void );
-int		   GetThreadWork( void );
+void	   ThreadSetDefault();
+int		   GetThreadWork();
 void	   RunThreadsOnIndividual( int workcnt, qboolean showpacifier, void ( *func )( int ) );
 void	   RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) );
-void	   ThreadLock( void );
-void	   ThreadUnlock( void );
+void	   ThreadLock();
+void	   ThreadUnlock();

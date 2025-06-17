@@ -32,7 +32,7 @@ int		   c_faceLeafs;
 AllocBspFace
 ================
 */
-bspFace_t* AllocBspFace( void )
+bspFace_t* AllocBspFace()
 {
 	bspFace_t* f;
 

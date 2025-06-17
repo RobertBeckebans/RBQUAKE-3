@@ -103,7 +103,7 @@ int PComp( const void* a, const void* b )
 	}
 	return 1;
 }
-void SortPortals( void )
+void SortPortals()
 {
 	int i;
 
@@ -230,7 +230,7 @@ void	   ClusterMerge( int leafnum )
 CalcPortalVis
 ==================
 */
-void CalcPortalVis( void )
+void CalcPortalVis()
 {
 #ifdef MREDEBUG
 	Sys_Printf( "%6d portals out of %d", 0, numportals * 2 );
@@ -246,7 +246,7 @@ void CalcPortalVis( void )
 CalcPassageVis
 ==================
 */
-void CalcPassageVis( void )
+void CalcPassageVis()
 {
 	PassageMemory();
 
@@ -271,7 +271,7 @@ void CalcPassageVis( void )
 CalcPassagePortalVis
 ==================
 */
-void CalcPassagePortalVis( void )
+void CalcPassagePortalVis()
 {
 	PassageMemory();
 
@@ -296,7 +296,7 @@ void CalcPassagePortalVis( void )
 CalcFastVis
 ==================
 */
-void CalcFastVis( void )
+void CalcFastVis()
 {
 	int i;
 
@@ -313,7 +313,7 @@ void CalcFastVis( void )
 CalcVis
 ==================
 */
-void CalcVis( void )
+void CalcVis()
 {
 	int			i, minvis, maxvis;
 	const char* value;
@@ -589,7 +589,7 @@ int TryMergeLeaves( int l1num, int l2num )
 UpdatePortals
 ============
 */
-void UpdatePortals( void )
+void UpdatePortals()
 {
 	int		   i;
 	vportal_t* p;
@@ -615,7 +615,7 @@ MergeLeaves
 try to merge leaves but don't merge through hint splitters
 ============
 */
-void MergeLeaves( void )
+void MergeLeaves()
 {
 	int		   i, j, nummerges, totalnummerges;
 	leaf_t*	   leaf;
@@ -787,7 +787,7 @@ fixedWinding_t* TryMergeWinding( fixedWinding_t* f1, fixedWinding_t* f2, vec3_t 
 MergeLeafPortals
 ============
 */
-void MergeLeafPortals( void )
+void MergeLeafPortals()
 {
 	int				i, j, k, nummerges, hintsmerged;
 	leaf_t*			leaf;
@@ -852,7 +852,7 @@ void MergeLeafPortals( void )
 WritePortals
 ============
 */
-int CountActivePortals( void )
+int CountActivePortals()
 {
 	int		   num, hints, j;
 	vportal_t* p;

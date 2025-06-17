@@ -33,7 +33,7 @@ short*						 snd_out;
 
 #if !id386 // if configured not to use asm
 
-void S_WriteLinearBlastStereo16( void )
+void S_WriteLinearBlastStereo16()
 {
 	int i;
 	int val;
@@ -71,10 +71,10 @@ void S_WriteLinearBlastStereo16( void )
 }
 #elif defined( __GNUC__ )
 // uses snd_mixa.s
-void S_WriteLinearBlastStereo16( void );
+void S_WriteLinearBlastStereo16();
 #else
 
-__declspec( naked ) void S_WriteLinearBlastStereo16( void )
+__declspec( naked ) void S_WriteLinearBlastStereo16()
 {
 	__asm {
 	

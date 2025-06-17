@@ -355,7 +355,7 @@ Sv_Init
 Initialize the server list and hash table
 ====================
 */
-qboolean Sv_Init( void )
+qboolean Sv_Init()
 {
 	size_t array_size;
 
@@ -488,7 +488,7 @@ Sv_GetFirst
 Get the first server in the list
 ====================
 */
-server_t* Sv_GetFirst( void )
+server_t* Sv_GetFirst()
 {
 	crt_server	 = NULL;
 	prev_pointer = NULL;
@@ -504,7 +504,7 @@ Sv_GetNext
 Get the next server in the list
 ====================
 */
-server_t* Sv_GetNext( void )
+server_t* Sv_GetNext()
 {
 	for( ;; )
 	{
@@ -618,7 +618,7 @@ Sv_ResolveAddressMappings
 Resolve the address mapping list
 ====================
 */
-qboolean Sv_ResolveAddressMappings( void )
+qboolean Sv_ResolveAddressMappings()
 {
 	addrmap_t* unresolved = addrmaps;
 	addrmap_t* addrmap;
