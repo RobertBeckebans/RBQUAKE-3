@@ -11,13 +11,16 @@ if not exist "%GIT_BASH%" (
 )
 
 :: Run the shell script using Git Bash
-echo Running clang-format via clang-format-code.sh...
-"%GIT_BASH%" -c "./clang-format-code.sh"
+echo Running clang-format via format_code.sh...
+"%GIT_BASH%" -c "./format_code.sh"
 
 if %ERRORLEVEL% neq 0 (
-    echo ERROR: clang-format-code.sh failed to execute.
+    echo ERROR: format_code failed to execute.
     exit /b 1
 )
+
+astyle.exe -v --formatted --options=astyle-header.ini shared\q_shared.h
+astyle.exe -v --formatted --options=astyle-header.ini engine\renderer\tr_local.h
 
 echo Done!
 endlocal
