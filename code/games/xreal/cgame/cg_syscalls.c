@@ -192,12 +192,14 @@ void trap_CM_CapsuleTrace( trace_t* results, const vec3_t start, const vec3_t en
 	syscall( CG_CM_CAPSULETRACE, results, start, end, mins, maxs, model, brushmask );
 }
 
-void trap_CM_TransformedBoxTrace( trace_t* results, const vec3_t start, const vec3_t end, const vec3_t mins, const vec3_t maxs, clipHandle_t model, int brushmask, const vec3_t origin, const vec3_t angles )
+void trap_CM_TransformedBoxTrace(
+	trace_t* results, const vec3_t start, const vec3_t end, const vec3_t mins, const vec3_t maxs, clipHandle_t model, int brushmask, const vec3_t origin, const vec3_t angles )
 {
 	syscall( CG_CM_TRANSFORMEDBOXTRACE, results, start, end, mins, maxs, model, brushmask, origin, angles );
 }
 
-void trap_CM_TransformedCapsuleTrace( trace_t* results, const vec3_t start, const vec3_t end, const vec3_t mins, const vec3_t maxs, clipHandle_t model, int brushmask, const vec3_t origin, const vec3_t angles )
+void trap_CM_TransformedCapsuleTrace(
+	trace_t* results, const vec3_t start, const vec3_t end, const vec3_t mins, const vec3_t maxs, clipHandle_t model, int brushmask, const vec3_t origin, const vec3_t angles )
 {
 	syscall( CG_CM_TRANSFORMEDCAPSULETRACE, results, start, end, mins, maxs, model, brushmask, origin, angles );
 }
@@ -252,7 +254,7 @@ void trap_S_UpdateEntityPosition( int entityNum, const vec3_t origin )
 	syscall( CG_S_UPDATEENTITYPOSITION, entityNum, origin );
 }
 
-void trap_S_Respatialize( int entityNum, const vec3_t origin, vec3_t axis[ 3 ], int inwater )
+void trap_S_Respatialize( int entityNum, const vec3_t origin, vec3_t axis[3], int inwater )
 {
 	syscall( CG_S_RESPATIALIZE, entityNum, origin, axis, inwater );
 }

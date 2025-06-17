@@ -21,8 +21,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 //
 
-#define CMD_BACKUP 64
-#define CMD_MASK   ( CMD_BACKUP - 1 )
+#define CMD_BACKUP				 64
+#define CMD_MASK				 ( CMD_BACKUP - 1 )
 // allow a lot of command backups for very fast systems
 // multiple commands may be combined into a single packet, so this
 // needs to be larger than PACKET_BACKUP
@@ -36,20 +36,20 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // they may be dropped by the network.
 typedef struct
 {
-	int snapFlags; // SNAPFLAG_RATE_DELAYED, etc
-	int ping;
+	int			  snapFlags; // SNAPFLAG_RATE_DELAYED, etc
+	int			  ping;
 
-	int serverTime; // server time the message is valid for (in msec)
+	int			  serverTime; // server time the message is valid for (in msec)
 
-	byte areamask[ MAX_MAP_AREA_BYTES ]; // portalarea visibility bits
+	byte		  areamask[MAX_MAP_AREA_BYTES]; // portalarea visibility bits
 
 	playerState_t ps; // complete information about the current player at this time
 
-	int           numEntities;                          // all of the entities that need to be presented
-	entityState_t entities[ MAX_ENTITIES_IN_SNAPSHOT ]; // at the time of this snapshot
+	int			  numEntities;						  // all of the entities that need to be presented
+	entityState_t entities[MAX_ENTITIES_IN_SNAPSHOT]; // at the time of this snapshot
 
-	int numServerCommands;     // text based server commands to execute when this
-	int serverCommandSequence; // snapshot becomes current
+	int			  numServerCommands;	 // text based server commands to execute when this
+	int			  serverCommandSequence; // snapshot becomes current
 } snapshot_t;
 
 enum

@@ -37,10 +37,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #ifdef Q3_VM
 
-	#define id386         0
-	#define idppc         0
+	#define id386		  0
+	#define idppc		  0
 	#define idppc_altivec 0
-	#define idsparc       0
+	#define idsparc		  0
 
 #else
 
@@ -54,34 +54,34 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		#if defined( SIMD_SSE ) //|| 1 //|| defined(__SSE__)//defined(_MSC_VER)
 			#define id386_sse 1
 			#include <xmmintrin.h>
-		//#define SSEVEC3_T
+		// #define SSEVEC3_T
 		#else
 			#define id386_sse 0
 		#endif
 	#else
-		#define id386       0
+		#define id386		0
 		#define id386_3dnow 0
-		#define id386_sse   0
+		#define id386_sse	0
 	#endif
 
-	#if( defined( powerc ) || defined( powerpc ) || defined( ppc ) || \
-		defined( __ppc ) || defined( __ppc__ ) ) &&                   \
-		!defined( C_ONLY )
+	#if( defined( powerc ) || defined( powerpc ) || defined( ppc ) || defined( __ppc ) || defined( __ppc__ ) ) && !defined( C_ONLY )
 		#define idppc 1
 		#if defined( __VEC__ )
 			#define idppc_altivec 1
 			#ifdef __APPLE__ // Apple's GCC does this differently than the FSF.
-				#define VECCONST_UINT8( a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p ) \
-					( vector unsigned char )( a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p )
+				#define VECCONST_UINT8( a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p ) ( vector unsigned char )( a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p )
 			#else
 				#define VECCONST_UINT8( a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p ) \
-					( vector unsigned char ) { a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p }
+					( vector unsigned char )                                             \
+					{                                                                    \
+						a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p                   \
+					}
 			#endif
 		#else
 			#define idppc_altivec 0
 		#endif
 	#else
-		#define idppc         0
+		#define idppc		  0
 		#define idppc_altivec 0
 	#endif
 
@@ -176,7 +176,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			#define Q3_LITTLE_ENDIAN
 		#elif defined __x86_64__
 			#undef idx64
-			#define idx64       1
+			#define idx64		1
 			#define ARCH_STRING "x86_64"
 			#define Q3_LITTLE_ENDIAN
 		#endif
@@ -204,7 +204,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 		#define ID_INLINE inline
 
-		#define PATH_SEP '/'
+		#define PATH_SEP  '/'
 
 		#if defined __i386__
 			#define ARCH_STRING "i386"
@@ -272,7 +272,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			#define ARCH_STRING "x86"
 		#elif defined __amd64__
 			#undef idx64
-			#define idx64       1
+			#define idx64		1
 			#define ARCH_STRING "x86_64"
 		#elif defined __axp__
 			#define ARCH_STRING "alpha"
@@ -319,15 +319,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 	#ifdef __sgi
 
-		#define OS_STRING "irix"
-		#define ID_INLINE __inline
-		#define PATH_SEP  '/'
+		#define OS_STRING	  "irix"
+		#define ID_INLINE	  __inline
+		#define PATH_SEP	  '/'
 
-		#define ARCH_STRING "mips"
+		#define ARCH_STRING	  "mips"
 
 		#define Q3_BIG_ENDIAN // SGI's MIPS are always big endian
 
-		#define DLL_EXT ".so"
+		#define DLL_EXT		  ".so"
 
 	#endif
 
@@ -337,17 +337,17 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 		#define OS_STRING "q3vm"
 		#define ID_INLINE
-		#define PATH_SEP '/'
+		#define PATH_SEP	'/'
 
 		#define ARCH_STRING "bytecode"
 
-		#define DLL_EXT ".qvm"
+		#define DLL_EXT		".qvm"
 
 	#endif
 
 	//===========================================================================
 
-	//catch missing defines in above blocks
+	// catch missing defines in above blocks
 	#if !defined( OS_STRING )
 		#error "Operating system not supported"
 	#endif
@@ -368,11 +368,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		#error "DLL_EXT not defined"
 	#endif
 
-//endianness
+// endianness
 void  CopyShortSwap( void* dest, void* src );
 void  CopyLongSwap( void* dest, void* src );
 short ShortSwap( short l );
-int   LongSwap( int l );
+int	  LongSwap( int l );
 float FloatSwap( const float* f );
 
 	#if defined( Q3_BIG_ENDIAN ) && defined( Q3_LITTLE_ENDIAN )
@@ -380,10 +380,10 @@ float FloatSwap( const float* f );
 	#elif defined( Q3_BIG_ENDIAN )
 
 		#define CopyLittleShort( dest, src ) CopyShortSwap( dest, src )
-		#define CopyLittleLong( dest, src )  CopyLongSwap( dest, src )
-		#define LittleShort( x )             ShortSwap( x )
-		#define LittleLong( x )              LongSwap( x )
-		#define LittleFloat( x )             FloatSwap( &x )
+		#define CopyLittleLong( dest, src )	 CopyLongSwap( dest, src )
+		#define LittleShort( x )			 ShortSwap( x )
+		#define LittleLong( x )				 LongSwap( x )
+		#define LittleFloat( x )			 FloatSwap( &x )
 		#define BigShort
 		#define BigLong
 		#define BigFloat
@@ -391,7 +391,7 @@ float FloatSwap( const float* f );
 	#elif defined( Q3_LITTLE_ENDIAN )
 
 		#define CopyLittleShort( dest, src ) Com_Memcpy( dest, src, 2 )
-		#define CopyLittleLong( dest, src )  Com_Memcpy( dest, src, 4 )
+		#define CopyLittleLong( dest, src )	 Com_Memcpy( dest, src, 4 )
 		#define LittleShort
 		#define LittleLong
 		#define LittleFloat
@@ -412,7 +412,7 @@ float FloatSwap( const float* f );
 		#error "Endianness not defined"
 	#endif
 
-	//platform string
+	// platform string
 	#ifdef NDEBUG
 		#define PLATFORM_STRING OS_STRING "-" ARCH_STRING
 	#else

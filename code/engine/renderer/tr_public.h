@@ -73,12 +73,12 @@ typedef struct
 	int ( *LightForPoint )( vec3_t point, vec3_t ambientLight, vec3_t directedLight, vec3_t lightDir );
 
 	void ( *AddPolyToScene )( qhandle_t hShader, int numVerts, const polyVert_t* verts, int num );
-	//void            (*AddPolysToScene) (qhandle_t hShader, int numVerts, const polyVert_t * verts, int numPolys);
+	// void            (*AddPolysToScene) (qhandle_t hShader, int numVerts, const polyVert_t * verts, int numPolys);
 
 	void ( *AddLightToScene )( const vec3_t org, float intensity, float r, float g, float b );
 	void ( *RenderScene )( const refdef_t* fd );
 
-	void ( *SetColor )( const float* rgba );                                                                                   // NULL = 1,1,1,1
+	void ( *SetColor )( const float* rgba );																				   // NULL = 1,1,1,1
 	void ( *DrawStretchPic )( float x, float y, float w, float h, float s1, float t1, float s2, float t2, qhandle_t hShader ); // 0 = white
 	void ( *DrawRotatedPic )( float x, float y, float w, float h, float s1, float t1, float s2, float t2, qhandle_t hShader, float angle );
 	void ( *DrawStretchPicGradient )( float x, float y, float w, float h, float s1, float t1, float s2, float t2, qhandle_t hShader, const float* gradientColor, int gradientType );

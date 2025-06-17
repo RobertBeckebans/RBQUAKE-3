@@ -33,13 +33,13 @@ you may contact in writing id Software LLC, c/o ZeniMax Media Inc., Suite 120, R
 
 #include "tr_local.h"
 
-#define LL( x ) x = LittleLong( x )
-#define LF( x ) x = LittleFloat( x )
+#define LL( x )				x = LittleLong( x )
+#define LF( x )				x = LittleFloat( x )
 
 #define NUMMDCVERTEXNORMALS 256
 
 // *INDENT-OFF*
-static float r_anormals[ NUMMDCVERTEXNORMALS ][ 3 ] = {
+static float r_anormals[NUMMDCVERTEXNORMALS][3] = {
 	{ 1.000000, 0.000000, 0.000000 },
 	{ 0.980785, 0.195090, 0.000000 },
 	{ 0.923880, 0.382683, 0.000000 },
@@ -301,25 +301,25 @@ static float r_anormals[ NUMMDCVERTEXNORMALS ][ 3 ] = {
 
 // NOTE: MDC_MAX_ERROR is effectively the compression level. the lower this value, the higher
 // the accuracy, but with lower compression ratios.
-#define MDC_MAX_ERROR 0.1 // if any compressed vert is off by more than this from the
+#define MDC_MAX_ERROR	  0.1 // if any compressed vert is off by more than this from the
 // actual vert, make this a baseframe
 
-#define MDC_DIST_SCALE 0.05 // lower for more accuracy, but less range
+#define MDC_DIST_SCALE	  0.05 // lower for more accuracy, but less range
 
 // note: we are locked in at 8 or less bits since changing to byte-encoded normals
 #define MDC_BITS_PER_AXIS 8
-#define MDC_MAX_OFS       127.0 // to be safe
+#define MDC_MAX_OFS		  127.0 // to be safe
 
-#define MDC_MAX_DIST ( MDC_MAX_OFS * MDC_DIST_SCALE )
+#define MDC_MAX_DIST	  ( MDC_MAX_OFS * MDC_DIST_SCALE )
 
 #if 0
 void            R_MDC_DecodeXyzCompressed( mdcXyzCompressed_t* xyzComp, vec3_t out, vec3_t normal );
 #else // optimized version
-	#define R_MDC_DecodeXyzCompressed( ofsVec, out, normal )                                   \
-		( out )[ 0 ] = ( ( float )( ( ofsVec )&255 ) - MDC_MAX_OFS ) * MDC_DIST_SCALE;         \
-		( out )[ 1 ] = ( ( float )( ( ofsVec >> 8 ) & 255 ) - MDC_MAX_OFS ) * MDC_DIST_SCALE;  \
-		( out )[ 2 ] = ( ( float )( ( ofsVec >> 16 ) & 255 ) - MDC_MAX_OFS ) * MDC_DIST_SCALE; \
-		VectorCopy( ( r_anormals )[ ( ofsVec >> 24 ) ], normal );
+	#define R_MDC_DecodeXyzCompressed( ofsVec, out, normal )                                 \
+		( out )[0] = ( ( float )( ( ofsVec ) & 255 ) - MDC_MAX_OFS ) * MDC_DIST_SCALE;       \
+		( out )[1] = ( ( float )( ( ofsVec >> 8 ) & 255 ) - MDC_MAX_OFS ) * MDC_DIST_SCALE;  \
+		( out )[2] = ( ( float )( ( ofsVec >> 16 ) & 255 ) - MDC_MAX_OFS ) * MDC_DIST_SCALE; \
+		VectorCopy( ( r_anormals )[( ofsVec >> 24 )], normal );
 #endif
 
 /*
@@ -329,31 +329,31 @@ R_LoadMDC
 */
 qboolean R_LoadMDC( model_t* mod, int lod, void* buffer, int bufferSize, const char* modName )
 {
-	int i, j, k, l;
+	int					i, j, k, l;
 
-	mdcHeader_t*        mdcModel;
-	md3Frame_t*         mdcFrame;
-	mdcSurface_t*       mdcSurf;
-	md3Shader_t*        mdcShader;
-	md3Triangle_t*      mdcTri;
-	md3St_t*            mdcst;
-	md3XyzNormal_t*     mdcxyz;
+	mdcHeader_t*		mdcModel;
+	md3Frame_t*			mdcFrame;
+	mdcSurface_t*		mdcSurf;
+	md3Shader_t*		mdcShader;
+	md3Triangle_t*		mdcTri;
+	md3St_t*			mdcst;
+	md3XyzNormal_t*		mdcxyz;
 	mdcXyzCompressed_t* mdcxyzComp;
-	mdcTag_t*           mdcTag;
-	mdcTagName_t*       mdcTagName;
+	mdcTag_t*			mdcTag;
+	mdcTagName_t*		mdcTagName;
 
-	mdvModel_t*    mdvModel;
-	mdvFrame_t*    frame;
-	mdvSurface_t * surf, *surface;
-	srfTriangle_t* tri;
-	mdvVertex_t*   v;
-	mdvSt_t*       st;
-	mdvTag_t*      tag;
-	mdvTagName_t*  tagName;
-	short*         ps;
+	mdvModel_t*			mdvModel;
+	mdvFrame_t*			frame;
+	mdvSurface_t *		surf, *surface;
+	srfTriangle_t*		tri;
+	mdvVertex_t*		v;
+	mdvSt_t*			st;
+	mdvTag_t*			tag;
+	mdvTagName_t*		tagName;
+	short*				ps;
 
-	int version;
-	int size;
+	int					version;
+	int					size;
 
 	mdcModel = ( mdcHeader_t* )buffer;
 
@@ -365,9 +365,9 @@ qboolean R_LoadMDC( model_t* mod, int lod, void* buffer, int bufferSize, const c
 	}
 
 	mod->type = MOD_MESH;
-	size      = LittleLong( mdcModel->ofsEnd );
+	size	  = LittleLong( mdcModel->ofsEnd );
 	mod->dataSize += size;
-	mdvModel = mod->mdv[ lod ] = ri.Hunk_Alloc( sizeof( mdvModel_t ), h_low );
+	mdvModel = mod->mdv[lod] = ri.Hunk_Alloc( sizeof( mdvModel_t ), h_low );
 
 	LL( mdcModel->ident );
 	LL( mdcModel->version );
@@ -402,9 +402,9 @@ qboolean R_LoadMDC( model_t* mod, int lod, void* buffer, int bufferSize, const c
 			frame->radius = 256;
 			for( j = 0; j < 3; j++ )
 			{
-				frame->bounds[ 0 ][ j ] = 128;
-				frame->bounds[ 1 ][ j ] = -128;
-				frame->localOrigin[ j ] = LittleFloat( mdcFrame->localOrigin[ j ] );
+				frame->bounds[0][j]	  = 128;
+				frame->bounds[1][j]	  = -128;
+				frame->localOrigin[j] = LittleFloat( mdcFrame->localOrigin[j] );
 			}
 		}
 		else
@@ -413,9 +413,9 @@ qboolean R_LoadMDC( model_t* mod, int lod, void* buffer, int bufferSize, const c
 			frame->radius = LittleFloat( mdcFrame->radius );
 			for( j = 0; j < 3; j++ )
 			{
-				frame->bounds[ 0 ][ j ] = LittleFloat( mdcFrame->bounds[ 0 ][ j ] );
-				frame->bounds[ 1 ][ j ] = LittleFloat( mdcFrame->bounds[ 1 ][ j ] );
-				frame->localOrigin[ j ] = LittleFloat( mdcFrame->localOrigin[ j ] );
+				frame->bounds[0][j]	  = LittleFloat( mdcFrame->bounds[0][j] );
+				frame->bounds[1][j]	  = LittleFloat( mdcFrame->bounds[1][j] );
+				frame->localOrigin[j] = LittleFloat( mdcFrame->localOrigin[j] );
 			}
 		}
 	}
@@ -430,8 +430,8 @@ qboolean R_LoadMDC( model_t* mod, int lod, void* buffer, int bufferSize, const c
 		vec3_t angles;
 		for( j = 0; j < 3; j++ )
 		{
-			tag->origin[ j ] = ( float )LittleShort( mdcTag->xyz[ j ] ) * MD3_XYZ_SCALE;
-			angles[ j ]      = ( float )LittleShort( mdcTag->angles[ j ] ) * MDC_TAG_ANGLE_SCALE;
+			tag->origin[j] = ( float )LittleShort( mdcTag->xyz[j] ) * MD3_XYZ_SCALE;
+			angles[j]	   = ( float )LittleShort( mdcTag->angles[j] ) * MDC_TAG_ANGLE_SCALE;
 		}
 
 		AnglesToAxis( angles, tag->axis );
@@ -493,21 +493,21 @@ qboolean R_LoadMDC( model_t* mod, int lod, void* buffer, int bufferSize, const c
 		// strip off a trailing _1 or _2
 		// this is a crutch for q3data being a mess
 		j = strlen( surf->name );
-		if( j > 2 && surf->name[ j - 2 ] == '_' )
+		if( j > 2 && surf->name[j - 2] == '_' )
 		{
-			surf->name[ j - 2 ] = 0;
+			surf->name[j - 2] = 0;
 		}
 
 		// register the shaders
 		/*
 		   surf->numShaders = md3Surf->numShaders;
 		   surf->shaders = shader = ri.Hunk_Alloc(sizeof(*shader) * md3Surf->numShaders, h_low);
-		
+
 		   md3Shader = (md3Shader_t *) ((byte *) md3Surf + md3Surf->ofsShaders);
 		   for(j = 0; j < md3Surf->numShaders; j++, shader++, md3Shader++)
 		   {
 		   shader_t       *sh;
-		
+
 		   sh = R_FindShader(md3Shader->name, SHADER_3D_DYNAMIC, qtrue);
 		   if(sh->defaultShader)
 		   {
@@ -521,7 +521,7 @@ qboolean R_LoadMDC( model_t* mod, int lod, void* buffer, int bufferSize, const c
 		 */
 
 		// only consider the first shader
-		mdcShader    = ( md3Shader_t* )( ( byte* )mdcSurf + mdcSurf->ofsShaders );
+		mdcShader	 = ( md3Shader_t* )( ( byte* )mdcSurf + mdcSurf->ofsShaders );
 		surf->shader = R_FindShader( mdcShader->name, SHADER_3D_DYNAMIC, qtrue );
 
 		// swap all the triangles
@@ -531,9 +531,9 @@ qboolean R_LoadMDC( model_t* mod, int lod, void* buffer, int bufferSize, const c
 		mdcTri = ( md3Triangle_t* )( ( byte* )mdcSurf + mdcSurf->ofsTriangles );
 		for( j = 0; j < mdcSurf->numTriangles; j++, tri++, mdcTri++ )
 		{
-			tri->indexes[ 0 ] = LittleLong( mdcTri->indexes[ 0 ] );
-			tri->indexes[ 1 ] = LittleLong( mdcTri->indexes[ 1 ] );
-			tri->indexes[ 2 ] = LittleLong( mdcTri->indexes[ 2 ] );
+			tri->indexes[0] = LittleLong( mdcTri->indexes[0] );
+			tri->indexes[1] = LittleLong( mdcTri->indexes[1] );
+			tri->indexes[2] = LittleLong( mdcTri->indexes[2] );
 		}
 
 		R_CalcSurfaceTriangleNeighbors( surf->numTriangles, surf->triangles );
@@ -542,9 +542,9 @@ qboolean R_LoadMDC( model_t* mod, int lod, void* buffer, int bufferSize, const c
 		mdcxyz = ( md3XyzNormal_t* )( ( byte* )mdcSurf + mdcSurf->ofsXyzNormals );
 		for( j = 0; j < mdcSurf->numVerts * mdcSurf->numBaseFrames; j++, mdcxyz++ )
 		{
-			mdcxyz->xyz[ 0 ] = LittleShort( mdcxyz->xyz[ 0 ] );
-			mdcxyz->xyz[ 1 ] = LittleShort( mdcxyz->xyz[ 1 ] );
-			mdcxyz->xyz[ 2 ] = LittleShort( mdcxyz->xyz[ 2 ] );
+			mdcxyz->xyz[0] = LittleShort( mdcxyz->xyz[0] );
+			mdcxyz->xyz[1] = LittleShort( mdcxyz->xyz[1] );
+			mdcxyz->xyz[2] = LittleShort( mdcxyz->xyz[2] );
 
 			mdcxyz->normal = LittleShort( mdcxyz->normal );
 		}
@@ -593,9 +593,9 @@ qboolean R_LoadMDC( model_t* mod, int lod, void* buffer, int bufferSize, const c
 
 			for( k = 0; k < mdcSurf->numVerts; k++, v++, mdcxyz++ )
 			{
-				v->xyz[ 0 ] = LittleShort( mdcxyz->xyz[ 0 ] ) * MD3_XYZ_SCALE;
-				v->xyz[ 1 ] = LittleShort( mdcxyz->xyz[ 1 ] ) * MD3_XYZ_SCALE;
-				v->xyz[ 2 ] = LittleShort( mdcxyz->xyz[ 2 ] ) * MD3_XYZ_SCALE;
+				v->xyz[0] = LittleShort( mdcxyz->xyz[0] ) * MD3_XYZ_SCALE;
+				v->xyz[1] = LittleShort( mdcxyz->xyz[1] ) * MD3_XYZ_SCALE;
+				v->xyz[2] = LittleShort( mdcxyz->xyz[2] ) * MD3_XYZ_SCALE;
 
 				if( mdcSurf->numCompFrames > 0 && compFrame >= 0 )
 				{
@@ -616,8 +616,8 @@ qboolean R_LoadMDC( model_t* mod, int lod, void* buffer, int bufferSize, const c
 		mdcst = ( md3St_t* )( ( byte* )mdcSurf + mdcSurf->ofsSt );
 		for( j = 0; j < mdcSurf->numVerts; j++, mdcst++, st++ )
 		{
-			st->st[ 0 ] = LittleFloat( mdcst->st[ 0 ] );
-			st->st[ 1 ] = LittleFloat( mdcst->st[ 1 ] );
+			st->st[0] = LittleFloat( mdcst->st[0] );
+			st->st[1] = LittleFloat( mdcst->st[1] );
 		}
 
 		// find the next surface
@@ -628,27 +628,27 @@ qboolean R_LoadMDC( model_t* mod, int lod, void* buffer, int bufferSize, const c
 #if 1
 	// create VBO surfaces from md3 surfaces
 	{
-		growList_t       vboSurfaces;
+		growList_t		 vboSurfaces;
 		srfVBOMDVMesh_t* vboSurf;
 
-		byte* data;
-		int   dataSize;
-		int   dataOfs;
+		byte*			 data;
+		int				 dataSize;
+		int				 dataOfs;
 
-		vec4_t tmp;
+		vec4_t			 tmp;
 
-		GLuint ofsTexCoords;
-		GLuint ofsTangents;
-		GLuint ofsBinormals;
-		GLuint ofsNormals;
+		GLuint			 ofsTexCoords;
+		GLuint			 ofsTangents;
+		GLuint			 ofsBinormals;
+		GLuint			 ofsNormals;
 
-		GLuint sizeXYZ;
-		GLuint sizeTangents;
-		GLuint sizeBinormals;
-		GLuint sizeNormals;
+		GLuint			 sizeXYZ;
+		GLuint			 sizeTangents;
+		GLuint			 sizeBinormals;
+		GLuint			 sizeNormals;
 
-		int vertexesNum;
-		int f;
+		int				 vertexesNum;
+		int				 f;
 
 		Com_InitGrowList( &vboSurfaces, 10 );
 
@@ -658,9 +658,9 @@ qboolean R_LoadMDC( model_t* mod, int lod, void* buffer, int bufferSize, const c
 			{
 				const float *v0, *v1, *v2;
 				const float *t0, *t1, *t2;
-				vec3_t       tangent;
-				vec3_t       binormal;
-				vec3_t       normal;
+				vec3_t		 tangent;
+				vec3_t		 binormal;
+				vec3_t		 normal;
 
 				for( j = 0, v = surf->verts; j < ( surf->numVerts * mdvModel->numFrames ); j++, v++ )
 				{
@@ -673,13 +673,13 @@ qboolean R_LoadMDC( model_t* mod, int lod, void* buffer, int bufferSize, const c
 				{
 					for( j = 0, tri = surf->triangles; j < surf->numTriangles; j++, tri++ )
 					{
-						v0 = surf->verts[ surf->numVerts * f + tri->indexes[ 0 ] ].xyz;
-						v1 = surf->verts[ surf->numVerts * f + tri->indexes[ 1 ] ].xyz;
-						v2 = surf->verts[ surf->numVerts * f + tri->indexes[ 2 ] ].xyz;
+						v0 = surf->verts[surf->numVerts * f + tri->indexes[0]].xyz;
+						v1 = surf->verts[surf->numVerts * f + tri->indexes[1]].xyz;
+						v2 = surf->verts[surf->numVerts * f + tri->indexes[2]].xyz;
 
-						t0 = surf->st[ tri->indexes[ 0 ] ].st;
-						t1 = surf->st[ tri->indexes[ 1 ] ].st;
-						t2 = surf->st[ tri->indexes[ 2 ] ].st;
+						t0 = surf->st[tri->indexes[0]].st;
+						t1 = surf->st[tri->indexes[1]].st;
+						t2 = surf->st[tri->indexes[2]].st;
 
 	#if 1
 						R_CalcTangentSpace( tangent, binormal, normal, v0, v1, v2, t0, t1, t2 );
@@ -692,13 +692,13 @@ qboolean R_LoadMDC( model_t* mod, int lod, void* buffer, int bufferSize, const c
 						{
 							float* v;
 
-							v = surf->verts[ surf->numVerts * f + tri->indexes[ k ] ].tangent;
+							v = surf->verts[surf->numVerts * f + tri->indexes[k]].tangent;
 							VectorAdd( v, tangent, v );
 
-							v = surf->verts[ surf->numVerts * f + tri->indexes[ k ] ].binormal;
+							v = surf->verts[surf->numVerts * f + tri->indexes[k]].binormal;
 							VectorAdd( v, binormal, v );
 
-							v = surf->verts[ surf->numVerts * f + tri->indexes[ k ] ].normal;
+							v = surf->verts[surf->numVerts * f + tri->indexes[k]].normal;
 							VectorAdd( v, normal, v );
 						}
 					}
@@ -712,17 +712,17 @@ qboolean R_LoadMDC( model_t* mod, int lod, void* buffer, int bufferSize, const c
 				}
 			}
 
-			//ri.Printf(PRINT_ALL, "...calculating MDC mesh VBOs ( '%s', %i verts %i tris )\n", surf->name, surf->numVerts, surf->numTriangles);
+			// ri.Printf(PRINT_ALL, "...calculating MDC mesh VBOs ( '%s', %i verts %i tris )\n", surf->name, surf->numVerts, surf->numTriangles);
 
 			// create surface
 			vboSurf = ri.Hunk_Alloc( sizeof( *vboSurf ), h_low );
 			Com_AddToGrowList( &vboSurfaces, vboSurf );
 
 			vboSurf->surfaceType = SF_VBO_MDVMESH;
-			vboSurf->mdvModel    = mdvModel;
-			vboSurf->mdvSurface  = surf;
-			vboSurf->numIndexes  = surf->numTriangles * 3;
-			vboSurf->numVerts    = surf->numVerts;
+			vboSurf->mdvModel	 = mdvModel;
+			vboSurf->mdvSurface	 = surf;
+			vboSurf->numIndexes	 = surf->numTriangles * 3;
+			vboSurf->numVerts	 = surf->numVerts;
 
 			/*
 			vboSurf->vbo = R_CreateVBO2(va("staticWorldMesh_vertices %i", vboSurfaces.currentElements), numVerts, optimizedVerts,
@@ -736,8 +736,8 @@ qboolean R_LoadMDC( model_t* mod, int lod, void* buffer, int bufferSize, const c
 			vertexesNum = surf->numVerts;
 
 			dataSize = ( surf->numVerts * mdvModel->numFrames * sizeof( vec4_t ) * 4 ) + // xyz, tangent, binormal, normal
-				( surf->numVerts * sizeof( vec4_t ) );                                   // texcoords
-			data    = ri.Hunk_AllocateTempMemory( dataSize );
+					   ( surf->numVerts * sizeof( vec4_t ) );							 // texcoords
+			data	= ri.Hunk_AllocateTempMemory( dataSize );
 			dataOfs = 0;
 
 			// feed vertex XYZ
@@ -747,9 +747,9 @@ qboolean R_LoadMDC( model_t* mod, int lod, void* buffer, int bufferSize, const c
 				{
 					for( k = 0; k < 3; k++ )
 					{
-						tmp[ k ] = surf->verts[ f * vertexesNum + j ].xyz[ k ];
+						tmp[k] = surf->verts[f * vertexesNum + j].xyz[k];
 					}
-					tmp[ 3 ] = 1;
+					tmp[3] = 1;
 					Com_Memcpy( data + dataOfs, ( vec_t* )tmp, sizeof( vec4_t ) );
 					dataOfs += sizeof( vec4_t );
 				}
@@ -766,10 +766,10 @@ qboolean R_LoadMDC( model_t* mod, int lod, void* buffer, int bufferSize, const c
 			{
 				for( k = 0; k < 2; k++ )
 				{
-					tmp[ k ] = surf->st[ j ].st[ k ];
+					tmp[k] = surf->st[j].st[k];
 				}
-				tmp[ 2 ] = 0;
-				tmp[ 3 ] = 1;
+				tmp[2] = 0;
+				tmp[3] = 1;
 				Com_Memcpy( data + dataOfs, ( vec_t* )tmp, sizeof( vec4_t ) );
 				dataOfs += sizeof( vec4_t );
 			}
@@ -782,9 +782,9 @@ qboolean R_LoadMDC( model_t* mod, int lod, void* buffer, int bufferSize, const c
 				{
 					for( k = 0; k < 3; k++ )
 					{
-						tmp[ k ] = surf->verts[ f * vertexesNum + j ].tangent[ k ];
+						tmp[k] = surf->verts[f * vertexesNum + j].tangent[k];
 					}
-					tmp[ 3 ] = 1;
+					tmp[3] = 1;
 					Com_Memcpy( data + dataOfs, ( vec_t* )tmp, sizeof( vec4_t ) );
 					dataOfs += sizeof( vec4_t );
 				}
@@ -803,9 +803,9 @@ qboolean R_LoadMDC( model_t* mod, int lod, void* buffer, int bufferSize, const c
 				{
 					for( k = 0; k < 3; k++ )
 					{
-						tmp[ k ] = surf->verts[ f * vertexesNum + j ].binormal[ k ];
+						tmp[k] = surf->verts[f * vertexesNum + j].binormal[k];
 					}
-					tmp[ 3 ] = 1;
+					tmp[3] = 1;
 					Com_Memcpy( data + dataOfs, ( vec_t* )tmp, sizeof( vec4_t ) );
 					dataOfs += sizeof( vec4_t );
 				}
@@ -824,9 +824,9 @@ qboolean R_LoadMDC( model_t* mod, int lod, void* buffer, int bufferSize, const c
 				{
 					for( k = 0; k < 3; k++ )
 					{
-						tmp[ k ] = surf->verts[ f * vertexesNum + j ].normal[ k ];
+						tmp[k] = surf->verts[f * vertexesNum + j].normal[k];
 					}
-					tmp[ 3 ] = 1;
+					tmp[3] = 1;
 					Com_Memcpy( data + dataOfs, ( vec_t* )tmp, sizeof( vec4_t ) );
 					dataOfs += sizeof( vec4_t );
 				}
@@ -837,29 +837,29 @@ qboolean R_LoadMDC( model_t* mod, int lod, void* buffer, int bufferSize, const c
 				}
 			}
 
-			vboSurf->vbo                 = R_CreateVBO( va( "staticMDCMesh_VBO '%s'", surf->name ), data, dataSize, VBO_USAGE_STATIC );
-			vboSurf->vbo->ofsXYZ         = 0;
-			vboSurf->vbo->ofsTexCoords   = ofsTexCoords;
+			vboSurf->vbo				 = R_CreateVBO( va( "staticMDCMesh_VBO '%s'", surf->name ), data, dataSize, VBO_USAGE_STATIC );
+			vboSurf->vbo->ofsXYZ		 = 0;
+			vboSurf->vbo->ofsTexCoords	 = ofsTexCoords;
 			vboSurf->vbo->ofsLightCoords = ofsTexCoords;
-			vboSurf->vbo->ofsTangents    = ofsTangents;
-			vboSurf->vbo->ofsBinormals   = ofsBinormals;
-			vboSurf->vbo->ofsNormals     = ofsNormals;
+			vboSurf->vbo->ofsTangents	 = ofsTangents;
+			vboSurf->vbo->ofsBinormals	 = ofsBinormals;
+			vboSurf->vbo->ofsNormals	 = ofsNormals;
 
-			vboSurf->vbo->sizeXYZ       = sizeXYZ;
-			vboSurf->vbo->sizeTangents  = sizeTangents;
+			vboSurf->vbo->sizeXYZ		= sizeXYZ;
+			vboSurf->vbo->sizeTangents	= sizeTangents;
 			vboSurf->vbo->sizeBinormals = sizeBinormals;
-			vboSurf->vbo->sizeNormals   = sizeNormals;
+			vboSurf->vbo->sizeNormals	= sizeNormals;
 
 			ri.Hunk_FreeTempMemory( data );
 		}
 
 		// move VBO surfaces list to hunk
 		mdvModel->numVBOSurfaces = vboSurfaces.currentElements;
-		mdvModel->vboSurfaces    = ri.Hunk_Alloc( mdvModel->numVBOSurfaces * sizeof( *mdvModel->vboSurfaces ), h_low );
+		mdvModel->vboSurfaces	 = ri.Hunk_Alloc( mdvModel->numVBOSurfaces * sizeof( *mdvModel->vboSurfaces ), h_low );
 
 		for( i = 0; i < mdvModel->numVBOSurfaces; i++ )
 		{
-			mdvModel->vboSurfaces[ i ] = ( srfVBOMDVMesh_t* )Com_GrowListElement( &vboSurfaces, i );
+			mdvModel->vboSurfaces[i] = ( srfVBOMDVMesh_t* )Com_GrowListElement( &vboSurfaces, i );
 		}
 
 		Com_DestroyGrowList( &vboSurfaces );

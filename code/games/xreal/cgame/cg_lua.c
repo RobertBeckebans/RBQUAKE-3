@@ -37,17 +37,17 @@ static lua_State* cg_luaState = NULL;
 CG_InitLua
 ============
 */
-void CG_InitLua()
+void			  CG_InitLua()
 {
-	int   numdirs;
-	char  filename[ MAX_QPATH ];
-	char  dirlist[ 1024 ];
+	int	  numdirs;
+	char  filename[MAX_QPATH];
+	char  dirlist[1024];
 	char* dirptr;
-	int   i;
-	int   dirlen;
+	int	  i;
+	int	  dirlen;
 
-	//vec3_t          in;
-	//float           out;
+	// vec3_t          in;
+	// float           out;
 
 	CG_Printf( "------- CGame Lua Initialization -------\n" );
 
@@ -66,7 +66,7 @@ void CG_InitLua()
 
 	// get all effects from effects/*.lua files
 	numdirs = trap_FS_GetFileList( "effects", ".lua", dirlist, 1024 );
-	dirptr  = dirlist;
+	dirptr	= dirlist;
 	for( i = 0; i < numdirs; i++, dirptr += dirlen + 1 )
 	{
 		dirlen = strlen( dirptr );
@@ -114,9 +114,9 @@ CG_LoadLuaScript
 */
 void CG_LoadLuaScript( const char* filename )
 {
-	int          len;
+	int			 len;
 	fileHandle_t f;
-	char*        buf;
+	char*		 buf;
 
 	CG_Printf( "...loading '%s'\n", filename );
 
@@ -130,7 +130,7 @@ void CG_LoadLuaScript( const char* filename )
 	buf = malloc( len + 1 );
 
 	trap_FS_Read( buf, len, f );
-	buf[ len ] = 0;
+	buf[len] = 0;
 	trap_FS_FCloseFile( f );
 
 	if( luaL_loadbuffer( cg_luaState, buf, strlen( buf ), filename ) )
@@ -153,11 +153,11 @@ CG_RunLuaFunction
 */
 void CG_RunLuaFunction( const char* func, const char* sig, ... )
 {
-	va_list    vl;
-	int        narg, nres; // number of arguments and results
+	va_list	   vl;
+	int		   narg, nres; // number of arguments and results
 	lua_State* L = cg_luaState;
 
-	if( !func || !func[ 0 ] )
+	if( !func || !func[0] )
 	{
 		return;
 	}
@@ -214,7 +214,7 @@ void CG_RunLuaFunction( const char* func, const char* sig, ... )
 endwhile:
 
 	// do the call
-	nres = strlen( sig );                    // number of expected results
+	nres = strlen( sig );					 // number of expected results
 	if( lua_pcall( L, narg, nres, 0 ) != 0 ) // do the call
 	{
 		CG_Printf( "CG_RunLuaFunction: error running function `%s': %s\n", func, lua_tostring( L, -1 ) );
@@ -285,9 +285,9 @@ CG_DumpLuaStack
 */
 void CG_DumpLuaStack()
 {
-	int        i;
+	int		   i;
 	lua_State* L   = cg_luaState;
-	int        top = lua_gettop( L );
+	int		   top = lua_gettop( L );
 
 	for( i = 1; i <= top; i++ )
 	{

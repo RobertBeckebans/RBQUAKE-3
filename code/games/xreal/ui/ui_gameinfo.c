@@ -31,30 +31,30 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // arena and bot info
 //
 
-int          ui_numBots;
-static char* ui_botInfos[ MAX_BOTS ];
+int			 ui_numBots;
+static char* ui_botInfos[MAX_BOTS];
 
-static int   ui_numArenas;
-static char* ui_arenaInfos[ MAX_ARENAS ];
+static int	 ui_numArenas;
+static char* ui_arenaInfos[MAX_ARENAS];
 
 /*
 ===============
 UI_ParseInfos
 ===============
 */
-int UI_ParseInfos( char* buf, int max, char* infos[] )
+int			 UI_ParseInfos( char* buf, int max, char* infos[] )
 {
 	char* token;
-	int   count;
-	char  key[ MAX_TOKEN_CHARS ];
-	char  info[ MAX_INFO_STRING ];
+	int	  count;
+	char  key[MAX_TOKEN_CHARS];
+	char  info[MAX_INFO_STRING];
 
 	count = 0;
 
 	while( 1 )
 	{
 		token = Com_Parse( &buf );
-		if( !token[ 0 ] )
+		if( !token[0] )
 		{
 			break;
 		}
@@ -70,11 +70,11 @@ int UI_ParseInfos( char* buf, int max, char* infos[] )
 			break;
 		}
 
-		info[ 0 ] = '\0';
+		info[0] = '\0';
 		while( 1 )
 		{
 			token = Com_ParseExt( &buf, qtrue );
-			if( !token[ 0 ] )
+			if( !token[0] )
 			{
 				Com_Printf( "Unexpected end of info file\n" );
 				break;
@@ -86,17 +86,17 @@ int UI_ParseInfos( char* buf, int max, char* infos[] )
 			Q_strncpyz( key, token, sizeof( key ) );
 
 			token = Com_ParseExt( &buf, qfalse );
-			if( !token[ 0 ] )
+			if( !token[0] )
 			{
 				strcpy( token, "<NULL>" );
 			}
 			Info_SetValueForKey( info, key, token );
 		}
-		//NOTE: extra space for arena number
-		infos[ count ] = UI_Alloc( strlen( info ) + strlen( "\\num\\" ) + strlen( va( "%d", MAX_ARENAS ) ) + 1 );
-		if( infos[ count ] )
+		// NOTE: extra space for arena number
+		infos[count] = UI_Alloc( strlen( info ) + strlen( "\\num\\" ) + strlen( va( "%d", MAX_ARENAS ) ) + 1 );
+		if( infos[count] )
 		{
-			strcpy( infos[ count ], info );
+			strcpy( infos[count], info );
 			count++;
 		}
 	}
@@ -110,9 +110,9 @@ UI_LoadArenasFromFile
 */
 static void UI_LoadArenasFromFile( char* filename )
 {
-	int          len;
+	int			 len;
 	fileHandle_t f;
-	char         buf[ MAX_ARENAS_TEXT ];
+	char		 buf[MAX_ARENAS_TEXT];
 
 	len = trap_FS_FOpenFile( filename, &f, FS_READ );
 	if( !f )
@@ -128,10 +128,10 @@ static void UI_LoadArenasFromFile( char* filename )
 	}
 
 	trap_FS_Read( buf, len, f );
-	buf[ len ] = 0;
+	buf[len] = 0;
 	trap_FS_FCloseFile( f );
 
-	ui_numArenas += UI_ParseInfos( buf, MAX_ARENAS - ui_numArenas, &ui_arenaInfos[ ui_numArenas ] );
+	ui_numArenas += UI_ParseInfos( buf, MAX_ARENAS - ui_numArenas, &ui_arenaInfos[ui_numArenas] );
 }
 
 /*
@@ -154,19 +154,19 @@ UI_LoadArenas
 */
 void UI_LoadArenas( void )
 {
-	int   numdirs;
-	char  filename[ 128 ];
-	char  dirlist[ MAX_ARENAS ];
+	int	  numdirs;
+	char  filename[128];
+	char  dirlist[MAX_ARENAS];
 	char* dirptr;
-	int   i, n;
-	int   dirlen;
+	int	  i, n;
+	int	  dirlen;
 
-	ui_numArenas    = 0;
+	ui_numArenas	= 0;
 	uiInfo.mapCount = 0;
 
 	// get all arenas from .arena files
 	numdirs = trap_FS_GetFileList( "scripts", ".arena", dirlist, MAX_ARENAS );
-	dirptr  = dirlist;
+	dirptr	= dirlist;
 
 	for( i = 0; i < numdirs; i++, dirptr += dirlen + 1 )
 	{
@@ -185,11 +185,11 @@ void UI_LoadArenas( void )
 
 	for( n = 0; n < ui_numArenas; n++ )
 	{
-		uiInfo.mapList[ uiInfo.mapCount ].cinematic   = -1;
-		uiInfo.mapList[ uiInfo.mapCount ].mapLoadName = String_Alloc( Info_ValueForKey( ui_arenaInfos[ n ], "map" ) );
-		uiInfo.mapList[ uiInfo.mapCount ].mapName     = String_Alloc( Info_ValueForKey( ui_arenaInfos[ n ], "longname" ) );
-		uiInfo.mapList[ uiInfo.mapCount ].levelShot   = -1;
-		uiInfo.mapList[ uiInfo.mapCount ].imageName   = String_Alloc( va( "levelshots/%s", uiInfo.mapList[ uiInfo.mapCount ].mapLoadName ) );
+		uiInfo.mapList[uiInfo.mapCount].cinematic	= -1;
+		uiInfo.mapList[uiInfo.mapCount].mapLoadName = String_Alloc( Info_ValueForKey( ui_arenaInfos[n], "map" ) );
+		uiInfo.mapList[uiInfo.mapCount].mapName		= String_Alloc( Info_ValueForKey( ui_arenaInfos[n], "longname" ) );
+		uiInfo.mapList[uiInfo.mapCount].levelShot	= -1;
+		uiInfo.mapList[uiInfo.mapCount].imageName	= String_Alloc( va( "levelshots/%s", uiInfo.mapList[uiInfo.mapCount].mapLoadName ) );
 
 		uiInfo.mapCount++;
 
@@ -209,9 +209,9 @@ UI_LoadBotsFromFile
 */
 static void UI_LoadBotsFromFile( char* filename )
 {
-	int          len;
+	int			 len;
 	fileHandle_t f;
-	char         buf[ MAX_BOTS_TEXT ];
+	char		 buf[MAX_BOTS_TEXT];
 
 	len = trap_FS_FOpenFile( filename, &f, FS_READ );
 
@@ -229,12 +229,12 @@ static void UI_LoadBotsFromFile( char* filename )
 	}
 
 	trap_FS_Read( buf, len, f );
-	buf[ len ] = 0;
+	buf[len] = 0;
 	trap_FS_FCloseFile( f );
 
 	Com_Compress( buf );
 
-	ui_numBots += UI_ParseInfos( buf, MAX_BOTS - ui_numBots, &ui_botInfos[ ui_numBots ] );
+	ui_numBots += UI_ParseInfos( buf, MAX_BOTS - ui_numBots, &ui_botInfos[ui_numBots] );
 }
 
 /*
@@ -245,12 +245,12 @@ UI_LoadBots
 void UI_LoadBots( void )
 {
 	vmCvar_t botsFile;
-	int      numdirs;
-	char     filename[ 128 ];
-	char     dirlist[ 1024 ];
-	char*    dirptr;
-	int      i;
-	int      dirlen;
+	int		 numdirs;
+	char	 filename[128];
+	char	 dirlist[1024];
+	char*	 dirptr;
+	int		 i;
+	int		 dirlen;
 
 	ui_numBots = 0;
 
@@ -267,7 +267,7 @@ void UI_LoadBots( void )
 
 	// get all bots from .bot files
 	numdirs = trap_FS_GetFileList( "scripts", ".bot", dirlist, 1024 );
-	dirptr  = dirlist;
+	dirptr	= dirlist;
 	for( i = 0; i < numdirs; i++, dirptr += dirlen + 1 )
 	{
 		dirlen = strlen( dirptr );
@@ -292,7 +292,7 @@ char* UI_GetBotInfoByNumber( int num )
 		return NULL;
 	}
 
-	return ui_botInfos[ num ];
+	return ui_botInfos[num];
 }
 
 /*
@@ -302,16 +302,16 @@ UI_GetBotInfoByName
 */
 char* UI_GetBotInfoByName( const char* name )
 {
-	int   n;
+	int	  n;
 	char* value;
 
 	for( n = 0; n < ui_numBots; n++ )
 	{
-		value = Info_ValueForKey( ui_botInfos[ n ], "name" );
+		value = Info_ValueForKey( ui_botInfos[n], "name" );
 
 		if( !Q_stricmp( value, name ) )
 		{
-			return ui_botInfos[ n ];
+			return ui_botInfos[n];
 		}
 	}
 
@@ -336,9 +336,9 @@ char* UI_GetBotNameByNumber( int num )
 
 void UI_ServerInfo( void )
 {
-	char info[ MAX_INFO_VALUE ];
+	char info[MAX_INFO_VALUE];
 
-	info[ 0 ] = '\0';
+	info[0] = '\0';
 
 	if( trap_GetConfigString( CS_SERVERINFO, info, sizeof( info ) ) )
 	{

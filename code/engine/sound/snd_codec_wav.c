@@ -61,7 +61,7 @@ static int S_ReadChunkInfo( fileHandle_t f, char* name )
 {
 	int len, r;
 
-	name[ 4 ] = 0;
+	name[4] = 0;
 
 	r = FS_Read( name, 4, f );
 	if( r != 4 )
@@ -88,8 +88,8 @@ Returns the length of the data in the chunk, or -1 if not found
 */
 static int S_FindRIFFChunk( fileHandle_t f, char* chunk )
 {
-	char name[ 5 ];
-	int  len;
+	char name[5];
+	int	 len;
 
 	while( ( len = S_ReadChunkInfo( f, name ) ) >= 0 )
 	{
@@ -132,7 +132,7 @@ static void S_ByteSwapRawSamples( int samples, int width, int s_channels, const 
 	}
 	for( i = 0; i < samples; i++ )
 	{
-		( ( short* )data )[ i ] = LittleShort( ( ( short* )data )[ i ] );
+		( ( short* )data )[i] = LittleShort( ( ( short* )data )[i] );
 	}
 }
 
@@ -143,9 +143,9 @@ S_ReadRIFFHeader
 */
 static qboolean S_ReadRIFFHeader( fileHandle_t file, snd_info_t* info )
 {
-	char dump[ 16 ];
-	int  bits;
-	int  fmtlen = 0;
+	char dump[16];
+	int	 bits;
+	int	 fmtlen = 0;
 
 	// skip the riff wav header
 	FS_Read( dump, 12, file );
@@ -160,7 +160,7 @@ static qboolean S_ReadRIFFHeader( fileHandle_t file, snd_info_t* info )
 	// Save the parameters
 	FGetLittleShort( file ); // wav_format
 	info->channels = FGetLittleShort( file );
-	info->rate     = FGetLittleLong( file );
+	info->rate	   = FGetLittleLong( file );
 	FGetLittleLong( file );
 	FGetLittleShort( file );
 	bits = FGetLittleShort( file );
@@ -171,7 +171,7 @@ static qboolean S_ReadRIFFHeader( fileHandle_t file, snd_info_t* info )
 		return qfalse;
 	}
 
-	info->width   = bits / 8;
+	info->width	  = bits / 8;
 	info->dataofs = 0;
 
 	// Skip the rest of the format chunk if required
@@ -193,24 +193,17 @@ static qboolean S_ReadRIFFHeader( fileHandle_t file, snd_info_t* info )
 }
 
 // WAV codec
-snd_codec_t wav_codec = {
-	"wav",
-	S_WAV_CodecLoad,
-	S_WAV_CodecOpenStream,
-	S_WAV_CodecReadStream,
-	S_WAV_CodecCloseStream,
-	NULL
-};
+snd_codec_t wav_codec = { "wav", S_WAV_CodecLoad, S_WAV_CodecOpenStream, S_WAV_CodecReadStream, S_WAV_CodecCloseStream, NULL };
 
 /*
 =================
 S_WAV_CodecLoad
 =================
 */
-void* S_WAV_CodecLoad( const char* filename, snd_info_t* info )
+void*		S_WAV_CodecLoad( const char* filename, snd_info_t* info )
 {
 	fileHandle_t file;
-	void*        buffer;
+	void*		 buffer;
 
 	// Try to open the file
 	FS_FOpenFileRead( filename, &file, qtrue );
@@ -223,8 +216,7 @@ void* S_WAV_CodecLoad( const char* filename, snd_info_t* info )
 	if( !S_ReadRIFFHeader( file, info ) )
 	{
 		FS_FCloseFile( file );
-		Com_Printf( S_COLOR_RED "ERROR: Incorrect/unsupported format in \"%s\"\n",
-			filename );
+		Com_Printf( S_COLOR_RED "ERROR: Incorrect/unsupported format in \"%s\"\n", filename );
 		return NULL;
 	}
 
@@ -233,8 +225,7 @@ void* S_WAV_CodecLoad( const char* filename, snd_info_t* info )
 	if( !buffer )
 	{
 		FS_FCloseFile( file );
-		Com_Printf( S_COLOR_RED "ERROR: Out of memory reading \"%s\"\n",
-			filename );
+		Com_Printf( S_COLOR_RED "ERROR: Out of memory reading \"%s\"\n", filename );
 		return NULL;
 	}
 

@@ -255,17 +255,17 @@ static void ImageInit( void )
 		memset( images, 0, sizeof( images ) );
 
 		/* generate *bogus image */
-		images[ 0 ].name = safe_malloc( strlen( DEFAULT_IMAGE ) + 1 );
-		strcpy( images[ 0 ].name, DEFAULT_IMAGE );
-		images[ 0 ].filename = safe_malloc( strlen( DEFAULT_IMAGE ) + 1 );
-		strcpy( images[ 0 ].filename, DEFAULT_IMAGE );
-		images[ 0 ].width    = 64;
-		images[ 0 ].height   = 64;
-		images[ 0 ].refCount = 1;
-		images[ 0 ].pixels   = safe_malloc( 64 * 64 * 4 );
+		images[0].name = safe_malloc( strlen( DEFAULT_IMAGE ) + 1 );
+		strcpy( images[0].name, DEFAULT_IMAGE );
+		images[0].filename = safe_malloc( strlen( DEFAULT_IMAGE ) + 1 );
+		strcpy( images[0].filename, DEFAULT_IMAGE );
+		images[0].width	   = 64;
+		images[0].height   = 64;
+		images[0].refCount = 1;
+		images[0].pixels   = safe_malloc( 64 * 64 * 4 );
 		for( i = 0; i < ( 64 * 64 * 4 ); i++ )
 		{
-			images[ 0 ].pixels[ i ] = 255;
+			images[0].pixels[i] = 255;
 		}
 	}
 }
@@ -313,14 +313,14 @@ finds an existing rgba image and returns a pointer to the image_t struct or NULL
 
 image_t* ImageFind( const char* filename )
 {
-	int  i;
-	char name[ 1024 ];
+	int	 i;
+	char name[1024];
 
 	/* init */
 	ImageInit();
 
 	/* dummy check */
-	if( filename == NULL || filename[ 0 ] == '\0' )
+	if( filename == NULL || filename[0] == '\0' )
 	{
 		return NULL;
 	}
@@ -332,9 +332,9 @@ image_t* ImageFind( const char* filename )
 	/* search list */
 	for( i = 0; i < MAX_IMAGES; i++ )
 	{
-		if( images[ i ].name != NULL && !strcmp( name, images[ i ].name ) )
+		if( images[i].name != NULL && !strcmp( name, images[i].name ) )
 		{
-			return &images[ i ];
+			return &images[i];
 		}
 	}
 
@@ -349,17 +349,17 @@ loads an rgba image and returns a pointer to the image_t struct or NULL if not f
 
 image_t* ImageLoad( const char* filename )
 {
-	int      i;
+	int		 i;
 	image_t* image;
-	char     name[ 1024 ];
-	int      size;
-	byte*    buffer = NULL;
+	char	 name[1024];
+	int		 size;
+	byte*	 buffer = NULL;
 
 	/* init */
 	ImageInit();
 
 	/* dummy check */
-	if( filename == NULL || filename[ 0 ] == '\0' )
+	if( filename == NULL || filename[0] == '\0' )
 	{
 		return NULL;
 	}
@@ -380,9 +380,9 @@ image_t* ImageLoad( const char* filename )
 	image = NULL;
 	for( i = 0; i < MAX_IMAGES; i++ )
 	{
-		if( images[ i ].name == NULL )
+		if( images[i].name == NULL )
 		{
-			image = &images[ i ];
+			image = &images[i];
 			break;
 		}
 	}
@@ -460,7 +460,7 @@ image_t* ImageLoad( const char* filename )
 					}
 				#endif // dds debug
 				}
-			#endif // ignore dds
+			#endif	   // ignore dds
 			}
 		#endif // ignore jpg dds
 		}

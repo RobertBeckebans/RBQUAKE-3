@@ -52,18 +52,18 @@ static void png_user_error_fn( png_structp png_ptr, png_const_charp error_messag
 
 void LoadPNG( const char* name, byte** pic, int* width, int* height, byte alphaByte )
 {
-	int          bit_depth;
-	int          color_type;
-	png_uint_32  w;
-	png_uint_32  h;
+	int			 bit_depth;
+	int			 color_type;
+	png_uint_32	 w;
+	png_uint_32	 h;
 	unsigned int row;
 	//	size_t          rowbytes;
-	png_infop   info;
-	png_structp png;
-	png_bytep*  row_pointers;
-	byte*       data;
-	byte*       out;
-	int         size;
+	png_infop	 info;
+	png_structp	 png;
+	png_bytep*	 row_pointers;
+	byte*		 data;
+	byte*		 out;
+	int			 size;
 
 	// load png
 	size = ri.FS_ReadFile( name, ( void** )&data );
@@ -73,7 +73,7 @@ void LoadPNG( const char* name, byte** pic, int* width, int* height, byte alphaB
 		return;
 	}
 
-	//png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+	// png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 	png = png_create_read_struct( PNG_LIBPNG_VER_STRING, ( png_voidp )NULL, png_user_error_fn, png_user_warning_fn );
 
 	if( !png )
@@ -107,7 +107,7 @@ void LoadPNG( const char* name, byte** pic, int* width, int* height, byte alphaB
 		return;
 	}
 
-	//png_set_write_fn(png, buffer, png_write_data, png_flush_data);
+	// png_set_write_fn(png, buffer, png_write_data, png_flush_data);
 	png_set_read_fn( png, data, png_read_data );
 
 	png_set_sig_bytes( png, 0 );
@@ -135,7 +135,7 @@ void LoadPNG( const char* name, byte** pic, int* width, int* height, byte alphaB
 	}
 
 	// expand grayscale images to the full 8 bits from 1, 2, or 4 bits/pixel
-	//if(color_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8)
+	// if(color_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8)
 	//  png_set_gray_1_2_4_to_8(png);
 
 	// expand paletted or RGB images with transparency to full alpha channels
@@ -161,7 +161,7 @@ void LoadPNG( const char* name, byte** pic, int* width, int* height, byte alphaB
 	png_read_update_info( png, info );
 
 	// allocate the memory to hold the image
-	*width  = w;
+	*width	= w;
 	*height = h;
 	*pic = out = ( byte* )ri.Malloc( w * h * 4 );
 
@@ -177,11 +177,11 @@ void LoadPNG( const char* name, byte** pic, int* width, int* height, byte alphaB
 		return;
 	}
 
-	//rowbytes = png_get_rowbytes(png, info);
+	// rowbytes = png_get_rowbytes(png, info);
 
 	for( row = 0; row < h; row++ )
 	{
-		row_pointers[ row ] = ( png_bytep )( out + ( row * 4 * w ) );
+		row_pointers[row] = ( png_bytep )( out + ( row * 4 * w ) );
 	}
 
 	// read image data
@@ -204,7 +204,7 @@ PNG SAVING
 
 =========================================================
 */
-static int png_compressed_size;
+static int	png_compressed_size;
 
 static void png_write_data( png_structp png, png_bytep data, png_size_t length )
 {
@@ -221,12 +221,12 @@ static void png_flush_data( png_structp png )
 void SavePNG( const char* name, const byte* pic, int width, int height, int numBytes, qboolean flip )
 {
 	png_structp png;
-	png_infop   info;
-	int         i;
-	int         row_stride;
-	byte*       buffer;
-	byte*       row;
-	png_bytep*  row_pointers;
+	png_infop	info;
+	int			i;
+	int			row_stride;
+	byte*		buffer;
+	byte*		row;
+	png_bytep*	row_pointers;
 
 	png = png_create_write_struct( PNG_LIBPNG_VER_STRING, NULL, NULL, NULL );
 
@@ -244,7 +244,7 @@ void SavePNG( const char* name, const byte* pic, int width, int height, int numB
 	}
 
 	png_compressed_size = 0;
-	buffer              = ri.Hunk_AllocateTempMemory( width * height * numBytes );
+	buffer				= ri.Hunk_AllocateTempMemory( width * height * numBytes );
 
 	// set error handling
 	if( setjmp( png_jmpbuf( png ) ) )
@@ -286,13 +286,13 @@ void SavePNG( const char* name, const byte* pic, int width, int height, int numB
 	}
 
 	row_stride = width * numBytes;
-	row        = ( byte* )pic + ( height - 1 ) * row_stride;
+	row		   = ( byte* )pic + ( height - 1 ) * row_stride;
 
 	if( flip )
 	{
 		for( i = height - 1; i >= 0; i-- )
 		{
-			row_pointers[ i ] = row;
+			row_pointers[i] = row;
 			row -= row_stride;
 		}
 	}
@@ -300,7 +300,7 @@ void SavePNG( const char* name, const byte* pic, int width, int height, int numB
 	{
 		for( i = 0; i < height; i++ )
 		{
-			row_pointers[ i ] = row;
+			row_pointers[i] = row;
 			row -= row_stride;
 		}
 	}

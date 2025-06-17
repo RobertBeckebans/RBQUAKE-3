@@ -93,7 +93,7 @@ picoModel_t* FindModel( char* name, int frame )
 	}
 
 	/* dummy check */
-	if( name == NULL || name[ 0 ] == '\0' )
+	if( name == NULL || name[0] == '\0' )
 	{
 		return NULL;
 	}
@@ -101,10 +101,9 @@ picoModel_t* FindModel( char* name, int frame )
 	/* search list */
 	for( i = 0; i < MAX_MODELS; i++ )
 	{
-		if( picoModels[ i ] != NULL &&
-			!strcmp( PicoGetModelName( picoModels[ i ] ), name ) && PicoGetModelFrameNum( picoModels[ i ] ) == frame )
+		if( picoModels[i] != NULL && !strcmp( PicoGetModelName( picoModels[i] ), name ) && PicoGetModelFrameNum( picoModels[i] ) == frame )
 		{
-			return picoModels[ i ];
+			return picoModels[i];
 		}
 	}
 
@@ -119,7 +118,7 @@ loads a picoModel and returns a pointer to the picoModel_t struct or NULL if not
 
 picoModel_t* LoadModel( char* name, int frame )
 {
-	int          i;
+	int			 i;
 	picoModel_t *model, **pm;
 
 	/* init */
@@ -129,7 +128,7 @@ picoModel_t* LoadModel( char* name, int frame )
 	}
 
 	/* dummy check */
-	if( name == NULL || name[ 0 ] == '\0' )
+	if( name == NULL || name[0] == '\0' )
 	{
 		return NULL;
 	}
@@ -145,9 +144,9 @@ picoModel_t* LoadModel( char* name, int frame )
 	pm = NULL;
 	for( i = 0; i < MAX_MODELS; i++ )
 	{
-		if( picoModels[ i ] == NULL )
+		if( picoModels[i] == NULL )
 		{
-			pm = &picoModels[ i ];
+			pm = &picoModels[i];
 			break;
 		}
 	}
@@ -209,24 +208,36 @@ InsertModel() - ydnar
 adds a picomodel into the bsp
 */
 
-void InsertModel( char* name, int frame, matrix_t transform, matrix_t nTransform, remap_t* remap, shaderInfo_t* celShader, int eNum, int castShadows, int recvShadows, int spawnFlags, float lightmapScale, int lightmapSampleSize, float shadeAngle )
+void InsertModel( char* name,
+	int					frame,
+	matrix_t			transform,
+	matrix_t			nTransform,
+	remap_t*			remap,
+	shaderInfo_t*		celShader,
+	int					eNum,
+	int					castShadows,
+	int					recvShadows,
+	int					spawnFlags,
+	float				lightmapScale,
+	int					lightmapSampleSize,
+	float				shadeAngle )
 {
-	int               i, j, k, s, numSurfaces;
-	matrix_t          identity;
-	picoModel_t*      model;
-	picoShader_t*     shader;
-	picoSurface_t*    surface;
-	shaderInfo_t*     si;
+	int				  i, j, k, s, numSurfaces;
+	matrix_t		  identity;
+	picoModel_t*	  model;
+	picoShader_t*	  shader;
+	picoSurface_t*	  surface;
+	shaderInfo_t*	  si;
 	mapDrawSurface_t* ds;
-	bspDrawVert_t*    dv;
-	char*             picoShaderName;
-	char              shaderName[ MAX_QPATH ];
-	picoVec_t *       xyz, *normal, *st;
-	byte*             color;
-	picoIndex_t*      indexes;
-	remap_t *         rm, *glob;
-	double            normalEpsilon_save;
-	double            distanceEpsilon_save;
+	bspDrawVert_t*	  dv;
+	char*			  picoShaderName;
+	char			  shaderName[MAX_QPATH];
+	picoVec_t *		  xyz, *normal, *st;
+	byte*			  color;
+	picoIndex_t*	  indexes;
+	remap_t *		  rm, *glob;
+	double			  normalEpsilon_save;
+	double			  distanceEpsilon_save;
 
 	/* get model */
 	model = LoadModel( name, frame );
@@ -286,8 +297,8 @@ void InsertModel( char* name, int frame, matrix_t transform, matrix_t nTransform
 		PicoFixSurfaceNormals( surface );
 
 		/* allocate a surface (ydnar: gs mods) */
-		ds              = AllocDrawSurface( SURFACE_TRIANGLES );
-		ds->entityNum   = eNum;
+		ds				= AllocDrawSurface( SURFACE_TRIANGLES );
+		ds->entityNum	= eNum;
 		ds->castShadows = castShadows;
 		ds->recvShadows = recvShadows;
 
@@ -306,7 +317,7 @@ void InsertModel( char* name, int frame, matrix_t transform, matrix_t nTransform
 		glob = NULL;
 		for( rm = remap; rm != NULL; rm = rm->next )
 		{
-			if( rm->from[ 0 ] == '*' && rm->from[ 1 ] == '\0' )
+			if( rm->from[0] == '*' && rm->from[1] == '\0' )
 			{
 				glob = rm;
 			}
@@ -314,7 +325,7 @@ void InsertModel( char* name, int frame, matrix_t transform, matrix_t nTransform
 			{
 				Sys_FPrintf( SYS_VRB, "Remapping %s to %s\n", picoShaderName, rm->to );
 				picoShaderName = rm->to;
-				glob           = NULL;
+				glob		   = NULL;
 				break;
 			}
 		}
@@ -353,11 +364,11 @@ void InsertModel( char* name, int frame, matrix_t transform, matrix_t nTransform
 				StripExtension( shaderName );
 
 				i = 0;
-				while( shaderName[ i ] )
+				while( shaderName[i] )
 				{
-					if( shaderName[ i ] == '\\' )
+					if( shaderName[i] == '\\' )
 					{
-						shaderName[ i ] = '/';
+						shaderName[i] = '/';
 					}
 					i++;
 				}
@@ -380,7 +391,7 @@ void InsertModel( char* name, int frame, matrix_t transform, matrix_t nTransform
 		}
 
 		/* fix the surface's normals (jal: conditioned by shader info) */
-		//if(!(spawnFlags & 64) && (shadeAngle == 0.0f || ds->type != SURFACE_FORCED_META))
+		// if(!(spawnFlags & 64) && (shadeAngle == 0.0f || ds->type != SURFACE_FORCED_META))
 		//	PicoFixSurfaceNormals(surface);
 
 		/* set sample size */
@@ -403,18 +414,18 @@ void InsertModel( char* name, int frame, matrix_t transform, matrix_t nTransform
 
 		/* set particulars */
 		ds->numVerts = PicoGetSurfaceNumVertexes( surface );
-		ds->verts    = safe_malloc( ds->numVerts * sizeof( ds->verts[ 0 ] ) );
-		memset( ds->verts, 0, ds->numVerts * sizeof( ds->verts[ 0 ] ) );
+		ds->verts	 = safe_malloc( ds->numVerts * sizeof( ds->verts[0] ) );
+		memset( ds->verts, 0, ds->numVerts * sizeof( ds->verts[0] ) );
 
 		ds->numIndexes = PicoGetSurfaceNumIndexes( surface );
-		ds->indexes    = safe_malloc( ds->numIndexes * sizeof( ds->indexes[ 0 ] ) );
-		memset( ds->indexes, 0, ds->numIndexes * sizeof( ds->indexes[ 0 ] ) );
+		ds->indexes	   = safe_malloc( ds->numIndexes * sizeof( ds->indexes[0] ) );
+		memset( ds->indexes, 0, ds->numIndexes * sizeof( ds->indexes[0] ) );
 
 		/* copy vertexes */
 		for( i = 0; i < ds->numVerts; i++ )
 		{
 			/* get vertex */
-			dv = &ds->verts[ i ];
+			dv = &ds->verts[i];
 
 			/* xyz and normal */
 			xyz = PicoGetSurfaceXYZ( surface, i );
@@ -429,43 +440,43 @@ void InsertModel( char* name, int frame, matrix_t transform, matrix_t nTransform
 			/* ydnar: tek-fu celshading support for flat shaded shit */
 			if( flat )
 			{
-				dv->st[ 0 ] = si->stFlat[ 0 ];
-				dv->st[ 1 ] = si->stFlat[ 1 ];
+				dv->st[0] = si->stFlat[0];
+				dv->st[1] = si->stFlat[1];
 			}
 
 			/* ydnar: gs mods: added support for explicit shader texcoord generation */
 			else if( si->tcGen )
 			{
 				/* project the texture */
-				dv->st[ 0 ] = DotProduct( si->vecs[ 0 ], dv->xyz );
-				dv->st[ 1 ] = DotProduct( si->vecs[ 1 ], dv->xyz );
+				dv->st[0] = DotProduct( si->vecs[0], dv->xyz );
+				dv->st[1] = DotProduct( si->vecs[1], dv->xyz );
 			}
 
 			/* normal texture coordinates */
 			else
 			{
-				st          = PicoGetSurfaceST( surface, 0, i );
-				dv->st[ 0 ] = st[ 0 ];
-				dv->st[ 1 ] = st[ 1 ];
+				st		  = PicoGetSurfaceST( surface, 0, i );
+				dv->st[0] = st[0];
+				dv->st[1] = st[1];
 			}
 
 			/* set lightmap/color bits */
 			color = PicoGetSurfaceColor( surface, 0, i );
 
-			dv->paintColor[ 0 ] = color[ 0 ] / 255.0f;
-			dv->paintColor[ 1 ] = color[ 1 ] / 255.0f;
-			dv->paintColor[ 2 ] = color[ 2 ] / 255.0f;
-			dv->paintColor[ 3 ] = color[ 3 ] / 255.0f;
+			dv->paintColor[0] = color[0] / 255.0f;
+			dv->paintColor[1] = color[1] / 255.0f;
+			dv->paintColor[2] = color[2] / 255.0f;
+			dv->paintColor[3] = color[3] / 255.0f;
 
 			for( j = 0; j < MAX_LIGHTMAPS; j++ )
 			{
-				dv->lightmap[ j ][ 0 ] = 0.0f;
-				dv->lightmap[ j ][ 1 ] = 0.0f;
+				dv->lightmap[j][0] = 0.0f;
+				dv->lightmap[j][1] = 0.0f;
 
-				dv->lightColor[ j ][ 0 ] = 255;
-				dv->lightColor[ j ][ 1 ] = 255;
-				dv->lightColor[ j ][ 2 ] = 255;
-				dv->lightColor[ j ][ 3 ] = 255;
+				dv->lightColor[j][0] = 255;
+				dv->lightColor[j][1] = 255;
+				dv->lightColor[j][2] = 255;
+				dv->lightColor[j][3] = 255;
 			}
 		}
 
@@ -473,7 +484,7 @@ void InsertModel( char* name, int frame, matrix_t transform, matrix_t nTransform
 		indexes = PicoGetSurfaceIndexes( surface, 0 );
 		for( i = 0; i < ds->numIndexes; i++ )
 		{
-			ds->indexes[ i ] = indexes[ i ];
+			ds->indexes[i] = indexes[i];
 		}
 
 		/* set cel shader */
@@ -482,12 +493,11 @@ void InsertModel( char* name, int frame, matrix_t transform, matrix_t nTransform
 		/* ydnar: giant hack land: generate clipping brushes for model triangles */
 		if( si->clipModel || ( spawnFlags & 2 ) ) /* 2nd bit */
 		{
-			vec3_t points[ 4 ], backs[ 3 ];
+			vec3_t points[4], backs[3];
 			vec4_t plane, reverse, pa, pb, pc;
 
 			/* temp hack */
-			if( !si->clipModel &&
-				( ( ( si->compileFlags & C_TRANSLUCENT ) && !( si->compileFlags & C_COLLISION ) ) || !( si->compileFlags & C_SOLID ) ) )
+			if( !si->clipModel && ( ( ( si->compileFlags & C_TRANSLUCENT ) && !( si->compileFlags & C_COLLISION ) ) || !( si->compileFlags & C_SOLID ) ) )
 			{
 				continue;
 			}
@@ -502,26 +512,25 @@ void InsertModel( char* name, int frame, matrix_t transform, matrix_t nTransform
 				for( j = 0; j < 3; j++ )
 				{
 					/* get vertex */
-					dv = &ds->verts[ ds->indexes[ i + j ] ];
+					dv = &ds->verts[ds->indexes[i + j]];
 
 					/* copy xyz */
-					VectorCopy( dv->xyz, points[ j ] );
-					VectorCopy( dv->xyz, backs[ j ] );
+					VectorCopy( dv->xyz, points[j] );
+					VectorCopy( dv->xyz, backs[j] );
 
 					/* find nearest axial to normal and push back points opposite */
 					/* note: this doesn't work as well as simply using the plane of the triangle, below */
 					for( k = 0; k < 3; k++ )
 					{
-						if( fabs( dv->normal[ k ] ) >= fabs( dv->normal[ ( k + 1 ) % 3 ] ) &&
-							fabs( dv->normal[ k ] ) >= fabs( dv->normal[ ( k + 2 ) % 3 ] ) )
+						if( fabs( dv->normal[k] ) >= fabs( dv->normal[( k + 1 ) % 3] ) && fabs( dv->normal[k] ) >= fabs( dv->normal[( k + 2 ) % 3] ) )
 						{
-							backs[ j ][ k ] += dv->normal[ k ] < 0.0f ? 64.0f : -64.0f;
+							backs[j][k] += dv->normal[k] < 0.0f ? 64.0f : -64.0f;
 							break;
 						}
 					}
 				}
 
-				VectorCopy( points[ 0 ], points[ 3 ] ); // for cyclic usage
+				VectorCopy( points[0], points[3] ); // for cyclic usage
 
 				/* make plane for triangle */
 				// div0: add some extra spawnflags:
@@ -529,7 +538,7 @@ void InsertModel( char* name, int frame, matrix_t transform, matrix_t nTransform
 				//   8: extrude with the original normals
 				//  16: extrude only with up/down normals (ideal for terrain)
 				//  24: extrude by distance zero (may need engine changes)
-				if( PlaneFromPoints( plane, points[ 0 ], points[ 1 ], points[ 2 ], qtrue ) )
+				if( PlaneFromPoints( plane, points[0], points[1], points[2], qtrue ) )
 				{
 					vec3_t bestNormal;
 					float  backPlaneDistance = 2;
@@ -552,48 +561,48 @@ void InsertModel( char* name, int frame, matrix_t transform, matrix_t nTransform
 						if( spawnFlags & 16 )
 						{
 							// 16: UP/DOWN normal
-							VectorSet( bestNormal, 0, 0, ( plane[ 2 ] >= 0 ? 1 : -1 ) );
+							VectorSet( bestNormal, 0, 0, ( plane[2] >= 0 ? 1 : -1 ) );
 						}
 						else
 						{
 							// 0: axial normal
-							if( fabs( plane[ 0 ] ) > fabs( plane[ 1 ] ) )     // x>y
-								if( fabs( plane[ 1 ] ) > fabs( plane[ 2 ] ) ) // x>y, y>z
+							if( fabs( plane[0] ) > fabs( plane[1] ) )	  // x>y
+								if( fabs( plane[1] ) > fabs( plane[2] ) ) // x>y, y>z
 								{
-									VectorSet( bestNormal, ( plane[ 0 ] >= 0 ? 1 : -1 ), 0, 0 );
+									VectorSet( bestNormal, ( plane[0] >= 0 ? 1 : -1 ), 0, 0 );
 								}
-								else                                              // x>y, z>=y
-									if( fabs( plane[ 0 ] ) > fabs( plane[ 2 ] ) ) // x>z, z>=y
+								else										  // x>y, z>=y
+									if( fabs( plane[0] ) > fabs( plane[2] ) ) // x>z, z>=y
+									{
+										VectorSet( bestNormal, ( plane[0] >= 0 ? 1 : -1 ), 0, 0 );
+									}
+									else // z>=x, x>y
+									{
+										VectorSet( bestNormal, 0, 0, ( plane[2] >= 0 ? 1 : -1 ) );
+									}
+							else										  // y>=x
+								if( fabs( plane[1] ) > fabs( plane[2] ) ) // y>z, y>=x
 								{
-									VectorSet( bestNormal, ( plane[ 0 ] >= 0 ? 1 : -1 ), 0, 0 );
+									VectorSet( bestNormal, 0, ( plane[1] >= 0 ? 1 : -1 ), 0 );
 								}
-								else // z>=x, x>y
+								else // z>=y, y>=x
 								{
-									VectorSet( bestNormal, 0, 0, ( plane[ 2 ] >= 0 ? 1 : -1 ) );
+									VectorSet( bestNormal, 0, 0, ( plane[2] >= 0 ? 1 : -1 ) );
 								}
-							else                                              // y>=x
-								if( fabs( plane[ 1 ] ) > fabs( plane[ 2 ] ) ) // y>z, y>=x
-							{
-								VectorSet( bestNormal, 0, ( plane[ 1 ] >= 0 ? 1 : -1 ), 0 );
-							}
-							else // z>=y, y>=x
-							{
-								VectorSet( bestNormal, 0, 0, ( plane[ 2 ] >= 0 ? 1 : -1 ) );
-							}
 						}
 					}
 
 					/* build a brush */
-					buildBrush                = AllocBrush( 48 );
-					buildBrush->entityNum     = mapEntityNum;
-					buildBrush->original      = buildBrush;
+					buildBrush				  = AllocBrush( 48 );
+					buildBrush->entityNum	  = mapEntityNum;
+					buildBrush->original	  = buildBrush;
 					buildBrush->contentShader = si;
 					buildBrush->compileFlags  = si->compileFlags;
 					buildBrush->contentFlags  = si->contentFlags;
 
 					buildBrush->generatedClipBrush = qtrue;
 
-					normalEpsilon_save   = normalEpsilon;
+					normalEpsilon_save	 = normalEpsilon;
 					distanceEpsilon_save = distanceEpsilon;
 
 					if( si->compileFlags & C_STRUCTURAL ) // allow forced structural brushes here
@@ -619,37 +628,37 @@ void InsertModel( char* name, int frame, matrix_t transform, matrix_t nTransform
 					for( j = 0; j < 3; j++ )
 					{
 						/* get vertex */
-						dv = &ds->verts[ ds->indexes[ i + j ] ];
+						dv = &ds->verts[ds->indexes[i + j]];
 
 						// shift by some units
-						VectorMA( dv->xyz, -64.0f, bestNormal, backs[ j ] ); // 64 prevents roundoff errors a bit
+						VectorMA( dv->xyz, -64.0f, bestNormal, backs[j] ); // 64 prevents roundoff errors a bit
 					}
 
 					/* make back plane */
 					VectorScale( plane, -1.0f, reverse );
-					reverse[ 3 ] = -plane[ 3 ];
+					reverse[3] = -plane[3];
 					if( ( spawnFlags & 24 ) != 24 )
 					{
-						reverse[ 3 ] += DotProduct( bestNormal, plane ) * backPlaneDistance;
+						reverse[3] += DotProduct( bestNormal, plane ) * backPlaneDistance;
 					}
 					// that's at least sqrt(1/3) backPlaneDistance, unless in DOWN mode; in DOWN mode, we are screwed anyway if we encounter a plane that's perpendicular to the xy plane)
 
-					if( PlaneFromPoints( pa, points[ 2 ], points[ 1 ], backs[ 1 ], qtrue ) &&
-						PlaneFromPoints( pb, points[ 1 ], points[ 0 ], backs[ 0 ], qtrue ) && PlaneFromPoints( pc, points[ 0 ], points[ 2 ], backs[ 2 ], qtrue ) )
+					if( PlaneFromPoints( pa, points[2], points[1], backs[1], qtrue ) && PlaneFromPoints( pb, points[1], points[0], backs[0], qtrue ) &&
+						PlaneFromPoints( pc, points[0], points[2], backs[2], qtrue ) )
 					{
 						/* set up brush sides */
-						buildBrush->numsides              = 5;
-						buildBrush->sides[ 0 ].shaderInfo = si;
+						buildBrush->numsides			= 5;
+						buildBrush->sides[0].shaderInfo = si;
 						for( j = 1; j < buildBrush->numsides; j++ )
 						{
-							buildBrush->sides[ j ].shaderInfo = NULL; // don't emit these faces as draw surfaces, should make smaller BSPs; hope this works
+							buildBrush->sides[j].shaderInfo = NULL; // don't emit these faces as draw surfaces, should make smaller BSPs; hope this works
 						}
 
-						buildBrush->sides[ 0 ].planenum = FindFloatPlane( plane, plane[ 3 ], 3, points );
-						buildBrush->sides[ 1 ].planenum = FindFloatPlane( pa, pa[ 3 ], 2, &points[ 1 ] ); // pa contains points[1] and points[2]
-						buildBrush->sides[ 2 ].planenum = FindFloatPlane( pb, pb[ 3 ], 2, &points[ 0 ] ); // pb contains points[0] and points[1]
-						buildBrush->sides[ 3 ].planenum = FindFloatPlane( pc, pc[ 3 ], 2, &points[ 2 ] ); // pc contains points[2] and points[0] (copied to points[3]
-						buildBrush->sides[ 4 ].planenum = FindFloatPlane( reverse, reverse[ 3 ], 3, backs );
+						buildBrush->sides[0].planenum = FindFloatPlane( plane, plane[3], 3, points );
+						buildBrush->sides[1].planenum = FindFloatPlane( pa, pa[3], 2, &points[1] ); // pa contains points[1] and points[2]
+						buildBrush->sides[2].planenum = FindFloatPlane( pb, pb[3], 2, &points[0] ); // pb contains points[0] and points[1]
+						buildBrush->sides[3].planenum = FindFloatPlane( pc, pc[3], 2, &points[2] ); // pc contains points[2] and points[0] (copied to points[3]
+						buildBrush->sides[4].planenum = FindFloatPlane( reverse, reverse[3], 3, backs );
 					}
 					else
 					{
@@ -657,7 +666,7 @@ void InsertModel( char* name, int frame, matrix_t transform, matrix_t nTransform
 						continue;
 					}
 
-					normalEpsilon   = normalEpsilon_save;
+					normalEpsilon	= normalEpsilon_save;
 					distanceEpsilon = distanceEpsilon_save;
 
 					/* add to entity */
@@ -665,9 +674,9 @@ void InsertModel( char* name, int frame, matrix_t transform, matrix_t nTransform
 					{
 						AddBrushBevels();
 						//% EmitBrushes( buildBrush, NULL, NULL );
-						buildBrush->next                 = entities[ mapEntityNum ].brushes;
-						entities[ mapEntityNum ].brushes = buildBrush;
-						entities[ mapEntityNum ].numBrushes++;
+						buildBrush->next			   = entities[mapEntityNum].brushes;
+						entities[mapEntityNum].brushes = buildBrush;
+						entities[mapEntityNum].numBrushes++;
 					}
 					else
 					{
@@ -685,18 +694,18 @@ AddTriangleModel()
 
 void AddTriangleModel( entity_t* e )
 {
-	int           frame, castShadows, recvShadows, spawnFlags;
+	int			  frame, castShadows, recvShadows, spawnFlags;
 	const char *  name, *model, *value;
-	char          shader[ MAX_QPATH ];
+	char		  shader[MAX_QPATH];
 	shaderInfo_t* celShader;
-	float         temp, baseLightmapScale, lightmapScale;
-	float         shadeAngle;
-	int           lightmapSampleSize;
-	vec3_t        scale;
-	matrix_t      rotation, transform;
-	epair_t*      ep;
-	remap_t *     remap, *remap2;
-	char*         split;
+	float		  temp, baseLightmapScale, lightmapScale;
+	float		  shadeAngle;
+	int			  lightmapSampleSize;
+	vec3_t		  scale;
+	matrix_t	  rotation, transform;
+	epair_t*	  ep;
+	remap_t *	  remap, *remap2;
+	char*		  split;
 
 	/* note it */
 	Sys_FPrintf( SYS_VRB, "--- AddTriangleModel ---\n" );
@@ -705,14 +714,14 @@ void AddTriangleModel( entity_t* e )
 	name = ValueForKey( e, "name" );
 
 	/* misc_model entities target non-worldspawn brush model entities */
-	if( name[ 0 ] == '\0' )
+	if( name[0] == '\0' )
 	{
 		return;
 	}
 
 	/* get model name */
 	model = ValueForKey( e, "model" );
-	if( model[ 0 ] == '\0' )
+	if( model[0] == '\0' )
 	{
 		return;
 	}
@@ -753,21 +762,21 @@ void AddTriangleModel( entity_t* e )
 	spawnFlags |= ( IntForKey( e, "forceMeta" ) > 0 ) ? 4 : 0;
 
 	/* get scale */
-	scale[ 0 ] = scale[ 1 ] = scale[ 2 ] = 1.0f;
-	temp                                 = FloatForKey( e, "modelscale" );
+	scale[0] = scale[1] = scale[2] = 1.0f;
+	temp						   = FloatForKey( e, "modelscale" );
 	if( temp != 0.0f )
 	{
-		scale[ 0 ] = scale[ 1 ] = scale[ 2 ] = temp;
+		scale[0] = scale[1] = scale[2] = temp;
 	}
 	value = ValueForKey( e, "modelscale_vec" );
-	if( value[ 0 ] != '\0' )
+	if( value[0] != '\0' )
 	{
-		sscanf( value, "%f %f %f", &scale[ 0 ], &scale[ 1 ], &scale[ 2 ] );
+		sscanf( value, "%f %f %f", &scale[0], &scale[1], &scale[2] );
 	}
 
 	/* set transform matrix */
 	MatrixIdentity( transform );
-	MatrixMultiplyScale( transform, scale[ 0 ], scale[ 1 ], scale[ 2 ] );
+	MatrixMultiplyScale( transform, scale[0], scale[1], scale[2] );
 	MatrixIdentity( rotation );
 
 	/* get shader remappings */
@@ -775,12 +784,11 @@ void AddTriangleModel( entity_t* e )
 	for( ep = e->epairs; ep != NULL; ep = ep->next )
 	{
 		/* look for keys prefixed with "_remap" */
-		if( ep->key != NULL && ep->value != NULL &&
-			ep->key[ 0 ] != '\0' && ep->value[ 0 ] != '\0' && !Q_strncasecmp( ep->key, "_remap", 6 ) )
+		if( ep->key != NULL && ep->value != NULL && ep->key[0] != '\0' && ep->value[0] != '\0' && !Q_strncasecmp( ep->key, "_remap", 6 ) )
 		{
 			/* create new remapping */
-			remap2      = remap;
-			remap       = safe_malloc( sizeof( *remap ) );
+			remap2		= remap;
+			remap		= safe_malloc( sizeof( *remap ) );
 			remap->next = remap2;
 			strcpy( remap->from, ep->value );
 
@@ -805,11 +813,11 @@ void AddTriangleModel( entity_t* e )
 
 	/* ydnar: cel shader support */
 	value = ValueForKey( e, "_celshader" );
-	if( value[ 0 ] == '\0' )
+	if( value[0] == '\0' )
 	{
-		value = ValueForKey( &entities[ 0 ], "_celshader" );
+		value = ValueForKey( &entities[0], "_celshader" );
 	}
-	if( value[ 0 ] != '\0' )
+	if( value[0] != '\0' )
 	{
 		sprintf( shader, "textures/%s", value );
 		celShader = ShaderInfoForShader( shader );
@@ -844,8 +852,7 @@ void AddTriangleModel( entity_t* e )
 	/* get lightmap scale */
 	/* vortex: added _ls key (short name of lightmapscale) */
 	lightmapScale = 0.0f;
-	if( strcmp( "", ValueForKey( e, "lightmapscale" ) ) ||
-		strcmp( "", ValueForKey( e, "_lightmapscale" ) ) || strcmp( "", ValueForKey( e, "_ls" ) ) )
+	if( strcmp( "", ValueForKey( e, "lightmapscale" ) ) || strcmp( "", ValueForKey( e, "_lightmapscale" ) ) || strcmp( "", ValueForKey( e, "_ls" ) ) )
 	{
 		lightmapScale = FloatForKey( e, "lightmapscale" );
 		if( lightmapScale <= 0.0f )
@@ -915,20 +922,20 @@ adds misc_model surfaces to the bsp
 
 void AddTriangleModels( entity_t* e )
 {
-	int           num, frame, castShadows, recvShadows, spawnFlags;
-	entity_t*     e2;
-	const char*   targetName;
+	int			  num, frame, castShadows, recvShadows, spawnFlags;
+	entity_t*	  e2;
+	const char*	  targetName;
 	const char *  target, *model, *value;
-	char          shader[ MAX_QPATH ];
+	char		  shader[MAX_QPATH];
 	shaderInfo_t* celShader;
-	float         temp, baseLightmapScale, lightmapScale;
-	float         shadeAngle;
-	int           lightmapSampleSize;
-	vec3_t        origin, scale, angles;
-	matrix_t      rotation, rotationScaled, transform;
-	epair_t*      ep;
-	remap_t *     remap, *remap2;
-	char*         split;
+	float		  temp, baseLightmapScale, lightmapScale;
+	float		  shadeAngle;
+	int			  lightmapSampleSize;
+	vec3_t		  origin, scale, angles;
+	matrix_t	  rotation, rotationScaled, transform;
+	epair_t*	  ep;
+	remap_t *	  remap, *remap2;
+	char*		  split;
 
 	/* note it */
 	Sys_FPrintf( SYS_VRB, "--- AddTriangleModels ---\n" );
@@ -943,7 +950,7 @@ void AddTriangleModels( entity_t* e )
 		targetName = ValueForKey( e, "name" );
 
 		/* misc_model entities target non-worldspawn brush model entities */
-		if( targetName[ 0 ] == '\0' )
+		if( targetName[0] == '\0' )
 		{
 			return;
 		}
@@ -952,8 +959,7 @@ void AddTriangleModels( entity_t* e )
 	/* get lightmap scale */
 	/* vortex: added _ls key (short name of lightmapscale) */
 	baseLightmapScale = 0.0f;
-	if( strcmp( "", ValueForKey( e, "lightmapscale" ) ) ||
-		strcmp( "", ValueForKey( e, "_lightmapscale" ) ) || strcmp( "", ValueForKey( e, "_ls" ) ) )
+	if( strcmp( "", ValueForKey( e, "lightmapscale" ) ) || strcmp( "", ValueForKey( e, "_lightmapscale" ) ) || strcmp( "", ValueForKey( e, "_ls" ) ) )
 	{
 		baseLightmapScale = FloatForKey( e, "lightmapscale" );
 		if( baseLightmapScale <= 0.0f )
@@ -978,7 +984,7 @@ void AddTriangleModels( entity_t* e )
 	for( num = 1; num < numEntities; num++ )
 	{
 		/* get e2 */
-		e2 = &entities[ num ];
+		e2 = &entities[num];
 
 		/* convert misc_models into raw geometry */
 		if( Q_stricmp( "misc_model", ValueForKey( e2, "classname" ) ) )
@@ -995,9 +1001,9 @@ void AddTriangleModels( entity_t* e )
 
 		/* get model name */
 		model = ValueForKey( e2, "model" );
-		if( model[ 0 ] == '\0' )
+		if( model[0] == '\0' )
 		{
-			Sys_Printf( "WARNING: misc_model at %i %i %i without a model key\n", ( int )origin[ 0 ], ( int )origin[ 1 ], ( int )origin[ 2 ] );
+			Sys_Printf( "WARNING: misc_model at %i %i %i without a model key\n", ( int )origin[0], ( int )origin[1], ( int )origin[2] );
 			continue;
 		}
 
@@ -1036,43 +1042,43 @@ void AddTriangleModels( entity_t* e )
 
 		/* get "angle" (yaw) or "angles" (pitch yaw roll) */
 		MatrixIdentity( rotation );
-		angles[ 0 ] = angles[ 1 ] = angles[ 2 ] = 0.0f;
+		angles[0] = angles[1] = angles[2] = 0.0f;
 
 		value = ValueForKey( e2, "angle" );
-		if( value[ 0 ] != '\0' )
+		if( value[0] != '\0' )
 		{
-			angles[ 1 ] = atof( value );
-			MatrixFromAngles( rotation, angles[ PITCH ], angles[ YAW ], angles[ ROLL ] );
+			angles[1] = atof( value );
+			MatrixFromAngles( rotation, angles[PITCH], angles[YAW], angles[ROLL] );
 		}
 
 		value = ValueForKey( e2, "angles" );
-		if( value[ 0 ] != '\0' )
+		if( value[0] != '\0' )
 		{
-			sscanf( value, "%f %f %f", &angles[ 0 ], &angles[ 1 ], &angles[ 2 ] );
-			MatrixFromAngles( rotation, angles[ PITCH ], angles[ YAW ], angles[ ROLL ] );
+			sscanf( value, "%f %f %f", &angles[0], &angles[1], &angles[2] );
+			MatrixFromAngles( rotation, angles[PITCH], angles[YAW], angles[ROLL] );
 		}
 
 		value = ValueForKey( e2, "rotation" );
-		if( value[ 0 ] != '\0' )
+		if( value[0] != '\0' )
 		{
-			sscanf( value, "%f %f %f %f %f %f %f %f %f", &rotation[ 0 ], &rotation[ 1 ], &rotation[ 2 ], &rotation[ 4 ], &rotation[ 5 ], &rotation[ 6 ], &rotation[ 8 ], &rotation[ 9 ], &rotation[ 10 ] );
+			sscanf( value, "%f %f %f %f %f %f %f %f %f", &rotation[0], &rotation[1], &rotation[2], &rotation[4], &rotation[5], &rotation[6], &rotation[8], &rotation[9], &rotation[10] );
 		}
 
 		/* get scale */
-		scale[ 0 ] = scale[ 1 ] = scale[ 2 ] = 1.0f;
-		temp                                 = FloatForKey( e2, "modelscale" );
+		scale[0] = scale[1] = scale[2] = 1.0f;
+		temp						   = FloatForKey( e2, "modelscale" );
 		if( temp != 0.0f )
 		{
-			scale[ 0 ] = scale[ 1 ] = scale[ 2 ] = temp;
+			scale[0] = scale[1] = scale[2] = temp;
 		}
 		value = ValueForKey( e2, "modelscale_vec" );
-		if( value[ 0 ] != '\0' )
+		if( value[0] != '\0' )
 		{
-			sscanf( value, "%f %f %f", &scale[ 0 ], &scale[ 1 ], &scale[ 2 ] );
+			sscanf( value, "%f %f %f", &scale[0], &scale[1], &scale[2] );
 		}
 
 		MatrixCopy( rotation, rotationScaled );
-		MatrixMultiplyScale( rotationScaled, scale[ 0 ], scale[ 1 ], scale[ 2 ] );
+		MatrixMultiplyScale( rotationScaled, scale[0], scale[1], scale[2] );
 
 		/* set transform matrix */
 		MatrixIdentity( transform );
@@ -1083,12 +1089,11 @@ void AddTriangleModels( entity_t* e )
 		for( ep = e2->epairs; ep != NULL; ep = ep->next )
 		{
 			/* look for keys prefixed with "_remap" */
-			if( ep->key != NULL && ep->value != NULL &&
-				ep->key[ 0 ] != '\0' && ep->value[ 0 ] != '\0' && !Q_strncasecmp( ep->key, "_remap", 6 ) )
+			if( ep->key != NULL && ep->value != NULL && ep->key[0] != '\0' && ep->value[0] != '\0' && !Q_strncasecmp( ep->key, "_remap", 6 ) )
 			{
 				/* create new remapping */
-				remap2      = remap;
-				remap       = safe_malloc( sizeof( *remap ) );
+				remap2		= remap;
+				remap		= safe_malloc( sizeof( *remap ) );
 				remap->next = remap2;
 				strcpy( remap->from, ep->value );
 
@@ -1113,11 +1118,11 @@ void AddTriangleModels( entity_t* e )
 
 		/* ydnar: cel shader support */
 		value = ValueForKey( e2, "_celshader" );
-		if( value[ 0 ] == '\0' )
+		if( value[0] == '\0' )
 		{
-			value = ValueForKey( &entities[ 0 ], "_celshader" );
+			value = ValueForKey( &entities[0], "_celshader" );
 		}
-		if( value[ 0 ] != '\0' )
+		if( value[0] != '\0' )
 		{
 			sprintf( shader, "textures/%s", value );
 			celShader = ShaderInfoForShader( shader );
@@ -1151,8 +1156,7 @@ void AddTriangleModels( entity_t* e )
 		/* get lightmap scale */
 		/* vortex: added _ls key (short name of lightmapscale) */
 		lightmapScale = 0.0f;
-		if( strcmp( "", ValueForKey( e2, "lightmapscale" ) ) ||
-			strcmp( "", ValueForKey( e2, "_lightmapscale" ) ) || strcmp( "", ValueForKey( e2, "_ls" ) ) )
+		if( strcmp( "", ValueForKey( e2, "lightmapscale" ) ) || strcmp( "", ValueForKey( e2, "_lightmapscale" ) ) || strcmp( "", ValueForKey( e2, "_ls" ) ) )
 		{
 			lightmapScale = FloatForKey( e2, "lightmapscale" );
 			if( lightmapScale <= 0.0f )

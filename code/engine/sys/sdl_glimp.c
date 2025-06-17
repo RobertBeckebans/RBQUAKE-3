@@ -54,19 +54,19 @@ typedef enum
 	RSERR_UNKNOWN
 } rserr_t;
 
-SDL_Window*          SDL_window    = NULL;
+SDL_Window*			 SDL_window	   = NULL;
 static SDL_GLContext SDL_glContext = NULL;
 
-cvar_t* r_allowResize; // make window resizable
-cvar_t* r_centerWindow;
-cvar_t* r_sdlDriver;
+cvar_t*				 r_allowResize; // make window resizable
+cvar_t*				 r_centerWindow;
+cvar_t*				 r_sdlDriver;
 
 /*
 ===============
 GLimp_Shutdown
 ===============
 */
-void GLimp_Shutdown( void )
+void				 GLimp_Shutdown( void )
 {
 	ri.IN_Shutdown();
 
@@ -105,12 +105,12 @@ void GLimp_LogComment( const char* comment )
 {
 	/*
 		static char		buf[4096];
-	
+
 		if(r_logFile->integer && GLEW_GREMEDY_string_marker)
 		{
 			// copy string and ensure it has a trailing '\0'
 			Q_strncpyz(buf, comment, sizeof(buf));
-	
+
 			glStringMarkerGREMEDY(strlen(buf), buf);
 		}
 	*/
@@ -123,16 +123,16 @@ GLimp_CompareModes
 */
 static int GLimp_CompareModes( const void* a, const void* b )
 {
-	const float ASPECT_EPSILON  = 0.001f;
-	SDL_Rect*   modeA           = ( SDL_Rect* )a;
-	SDL_Rect*   modeB           = ( SDL_Rect* )b;
-	float       aspectA         = ( float )modeA->w / ( float )modeA->h;
-	float       aspectB         = ( float )modeB->w / ( float )modeB->h;
-	int         areaA           = modeA->w * modeA->h;
-	int         areaB           = modeB->w * modeB->h;
-	float       aspectDiffA     = fabs( aspectA - displayAspect );
-	float       aspectDiffB     = fabs( aspectB - displayAspect );
-	float       aspectDiffsDiff = aspectDiffA - aspectDiffB;
+	const float ASPECT_EPSILON	= 0.001f;
+	SDL_Rect*	modeA			= ( SDL_Rect* )a;
+	SDL_Rect*	modeB			= ( SDL_Rect* )b;
+	float		aspectA			= ( float )modeA->w / ( float )modeA->h;
+	float		aspectB			= ( float )modeB->w / ( float )modeB->h;
+	int			areaA			= modeA->w * modeA->h;
+	int			areaB			= modeB->w * modeB->h;
+	float		aspectDiffA		= fabs( aspectA - displayAspect );
+	float		aspectDiffB		= fabs( aspectB - displayAspect );
+	float		aspectDiffsDiff = aspectDiffA - aspectDiffB;
 
 	if( aspectDiffsDiff > ASPECT_EPSILON )
 	{
@@ -155,12 +155,12 @@ GLimp_DetectAvailableModes
 */
 static void GLimp_DetectAvailableModes( void )
 {
-	int      i;
-	char     buf[ MAX_STRING_CHARS ] = { 0 };
-	SDL_Rect modes[ 256 ];
-	int      numModes = 0;
+	int				i;
+	char			buf[MAX_STRING_CHARS] = { 0 };
+	SDL_Rect		modes[256];
+	int				numModes = 0;
 
-	int             display = SDL_GetWindowDisplayIndex( SDL_window );
+	int				display = SDL_GetWindowDisplayIndex( SDL_window );
 	SDL_DisplayMode windowMode;
 
 	if( SDL_GetWindowDisplayMode( SDL_window, &windowMode ) < 0 )
@@ -189,8 +189,8 @@ static void GLimp_DetectAvailableModes( void )
 			continue;
 		}
 
-		modes[ numModes ].w = mode.w;
-		modes[ numModes ].h = mode.h;
+		modes[numModes].w = mode.w;
+		modes[numModes].h = mode.h;
 		numModes++;
 	}
 
@@ -201,7 +201,7 @@ static void GLimp_DetectAvailableModes( void )
 
 	for( i = 0; i < numModes; i++ )
 	{
-		const char* newModeString = va( "%ux%u ", modes[ i ].w, modes[ i ].h );
+		const char* newModeString = va( "%ux%u ", modes[i].w, modes[i].h );
 
 		if( strlen( newModeString ) < ( int )sizeof( buf ) - strlen( buf ) )
 		{
@@ -209,13 +209,13 @@ static void GLimp_DetectAvailableModes( void )
 		}
 		else
 		{
-			ri.Printf( PRINT_WARNING, "Skipping mode %ux%x, buffer too small\n", modes[ i ].w, modes[ i ].h );
+			ri.Printf( PRINT_WARNING, "Skipping mode %ux%x, buffer too small\n", modes[i].w, modes[i].h );
 		}
 	}
 
 	if( *buf )
 	{
-		buf[ strlen( buf ) - 1 ] = 0;
+		buf[strlen( buf ) - 1] = 0;
 		ri.Printf( PRINT_ALL, "Available modes: '%s'\n", buf );
 		ri.Cvar_Set( "r_availableModes", buf );
 	}
@@ -228,14 +228,14 @@ GLimp_SetMode
 */
 static int GLimp_SetMode( int mode, qboolean fullscreen, qboolean noborder, qboolean coreProfileContext )
 {
-	int             perChannelColorBits;
-	int             colorBits, depthBits, stencilBits;
-	int             i     = 0;
-	SDL_Surface*    icon  = NULL;
-	Uint32          flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
+	int				perChannelColorBits;
+	int				colorBits, depthBits, stencilBits;
+	int				i	  = 0;
+	SDL_Surface*	icon  = NULL;
+	Uint32			flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
 	SDL_DisplayMode desktopMode;
-	int             display = 0;
-	int             x = SDL_WINDOWPOS_UNDEFINED, y = SDL_WINDOWPOS_UNDEFINED;
+	int				display = 0;
+	int				x = SDL_WINDOWPOS_UNDEFINED, y = SDL_WINDOWPOS_UNDEFINED;
 
 	ri.Printf( PRINT_ALL, "Initializing OpenGL display\n" );
 
@@ -244,8 +244,7 @@ static int GLimp_SetMode( int mode, qboolean fullscreen, qboolean noborder, qboo
 		flags |= SDL_WINDOW_RESIZABLE;
 	}
 
-	icon = SDL_CreateRGBSurfaceFrom(
-		( void* )CLIENT_WINDOW_ICON.pixel_data,
+	icon = SDL_CreateRGBSurfaceFrom( ( void* )CLIENT_WINDOW_ICON.pixel_data,
 		CLIENT_WINDOW_ICON.width,
 		CLIENT_WINDOW_ICON.height,
 		CLIENT_WINDOW_ICON.bytes_per_pixel * 8,
@@ -401,8 +400,8 @@ static int GLimp_SetMode( int mode, qboolean fullscreen, qboolean noborder, qboo
 			}
 		}
 
-		testColorBits   = colorBits;
-		testDepthBits   = depthBits;
+		testColorBits	= colorBits;
+		testDepthBits	= depthBits;
 		testStencilBits = stencilBits;
 
 		if( ( i % 4 ) == 3 )
@@ -512,10 +511,10 @@ static int GLimp_SetMode( int mode, qboolean fullscreen, qboolean noborder, qboo
 					continue;
 			}
 
-			mode.w            = glConfig.vidWidth;
-			mode.h            = glConfig.vidHeight;
+			mode.w			  = glConfig.vidWidth;
+			mode.h			  = glConfig.vidHeight;
 			mode.refresh_rate = glConfig.displayFrequency = ri.Cvar_VariableIntegerValue( "r_displayRefresh" );
-			mode.driverdata                               = NULL;
+			mode.driverdata								  = NULL;
 
 			if( SDL_SetWindowDisplayMode( SDL_window, &mode ) < 0 )
 			{
@@ -535,8 +534,8 @@ static int GLimp_SetMode( int mode, qboolean fullscreen, qboolean noborder, qboo
 
 		SDL_GL_SetSwapInterval( r_swapInterval->integer );
 
-		glConfig.colorBits   = testColorBits;
-		glConfig.depthBits   = testDepthBits;
+		glConfig.colorBits	 = testColorBits;
+		glConfig.depthBits	 = testDepthBits;
 		glConfig.stencilBits = testStencilBits;
 
 		ri.Printf( PRINT_ALL, "Using %d color bits, %d depth, %d stencil display.\n", glConfig.colorBits, glConfig.depthBits, glConfig.stencilBits );
@@ -589,7 +588,7 @@ static qboolean GLimp_StartDriverAndSetMode( int mode, qboolean fullscreen, qboo
 		ri.Printf( PRINT_ALL, "Fullscreen not allowed with in_nograb 1\n" );
 		ri.Cvar_Set( "r_fullscreen", "0" );
 		r_fullscreen->modified = qfalse;
-		fullscreen             = qfalse;
+		fullscreen			   = qfalse;
 	}
 
 	err = GLimp_SetMode( mode, fullscreen, noborder, coreProfileContext );
@@ -640,7 +639,7 @@ static void GLimp_InitExtensions( void )
 	{
 		// GL_ARB_occlusion_query
 		glConfig2.occlusionQueryAvailable = qfalse;
-		glConfig2.occlusionQueryBits      = 0;
+		glConfig2.occlusionQueryBits	  = 0;
 		if( GLimp_HaveExtension( "GL_ARB_occlusion_query" ) )
 		{
 			if( r_ext_occlusion_query->value )
@@ -668,7 +667,7 @@ static void GLimp_InitExtensions( void )
 			GL_CheckErrors();
 			glGetIntegerv( GL_MAX_VERTEX_UNIFORM_COMPONENTS, &glConfig2.maxVertexUniforms );
 			GL_CheckErrors();
-			//glGetIntegerv(GL_MAX_VARYING_FLOATS, &glConfig.maxVaryingFloats); GL_CheckErrors();
+			// glGetIntegerv(GL_MAX_VARYING_FLOATS, &glConfig.maxVaryingFloats); GL_CheckErrors();
 			glGetIntegerv( GL_MAX_VERTEX_ATTRIBS, &glConfig2.maxVertexAttribs );
 			GL_CheckErrors();
 
@@ -680,12 +679,12 @@ static void GLimp_InitExtensions( void )
 				// HACK
 				// restrict to number of vertex uniforms to 512 because of:
 				// xreal.x86_64: nv50_program.c:4181: nv50_program_validate_data: Assertion `p->param_nr <= 512' failed
-			
+
 				glConfig2.maxVertexUniforms = Q_bound(0, glConfig2.maxVertexUniforms, 512);
 			}
 			*/
 
-			glConfig2.maxVertexSkinningBones     = ( int )Q_bound( 0.0, ( Q_max( glConfig2.maxVertexUniforms - reservedComponents, 0 ) / 16 ), MAX_BONES );
+			glConfig2.maxVertexSkinningBones	 = ( int )Q_bound( 0.0, ( Q_max( glConfig2.maxVertexUniforms - reservedComponents, 0 ) / 16 ), MAX_BONES );
 			glConfig2.vboVertexSkinningAvailable = r_vboVertexSkinning->integer && ( ( glConfig2.maxVertexSkinningBones >= 12 ) ? qtrue : qfalse );
 
 			ri.Printf( PRINT_DEVELOPER, "...using GL_ARB_vertex_shader\n" );
@@ -846,7 +845,7 @@ static void GLimp_InitExtensions( void )
 		glConfig2.texture3DAvailable = qfalse;
 		if( GLimp_HaveExtension( "GL_EXT_texture3D" ) )
 		{
-			//if(r_ext_texture3d->value)
+			// if(r_ext_texture3d->value)
 			{
 				glConfig2.texture3DAvailable = qtrue;
 				ri.Printf( PRINT_DEVELOPER, "...using GL_EXT_texture3D\n" );
@@ -869,7 +868,7 @@ static void GLimp_InitExtensions( void )
 		if(GLimp_HaveExtension("GL_EXT_texture_filter_anisotropic"))
 		{
 			glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &glConfig2.maxTextureAnisotropy);
-		
+
 			if(r_ext_texture_filter_anisotropic->value)
 			{
 				glConfig2.textureAnisotropyAvailable = qtrue;
@@ -974,7 +973,7 @@ void GLimp_Init( void )
 {
 	qboolean success = qtrue;
 
-	r_sdlDriver    = ri.Cvar_Get( "r_sdlDriver", "", CVAR_ROM );
+	r_sdlDriver	   = ri.Cvar_Get( "r_sdlDriver", "", CVAR_ROM );
 	r_allowResize  = ri.Cvar_Get( "r_allowResize", "0", CVAR_ARCHIVE );
 	r_centerWindow = ri.Cvar_Get( "r_centerWindow", "0", CVAR_ARCHIVE );
 
@@ -1030,9 +1029,9 @@ success:
 	// get our config strings
 	Q_strncpyz( glConfig.vendor_string, ( char* )glGetString( GL_VENDOR ), sizeof( glConfig.vendor_string ) );
 	Q_strncpyz( glConfig.renderer_string, ( char* )glGetString( GL_RENDERER ), sizeof( glConfig.renderer_string ) );
-	if( *glConfig.renderer_string && glConfig.renderer_string[ strlen( glConfig.renderer_string ) - 1 ] == '\n' )
+	if( *glConfig.renderer_string && glConfig.renderer_string[strlen( glConfig.renderer_string ) - 1] == '\n' )
 	{
-		glConfig.renderer_string[ strlen( glConfig.renderer_string ) - 1 ] = 0;
+		glConfig.renderer_string[strlen( glConfig.renderer_string ) - 1] = 0;
 	}
 	Q_strncpyz( glConfig.version_string, ( char* )glGetString( GL_VERSION ), sizeof( glConfig.version_string ) );
 
@@ -1041,9 +1040,7 @@ success:
 		Q_strncpyz( glConfig.extensions_string, ( char* )glGetString( GL_EXTENSIONS ), sizeof( glConfig.extensions_string ) );
 	}
 
-	if( Q_stristr( glConfig.renderer_string, "mesa" ) ||
-		Q_stristr( glConfig.renderer_string, "gallium" ) ||
-		Q_stristr( glConfig.vendor_string, "nouveau" ) ||
+	if( Q_stristr( glConfig.renderer_string, "mesa" ) || Q_stristr( glConfig.renderer_string, "gallium" ) || Q_stristr( glConfig.vendor_string, "nouveau" ) ||
 		Q_stristr( glConfig.vendor_string, "mesa" ) )
 	{
 		// suckage
@@ -1052,42 +1049,18 @@ success:
 
 	if( Q_stristr( glConfig.renderer_string, "geforce" ) )
 	{
-		if( Q_stristr( glConfig.renderer_string, "8400" ) ||
-			Q_stristr( glConfig.renderer_string, "8500" ) ||
-			Q_stristr( glConfig.renderer_string, "8600" ) ||
-			Q_stristr( glConfig.renderer_string, "8800" ) ||
-			Q_stristr( glConfig.renderer_string, "9500" ) ||
-			Q_stristr( glConfig.renderer_string, "9600" ) ||
-			Q_stristr( glConfig.renderer_string, "9800" ) ||
-			Q_stristr( glConfig.renderer_string, "gts 240" ) ||
-			Q_stristr( glConfig.renderer_string, "gts 250" ) ||
-			Q_stristr( glConfig.renderer_string, "gtx 260" ) ||
-			Q_stristr( glConfig.renderer_string, "gtx 275" ) ||
-			Q_stristr( glConfig.renderer_string, "gtx 280" ) ||
-			Q_stristr( glConfig.renderer_string, "gtx 285" ) ||
-			Q_stristr( glConfig.renderer_string, "gtx 295" ) ||
-			Q_stristr( glConfig.renderer_string, "gt 320" ) ||
-			Q_stristr( glConfig.renderer_string, "gt 330" ) ||
-			Q_stristr( glConfig.renderer_string, "gt 340" ) ||
-			Q_stristr( glConfig.renderer_string, "gt 415" ) ||
-			Q_stristr( glConfig.renderer_string, "gt 420" ) ||
-			Q_stristr( glConfig.renderer_string, "gt 425" ) ||
-			Q_stristr( glConfig.renderer_string, "gt 430" ) ||
-			Q_stristr( glConfig.renderer_string, "gt 435" ) ||
-			Q_stristr( glConfig.renderer_string, "gt 440" ) ||
-			Q_stristr( glConfig.renderer_string, "gt 520" ) ||
-			Q_stristr( glConfig.renderer_string, "gt 525" ) ||
-			Q_stristr( glConfig.renderer_string, "gt 540" ) ||
-			Q_stristr( glConfig.renderer_string, "gt 550" ) ||
-			Q_stristr( glConfig.renderer_string, "gt 555" ) ||
-			Q_stristr( glConfig.renderer_string, "gts 450" ) ||
-			Q_stristr( glConfig.renderer_string, "gtx 460" ) ||
-			Q_stristr( glConfig.renderer_string, "gtx 470" ) ||
-			Q_stristr( glConfig.renderer_string, "gtx 480" ) ||
-			Q_stristr( glConfig.renderer_string, "gtx 485" ) ||
-			Q_stristr( glConfig.renderer_string, "gtx 560" ) ||
-			Q_stristr( glConfig.renderer_string, "gtx 570" ) ||
-			Q_stristr( glConfig.renderer_string, "gtx 580" ) ||
+		if( Q_stristr( glConfig.renderer_string, "8400" ) || Q_stristr( glConfig.renderer_string, "8500" ) || Q_stristr( glConfig.renderer_string, "8600" ) ||
+			Q_stristr( glConfig.renderer_string, "8800" ) || Q_stristr( glConfig.renderer_string, "9500" ) || Q_stristr( glConfig.renderer_string, "9600" ) ||
+			Q_stristr( glConfig.renderer_string, "9800" ) || Q_stristr( glConfig.renderer_string, "gts 240" ) || Q_stristr( glConfig.renderer_string, "gts 250" ) ||
+			Q_stristr( glConfig.renderer_string, "gtx 260" ) || Q_stristr( glConfig.renderer_string, "gtx 275" ) || Q_stristr( glConfig.renderer_string, "gtx 280" ) ||
+			Q_stristr( glConfig.renderer_string, "gtx 285" ) || Q_stristr( glConfig.renderer_string, "gtx 295" ) || Q_stristr( glConfig.renderer_string, "gt 320" ) ||
+			Q_stristr( glConfig.renderer_string, "gt 330" ) || Q_stristr( glConfig.renderer_string, "gt 340" ) || Q_stristr( glConfig.renderer_string, "gt 415" ) ||
+			Q_stristr( glConfig.renderer_string, "gt 420" ) || Q_stristr( glConfig.renderer_string, "gt 425" ) || Q_stristr( glConfig.renderer_string, "gt 430" ) ||
+			Q_stristr( glConfig.renderer_string, "gt 435" ) || Q_stristr( glConfig.renderer_string, "gt 440" ) || Q_stristr( glConfig.renderer_string, "gt 520" ) ||
+			Q_stristr( glConfig.renderer_string, "gt 525" ) || Q_stristr( glConfig.renderer_string, "gt 540" ) || Q_stristr( glConfig.renderer_string, "gt 550" ) ||
+			Q_stristr( glConfig.renderer_string, "gt 555" ) || Q_stristr( glConfig.renderer_string, "gts 450" ) || Q_stristr( glConfig.renderer_string, "gtx 460" ) ||
+			Q_stristr( glConfig.renderer_string, "gtx 470" ) || Q_stristr( glConfig.renderer_string, "gtx 480" ) || Q_stristr( glConfig.renderer_string, "gtx 485" ) ||
+			Q_stristr( glConfig.renderer_string, "gtx 560" ) || Q_stristr( glConfig.renderer_string, "gtx 570" ) || Q_stristr( glConfig.renderer_string, "gtx 580" ) ||
 			Q_stristr( glConfig.renderer_string, "gtx 590" ) )
 		{
 			glConfig.hardwareType = GLHW_NV_DX10;
@@ -1143,7 +1116,7 @@ void GLimp_EndFrame( void )
 
 	if( r_fullscreen->modified )
 	{
-		int      fullscreen;
+		int		 fullscreen;
 		qboolean needToToggle;
 		qboolean sdlToggled = qfalse;
 
@@ -1187,18 +1160,18 @@ SMP acceleration
 ===========================================================
 */
 
-static SDL_mutex* smpMutex                    = NULL;
-static SDL_cond*  renderCommandsEvent         = NULL;
-static SDL_cond*  renderCompletedEvent        = NULL;
+static SDL_mutex* smpMutex					  = NULL;
+static SDL_cond*  renderCommandsEvent		  = NULL;
+static SDL_cond*  renderCompletedEvent		  = NULL;
 static void ( *renderThreadFunction )( void ) = NULL;
-static SDL_Thread* renderThread               = NULL;
+static SDL_Thread* renderThread				  = NULL;
 
 /*
 ===============
 GLimp_SetCurrentContext
 ===============
 */
-static void GLimp_SetCurrentContext( qboolean enable )
+static void		   GLimp_SetCurrentContext( qboolean enable )
 {
 	if( enable )
 	{
@@ -1262,7 +1235,7 @@ qboolean GLimp_SpawnRenderThread( void ( *function )( void ) )
 	}
 
 	renderThreadFunction = function;
-	renderThread         = SDL_CreateThread( GLimp_RenderThreadWrapper, "render thread", NULL );
+	renderThread		 = SDL_CreateThread( GLimp_RenderThreadWrapper, "render thread", NULL );
 	if( renderThread == NULL )
 	{
 		ri.Printf( PRINT_WARNING, "SDL_CreateThread() returned %s", SDL_GetError() );
@@ -1284,7 +1257,7 @@ void GLimp_ShutdownRenderThread( void )
 	{
 		GLimp_WakeRenderer( NULL );
 		SDL_WaitThread( renderThread, NULL );
-		renderThread       = NULL;
+		renderThread	   = NULL;
 		glConfig.smpActive = qfalse;
 	}
 
@@ -1309,7 +1282,7 @@ void GLimp_ShutdownRenderThread( void )
 	renderThreadFunction = NULL;
 }
 
-static volatile void*    smpData = NULL;
+static volatile void*	 smpData = NULL;
 static volatile qboolean smpDataReady;
 
 /*
@@ -1317,7 +1290,7 @@ static volatile qboolean smpDataReady;
 GLimp_RendererSleep
 ===============
 */
-void* GLimp_RendererSleep( void )
+void*					 GLimp_RendererSleep( void )
 {
 	void* data = NULL;
 
@@ -1325,7 +1298,7 @@ void* GLimp_RendererSleep( void )
 
 	SDL_LockMutex( smpMutex );
 	{
-		smpData      = NULL;
+		smpData		 = NULL;
 		smpDataReady = qfalse;
 
 		// after this, the front end can exit GLimp_FrontEndSleep
@@ -1388,7 +1361,7 @@ void GLimp_WakeRenderer( void* data )
 	SDL_LockMutex( smpMutex );
 	{
 		assert( smpData == NULL );
-		smpData      = data;
+		smpData		 = data;
 		smpDataReady = qtrue;
 
 		// after this, the renderer can continue through GLimp_RendererSleep

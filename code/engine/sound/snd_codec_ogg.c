@@ -39,24 +39,17 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	#define OGG_SAMPLEWIDTH 2
 
 // Q3 OGG codec
-snd_codec_t ogg_codec = {
-	"ogg",
-	S_OGG_CodecLoad,
-	S_OGG_CodecOpenStream,
-	S_OGG_CodecReadStream,
-	S_OGG_CodecCloseStream,
-	NULL
-};
+snd_codec_t ogg_codec = { "ogg", S_OGG_CodecLoad, S_OGG_CodecOpenStream, S_OGG_CodecReadStream, S_OGG_CodecCloseStream, NULL };
 
 // callbacks for vobisfile
 
 // fread() replacement
-size_t S_OGG_Callback_read( void* ptr, size_t size, size_t nmemb, void* datasource )
+size_t		S_OGG_Callback_read( void* ptr, size_t size, size_t nmemb, void* datasource )
 {
 	snd_stream_t* stream;
-	int           byteSize  = 0;
-	int           bytesRead = 0;
-	size_t        nMembRead = 0;
+	int			  byteSize	= 0;
+	int			  bytesRead = 0;
+	size_t		  nMembRead = 0;
 
 	// check if input is valid
 	if( !ptr )
@@ -107,7 +100,7 @@ size_t S_OGG_Callback_read( void* ptr, size_t size, size_t nmemb, void* datasour
 int S_OGG_Callback_seek( void* datasource, ogg_int64_t offset, int whence )
 {
 	snd_stream_t* stream;
-	int           retVal = 0;
+	int			  retVal = 0;
 
 	// check if input is valid
 	if( !datasource )
@@ -211,28 +204,23 @@ long S_OGG_Callback_tell( void* datasource )
 }
 
 // the callback structure
-const ov_callbacks S_OGG_Callbacks = {
-	&S_OGG_Callback_read,
-	&S_OGG_Callback_seek,
-	&S_OGG_Callback_close,
-	&S_OGG_Callback_tell
-};
+const ov_callbacks S_OGG_Callbacks = { &S_OGG_Callback_read, &S_OGG_Callback_seek, &S_OGG_Callback_close, &S_OGG_Callback_tell };
 
 /*
 =================
 S_OGG_CodecOpenStream
 =================
 */
-snd_stream_t* S_OGG_CodecOpenStream( const char* filename )
+snd_stream_t*	   S_OGG_CodecOpenStream( const char* filename )
 {
-	snd_stream_t* stream;
+	snd_stream_t*	stream;
 
 	// OGG codec control structure
 	OggVorbis_File* vf;
 
 	// some variables used to get informations about the OGG
-	vorbis_info* OGGInfo;
-	ogg_int64_t  numSamples;
+	vorbis_info*	OGGInfo;
+	ogg_int64_t		numSamples;
 
 	// check if input is valid
 	if( !filename )
@@ -307,11 +295,11 @@ snd_stream_t* S_OGG_CodecOpenStream( const char* filename )
 	numSamples = ov_pcm_total( vf, 0 );
 
 	// fill in the info-structure in the stream
-	stream->info.rate     = OGGInfo->rate;
-	stream->info.width    = OGG_SAMPLEWIDTH;
+	stream->info.rate	  = OGGInfo->rate;
+	stream->info.width	  = OGG_SAMPLEWIDTH;
 	stream->info.channels = OGGInfo->channels;
 	stream->info.samples  = numSamples;
-	stream->info.size     = stream->info.samples * stream->info.channels * stream->info.width;
+	stream->info.size	  = stream->info.samples * stream->info.channels * stream->info.width;
 	stream->info.dataofs  = 0;
 
 	// We use stream->pos for the file pointer in the compressed ogg file
@@ -354,14 +342,14 @@ S_OGG_CodecReadStream
 int S_OGG_CodecReadStream( snd_stream_t* stream, int bytes, void* buffer )
 {
 	// buffer handling
-	int   bytesRead, bytesLeft, c;
+	int	  bytesRead, bytesLeft, c;
 	char* bufPtr;
 
 	// Bitstream for the decoder
-	int BS = 0;
+	int	  BS = 0;
 
 	// big endian machines want their samples in big endian order
-	int IsBigEndian = 0;
+	int	  IsBigEndian = 0;
 
 	#ifdef Q3_BIG_ENDIAN
 	IsBigEndian = 1;
@@ -380,7 +368,7 @@ int S_OGG_CodecReadStream( snd_stream_t* stream, int bytes, void* buffer )
 
 	bytesRead = 0;
 	bytesLeft = bytes;
-	bufPtr    = buffer;
+	bufPtr	  = buffer;
 
 	// cycle until we have the requested or all available bytes read
 	while( -1 )
@@ -419,8 +407,8 @@ where we read the whole stream at once.
 void* S_OGG_CodecLoad( const char* filename, snd_info_t* info )
 {
 	snd_stream_t* stream;
-	byte*         buffer;
-	int           bytesRead;
+	byte*		  buffer;
+	int			  bytesRead;
 
 	// check if input is valid
 	if( !( filename && info ) )
@@ -436,11 +424,11 @@ void* S_OGG_CodecLoad( const char* filename, snd_info_t* info )
 	}
 
 	// copy over the info
-	info->rate     = stream->info.rate;
-	info->width    = stream->info.width;
+	info->rate	   = stream->info.rate;
+	info->width	   = stream->info.width;
 	info->channels = stream->info.channels;
 	info->samples  = stream->info.samples;
-	info->size     = stream->info.size;
+	info->size	   = stream->info.size;
 	info->dataofs  = stream->info.dataofs;
 
 	// allocate a buffer

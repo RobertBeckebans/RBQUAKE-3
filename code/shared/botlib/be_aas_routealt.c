@@ -44,18 +44,18 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "be_aas_def.h"
 
 #define ENABLE_ALTROUTING
-//#define ALTROUTE_DEBUG
+// #define ALTROUTE_DEBUG
 
 typedef struct midrangearea_s
 {
-	int            valid;
+	int			   valid;
 	unsigned short starttime;
 	unsigned short goaltime;
 } midrangearea_t;
 
 midrangearea_t* midrangeareas;
-int*            clusterareas;
-int             numclusterareas;
+int*			clusterareas;
+int				numclusterareas;
 
 //===========================================================================
 //
@@ -63,23 +63,23 @@ int             numclusterareas;
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-void AAS_AltRoutingFloodCluster_r( int areanum )
+void			AAS_AltRoutingFloodCluster_r( int areanum )
 {
-	int         i, otherareanum;
+	int			i, otherareanum;
 	aas_area_t* area;
 	aas_face_t* face;
 
-	//add the current area to the areas of the current cluster
-	clusterareas[ numclusterareas ] = areanum;
+	// add the current area to the areas of the current cluster
+	clusterareas[numclusterareas] = areanum;
 	numclusterareas++;
-	//remove the area from the mid range areas
-	midrangeareas[ areanum ].valid = qfalse;
-	//flood to other areas through the faces of this area
-	area = &aasworld.areas[ areanum ];
+	// remove the area from the mid range areas
+	midrangeareas[areanum].valid = qfalse;
+	// flood to other areas through the faces of this area
+	area = &aasworld.areas[areanum];
 	for( i = 0; i < area->numfaces; i++ )
 	{
-		face = &aasworld.faces[ abs( aasworld.faceindex[ area->firstface + i ] ) ];
-		//get the area at the other side of the face
+		face = &aasworld.faces[abs( aasworld.faceindex[area->firstface + i] )];
+		// get the area at the other side of the face
 		if( face->frontarea == areanum )
 		{
 			otherareanum = face->backarea;
@@ -88,20 +88,20 @@ void AAS_AltRoutingFloodCluster_r( int areanum )
 		{
 			otherareanum = face->frontarea;
 		}
-		//if there is an area at the other side of this face
+		// if there is an area at the other side of this face
 		if( !otherareanum )
 		{
 			continue;
 		}
-		//if the other area is not a midrange area
-		if( !midrangeareas[ otherareanum ].valid )
+		// if the other area is not a midrange area
+		if( !midrangeareas[otherareanum].valid )
 		{
 			continue;
 		}
 		//
 		AAS_AltRoutingFloodCluster_r( otherareanum );
-	} //end for
-} //end of the function AAS_AltRoutingFloodCluster_r
+	} // end for
+} // end of the function AAS_AltRoutingFloodCluster_r
 //===========================================================================
 //
 // Parameter:				-
@@ -113,9 +113,9 @@ int AAS_AlternativeRouteGoals( vec3_t start, int startareanum, vec3_t goal, int 
 #ifndef ENABLE_ALTROUTING
 	return 0;
 #else
-	int    i, j, bestareanum;
-	int    numaltroutegoals, nummidrangeareas;
-	int    starttime, goaltime, goaltraveltime;
+	int	   i, j, bestareanum;
+	int	   numaltroutegoals, nummidrangeareas;
+	int	   starttime, goaltime, goaltraveltime;
 	float  dist, bestdist;
 	vec3_t mid, dir;
 	#ifdef ALTROUTE_DEBUG
@@ -128,9 +128,9 @@ int AAS_AlternativeRouteGoals( vec3_t start, int startareanum, vec3_t goal, int 
 	{
 		return 0;
 	}
-	//travel time towards the goal area
+	// travel time towards the goal area
 	goaltraveltime = AAS_AreaTravelTimeToGoalArea( startareanum, start, goalareanum, travelflags );
-	//clear the midrange areas
+	// clear the midrange areas
 	Com_Memset( midrangeareas, 0, aasworld.numareas * sizeof( midrangearea_t ) );
 	numaltroutegoals = 0;
 	//
@@ -141,105 +141,103 @@ int AAS_AlternativeRouteGoals( vec3_t start, int startareanum, vec3_t goal, int 
 		//
 		if( !( type & ALTROUTEGOAL_ALL ) )
 		{
-			if( !( type & ALTROUTEGOAL_CLUSTERPORTALS && ( aasworld.areasettings[ i ].contents & AREACONTENTS_CLUSTERPORTAL ) ) )
+			if( !( type & ALTROUTEGOAL_CLUSTERPORTALS && ( aasworld.areasettings[i].contents & AREACONTENTS_CLUSTERPORTAL ) ) )
 			{
-				if( !( type & ALTROUTEGOAL_VIEWPORTALS && ( aasworld.areasettings[ i ].contents & AREACONTENTS_VIEWPORTAL ) ) )
+				if( !( type & ALTROUTEGOAL_VIEWPORTALS && ( aasworld.areasettings[i].contents & AREACONTENTS_VIEWPORTAL ) ) )
 				{
 					continue;
-				} //end if
-			}     //end if
-		}         //end if
-		//if the area has no reachabilities
+				} // end if
+			} // end if
+		} // end if
+		// if the area has no reachabilities
 		if( !AAS_AreaReachability( i ) )
 		{
 			continue;
 		}
-		//tavel time from the area to the start area
+		// tavel time from the area to the start area
 		starttime = AAS_AreaTravelTimeToGoalArea( startareanum, start, i, travelflags );
 		if( !starttime )
 		{
 			continue;
 		}
-		//if the travel time from the start to the area is greater than the shortest goal travel time
+		// if the travel time from the start to the area is greater than the shortest goal travel time
 		if( starttime > ( float )1.1 * goaltraveltime )
 		{
 			continue;
 		}
-		//travel time from the area to the goal area
+		// travel time from the area to the goal area
 		goaltime = AAS_AreaTravelTimeToGoalArea( i, NULL, goalareanum, travelflags );
 		if( !goaltime )
 		{
 			continue;
 		}
-		//if the travel time from the area to the goal is greater than the shortest goal travel time
+		// if the travel time from the area to the goal is greater than the shortest goal travel time
 		if( goaltime > ( float )0.8 * goaltraveltime )
 		{
 			continue;
 		}
-		//this is a mid range area
-		midrangeareas[ i ].valid     = qtrue;
-		midrangeareas[ i ].starttime = starttime;
-		midrangeareas[ i ].goaltime  = goaltime;
+		// this is a mid range area
+		midrangeareas[i].valid	   = qtrue;
+		midrangeareas[i].starttime = starttime;
+		midrangeareas[i].goaltime  = goaltime;
 		Log_Write( "%d midrange area %d", nummidrangeareas, i );
 		nummidrangeareas++;
-	} //end for
+	} // end for
 	//
 	for( i = 1; i < aasworld.numareas; i++ )
 	{
-		if( !midrangeareas[ i ].valid )
+		if( !midrangeareas[i].valid )
 		{
 			continue;
 		}
-		//get the areas in one cluster
+		// get the areas in one cluster
 		numclusterareas = 0;
 		AAS_AltRoutingFloodCluster_r( i );
-		//now we've got a cluster with areas through which an alternative route could go
-		//get the 'center' of the cluster
+		// now we've got a cluster with areas through which an alternative route could go
+		// get the 'center' of the cluster
 		VectorClear( mid );
 		for( j = 0; j < numclusterareas; j++ )
 		{
-			VectorAdd( mid, aasworld.areas[ clusterareas[ j ] ].center, mid );
-		} //end for
+			VectorAdd( mid, aasworld.areas[clusterareas[j]].center, mid );
+		} // end for
 		VectorScale( mid, 1.0 / numclusterareas, mid );
-		//get the area closest to the center of the cluster
-		bestdist    = 999999;
+		// get the area closest to the center of the cluster
+		bestdist	= 999999;
 		bestareanum = 0;
 		for( j = 0; j < numclusterareas; j++ )
 		{
-			VectorSubtract( mid, aasworld.areas[ clusterareas[ j ] ].center, dir );
+			VectorSubtract( mid, aasworld.areas[clusterareas[j]].center, dir );
 			dist = VectorLength( dir );
 			if( dist < bestdist )
 			{
-				bestdist    = dist;
-				bestareanum = clusterareas[ j ];
-			} //end if
-		}     //end for
-		//now we've got an area for an alternative route
-		//FIXME: add alternative goal origin
-		VectorCopy( aasworld.areas[ bestareanum ].center, altroutegoals[ numaltroutegoals ].origin );
-		altroutegoals[ numaltroutegoals ].areanum         = bestareanum;
-		altroutegoals[ numaltroutegoals ].starttraveltime = midrangeareas[ bestareanum ].starttime;
-		altroutegoals[ numaltroutegoals ].goaltraveltime  = midrangeareas[ bestareanum ].goaltime;
-		altroutegoals[ numaltroutegoals ].extratraveltime =
-			( midrangeareas[ bestareanum ].starttime + midrangeareas[ bestareanum ].goaltime ) -
-			goaltraveltime;
+				bestdist	= dist;
+				bestareanum = clusterareas[j];
+			} // end if
+		} // end for
+		// now we've got an area for an alternative route
+		// FIXME: add alternative goal origin
+		VectorCopy( aasworld.areas[bestareanum].center, altroutegoals[numaltroutegoals].origin );
+		altroutegoals[numaltroutegoals].areanum			= bestareanum;
+		altroutegoals[numaltroutegoals].starttraveltime = midrangeareas[bestareanum].starttime;
+		altroutegoals[numaltroutegoals].goaltraveltime	= midrangeareas[bestareanum].goaltime;
+		altroutegoals[numaltroutegoals].extratraveltime = ( midrangeareas[bestareanum].starttime + midrangeareas[bestareanum].goaltime ) - goaltraveltime;
 		numaltroutegoals++;
 		//
 	#ifdef ALTROUTE_DEBUG
 		AAS_ShowAreaPolygons( bestareanum, 1, qtrue );
 	#endif
-		//don't return more than the maximum alternative route goals
+		// don't return more than the maximum alternative route goals
 		if( numaltroutegoals >= maxaltroutegoals )
 		{
 			break;
 		}
-	} //end for
+	} // end for
 	#ifdef ALTROUTE_DEBUG
 	botimport.Print( PRT_MESSAGE, "alternative route goals in %d msec\n", Sys_MilliSeconds() - startmillisecs );
 	#endif
 	return numaltroutegoals;
 #endif
-} //end of the function AAS_AlternativeRouteGoals
+} // end of the function AAS_AlternativeRouteGoals
 //===========================================================================
 //
 // Parameter:				-
@@ -260,7 +258,7 @@ void AAS_InitAlternativeRouting( void )
 	}
 	clusterareas = ( int* )GetMemory( aasworld.numareas * sizeof( int ) );
 #endif
-} //end of the function AAS_InitAlternativeRouting
+} // end of the function AAS_InitAlternativeRouting
 //===========================================================================
 //
 // Parameter:				-
@@ -279,7 +277,7 @@ void AAS_ShutdownAlternativeRouting( void )
 	{
 		FreeMemory( clusterareas );
 	}
-	clusterareas    = NULL;
+	clusterareas	= NULL;
 	numclusterareas = 0;
 #endif
-} //end of the function AAS_ShutdownAlternativeRouting
+} // end of the function AAS_ShutdownAlternativeRouting

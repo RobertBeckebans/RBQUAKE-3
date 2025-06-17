@@ -33,7 +33,7 @@ CREDITS
 typedef struct
 {
 	menuframework_s menu;
-	int             frame;
+	int				frame;
 } creditsmenu_t;
 
 static creditsmenu_t s_credits;
@@ -43,16 +43,15 @@ static creditsmenu_t s_credits;
 UI_CreditMenu_Draw_ioq3
 ===============
 */
-static void UI_CreditMenu_Draw_ioq3( void )
+static void			 UI_CreditMenu_Draw_ioq3( void )
 {
-	int y;
-	int i;
+	int				   y;
+	int				   i;
 
 	// These are all people that have made commits to Subversion, and thus
 	//  probably incomplete.
 	// (These are in alphabetical order, for the defense of everyone's egos.)
-	static const char* names[] = {
-		"Tim Angus",
+	static const char* names[] = { "Tim Angus",
 		"James Canete",
 		"Vincent Cojot",
 		"Ryan C. Gordon",
@@ -65,8 +64,7 @@ static void UI_CreditMenu_Draw_ioq3( void )
 		"Zachary J. Slater",
 		"Tony J. White",
 		"...and many, many others!", // keep this one last.
-		NULL
-	};
+		NULL };
 
 	// Center text vertically on the screen
 	y = ( SCREEN_HEIGHT - ARRAY_LEN( names ) * ( 1.42 * PROP_HEIGHT * PROP_SMALL_SIZE_SCALE ) ) / 2;
@@ -74,9 +72,9 @@ static void UI_CreditMenu_Draw_ioq3( void )
 	UI_DrawProportionalString( 320, y, "ioquake3 contributors:", UI_CENTER | UI_SMALLFONT, color_white );
 	y += 1.42 * PROP_HEIGHT * PROP_SMALL_SIZE_SCALE;
 
-	for( i = 0; names[ i ]; i++ )
+	for( i = 0; names[i]; i++ )
 	{
-		UI_DrawProportionalString( 320, y, names[ i ], UI_CENTER | UI_SMALLFONT, color_white );
+		UI_DrawProportionalString( 320, y, names[i], UI_CENTER | UI_SMALLFONT, color_white );
 		y += 1.42 * PROP_HEIGHT * PROP_SMALL_SIZE_SCALE;
 	}
 
@@ -176,8 +174,8 @@ void UI_CreditMenu( void )
 {
 	memset( &s_credits, 0, sizeof( s_credits ) );
 
-	s_credits.menu.draw       = UI_CreditMenu_Draw;
-	s_credits.menu.key        = UI_CreditMenu_Key;
+	s_credits.menu.draw		  = UI_CreditMenu_Draw;
+	s_credits.menu.key		  = UI_CreditMenu_Key;
 	s_credits.menu.fullscreen = qtrue;
 	UI_PushMenu( &s_credits.menu );
 }

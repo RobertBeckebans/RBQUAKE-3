@@ -33,13 +33,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // can't use the glvertex3fv functions, because the vec3_t fields
 // could be either floats or doubles, depending on DOUBLEVEC_T
 
-qboolean drawFlag;
+qboolean			 drawFlag;
 
-static qboolean drawInit   = qfalse;
-static vec3_t   drawOrigin = { 0, 0, 0 };
-static vec3_t   drawAngles = { 0, 0, 0 };
+static qboolean		 drawInit	= qfalse;
+static vec3_t		 drawOrigin = { 0, 0, 0 };
+static vec3_t		 drawAngles = { 0, 0, 0 };
 
-static SDL_Window*   mainwindow;
+static SDL_Window*	 mainwindow;
 static SDL_GLContext maincontext;
 
 	#define WIN_SIZE 512
@@ -64,10 +64,10 @@ static void Reshape( int width, int height )
 
 	glRotatef( -90, 1, 0, 0 ); // put Z going up
 	glRotatef( 90, 0, 0, 1 );  // put Z going up
-	glRotatef( -drawAngles[ 2 ], 1, 0, 0 );
-	glRotatef( -drawAngles[ 0 ], 0, 1, 0 );
-	glRotatef( -drawAngles[ 1 ], 0, 0, 1 );
-	glTranslatef( -drawOrigin[ 0 ], -drawOrigin[ 1 ], -drawOrigin[ 2 ] );
+	glRotatef( -drawAngles[2], 1, 0, 0 );
+	glRotatef( -drawAngles[0], 0, 1, 0 );
+	glRotatef( -drawAngles[1], 0, 0, 1 );
+	glTranslatef( -drawOrigin[0], -drawOrigin[1], -drawOrigin[2] );
 }
 
 static void Draw_BeginScene( void )
@@ -120,7 +120,7 @@ static void Draw_BeginScene( void )
 
 	Reshape( WIN_SIZE, WIN_SIZE );
 
-	//glClearColor(1, 0.8, 0.8, 0);
+	// glClearColor(1, 0.8, 0.8, 0);
 	glClearColor( 0.8, 0.8, 0.8, 0 );
 	glClear( GL_COLOR_BUFFER_BIT );
 
@@ -148,7 +148,7 @@ static void Draw_BeginScene( void )
 
 static void Draw_EndScene( void )
 {
-	//Sys_FPrintf(SYS_VRB, "Draw_EndScene()\n");
+	// Sys_FPrintf(SYS_VRB, "Draw_EndScene()\n");
 
 	SDL_GL_SwapWindow( mainwindow );
 }
@@ -213,7 +213,7 @@ void Draw_Winding( winding_t* w, float r, float g, float b, float a )
 	glBegin( GL_LINE_LOOP );
 	for( i = 0; i < w->numpoints; i++ )
 	{
-		glVertex3f( w->p[ i ][ 0 ], w->p[ i ][ 1 ], w->p[ i ][ 2 ] );
+		glVertex3f( w->p[i][0], w->p[i][1], w->p[i][2] );
 	}
 	glEnd();
 
@@ -221,7 +221,7 @@ void Draw_Winding( winding_t* w, float r, float g, float b, float a )
 	glBegin( GL_POLYGON );
 	for( i = 0; i < w->numpoints; i++ )
 	{
-		glVertex3f( w->p[ i ][ 0 ], w->p[ i ][ 1 ], w->p[ i ][ 2 ] );
+		glVertex3f( w->p[i][0], w->p[i][1], w->p[i][2] );
 	}
 	glEnd();
 
@@ -232,31 +232,31 @@ void Draw_Winding( winding_t* w, float r, float g, float b, float a )
 void Draw_AABB( const vec3_t origin, const vec3_t mins, const vec3_t maxs, vec4_t color )
 {
 #if defined( USE_OPENGL )
-	vec3_t corners[ 8 ];
-	int    i;
+	vec3_t corners[8];
+	int	   i;
 
 	// upper corners
-	corners[ 0 ][ 0 ] = origin[ 0 ] + maxs[ 0 ];
-	corners[ 0 ][ 1 ] = origin[ 1 ] + maxs[ 1 ];
-	corners[ 0 ][ 2 ] = origin[ 2 ] + maxs[ 2 ];
+	corners[0][0] = origin[0] + maxs[0];
+	corners[0][1] = origin[1] + maxs[1];
+	corners[0][2] = origin[2] + maxs[2];
 
-	corners[ 1 ][ 0 ] = origin[ 0 ] + mins[ 0 ];
-	corners[ 1 ][ 1 ] = origin[ 1 ] + maxs[ 1 ];
-	corners[ 1 ][ 2 ] = origin[ 2 ] + maxs[ 2 ];
+	corners[1][0] = origin[0] + mins[0];
+	corners[1][1] = origin[1] + maxs[1];
+	corners[1][2] = origin[2] + maxs[2];
 
-	corners[ 2 ][ 0 ] = origin[ 0 ] + mins[ 0 ];
-	corners[ 2 ][ 1 ] = origin[ 1 ] + mins[ 1 ];
-	corners[ 2 ][ 2 ] = origin[ 2 ] + maxs[ 2 ];
+	corners[2][0] = origin[0] + mins[0];
+	corners[2][1] = origin[1] + mins[1];
+	corners[2][2] = origin[2] + maxs[2];
 
-	corners[ 3 ][ 0 ] = origin[ 0 ] + maxs[ 0 ];
-	corners[ 3 ][ 1 ] = origin[ 1 ] + mins[ 1 ];
-	corners[ 3 ][ 2 ] = origin[ 2 ] + maxs[ 2 ];
+	corners[3][0] = origin[0] + maxs[0];
+	corners[3][1] = origin[1] + mins[1];
+	corners[3][2] = origin[2] + maxs[2];
 
 	// lower corners
-	memcpy( corners[ 4 ], corners[ 0 ], sizeof( vec3_t ) * 4 );
+	memcpy( corners[4], corners[0], sizeof( vec3_t ) * 4 );
 	for( i = 0; i < 4; i++ )
 	{
-		corners[ 4 + i ][ 2 ] = origin[ 2 ] + mins[ 2 ];
+		corners[4 + i][2] = origin[2] + mins[2];
 	}
 
 	// draw bounding box
@@ -265,16 +265,16 @@ void Draw_AABB( const vec3_t origin, const vec3_t mins, const vec3_t maxs, vec4_
 	for( i = 0; i < 4; i++ )
 	{
 		// top plane
-		glVertex3fv( corners[ i ] );
-		glVertex3fv( corners[ ( i + 1 ) & 3 ] );
+		glVertex3fv( corners[i] );
+		glVertex3fv( corners[( i + 1 ) & 3] );
 
 		// bottom plane
-		glVertex3fv( corners[ 4 + i ] );
-		glVertex3fv( corners[ 4 + ( ( i + 1 ) & 3 ) ] );
+		glVertex3fv( corners[4 + i] );
+		glVertex3fv( corners[4 + ( ( i + 1 ) & 3 )] );
 
 		// vertical lines
-		glVertex3fv( corners[ i ] );
-		glVertex3fv( corners[ 4 + i ] );
+		glVertex3fv( corners[i] );
+		glVertex3fv( corners[4 + i] );
 	}
 	glEnd();
 #endif
@@ -283,14 +283,14 @@ void Draw_AABB( const vec3_t origin, const vec3_t mins, const vec3_t maxs, vec4_
 void Draw_Scene( void ( *drawFunc )( void ) )
 {
 #if defined( USE_OPENGL )
-	Uint8*   keys;
+	Uint8*	 keys;
 	matrix_t rotation;
-	vec3_t   forward, right, up;
+	vec3_t	 forward, right, up;
 	qboolean mouseGrabbed;
 	qboolean mouseGrabbedLastFrame;
-	int      oldTime, newTime, deltaTime; // for frame independent movement
+	int		 oldTime, newTime, deltaTime; // for frame independent movement
 
-	mouseGrabbed          = qfalse;
+	mouseGrabbed		  = qfalse;
 	mouseGrabbedLastFrame = qfalse;
 
 	oldTime = SDL_GetTicks();
@@ -298,12 +298,12 @@ void Draw_Scene( void ( *drawFunc )( void ) )
 	{
 		SDL_Event event;
 
-		newTime   = SDL_GetTicks();
+		newTime	  = SDL_GetTicks();
 		deltaTime = newTime - oldTime;
 
-		//Sys_Printf(" deltaTime (%5.2f seconds)\n", (deltaTime / 1000.0));
+		// Sys_Printf(" deltaTime (%5.2f seconds)\n", (deltaTime / 1000.0));
 
-		MatrixFromAngles( rotation, drawAngles[ PITCH ], drawAngles[ YAW ], drawAngles[ ROLL ] );
+		MatrixFromAngles( rotation, drawAngles[PITCH], drawAngles[YAW], drawAngles[ROLL] );
 		MatrixToVectorsFRU( rotation, forward, right, up );
 
 		while( SDL_PollEvent( &event ) )
@@ -314,8 +314,8 @@ void Draw_Scene( void ( *drawFunc )( void ) )
 				{
 					if( mouseGrabbed && !mouseGrabbedLastFrame )
 					{
-						drawAngles[ PITCH ] += event.motion.yrel;
-						drawAngles[ YAW ] -= event.motion.xrel;
+						drawAngles[PITCH] += event.motion.yrel;
+						drawAngles[YAW] -= event.motion.xrel;
 					}
 					mouseGrabbedLastFrame = qfalse;
 					break;
@@ -332,7 +332,7 @@ void Draw_Scene( void ( *drawFunc )( void ) )
 							{
 								SDL_SetRelativeMouseMode( SDL_TRUE );
 								SDL_SetWindowGrab( mainwindow, SDL_TRUE );
-								mouseGrabbed          = qtrue;
+								mouseGrabbed		  = qtrue;
 								mouseGrabbedLastFrame = qtrue;
 							}
 							else
@@ -364,13 +364,13 @@ void Draw_Scene( void ( *drawFunc )( void ) )
 
 		keys = SDL_GetKeyboardState( NULL );
 
-		if( keys[ SDLK_ESCAPE ] )
+		if( keys[SDLK_ESCAPE] )
 		{
 			Draw_Shutdown();
 			return;
 		}
 
-		if( keys[ SDLK_w ] )
+		if( keys[SDLK_w] )
 		{
 			if( SDL_GetModState() & KMOD_SHIFT )
 			{
@@ -382,7 +382,7 @@ void Draw_Scene( void ( *drawFunc )( void ) )
 			}
 		}
 
-		if( keys[ SDLK_s ] )
+		if( keys[SDLK_s] )
 		{
 			if( SDL_GetModState() & KMOD_SHIFT )
 			{
@@ -394,7 +394,7 @@ void Draw_Scene( void ( *drawFunc )( void ) )
 			}
 		}
 
-		if( keys[ SDLK_a ] )
+		if( keys[SDLK_a] )
 		{
 			if( SDL_GetModState() & KMOD_SHIFT )
 			{
@@ -406,7 +406,7 @@ void Draw_Scene( void ( *drawFunc )( void ) )
 			}
 		}
 
-		if( keys[ SDLK_d ] )
+		if( keys[SDLK_d] )
 		{
 			if( SDL_GetModState() & KMOD_SHIFT )
 			{
@@ -418,9 +418,9 @@ void Draw_Scene( void ( *drawFunc )( void ) )
 			}
 		}
 
-		if( keys[ SDLK_SPACE ] )
+		if( keys[SDLK_SPACE] )
 		{
-			//drawOrigin[2] += 1.0 * deltaTime;
+			// drawOrigin[2] += 1.0 * deltaTime;
 			if( SDL_GetModState() & KMOD_SHIFT )
 			{
 				VectorMA( drawOrigin, 0.5 * deltaTime, up, drawOrigin );
@@ -431,9 +431,9 @@ void Draw_Scene( void ( *drawFunc )( void ) )
 			}
 		}
 
-		if( keys[ SDLK_c ] )
+		if( keys[SDLK_c] )
 		{
-			//drawOrigin[2] -= 1.0 * deltaTime;
+			// drawOrigin[2] -= 1.0 * deltaTime;
 			if( SDL_GetModState() & KMOD_SHIFT )
 			{
 				VectorMA( drawOrigin, -0.5 * deltaTime, up, drawOrigin );
@@ -444,34 +444,34 @@ void Draw_Scene( void ( *drawFunc )( void ) )
 			}
 		}
 
-		if( keys[ SDLK_UP ] )
+		if( keys[SDLK_UP] )
 		{
-			drawAngles[ PITCH ] -= 1.0 * deltaTime;
+			drawAngles[PITCH] -= 1.0 * deltaTime;
 		}
 
-		if( keys[ SDLK_DOWN ] )
+		if( keys[SDLK_DOWN] )
 		{
-			drawAngles[ PITCH ] += 1.0 * deltaTime;
+			drawAngles[PITCH] += 1.0 * deltaTime;
 		}
 
-		if( keys[ SDLK_LEFT ] )
+		if( keys[SDLK_LEFT] )
 		{
-			drawAngles[ YAW ] += 1.0 * deltaTime;
+			drawAngles[YAW] += 1.0 * deltaTime;
 		}
 
-		if( keys[ SDLK_RIGHT ] )
+		if( keys[SDLK_RIGHT] )
 		{
-			drawAngles[ YAW ] -= 1.0 * deltaTime;
+			drawAngles[YAW] -= 1.0 * deltaTime;
 		}
 
 		// check to make sure the angles haven't wrapped
-		if( drawAngles[ PITCH ] < -90 )
+		if( drawAngles[PITCH] < -90 )
 		{
-			drawAngles[ PITCH ] = -90;
+			drawAngles[PITCH] = -90;
 		}
-		else if( drawAngles[ PITCH ] > 90 )
+		else if( drawAngles[PITCH] > 90 )
 		{
-			drawAngles[ PITCH ] = 90;
+			drawAngles[PITCH] = 90;
 		}
 
 		Draw_BeginScene();

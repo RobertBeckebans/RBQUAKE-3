@@ -34,9 +34,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #define MAX_THREADS 64
 
-int      dispatch;
-int      workcount;
-int      oldf;
+int		 dispatch;
+int		 workcount;
+int		 oldf;
 qboolean pacifier;
 
 qboolean threaded;
@@ -47,7 +47,7 @@ GetThreadWork
 
 =============
 */
-int GetThreadWork( void )
+int		 GetThreadWork( void )
 {
 	int r;
 	int f;
@@ -91,7 +91,7 @@ void ThreadWorkerFunction( int threadnum )
 		{
 			break;
 		}
-		//Sys_Printf ("thread %i, work %i\n", threadnum, work);
+		// Sys_Printf ("thread %i, work %i\n", threadnum, work);
 		workfunction( work );
 	}
 }
@@ -119,11 +119,11 @@ WIN32
 
 	#include <windows.h>
 
-int              numthreads = -1;
+int				 numthreads = -1;
 CRITICAL_SECTION crit;
-static int       enter;
+static int		 enter;
 
-void ThreadSetDefault( void )
+void			 ThreadSetDefault( void )
 {
 	SYSTEM_INFO info;
 
@@ -175,15 +175,15 @@ RunThreadsOn
 */
 void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) )
 {
-	int    threadid[ MAX_THREADS ];
-	HANDLE threadhandle[ MAX_THREADS ];
-	int    i;
-	int    start, end;
+	int	   threadid[MAX_THREADS];
+	HANDLE threadhandle[MAX_THREADS];
+	int	   i;
+	int	   start, end;
 
-	start     = I_FloatTime();
+	start	  = I_FloatTime();
 	dispatch  = 0;
 	workcount = workcnt;
-	oldf      = -1;
+	oldf	  = -1;
 	pacifier  = showpacifier;
 	threaded  = qtrue;
 
@@ -201,25 +201,25 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) )
 	{
 		for( i = 0; i < numthreads; i++ )
 		{
-			threadhandle[ i ] = CreateThread( NULL, // LPSECURITY_ATTRIBUTES lpsa,
-				//0,     // DWORD cbStack,
+			threadhandle[i] = CreateThread( NULL, // LPSECURITY_ATTRIBUTES lpsa,
+												  // 0,     // DWORD cbStack,
 				/* ydnar: cranking stack size to eliminate radiosity crash with 1MB stack on win32 */
 				( 4096 * 1024 ),
 				( LPTHREAD_START_ROUTINE )func, // LPTHREAD_START_ROUTINE lpStartAddr,
-				( LPVOID )i,                    // LPVOID lpvThreadParm,
-				0,                              //   DWORD fdwCreate,
-				&threadid[ i ] );
+				( LPVOID )i,					// LPVOID lpvThreadParm,
+				0,								//   DWORD fdwCreate,
+				&threadid[i] );
 		}
 
 		for( i = 0; i < numthreads; i++ )
 		{
-			WaitForSingleObject( threadhandle[ i ], INFINITE );
+			WaitForSingleObject( threadhandle[i], INFINITE );
 		}
 	}
 	DeleteCriticalSection( &crit );
 
 	threaded = qfalse;
-	end      = I_FloatTime();
+	end		 = I_FloatTime();
 	if( pacifier )
 	{
 		Sys_Printf( " (%i)\n", end - start );
@@ -239,7 +239,7 @@ OSF1
 #ifdef __osf__
 	#define USED
 
-int numthreads = 4;
+int	 numthreads = 4;
 
 void ThreadSetDefault( void )
 {
@@ -253,7 +253,7 @@ void ThreadSetDefault( void )
 
 pthread_mutex_t* my_mutex;
 
-void ThreadLock( void )
+void			 ThreadLock( void )
 {
 	if( my_mutex )
 	{
@@ -276,17 +276,17 @@ RunThreadsOn
 */
 void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) )
 {
-	int                 i;
-	pthread_t           work_threads[ MAX_THREADS ];
-	pthread_addr_t      status;
-	pthread_attr_t      attrib;
+	int					i;
+	pthread_t			work_threads[MAX_THREADS];
+	pthread_addr_t		status;
+	pthread_attr_t		attrib;
 	pthread_mutexattr_t mattrib;
-	int                 start, end;
+	int					start, end;
 
-	start     = I_FloatTime();
+	start	  = I_FloatTime();
 	dispatch  = 0;
 	workcount = workcnt;
-	oldf      = -1;
+	oldf	  = -1;
 	pacifier  = showpacifier;
 	threaded  = qtrue;
 
@@ -323,7 +323,7 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) )
 
 	for( i = 0; i < numthreads; i++ )
 	{
-		if( pthread_create( &work_threads[ i ], attrib, ( pthread_startroutine_t )func, ( pthread_addr_t )i ) == -1 )
+		if( pthread_create( &work_threads[i], attrib, ( pthread_startroutine_t )func, ( pthread_addr_t )i ) == -1 )
 		{
 			Error( "pthread_create failed" );
 		}
@@ -331,7 +331,7 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) )
 
 	for( i = 0; i < numthreads; i++ )
 	{
-		if( pthread_join( work_threads[ i ], &status ) == -1 )
+		if( pthread_join( work_threads[i], &status ) == -1 )
 		{
 			Error( "pthread_join failed" );
 		}
@@ -364,10 +364,10 @@ IRIX
 	#include <sys/types.h>
 	#include <sys/prctl.h>
 
-int       numthreads = -1;
+int		  numthreads = -1;
 abilock_t lck;
 
-void ThreadSetDefault( void )
+void	  ThreadSetDefault( void )
 {
 	if( numthreads == -1 )
 	{
@@ -395,13 +395,13 @@ RunThreadsOn
 void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) )
 {
 	int i;
-	int pid[ MAX_THREADS ];
+	int pid[MAX_THREADS];
 	int start, end;
 
-	start     = I_FloatTime();
+	start	  = I_FloatTime();
 	dispatch  = 0;
 	workcount = workcnt;
-	oldf      = -1;
+	oldf	  = -1;
 	pacifier  = showpacifier;
 	threaded  = qtrue;
 
@@ -414,8 +414,8 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) )
 
 	for( i = 0; i < numthreads - 1; i++ )
 	{
-		pid[ i ] = sprocsp( ( void ( * )( void*, size_t ) )func, PR_SALL, ( void* )i, NULL, 0x200000 ); // 2 meg stacks
-		if( pid[ i ] == -1 )
+		pid[i] = sprocsp( ( void ( * )( void*, size_t ) )func, PR_SALL, ( void* )i, NULL, 0x200000 ); // 2 meg stacks
+		if( pid[i] == -1 )
 		{
 			perror( "sproc" );
 			Error( "sproc failed" );
@@ -451,7 +451,7 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) )
 #ifdef __linux__
 	#define USED
 
-int numthreads = 4;
+int	 numthreads = 4;
 
 void ThreadSetDefault( void )
 {
@@ -470,15 +470,15 @@ void ThreadSetDefault( void )
 
 typedef struct pt_mutex_s
 {
-	pthread_t*      owner;
+	pthread_t*		owner;
 	pthread_mutex_t a_mutex;
-	pthread_cond_t  cond;
-	unsigned int    lock;
+	pthread_cond_t	cond;
+	unsigned int	lock;
 } pt_mutex_t;
 
 pt_mutex_t global_lock;
 
-void ThreadLock( void )
+void	   ThreadLock( void )
 {
 	pt_mutex_t* pt_mutex = &global_lock;
 
@@ -497,7 +497,7 @@ void ThreadLock( void )
 		if( ( !pt_mutex->owner ) && ( pt_mutex->lock == 0 ) )
 		{
 			pt_mutex->owner = ( pthread_t* )pthread_self();
-			pt_mutex->lock  = 1;
+			pt_mutex->lock	= 1;
 		}
 		else
 		{
@@ -507,7 +507,7 @@ void ThreadLock( void )
 				if( ( !pt_mutex->owner ) && ( pt_mutex->lock == 0 ) )
 				{
 					pt_mutex->owner = ( pthread_t* )pthread_self();
-					pt_mutex->lock  = 1;
+					pt_mutex->lock	= 1;
 					break;
 				}
 			}
@@ -562,16 +562,16 @@ RunThreadsOn
 void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) )
 {
 	pthread_mutexattr_t mattrib;
-	pthread_t           work_threads[ MAX_THREADS ];
+	pthread_t			work_threads[MAX_THREADS];
 
-	int start, end;
-	int i = 0, status = 0;
+	int					start, end;
+	int					i = 0, status = 0;
 
-	start    = I_FloatTime();
+	start	 = I_FloatTime();
 	pacifier = showpacifier;
 
 	dispatch  = 0;
-	oldf      = -1;
+	oldf	  = -1;
 	workcount = workcnt;
 
 	if( numthreads == 1 )
@@ -602,14 +602,14 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) )
 		for( i = 0; i < numthreads; i++ )
 		{
 			/* Default pthread attributes: joinable & non-realtime scheduling */
-			if( pthread_create( &work_threads[ i ], NULL, ( void* )func, ( void* )i ) != 0 )
+			if( pthread_create( &work_threads[i], NULL, ( void* )func, ( void* )i ) != 0 )
 			{
 				Error( "pthread_create failed" );
 			}
 		}
 		for( i = 0; i < numthreads; i++ )
 		{
-			if( pthread_join( work_threads[ i ], ( void** )&status ) != 0 )
+			if( pthread_join( work_threads[i], ( void** )&status ) != 0 )
 			{
 				Error( "pthread_join failed" );
 			}
@@ -636,7 +636,7 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) )
 
 #ifndef USED
 
-int numthreads = 1;
+int	 numthreads = 1;
 
 void ThreadSetDefault( void )
 {
@@ -662,9 +662,9 @@ void RunThreadsOn( int workcnt, qboolean showpacifier, void ( *func )( int ) )
 
 	dispatch  = 0;
 	workcount = workcnt;
-	oldf      = -1;
+	oldf	  = -1;
 	pacifier  = showpacifier;
-	start     = I_FloatTime();
+	start	  = I_FloatTime();
 	func( 0 );
 
 	end = I_FloatTime();

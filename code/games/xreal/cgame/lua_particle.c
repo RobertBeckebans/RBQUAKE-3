@@ -81,7 +81,7 @@ static int particle_SetDuration( lua_State* L )
 {
 	cparticle_t*  p;
 	lua_Particle* lp;
-	float         duration;
+	float		  duration;
 
 	lp = lua_getparticle( L, 1 );
 	p  = lp->p;
@@ -97,7 +97,7 @@ static int particle_SetOrigin( lua_State* L )
 {
 	cparticle_t*  p;
 	lua_Particle* lp;
-	vec_t*        origin;
+	vec_t*		  origin;
 
 	lp = lua_getparticle( L, 1 );
 	p  = lp->p;
@@ -113,7 +113,7 @@ static int particle_SetVelocity( lua_State* L )
 {
 	cparticle_t*  p;
 	lua_Particle* lp;
-	vec_t*        v;
+	vec_t*		  v;
 
 	lp = lua_getparticle( L, 1 );
 	p  = lp->p;
@@ -128,7 +128,7 @@ static int particle_SetAcceleration( lua_State* L )
 {
 	cparticle_t*  p;
 	lua_Particle* lp;
-	vec_t*        v;
+	vec_t*		  v;
 
 	lp = lua_getparticle( L, 1 );
 	p  = lp->p;
@@ -147,10 +147,10 @@ static int particle_SetColor( lua_State* L )
 	lp = lua_getparticle( L, 1 );
 	p  = lp->p;
 
-	p->color[ 0 ] = luaL_checknumber( L, 2 );
-	p->color[ 1 ] = luaL_checknumber( L, 3 );
-	p->color[ 2 ] = luaL_checknumber( L, 4 );
-	p->color[ 3 ] = luaL_checknumber( L, 5 );
+	p->color[0] = luaL_checknumber( L, 2 );
+	p->color[1] = luaL_checknumber( L, 3 );
+	p->color[2] = luaL_checknumber( L, 4 );
+	p->color[3] = luaL_checknumber( L, 5 );
 
 	return 1;
 }
@@ -163,10 +163,10 @@ static int particle_SetColorVelocity( lua_State* L )
 	lp = lua_getparticle( L, 1 );
 	p  = lp->p;
 
-	p->colorVel[ 0 ] = luaL_checknumber( L, 2 );
-	p->colorVel[ 1 ] = luaL_checknumber( L, 3 );
-	p->colorVel[ 2 ] = luaL_checknumber( L, 4 );
-	p->colorVel[ 3 ] = luaL_checknumber( L, 5 );
+	p->colorVel[0] = luaL_checknumber( L, 2 );
+	p->colorVel[1] = luaL_checknumber( L, 3 );
+	p->colorVel[2] = luaL_checknumber( L, 4 );
+	p->colorVel[3] = luaL_checknumber( L, 5 );
 
 	return 1;
 }
@@ -232,7 +232,7 @@ static int particle_SetRotation( lua_State* L )
 	p  = lp->p;
 
 	p->rotate = qtrue;
-	p->roll   = luaL_checknumber( L, 2 );
+	p->roll	  = luaL_checknumber( L, 2 );
 
 	return 1;
 }
@@ -248,7 +248,7 @@ static int particle_ToString( lua_State* L )
 {
 	cparticle_t*  p;
 	lua_Particle* lp;
-	char          buf[ MAX_STRING_CHARS ];
+	char		  buf[MAX_STRING_CHARS];
 
 	lp = lua_getparticle( L, 1 );
 	p  = lp->p;
@@ -258,13 +258,9 @@ static int particle_ToString( lua_State* L )
 	return 1;
 }
 
-static const luaL_reg particle_ctor[] = {
-	{ "Spawn", particle_Spawn },
-	{ NULL, NULL }
-};
+static const luaL_reg particle_ctor[] = { { "Spawn", particle_Spawn }, { NULL, NULL } };
 
-static const luaL_reg particle_meta[] = {
-	{ "SetType", particle_SetType },
+static const luaL_reg particle_meta[] = { { "SetType", particle_SetType },
 	{ "SetShader", particle_SetShader },
 	{ "SetDuration", particle_SetDuration },
 	{ "SetOrigin", particle_SetOrigin },
@@ -279,16 +275,15 @@ static const luaL_reg particle_meta[] = {
 	{ "SetRotation", particle_SetRotation },
 	{ "__gc", particle_GC },
 	{ "__tostring", particle_ToString },
-	{ NULL, NULL }
-};
+	{ NULL, NULL } };
 
-int luaopen_particle( lua_State* L )
+int					  luaopen_particle( lua_State* L )
 {
 	luaL_newmetatable( L, "cgame.particle" );
 
 	lua_pushstring( L, "__index" );
 	lua_pushvalue( L, -2 ); // pushes the metatable
-	lua_settable( L, -3 );  // metatable.__index = metatable
+	lua_settable( L, -3 );	// metatable.__index = metatable
 
 	luaL_register( L, NULL, particle_meta );
 	luaL_register( L, "particle", particle_ctor );

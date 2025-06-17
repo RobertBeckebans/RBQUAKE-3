@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include <stdio.h>
 #include "../qcommon/qcommon.h"
 
-int sys_curtime;
+int	 sys_curtime;
 
 //===================================================================
 

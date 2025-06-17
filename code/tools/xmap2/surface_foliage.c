@@ -33,8 +33,8 @@ Foliage code for Wolfenstein: Enemy Territory by ydnar@splashdamage.com
 
 #define MAX_FOLIAGE_INSTANCES 8192
 
-static int               numFoliageInstances;
-static foliageInstance_t foliageInstances[ MAX_FOLIAGE_INSTANCES ];
+static int				 numFoliageInstances;
+static foliageInstance_t foliageInstances[MAX_FOLIAGE_INSTANCES];
 
 /*
 SubdivideFoliageTriangle_r()
@@ -42,10 +42,10 @@ recursively subdivides a triangle until the triangle is smaller than
 the desired density, then pseudo-randomly sets a point
 */
 
-static void SubdivideFoliageTriangle_r( mapDrawSurface_t* ds, foliage_t* foliage, bspDrawVert_t** tri )
+static void				 SubdivideFoliageTriangle_r( mapDrawSurface_t* ds, foliage_t* foliage, bspDrawVert_t** tri )
 {
-	bspDrawVert_t mid, *tri2[ 3 ];
-	int           max;
+	bspDrawVert_t mid, *tri2[3];
+	int			  max;
 
 	/* limit test */
 	if( numFoliageInstances >= MAX_FOLIAGE_INSTANCES )
@@ -58,13 +58,13 @@ static void SubdivideFoliageTriangle_r( mapDrawSurface_t* ds, foliage_t* foliage
 		vec4_t plane;
 
 		/* make a plane */
-		if( !PlaneFromPoints( plane, tri[ 0 ]->xyz, tri[ 1 ]->xyz, tri[ 2 ]->xyz, qtrue ) )
+		if( !PlaneFromPoints( plane, tri[0]->xyz, tri[1]->xyz, tri[2]->xyz, qtrue ) )
 		{
 			return;
 		}
 
 		/* if normal is too far off vertical, then don't place an instance */
-		if( plane[ 2 ] < 0.5f )
+		if( plane[2] < 0.5f )
 		{
 			return;
 		}
@@ -72,40 +72,40 @@ static void SubdivideFoliageTriangle_r( mapDrawSurface_t* ds, foliage_t* foliage
 
 	/* subdivide calc */
 	{
-		int                i;
-		float *            a, *b, dx, dy, dz, dist, maxDist;
+		int				   i;
+		float *			   a, *b, dx, dy, dz, dist, maxDist;
 		foliageInstance_t* fi;
 
 		/* get instance */
-		fi = &foliageInstances[ numFoliageInstances ];
+		fi = &foliageInstances[numFoliageInstances];
 
 		/* find the longest edge and split it */
-		max     = -1;
+		max		= -1;
 		maxDist = 0.0f;
 		VectorClear( fi->xyz );
 		VectorClear( fi->normal );
 		for( i = 0; i < 3; i++ )
 		{
 			/* get verts */
-			a = tri[ i ]->xyz;
-			b = tri[ ( i + 1 ) % 3 ]->xyz;
+			a = tri[i]->xyz;
+			b = tri[( i + 1 ) % 3]->xyz;
 
 			/* get dists */
-			dx   = a[ 0 ] - b[ 0 ];
-			dy   = a[ 1 ] - b[ 1 ];
-			dz   = a[ 2 ] - b[ 2 ];
+			dx	 = a[0] - b[0];
+			dy	 = a[1] - b[1];
+			dz	 = a[2] - b[2];
 			dist = ( dx * dx ) + ( dy * dy ) + ( dz * dz );
 
 			/* longer? */
 			if( dist > maxDist )
 			{
 				maxDist = dist;
-				max     = i;
+				max		= i;
 			}
 
 			/* add to centroid */
-			VectorAdd( fi->xyz, tri[ i ]->xyz, fi->xyz );
-			VectorAdd( fi->normal, tri[ i ]->normal, fi->normal );
+			VectorAdd( fi->xyz, tri[i]->xyz, fi->xyz );
+			VectorAdd( fi->normal, tri[i]->normal, fi->normal );
 		}
 
 		/* is the triangle small enough? */
@@ -120,7 +120,7 @@ static void SubdivideFoliageTriangle_r( mapDrawSurface_t* ds, foliage_t* foliage
 			}
 			else
 			{
-				alpha = ( ( float )tri[ 0 ]->lightColor[ 0 ][ 3 ] + ( float )tri[ 1 ]->lightColor[ 0 ][ 3 ] + ( float )tri[ 2 ]->lightColor[ 0 ][ 3 ] ) / 765.0f;
+				alpha = ( ( float )tri[0]->lightColor[0][3] + ( float )tri[1]->lightColor[0][3] + ( float )tri[2]->lightColor[0][3] ) / 765.0f;
 				if( foliage->inverseAlpha == 1 )
 				{
 					alpha = 1.0f - alpha;
@@ -133,7 +133,7 @@ static void SubdivideFoliageTriangle_r( mapDrawSurface_t* ds, foliage_t* foliage
 
 			/* roll the dice */
 			odds = foliage->odds * alpha;
-			r    = Random();
+			r	 = Random();
 			if( r > odds )
 			{
 				return;
@@ -153,16 +153,16 @@ static void SubdivideFoliageTriangle_r( mapDrawSurface_t* ds, foliage_t* foliage
 	}
 
 	/* split the longest edge and map it */
-	LerpDrawVert( tri[ max ], tri[ ( max + 1 ) % 3 ], &mid );
+	LerpDrawVert( tri[max], tri[( max + 1 ) % 3], &mid );
 
 	/* recurse to first triangle */
 	VectorCopy( tri, tri2 );
-	tri2[ max ] = &mid;
+	tri2[max] = &mid;
 	SubdivideFoliageTriangle_r( ds, foliage, tri2 );
 
 	/* recurse to second triangle */
 	VectorCopy( tri, tri2 );
-	tri2[ ( max + 1 ) % 3 ] = &mid;
+	tri2[( max + 1 ) % 3] = &mid;
 	SubdivideFoliageTriangle_r( ds, foliage, tri2 );
 }
 
@@ -173,14 +173,14 @@ generates a foliage file for a bsp
 
 void Foliage( mapDrawSurface_t* src )
 {
-	int               i, j, k, x, y, pw[ 5 ], r, oldNumMapDrawSurfs;
+	int				  i, j, k, x, y, pw[5], r, oldNumMapDrawSurfs;
 	mapDrawSurface_t* ds;
-	shaderInfo_t*     si;
-	foliage_t*        foliage;
-	mesh_t            srcMesh, *subdivided, *mesh;
-	bspDrawVert_t *   verts, *dv[ 3 ], *fi;
-	vec3_t            scale;
-	matrix_t          transform, rotation;
+	shaderInfo_t*	  si;
+	foliage_t*		  foliage;
+	mesh_t			  srcMesh, *subdivided, *mesh;
+	bspDrawVert_t *	  verts, *dv[3], *fi;
+	vec3_t			  scale;
+	matrix_t		  transform, rotation;
 
 	/* get shader */
 	si = src->shaderInfo;
@@ -207,9 +207,9 @@ void Foliage( mapDrawSurface_t* src )
 				/* map the triangles */
 				for( i = 0; i < src->numIndexes; i += 3 )
 				{
-					dv[ 0 ] = &verts[ src->indexes[ i ] ];
-					dv[ 1 ] = &verts[ src->indexes[ i + 1 ] ];
-					dv[ 2 ] = &verts[ src->indexes[ i + 2 ] ];
+					dv[0] = &verts[src->indexes[i]];
+					dv[1] = &verts[src->indexes[i + 1]];
+					dv[2] = &verts[src->indexes[i + 2]];
 					SubdivideFoliageTriangle_r( src, foliage, dv );
 				}
 				break;
@@ -219,7 +219,7 @@ void Foliage( mapDrawSurface_t* src )
 				srcMesh.width  = src->patchWidth;
 				srcMesh.height = src->patchHeight;
 				srcMesh.verts  = src->verts;
-				subdivided     = SubdivideMesh( srcMesh, 8, 512 );
+				subdivided	   = SubdivideMesh( srcMesh, 8, 512 );
 
 				/* fit it to the curve and remove colinear verts on rows/columns */
 				PutMeshOnCurve( *subdivided );
@@ -235,25 +235,25 @@ void Foliage( mapDrawSurface_t* src )
 					for( x = 0; x < ( mesh->width - 1 ); x++ )
 					{
 						/* set indexes */
-						pw[ 0 ] = x + ( y * mesh->width );
-						pw[ 1 ] = x + ( ( y + 1 ) * mesh->width );
-						pw[ 2 ] = x + 1 + ( ( y + 1 ) * mesh->width );
-						pw[ 3 ] = x + 1 + ( y * mesh->width );
-						pw[ 4 ] = x + ( y * mesh->width ); /* same as pw[ 0 ] */
+						pw[0] = x + ( y * mesh->width );
+						pw[1] = x + ( ( y + 1 ) * mesh->width );
+						pw[2] = x + 1 + ( ( y + 1 ) * mesh->width );
+						pw[3] = x + 1 + ( y * mesh->width );
+						pw[4] = x + ( y * mesh->width ); /* same as pw[ 0 ] */
 
 						/* set radix */
 						r = ( x + y ) & 1;
 
 						/* get drawverts and map first triangle */
-						dv[ 0 ] = &verts[ pw[ r + 0 ] ];
-						dv[ 1 ] = &verts[ pw[ r + 1 ] ];
-						dv[ 2 ] = &verts[ pw[ r + 2 ] ];
+						dv[0] = &verts[pw[r + 0]];
+						dv[1] = &verts[pw[r + 1]];
+						dv[2] = &verts[pw[r + 2]];
 						SubdivideFoliageTriangle_r( src, foliage, dv );
 
 						/* get drawverts and map second triangle */
-						dv[ 0 ] = &verts[ pw[ r + 0 ] ];
-						dv[ 1 ] = &verts[ pw[ r + 2 ] ];
-						dv[ 2 ] = &verts[ pw[ r + 3 ] ];
+						dv[0] = &verts[pw[r + 0]];
+						dv[1] = &verts[pw[r + 2]];
+						dv[2] = &verts[pw[r + 3]];
 						SubdivideFoliageTriangle_r( src, foliage, dv );
 					}
 				}
@@ -277,7 +277,7 @@ void Foliage( mapDrawSurface_t* src )
 
 		/* set transform matrix */
 		VectorSet( scale, foliage->scale, foliage->scale, foliage->scale );
-		MatrixSetupScale( transform, scale[ 0 ], scale[ 1 ], scale[ 2 ] );
+		MatrixSetupScale( transform, scale[0], scale[1], scale[2] );
 		MatrixIdentity( rotation );
 
 		/* add the model to the bsp */
@@ -287,14 +287,14 @@ void Foliage( mapDrawSurface_t* src )
 		for( i = oldNumMapDrawSurfs; i < numMapDrawSurfs; i++ )
 		{
 			/* get surface */
-			ds = &mapDrawSurfs[ i ];
+			ds = &mapDrawSurfs[i];
 
 			/* set up */
-			ds->type                = SURFACE_FOLIAGE;
+			ds->type				= SURFACE_FOLIAGE;
 			ds->numFoliageInstances = numFoliageInstances;
 
 			/* a wee hack */
-			ds->patchWidth  = ds->numFoliageInstances;
+			ds->patchWidth	= ds->numFoliageInstances;
 			ds->patchHeight = ds->numVerts;
 
 			/* set fog to be same as source surface */
@@ -311,24 +311,24 @@ void Foliage( mapDrawSurface_t* src )
 			for( j = 0; j < ds->numFoliageInstances; j++ )
 			{
 				/* get vert (foliage instance) */
-				fi = &ds->verts[ ds->numVerts + j ];
+				fi = &ds->verts[ds->numVerts + j];
 
 				/* copy xyz and normal */
-				VectorCopy( foliageInstances[ j ].xyz, fi->xyz );
-				VectorCopy( foliageInstances[ j ].normal, fi->normal );
+				VectorCopy( foliageInstances[j].xyz, fi->xyz );
+				VectorCopy( foliageInstances[j].normal, fi->normal );
 
 				/* ydnar: set color */
-				fi->paintColor[ 0 ] = 1.0f;
-				fi->paintColor[ 1 ] = 1.0f;
-				fi->paintColor[ 2 ] = 1.0f;
-				fi->paintColor[ 3 ] = 1.0f;
+				fi->paintColor[0] = 1.0f;
+				fi->paintColor[1] = 1.0f;
+				fi->paintColor[2] = 1.0f;
+				fi->paintColor[3] = 1.0f;
 
 				for( k = 0; k < MAX_LIGHTMAPS; k++ )
 				{
-					fi->lightColor[ k ][ 0 ] = 255;
-					fi->lightColor[ k ][ 1 ] = 255;
-					fi->lightColor[ k ][ 2 ] = 255;
-					fi->lightColor[ k ][ 3 ] = 255;
+					fi->lightColor[k][0] = 255;
+					fi->lightColor[k][1] = 255;
+					fi->lightColor[k][2] = 255;
+					fi->lightColor[k][3] = 255;
 				}
 			}
 

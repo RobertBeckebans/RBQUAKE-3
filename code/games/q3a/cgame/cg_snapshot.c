@@ -84,13 +84,13 @@ All other times will use CG_TransitionSnapshot instead.
 */
 void CG_SetInitialSnapshot( snapshot_t* snap )
 {
-	int            i;
-	centity_t*     cent;
+	int			   i;
+	centity_t*	   cent;
 	entityState_t* state;
 
 	cg.snap = snap;
 
-	BG_PlayerStateToEntityState( &snap->ps, &cg_entities[ snap->ps.clientNum ].currentState, qfalse );
+	BG_PlayerStateToEntityState( &snap->ps, &cg_entities[snap->ps.clientNum].currentState, qfalse );
 
 	// sort out solid entities
 	CG_BuildSolidList();
@@ -103,11 +103,11 @@ void CG_SetInitialSnapshot( snapshot_t* snap )
 
 	for( i = 0; i < cg.snap->numEntities; i++ )
 	{
-		state = &cg.snap->entities[ i ];
-		cent  = &cg_entities[ state->number ];
+		state = &cg.snap->entities[i];
+		cent  = &cg_entities[state->number];
 
 		memcpy( &cent->currentState, state, sizeof( entityState_t ) );
-		//cent->currentState = *state;
+		// cent->currentState = *state;
 		cent->interpolate  = qfalse;
 		cent->currentValid = qtrue;
 
@@ -127,9 +127,9 @@ The transition point from snap to nextSnap has passed
 */
 static void CG_TransitionSnapshot( void )
 {
-	centity_t*  cent;
+	centity_t*	cent;
 	snapshot_t* oldFrame;
-	int         i;
+	int			i;
 
 	if( !cg.snap )
 	{
@@ -151,20 +151,20 @@ static void CG_TransitionSnapshot( void )
 	// clear the currentValid flag for all entities in the existing snapshot
 	for( i = 0; i < cg.snap->numEntities; i++ )
 	{
-		cent               = &cg_entities[ cg.snap->entities[ i ].number ];
+		cent			   = &cg_entities[cg.snap->entities[i].number];
 		cent->currentValid = qfalse;
 	}
 
 	// move nextSnap to snap and do the transitions
 	oldFrame = cg.snap;
-	cg.snap  = cg.nextSnap;
+	cg.snap	 = cg.nextSnap;
 
-	BG_PlayerStateToEntityState( &cg.snap->ps, &cg_entities[ cg.snap->ps.clientNum ].currentState, qfalse );
-	cg_entities[ cg.snap->ps.clientNum ].interpolate = qfalse;
+	BG_PlayerStateToEntityState( &cg.snap->ps, &cg_entities[cg.snap->ps.clientNum].currentState, qfalse );
+	cg_entities[cg.snap->ps.clientNum].interpolate = qfalse;
 
 	for( i = 0; i < cg.snap->numEntities; i++ )
 	{
-		cent = &cg_entities[ cg.snap->entities[ i ].number ];
+		cent = &cg_entities[cg.snap->entities[i].number];
 		CG_TransitionEntity( cent );
 
 		// remember time of snapshot this entity was last updated in
@@ -179,7 +179,7 @@ static void CG_TransitionSnapshot( void )
 		playerState_t *ops, *ps;
 
 		ops = &oldFrame->ps;
-		ps  = &cg.snap->ps;
+		ps	= &cg.snap->ps;
 		// teleporting checks are irrespective of prediction
 		if( ( ps->eFlags ^ ops->eFlags ) & EF_TELEPORT_BIT )
 		{
@@ -204,23 +204,23 @@ A new snapshot has just been read in from the client system.
 */
 static void CG_SetNextSnap( snapshot_t* snap )
 {
-	int            num;
+	int			   num;
 	entityState_t* es;
-	centity_t*     cent;
+	centity_t*	   cent;
 
 	cg.nextSnap = snap;
 
-	BG_PlayerStateToEntityState( &snap->ps, &cg_entities[ snap->ps.clientNum ].nextState, qfalse );
-	cg_entities[ cg.snap->ps.clientNum ].interpolate = qtrue;
+	BG_PlayerStateToEntityState( &snap->ps, &cg_entities[snap->ps.clientNum].nextState, qfalse );
+	cg_entities[cg.snap->ps.clientNum].interpolate = qtrue;
 
 	// check for extrapolation errors
 	for( num = 0; num < snap->numEntities; num++ )
 	{
-		es   = &snap->entities[ num ];
-		cent = &cg_entities[ es->number ];
+		es	 = &snap->entities[num];
+		cent = &cg_entities[es->number];
 
 		memcpy( &cent->nextState, es, sizeof( entityState_t ) );
-		//cent->nextState = *es;
+		// cent->nextState = *es;
 
 		// if this frame is a teleport, or the entity wasn't in the
 		// previous frame, don't interpolate
@@ -273,26 +273,24 @@ valid snapshot.
 */
 static snapshot_t* CG_ReadNextSnapshot( void )
 {
-	qboolean    r;
+	qboolean	r;
 	snapshot_t* dest;
 
 	if( cg.latestSnapshotNum > cgs.processedSnapshotNum + 1000 )
 	{
-		CG_Printf( "WARNING: CG_ReadNextSnapshot: way out of range, %i > %i\n",
-			cg.latestSnapshotNum,
-			cgs.processedSnapshotNum );
+		CG_Printf( "WARNING: CG_ReadNextSnapshot: way out of range, %i > %i\n", cg.latestSnapshotNum, cgs.processedSnapshotNum );
 	}
 
 	while( cgs.processedSnapshotNum < cg.latestSnapshotNum )
 	{
 		// decide which of the two slots to load it into
-		if( cg.snap == &cg.activeSnapshots[ 0 ] )
+		if( cg.snap == &cg.activeSnapshots[0] )
 		{
-			dest = &cg.activeSnapshots[ 1 ];
+			dest = &cg.activeSnapshots[1];
 		}
 		else
 		{
-			dest = &cg.activeSnapshots[ 0 ];
+			dest = &cg.activeSnapshots[0];
 		}
 
 		// try to read the snapshot from the client system
@@ -302,7 +300,7 @@ static snapshot_t* CG_ReadNextSnapshot( void )
 		// FIXME: why would trap_GetSnapshot return a snapshot with the same server time
 		if( cg.snap && r && dest->serverTime == cg.snap->serverTime )
 		{
-			//continue;
+			// continue;
 		}
 
 		// if it succeeded, return
@@ -350,7 +348,7 @@ of an interpolating one)
 void CG_ProcessSnapshots( void )
 {
 	snapshot_t* snap;
-	int         n;
+	int			n;
 
 	// see what the latest snapshot the client system has is
 	trap_GetCurrentSnapshotNumber( &n, &cg.latestSnapshotTime );

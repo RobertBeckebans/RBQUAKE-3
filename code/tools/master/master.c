@@ -36,18 +36,18 @@
 // ---------- Constants ---------- //
 
 // Version of dpmaster
-#define VERSION "1.6"
+#define VERSION				"1.6"
 
 // Default master port
 #define DEFAULT_MASTER_PORT 27950
 
 // Maximum and minimum sizes for a valid packet
-#define MAX_PACKET_SIZE 2048
-#define MIN_PACKET_SIZE 5
+#define MAX_PACKET_SIZE		2048
+#define MIN_PACKET_SIZE		5
 
 #ifndef WIN32
 	// Default path we use for chroot
-	#define DEFAULT_JAIL_PATH "/var/empty/"
+	#define DEFAULT_JAIL_PATH	  "/var/empty/"
 
 	// User we use by default for dropping super-user privileges
 	#define DEFAULT_LOW_PRIV_USER "nobody"
@@ -65,12 +65,12 @@ typedef int socklen_t;
 static unsigned short master_port = DEFAULT_MASTER_PORT;
 
 // Local address we listen on, if any
-static const char*    listen_name = NULL;
+static const char*	  listen_name = NULL;
 static struct in_addr listen_addr;
 
 #ifndef WIN32
 // On UNIX systems, we can run as a daemon
-static qboolean daemon_mode = qfalse;
+static qboolean	   daemon_mode = qfalse;
 
 // Path we use for chroot
 static const char* jail_path = DEFAULT_JAIL_PATH;
@@ -82,17 +82,17 @@ static const char* low_priv_user = DEFAULT_LOW_PRIV_USER;
 // ---------- Public variables ---------- //
 
 // The master socket
-int inSock  = -1;
-int outSock = -1;
+int			inSock	= -1;
+int			outSock = -1;
 
 // The current time (updated every time we receive a packet)
-time_t crt_time;
+time_t		crt_time;
 
 // Maximum level for a message to be printed
 msg_level_t max_msg_level = MSG_NORMAL;
 
 // Peer address. We rebuild it every time we receive a new packet
-char peer_address[ 128 ];
+char		peer_address[128];
 
 // ---------- Private functions ---------- //
 
@@ -114,7 +114,7 @@ static void PrintPacket( const char* packet, size_t length )
 
 	for( i = 0; i < length; i++ )
 	{
-		char c = packet[ i ];
+		char c = packet[i];
 
 		if( c == '\\' )
 		{
@@ -265,20 +265,20 @@ Parse the options passed by the command line
 */
 static qboolean ParseCommandLine( int argc, const char* argv[] )
 {
-	int          ind           = 1;
-	unsigned int vlevel        = max_msg_level;
-	qboolean     valid_options = qtrue;
+	int			 ind		   = 1;
+	unsigned int vlevel		   = max_msg_level;
+	qboolean	 valid_options = qtrue;
 
 	while( ind < argc && valid_options )
 	{
 		// If it doesn't even look like an option, why bother?
-		if( argv[ ind ][ 0 ] != '-' )
+		if( argv[ind][0] != '-' )
 		{
 			valid_options = qfalse;
 		}
 
 		else
-			switch( argv[ ind ][ 1 ] )
+			switch( argv[ind][1] )
 			{
 #ifndef WIN32
 				// Daemon mode
@@ -297,7 +297,7 @@ static qboolean ParseCommandLine( int argc, const char* argv[] )
 					ind++;
 					if( ind < argc )
 					{
-						valid_options = Sv_SetHashSize( atoi( argv[ ind ] ) );
+						valid_options = Sv_SetHashSize( atoi( argv[ind] ) );
 					}
 					else
 					{
@@ -311,7 +311,7 @@ static qboolean ParseCommandLine( int argc, const char* argv[] )
 					ind++;
 					if( ind < argc )
 					{
-						jail_path = argv[ ind ];
+						jail_path = argv[ind];
 					}
 					else
 					{
@@ -323,13 +323,13 @@ static qboolean ParseCommandLine( int argc, const char* argv[] )
 				// Listen address
 				case 'l':
 					ind++;
-					if( ind >= argc || argv[ ind ][ 0 ] == '\0' )
+					if( ind >= argc || argv[ind][0] == '\0' )
 					{
 						valid_options = qfalse;
 					}
 					else
 					{
-						listen_name = argv[ ind ];
+						listen_name = argv[ind];
 					}
 					break;
 
@@ -338,7 +338,7 @@ static qboolean ParseCommandLine( int argc, const char* argv[] )
 					ind++;
 					if( ind < argc )
 					{
-						valid_options = Sv_AddAddressMapping( argv[ ind ] );
+						valid_options = Sv_AddAddressMapping( argv[ind] );
 					}
 					else
 					{
@@ -351,7 +351,7 @@ static qboolean ParseCommandLine( int argc, const char* argv[] )
 					ind++;
 					if( ind < argc )
 					{
-						valid_options = Sv_SetMaxNbServers( atoi( argv[ ind ] ) );
+						valid_options = Sv_SetMaxNbServers( atoi( argv[ind] ) );
 					}
 					else
 					{
@@ -367,7 +367,7 @@ static qboolean ParseCommandLine( int argc, const char* argv[] )
 					ind++;
 					if( ind < argc )
 					{
-						port_num = atoi( argv[ ind ] );
+						port_num = atoi( argv[ind] );
 					}
 					if( !port_num )
 					{
@@ -386,7 +386,7 @@ static qboolean ParseCommandLine( int argc, const char* argv[] )
 					ind++;
 					if( ind < argc )
 					{
-						low_priv_user = argv[ ind ];
+						low_priv_user = argv[ind];
 					}
 					else
 					{
@@ -398,10 +398,10 @@ static qboolean ParseCommandLine( int argc, const char* argv[] )
 				// Verbose level
 				case 'v':
 					// If a verbose level has been specified
-					if( ind + 1 < argc && argv[ ind + 1 ][ 0 ] != '-' )
+					if( ind + 1 < argc && argv[ind + 1][0] != '-' )
 					{
 						ind++;
-						vlevel = atoi( argv[ ind ] );
+						vlevel = atoi( argv[ind] );
 						if( vlevel > MSG_DEBUG )
 						{
 							valid_options = qfalse;
@@ -446,28 +446,29 @@ Print the command line syntax and the available options
 */
 static void PrintHelp( void )
 {
-	MsgPrint( MSG_ERROR, "Syntax: xrealmaster [options]\n"
-						 "Available options are:\n"
+	MsgPrint( MSG_ERROR,
+		"Syntax: xrealmaster [options]\n"
+		"Available options are:\n"
 #ifndef WIN32
-						 "  -D               : run as a daemon\n"
+		"  -D               : run as a daemon\n"
 #endif
-						 "  -h               : this help\n"
-						 "  -H <hash_size>   : hash size in bits, up to %u (default: %u)\n"
+		"  -h               : this help\n"
+		"  -H <hash_size>   : hash size in bits, up to %u (default: %u)\n"
 #ifndef WIN32
-						 "  -j <jail_path>   : use <jail_path> as chroot path (default: %s)\n"
-						 "                     only available when running with super-user privileges\n"
+		"  -j <jail_path>   : use <jail_path> as chroot path (default: %s)\n"
+		"                     only available when running with super-user privileges\n"
 #endif
-						 "  -l <address>     : listen on local address <address>\n"
-						 "  -m <a1>=<a2>     : map address <a1> to <a2> when sending it to clients\n"
-						 "                     addresses can contain a port number (ex: myaddr.net:1234)\n"
-						 "  -n <max_servers> : maximum number of servers recorded (default: %u)\n"
-						 "  -p <port_num>    : use port <port_num> (default: %u)\n"
+		"  -l <address>     : listen on local address <address>\n"
+		"  -m <a1>=<a2>     : map address <a1> to <a2> when sending it to clients\n"
+		"                     addresses can contain a port number (ex: myaddr.net:1234)\n"
+		"  -n <max_servers> : maximum number of servers recorded (default: %u)\n"
+		"  -p <port_num>    : use port <port_num> (default: %u)\n"
 #ifndef WIN32
-						 "  -u <user>        : use <user> privileges (default: %s)\n"
-						 "                     only available when running with super-user privileges\n"
+		"  -u <user>        : use <user> privileges (default: %s)\n"
+		"                     only available when running with super-user privileges\n"
 #endif
-						 "  -v [verbose_lvl] : verbose level, up to %u (default: %u; no value means max)\n"
-						 "\n",
+		"  -v [verbose_lvl] : verbose level, up to %u (default: %u; no value means max)\n"
+		"\n",
 		MAX_HASH_SIZE,
 		DEFAULT_HASH_SIZE,
 #ifndef WIN32
@@ -571,7 +572,7 @@ cleanUp
 Clean up
 ===============
 */
-static void cleanUp( int signal )
+static void		cleanUp( int signal )
 {
 	MsgPrint( MSG_NORMAL, "Caught signal %d, exiting...\n", signal );
 
@@ -583,25 +584,25 @@ static const char* ignoreFile = "ignore.txt";
 
 typedef struct
 {
-	char address[ ADDRESS_LENGTH ]; // Dotted quad
+	char address[ADDRESS_LENGTH]; // Dotted quad
 } ignoreAddress_t;
 
 #define PARSE_INTERVAL 60 // seconds
 
-static time_t           lastParseTime      = 0;
-static int              numIgnoreAddresses = 0;
-static ignoreAddress_t* ignoreAddresses    = NULL;
+static time_t			lastParseTime	   = 0;
+static int				numIgnoreAddresses = 0;
+static ignoreAddress_t* ignoreAddresses	   = NULL;
 
 /*
 ====================
 parseIgnoreAddress
 ====================
 */
-static qboolean parseIgnoreAddress( void )
+static qboolean			parseIgnoreAddress( void )
 {
-	int   numAllocIgnoreAddresses = 1;
-	FILE* f                       = NULL;
-	int   i;
+	int	  numAllocIgnoreAddresses = 1;
+	FILE* f						  = NULL;
+	int	  i;
 
 	// Only reparse periodically
 	if( crt_time - lastParseTime < PARSE_INTERVAL )
@@ -619,7 +620,7 @@ static qboolean parseIgnoreAddress( void )
 	}
 
 	numIgnoreAddresses = 0;
-	ignoreAddresses    = malloc( sizeof( ignoreAddress_t ) * numAllocIgnoreAddresses );
+	ignoreAddresses	   = malloc( sizeof( ignoreAddress_t ) * numAllocIgnoreAddresses );
 
 	// Alloc failed, fail parsing
 	if( ignoreAddresses == NULL )
@@ -639,7 +640,7 @@ static qboolean parseIgnoreAddress( void )
 	while( !feof( f ) )
 	{
 		char c;
-		char buffer[ ADDRESS_LENGTH ];
+		char buffer[ADDRESS_LENGTH];
 
 		i = 0;
 
@@ -655,22 +656,22 @@ static qboolean parseIgnoreAddress( void )
 			{
 				if( i >= ADDRESS_LENGTH )
 				{
-					buffer[ i - 1 ] = '\0';
+					buffer[i - 1] = '\0';
 					break;
 				}
 
-				buffer[ i ] = c;
+				buffer[i] = c;
 
 				if( isspace( c ) )
 				{
-					buffer[ i ] = '\0';
+					buffer[i] = '\0';
 					break;
 				}
 
 				i++;
 			} while( ( c = fgetc( f ) ) != EOF );
 
-			strcpy( ignoreAddresses[ numIgnoreAddresses ].address, buffer );
+			strcpy( ignoreAddresses[numIgnoreAddresses].address, buffer );
 
 			numIgnoreAddresses++;
 
@@ -720,7 +721,7 @@ static qboolean ignoreAddress( const char* address )
 
 	for( i = 0; i < numIgnoreAddresses; i++ )
 	{
-		if( strcmp( address, ignoreAddresses[ i ].address ) == 0 )
+		if( strcmp( address, ignoreAddresses[i].address ) == 0 )
 		{
 			break;
 		}
@@ -745,13 +746,13 @@ Main function
 int main( int argc, const char* argv[] )
 {
 	struct sockaddr_in address;
-	socklen_t          addrlen;
-	int                nb_bytes;
-	int                sock;
-	char               packet[ MAX_PACKET_SIZE + 1 ]; // "+ 1" because we append a '\0'
-	qboolean           valid_options;
-	fd_set             rfds;
-	struct timeval     tv;
+	socklen_t		   addrlen;
+	int				   nb_bytes;
+	int				   sock;
+	char			   packet[MAX_PACKET_SIZE + 1]; // "+ 1" because we append a '\0'
+	qboolean		   valid_options;
+	fd_set			   rfds;
+	struct timeval	   tv;
 
 	signal( SIGINT, cleanUp );
 	signal( SIGTERM, cleanUp );
@@ -808,7 +809,7 @@ int main( int argc, const char* argv[] )
 		}
 
 		// Get the next valid message
-		addrlen  = sizeof( address );
+		addrlen	 = sizeof( address );
 		nb_bytes = recvfrom( sock, packet, sizeof( packet ) - 1, 0, ( struct sockaddr* )&address, &addrlen );
 		if( nb_bytes <= 0 )
 		{
@@ -854,8 +855,8 @@ int main( int argc, const char* argv[] )
 		}
 
 		// Append a '\0' to make the parsing easier and update the current time
-		packet[ nb_bytes ] = '\0';
-		crt_time           = time( NULL );
+		packet[nb_bytes] = '\0';
+		crt_time		 = time( NULL );
 
 		// Call HandleMessage with the remaining contents
 		HandleMessage( packet + 4, nb_bytes - 4, &address );
@@ -876,7 +877,7 @@ Print a message to screen, depending on its verbose level
 int MsgPrint( msg_level_t msg_level, const char* format, ... )
 {
 	va_list args;
-	int     result;
+	int		result;
 
 	// If the message level is above the maximum level, don't print it
 	if( msg_level > max_msg_level )

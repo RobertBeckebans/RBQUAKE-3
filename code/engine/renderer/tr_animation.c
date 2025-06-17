@@ -45,9 +45,9 @@ static skelAnimation_t* R_AllocAnimation( void )
 		return NULL;
 	}
 
-	anim                              = ri.Hunk_Alloc( sizeof( *anim ), h_low );
-	anim->index                       = tr.numAnimations;
-	tr.animations[ tr.numAnimations ] = anim;
+	anim							= ri.Hunk_Alloc( sizeof( *anim ), h_low );
+	anim->index						= tr.numAnimations;
+	tr.animations[tr.numAnimations] = anim;
 	tr.numAnimations++;
 
 	return anim;
@@ -65,20 +65,20 @@ void R_InitAnimations( void )
 	// leave a space for NULL animation
 	tr.numAnimations = 0;
 
-	anim       = R_AllocAnimation();
+	anim	   = R_AllocAnimation();
 	anim->type = AT_BAD;
 	strcpy( anim->name, "<default animation>" );
 }
 
 static qboolean R_LoadMD5Anim( skelAnimation_t* skelAnim, void* buffer, int bufferSize, const char* name )
 {
-	int             i, j;
+	int				i, j;
 	md5Animation_t* anim;
-	md5Frame_t*     frame;
-	md5Channel_t*   channel;
-	char*           token;
-	int             version;
-	char*           buf_p;
+	md5Frame_t*		frame;
+	md5Channel_t*	channel;
+	char*			token;
+	int				version;
+	char*			buf_p;
 
 	buf_p = buffer;
 
@@ -89,7 +89,7 @@ static qboolean R_LoadMD5Anim( skelAnimation_t* skelAnim, void* buffer, int buff
 	Com_ParseExt( &buf_p, qfalse );
 
 	// check version
-	token   = Com_ParseExt( &buf_p, qfalse );
+	token	= Com_ParseExt( &buf_p, qfalse );
 	version = atoi( token );
 	if( version != MD5_VERSION )
 	{
@@ -108,7 +108,7 @@ static qboolean R_LoadMD5Anim( skelAnimation_t* skelAnim, void* buffer, int buff
 		ri.Printf( PRINT_WARNING, "RE_RegisterAnimation: expected 'numFrames' found '%s' in model '%s'\n", token, name );
 		return qfalse;
 	}
-	token           = Com_ParseExt( &buf_p, qfalse );
+	token			= Com_ParseExt( &buf_p, qfalse );
 	anim->numFrames = atoi( token );
 
 	// parse numJoints <number>
@@ -118,7 +118,7 @@ static qboolean R_LoadMD5Anim( skelAnimation_t* skelAnim, void* buffer, int buff
 		ri.Printf( PRINT_WARNING, "RE_RegisterAnimation: expected 'numJoints' found '%s' in model '%s'\n", token, name );
 		return qfalse;
 	}
-	token             = Com_ParseExt( &buf_p, qfalse );
+	token			  = Com_ParseExt( &buf_p, qfalse );
 	anim->numChannels = atoi( token );
 
 	// parse frameRate <number>
@@ -128,7 +128,7 @@ static qboolean R_LoadMD5Anim( skelAnimation_t* skelAnim, void* buffer, int buff
 		ri.Printf( PRINT_WARNING, "RE_RegisterAnimation: expected 'frameRate' found '%s' in model '%s'\n", token, name );
 		return qfalse;
 	}
-	token           = Com_ParseExt( &buf_p, qfalse );
+	token			= Com_ParseExt( &buf_p, qfalse );
 	anim->frameRate = atoi( token );
 
 	// parse numAnimatedComponents <number>
@@ -138,7 +138,7 @@ static qboolean R_LoadMD5Anim( skelAnimation_t* skelAnim, void* buffer, int buff
 		ri.Printf( PRINT_WARNING, "RE_RegisterAnimation: expected 'numAnimatedComponents' found '%s' in model '%s'\n", token, name );
 		return qfalse;
 	}
-	token                       = Com_ParseExt( &buf_p, qfalse );
+	token						= Com_ParseExt( &buf_p, qfalse );
 	anim->numAnimatedComponents = atoi( token );
 
 	// parse hierarchy {
@@ -163,9 +163,9 @@ static qboolean R_LoadMD5Anim( skelAnimation_t* skelAnim, void* buffer, int buff
 		token = Com_ParseExt( &buf_p, qtrue );
 		Q_strncpyz( channel->name, token, sizeof( channel->name ) );
 
-		//ri.Printf(PRINT_ALL, "RE_RegisterAnimation: '%s' has channel '%s'\n", name, channel->name);
+		// ri.Printf(PRINT_ALL, "RE_RegisterAnimation: '%s' has channel '%s'\n", name, channel->name);
 
-		token                = Com_ParseExt( &buf_p, qfalse );
+		token				 = Com_ParseExt( &buf_p, qfalse );
 		channel->parentIndex = atoi( token );
 
 		if( channel->parentIndex >= anim->numChannels )
@@ -173,10 +173,10 @@ static qboolean R_LoadMD5Anim( skelAnimation_t* skelAnim, void* buffer, int buff
 			ri.Error( ERR_DROP, "RE_RegisterAnimation: '%s' has channel '%s' with bad parent index %i while numBones is %i\n", name, channel->name, channel->parentIndex, anim->numChannels );
 		}
 
-		token                   = Com_ParseExt( &buf_p, qfalse );
+		token					= Com_ParseExt( &buf_p, qfalse );
 		channel->componentsBits = atoi( token );
 
-		token                     = Com_ParseExt( &buf_p, qfalse );
+		token					  = Com_ParseExt( &buf_p, qfalse );
 		channel->componentsOffset = atoi( token );
 	}
 
@@ -216,8 +216,8 @@ static qboolean R_LoadMD5Anim( skelAnimation_t* skelAnim, void* buffer, int buff
 
 		for( j = 0; j < 3; j++ )
 		{
-			token                   = Com_ParseExt( &buf_p, qfalse );
-			frame->bounds[ 0 ][ j ] = atof( token );
+			token				= Com_ParseExt( &buf_p, qfalse );
+			frame->bounds[0][j] = atof( token );
 		}
 
 		// skip )
@@ -238,8 +238,8 @@ static qboolean R_LoadMD5Anim( skelAnimation_t* skelAnim, void* buffer, int buff
 
 		for( j = 0; j < 3; j++ )
 		{
-			token                   = Com_ParseExt( &buf_p, qfalse );
-			frame->bounds[ 1 ][ j ] = atof( token );
+			token				= Com_ParseExt( &buf_p, qfalse );
+			frame->bounds[1][j] = atof( token );
 		}
 
 		// skip )
@@ -285,8 +285,8 @@ static qboolean R_LoadMD5Anim( skelAnimation_t* skelAnim, void* buffer, int buff
 
 		for( j = 0; j < 3; j++ )
 		{
-			token                    = Com_ParseExt( &buf_p, qfalse );
-			channel->baseOrigin[ j ] = atof( token );
+			token				   = Com_ParseExt( &buf_p, qfalse );
+			channel->baseOrigin[j] = atof( token );
 		}
 
 		// skip )
@@ -307,8 +307,8 @@ static qboolean R_LoadMD5Anim( skelAnimation_t* skelAnim, void* buffer, int buff
 
 		for( j = 0; j < 3; j++ )
 		{
-			token                  = Com_ParseExt( &buf_p, qfalse );
-			channel->baseQuat[ j ] = atof( token );
+			token				 = Com_ParseExt( &buf_p, qfalse );
+			channel->baseQuat[j] = atof( token );
 		}
 		QuatCalcW( channel->baseQuat );
 
@@ -356,8 +356,8 @@ static qboolean R_LoadMD5Anim( skelAnimation_t* skelAnim, void* buffer, int buff
 		frame->components = ri.Hunk_Alloc( sizeof( float ) * anim->numAnimatedComponents, h_low );
 		for( j = 0; j < anim->numAnimatedComponents; j++ )
 		{
-			token                  = Com_ParseExt( &buf_p, qtrue );
-			frame->components[ j ] = atof( token );
+			token				 = Com_ParseExt( &buf_p, qtrue );
+			frame->components[j] = atof( token );
 		}
 
 		// parse }
@@ -379,10 +379,10 @@ static void GetChunkHeader( memStream_t* s, axChunkHeader_t* chunkHeader )
 
 	for( i = 0; i < 20; i++ )
 	{
-		chunkHeader->ident[ i ] = MemStreamGetC( s );
+		chunkHeader->ident[i] = MemStreamGetC( s );
 	}
 
-	chunkHeader->flags    = MemStreamGetLong( s );
+	chunkHeader->flags	  = MemStreamGetLong( s );
 	chunkHeader->dataSize = MemStreamGetLong( s );
 	chunkHeader->numData  = MemStreamGetLong( s );
 }
@@ -404,12 +404,12 @@ static void GetBone( memStream_t* s, axBone_t* bone )
 
 	for( i = 0; i < 4; i++ )
 	{
-		bone->quat[ i ] = MemStreamGetFloat( s );
+		bone->quat[i] = MemStreamGetFloat( s );
 	}
 
 	for( i = 0; i < 3; i++ )
 	{
-		bone->position[ i ] = MemStreamGetFloat( s );
+		bone->position[i] = MemStreamGetFloat( s );
 	}
 
 	bone->length = MemStreamGetFloat( s );
@@ -421,21 +421,21 @@ static void GetBone( memStream_t* s, axBone_t* bone )
 
 static qboolean R_LoadPSA( skelAnimation_t* skelAnim, void* buffer, int bufferSize, const char* name )
 {
-	int                i, j, k;
-	memStream_t*       stream;
-	axChunkHeader_t    chunkHeader;
-	int                numReferenceBones;
+	int				   i, j, k;
+	memStream_t*	   stream;
+	axChunkHeader_t	   chunkHeader;
+	int				   numReferenceBones;
 	axReferenceBone_t* refBone;
 	axReferenceBone_t* refBones;
 
-	int                numSequences;
+	int				   numSequences;
 	axAnimationInfo_t* animInfo;
 
-	axAnimationKey_t* key;
+	axAnimationKey_t*  key;
 
-	psaAnimation_t*  psa;
-	skelAnimation_t* extraAnim;
-	growList_t       extraAnims;
+	psaAnimation_t*	   psa;
+	skelAnimation_t*   extraAnim;
+	growList_t		   extraAnims;
 
 	stream = AllocMemStream( buffer, bufferSize );
 	GetChunkHeader( stream, &chunkHeader );
@@ -487,7 +487,7 @@ static qboolean R_LoadPSA( skelAnimation_t* skelAnim, void* buffer, int bufferSi
 	{
 		MemStreamRead( stream, refBone->name, sizeof( refBone->name ) );
 
-		refBone->flags       = MemStreamGetLong( stream );
+		refBone->flags		 = MemStreamGetLong( stream );
 		refBone->numChildren = MemStreamGetLong( stream );
 		refBone->parentIndex = MemStreamGetLong( stream );
 
@@ -569,7 +569,7 @@ static qboolean R_LoadPSA( skelAnimation_t* skelAnim, void* buffer, int bufferSi
 		}
 
 		psa->numBones = numReferenceBones;
-		psa->bones    = refBones;
+		psa->bones	  = refBones;
 
 		animInfo = &psa->info;
 
@@ -586,8 +586,8 @@ static qboolean R_LoadPSA( skelAnimation_t* skelAnim, void* buffer, int bufferSi
 		animInfo->rootInclude = MemStreamGetLong( stream );
 
 		animInfo->keyCompressionStyle = MemStreamGetLong( stream );
-		animInfo->keyQuotum           = MemStreamGetLong( stream );
-		animInfo->keyReduction        = MemStreamGetFloat( stream );
+		animInfo->keyQuotum			  = MemStreamGetLong( stream );
+		animInfo->keyReduction		  = MemStreamGetFloat( stream );
 
 		animInfo->trackTime = MemStreamGetFloat( stream );
 
@@ -596,7 +596,7 @@ static qboolean R_LoadPSA( skelAnimation_t* skelAnim, void* buffer, int bufferSi
 		animInfo->startBoneIndex = MemStreamGetLong( stream );
 
 		animInfo->firstRawFrame = MemStreamGetLong( stream );
-		animInfo->numRawFrames  = MemStreamGetLong( stream );
+		animInfo->numRawFrames	= MemStreamGetLong( stream );
 
 	#if 0
 		ri.Printf( PRINT_ALL, "R_LoadPSA: axAnimationInfo_t(%i):\n"
@@ -655,33 +655,33 @@ static qboolean R_LoadPSA( skelAnimation_t* skelAnim, void* buffer, int bufferSi
 		else
 		{
 			extraAnim = Com_GrowListElement( &extraAnims, i - 1 );
-			psa       = extraAnim->psa;
+			psa		  = extraAnim->psa;
 		}
 
 		psa->numKeys = psa->info.numBones * psa->info.numRawFrames;
-		psa->keys    = ri.Hunk_Alloc( psa->numKeys * sizeof( axAnimationKey_t ), h_low );
+		psa->keys	 = ri.Hunk_Alloc( psa->numKeys * sizeof( axAnimationKey_t ), h_low );
 
-		for( j = 0, key = &psa->keys[ 0 ]; j < psa->numKeys; j++, key++ )
+		for( j = 0, key = &psa->keys[0]; j < psa->numKeys; j++, key++ )
 		{
 			for( k = 0; k < 3; k++ )
 			{
-				key->position[ k ] = MemStreamGetFloat( stream );
+				key->position[k] = MemStreamGetFloat( stream );
 			}
 
 			// Tr3B: see R_LoadPSK ...
 			if( ( j % psa->info.numBones ) == 0 )
 			{
-				key->quat[ 0 ] = MemStreamGetFloat( stream );
-				key->quat[ 1 ] = -MemStreamGetFloat( stream );
-				key->quat[ 2 ] = MemStreamGetFloat( stream );
-				key->quat[ 3 ] = MemStreamGetFloat( stream );
+				key->quat[0] = MemStreamGetFloat( stream );
+				key->quat[1] = -MemStreamGetFloat( stream );
+				key->quat[2] = MemStreamGetFloat( stream );
+				key->quat[3] = MemStreamGetFloat( stream );
 			}
 			else
 			{
-				key->quat[ 0 ] = -MemStreamGetFloat( stream );
-				key->quat[ 1 ] = -MemStreamGetFloat( stream );
-				key->quat[ 2 ] = -MemStreamGetFloat( stream );
-				key->quat[ 3 ] = MemStreamGetFloat( stream );
+				key->quat[0] = -MemStreamGetFloat( stream );
+				key->quat[1] = -MemStreamGetFloat( stream );
+				key->quat[2] = -MemStreamGetFloat( stream );
+				key->quat[3] = MemStreamGetFloat( stream );
 			}
 
 			key->time = MemStreamGetFloat( stream );
@@ -701,19 +701,19 @@ RE_RegisterAnimation
 */
 qhandle_t RE_RegisterAnimation( const char* name )
 {
-	qhandle_t        hAnim;
+	qhandle_t		 hAnim;
 	skelAnimation_t* anim;
-	char*            buffer;
-	int              bufferLen;
-	qboolean         loaded = qfalse;
+	char*			 buffer;
+	int				 bufferLen;
+	qboolean		 loaded = qfalse;
 
-	if( !name || !name[ 0 ] )
+	if( !name || !name[0] )
 	{
 		ri.Printf( PRINT_WARNING, "Empty name passed to RE_RegisterAnimation\n" );
 		return 0;
 	}
 
-	//ri.Printf(PRINT_ALL, "RE_RegisterAnimation(%s)\n", name);
+	// ri.Printf(PRINT_ALL, "RE_RegisterAnimation(%s)\n", name);
 
 	if( strlen( name ) >= MAX_QPATH )
 	{
@@ -724,7 +724,7 @@ qhandle_t RE_RegisterAnimation( const char* name )
 	// search the currently loaded animations
 	for( hAnim = 1; hAnim < tr.numAnimations; hAnim++ )
 	{
-		anim = tr.animations[ hAnim ];
+		anim = tr.animations[hAnim];
 		if( !Q_stricmp( anim->name, name ) )
 		{
 			if( anim->type == AT_BAD )
@@ -740,7 +740,7 @@ qhandle_t RE_RegisterAnimation( const char* name )
 
 			animName = strstr( name, "::" );
 
-			//ri.Printf(PRINT_ALL, "animName = '%s'\n", animName ? (animName + 2) : NULL);
+			// ri.Printf(PRINT_ALL, "animName = '%s'\n", animName ? (animName + 2) : NULL);
 			if( animName && *( animName + 2 ) && !Q_stricmp( anim->psa->info.name, ( animName + 2 ) ) )
 			{
 				return hAnim;
@@ -807,10 +807,10 @@ skelAnimation_t* R_GetAnimationByHandle( qhandle_t index )
 	// out of range gets the default animation
 	if( index < 1 || index >= tr.numAnimations )
 	{
-		return tr.animations[ 0 ];
+		return tr.animations[0];
 	}
 
-	anim = tr.animations[ index ];
+	anim = tr.animations[index];
 
 	return anim;
 }
@@ -822,12 +822,12 @@ R_AnimationList_f
 */
 void R_AnimationList_f( void )
 {
-	int              i;
+	int				 i;
 	skelAnimation_t* anim;
 
 	for( i = 0; i < tr.numAnimations; i++ )
 	{
-		anim = tr.animations[ i ];
+		anim = tr.animations[i];
 
 		if( anim->type == AT_PSA && anim->psa )
 		{
@@ -855,16 +855,16 @@ static void R_CullMD5( trRefEntity_t* ent )
 		// no properly set skeleton so use the bounding box by the model instead by the animations
 		md5Model_t* model = tr.currentModel->md5;
 
-		VectorCopy( model->bounds[ 0 ], ent->localBounds[ 0 ] );
-		VectorCopy( model->bounds[ 1 ], ent->localBounds[ 1 ] );
+		VectorCopy( model->bounds[0], ent->localBounds[0] );
+		VectorCopy( model->bounds[1], ent->localBounds[1] );
 	}
 	else
 	{
 		// copy a bounding box in the current coordinate system provided by skeleton
 		for( i = 0; i < 3; i++ )
 		{
-			ent->localBounds[ 0 ][ i ] = ent->e.skeleton.bounds[ 0 ][ i ];
-			ent->localBounds[ 1 ][ i ] = ent->e.skeleton.bounds[ 1 ][ i ];
+			ent->localBounds[0][i] = ent->e.skeleton.bounds[0][i];
+			ent->localBounds[1][i] = ent->e.skeleton.bounds[1][i];
 		}
 	}
 
@@ -895,12 +895,12 @@ R_AddMD5Surfaces
 */
 void R_AddMD5Surfaces( trRefEntity_t* ent )
 {
-	md5Model_t*   model;
+	md5Model_t*	  model;
 	md5Surface_t* surface;
-	shader_t*     shader;
-	int           i;
-	qboolean      personalModel;
-	int           fogNum;
+	shader_t*	  shader;
+	int			  i;
+	qboolean	  personalModel;
+	int			  fogNum;
 
 	model = tr.currentModel->md5;
 
@@ -927,8 +927,7 @@ void R_AddMD5Surfaces( trRefEntity_t* ent )
 	// see if we are in a fog volume
 	fogNum = R_FogWorldBox( ent->worldBounds );
 
-	if( !r_vboModels->integer || !model->numVBOSurfaces ||
-		( !glConfig2.vboVertexSkinningAvailable && ent->e.skeleton.type == SK_ABSOLUTE ) )
+	if( !r_vboModels->integer || !model->numVBOSurfaces || ( !glConfig2.vboVertexSkinningAvailable && ent->e.skeleton.type == SK_ABSOLUTE ) )
 	{
 		// finally add surfaces
 		for( i = 0, surface = model->surfaces; i < model->numSurfaces; i++, surface++ )
@@ -947,9 +946,9 @@ void R_AddMD5Surfaces( trRefEntity_t* ent )
 				shader = tr.defaultShader;
 
 				// FIXME: replace MD3_MAX_SURFACES for skin_t::surfaces
-				if( i >= 0 && i < skin->numSurfaces && skin->surfaces[ i ] )
+				if( i >= 0 && i < skin->numSurfaces && skin->surfaces[i] )
 				{
-					shader = skin->surfaces[ i ]->shader;
+					shader = skin->surfaces[i]->shader;
 				}
 				if( shader == tr.defaultShader )
 				{
@@ -976,13 +975,13 @@ void R_AddMD5Surfaces( trRefEntity_t* ent )
 	}
 	else
 	{
-		int              i;
+		int				 i;
 		srfVBOMD5Mesh_t* vboSurface;
-		shader_t*        shader;
+		shader_t*		 shader;
 
 		for( i = 0; i < model->numVBOSurfaces; i++ )
 		{
-			vboSurface = model->vboSurfaces[ i ];
+			vboSurface = model->vboSurfaces[i];
 
 			if( ent->e.customShader )
 			{
@@ -998,10 +997,10 @@ void R_AddMD5Surfaces( trRefEntity_t* ent )
 				shader = tr.defaultShader;
 
 				// FIXME: replace MD3_MAX_SURFACES for skin_t::surfaces
-				//if(i >= 0 && i < skin->numSurfaces && skin->surfaces[i])
-				if( vboSurface->skinIndex >= 0 && vboSurface->skinIndex < skin->numSurfaces && skin->surfaces[ vboSurface->skinIndex ] )
+				// if(i >= 0 && i < skin->numSurfaces && skin->surfaces[i])
+				if( vboSurface->skinIndex >= 0 && vboSurface->skinIndex < skin->numSurfaces && skin->surfaces[vboSurface->skinIndex] )
 				{
-					shader = skin->surfaces[ vboSurface->skinIndex ]->shader;
+					shader = skin->surfaces[vboSurface->skinIndex]->shader;
 				}
 
 				if( shader == tr.defaultShader )
@@ -1034,13 +1033,13 @@ R_AddMD5Interactions
 */
 void R_AddMD5Interactions( trRefEntity_t* ent, trRefLight_t* light )
 {
-	int               i;
-	md5Model_t*       model;
-	md5Surface_t*     surface;
-	shader_t*         shader = 0;
-	qboolean          personalModel;
-	byte              cubeSideBits = CUBESIDE_CLIPALL;
-	interactionType_t iaType       = IA_DEFAULT;
+	int				  i;
+	md5Model_t*		  model;
+	md5Surface_t*	  surface;
+	shader_t*		  shader = 0;
+	qboolean		  personalModel;
+	byte			  cubeSideBits = CUBESIDE_CLIPALL;
+	interactionType_t iaType	   = IA_DEFAULT;
 
 	// cull the entire model if merged bounding box of both frames
 	// is outside the view frustum and we don't care about proper shadowing
@@ -1080,7 +1079,7 @@ void R_AddMD5Interactions( trRefEntity_t* ent, trRefLight_t* light )
 	model = tr.currentModel->md5;
 
 	// do a quick AABB cull
-	if( !BoundsIntersect( light->worldBounds[ 0 ], light->worldBounds[ 1 ], ent->worldBounds[ 0 ], ent->worldBounds[ 1 ] ) )
+	if( !BoundsIntersect( light->worldBounds[0], light->worldBounds[1], ent->worldBounds[0], ent->worldBounds[1] ) )
 	{
 		tr.pc.c_dlightSurfacesCulled += model->numSurfaces;
 		return;
@@ -1098,8 +1097,7 @@ void R_AddMD5Interactions( trRefEntity_t* ent, trRefLight_t* light )
 
 	cubeSideBits = R_CalcLightCubeSideBits( light, ent->worldBounds );
 
-	if( !r_vboModels->integer || !model->numVBOSurfaces ||
-		( !glConfig2.vboVertexSkinningAvailable && ent->e.skeleton.type == SK_ABSOLUTE ) )
+	if( !r_vboModels->integer || !model->numVBOSurfaces || ( !glConfig2.vboVertexSkinningAvailable && ent->e.skeleton.type == SK_ABSOLUTE ) )
 	{
 		// generate interactions with all surfaces
 		for( i = 0, surface = model->surfaces; i < model->numSurfaces; i++, surface++ )
@@ -1118,9 +1116,9 @@ void R_AddMD5Interactions( trRefEntity_t* ent, trRefLight_t* light )
 				shader = tr.defaultShader;
 
 				// FIXME: replace MD3_MAX_SURFACES for skin_t::surfaces
-				if( i >= 0 && i < skin->numSurfaces && skin->surfaces[ i ] )
+				if( i >= 0 && i < skin->numSurfaces && skin->surfaces[i] )
 				{
-					shader = skin->surfaces[ i ]->shader;
+					shader = skin->surfaces[i]->shader;
 				}
 				if( shader == tr.defaultShader )
 				{
@@ -1154,13 +1152,13 @@ void R_AddMD5Interactions( trRefEntity_t* ent, trRefLight_t* light )
 	}
 	else
 	{
-		int              i;
+		int				 i;
 		srfVBOMD5Mesh_t* vboSurface;
-		shader_t*        shader;
+		shader_t*		 shader;
 
 		for( i = 0; i < model->numVBOSurfaces; i++ )
 		{
-			vboSurface = model->vboSurfaces[ i ];
+			vboSurface = model->vboSurfaces[i];
 
 			if( ent->e.customShader )
 			{
@@ -1176,9 +1174,9 @@ void R_AddMD5Interactions( trRefEntity_t* ent, trRefLight_t* light )
 				shader = tr.defaultShader;
 
 				// FIXME: replace MD3_MAX_SURFACES for skin_t::surfaces
-				if( i >= 0 && i < skin->numSurfaces && skin->surfaces[ i ] )
+				if( i >= 0 && i < skin->numSurfaces && skin->surfaces[i] )
 				{
-					shader = skin->surfaces[ i ]->shader;
+					shader = skin->surfaces[i]->shader;
 				}
 				if( shader == tr.defaultShader )
 				{
@@ -1220,12 +1218,12 @@ and copy the parentIndex entries into the refSkeleton_t
 */
 int RE_CheckSkeleton( refSkeleton_t* skel, qhandle_t hModel, qhandle_t hAnim )
 {
-	int              i;
-	model_t*         model;
-	md5Model_t*      md5Model;
+	int				 i;
+	model_t*		 model;
+	md5Model_t*		 md5Model;
 	skelAnimation_t* skelAnim;
 
-	model    = R_GetModelByHandle( hModel );
+	model	 = R_GetModelByHandle( hModel );
 	skelAnim = R_GetAnimationByHandle( hAnim );
 
 	if( model->type != MOD_MD5 || !model->md5 )
@@ -1249,14 +1247,19 @@ int RE_CheckSkeleton( refSkeleton_t* skel, qhandle_t hModel, qhandle_t hAnim )
 	if( skelAnim->type == AT_MD5 && skelAnim->md5 )
 	{
 		md5Animation_t* md5Animation;
-		md5Bone_t*      md5Bone;
-		md5Channel_t*   md5Channel;
+		md5Bone_t*		md5Bone;
+		md5Channel_t*	md5Channel;
 
 		md5Animation = skelAnim->md5;
 
 		if( md5Model->numBones != md5Animation->numChannels )
 		{
-			ri.Printf( PRINT_WARNING, "RE_CheckSkeleton: model '%s' has different number of bones than animation '%s': %d != %d\n", model->name, skelAnim->name, md5Model->numBones, md5Animation->numChannels );
+			ri.Printf( PRINT_WARNING,
+				"RE_CheckSkeleton: model '%s' has different number of bones than animation '%s': %d != %d\n",
+				model->name,
+				skelAnim->name,
+				md5Model->numBones,
+				md5Animation->numChannels );
 			return qfalse;
 		}
 
@@ -1268,22 +1271,27 @@ int RE_CheckSkeleton( refSkeleton_t* skel, qhandle_t hModel, qhandle_t hAnim )
 				return qfalse;
 			}
 
-			skel->bones[ i ].parentIndex = md5Bone->parentIndex;
+			skel->bones[i].parentIndex = md5Bone->parentIndex;
 		}
 
 		return qtrue;
 	}
 	else if( skelAnim->type == AT_PSA && skelAnim->psa )
 	{
-		psaAnimation_t*    psaAnimation;
+		psaAnimation_t*	   psaAnimation;
 		axReferenceBone_t* refBone;
-		md5Bone_t*         md5Bone;
+		md5Bone_t*		   md5Bone;
 
 		psaAnimation = skelAnim->psa;
 
 		if( md5Model->numBones != psaAnimation->info.numBones )
 		{
-			ri.Printf( PRINT_WARNING, "RE_CheckSkeleton: model '%s' has different number of bones than animation '%s': %d != %d\n", model->name, skelAnim->name, md5Model->numBones, psaAnimation->info.numBones );
+			ri.Printf( PRINT_WARNING,
+				"RE_CheckSkeleton: model '%s' has different number of bones than animation '%s': %d != %d\n",
+				model->name,
+				skelAnim->name,
+				md5Model->numBones,
+				psaAnimation->info.numBones );
 			return qfalse;
 		}
 
@@ -1295,7 +1303,7 @@ int RE_CheckSkeleton( refSkeleton_t* skel, qhandle_t hModel, qhandle_t hAnim )
 				return qfalse;
 			}
 
-			skel->bones[ i ].parentIndex = md5Bone->parentIndex;
+			skel->bones[i].parentIndex = md5Bone->parentIndex;
 		}
 
 		return qtrue;
@@ -1319,13 +1327,13 @@ int RE_BuildSkeleton( refSkeleton_t* skel, qhandle_t hAnim, int startFrame, int 
 
 	if( skelAnim->type == AT_MD5 && skelAnim->md5 )
 	{
-		int             i;
+		int				i;
 		md5Animation_t* anim;
-		md5Channel_t*   channel;
-		md5Frame_t *    newFrame, *oldFrame;
-		vec3_t          newOrigin, oldOrigin, lerpedOrigin;
-		quat_t          newQuat, oldQuat, lerpedQuat;
-		int             componentsApplied;
+		md5Channel_t*	channel;
+		md5Frame_t *	newFrame, *oldFrame;
+		vec3_t			newOrigin, oldOrigin, lerpedOrigin;
+		quat_t			newQuat, oldQuat, lerpedQuat;
+		int				componentsApplied;
 
 		anim = skelAnim->md5;
 
@@ -1346,16 +1354,14 @@ int RE_BuildSkeleton( refSkeleton_t* skel, qhandle_t hAnim, int startFrame, int 
 		Q_clamp( endFrame, 0, anim->numFrames - 1 );
 
 		// compute frame pointers
-		oldFrame = &anim->frames[ startFrame ];
-		newFrame = &anim->frames[ endFrame ];
+		oldFrame = &anim->frames[startFrame];
+		newFrame = &anim->frames[endFrame];
 
 		// calculate a bounding box in the current coordinate system
 		for( i = 0; i < 3; i++ )
 		{
-			skel->bounds[ 0 ][ i ] =
-				oldFrame->bounds[ 0 ][ i ] < newFrame->bounds[ 0 ][ i ] ? oldFrame->bounds[ 0 ][ i ] : newFrame->bounds[ 0 ][ i ];
-			skel->bounds[ 1 ][ i ] =
-				oldFrame->bounds[ 1 ][ i ] > newFrame->bounds[ 1 ][ i ] ? oldFrame->bounds[ 1 ][ i ] : newFrame->bounds[ 1 ][ i ];
+			skel->bounds[0][i] = oldFrame->bounds[0][i] < newFrame->bounds[0][i] ? oldFrame->bounds[0][i] : newFrame->bounds[0][i];
+			skel->bounds[1][i] = oldFrame->bounds[1][i] > newFrame->bounds[1][i] ? oldFrame->bounds[1][i] : newFrame->bounds[1][i];
 		}
 
 		for( i = 0, channel = anim->channels; i < anim->numChannels; i++, channel++ )
@@ -1372,44 +1378,44 @@ int RE_BuildSkeleton( refSkeleton_t* skel, qhandle_t hAnim, int startFrame, int 
 			// update tranlation bits
 			if( channel->componentsBits & COMPONENT_BIT_TX )
 			{
-				oldOrigin[ 0 ] = oldFrame->components[ channel->componentsOffset + componentsApplied ];
-				newOrigin[ 0 ] = newFrame->components[ channel->componentsOffset + componentsApplied ];
+				oldOrigin[0] = oldFrame->components[channel->componentsOffset + componentsApplied];
+				newOrigin[0] = newFrame->components[channel->componentsOffset + componentsApplied];
 				componentsApplied++;
 			}
 
 			if( channel->componentsBits & COMPONENT_BIT_TY )
 			{
-				oldOrigin[ 1 ] = oldFrame->components[ channel->componentsOffset + componentsApplied ];
-				newOrigin[ 1 ] = newFrame->components[ channel->componentsOffset + componentsApplied ];
+				oldOrigin[1] = oldFrame->components[channel->componentsOffset + componentsApplied];
+				newOrigin[1] = newFrame->components[channel->componentsOffset + componentsApplied];
 				componentsApplied++;
 			}
 
 			if( channel->componentsBits & COMPONENT_BIT_TZ )
 			{
-				oldOrigin[ 2 ] = oldFrame->components[ channel->componentsOffset + componentsApplied ];
-				newOrigin[ 2 ] = newFrame->components[ channel->componentsOffset + componentsApplied ];
+				oldOrigin[2] = oldFrame->components[channel->componentsOffset + componentsApplied];
+				newOrigin[2] = newFrame->components[channel->componentsOffset + componentsApplied];
 				componentsApplied++;
 			}
 
 			// update quaternion rotation bits
 			if( channel->componentsBits & COMPONENT_BIT_QX )
 			{
-				( ( vec_t* )oldQuat )[ 0 ] = oldFrame->components[ channel->componentsOffset + componentsApplied ];
-				( ( vec_t* )newQuat )[ 0 ] = newFrame->components[ channel->componentsOffset + componentsApplied ];
+				( ( vec_t* )oldQuat )[0] = oldFrame->components[channel->componentsOffset + componentsApplied];
+				( ( vec_t* )newQuat )[0] = newFrame->components[channel->componentsOffset + componentsApplied];
 				componentsApplied++;
 			}
 
 			if( channel->componentsBits & COMPONENT_BIT_QY )
 			{
-				( ( vec_t* )oldQuat )[ 1 ] = oldFrame->components[ channel->componentsOffset + componentsApplied ];
-				( ( vec_t* )newQuat )[ 1 ] = newFrame->components[ channel->componentsOffset + componentsApplied ];
+				( ( vec_t* )oldQuat )[1] = oldFrame->components[channel->componentsOffset + componentsApplied];
+				( ( vec_t* )newQuat )[1] = newFrame->components[channel->componentsOffset + componentsApplied];
 				componentsApplied++;
 			}
 
 			if( channel->componentsBits & COMPONENT_BIT_QZ )
 			{
-				( ( vec_t* )oldQuat )[ 2 ] = oldFrame->components[ channel->componentsOffset + componentsApplied ];
-				( ( vec_t* )newQuat )[ 2 ] = newFrame->components[ channel->componentsOffset + componentsApplied ];
+				( ( vec_t* )oldQuat )[2] = oldFrame->components[channel->componentsOffset + componentsApplied];
+				( ( vec_t* )newQuat )[2] = newFrame->components[channel->componentsOffset + componentsApplied];
 			}
 
 			QuatCalcW( oldQuat );
@@ -1427,55 +1433,55 @@ int RE_BuildSkeleton( refSkeleton_t* skel, qhandle_t hAnim, int startFrame, int 
 	#endif
 
 			// copy lerped information to the bone + extra data
-			skel->bones[ i ].parentIndex = channel->parentIndex;
+			skel->bones[i].parentIndex = channel->parentIndex;
 
 			if( channel->parentIndex < 0 && clearOrigin )
 			{
-				VectorClear( skel->bones[ i ].origin );
-				QuatClear( skel->bones[ i ].rotation );
+				VectorClear( skel->bones[i].origin );
+				QuatClear( skel->bones[i].rotation );
 
 				// move bounding box back
-				VectorSubtract( skel->bounds[ 0 ], lerpedOrigin, skel->bounds[ 0 ] );
-				VectorSubtract( skel->bounds[ 1 ], lerpedOrigin, skel->bounds[ 1 ] );
+				VectorSubtract( skel->bounds[0], lerpedOrigin, skel->bounds[0] );
+				VectorSubtract( skel->bounds[1], lerpedOrigin, skel->bounds[1] );
 			}
 			else
 			{
-				VectorCopy( lerpedOrigin, skel->bones[ i ].origin );
+				VectorCopy( lerpedOrigin, skel->bones[i].origin );
 			}
 
-			QuatCopy( lerpedQuat, skel->bones[ i ].rotation );
+			QuatCopy( lerpedQuat, skel->bones[i].rotation );
 
 	#if defined( REFBONE_NAMES )
-			Q_strncpyz( skel->bones[ i ].name, channel->name, sizeof( skel->bones[ i ].name ) );
+			Q_strncpyz( skel->bones[i].name, channel->name, sizeof( skel->bones[i].name ) );
 	#endif
 		}
 
 		skel->numBones = anim->numChannels;
-		skel->type     = SK_RELATIVE;
+		skel->type	   = SK_RELATIVE;
 		return qtrue;
 	}
 	else if( skelAnim->type == AT_PSA && skelAnim->psa )
 	{
-		int                i;
-		psaAnimation_t*    anim;
+		int				   i;
+		psaAnimation_t*	   anim;
 		axAnimationKey_t * newKey, *oldKey;
 		axReferenceBone_t* refBone;
-		vec3_t             newOrigin, oldOrigin, lerpedOrigin;
-		quat_t             newQuat, oldQuat, lerpedQuat;
-		refSkeleton_t      skeleton;
+		vec3_t			   newOrigin, oldOrigin, lerpedOrigin;
+		quat_t			   newQuat, oldQuat, lerpedQuat;
+		refSkeleton_t	   skeleton;
 
 		anim = skelAnim->psa;
 
 		Q_clamp( startFrame, 0, anim->info.numRawFrames - 1 );
 		Q_clamp( endFrame, 0, anim->info.numRawFrames - 1 );
 
-		ClearBounds( skel->bounds[ 0 ], skel->bounds[ 1 ] );
+		ClearBounds( skel->bounds[0], skel->bounds[1] );
 
 		skel->numBones = anim->info.numBones;
 		for( i = 0, refBone = anim->bones; i < anim->info.numBones; i++, refBone++ )
 		{
-			oldKey = &anim->keys[ startFrame * anim->info.numBones + i ];
-			newKey = &anim->keys[ endFrame * anim->info.numBones + i ];
+			oldKey = &anim->keys[startFrame * anim->info.numBones + i];
+			newKey = &anim->keys[endFrame * anim->info.numBones + i];
 
 			VectorCopy( newKey->position, newOrigin );
 			VectorCopy( oldKey->position, oldOrigin );
@@ -1483,51 +1489,51 @@ int RE_BuildSkeleton( refSkeleton_t* skel, qhandle_t hAnim, int startFrame, int 
 			QuatCopy( newKey->quat, newQuat );
 			QuatCopy( oldKey->quat, oldQuat );
 
-			//QuatCalcW(oldQuat);
-			//QuatNormalize(oldQuat);
+			// QuatCalcW(oldQuat);
+			// QuatNormalize(oldQuat);
 
-			//QuatCalcW(newQuat);
-			//QuatNormalize(newQuat);
+			// QuatCalcW(newQuat);
+			// QuatNormalize(newQuat);
 
 			VectorLerp( oldOrigin, newOrigin, frac, lerpedOrigin );
 			QuatSlerp( oldQuat, newQuat, frac, lerpedQuat );
 
 			// copy lerped information to the bone + extra data
-			skel->bones[ i ].parentIndex = refBone->parentIndex;
+			skel->bones[i].parentIndex = refBone->parentIndex;
 
 			if( refBone->parentIndex < 0 && clearOrigin )
 			{
-				VectorClear( skel->bones[ i ].origin );
-				QuatClear( skel->bones[ i ].rotation );
+				VectorClear( skel->bones[i].origin );
+				QuatClear( skel->bones[i].rotation );
 
 				// move bounding box back
-				VectorSubtract( skel->bounds[ 0 ], lerpedOrigin, skel->bounds[ 0 ] );
-				VectorSubtract( skel->bounds[ 1 ], lerpedOrigin, skel->bounds[ 1 ] );
+				VectorSubtract( skel->bounds[0], lerpedOrigin, skel->bounds[0] );
+				VectorSubtract( skel->bounds[1], lerpedOrigin, skel->bounds[1] );
 			}
 			else
 			{
-				VectorCopy( lerpedOrigin, skel->bones[ i ].origin );
+				VectorCopy( lerpedOrigin, skel->bones[i].origin );
 			}
 
-			QuatCopy( lerpedQuat, skel->bones[ i ].rotation );
+			QuatCopy( lerpedQuat, skel->bones[i].rotation );
 
 	#if defined( REFBONE_NAMES )
-			Q_strncpyz( skel->bones[ i ].name, refBone->name, sizeof( skel->bones[ i ].name ) );
+			Q_strncpyz( skel->bones[i].name, refBone->name, sizeof( skel->bones[i].name ) );
 	#endif
 
 			// calculate absolute values for the bounding box approximation
-			VectorCopy( skel->bones[ i ].origin, skeleton.bones[ i ].origin );
-			QuatCopy( skel->bones[ i ].rotation, skeleton.bones[ i ].rotation );
+			VectorCopy( skel->bones[i].origin, skeleton.bones[i].origin );
+			QuatCopy( skel->bones[i].rotation, skeleton.bones[i].rotation );
 
 			if( refBone->parentIndex >= 0 )
 			{
-				vec3_t     rotated;
-				quat_t     quat;
+				vec3_t	   rotated;
+				quat_t	   quat;
 				refBone_t* parent;
 				refBone_t* bone;
 
-				bone   = &skeleton.bones[ i ];
-				parent = &skeleton.bones[ refBone->parentIndex ];
+				bone   = &skeleton.bones[i];
+				parent = &skeleton.bones[refBone->parentIndex];
 
 				QuatTransformVector( parent->rotation, bone->origin, rotated );
 
@@ -1536,16 +1542,16 @@ int RE_BuildSkeleton( refSkeleton_t* skel, qhandle_t hAnim, int startFrame, int 
 				QuatMultiply1( parent->rotation, bone->rotation, quat );
 				QuatCopy( quat, bone->rotation );
 
-				AddPointToBounds( bone->origin, skel->bounds[ 0 ], skel->bounds[ 1 ] );
+				AddPointToBounds( bone->origin, skel->bounds[0], skel->bounds[1] );
 			}
 		}
 
 		skel->numBones = anim->info.numBones;
-		skel->type     = SK_RELATIVE;
+		skel->type	   = SK_RELATIVE;
 		return qtrue;
 	}
 
-	//ri.Printf(PRINT_WARNING, "RE_BuildSkeleton: bad animation '%s' with handle %i\n", anim->name, hAnim);
+	// ri.Printf(PRINT_WARNING, "RE_BuildSkeleton: bad animation '%s' with handle %i\n", anim->name, hAnim);
 
 	// FIXME: clear existing bones and bounds?
 	return qfalse;
@@ -1558,10 +1564,10 @@ RE_BlendSkeleton
 */
 int RE_BlendSkeleton( refSkeleton_t* skel, const refSkeleton_t* blend, float frac )
 {
-	int    i;
+	int	   i;
 	vec3_t lerpedOrigin;
 	quat_t lerpedQuat;
-	vec3_t bounds[ 2 ];
+	vec3_t bounds[2];
 
 	if( skel->numBones != blend->numBones )
 	{
@@ -1572,21 +1578,21 @@ int RE_BlendSkeleton( refSkeleton_t* skel, const refSkeleton_t* blend, float fra
 	// lerp between the 2 bone poses
 	for( i = 0; i < skel->numBones; i++ )
 	{
-		VectorLerp( skel->bones[ i ].origin, blend->bones[ i ].origin, frac, lerpedOrigin );
-		QuatSlerp( skel->bones[ i ].rotation, blend->bones[ i ].rotation, frac, lerpedQuat );
+		VectorLerp( skel->bones[i].origin, blend->bones[i].origin, frac, lerpedOrigin );
+		QuatSlerp( skel->bones[i].rotation, blend->bones[i].rotation, frac, lerpedQuat );
 
-		VectorCopy( lerpedOrigin, skel->bones[ i ].origin );
-		QuatCopy( lerpedQuat, skel->bones[ i ].rotation );
+		VectorCopy( lerpedOrigin, skel->bones[i].origin );
+		QuatCopy( lerpedQuat, skel->bones[i].rotation );
 	}
 
 	// calculate a bounding box in the current coordinate system
 	for( i = 0; i < 3; i++ )
 	{
-		bounds[ 0 ][ i ] = skel->bounds[ 0 ][ i ] < blend->bounds[ 0 ][ i ] ? skel->bounds[ 0 ][ i ] : blend->bounds[ 0 ][ i ];
-		bounds[ 1 ][ i ] = skel->bounds[ 1 ][ i ] > blend->bounds[ 1 ][ i ] ? skel->bounds[ 1 ][ i ] : blend->bounds[ 1 ][ i ];
+		bounds[0][i] = skel->bounds[0][i] < blend->bounds[0][i] ? skel->bounds[0][i] : blend->bounds[0][i];
+		bounds[1][i] = skel->bounds[1][i] > blend->bounds[1][i] ? skel->bounds[1][i] : blend->bounds[1][i];
 	}
-	VectorCopy( bounds[ 0 ], skel->bounds[ 0 ] );
-	VectorCopy( bounds[ 1 ], skel->bounds[ 1 ] );
+	VectorCopy( bounds[0], skel->bounds[0] );
+	VectorCopy( bounds[1], skel->bounds[1] );
 
 	return qtrue;
 }

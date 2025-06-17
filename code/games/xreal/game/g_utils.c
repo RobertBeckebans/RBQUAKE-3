@@ -27,49 +27,49 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 typedef struct
 {
-	char  oldShader[ MAX_QPATH ];
-	char  newShader[ MAX_QPATH ];
+	char  oldShader[MAX_QPATH];
+	char  newShader[MAX_QPATH];
 	float timeOffset;
 } shaderRemap_t;
 
 #define MAX_SHADER_REMAPS 128
 
-int           remapCount = 0;
-shaderRemap_t remappedShaders[ MAX_SHADER_REMAPS ];
+int			  remapCount = 0;
+shaderRemap_t remappedShaders[MAX_SHADER_REMAPS];
 
-void AddRemap( const char* oldShader, const char* newShader, float timeOffset )
+void		  AddRemap( const char* oldShader, const char* newShader, float timeOffset )
 {
 	int i;
 
 	for( i = 0; i < remapCount; i++ )
 	{
-		if( Q_stricmp( oldShader, remappedShaders[ i ].oldShader ) == 0 )
+		if( Q_stricmp( oldShader, remappedShaders[i].oldShader ) == 0 )
 		{
 			// found it, just update this one
-			strcpy( remappedShaders[ i ].newShader, newShader );
-			remappedShaders[ i ].timeOffset = timeOffset;
+			strcpy( remappedShaders[i].newShader, newShader );
+			remappedShaders[i].timeOffset = timeOffset;
 			return;
 		}
 	}
 	if( remapCount < MAX_SHADER_REMAPS )
 	{
-		strcpy( remappedShaders[ remapCount ].newShader, newShader );
-		strcpy( remappedShaders[ remapCount ].oldShader, oldShader );
-		remappedShaders[ remapCount ].timeOffset = timeOffset;
+		strcpy( remappedShaders[remapCount].newShader, newShader );
+		strcpy( remappedShaders[remapCount].oldShader, oldShader );
+		remappedShaders[remapCount].timeOffset = timeOffset;
 		remapCount++;
 	}
 }
 
 const char* BuildShaderStateConfig( void )
 {
-	static char buff[ MAX_STRING_CHARS * 4 ];
-	char        out[ ( MAX_QPATH * 2 ) + 5 ];
-	int         i;
+	static char buff[MAX_STRING_CHARS * 4];
+	char		out[( MAX_QPATH * 2 ) + 5];
+	int			i;
 
 	memset( buff, 0, MAX_STRING_CHARS );
 	for( i = 0; i < remapCount; i++ )
 	{
-		Com_sprintf( out, ( MAX_QPATH * 2 ) + 5, "%s=%s:%5.2f@", remappedShaders[ i ].oldShader, remappedShaders[ i ].newShader, remappedShaders[ i ].timeOffset );
+		Com_sprintf( out, ( MAX_QPATH * 2 ) + 5, "%s=%s:%5.2f@", remappedShaders[i].oldShader, remappedShaders[i].newShader, remappedShaders[i].timeOffset );
 		Q_strcat( buff, sizeof( buff ), out );
 	}
 	return buff;
@@ -91,10 +91,10 @@ G_FindConfigstringIndex
 */
 static int G_FindConfigstringIndex( const char* name, int start, int max, qboolean create )
 {
-	int  i;
-	char s[ MAX_STRING_CHARS ];
+	int	 i;
+	char s[MAX_STRING_CHARS];
 
-	if( !name || !name[ 0 ] )
+	if( !name || !name[0] )
 	{
 		return 0;
 	}
@@ -102,7 +102,7 @@ static int G_FindConfigstringIndex( const char* name, int start, int max, qboole
 	for( i = 1; i < max; i++ )
 	{
 		trap_GetConfigstring( start + i, s, sizeof( s ) );
-		if( !s[ 0 ] )
+		if( !s[0] )
 		{
 			break;
 		}
@@ -157,9 +157,9 @@ void G_TeamCommand( team_t team, char* cmd )
 
 	for( i = 0; i < level.maxclients; i++ )
 	{
-		if( level.clients[ i ].pers.connected == CON_CONNECTED )
+		if( level.clients[i].pers.connected == CON_CONNECTED )
 		{
-			if( level.clients[ i ].sess.sessionTeam == team )
+			if( level.clients[i].sess.sessionTeam == team )
 			{
 				trap_SendServerCommand( i, va( "%s", cmd ) );
 			}
@@ -169,9 +169,9 @@ void G_TeamCommand( team_t team, char* cmd )
 
 void G_ProjectSource( vec3_t point, vec3_t distance, vec3_t forward, vec3_t right, vec3_t result )
 {
-	result[ 0 ] = point[ 0 ] + forward[ 0 ] * distance[ 0 ] + right[ 0 ] * distance[ 1 ];
-	result[ 1 ] = point[ 1 ] + forward[ 1 ] * distance[ 0 ] + right[ 1 ] * distance[ 1 ];
-	result[ 2 ] = point[ 2 ] + forward[ 2 ] * distance[ 0 ] + right[ 2 ] * distance[ 1 ] + distance[ 2 ];
+	result[0] = point[0] + forward[0] * distance[0] + right[0] * distance[1];
+	result[1] = point[1] + forward[1] * distance[0] + right[1] * distance[1];
+	result[2] = point[2] + forward[2] * distance[0] + right[2] * distance[1] + distance[2];
 }
 
 /*
@@ -199,7 +199,7 @@ gentity_t* G_Find( gentity_t* from, int fieldofs, const char* match )
 		from++;
 	}
 
-	for( ; from < &g_entities[ level.numEntities ]; from++ )
+	for( ; from < &g_entities[level.numEntities]; from++ )
 	{
 		if( !from->inuse )
 		{
@@ -231,7 +231,7 @@ G_FindRadius (origin, radius)
 gentity_t* G_FindRadius( gentity_t* from, const vec3_t org, float rad )
 {
 	vec3_t eorg;
-	int    j;
+	int	   j;
 
 	if( !from )
 	{
@@ -242,7 +242,7 @@ gentity_t* G_FindRadius( gentity_t* from, const vec3_t org, float rad )
 		from++;
 	}
 
-	for( ; from < &g_entities[ level.numEntities ]; from++ )
+	for( ; from < &g_entities[level.numEntities]; from++ )
 	{
 		if( !from->inuse )
 		{
@@ -251,7 +251,7 @@ gentity_t* G_FindRadius( gentity_t* from, const vec3_t org, float rad )
 
 		for( j = 0; j < 3; j++ )
 		{
-			eorg[ j ] = org[ j ] - ( from->s.origin[ j ] + ( from->r.mins[ j ] + from->r.maxs[ j ] ) * 0.5 );
+			eorg[j] = org[j] - ( from->s.origin[j] + ( from->r.mins[j] + from->r.maxs[j] ) * 0.5 );
 		}
 
 		if( VectorLength( eorg ) > rad )
@@ -294,9 +294,9 @@ Selects a random entity from among the targets
 
 gentity_t* G_PickTarget( char* name )
 {
-	gentity_t* ent         = NULL;
-	int        num_choices = 0;
-	gentity_t* choice[ MAXCHOICES ];
+	gentity_t* ent		   = NULL;
+	int		   num_choices = 0;
+	gentity_t* choice[MAXCHOICES];
 
 	if( !name )
 	{
@@ -311,7 +311,7 @@ gentity_t* G_PickTarget( char* name )
 		{
 			break;
 		}
-		choice[ num_choices++ ] = ent;
+		choice[num_choices++] = ent;
 		if( num_choices == MAXCHOICES )
 		{
 			break;
@@ -324,7 +324,7 @@ gentity_t* G_PickTarget( char* name )
 		return NULL;
 	}
 
-	return choice[ rand() % num_choices ];
+	return choice[rand() % num_choices];
 }
 
 /*
@@ -392,18 +392,18 @@ for making temporary vectors for function calls
 */
 float* tv( float x, float y, float z )
 {
-	static int    index;
-	static vec3_t vecs[ 8 ];
-	float*        v;
+	static int	  index;
+	static vec3_t vecs[8];
+	float*		  v;
 
 	// use an array so that multiple tempvectors won't collide
 	// for a while
-	v     = vecs[ index ];
+	v	  = vecs[index];
 	index = ( index + 1 ) & 7;
 
-	v[ 0 ] = x;
-	v[ 1 ] = y;
-	v[ 2 ] = z;
+	v[0] = x;
+	v[1] = y;
+	v[2] = z;
 
 	return v;
 }
@@ -418,15 +418,15 @@ for printing vectors
 */
 char* vtos( const vec3_t v )
 {
-	static int  index;
-	static char str[ 8 ][ 32 ];
-	char*       s;
+	static int	index;
+	static char str[8][32];
+	char*		s;
 
 	// use an array so that multiple vtos won't collide
-	s     = str[ index ];
+	s	  = str[index];
 	index = ( index + 1 ) & 7;
 
-	Com_sprintf( s, 32, "(%i %i %i)", ( int )v[ 0 ], ( int )v[ 1 ], ( int )v[ 2 ] );
+	Com_sprintf( s, 32, "(%i %i %i)", ( int )v[0], ( int )v[1], ( int )v[2] );
 
 	return s;
 }
@@ -443,9 +443,9 @@ instead of an orientation.
 */
 void G_SetMovedir( vec3_t angles, vec3_t movedir )
 {
-	static vec3_t VEC_UP       = { 0, -1, 0 };
+	static vec3_t VEC_UP	   = { 0, -1, 0 };
 	static vec3_t MOVEDIR_UP   = { 0, 0, 1 };
-	static vec3_t VEC_DOWN     = { 0, -2, 0 };
+	static vec3_t VEC_DOWN	   = { 0, -2, 0 };
 	static vec3_t MOVEDIR_DOWN = { 0, 0, -1 };
 
 	if( VectorCompare( angles, VEC_UP ) )
@@ -467,17 +467,17 @@ float vectoyaw( const vec3_t vec )
 {
 	float yaw;
 
-	if( vec[ YAW ] == 0 && vec[ PITCH ] == 0 )
+	if( vec[YAW] == 0 && vec[PITCH] == 0 )
 	{
 		yaw = 0;
 	}
 	else
 	{
-		if( vec[ PITCH ] )
+		if( vec[PITCH] )
 		{
-			yaw = ( atan2( vec[ YAW ], vec[ PITCH ] ) * 180 / M_PI );
+			yaw = ( atan2( vec[YAW], vec[PITCH] ) * 180 / M_PI );
 		}
-		else if( vec[ YAW ] > 0 )
+		else if( vec[YAW] > 0 )
 		{
 			yaw = 90;
 		}
@@ -496,9 +496,9 @@ float vectoyaw( const vec3_t vec )
 
 void G_InitGentity( gentity_t* e )
 {
-	e->inuse      = qtrue;
+	e->inuse	  = qtrue;
 	e->classname  = "noclass";
-	e->s.number   = e - g_entities;
+	e->s.number	  = e - g_entities;
 	e->r.ownerNum = ENTITYNUM_NONE;
 
 #if defined( ACEBOT )
@@ -523,16 +523,16 @@ angles and bad trails.
 */
 gentity_t* G_Spawn( void )
 {
-	int        i, force;
+	int		   i, force;
 	gentity_t* e;
 
 	e = NULL; // shut up warning
-	i = 0;    // shut up warning
+	i = 0;	  // shut up warning
 	for( force = 0; force < 2; force++ )
 	{
 		// if we go through all entities and can't find one to free,
 		// override the normal minimum times before use
-		e = &g_entities[ MAX_CLIENTS ];
+		e = &g_entities[MAX_CLIENTS];
 		for( i = MAX_CLIENTS; i < level.numEntities; i++, e++ )
 		{
 			if( e->inuse )
@@ -560,7 +560,7 @@ gentity_t* G_Spawn( void )
 	{
 		for( i = 0; i < MAX_GENTITIES; i++ )
 		{
-			G_Printf( "%4i: %s\n", i, g_entities[ i ].classname );
+			G_Printf( "%4i: %s\n", i, g_entities[i].classname );
 		}
 		G_Error( "G_Spawn: no free entities" );
 	}
@@ -569,7 +569,7 @@ gentity_t* G_Spawn( void )
 	level.numEntities++;
 
 	// let the server system know that there are more entities
-	trap_LocateGameData( level.gentities, level.numEntities, sizeof( gentity_t ), &level.clients[ 0 ].ps, sizeof( level.clients[ 0 ] ) );
+	trap_LocateGameData( level.gentities, level.numEntities, sizeof( gentity_t ), &level.clients[0].ps, sizeof( level.clients[0] ) );
 
 	G_InitGentity( e );
 	return e;
@@ -582,10 +582,10 @@ G_EntitiesFree
 */
 qboolean G_EntitiesFree( void )
 {
-	int        i;
+	int		   i;
 	gentity_t* e;
 
-	e = &g_entities[ MAX_CLIENTS ];
+	e = &g_entities[MAX_CLIENTS];
 	for( i = MAX_CLIENTS; i < level.numEntities; i++, e++ )
 	{
 		if( e->inuse )
@@ -617,7 +617,7 @@ void G_FreeEntity( gentity_t* ed )
 	memset( ed, 0, sizeof( *ed ) );
 	ed->classname = "freed";
 	ed->freetime  = level.time;
-	ed->inuse     = qfalse;
+	ed->inuse	  = qfalse;
 
 #if defined( ACEBOT )
 	ed->node = -1;
@@ -636,13 +636,13 @@ must be taken if the origin is right on a surface (snap towards start vector fir
 gentity_t* G_TempEntity( vec3_t origin, int event )
 {
 	gentity_t* e;
-	vec3_t     snapped;
+	vec3_t	   snapped;
 
-	e          = G_Spawn();
+	e		   = G_Spawn();
 	e->s.eType = ET_EVENTS + event;
 
-	e->classname      = "tempEntity";
-	e->eventTime      = level.time;
+	e->classname	  = "tempEntity";
+	e->eventTime	  = level.time;
 	e->freeAfterEvent = qtrue;
 
 	VectorCopy( origin, snapped );
@@ -673,10 +673,10 @@ of ent.  Ent should be unlinked before calling this!
 */
 void G_KillBox( gentity_t* ent )
 {
-	int        i, num;
-	int        touch[ MAX_GENTITIES ];
+	int		   i, num;
+	int		   touch[MAX_GENTITIES];
 	gentity_t* hit;
-	vec3_t     mins, maxs;
+	vec3_t	   mins, maxs;
 
 	VectorAdd( ent->client->ps.origin, ent->r.mins, mins );
 	VectorAdd( ent->client->ps.origin, ent->r.maxs, maxs );
@@ -684,7 +684,7 @@ void G_KillBox( gentity_t* ent )
 
 	for( i = 0; i < num; i++ )
 	{
-		hit = &g_entities[ touch[ i ] ];
+		hit = &g_entities[touch[i]];
 		if( !hit->client )
 		{
 			continue;
@@ -735,17 +735,17 @@ void G_AddEvent( gentity_t* ent, int event, int eventParm )
 	// clients need to add the event in playerState_t instead of entityState_t
 	if( ent->client )
 	{
-		bits                              = ent->client->ps.externalEvent & EV_EVENT_BITS;
-		bits                              = ( bits + EV_EVENT_BIT1 ) & EV_EVENT_BITS;
-		ent->client->ps.externalEvent     = event | bits;
+		bits							  = ent->client->ps.externalEvent & EV_EVENT_BITS;
+		bits							  = ( bits + EV_EVENT_BIT1 ) & EV_EVENT_BITS;
+		ent->client->ps.externalEvent	  = event | bits;
 		ent->client->ps.externalEventParm = eventParm;
 		ent->client->ps.externalEventTime = level.time;
 	}
 	else
 	{
-		bits             = ent->s.event & EV_EVENT_BITS;
-		bits             = ( bits + EV_EVENT_BIT1 ) & EV_EVENT_BITS;
-		ent->s.event     = event | bits;
+		bits			 = ent->s.event & EV_EVENT_BITS;
+		bits			 = ( bits + EV_EVENT_BIT1 ) & EV_EVENT_BITS;
+		ent->s.event	 = event | bits;
 		ent->s.eventParm = eventParm;
 	}
 	ent->eventTime = level.time;
@@ -760,7 +760,7 @@ void G_Sound( gentity_t* ent, int channel, int soundIndex )
 {
 	gentity_t* te;
 
-	te              = G_TempEntity( ent->r.currentOrigin, EV_GENERAL_SOUND );
+	te				= G_TempEntity( ent->r.currentOrigin, EV_GENERAL_SOUND );
 	te->s.eventParm = soundIndex;
 }
 
@@ -776,8 +776,8 @@ Sets the pos trajectory for a fixed position
 void G_SetOrigin( gentity_t* ent, vec3_t origin )
 {
 	VectorCopy( origin, ent->s.pos.trBase );
-	ent->s.pos.trType     = TR_STATIONARY;
-	ent->s.pos.trTime     = 0;
+	ent->s.pos.trType	  = TR_STATIONARY;
+	ent->s.pos.trTime	  = 0;
 	ent->s.pos.trDuration = 0;
 	VectorClear( ent->s.pos.trDelta );
 

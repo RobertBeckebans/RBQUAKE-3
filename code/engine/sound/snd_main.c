@@ -26,13 +26,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "snd_local.h"
 #include "snd_public.h"
 
-cvar_t* s_volume;
-cvar_t* s_muted;
-cvar_t* s_musicVolume;
-cvar_t* s_doppler;
-cvar_t* s_backend;
-cvar_t* s_muteWhenMinimized;
-cvar_t* s_muteWhenUnfocused;
+cvar_t*					s_volume;
+cvar_t*					s_muted;
+cvar_t*					s_musicVolume;
+cvar_t*					s_doppler;
+cvar_t*					s_backend;
+cvar_t*					s_muteWhenMinimized;
+cvar_t*					s_muteWhenUnfocused;
 
 static soundInterface_t si;
 
@@ -41,7 +41,7 @@ static soundInterface_t si;
 S_ValidateInterface
 =================
 */
-static qboolean S_ValidSoundInterface( soundInterface_t* si )
+static qboolean			S_ValidSoundInterface( soundInterface_t* si )
 {
 	if( !si->Shutdown )
 	{
@@ -285,7 +285,7 @@ void S_StopLoopingSound( int entityNum )
 S_Respatialize
 =================
 */
-void S_Respatialize( int entityNum, const vec3_t origin, vec3_t axis[ 3 ], int inwater )
+void S_Respatialize( int entityNum, const vec3_t origin, vec3_t axis[3], int inwater )
 {
 	if( si.Respatialize )
 	{
@@ -315,8 +315,7 @@ void S_Update( void )
 {
 	if( s_muted->integer )
 	{
-		if( !( s_muteWhenMinimized->integer && com_minimized->integer ) &&
-			!( s_muteWhenUnfocused->integer && com_unfocused->integer ) )
+		if( !( s_muteWhenMinimized->integer && com_minimized->integer ) && !( s_muteWhenUnfocused->integer && com_unfocused->integer ) )
 		{
 			s_muted->integer  = qfalse;
 			s_muted->modified = qtrue;
@@ -324,8 +323,7 @@ void S_Update( void )
 	}
 	else
 	{
-		if( ( s_muteWhenMinimized->integer && com_minimized->integer ) ||
-			( s_muteWhenUnfocused->integer && com_unfocused->integer ) )
+		if( ( s_muteWhenMinimized->integer && com_minimized->integer ) || ( s_muteWhenUnfocused->integer && com_unfocused->integer ) )
 		{
 			s_muted->integer  = qtrue;
 			s_muted->modified = qtrue;
@@ -497,8 +495,8 @@ S_Play_f
 */
 void S_Play_f( void )
 {
-	int         i;
-	int         c;
+	int			i;
+	int			c;
 	sfxHandle_t h;
 
 	if( !si.RegisterSound || !si.StartLocalSound )
@@ -580,16 +578,16 @@ S_Init
 */
 void S_Init( void )
 {
-	cvar_t*  cv;
+	cvar_t*	 cv;
 	qboolean started = qfalse;
 
 	Com_Printf( "------ Initializing Sound ------\n" );
 
-	s_volume            = Cvar_Get( "s_volume", "0.8", CVAR_ARCHIVE );
-	s_musicVolume       = Cvar_Get( "s_musicvolume", "0.25", CVAR_ARCHIVE );
-	s_muted             = Cvar_Get( "s_muted", "0", CVAR_ROM );
-	s_doppler           = Cvar_Get( "s_doppler", "1", CVAR_ARCHIVE );
-	s_backend           = Cvar_Get( "s_backend", "", CVAR_ROM );
+	s_volume			= Cvar_Get( "s_volume", "0.8", CVAR_ARCHIVE );
+	s_musicVolume		= Cvar_Get( "s_musicvolume", "0.25", CVAR_ARCHIVE );
+	s_muted				= Cvar_Get( "s_muted", "0", CVAR_ROM );
+	s_doppler			= Cvar_Get( "s_doppler", "1", CVAR_ARCHIVE );
+	s_backend			= Cvar_Get( "s_backend", "", CVAR_ROM );
 	s_muteWhenMinimized = Cvar_Get( "s_muteWhenMinimized", "0", CVAR_ARCHIVE );
 	s_muteWhenUnfocused = Cvar_Get( "s_muteWhenUnfocused", "0", CVAR_ARCHIVE );
 
@@ -612,7 +610,7 @@ void S_Init( void )
 		cv = Cvar_Get( "s_useOpenAL", "1", CVAR_ARCHIVE | CVAR_LATCH );
 		if( cv->integer )
 		{
-			//OpenAL
+			// OpenAL
 			started = S_AL_Init( &si );
 			Cvar_Set( "s_backend", "OpenAL" );
 		}

@@ -27,34 +27,34 @@
 // ---------- Constants ---------- //
 
 // Timeouts (in secondes)
-#define TIMEOUT_HEARTBEAT    2
-#define TIMEOUT_INFORESPONSE ( 15 * 60 )
+#define TIMEOUT_HEARTBEAT	  2
+#define TIMEOUT_INFORESPONSE  ( 15 * 60 )
 
 // Period of validity for a challenge string (in secondes)
-#define TIMEOUT_CHALLENGE 2
+#define TIMEOUT_CHALLENGE	  2
 
 // Maximum size of a reponse packet
-#define MAX_PACKET_SIZE 1400
+#define MAX_PACKET_SIZE		  1400
 
 // Types of messages (with samples):
 
 // "heartbeat XreaL-1\n"
-#define S2M_HEARTBEAT "heartbeat XreaL-1"
+#define S2M_HEARTBEAT		  "heartbeat XreaL-1"
 
 // "getinfo A_Challenge"
-#define M2S_GETINFO "getinfo"
+#define M2S_GETINFO			  "getinfo"
 
 // "infoResponse\n\\pure\\1\\..."
-#define S2M_INFORESPONSE "infoResponse\x0A"
+#define S2M_INFORESPONSE	  "infoResponse\x0A"
 
 // "getservers 68 empty full"
-#define C2M_GETSERVERS "getservers "
+#define C2M_GETSERVERS		  "getservers "
 
 // "getserversResponse\\...(6 bytes)...\\...(6 bytes)...\\EOT\0\0\0"
 #define M2C_GETSERVERSREPONSE "getserversResponse"
 
-#define C2M_GETMOTD "getmotd"
-#define M2C_MOTD    "motd "
+#define C2M_GETMOTD			  "getmotd"
+#define M2C_MOTD			  "motd "
 
 // ---------- Private functions ---------- //
 
@@ -67,10 +67,10 @@ Search an infostring for the value of a key
 */
 static char* SearchInfostring( const char* infostring, const char* key )
 {
-	static char value[ 256 ];
-	char        crt_key[ 256 ];
-	size_t      value_ind, key_ind;
-	char        c;
+	static char value[256];
+	char		crt_key[256];
+	size_t		value_ind, key_ind;
+	char		c;
 
 	if( *infostring++ != '\\' )
 	{
@@ -93,11 +93,11 @@ static char* SearchInfostring( const char* infostring, const char* key )
 			}
 			if( c == '\\' || key_ind == sizeof( crt_key ) - 1 )
 			{
-				crt_key[ key_ind ] = '\0';
+				crt_key[key_ind] = '\0';
 				break;
 			}
 
-			crt_key[ key_ind++ ] = c;
+			crt_key[key_ind++] = c;
 		}
 
 		// If it's the key we are looking for, save it in "value"
@@ -109,11 +109,11 @@ static char* SearchInfostring( const char* infostring, const char* key )
 
 				if( c == '\0' || c == '\\' || value_ind == sizeof( value ) - 1 )
 				{
-					value[ value_ind ] = '\0';
+					value[value_ind] = '\0';
 					return value;
 				}
 
-				value[ value_ind++ ] = c;
+				value[value_ind++] = c;
 			}
 		}
 
@@ -143,9 +143,9 @@ Build a challenge string for a "getinfo" message
 */
 static const char* BuildChallenge( void )
 {
-	static char challenge[ CHALLENGE_MAX_LENGTH ];
-	size_t      ind;
-	size_t      length = CHALLENGE_MIN_LENGTH - 1; // We start at the minimum size
+	static char challenge[CHALLENGE_MAX_LENGTH];
+	size_t		ind;
+	size_t		length = CHALLENGE_MIN_LENGTH - 1; // We start at the minimum size
 
 	// ... then we add a random number of characters
 	length += rand() % ( CHALLENGE_MAX_LENGTH - CHALLENGE_MIN_LENGTH + 1 );
@@ -159,10 +159,10 @@ static const char* BuildChallenge( void )
 			c = 33 + rand() % ( 126 - 33 + 1 ); // -> c = 33..126
 		} while( c == '\\' || c == ';' || c == '"' || c == '%' || c == '/' );
 
-		challenge[ ind ] = c;
+		challenge[ind] = c;
 	}
 
-	challenge[ length ] = '\0';
+	challenge[length] = '\0';
 	return challenge;
 }
 
@@ -175,7 +175,7 @@ Send a "getinfo" message to a server
 */
 static void SendGetInfo( server_t* server )
 {
-	char msg[ 64 ] = "\xFF\xFF\xFF\xFF" M2S_GETINFO " ";
+	char msg[64] = "\xFF\xFF\xFF\xFF" M2S_GETINFO " ";
 
 	if( !server->challenge_timeout || server->challenge_timeout < crt_time )
 	{
@@ -198,16 +198,16 @@ Parse getservers requests and send the appropriate response
 */
 static void HandleGetServers( const char* msg, const struct sockaddr_in* addr )
 {
-	const char*    packetheader = "\xFF\xFF\xFF\xFF" M2C_GETSERVERSREPONSE "\\";
-	const size_t   headersize   = strlen( packetheader );
-	char           packet[ MAX_PACKET_SIZE ];
-	size_t         packetind;
-	server_t*      sv;
+	const char*	   packetheader = "\xFF\xFF\xFF\xFF" M2C_GETSERVERSREPONSE "\\";
+	const size_t   headersize	= strlen( packetheader );
+	char		   packet[MAX_PACKET_SIZE];
+	size_t		   packetind;
+	server_t*	   sv;
 	unsigned int   protocol;
 	unsigned int   sv_addr;
 	unsigned short sv_port;
-	qboolean       no_empty;
-	qboolean       no_full;
+	qboolean	   no_empty;
+	qboolean	   no_full;
 	unsigned int   numServers = 0;
 
 	// Check if there's a name before the protocol number
@@ -217,7 +217,7 @@ static void HandleGetServers( const char* msg, const struct sockaddr_in* addr )
 	MsgPrint( MSG_NORMAL, "%s ---> getservers( protocol version %d )\n", peer_address, protocol );
 
 	no_empty = ( strstr( msg, "empty" ) == NULL );
-	no_full  = ( strstr( msg, "full" ) == NULL );
+	no_full	 = ( strstr( msg, "full" ) == NULL );
 
 	// Initialize the packet contents with the header
 	packetind = headersize;
@@ -230,12 +230,12 @@ static void HandleGetServers( const char* msg, const struct sockaddr_in* addr )
 		if( sv == NULL || packetind > sizeof( packet ) - ( 7 + 6 ) )
 		{
 			// End Of Transmission
-			packet[ packetind ]     = 'E';
-			packet[ packetind + 1 ] = 'O';
-			packet[ packetind + 2 ] = 'T';
-			packet[ packetind + 3 ] = '\0';
-			packet[ packetind + 4 ] = '\0';
-			packet[ packetind + 5 ] = '\0';
+			packet[packetind]	  = 'E';
+			packet[packetind + 1] = 'O';
+			packet[packetind + 2] = 'T';
+			packet[packetind + 3] = '\0';
+			packet[packetind + 4] = '\0';
+			packet[packetind + 5] = '\0';
 			packetind += 6;
 
 			// Send the packet to the client
@@ -301,29 +301,24 @@ static void HandleGetServers( const char* msg, const struct sockaddr_in* addr )
 				sv_port = ntohs( addrmap->to.sin_port );
 			}
 
-			MsgPrint( MSG_DEBUG,
-				"Server address mapped to %u.%u.%u.%u:%hu\n",
-				sv_addr >> 24,
-				( sv_addr >> 16 ) & 0xFF,
-				( sv_addr >> 8 ) & 0xFF,
-				sv_addr & 0xFF,
-				sv_port );
+			MsgPrint( MSG_DEBUG, "Server address mapped to %u.%u.%u.%u:%hu\n", sv_addr >> 24, ( sv_addr >> 16 ) & 0xFF, ( sv_addr >> 8 ) & 0xFF, sv_addr & 0xFF, sv_port );
 		}
 
 		// IP address
-		packet[ packetind ]     = sv_addr >> 24;
-		packet[ packetind + 1 ] = ( sv_addr >> 16 ) & 0xFF;
-		packet[ packetind + 2 ] = ( sv_addr >> 8 ) & 0xFF;
-		packet[ packetind + 3 ] = sv_addr & 0xFF;
+		packet[packetind]	  = sv_addr >> 24;
+		packet[packetind + 1] = ( sv_addr >> 16 ) & 0xFF;
+		packet[packetind + 2] = ( sv_addr >> 8 ) & 0xFF;
+		packet[packetind + 3] = sv_addr & 0xFF;
 
 		// Port
-		packet[ packetind + 4 ] = sv_port >> 8;
-		packet[ packetind + 5 ] = sv_port & 0xFF;
+		packet[packetind + 4] = sv_port >> 8;
+		packet[packetind + 5] = sv_port & 0xFF;
 
 		// Trailing '\'
-		packet[ packetind + 6 ] = '\\';
+		packet[packetind + 6] = '\\';
 
-		MsgPrint( MSG_DEBUG, "  - Sending server %u.%u.%u.%u:%hu\n", ( qbyte )packet[ packetind ], ( qbyte )packet[ packetind + 1 ], ( qbyte )packet[ packetind + 2 ], ( qbyte )packet[ packetind + 3 ], sv_port );
+		MsgPrint(
+			MSG_DEBUG, "  - Sending server %u.%u.%u.%u:%hu\n", ( qbyte )packet[packetind], ( qbyte )packet[packetind + 1], ( qbyte )packet[packetind + 2], ( qbyte )packet[packetind + 3], sv_port );
 
 		packetind += 7;
 		numServers++;
@@ -339,7 +334,7 @@ Parse infoResponse messages
 */
 static void HandleInfoResponse( server_t* server, const char* msg )
 {
-	char*        value;
+	char*		 value;
 	unsigned int new_protocol = 0, new_maxclients = 0;
 
 	MsgPrint( MSG_DEBUG, "%s ---> infoResponse\n", peer_address );
@@ -370,11 +365,7 @@ static void HandleInfoResponse( server_t* server, const char* msg )
 	}
 	if( !new_protocol || !new_maxclients )
 	{
-		MsgPrint( MSG_ERROR,
-			"ERROR: invalid infoResponse from %s (protocol: %d, maxclients: %d)\n",
-			peer_address,
-			new_protocol,
-			new_maxclients );
+		MsgPrint( MSG_ERROR, "ERROR: invalid infoResponse from %s (protocol: %d, maxclients: %d)\n", peer_address, new_protocol, new_maxclients );
 		return;
 	}
 	server->protocol   = new_protocol;
@@ -392,7 +383,7 @@ static void HandleInfoResponse( server_t* server, const char* msg )
 }
 
 #define CHALLENGE_KEY "challenge\\"
-#define MOTD_KEY      "motd\\"
+#define MOTD_KEY	  "motd\\"
 
 /*
 ====================
@@ -403,14 +394,14 @@ Parse getservers requests and send the appropriate response
 */
 static void HandleGetMotd( const char* msg, const struct sockaddr_in* addr )
 {
-	const char*  packetheader = "\xFF\xFF\xFF\xFF" M2C_MOTD "\"";
-	const size_t headersize   = strlen( packetheader );
-	char         packet[ MAX_PACKET_SIZE ];
-	char         challenge[ MAX_PACKET_SIZE ];
-	const char*  motd = ""; //FIXME
-	size_t       packetind;
-	char*        value;
-	char         version[ 1024 ], renderer[ 1024 ];
+	const char*	 packetheader = "\xFF\xFF\xFF\xFF" M2C_MOTD "\"";
+	const size_t headersize	  = strlen( packetheader );
+	char		 packet[MAX_PACKET_SIZE];
+	char		 challenge[MAX_PACKET_SIZE];
+	const char*	 motd = ""; // FIXME
+	size_t		 packetind;
+	char*		 value;
+	char		 version[1024], renderer[1024];
 
 	MsgPrint( MSG_DEBUG, "%s ---> getmotd\n", peer_address );
 
@@ -422,13 +413,13 @@ static void HandleGetMotd( const char* msg, const struct sockaddr_in* addr )
 	}
 
 	strncpy( challenge, value, sizeof( challenge ) - 1 );
-	challenge[ sizeof( challenge ) - 1 ] = '\0';
+	challenge[sizeof( challenge ) - 1] = '\0';
 
 	value = SearchInfostring( msg, "renderer" );
 	if( value )
 	{
 		strncpy( renderer, value, sizeof( renderer ) - 1 );
-		renderer[ sizeof( renderer ) - 1 ] = '\0';
+		renderer[sizeof( renderer ) - 1] = '\0';
 		MsgPrint( MSG_DEBUG, "%s is using renderer %s\n", peer_address, value );
 	}
 
@@ -436,7 +427,7 @@ static void HandleGetMotd( const char* msg, const struct sockaddr_in* addr )
 	if( value )
 	{
 		strncpy( version, value, sizeof( version ) - 1 );
-		version[ sizeof( version ) - 1 ] = '\0';
+		version[sizeof( version ) - 1] = '\0';
 		MsgPrint( MSG_DEBUG, "%s is using version %s\n", peer_address, value );
 	}
 
@@ -444,17 +435,17 @@ static void HandleGetMotd( const char* msg, const struct sockaddr_in* addr )
 	packetind = headersize;
 	memcpy( packet, packetheader, headersize );
 
-	strncpy( &packet[ packetind ], CHALLENGE_KEY, MAX_PACKET_SIZE - packetind - 2 );
+	strncpy( &packet[packetind], CHALLENGE_KEY, MAX_PACKET_SIZE - packetind - 2 );
 	packetind += strlen( CHALLENGE_KEY );
 
-	strncpy( &packet[ packetind ], challenge, MAX_PACKET_SIZE - packetind - 2 );
+	strncpy( &packet[packetind], challenge, MAX_PACKET_SIZE - packetind - 2 );
 	packetind += strlen( challenge );
-	packet[ packetind++ ] = '\\';
+	packet[packetind++] = '\\';
 
-	strncpy( &packet[ packetind ], MOTD_KEY, MAX_PACKET_SIZE - packetind - 2 );
+	strncpy( &packet[packetind], MOTD_KEY, MAX_PACKET_SIZE - packetind - 2 );
 	packetind += strlen( MOTD_KEY );
 
-	strncpy( &packet[ packetind ], motd, MAX_PACKET_SIZE - packetind - 2 );
+	strncpy( &packet[packetind], motd, MAX_PACKET_SIZE - packetind - 2 );
 	packetind += strlen( motd );
 
 	if( packetind > MAX_PACKET_SIZE - 2 )
@@ -462,8 +453,8 @@ static void HandleGetMotd( const char* msg, const struct sockaddr_in* addr )
 		packetind = MAX_PACKET_SIZE - 2;
 	}
 
-	packet[ packetind++ ] = '\"';
-	packet[ packetind++ ] = '\0';
+	packet[packetind++] = '\"';
+	packet[packetind++] = '\0';
 
 	MsgPrint( MSG_DEBUG, "%s <--- motd\n", peer_address );
 
@@ -487,7 +478,7 @@ void HandleMessage( const char* msg, size_t length, const struct sockaddr_in* ad
 	// If it's an heartbeat
 	if( !strncmp( S2M_HEARTBEAT, msg, strlen( S2M_HEARTBEAT ) ) )
 	{
-		char gameId[ 64 ];
+		char gameId[64];
 
 		// Extract the game id
 		sscanf( msg + strlen( S2M_HEARTBEAT ) + 1, "%63s", gameId );

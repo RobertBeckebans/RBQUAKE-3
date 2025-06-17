@@ -29,7 +29,7 @@ CM_PointLeafnum_r
 */
 int CM_PointLeafnum_r( const vec3_t p, int num )
 {
-	float     d;
+	float	  d;
 	cNode_t*  node;
 	cplane_t* plane;
 
@@ -40,7 +40,7 @@ int CM_PointLeafnum_r( const vec3_t p, int num )
 
 		if( plane->type < 3 )
 		{
-			d = p[ plane->type ] - plane->dist;
+			d = p[plane->type] - plane->dist;
 		}
 		else
 		{
@@ -48,11 +48,11 @@ int CM_PointLeafnum_r( const vec3_t p, int num )
 		}
 		if( d < 0 )
 		{
-			num = node->children[ 1 ];
+			num = node->children[1];
 		}
 		else
 		{
-			num = node->children[ 0 ];
+			num = node->children[0];
 		}
 	}
 
@@ -86,7 +86,7 @@ void CM_StoreLeafs( leafList_t* ll, int nodenum )
 	leafNum = -1 - nodenum;
 
 	// store the lastLeaf even if the list is overflowed
-	if( cm.leafs[ leafNum ].cluster != -1 )
+	if( cm.leafs[leafNum].cluster != -1 )
 	{
 		ll->lastLeaf = leafNum;
 	}
@@ -96,25 +96,25 @@ void CM_StoreLeafs( leafList_t* ll, int nodenum )
 		ll->overflowed = qtrue;
 		return;
 	}
-	ll->list[ ll->count++ ] = leafNum;
+	ll->list[ll->count++] = leafNum;
 }
 
 void CM_StoreBrushes( leafList_t* ll, int nodenum )
 {
-	int       i, k;
-	int       leafnum;
-	int       brushnum;
+	int		  i, k;
+	int		  leafnum;
+	int		  brushnum;
 	cLeaf_t*  leaf;
 	cbrush_t* b;
 
 	leafnum = -1 - nodenum;
 
-	leaf = &cm.leafs[ leafnum ];
+	leaf = &cm.leafs[leafnum];
 
 	for( k = 0; k < leaf->numLeafBrushes; k++ )
 	{
-		brushnum = cm.leafbrushes[ leaf->firstLeafBrush + k ];
-		b        = &cm.brushes[ brushnum ];
+		brushnum = cm.leafbrushes[leaf->firstLeafBrush + k];
+		b		 = &cm.brushes[brushnum];
 		if( b->checkcount == cm.checkcount )
 		{
 			continue; // already checked this brush in another leaf
@@ -122,7 +122,7 @@ void CM_StoreBrushes( leafList_t* ll, int nodenum )
 		b->checkcount = cm.checkcount;
 		for( i = 0; i < 3; i++ )
 		{
-			if( b->bounds[ 0 ][ i ] >= ll->bounds[ 1 ][ i ] || b->bounds[ 1 ][ i ] <= ll->bounds[ 0 ][ i ] )
+			if( b->bounds[0][i] >= ll->bounds[1][i] || b->bounds[1][i] <= ll->bounds[0][i] )
 			{
 				break;
 			}
@@ -136,7 +136,7 @@ void CM_StoreBrushes( leafList_t* ll, int nodenum )
 			ll->overflowed = qtrue;
 			return;
 		}
-		( ( cbrush_t** )ll->list )[ ll->count++ ] = b;
+		( ( cbrush_t** )ll->list )[ll->count++] = b;
 	}
 #if 0
 	// store patches?
@@ -162,7 +162,7 @@ void CM_BoxLeafnums_r( leafList_t* ll, int nodenum )
 {
 	cplane_t* plane;
 	cNode_t*  node;
-	int       s;
+	int		  s;
 
 	while( 1 )
 	{
@@ -172,22 +172,22 @@ void CM_BoxLeafnums_r( leafList_t* ll, int nodenum )
 			return;
 		}
 
-		node  = &cm.nodes[ nodenum ];
+		node  = &cm.nodes[nodenum];
 		plane = node->plane;
-		s     = BoxOnPlaneSide( ll->bounds[ 0 ], ll->bounds[ 1 ], plane );
+		s	  = BoxOnPlaneSide( ll->bounds[0], ll->bounds[1], plane );
 		if( s == 1 )
 		{
-			nodenum = node->children[ 0 ];
+			nodenum = node->children[0];
 		}
 		else if( s == 2 )
 		{
-			nodenum = node->children[ 1 ];
+			nodenum = node->children[1];
 		}
 		else
 		{
 			// go down both
-			CM_BoxLeafnums_r( ll, node->children[ 0 ] );
-			nodenum = node->children[ 1 ];
+			CM_BoxLeafnums_r( ll, node->children[0] );
+			nodenum = node->children[1];
 		}
 	}
 }
@@ -203,13 +203,13 @@ int CM_BoxLeafnums( const vec3_t mins, const vec3_t maxs, int* list, int listsiz
 
 	cm.checkcount++;
 
-	VectorCopy( mins, ll.bounds[ 0 ] );
-	VectorCopy( maxs, ll.bounds[ 1 ] );
-	ll.count      = 0;
-	ll.maxcount   = listsize;
-	ll.list       = list;
+	VectorCopy( mins, ll.bounds[0] );
+	VectorCopy( maxs, ll.bounds[1] );
+	ll.count	  = 0;
+	ll.maxcount	  = listsize;
+	ll.list		  = list;
 	ll.storeLeafs = CM_StoreLeafs;
-	ll.lastLeaf   = 0;
+	ll.lastLeaf	  = 0;
 	ll.overflowed = qfalse;
 
 	CM_BoxLeafnums_r( &ll, 0 );
@@ -229,13 +229,13 @@ int CM_BoxBrushes( const vec3_t mins, const vec3_t maxs, cbrush_t** list, int li
 
 	cm.checkcount++;
 
-	VectorCopy( mins, ll.bounds[ 0 ] );
-	VectorCopy( maxs, ll.bounds[ 1 ] );
-	ll.count      = 0;
-	ll.maxcount   = listsize;
-	ll.list       = ( void* )list;
+	VectorCopy( mins, ll.bounds[0] );
+	VectorCopy( maxs, ll.bounds[1] );
+	ll.count	  = 0;
+	ll.maxcount	  = listsize;
+	ll.list		  = ( void* )list;
 	ll.storeLeafs = CM_StoreBrushes;
-	ll.lastLeaf   = 0;
+	ll.lastLeaf	  = 0;
 	ll.overflowed = qfalse;
 
 	CM_BoxLeafnums_r( &ll, 0 );
@@ -253,13 +253,13 @@ CM_PointContents
 */
 int CM_PointContents( const vec3_t p, clipHandle_t model )
 {
-	int       leafnum;
-	int       i, k;
-	int       brushnum;
+	int		  leafnum;
+	int		  i, k;
+	int		  brushnum;
 	cLeaf_t*  leaf;
 	cbrush_t* b;
-	int       contents;
-	float     d;
+	int		  contents;
+	float	  d;
 	cmodel_t* clipm;
 
 	if( !cm.numNodes )
@@ -276,7 +276,7 @@ int CM_PointContents( const vec3_t p, clipHandle_t model )
 	else
 	{
 		leafnum = CM_PointLeafnum_r( p, 0 );
-		leaf    = &cm.leafs[ leafnum ];
+		leaf	= &cm.leafs[leafnum];
 	}
 
 	if( leaf->area == -1 )
@@ -289,10 +289,10 @@ int CM_PointContents( const vec3_t p, clipHandle_t model )
 	contents = 0;
 	for( k = 0; k < leaf->numLeafBrushes; k++ )
 	{
-		brushnum = cm.leafbrushes[ leaf->firstLeafBrush + k ];
-		b        = &cm.brushes[ brushnum ];
+		brushnum = cm.leafbrushes[leaf->firstLeafBrush + k];
+		b		 = &cm.brushes[brushnum];
 
-		if( !CM_BoundsIntersectPoint( b->bounds[ 0 ], b->bounds[ 1 ], p ) )
+		if( !CM_BoundsIntersectPoint( b->bounds[0], b->bounds[1], p ) )
 		{
 			continue;
 		}
@@ -300,10 +300,10 @@ int CM_PointContents( const vec3_t p, clipHandle_t model )
 		// see if the point is in the brush
 		for( i = 0; i < b->numsides; i++ )
 		{
-			d = DotProduct( p, b->sides[ i ].plane->normal );
+			d = DotProduct( p, b->sides[i].plane->normal );
 			// FIXME test for Cash
 			//			if ( d >= b->sides[i].plane->dist ) {
-			if( d > b->sides[ i ].plane->dist )
+			if( d > b->sides[i].plane->dist )
 			{
 				break;
 			}
@@ -336,15 +336,14 @@ int CM_TransformedPointContents( const vec3_t p, clipHandle_t model, const vec3_
 	VectorSubtract( p, origin, p_l );
 
 	// rotate start and end into the models frame of reference
-	if( model != BOX_MODEL_HANDLE &&
-		( angles[ 0 ] || angles[ 1 ] || angles[ 2 ] ) )
+	if( model != BOX_MODEL_HANDLE && ( angles[0] || angles[1] || angles[2] ) )
 	{
 		AngleVectors( angles, forward, right, up );
 
 		VectorCopy( p_l, temp );
-		p_l[ 0 ] = DotProduct( temp, forward );
-		p_l[ 1 ] = -DotProduct( temp, right );
-		p_l[ 2 ] = DotProduct( temp, up );
+		p_l[0] = DotProduct( temp, forward );
+		p_l[1] = -DotProduct( temp, right );
+		p_l[2] = DotProduct( temp, up );
 	}
 
 	return CM_PointContents( p_l, model );
@@ -378,11 +377,11 @@ AREAPORTALS
 
 void CM_FloodArea_r( int areaNum, int floodnum )
 {
-	int      i;
+	int		 i;
 	cArea_t* area;
-	int*     con;
+	int*	 con;
 
-	area = &cm.areas[ areaNum ];
+	area = &cm.areas[areaNum];
 
 	if( area->floodvalid == cm.floodvalid )
 	{
@@ -393,12 +392,12 @@ void CM_FloodArea_r( int areaNum, int floodnum )
 		Com_Error( ERR_DROP, "FloodArea_r: reflooded" );
 	}
 
-	area->floodnum   = floodnum;
+	area->floodnum	 = floodnum;
 	area->floodvalid = cm.floodvalid;
-	con              = cm.areaPortals + areaNum * cm.numAreas;
+	con				 = cm.areaPortals + areaNum * cm.numAreas;
 	for( i = 0; i < cm.numAreas; i++ )
 	{
-		if( con[ i ] > 0 )
+		if( con[i] > 0 )
 		{
 			CM_FloodArea_r( i, floodnum );
 		}
@@ -413,9 +412,9 @@ CM_FloodAreaConnections
 */
 void CM_FloodAreaConnections( void )
 {
-	int      i;
+	int		 i;
 	cArea_t* area;
-	int      floodnum;
+	int		 floodnum;
 
 	// all current floods are now invalid
 	cm.floodvalid++;
@@ -423,7 +422,7 @@ void CM_FloodAreaConnections( void )
 
 	for( i = 0; i < cm.numAreas; i++ )
 	{
-		area = &cm.areas[ i ];
+		area = &cm.areas[i];
 		if( area->floodvalid == cm.floodvalid )
 		{
 			continue; // already flooded into
@@ -453,14 +452,14 @@ void CM_AdjustAreaPortalState( int area1, int area2, qboolean open )
 
 	if( open )
 	{
-		cm.areaPortals[ area1 * cm.numAreas + area2 ]++;
-		cm.areaPortals[ area2 * cm.numAreas + area1 ]++;
+		cm.areaPortals[area1 * cm.numAreas + area2]++;
+		cm.areaPortals[area2 * cm.numAreas + area1]++;
 	}
 	else
 	{
-		cm.areaPortals[ area1 * cm.numAreas + area2 ]--;
-		cm.areaPortals[ area2 * cm.numAreas + area1 ]--;
-		if( cm.areaPortals[ area2 * cm.numAreas + area1 ] < 0 )
+		cm.areaPortals[area1 * cm.numAreas + area2]--;
+		cm.areaPortals[area2 * cm.numAreas + area1]--;
+		if( cm.areaPortals[area2 * cm.numAreas + area1] < 0 )
 		{
 			Com_Error( ERR_DROP, "CM_AdjustAreaPortalState: negative reference count" );
 		}
@@ -494,7 +493,7 @@ qboolean CM_AreasConnected( int area1, int area2 )
 		Com_Error( ERR_DROP, "area >= cm.numAreas" );
 	}
 
-	if( cm.areas[ area1 ].floodnum == cm.areas[ area2 ].floodnum )
+	if( cm.areas[area1].floodnum == cm.areas[area2].floodnum )
 	{
 		return qtrue;
 	}
@@ -534,12 +533,12 @@ int CM_WriteAreaBits( byte* buffer, int area )
 	}
 	else
 	{
-		floodnum = cm.areas[ area ].floodnum;
+		floodnum = cm.areas[area].floodnum;
 		for( i = 0; i < cm.numAreas; i++ )
 		{
-			if( cm.areas[ i ].floodnum == floodnum || area == -1 )
+			if( cm.areas[i].floodnum == floodnum || area == -1 )
 			{
-				buffer[ i >> 3 ] |= 1 << ( i & 7 );
+				buffer[i >> 3] |= 1 << ( i & 7 );
 			}
 		}
 	}
@@ -554,12 +553,8 @@ CM_BoundsIntersect
 */
 qboolean CM_BoundsIntersect( const vec3_t mins, const vec3_t maxs, const vec3_t mins2, const vec3_t maxs2 )
 {
-	if( maxs[ 0 ] < mins2[ 0 ] - SURFACE_CLIP_EPSILON ||
-		maxs[ 1 ] < mins2[ 1 ] - SURFACE_CLIP_EPSILON ||
-		maxs[ 2 ] < mins2[ 2 ] - SURFACE_CLIP_EPSILON ||
-		mins[ 0 ] > maxs2[ 0 ] + SURFACE_CLIP_EPSILON ||
-		mins[ 1 ] > maxs2[ 1 ] + SURFACE_CLIP_EPSILON ||
-		mins[ 2 ] > maxs2[ 2 ] + SURFACE_CLIP_EPSILON )
+	if( maxs[0] < mins2[0] - SURFACE_CLIP_EPSILON || maxs[1] < mins2[1] - SURFACE_CLIP_EPSILON || maxs[2] < mins2[2] - SURFACE_CLIP_EPSILON || mins[0] > maxs2[0] + SURFACE_CLIP_EPSILON ||
+		mins[1] > maxs2[1] + SURFACE_CLIP_EPSILON || mins[2] > maxs2[2] + SURFACE_CLIP_EPSILON )
 	{
 		return qfalse;
 	}
@@ -574,12 +569,8 @@ CM_BoundsIntersectPoint
 */
 qboolean CM_BoundsIntersectPoint( const vec3_t mins, const vec3_t maxs, const vec3_t point )
 {
-	if( maxs[ 0 ] < point[ 0 ] - SURFACE_CLIP_EPSILON ||
-		maxs[ 1 ] < point[ 1 ] - SURFACE_CLIP_EPSILON ||
-		maxs[ 2 ] < point[ 2 ] - SURFACE_CLIP_EPSILON ||
-		mins[ 0 ] > point[ 0 ] + SURFACE_CLIP_EPSILON ||
-		mins[ 1 ] > point[ 1 ] + SURFACE_CLIP_EPSILON ||
-		mins[ 2 ] > point[ 2 ] + SURFACE_CLIP_EPSILON )
+	if( maxs[0] < point[0] - SURFACE_CLIP_EPSILON || maxs[1] < point[1] - SURFACE_CLIP_EPSILON || maxs[2] < point[2] - SURFACE_CLIP_EPSILON || mins[0] > point[0] + SURFACE_CLIP_EPSILON ||
+		mins[1] > point[1] + SURFACE_CLIP_EPSILON || mins[2] > point[2] + SURFACE_CLIP_EPSILON )
 	{
 		return qfalse;
 	}

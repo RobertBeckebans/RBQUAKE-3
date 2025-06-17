@@ -41,7 +41,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	#include <libc.h>
 #endif
 
-#define BASEDIRNAME   "xreal" // assumed to have a 2 or 3 following
+#define BASEDIRNAME	  "xreal" // assumed to have a 2 or 3 following
 #define PATHSEPERATOR '/'
 
 #ifdef SAFE_MALLOC
@@ -73,14 +73,14 @@ void* safe_malloc_info( size_t size, char* info )
 #endif
 
 // set these before calling CheckParm
-int    myargc;
-char** myargv;
+int		 myargc;
+char**	 myargv;
 
-char     com_token[ 1024 ];
+char	 com_token[1024];
 qboolean com_eof;
 
 qboolean archive;
-char     archivedir[ 1024 ];
+char	 archivedir[1024];
 
 /*
 ===================
@@ -90,27 +90,27 @@ Mimic unix command line expansion
 ===================
 */
 #define MAX_EX_ARGC 1024
-int   ex_argc;
-char* ex_argv[ MAX_EX_ARGC ];
+int	  ex_argc;
+char* ex_argv[MAX_EX_ARGC];
 
 #ifdef _WIN32
 	#include "io.h"
 void ExpandWildcards( int* argc, char*** argv )
 {
 	struct _finddata_t fileinfo;
-	int                handle;
-	int                i;
-	char               filename[ 1024 ];
-	char               filebase[ 1024 ];
-	char*              path;
+	int				   handle;
+	int				   i;
+	char			   filename[1024];
+	char			   filebase[1024];
+	char*			   path;
 
 	ex_argc = 0;
 	for( i = 0; i < *argc; i++ )
 	{
-		path = ( *argv )[ i ];
-		if( path[ 0 ] == '-' || ( !strstr( path, "*" ) && !strstr( path, "?" ) ) )
+		path = ( *argv )[i];
+		if( path[0] == '-' || ( !strstr( path, "*" ) && !strstr( path, "?" ) ) )
 		{
-			ex_argv[ ex_argc++ ] = path;
+			ex_argv[ex_argc++] = path;
 			continue;
 		}
 
@@ -125,7 +125,7 @@ void ExpandWildcards( int* argc, char*** argv )
 		do
 		{
 			sprintf( filename, "%s%s", filebase, fileinfo.name );
-			ex_argv[ ex_argc++ ] = copystring( filename );
+			ex_argv[ex_argc++] = copystring( filename );
 		} while( _findnext( handle, &fileinfo ) != -1 );
 
 		_findclose( handle );
@@ -151,18 +151,18 @@ gamedir will hold qdir + the game directory (id1, id2, etc)
 
 */
 
-char qdir[ 1024 ];
-char gamedir[ 1024 ];
-char writedir[ 1024 ];
+char qdir[1024];
+char gamedir[1024];
+char writedir[1024];
 
 void SetQdirFromPath( const char* path )
 {
-	char        temp[ 1024 ];
+	char		temp[1024];
 	const char* c;
 	const char* sep;
-	int         len, count;
+	int			len, count;
 
-	if( !( path[ 0 ] == '/' || path[ 0 ] == '\\' || path[ 1 ] == ':' ) )
+	if( !( path[0] == '/' || path[0] == '\\' || path[1] == ':' ) )
 	{
 		// path is partial
 		Q_getwd( temp );
@@ -180,11 +180,11 @@ void SetQdirFromPath( const char* path )
 		if( !Q_strncasecmp( c, BASEDIRNAME, len ) )
 		{
 			//
-			//strncpy (qdir, path, c+len+2-path);
+			// strncpy (qdir, path, c+len+2-path);
 			// the +2 assumes a 2 or 3 following quake which is not the
 			// case with a retail install
 			// so we need to add up how much to the next separator
-			sep   = c + len;
+			sep	  = c + len;
 			count = 1;
 			while( *sep && *sep != '/' && *sep != '\\' )
 			{
@@ -195,9 +195,9 @@ void SetQdirFromPath( const char* path )
 			Sys_Printf( "qdir: %s\n", qdir );
 			for( i = 0; i < strlen( qdir ); i++ )
 			{
-				if( qdir[ i ] == '\\' )
+				if( qdir[i] == '\\' )
 				{
-					qdir[ i ] = '/';
+					qdir[i] = '/';
 				}
 			}
 
@@ -210,22 +210,22 @@ void SetQdirFromPath( const char* path )
 
 					for( i = 0; i < strlen( gamedir ); i++ )
 					{
-						if( gamedir[ i ] == '\\' )
+						if( gamedir[i] == '\\' )
 						{
-							gamedir[ i ] = '/';
+							gamedir[i] = '/';
 						}
 					}
 
 					Sys_Printf( "gamedir: %s\n", gamedir );
 
-					if( !writedir[ 0 ] )
+					if( !writedir[0] )
 					{
 						strcpy( writedir, gamedir );
 					}
-					else if( writedir[ strlen( writedir ) - 1 ] != '/' )
+					else if( writedir[strlen( writedir ) - 1] != '/' )
 					{
-						writedir[ strlen( writedir ) ]     = '/';
-						writedir[ strlen( writedir ) + 1 ] = 0;
+						writedir[strlen( writedir )]	 = '/';
+						writedir[strlen( writedir ) + 1] = 0;
 					}
 
 					return;
@@ -241,9 +241,9 @@ void SetQdirFromPath( const char* path )
 
 char* ExpandArg( const char* path )
 {
-	static char full[ 1024 ];
+	static char full[1024];
 
-	if( path[ 0 ] != '/' && path[ 0 ] != '\\' && path[ 1 ] != ':' )
+	if( path[0] != '/' && path[0] != '\\' && path[1] != ':' )
 	{
 		Q_getwd( full );
 		strcat( full, path );
@@ -257,13 +257,13 @@ char* ExpandArg( const char* path )
 
 char* ExpandPath( const char* path )
 {
-	static char full[ 1024 ];
+	static char full[1024];
 
 	if( !qdir )
 	{
 		Error( "ExpandPath called without qdir set" );
 	}
-	if( path[ 0 ] == '/' || path[ 0 ] == '\\' || path[ 1 ] == ':' )
+	if( path[0] == '/' || path[0] == '\\' || path[1] == ':' )
 	{
 		strcpy( full, path );
 		return full;
@@ -274,13 +274,13 @@ char* ExpandPath( const char* path )
 
 char* ExpandGamePath( const char* path )
 {
-	static char full[ 1024 ];
+	static char full[1024];
 
 	if( !qdir )
 	{
 		Error( "ExpandGamePath called without qdir set" );
 	}
-	if( path[ 0 ] == '/' || path[ 0 ] == '\\' || path[ 1 ] == ':' )
+	if( path[0] == '/' || path[0] == '\\' || path[1] == ':' )
 	{
 		strcpy( full, path );
 		return full;
@@ -292,7 +292,7 @@ char* ExpandGamePath( const char* path )
 char* ExpandPathAndArchive( const char* path )
 {
 	char* expanded;
-	char  archivename[ 1024 ];
+	char  archivename[1024];
 
 	expanded = ExpandPath( path );
 
@@ -356,11 +356,11 @@ void Q_getwd( char* out )
 	strcat( out, "/" );
 #endif
 
-	while( out[ i ] != 0 )
+	while( out[i] != 0 )
 	{
-		if( out[ i ] == '\\' )
+		if( out[i] == '\\' )
 		{
-			out[ i ] = '/';
+			out[i] = '/';
 		}
 		i++;
 	}
@@ -416,8 +416,8 @@ char* Com_Parse( char* data )
 	int c;
 	int len;
 
-	len            = 0;
-	com_token[ 0 ] = 0;
+	len			 = 0;
+	com_token[0] = 0;
 
 	if( !data )
 	{
@@ -437,7 +437,7 @@ skipwhite:
 	}
 
 	// skip // comments
-	if( c == '/' && data[ 1 ] == '/' )
+	if( c == '/' && data[1] == '/' )
 	{
 		while( *data && *data != '\n' )
 		{
@@ -455,10 +455,10 @@ skipwhite:
 			c = *data++;
 			if( c == '\"' )
 			{
-				com_token[ len ] = 0;
+				com_token[len] = 0;
 				return data;
 			}
-			com_token[ len ] = c;
+			com_token[len] = c;
 			len++;
 		} while( 1 );
 	}
@@ -466,16 +466,16 @@ skipwhite:
 	// parse single characters
 	if( c == '{' || c == '}' || c == ')' || c == '(' || c == '\'' || c == ':' )
 	{
-		com_token[ len ] = c;
+		com_token[len] = c;
 		len++;
-		com_token[ len ] = 0;
+		com_token[len] = 0;
 		return data + 1;
 	}
 
 	// parse a regular word
 	do
 	{
-		com_token[ len ] = c;
+		com_token[len] = c;
 		data++;
 		len++;
 		c = *data;
@@ -485,7 +485,7 @@ skipwhite:
 		}
 	} while( c > 32 );
 
-	com_token[ len ] = 0;
+	com_token[len] = 0;
 	return data;
 }
 
@@ -551,7 +551,7 @@ void Q_strncpyz( char* dest, const char* src, int destsize )
 	}
 
 	strncpy( dest, src, destsize - 1 );
-	dest[ destsize - 1 ] = 0;
+	dest[destsize - 1] = 0;
 }
 
 // never goes past bounds or leaves without a terminating 0
@@ -608,12 +608,12 @@ FIXME: make this buffer size safe someday
 */
 char* va( char* format, ... )
 {
-	va_list     argptr;
-	static char string[ 2 ][ 32000 ]; // in case va is called by nested functions
-	static int  index = 0;
-	char*       buf;
+	va_list		argptr;
+	static char string[2][32000]; // in case va is called by nested functions
+	static int	index = 0;
+	char*		buf;
 
-	buf = string[ index & 1 ];
+	buf = string[index & 1];
 	index++;
 
 	va_start( argptr, format );
@@ -645,7 +645,7 @@ int CheckParm( const char* check )
 
 	for( i = 1; i < myargc; i++ )
 	{
-		if( !Q_stricmp( check, myargv[ i ] ) )
+		if( !Q_stricmp( check, myargv[i] ) )
 		{
 			return i;
 		}
@@ -742,13 +742,13 @@ LoadFile
 int LoadFile( const char* filename, void** bufferptr )
 {
 	FILE* f;
-	int   length;
+	int	  length;
 	void* buffer;
 
-	f                             = SafeOpenRead( filename );
-	length                        = Q_filelength( f );
-	buffer                        = safe_malloc( length + 1 );
-	( ( char* )buffer )[ length ] = 0;
+	f							= SafeOpenRead( filename );
+	length						= Q_filelength( f );
+	buffer						= safe_malloc( length + 1 );
+	( ( char* )buffer )[length] = 0;
 	SafeRead( f, buffer, length );
 	fclose( f );
 
@@ -767,13 +767,13 @@ rounds up memory allocation to 4K boundry
 int LoadFileBlock( const char* filename, void** bufferptr )
 {
 	FILE* f;
-	int   length, nBlock, nAllocSize;
+	int	  length, nBlock, nAllocSize;
 	void* buffer;
 
-	f          = SafeOpenRead( filename );
-	length     = Q_filelength( f );
+	f		   = SafeOpenRead( filename );
+	length	   = Q_filelength( f );
 	nAllocSize = length;
-	nBlock     = nAllocSize % MEM_BLOCKSIZE;
+	nBlock	   = nAllocSize % MEM_BLOCKSIZE;
 	if( nBlock > 0 )
 	{
 		nAllocSize += MEM_BLOCKSIZE - nBlock;
@@ -797,7 +797,7 @@ Allows failure
 int TryLoadFile( const char* filename, void** bufferptr )
 {
 	FILE* f;
-	int   length;
+	int	  length;
 	void* buffer;
 
 	*bufferptr = NULL;
@@ -807,9 +807,9 @@ int TryLoadFile( const char* filename, void** bufferptr )
 	{
 		return -1;
 	}
-	length                        = Q_filelength( f );
-	buffer                        = safe_malloc( length + 1 );
-	( ( char* )buffer )[ length ] = 0;
+	length						= Q_filelength( f );
+	buffer						= safe_malloc( length + 1 );
+	( ( char* )buffer )[length] = 0;
 	SafeRead( f, buffer, length );
 	fclose( f );
 
@@ -855,9 +855,9 @@ void DefaultExtension( char* path, const char* extension )
 
 void DefaultPath( char* path, const char* basepath )
 {
-	char temp[ 128 ];
+	char temp[128];
 
-	if( path[ 0 ] == '/' || path[ 0 ] == '\\' )
+	if( path[0] == '/' || path[0] == '\\' )
 	{
 		return; // absolute path location
 	}
@@ -871,11 +871,11 @@ void StripFilename( char* path )
 	int length;
 
 	length = strlen( path ) - 1;
-	while( length > 0 && path[ length ] != '/' && path[ length ] != '\\' )
+	while( length > 0 && path[length] != '/' && path[length] != '\\' )
 	{
 		length--;
 	}
-	path[ length ] = 0;
+	path[length] = 0;
 }
 
 void StripExtension( char* path )
@@ -883,17 +883,17 @@ void StripExtension( char* path )
 	int length;
 
 	length = strlen( path ) - 1;
-	while( length > 0 && path[ length ] != '.' )
+	while( length > 0 && path[length] != '.' )
 	{
 		length--;
-		if( path[ length ] == '/' || path[ length ] == '\\' )
+		if( path[length] == '/' || path[length] == '\\' )
 		{
 			return; // no extension
 		}
 	}
 	if( length )
 	{
-		path[ length ] = 0;
+		path[length] = 0;
 	}
 }
 
@@ -919,7 +919,7 @@ void ExtractFilePath( const char* path, char* dest )
 	}
 
 	memcpy( dest, path, src - path );
-	dest[ src - path ] = 0;
+	dest[src - path] = 0;
 }
 
 void ExtractFileBase( const char* path, char* dest )
@@ -973,7 +973,7 @@ ParseNum / ParseHex
 int ParseHex( const char* hex )
 {
 	const char* str;
-	int         num;
+	int			num;
 
 	num = 0;
 	str = hex;
@@ -1005,11 +1005,11 @@ int ParseHex( const char* hex )
 
 int ParseNum( const char* str )
 {
-	if( str[ 0 ] == '$' )
+	if( str[0] == '$' )
 	{
 		return ParseHex( str + 1 );
 	}
-	if( str[ 0 ] == '0' && str[ 1 ] == 'x' )
+	if( str[0] == '0' && str[1] == 'x' )
 	{
 		return ParseHex( str + 2 );
 	}
@@ -1066,15 +1066,15 @@ float LittleFloat( float l )
 {
 	union
 	{
-		byte  b[ 4 ];
+		byte  b[4];
 		float f;
 	} in, out;
 
-	in.f       = l;
-	out.b[ 0 ] = in.b[ 3 ];
-	out.b[ 1 ] = in.b[ 2 ];
-	out.b[ 2 ] = in.b[ 1 ];
-	out.b[ 3 ] = in.b[ 0 ];
+	in.f	 = l;
+	out.b[0] = in.b[3];
+	out.b[1] = in.b[2];
+	out.b[2] = in.b[1];
+	out.b[3] = in.b[0];
 
 	return out.f;
 }
@@ -1122,15 +1122,15 @@ float BigFloat( float l )
 {
 	union
 	{
-		byte  b[ 4 ];
+		byte  b[4];
 		float f;
 	} in, out;
 
-	in.f       = l;
-	out.b[ 0 ] = in.b[ 3 ];
-	out.b[ 1 ] = in.b[ 2 ];
-	out.b[ 2 ] = in.b[ 1 ];
-	out.b[ 3 ] = in.b[ 0 ];
+	in.f	 = l;
+	out.b[0] = in.b[3];
+	out.b[1] = in.b[2];
+	out.b[2] = in.b[1];
+	out.b[3] = in.b[0];
 
 	return out.f;
 }
@@ -1153,18 +1153,271 @@ float LittleFloat( float l )
 #define CRC_INIT_VALUE 0xffff
 #define CRC_XOR_VALUE  0x0000
 
-static unsigned short crctable[ 256 ] = {
-	0x0000, 0x1021, 0x2042, 0x3063, 0x4084, 0x50a5, 0x60c6, 0x70e7, 0x8108, 0x9129, 0xa14a, 0xb16b, 0xc18c, 0xd1ad, 0xe1ce, 0xf1ef, 0x1231, 0x0210, 0x3273, 0x2252, 0x52b5, 0x4294, 0x72f7, 0x62d6, 0x9339, 0x8318, 0xb37b, 0xa35a, 0xd3bd, 0xc39c, 0xf3ff, 0xe3de, 0x2462, 0x3443, 0x0420, 0x1401, 0x64e6, 0x74c7, 0x44a4, 0x5485, 0xa56a, 0xb54b, 0x8528, 0x9509, 0xe5ee, 0xf5cf, 0xc5ac, 0xd58d, 0x3653, 0x2672, 0x1611, 0x0630, 0x76d7, 0x66f6, 0x5695, 0x46b4, 0xb75b, 0xa77a, 0x9719, 0x8738, 0xf7df, 0xe7fe, 0xd79d, 0xc7bc, 0x48c4, 0x58e5, 0x6886, 0x78a7, 0x0840, 0x1861, 0x2802, 0x3823, 0xc9cc, 0xd9ed, 0xe98e, 0xf9af, 0x8948, 0x9969, 0xa90a, 0xb92b, 0x5af5, 0x4ad4, 0x7ab7, 0x6a96, 0x1a71, 0x0a50, 0x3a33, 0x2a12, 0xdbfd, 0xcbdc, 0xfbbf, 0xeb9e, 0x9b79, 0x8b58, 0xbb3b, 0xab1a, 0x6ca6, 0x7c87, 0x4ce4, 0x5cc5, 0x2c22, 0x3c03, 0x0c60, 0x1c41, 0xedae, 0xfd8f, 0xcdec, 0xddcd, 0xad2a, 0xbd0b, 0x8d68, 0x9d49, 0x7e97, 0x6eb6, 0x5ed5, 0x4ef4, 0x3e13, 0x2e32, 0x1e51, 0x0e70, 0xff9f, 0xefbe, 0xdfdd, 0xcffc, 0xbf1b, 0xaf3a, 0x9f59, 0x8f78, 0x9188, 0x81a9, 0xb1ca, 0xa1eb, 0xd10c, 0xc12d, 0xf14e, 0xe16f, 0x1080, 0x00a1, 0x30c2, 0x20e3, 0x5004, 0x4025, 0x7046, 0x6067, 0x83b9, 0x9398, 0xa3fb, 0xb3da, 0xc33d, 0xd31c, 0xe37f, 0xf35e, 0x02b1, 0x1290, 0x22f3, 0x32d2, 0x4235, 0x5214, 0x6277, 0x7256, 0xb5ea, 0xa5cb, 0x95a8, 0x8589, 0xf56e, 0xe54f, 0xd52c, 0xc50d, 0x34e2, 0x24c3, 0x14a0, 0x0481, 0x7466, 0x6447, 0x5424, 0x4405, 0xa7db, 0xb7fa, 0x8799, 0x97b8, 0xe75f, 0xf77e, 0xc71d, 0xd73c, 0x26d3, 0x36f2, 0x0691, 0x16b0, 0x6657, 0x7676, 0x4615, 0x5634, 0xd94c, 0xc96d, 0xf90e, 0xe92f, 0x99c8, 0x89e9, 0xb98a, 0xa9ab, 0x5844, 0x4865, 0x7806, 0x6827, 0x18c0, 0x08e1, 0x3882, 0x28a3, 0xcb7d, 0xdb5c, 0xeb3f, 0xfb1e, 0x8bf9, 0x9bd8, 0xabbb, 0xbb9a, 0x4a75, 0x5a54, 0x6a37, 0x7a16, 0x0af1, 0x1ad0, 0x2ab3, 0x3a92, 0xfd2e, 0xed0f, 0xdd6c, 0xcd4d, 0xbdaa, 0xad8b, 0x9de8, 0x8dc9, 0x7c26, 0x6c07, 0x5c64, 0x4c45, 0x3ca2, 0x2c83, 0x1ce0, 0x0cc1, 0xef1f, 0xff3e, 0xcf5d, 0xdf7c, 0xaf9b, 0xbfba, 0x8fd9, 0x9ff8, 0x6e17, 0x7e36, 0x4e55, 0x5e74, 0x2e93, 0x3eb2, 0x0ed1, 0x1ef0
-};
+static unsigned short crctable[256] = { 0x0000,
+	0x1021,
+	0x2042,
+	0x3063,
+	0x4084,
+	0x50a5,
+	0x60c6,
+	0x70e7,
+	0x8108,
+	0x9129,
+	0xa14a,
+	0xb16b,
+	0xc18c,
+	0xd1ad,
+	0xe1ce,
+	0xf1ef,
+	0x1231,
+	0x0210,
+	0x3273,
+	0x2252,
+	0x52b5,
+	0x4294,
+	0x72f7,
+	0x62d6,
+	0x9339,
+	0x8318,
+	0xb37b,
+	0xa35a,
+	0xd3bd,
+	0xc39c,
+	0xf3ff,
+	0xe3de,
+	0x2462,
+	0x3443,
+	0x0420,
+	0x1401,
+	0x64e6,
+	0x74c7,
+	0x44a4,
+	0x5485,
+	0xa56a,
+	0xb54b,
+	0x8528,
+	0x9509,
+	0xe5ee,
+	0xf5cf,
+	0xc5ac,
+	0xd58d,
+	0x3653,
+	0x2672,
+	0x1611,
+	0x0630,
+	0x76d7,
+	0x66f6,
+	0x5695,
+	0x46b4,
+	0xb75b,
+	0xa77a,
+	0x9719,
+	0x8738,
+	0xf7df,
+	0xe7fe,
+	0xd79d,
+	0xc7bc,
+	0x48c4,
+	0x58e5,
+	0x6886,
+	0x78a7,
+	0x0840,
+	0x1861,
+	0x2802,
+	0x3823,
+	0xc9cc,
+	0xd9ed,
+	0xe98e,
+	0xf9af,
+	0x8948,
+	0x9969,
+	0xa90a,
+	0xb92b,
+	0x5af5,
+	0x4ad4,
+	0x7ab7,
+	0x6a96,
+	0x1a71,
+	0x0a50,
+	0x3a33,
+	0x2a12,
+	0xdbfd,
+	0xcbdc,
+	0xfbbf,
+	0xeb9e,
+	0x9b79,
+	0x8b58,
+	0xbb3b,
+	0xab1a,
+	0x6ca6,
+	0x7c87,
+	0x4ce4,
+	0x5cc5,
+	0x2c22,
+	0x3c03,
+	0x0c60,
+	0x1c41,
+	0xedae,
+	0xfd8f,
+	0xcdec,
+	0xddcd,
+	0xad2a,
+	0xbd0b,
+	0x8d68,
+	0x9d49,
+	0x7e97,
+	0x6eb6,
+	0x5ed5,
+	0x4ef4,
+	0x3e13,
+	0x2e32,
+	0x1e51,
+	0x0e70,
+	0xff9f,
+	0xefbe,
+	0xdfdd,
+	0xcffc,
+	0xbf1b,
+	0xaf3a,
+	0x9f59,
+	0x8f78,
+	0x9188,
+	0x81a9,
+	0xb1ca,
+	0xa1eb,
+	0xd10c,
+	0xc12d,
+	0xf14e,
+	0xe16f,
+	0x1080,
+	0x00a1,
+	0x30c2,
+	0x20e3,
+	0x5004,
+	0x4025,
+	0x7046,
+	0x6067,
+	0x83b9,
+	0x9398,
+	0xa3fb,
+	0xb3da,
+	0xc33d,
+	0xd31c,
+	0xe37f,
+	0xf35e,
+	0x02b1,
+	0x1290,
+	0x22f3,
+	0x32d2,
+	0x4235,
+	0x5214,
+	0x6277,
+	0x7256,
+	0xb5ea,
+	0xa5cb,
+	0x95a8,
+	0x8589,
+	0xf56e,
+	0xe54f,
+	0xd52c,
+	0xc50d,
+	0x34e2,
+	0x24c3,
+	0x14a0,
+	0x0481,
+	0x7466,
+	0x6447,
+	0x5424,
+	0x4405,
+	0xa7db,
+	0xb7fa,
+	0x8799,
+	0x97b8,
+	0xe75f,
+	0xf77e,
+	0xc71d,
+	0xd73c,
+	0x26d3,
+	0x36f2,
+	0x0691,
+	0x16b0,
+	0x6657,
+	0x7676,
+	0x4615,
+	0x5634,
+	0xd94c,
+	0xc96d,
+	0xf90e,
+	0xe92f,
+	0x99c8,
+	0x89e9,
+	0xb98a,
+	0xa9ab,
+	0x5844,
+	0x4865,
+	0x7806,
+	0x6827,
+	0x18c0,
+	0x08e1,
+	0x3882,
+	0x28a3,
+	0xcb7d,
+	0xdb5c,
+	0xeb3f,
+	0xfb1e,
+	0x8bf9,
+	0x9bd8,
+	0xabbb,
+	0xbb9a,
+	0x4a75,
+	0x5a54,
+	0x6a37,
+	0x7a16,
+	0x0af1,
+	0x1ad0,
+	0x2ab3,
+	0x3a92,
+	0xfd2e,
+	0xed0f,
+	0xdd6c,
+	0xcd4d,
+	0xbdaa,
+	0xad8b,
+	0x9de8,
+	0x8dc9,
+	0x7c26,
+	0x6c07,
+	0x5c64,
+	0x4c45,
+	0x3ca2,
+	0x2c83,
+	0x1ce0,
+	0x0cc1,
+	0xef1f,
+	0xff3e,
+	0xcf5d,
+	0xdf7c,
+	0xaf9b,
+	0xbfba,
+	0x8fd9,
+	0x9ff8,
+	0x6e17,
+	0x7e36,
+	0x4e55,
+	0x5e74,
+	0x2e93,
+	0x3eb2,
+	0x0ed1,
+	0x1ef0 };
 
-void CRC_Init( unsigned short* crcvalue )
+void				  CRC_Init( unsigned short* crcvalue )
 {
 	*crcvalue = CRC_INIT_VALUE;
 }
 
 void CRC_ProcessByte( unsigned short* crcvalue, byte data )
 {
-	*crcvalue = ( *crcvalue << 8 ) ^ crctable[ ( *crcvalue >> 8 ) ^ data ];
+	*crcvalue = ( *crcvalue << 8 ) ^ crctable[( *crcvalue >> 8 ) ^ data];
 }
 
 unsigned short CRC_Value( unsigned short crcvalue )
@@ -1182,20 +1435,20 @@ CreatePath
 void CreatePath( const char* path )
 {
 	const char* ofs;
-	char        c;
-	char        dir[ 1024 ];
+	char		c;
+	char		dir[1024];
 
 #ifdef _WIN32
 	int olddrive = -1;
 
-	if( path[ 1 ] == ':' )
+	if( path[1] == ':' )
 	{
 		olddrive = _getdrive();
-		_chdrive( toupper( path[ 0 ] ) - 'A' + 1 );
+		_chdrive( toupper( path[0] ) - 'A' + 1 );
 	}
 #endif
 
-	if( path[ 1 ] == ':' )
+	if( path[1] == ':' )
 	{
 		path += 2;
 	}
@@ -1207,7 +1460,7 @@ void CreatePath( const char* path )
 		{
 			// create the directory
 			memcpy( dir, path, ofs - path );
-			dir[ ofs - path ] = 0;
+			dir[ofs - path] = 0;
 			Q_mkdir( dir );
 		}
 	}
@@ -1230,7 +1483,7 @@ QCopyFile
 void QCopyFile( const char* from, const char* to )
 {
 	void* buffer;
-	int   length;
+	int	  length;
 
 	length = LoadFile( from, &buffer );
 	CreatePath( to );

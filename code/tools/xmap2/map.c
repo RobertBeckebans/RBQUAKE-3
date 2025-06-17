@@ -38,7 +38,7 @@ several games based on the Quake III Arena engine, in the form of "Q3Map2."
 #define USE_HASHING
 #define PLANE_HASHES 8192
 
-int planehash[ PLANE_HASHES ];
+int planehash[PLANE_HASHES];
 
 int c_boxbevels;
 int c_edgebevels;
@@ -64,8 +64,7 @@ qboolean PlaneEqual( plane_t* p, vec3_t normal, vec_t dist )
 	de = distanceEpsilon;
 
 	/* compare */
-	if( fabs( p->dist - dist ) <= de &&
-		fabs( p->normal[ 0 ] - normal[ 0 ] ) <= ne && fabs( p->normal[ 1 ] - normal[ 1 ] ) <= ne && fabs( p->normal[ 2 ] - normal[ 2 ] ) <= ne )
+	if( fabs( p->dist - dist ) <= de && fabs( p->normal[0] - normal[0] ) <= ne && fabs( p->normal[1] - normal[1] ) <= ne && fabs( p->normal[2] - normal[2] ) <= ne )
 	{
 		return qtrue;
 	}
@@ -84,8 +83,8 @@ void AddPlaneToHash( plane_t* p )
 
 	hash = ( PLANE_HASHES - 1 ) & ( int )fabs( p->dist );
 
-	p->hash_chain     = planehash[ hash ];
-	planehash[ hash ] = p - mapplanes + 1;
+	p->hash_chain	= planehash[hash];
+	planehash[hash] = p - mapplanes + 1;
 }
 
 /*
@@ -106,7 +105,7 @@ int CreateNewFloatPlane( vec3_t normal, vec_t dist )
 	// create a new plane
 	AUTOEXPAND_BY_REALLOC( mapplanes, nummapplanes + 1, allocatedmapplanes, 1024 );
 
-	p = &mapplanes[ nummapplanes ];
+	p = &mapplanes[nummapplanes];
 	VectorCopy( normal, p->normal );
 	p->dist = dist;
 	p->type = ( p + 1 )->type = PlaneTypeForNormal( p->normal );
@@ -119,11 +118,11 @@ int CreateNewFloatPlane( vec3_t normal, vec_t dist )
 	// allways put axial planes facing positive first
 	if( p->type < 3 )
 	{
-		if( p->normal[ 0 ] < 0 || p->normal[ 1 ] < 0 || p->normal[ 2 ] < 0 )
+		if( p->normal[0] < 0 || p->normal[1] < 0 || p->normal[2] < 0 )
 		{
 			// flip order
-			temp       = *p;
-			*p         = *( p + 1 );
+			temp	   = *p;
+			*p		   = *( p + 1 );
 			*( p + 1 ) = temp;
 
 			AddPlaneToHash( p );
@@ -148,16 +147,16 @@ void SnapNormal( vec3_t normal )
 
 	for( i = 0; i < 3; i++ )
 	{
-		if( fabs( normal[ i ] - 1 ) < normalEpsilon )
+		if( fabs( normal[i] - 1 ) < normalEpsilon )
 		{
 			VectorClear( normal );
-			normal[ i ] = 1;
+			normal[i] = 1;
 			break;
 		}
-		if( fabs( normal[ i ] - -1 ) < normalEpsilon )
+		if( fabs( normal[i] - -1 ) < normalEpsilon )
 		{
 			VectorClear( normal );
-			normal[ i ] = -1;
+			normal[i] = -1;
 			break;
 		}
 	}
@@ -204,16 +203,16 @@ must be within an epsilon distance of the plane
 int FindFloatPlane( vec3_t innormal, vec_t dist, int numPoints, vec3_t* points )
 #ifdef USE_HASHING
 {
-	int      i, j, hash, h;
-	int      pidx;
+	int		 i, j, hash, h;
+	int		 pidx;
 	plane_t* p;
-	vec_t    d;
-	vec3_t   centerofweight;
-	vec3_t   normal;
+	vec_t	 d;
+	vec3_t	 centerofweight;
+	vec3_t	 normal;
 
 	VectorClear( centerofweight );
 	for( i = 0; i < numPoints; ++i )
-		VectorMA( centerofweight, 1.0 / numPoints, points[ i ], centerofweight );
+		VectorMA( centerofweight, 1.0 / numPoints, points[i], centerofweight );
 
 	/* hash the plane */
 	VectorCopy( innormal, normal );
@@ -224,9 +223,9 @@ int FindFloatPlane( vec3_t innormal, vec_t dist, int numPoints, vec3_t* points )
 	for( i = -1; i <= 1; i++ )
 	{
 		h = ( hash + i ) & ( PLANE_HASHES - 1 );
-		for( pidx = planehash[ h ] - 1; pidx != -1; pidx = mapplanes[ pidx ].hash_chain - 1 )
+		for( pidx = planehash[h] - 1; pidx != -1; pidx = mapplanes[pidx].hash_chain - 1 )
 		{
-			p = &mapplanes[ pidx ];
+			p = &mapplanes[pidx];
 
 			/* do standard plane compare */
 			if( !PlaneEqual( p, normal, dist ) )
@@ -238,7 +237,7 @@ int FindFloatPlane( vec3_t innormal, vec_t dist, int numPoints, vec3_t* points )
 			/* ydnar: test supplied points against this plane */
 			for( j = 0; j < numPoints; j++ )
 			{
-				d = DotProduct( points[ j ], normal ) - dist;
+				d = DotProduct( points[j], normal ) - dist;
 				if( fabs( d ) > distanceEpsilon )
 					break;
 			}
@@ -255,15 +254,15 @@ int FindFloatPlane( vec3_t innormal, vec_t dist, int numPoints, vec3_t* points )
 
 #else
 {
-	int      i;
+	int		 i;
 	plane_t* p;
-	vec3_t   normal;
+	vec3_t	 normal;
 
-	vec3_t centerofweight;
+	vec3_t	 centerofweight;
 
 	VectorClear( centerofweight );
 	for( i = 0; i < numPoints; ++i )
-		VectorMA( centerofweight, 1.0 / numPoints, points[ i ], centerofweight );
+		VectorMA( centerofweight, 1.0 / numPoints, points[i], centerofweight );
 
 	VectorCopy( innormal, normal );
 	SnapPlane( normal, &dist, centerofweight );
@@ -290,13 +289,13 @@ int MapPlaneFromPoints( vec3_t* p )
 	vec_t  dist;
 
 	/* calc plane normal */
-	VectorSubtract( p[ 0 ], p[ 1 ], t1 );
-	VectorSubtract( p[ 2 ], p[ 1 ], t2 );
+	VectorSubtract( p[0], p[1], t1 );
+	VectorSubtract( p[2], p[1], t2 );
 	CrossProduct( t1, t2, normal );
 	VectorNormalize( normal );
 
 	/* calc plane distance */
-	dist = DotProduct( p[ 0 ], normal );
+	dist = DotProduct( p[0], normal );
 
 	/* store the plane */
 	return FindFloatPlane( normal, dist, 3, p );
@@ -308,13 +307,13 @@ int MapPlaneFromEquation( vec4_t plane )
 	vec_t  dist;
 	vec_t  mag;
 
-	dist = -plane[ 3 ];
+	dist = -plane[3];
 
 	mag = VectorNormalize2( plane, normal );
 
 	if( mag )
 	{
-		plane[ 3 ] /= mag;
+		plane[3] /= mag;
 	}
 
 	SnapPlane( normal, &dist, NULL );
@@ -358,25 +357,25 @@ the content flags and compile flags on all sides of a brush should be the same
 
 void SetBrushContents( brush_t* b )
 {
-	int      contentFlags, compileFlags;
-	side_t*  s;
-	int      i;
+	int		 contentFlags, compileFlags;
+	side_t*	 s;
+	int		 i;
 	qboolean mixed;
 
 	/* Tr3B: sort brush sides because Doom 3 visportals don't need to be on the first brush side */
-	qsort( b->sides, b->numsides, sizeof( b->sides[ 0 ] ), CompareBrushSides );
+	qsort( b->sides, b->numsides, sizeof( b->sides[0] ), CompareBrushSides );
 
 	/* get initial compile flags from first side */
-	s                = &b->sides[ 0 ];
-	contentFlags     = s->contentFlags;
-	compileFlags     = s->compileFlags;
+	s				 = &b->sides[0];
+	contentFlags	 = s->contentFlags;
+	compileFlags	 = s->compileFlags;
 	b->contentShader = s->shaderInfo;
-	mixed            = qfalse;
+	mixed			 = qfalse;
 
 	/* get the content/compile flags for every side in the brush */
 	for( i = 1; i < b->numsides; i++, s++ )
 	{
-		s = &b->sides[ i ];
+		s = &b->sides[i];
 		if( s->shaderInfo == NULL )
 		{
 			continue;
@@ -460,15 +459,15 @@ ydnar 2003-01-20: added mrelusive fixes
 
 void AddBrushBevels( void )
 {
-	int        axis, dir;
-	int        i, j, k, l, order;
-	side_t     sidetemp;
+	int		   axis, dir;
+	int		   i, j, k, l, order;
+	side_t	   sidetemp;
 	side_t *   s, *s2;
 	winding_t *w, *w2;
-	vec3_t     normal;
-	float      dist;
-	vec3_t     vec, vec2;
-	float      d, minBack;
+	vec3_t	   normal;
+	float	   dist;
+	vec3_t	   vec, vec2;
+	float	   d, minBack;
 
 	//
 	// add the axial planes
@@ -498,8 +497,7 @@ void AddBrushBevels( void )
 					}
 				}
 #else
-				if( ( dir > 0 && mapplanes[ s->planenum ].normal[ axis ] == 1.0f ) ||
-					( dir < 0 && mapplanes[ s->planenum ].normal[ axis ] == -1.0f ) )
+				if( ( dir > 0 && mapplanes[s->planenum].normal[axis] == 1.0f ) || ( dir < 0 && mapplanes[s->planenum].normal[axis] == -1.0f ) )
 				{
 					break;
 				}
@@ -520,18 +518,18 @@ void AddBrushBevels( void )
 				memset( s, 0, sizeof( *s ) );
 				buildBrush->numsides++;
 				VectorClear( normal );
-				normal[ axis ] = dir;
+				normal[axis] = dir;
 
 				if( dir == 1 )
 				{
 					/* ydnar: adding bevel plane snapping for fewer bsp planes */
 					if( bevelSnap > 0 )
 					{
-						dist = floor( buildBrush->maxs[ axis ] / bevelSnap ) * bevelSnap;
+						dist = floor( buildBrush->maxs[axis] / bevelSnap ) * bevelSnap;
 					}
 					else
 					{
-						dist = buildBrush->maxs[ axis ];
+						dist = buildBrush->maxs[axis];
 					}
 				}
 				else
@@ -539,26 +537,26 @@ void AddBrushBevels( void )
 					/* ydnar: adding bevel plane snapping for fewer bsp planes */
 					if( bevelSnap > 0 )
 					{
-						dist = -ceil( buildBrush->mins[ axis ] / bevelSnap ) * bevelSnap;
+						dist = -ceil( buildBrush->mins[axis] / bevelSnap ) * bevelSnap;
 					}
 					else
 					{
-						dist = -buildBrush->mins[ axis ];
+						dist = -buildBrush->mins[axis];
 					}
 				}
 
-				s->planenum     = FindFloatPlane( normal, dist, 0, NULL );
-				s->contentFlags = buildBrush->sides[ 0 ].contentFlags;
-				s->bevel        = qtrue;
+				s->planenum		= FindFloatPlane( normal, dist, 0, NULL );
+				s->contentFlags = buildBrush->sides[0].contentFlags;
+				s->bevel		= qtrue;
 				c_boxbevels++;
 			}
 
 			// if the plane is not in it canonical order, swap it
 			if( i != order )
 			{
-				sidetemp                   = buildBrush->sides[ order ];
-				buildBrush->sides[ order ] = buildBrush->sides[ i ];
-				buildBrush->sides[ i ]     = sidetemp;
+				sidetemp				 = buildBrush->sides[order];
+				buildBrush->sides[order] = buildBrush->sides[i];
+				buildBrush->sides[i]	 = sidetemp;
 			}
 		}
 	}
@@ -583,7 +581,7 @@ void AddBrushBevels( void )
 		for( j = 0; j < w->numpoints; j++ )
 		{
 			k = ( j + 1 ) % w->numpoints;
-			VectorSubtract( w->p[ j ], w->p[ k ], vec );
+			VectorSubtract( w->p[j], w->p[k], vec );
 			if( VectorNormalize( vec ) < 0.5f )
 			{
 				continue;
@@ -591,7 +589,7 @@ void AddBrushBevels( void )
 			SnapNormal( vec );
 			for( k = 0; k < 3; k++ )
 			{
-				if( vec[ k ] == -1.0f || vec[ k ] == 1.0f || ( vec[ k ] == 0.0f && vec[ ( k + 1 ) % 3 ] == 0.0f ) )
+				if( vec[k] == -1.0f || vec[k] == 1.0f || ( vec[k] == 0.0f && vec[( k + 1 ) % 3] == 0.0f ) )
 				{
 					break; // axial
 				}
@@ -611,25 +609,25 @@ void AddBrushBevels( void )
 				{
 					// construct a plane
 					VectorClear( vec2 );
-					vec2[ axis ] = dir;
+					vec2[axis] = dir;
 					CrossProduct( vec, vec2, normal );
 					if( VectorNormalize( normal ) < 0.5f )
 					{
 						continue;
 					}
-					dist = DotProduct( w->p[ j ], normal );
+					dist = DotProduct( w->p[j], normal );
 
 					// if all the points on all the sides are
 					// behind this plane, it is a proper edge bevel
 					for( k = 0; k < buildBrush->numsides; k++ )
 					{
 						// if this plane has allready been used, skip it
-						if( PlaneEqual( &mapplanes[ buildBrush->sides[ k ].planenum ], normal, dist ) )
+						if( PlaneEqual( &mapplanes[buildBrush->sides[k].planenum], normal, dist ) )
 						{
 							break;
 						}
 
-						w2 = buildBrush->sides[ k ].winding;
+						w2 = buildBrush->sides[k].winding;
 						if( !w2 )
 						{
 							continue;
@@ -637,7 +635,7 @@ void AddBrushBevels( void )
 						minBack = 0.0f;
 						for( l = 0; l < w2->numpoints; l++ )
 						{
-							d = DotProduct( w2->p[ l ], normal ) - dist;
+							d = DotProduct( w2->p[l], normal ) - dist;
 							if( d > 0.1f )
 							{
 								break; // point in front
@@ -678,13 +676,13 @@ void AddBrushBevels( void )
 						Sys_Printf( "Entity %i, Brush %i: MAX_BUILD_SIDES\n", buildBrush->entityNum, buildBrush->brushNum );
 #endif
 					}
-					s2 = &buildBrush->sides[ buildBrush->numsides ];
+					s2 = &buildBrush->sides[buildBrush->numsides];
 					buildBrush->numsides++;
 					memset( s2, 0, sizeof( *s2 ) );
 
-					s2->planenum     = FindFloatPlane( normal, dist, 1, &w->p[ j ] );
-					s2->contentFlags = buildBrush->sides[ 0 ].contentFlags;
-					s2->bevel        = qtrue;
+					s2->planenum	 = FindFloatPlane( normal, dist, 1, &w->p[j] );
+					s2->contentFlags = buildBrush->sides[0].contentFlags;
+					s2->bevel		 = qtrue;
 					c_edgebevels++;
 				}
 			}
@@ -701,7 +699,7 @@ and links it to the current entity
 static void MergeOrigin( entity_t* ent, vec3_t origin )
 {
 	vec3_t adjustment;
-	char   string[ 128 ];
+	char   string[128];
 
 	/* we have not parsed the brush completely yet... */
 	GetVectorForKey( ent, "origin", ent->origin );
@@ -710,7 +708,7 @@ static void MergeOrigin( entity_t* ent, vec3_t origin )
 	VectorAdd( adjustment, ent->origin, ent->origin );
 	VectorCopy( origin, ent->originbrush_origin );
 
-	sprintf( string, "%f %f %f", ent->origin[ 0 ], ent->origin[ 1 ], ent->origin[ 2 ] );
+	sprintf( string, "%f %f %f", ent->origin[0], ent->origin[1], ent->origin[2] );
 	SetKeyValue( ent, "origin", string );
 }
 
@@ -741,7 +739,7 @@ brush_t* FinishBrush( void )
 		VectorAdd( buildBrush->mins, buildBrush->maxs, origin );
 		VectorScale( origin, 0.5, origin );
 
-		MergeOrigin( &entities[ numEntities - 1 ], origin );
+		MergeOrigin( &entities[numEntities - 1], origin );
 
 		/* don't keep this brush */
 		return NULL;
@@ -768,7 +766,7 @@ brush_t* FinishBrush( void )
 
 	/* set map entity and brush numbering */
 	b->entityNum = mapEnt->mapEntityNum;
-	b->brushNum  = entitySourceBrushes;
+	b->brushNum	 = entitySourceBrushes;
 
 	/* set original */
 	b->original = b;
@@ -776,7 +774,7 @@ brush_t* FinishBrush( void )
 	/* link opaque brushes to head of list, translucent brushes to end */
 	if( b->opaque || mapEnt->lastBrush == NULL )
 	{
-		b->next         = mapEnt->brushes;
+		b->next			= mapEnt->brushes;
 		mapEnt->brushes = b;
 		if( mapEnt->lastBrush == NULL )
 		{
@@ -785,26 +783,26 @@ brush_t* FinishBrush( void )
 	}
 	else
 	{
-		b->next                 = NULL;
+		b->next					= NULL;
 		mapEnt->lastBrush->next = b;
-		mapEnt->lastBrush       = b;
+		mapEnt->lastBrush		= b;
 	}
 
 	/* link colorMod volume brushes to the entity directly */
 	if( b->contentShader != NULL && b->contentShader->colorMod != NULL && b->contentShader->colorMod->type == CM_VOLUME )
 	{
-		b->nextColorModBrush    = mapEnt->colorModBrushes;
+		b->nextColorModBrush	= mapEnt->colorModBrushes;
 		mapEnt->colorModBrushes = b;
 	}
 
 	{
 		side_t* s;
-		int     i;
+		int		i;
 
 		/* get the content/compile flags for every side in the brush */
-		for( i = 0, s = &b->sides[ 0 ]; i < b->numsides; i++, s++ )
+		for( i = 0, s = &b->sides[0]; i < b->numsides; i++, s++ )
 		{
-			s = &b->sides[ i ];
+			s = &b->sides[i];
 			if( s->shaderInfo == NULL )
 			{
 				continue;
@@ -822,8 +820,10 @@ determines best orthagonal axis to project a texture onto a wall
 (must be identical in radiant!)
 */
 
-vec3_t baseaxis[ 18 ] = {
-	{ 0, 0, 1 }, { 1, 0, 0 }, { 0, -1, 0 }, // floor
+vec3_t baseaxis[18] = {
+	{ 0, 0, 1 },
+	{ 1, 0, 0 },
+	{ 0, -1, 0 }, // floor
 	{ 0, 0, -1 },
 	{ 1, 0, 0 },
 	{ 0, -1, 0 }, // ceiling
@@ -843,25 +843,25 @@ vec3_t baseaxis[ 18 ] = {
 
 void TextureAxisFromPlane( plane_t* pln, vec3_t xv, vec3_t yv )
 {
-	int   bestaxis;
+	int	  bestaxis;
 	vec_t dot, best;
-	int   i;
+	int	  i;
 
-	best     = 0;
+	best	 = 0;
 	bestaxis = 0;
 
 	for( i = 0; i < 6; i++ )
 	{
-		dot = DotProduct( pln->normal, baseaxis[ i * 3 ] );
+		dot = DotProduct( pln->normal, baseaxis[i * 3] );
 		if( dot > best + 0.0001f ) /* ydnar: bug 637 fix, suggested by jmonroe */
 		{
-			best     = dot;
+			best	 = dot;
 			bestaxis = i;
 		}
 	}
 
-	VectorCopy( baseaxis[ bestaxis * 3 + 1 ], xv );
-	VectorCopy( baseaxis[ bestaxis * 3 + 2 ], yv );
+	VectorCopy( baseaxis[bestaxis * 3 + 1], xv );
+	VectorCopy( baseaxis[bestaxis * 3 + 2], yv );
 }
 
 /*
@@ -869,23 +869,23 @@ QuakeTextureVecs()
 creates world-to-texture mapping vecs for crappy quake plane arrangements
 */
 
-void QuakeTextureVecs( plane_t* plane, vec_t shift[ 2 ], vec_t rotate, vec_t scale[ 2 ], vec_t mappingVecs[ 2 ][ 4 ] )
+void QuakeTextureVecs( plane_t* plane, vec_t shift[2], vec_t rotate, vec_t scale[2], vec_t mappingVecs[2][4] )
 {
-	vec3_t vecs[ 2 ];
-	int    sv, tv;
+	vec3_t vecs[2];
+	int	   sv, tv;
 	vec_t  ang, sinv, cosv;
 	vec_t  ns, nt;
-	int    i, j;
+	int	   i, j;
 
-	TextureAxisFromPlane( plane, vecs[ 0 ], vecs[ 1 ] );
+	TextureAxisFromPlane( plane, vecs[0], vecs[1] );
 
-	if( !scale[ 0 ] )
+	if( !scale[0] )
 	{
-		scale[ 0 ] = 1;
+		scale[0] = 1;
 	}
-	if( !scale[ 1 ] )
+	if( !scale[1] )
 	{
-		scale[ 1 ] = 1;
+		scale[1] = 1;
 	}
 
 	// rotate axis
@@ -911,16 +911,16 @@ void QuakeTextureVecs( plane_t* plane, vec_t shift[ 2 ], vec_t rotate, vec_t sca
 	}
 	else
 	{
-		ang  = rotate / 180 * Q_PI;
+		ang	 = rotate / 180 * Q_PI;
 		sinv = sin( ang );
 		cosv = cos( ang );
 	}
 
-	if( vecs[ 0 ][ 0 ] )
+	if( vecs[0][0] )
 	{
 		sv = 0;
 	}
-	else if( vecs[ 0 ][ 1 ] )
+	else if( vecs[0][1] )
 	{
 		sv = 1;
 	}
@@ -929,11 +929,11 @@ void QuakeTextureVecs( plane_t* plane, vec_t shift[ 2 ], vec_t rotate, vec_t sca
 		sv = 2;
 	}
 
-	if( vecs[ 1 ][ 0 ] )
+	if( vecs[1][0] )
 	{
 		tv = 0;
 	}
-	else if( vecs[ 1 ][ 1 ] )
+	else if( vecs[1][1] )
 	{
 		tv = 1;
 	}
@@ -944,20 +944,20 @@ void QuakeTextureVecs( plane_t* plane, vec_t shift[ 2 ], vec_t rotate, vec_t sca
 
 	for( i = 0; i < 2; i++ )
 	{
-		ns              = cosv * vecs[ i ][ sv ] - sinv * vecs[ i ][ tv ];
-		nt              = sinv * vecs[ i ][ sv ] + cosv * vecs[ i ][ tv ];
-		vecs[ i ][ sv ] = ns;
-		vecs[ i ][ tv ] = nt;
+		ns			= cosv * vecs[i][sv] - sinv * vecs[i][tv];
+		nt			= sinv * vecs[i][sv] + cosv * vecs[i][tv];
+		vecs[i][sv] = ns;
+		vecs[i][tv] = nt;
 	}
 
 	for( i = 0; i < 2; i++ )
 		for( j = 0; j < 3; j++ )
 		{
-			mappingVecs[ i ][ j ] = vecs[ i ][ j ] / scale[ i ];
+			mappingVecs[i][j] = vecs[i][j] / scale[i];
 		}
 
-	mappingVecs[ 0 ][ 3 ] = shift[ 0 ];
-	mappingVecs[ 1 ][ 3 ] = shift[ 1 ];
+	mappingVecs[0][3] = shift[0];
+	mappingVecs[1][3] = shift[1];
 }
 
 /*
@@ -976,21 +976,21 @@ NOTE: it would be "cleaner" to have seperate functions to parse between old and 
 
 static void ParseRawBrush( qboolean onlyLights )
 {
-	side_t*       side;
-	vec3_t        planePoints[ 3 ];
-	vec4_t        planeEquation;
-	int           planenum;
+	side_t*		  side;
+	vec3_t		  planePoints[3];
+	vec4_t		  planeEquation;
+	int			  planenum;
 	shaderInfo_t* si;
-	vec_t         shift[ 2 ];
-	vec_t         rotate;
-	vec_t         scale[ 2 ];
-	char          name[ MAX_QPATH ];
-	char          shader[ MAX_QPATH ];
-	int           flags;
+	vec_t		  shift[2];
+	vec_t		  rotate;
+	vec_t		  scale[2];
+	char		  name[MAX_QPATH];
+	char		  shader[MAX_QPATH];
+	int			  flags;
 
 	/* initial setup */
 	buildBrush->numsides = 0;
-	buildBrush->detail   = qfalse;
+	buildBrush->detail	 = qfalse;
 
 	/* bp */
 	if( g_bBrushPrimit >= BPRIMIT_NEWBRUSHES )
@@ -1037,7 +1037,7 @@ static void ParseRawBrush( qboolean onlyLights )
 #endif
 
 		/* add side */
-		side = &buildBrush->sides[ buildBrush->numsides ];
+		side = &buildBrush->sides[buildBrush->numsides];
 		memset( side, 0, sizeof( *side ) );
 		buildBrush->numsides++;
 
@@ -1049,9 +1049,9 @@ static void ParseRawBrush( qboolean onlyLights )
 		else
 		{
 			/* read the three point plane definition */
-			Parse1DMatrix( 3, planePoints[ 0 ] );
-			Parse1DMatrix( 3, planePoints[ 1 ] );
-			Parse1DMatrix( 3, planePoints[ 2 ] );
+			Parse1DMatrix( 3, planePoints[0] );
+			Parse1DMatrix( 3, planePoints[1] );
+			Parse1DMatrix( 3, planePoints[2] );
 		}
 
 		/* bp: read the texture matrix */
@@ -1068,15 +1068,15 @@ static void ParseRawBrush( qboolean onlyLights )
 		if( g_bBrushPrimit == BPRIMIT_OLDBRUSHES )
 		{
 			GetToken( qfalse );
-			shift[ 0 ] = atof( token );
+			shift[0] = atof( token );
 			GetToken( qfalse );
-			shift[ 1 ] = atof( token );
+			shift[1] = atof( token );
 			GetToken( qfalse );
 			rotate = atof( token );
 			GetToken( qfalse );
-			scale[ 0 ] = atof( token );
+			scale[0] = atof( token );
 			GetToken( qfalse );
-			scale[ 1 ] = atof( token );
+			scale[1] = atof( token );
 		}
 
 		/* set default flags and values */
@@ -1091,7 +1091,7 @@ static void ParseRawBrush( qboolean onlyLights )
 
 		if( onlyLights )
 		{
-			si = &shaderInfo[ 0 ];
+			si = &shaderInfo[0];
 		}
 		else
 		{
@@ -1101,13 +1101,13 @@ static void ParseRawBrush( qboolean onlyLights )
 		side->surfaceFlags = si->surfaceFlags;
 		side->contentFlags = si->contentFlags;
 		side->compileFlags = si->compileFlags;
-		side->value        = si->value;
+		side->value		   = si->value;
 
 		/* ydnar: gs mods: bias texture shift */
 		if( si->globalTexture == qfalse )
 		{
-			shift[ 0 ] -= ( floor( shift[ 0 ] / si->shaderWidth ) * si->shaderWidth );
-			shift[ 1 ] -= ( floor( shift[ 1 ] / si->shaderHeight ) * si->shaderHeight );
+			shift[0] -= ( floor( shift[0] / si->shaderWidth ) * si->shaderWidth );
+			shift[1] -= ( floor( shift[1] / si->shaderHeight ) * si->shaderHeight );
 		}
 
 		/*
@@ -1152,7 +1152,7 @@ static void ParseRawBrush( qboolean onlyLights )
 		/* bp: get the texture mapping for this texturedef / plane combination */
 		if( g_bBrushPrimit == BPRIMIT_OLDBRUSHES )
 		{
-			QuakeTextureVecs( &mapplanes[ planenum ], shift, rotate, scale, side->vecs );
+			QuakeTextureVecs( &mapplanes[planenum], shift, rotate, scale, side->vecs );
 		}
 	}
 
@@ -1174,7 +1174,7 @@ also removes planes without any normal
 
 qboolean RemoveDuplicateBrushPlanes( brush_t* b )
 {
-	int     i, j, k;
+	int		i, j, k;
 	side_t* sides;
 
 	sides = b->sides;
@@ -1182,7 +1182,7 @@ qboolean RemoveDuplicateBrushPlanes( brush_t* b )
 	for( i = 1; i < b->numsides; i++ )
 	{
 		// check for a degenerate plane
-		if( sides[ i ].planenum == -1 )
+		if( sides[i].planenum == -1 )
 		{
 #if defined( USE_XML )
 			xml_Select( "degenerate plane", b->entityNum, b->brushNum, qfalse );
@@ -1193,7 +1193,7 @@ qboolean RemoveDuplicateBrushPlanes( brush_t* b )
 			// remove it
 			for( k = i + 1; k < b->numsides; k++ )
 			{
-				sides[ k - 1 ] = sides[ k ];
+				sides[k - 1] = sides[k];
 			}
 			b->numsides--;
 			i--;
@@ -1203,7 +1203,7 @@ qboolean RemoveDuplicateBrushPlanes( brush_t* b )
 		// check for duplication and mirroring
 		for( j = 0; j < i; j++ )
 		{
-			if( sides[ i ].planenum == sides[ j ].planenum )
+			if( sides[i].planenum == sides[j].planenum )
 			{
 #if defined( USE_XML )
 				xml_Select( "duplicate plane", b->entityNum, b->brushNum, qfalse );
@@ -1214,14 +1214,14 @@ qboolean RemoveDuplicateBrushPlanes( brush_t* b )
 				// remove the second duplicate
 				for( k = i + 1; k < b->numsides; k++ )
 				{
-					sides[ k - 1 ] = sides[ k ];
+					sides[k - 1] = sides[k];
 				}
 				b->numsides--;
 				i--;
 				break;
 			}
 
-			if( sides[ i ].planenum == ( sides[ j ].planenum ^ 1 ) )
+			if( sides[i].planenum == ( sides[j].planenum ^ 1 ) )
 			{
 				// mirror plane, brush is invalid
 #if defined( USE_XML )
@@ -1255,10 +1255,10 @@ static void ParseBrush( qboolean onlyLights )
 	}
 
 	/* set some defaults */
-	buildBrush->portalareas[ 0 ] = -1;
-	buildBrush->portalareas[ 1 ] = -1;
-	buildBrush->entityNum        = numMapEntities - 1;
-	buildBrush->brushNum         = entitySourceBrushes;
+	buildBrush->portalareas[0] = -1;
+	buildBrush->portalareas[1] = -1;
+	buildBrush->entityNum	   = numMapEntities - 1;
+	buildBrush->brushNum	   = entitySourceBrushes;
 
 	/* if there are mirrored planes, the entire brush is invalid */
 	if( !RemoveDuplicateBrushPlanes( buildBrush ) )
@@ -1312,20 +1312,20 @@ void MoveBrushesToWorld( entity_t* ent )
 		next = b->next;
 
 		/* link opaque brushes to head of list, translucent brushes to end */
-		if( b->opaque || entities[ 0 ].lastBrush == NULL )
+		if( b->opaque || entities[0].lastBrush == NULL )
 		{
-			b->next               = entities[ 0 ].brushes;
-			entities[ 0 ].brushes = b;
-			if( entities[ 0 ].lastBrush == NULL )
+			b->next				= entities[0].brushes;
+			entities[0].brushes = b;
+			if( entities[0].lastBrush == NULL )
 			{
-				entities[ 0 ].lastBrush = b;
+				entities[0].lastBrush = b;
 			}
 		}
 		else
 		{
-			b->next                       = NULL;
-			entities[ 0 ].lastBrush->next = b;
-			entities[ 0 ].lastBrush       = b;
+			b->next						= NULL;
+			entities[0].lastBrush->next = b;
+			entities[0].lastBrush		= b;
 		}
 	}
 	ent->brushes = NULL;
@@ -1336,8 +1336,8 @@ void MoveBrushesToWorld( entity_t* ent )
 		for( b = ent->colorModBrushes; b->nextColorModBrush != NULL; b = b->nextColorModBrush )
 			;
 
-		b->nextColorModBrush          = entities[ 0 ].colorModBrushes;
-		entities[ 0 ].colorModBrushes = ent->colorModBrushes;
+		b->nextColorModBrush		= entities[0].colorModBrushes;
+		entities[0].colorModBrushes = ent->colorModBrushes;
 
 		ent->colorModBrushes = NULL;
 	}
@@ -1353,8 +1353,8 @@ void MovePatchesToWorld( entity_t* ent )
 		for( pm = ent->patches; pm->next != NULL; pm = pm->next )
 			;
 
-		pm->next              = entities[ 0 ].patches;
-		entities[ 0 ].patches = ent->patches;
+		pm->next			= entities[0].patches;
+		entities[0].patches = ent->patches;
 
 		ent->patches = NULL;
 	}
@@ -1366,9 +1366,9 @@ AdjustBrushesForOrigin()
 
 void AdjustBrushesForOrigin( entity_t* ent, vec3_t origin )
 {
-	int      i;
-	side_t*  s;
-	vec_t    newdist;
+	int		 i;
+	side_t*	 s;
+	vec_t	 newdist;
 	brush_t* b;
 
 	/* walk brush list */
@@ -1378,13 +1378,13 @@ void AdjustBrushesForOrigin( entity_t* ent, vec3_t origin )
 		for( i = 0; i < b->numsides; i++ )
 		{
 			/* get brush side */
-			s = &b->sides[ i ];
+			s = &b->sides[i];
 
 			/* offset side plane */
-			newdist = mapplanes[ s->planenum ].dist - DotProduct( mapplanes[ s->planenum ].normal, origin );
+			newdist = mapplanes[s->planenum].dist - DotProduct( mapplanes[s->planenum].normal, origin );
 
 			/* find a new plane */
-			s->planenum = FindFloatPlane( mapplanes[ s->planenum ].normal, newdist, 0, NULL );
+			s->planenum = FindFloatPlane( mapplanes[s->planenum].normal, newdist, 0, NULL );
 		}
 
 		/* rebuild brush windings (ydnar: just offsetting the winding above should be fine) */
@@ -1398,7 +1398,7 @@ AdjustPatchesForOrigin()
 
 void AdjustPatchesForOrigin( entity_t* ent, vec3_t origin )
 {
-	int          i;
+	int			 i;
 	parseMesh_t* p;
 
 	/* walk patch list */
@@ -1406,7 +1406,7 @@ void AdjustPatchesForOrigin( entity_t* ent, vec3_t origin )
 	{
 		for( i = 0; i < ( p->mesh.width * p->mesh.height ); i++ )
 		{
-			VectorSubtract( p->mesh.verts[ i ].xyz, origin, p->mesh.verts[ i ].xyz );
+			VectorSubtract( p->mesh.verts[i].xyz, origin, p->mesh.verts[i].xyz );
 		}
 	}
 }
@@ -1418,11 +1418,11 @@ finds the bounds of an entity's brushes (necessary for terrain-style generic met
 
 void SetEntityBounds( entity_t* e )
 {
-	int          i;
-	brush_t*     b;
+	int			 i;
+	brush_t*	 b;
 	parseMesh_t* p;
-	vec3_t       mins, maxs;
-	const char*  value;
+	vec3_t		 mins, maxs;
+	const char*	 value;
 
 	/* walk the entity's brushes/patches and determine bounds */
 	ClearBounds( mins, maxs );
@@ -1435,18 +1435,18 @@ void SetEntityBounds( entity_t* e )
 	{
 		for( i = 0; i < ( p->mesh.width * p->mesh.height ); i++ )
 		{
-			AddPointToBounds( p->mesh.verts[ i ].xyz, mins, maxs );
+			AddPointToBounds( p->mesh.verts[i].xyz, mins, maxs );
 		}
 	}
 
 	/* try to find explicit min/max key */
 	value = ValueForKey( e, "min" );
-	if( value[ 0 ] != '\0' )
+	if( value[0] != '\0' )
 	{
 		GetVectorForKey( e, "min", mins );
 	}
 	value = ValueForKey( e, "max" );
-	if( value[ 0 ] != '\0' )
+	if( value[0] != '\0' )
 	{
 		GetVectorForKey( e, "max", maxs );
 	}
@@ -1471,13 +1471,13 @@ based on LoadAlphaMap() from terrain.c, a little more generic
 
 void LoadEntityIndexMap( entity_t* e )
 {
-	int           i, size, numLayers, w, h;
+	int			  i, size, numLayers, w, h;
 	const char *  value, *indexMapFilename, *shader;
-	char          ext[ MAX_QPATH ], offset[ 4096 ], *search, *space;
-	byte*         pixels;
+	char		  ext[MAX_QPATH], offset[4096], *search, *space;
+	byte*		  pixels;
 	unsigned int* pixels32;
-	indexMap_t*   im;
-	brush_t*      b;
+	indexMap_t*	  im;
+	brush_t*	  b;
 	parseMesh_t*  p;
 
 	/* this only works with bmodel ents */
@@ -1488,11 +1488,11 @@ void LoadEntityIndexMap( entity_t* e )
 
 	/* determine if there is an index map (support legacy "alphamap" key as well) */
 	value = ValueForKey( e, "_indexmap" );
-	if( value[ 0 ] == '\0' )
+	if( value[0] == '\0' )
 	{
 		value = ValueForKey( e, "alphamap" );
 	}
-	if( value[ 0 ] == '\0' )
+	if( value[0] == '\0' )
 	{
 		return;
 	}
@@ -1500,11 +1500,11 @@ void LoadEntityIndexMap( entity_t* e )
 
 	/* get number of layers (support legacy "layers" key as well) */
 	value = ValueForKey( e, "_layers" );
-	if( value[ 0 ] == '\0' )
+	if( value[0] == '\0' )
 	{
 		value = ValueForKey( e, "layers" );
 	}
-	if( value[ 0 ] == '\0' )
+	if( value[0] == '\0' )
 	{
 		Sys_Printf( "WARNING: Entity with index/alpha map \"%s\" has missing \"_layers\" or \"layers\" key\n", indexMapFilename );
 		Sys_Printf( "Entity will not be textured properly. Check your keys/values.\n" );
@@ -1520,11 +1520,11 @@ void LoadEntityIndexMap( entity_t* e )
 
 	/* get base shader name (support legacy "shader" key as well) */
 	value = ValueForKey( mapEnt, "_shader" );
-	if( value[ 0 ] == '\0' )
+	if( value[0] == '\0' )
 	{
 		value = ValueForKey( e, "shader" );
 	}
-	if( value[ 0 ] == '\0' )
+	if( value[0] == '\0' )
 	{
 		Sys_Printf( "WARNING: Entity with index/alpha map \"%s\" has missing \"_shader\" or \"shader\" key\n", indexMapFilename );
 		Sys_Printf( "Entity will not be textured properly. Check your keys/values.\n" );
@@ -1549,10 +1549,10 @@ void LoadEntityIndexMap( entity_t* e )
 		pixels = safe_malloc( size );
 		for( i = 0; i < size; i++ )
 		{
-			pixels[ i ] = ( ( pixels32[ i ] & 0xFF ) * numLayers ) / 256;
-			if( pixels[ i ] >= numLayers )
+			pixels[i] = ( ( pixels32[i] & 0xFF ) * numLayers ) / 256;
+			if( pixels[i] >= numLayers )
 			{
-				pixels[ i ] = numLayers - 1;
+				pixels[i] = numLayers - 1;
 			}
 		}
 
@@ -1571,9 +1571,9 @@ void LoadEntityIndexMap( entity_t* e )
 		size = w * h;
 		for( i = 0; i < size; i++ )
 		{
-			if( pixels[ i ] >= numLayers )
+			if( pixels[i] >= numLayers )
 			{
-				pixels[ i ] = numLayers - 1;
+				pixels[i] = numLayers - 1;
 			}
 
 			/* debug code */
@@ -1600,8 +1600,8 @@ void LoadEntityIndexMap( entity_t* e )
 	memset( im, 0, sizeof( *im ) );
 
 	/* set it up */
-	im->w         = w;
-	im->h         = h;
+	im->w		  = w;
+	im->h		  = h;
 	im->numLayers = numLayers;
 	strcpy( im->name, indexMapFilename );
 	strcpy( im->shader, shader );
@@ -1609,11 +1609,11 @@ void LoadEntityIndexMap( entity_t* e )
 
 	/* get height offsets */
 	value = ValueForKey( mapEnt, "_offsets" );
-	if( value[ 0 ] == '\0' )
+	if( value[0] == '\0' )
 	{
 		value = ValueForKey( e, "offsets" );
 	}
-	if( value[ 0 ] != '\0' )
+	if( value[0] != '\0' )
 	{
 		/* value is a space-seperated set of numbers */
 		strcpy( offset, value );
@@ -1627,7 +1627,7 @@ void LoadEntityIndexMap( entity_t* e )
 			{
 				*space = '\0';
 			}
-			im->offsets[ i ] = atof( search );
+			im->offsets[i] = atof( search );
 			if( space == NULL )
 			{
 				break;
@@ -1654,20 +1654,20 @@ parses a single entity out of a map file
 
 static qboolean ParseMapEntity( qboolean onlyLights )
 {
-	int         i;
-	epair_t*    ep;
-	const char* targetname;
-	const char *classname, *value, *name, *model;
-	const char* name2;
-	entity_t*   otherEnt;
-	float       lightmapScale, shadeAngle;
-	int         lightmapSampleSize;
+	int			  i;
+	epair_t*	  ep;
+	const char*	  targetname;
+	const char *  classname, *value, *name, *model;
+	const char*	  name2;
+	entity_t*	  otherEnt;
+	float		  lightmapScale, shadeAngle;
+	int			  lightmapSampleSize;
 	//	char            shader[MAX_QPATH];
 	shaderInfo_t* celShader = NULL;
-	brush_t*      brush;
+	brush_t*	  brush;
 	parseMesh_t*  patch;
-	qboolean      funcGroup;
-	int           castShadows, recvShadows;
+	qboolean	  funcGroup;
+	int			  castShadows, recvShadows;
 
 	/* eof check */
 	if( !GetToken( qtrue ) )
@@ -1706,9 +1706,9 @@ static qboolean ParseMapEntity( qboolean onlyLights )
 		Sys_Printf( "WARNING: ParseEntity: { not found, found %s - last entity was at: <%4.2f, %4.2f, %4.2f>...\n"
 					"Continuing to process map, but resulting BSP may be invalid.\n",
 			token,
-			entities[ numEntities ].origin[ 0 ],
-			entities[ numEntities ].origin[ 1 ],
-			entities[ numEntities ].origin[ 2 ] );
+			entities[numEntities].origin[0],
+			entities[numEntities].origin[1],
+			entities[numEntities].origin[2] );
 		return qfalse;
 	}
 
@@ -1720,7 +1720,7 @@ static qboolean ParseMapEntity( qboolean onlyLights )
 
 	/* setup */
 	entitySourceBrushes = 0;
-	mapEnt              = &entities[ numEntities ];
+	mapEnt				= &entities[numEntities];
 	numEntities++;
 	memset( mapEnt, 0, sizeof( *mapEnt ) );
 
@@ -1809,9 +1809,9 @@ static qboolean ParseMapEntity( qboolean onlyLights )
 			ep = ParseEPair();
 
 			/* ydnar: 2002-07-06 fixed wolf bug with empty epairs */
-			if( ep->key[ 0 ] != '\0' && ep->value[ 0 ] != '\0' )
+			if( ep->key[0] != '\0' && ep->value[0] != '\0' )
 			{
-				ep->next       = mapEnt->epairs;
+				ep->next	   = mapEnt->epairs;
 				mapEnt->epairs = ep;
 			}
 		}
@@ -1819,8 +1819,8 @@ static qboolean ParseMapEntity( qboolean onlyLights )
 
 	/* ydnar: get classname */
 	classname = ValueForKey( mapEnt, "classname" );
-	name      = ValueForKey( mapEnt, "name" );
-	model     = ValueForKey( mapEnt, "model" );
+	name	  = ValueForKey( mapEnt, "name" );
+	model	  = ValueForKey( mapEnt, "model" );
 	GetVectorForKey( mapEnt, "origin", mapEnt->origin );
 
 	/* ydnar: determine if this is a func_group */
@@ -1845,7 +1845,7 @@ static qboolean ParseMapEntity( qboolean onlyLights )
 
 		/* Tr3B: rename targetname to name if necessary */
 		targetname = ValueForKey( mapEnt, "targetname" );
-		if( targetname[ 0 ] )
+		if( targetname[0] )
 		{
 			SetKeyValue( mapEnt, "name", targetname );
 			name = ValueForKey( mapEnt, "name" );
@@ -1853,10 +1853,10 @@ static qboolean ParseMapEntity( qboolean onlyLights )
 		}
 
 		/* Tr3B: check for empty name */
-		if( !name[ 0 ] && numEntities != 1 )
+		if( !name[0] && numEntities != 1 )
 		{
 			name = UniqueEntityName( mapEnt, classname );
-			if( !name[ 0 ] )
+			if( !name[0] )
 			{
 #if defined( USE_XML )
 				xml_Select( "UniqueEntityName failed", mapEnt->mapEntityNum, 0, qtrue );
@@ -1872,7 +1872,7 @@ static qboolean ParseMapEntity( qboolean onlyLights )
 		/* Tr3B: check for bad duplicated names */
 		for( i = 0; i < numEntities; i++ )
 		{
-			otherEnt = &entities[ i ];
+			otherEnt = &entities[i];
 
 			if( mapEnt == otherEnt )
 			{
@@ -1889,7 +1889,7 @@ static qboolean ParseMapEntity( qboolean onlyLights )
 				Sys_Printf( "Entity %i, Brush %i: duplicated entity name\n", mapEnt->mapEntityNum, 0 );
 #endif
 				name = UniqueEntityName( mapEnt, classname );
-				if( !name[ 0 ] )
+				if( !name[0] )
 				{
 #if defined( USE_XML )
 					xml_Select( "UniqueEntityName failed", mapEnt->mapEntityNum, 0, qtrue );
@@ -1905,7 +1905,7 @@ static qboolean ParseMapEntity( qboolean onlyLights )
 		}
 
 		// Tr3B
-		if( !model[ 0 ] && Q_stricmp( "func_static", classname ) && ( mapEnt->brushes || mapEnt->patches ) && numEntities != 1 )
+		if( !model[0] && Q_stricmp( "func_static", classname ) && ( mapEnt->brushes || mapEnt->patches ) && numEntities != 1 )
 		{
 			SetKeyValue( mapEnt, "model", name );
 			model = ValueForKey( mapEnt, "model" );
@@ -1915,56 +1915,67 @@ static qboolean ParseMapEntity( qboolean onlyLights )
 #if 1
 		if( !Q_stricmp( "misc_model", classname ) )
 		{
-			vec_t    temp;
-			vec3_t   angles, scale;
+			vec_t	 temp;
+			vec3_t	 angles, scale;
 			matrix_t rotation, rotationScaled;
 
 			/* get "angle" (yaw) or "angles" (pitch yaw roll) */
 			MatrixIdentity( rotation );
-			angles[ 0 ] = angles[ 1 ] = angles[ 2 ] = 0.0f;
+			angles[0] = angles[1] = angles[2] = 0.0f;
 
 			value = ValueForKey( mapEnt, "angle" );
-			if( value[ 0 ] != '\0' )
+			if( value[0] != '\0' )
 			{
-				angles[ 1 ] = atof( value );
-				MatrixFromAngles( rotation, angles[ PITCH ], angles[ YAW ], angles[ ROLL ] );
+				angles[1] = atof( value );
+				MatrixFromAngles( rotation, angles[PITCH], angles[YAW], angles[ROLL] );
 				RemoveKey( mapEnt, "angle" );
 			}
 
 			value = ValueForKey( mapEnt, "angles" );
-			if( value[ 0 ] != '\0' )
+			if( value[0] != '\0' )
 			{
-				sscanf( value, "%f %f %f", &angles[ 0 ], &angles[ 1 ], &angles[ 2 ] );
-				MatrixFromAngles( rotation, angles[ PITCH ], angles[ YAW ], angles[ ROLL ] );
+				sscanf( value, "%f %f %f", &angles[0], &angles[1], &angles[2] );
+				MatrixFromAngles( rotation, angles[PITCH], angles[YAW], angles[ROLL] );
 				RemoveKey( mapEnt, "angles" );
 			}
 
 			value = ValueForKey( mapEnt, "rotation" );
-			if( value[ 0 ] != '\0' )
+			if( value[0] != '\0' )
 			{
-				sscanf( value, "%f %f %f %f %f %f %f %f %f", &rotation[ 0 ], &rotation[ 1 ], &rotation[ 2 ], &rotation[ 4 ], &rotation[ 5 ], &rotation[ 6 ], &rotation[ 8 ], &rotation[ 9 ], &rotation[ 10 ] );
+				sscanf( value, "%f %f %f %f %f %f %f %f %f", &rotation[0], &rotation[1], &rotation[2], &rotation[4], &rotation[5], &rotation[6], &rotation[8], &rotation[9], &rotation[10] );
 			}
 
 			/* get scale */
 			MatrixCopy( rotation, rotationScaled );
 
-			scale[ 0 ] = scale[ 1 ] = scale[ 2 ] = 1.0f;
-			temp                                 = FloatForKey( mapEnt, "modelscale" );
+			scale[0] = scale[1] = scale[2] = 1.0f;
+			temp						   = FloatForKey( mapEnt, "modelscale" );
 			if( temp != 0.0f )
 			{
-				scale[ 0 ] = scale[ 1 ] = scale[ 2 ] = temp;
+				scale[0] = scale[1] = scale[2] = temp;
 				RemoveKey( mapEnt, "modelscale" );
 			}
 			value = ValueForKey( mapEnt, "modelscale_vec" );
-			if( value[ 0 ] != '\0' )
+			if( value[0] != '\0' )
 			{
-				sscanf( value, "%f %f %f", &scale[ 0 ], &scale[ 1 ], &scale[ 2 ] );
+				sscanf( value, "%f %f %f", &scale[0], &scale[1], &scale[2] );
 				RemoveKey( mapEnt, "modelscale_vec" );
 			}
 
-			MatrixMultiplyScale( rotationScaled, scale[ 0 ], scale[ 1 ], scale[ 2 ] );
+			MatrixMultiplyScale( rotationScaled, scale[0], scale[1], scale[2] );
 
-			SetKeyValue( mapEnt, "rotation", va( "%f %f %f %f %f %f %f %f %f", rotationScaled[ 0 ], rotationScaled[ 1 ], rotationScaled[ 2 ], rotationScaled[ 4 ], rotationScaled[ 5 ], rotationScaled[ 6 ], rotationScaled[ 8 ], rotationScaled[ 9 ], rotationScaled[ 10 ] ) );
+			SetKeyValue( mapEnt,
+				"rotation",
+				va( "%f %f %f %f %f %f %f %f %f",
+					rotationScaled[0],
+					rotationScaled[1],
+					rotationScaled[2],
+					rotationScaled[4],
+					rotationScaled[5],
+					rotationScaled[6],
+					rotationScaled[8],
+					rotationScaled[9],
+					rotationScaled[10] ) );
 		}
 #endif
 
@@ -1973,15 +1984,15 @@ static qboolean ParseMapEntity( qboolean onlyLights )
 		if( numEntities == 1 || funcGroup )
 		{
 			brush_t *b, *prev, *next;
-			GSList*  structuralBrushes = NULL;
-			GSList*  detailBrushes     = NULL;
-			guint    numDetailBrushes;
+			GSList*	 structuralBrushes = NULL;
+			GSList*	 detailBrushes	   = NULL;
+			guint	 numDetailBrushes;
 
 			memset( &convertDetailBrushesEntity, 0, sizeof( convertDetailBrushesEntity ) );
 
 			if( funcGroup )
 			{
-				epair_t*    ep;
+				epair_t*	ep;
 				const char* name;
 
 				// duplicate epairs
@@ -2029,7 +2040,7 @@ static qboolean ParseMapEntity( qboolean onlyLights )
 				// link opaque brushes to head of list, translucent brushes to end
 				if( b->opaque || convertDetailBrushesEntity.lastBrush == NULL )
 				{
-					b->next                            = convertDetailBrushesEntity.brushes;
+					b->next							   = convertDetailBrushesEntity.brushes;
 					convertDetailBrushesEntity.brushes = b;
 					if( convertDetailBrushesEntity.lastBrush == NULL )
 					{
@@ -2038,22 +2049,22 @@ static qboolean ParseMapEntity( qboolean onlyLights )
 				}
 				else
 				{
-					b->next                                    = NULL;
+					b->next									   = NULL;
 					convertDetailBrushesEntity.lastBrush->next = b;
-					convertDetailBrushesEntity.lastBrush       = b;
+					convertDetailBrushesEntity.lastBrush	   = b;
 				}
 
 				// link colorMod volume brushes to the entity directly
 				if( b->contentShader != NULL && b->contentShader->colorMod != NULL && b->contentShader->colorMod->type == CM_VOLUME )
 				{
-					b->nextColorModBrush                       = convertDetailBrushesEntity.colorModBrushes;
+					b->nextColorModBrush					   = convertDetailBrushesEntity.colorModBrushes;
 					convertDetailBrushesEntity.colorModBrushes = b;
 				}
 
 				detailBrushes = g_slist_remove( detailBrushes, detailBrushes->data );
 			}
 
-			mapEnt->brushes         = NULL;
+			mapEnt->brushes			= NULL;
 			mapEnt->colorModBrushes = NULL;
 
 			// readd structural brushes to current entity
@@ -2064,7 +2075,7 @@ static qboolean ParseMapEntity( qboolean onlyLights )
 				// link opaque brushes to head of list, translucent brushes to end
 				if( b->opaque || mapEnt->lastBrush == NULL )
 				{
-					b->next         = mapEnt->brushes;
+					b->next			= mapEnt->brushes;
 					mapEnt->brushes = b;
 					if( mapEnt->lastBrush == NULL )
 					{
@@ -2073,15 +2084,15 @@ static qboolean ParseMapEntity( qboolean onlyLights )
 				}
 				else
 				{
-					b->next                 = NULL;
+					b->next					= NULL;
 					mapEnt->lastBrush->next = b;
-					mapEnt->lastBrush       = b;
+					mapEnt->lastBrush		= b;
 				}
 
 				// link colorMod volume brushes to the entity directly
 				if( b->contentShader != NULL && b->contentShader->colorMod != NULL && b->contentShader->colorMod->type == CM_VOLUME )
 				{
-					b->nextColorModBrush    = mapEnt->colorModBrushes;
+					b->nextColorModBrush	= mapEnt->colorModBrushes;
 					mapEnt->colorModBrushes = b;
 				}
 
@@ -2090,7 +2101,7 @@ static qboolean ParseMapEntity( qboolean onlyLights )
 		}
 	}
 
-	if( model[ 0 ] && !Q_stricmp( "func_group", classname ) && !mapEnt->brushes && !mapEnt->patches )
+	if( model[0] && !Q_stricmp( "func_group", classname ) && !mapEnt->brushes && !mapEnt->patches )
 	{
 		RemoveKey( mapEnt, "model" );
 	}
@@ -2124,8 +2135,7 @@ static qboolean ParseMapEntity( qboolean onlyLights )
 	/* vortex: added _ls key (short name of lightmapscale) */
 	/* ydnar: get lightmap scaling value for this entity */
 	lightmapScale = 0.0f;
-	if( strcmp( "", ValueForKey( mapEnt, "lightmapscale" ) ) ||
-		strcmp( "", ValueForKey( mapEnt, "_lightmapscale" ) ) || strcmp( "", ValueForKey( mapEnt, "_ls" ) ) )
+	if( strcmp( "", ValueForKey( mapEnt, "lightmapscale" ) ) || strcmp( "", ValueForKey( mapEnt, "_lightmapscale" ) ) || strcmp( "", ValueForKey( mapEnt, "_ls" ) ) )
 	{
 		/* get lightmap scale from entity */
 		lightmapScale = FloatForKey( mapEnt, "lightmapscale" );
@@ -2204,27 +2214,27 @@ static qboolean ParseMapEntity( qboolean onlyLights )
 	/* attach stuff to everything in the entity */
 	for( brush = mapEnt->brushes; brush != NULL; brush = brush->next )
 	{
-		brush->entityNum          = mapEnt->mapEntityNum;
-		brush->castShadows        = castShadows;
-		brush->recvShadows        = recvShadows;
+		brush->entityNum		  = mapEnt->mapEntityNum;
+		brush->castShadows		  = castShadows;
+		brush->recvShadows		  = recvShadows;
 		brush->lightmapSampleSize = lightmapSampleSize;
-		brush->lightmapScale      = lightmapScale;
-		brush->celShader          = celShader;
+		brush->lightmapScale	  = lightmapScale;
+		brush->celShader		  = celShader;
 		brush->shadeAngleDegrees  = shadeAngle;
 	}
 
 	for( patch = mapEnt->patches; patch != NULL; patch = patch->next )
 	{
-		patch->entityNum          = mapEnt->mapEntityNum;
-		patch->castShadows        = castShadows;
-		patch->recvShadows        = recvShadows;
+		patch->entityNum		  = mapEnt->mapEntityNum;
+		patch->castShadows		  = castShadows;
+		patch->recvShadows		  = recvShadows;
 		patch->lightmapSampleSize = lightmapSampleSize;
-		patch->lightmapScale      = lightmapScale;
-		patch->celShader          = celShader;
+		patch->lightmapScale	  = lightmapScale;
+		patch->celShader		  = celShader;
 	}
 
 	/* Tr3B: convert Doom3's func_static entities with custom models into misc_models */
-	if( convertType == CONVERT_NOTHING && !Q_stricmp( "func_static", classname ) && !mapEnt->brushes && !mapEnt->patches && model[ 0 ] != '\0' )
+	if( convertType == CONVERT_NOTHING && !Q_stricmp( "func_static", classname ) && !mapEnt->brushes && !mapEnt->patches && model[0] != '\0' )
 	{
 		SetKeyValue( mapEnt, "classname", "misc_model" );
 	}
@@ -2250,10 +2260,10 @@ static qboolean ParseMapEntity( qboolean onlyLights )
 
 #if 1
 	// HACK: determine if this is a func_static that can be merged into worldspawn
-	if( convertType == CONVERT_NOTHING && !Q_stricmp( "func_static", classname ) && name[ 0 ] != '\0' && model[ 0 ] != '\0' && !Q_stricmp( name, model ) )
+	if( convertType == CONVERT_NOTHING && !Q_stricmp( "func_static", classname ) && name[0] != '\0' && model[0] != '\0' && !Q_stricmp( name, model ) )
 	{
 		brush_t* brush;
-		vec3_t   originNeg;
+		vec3_t	 originNeg;
 
 	#if 1
 		VectorNegate( mapEnt->origin, originNeg );
@@ -2309,11 +2319,11 @@ static qboolean ParseMapEntity( qboolean onlyLights )
 
 	// Tr3B: moved this up before SetEntityBounds() is called
 	// move brushes and patches from world space into entity space
-	if( mapEnt->origin[ 0 ] || mapEnt->origin[ 1 ] || mapEnt->origin[ 2 ] )
+	if( mapEnt->origin[0] || mapEnt->origin[1] || mapEnt->origin[2] )
 	{
 		if( mapEnt->brushes || mapEnt->patches )
 		{
-			if( convertType != CONVERT_QUAKE3 && ( name[ 0 ] != '\0' && model[ 0 ] != '\0' && !Q_stricmp( name, model ) ) )
+			if( convertType != CONVERT_QUAKE3 && ( name[0] != '\0' && model[0] != '\0' && !Q_stricmp( name, model ) ) )
 			{
 				AdjustBrushesForOrigin( mapEnt, vec3_origin );
 				AdjustPatchesForOrigin( mapEnt, mapEnt->origin );
@@ -2372,7 +2382,7 @@ static qboolean ParseMapEntity( qboolean onlyLights )
 	// Tr3B: append temporary func_group containing the detail brushes
 	if( convertDetailBrushesEntity.lastBrush != NULL )
 	{
-		mapEnt = &entities[ numEntities ];
+		mapEnt = &entities[numEntities];
 		numEntities++;
 		memcpy( mapEnt, &convertDetailBrushesEntity, sizeof( *mapEnt ) );
 
@@ -2394,9 +2404,9 @@ loads a map file into a list of entities
 
 void LoadMapFile( char* filename, qboolean onlyLights )
 {
-	FILE*    file;
+	FILE*	 file;
 	brush_t* b;
-	int      oldNumEntities, numMapBrushes;
+	int		 oldNumEntities, numMapBrushes;
 
 	/* note it */
 	Sys_FPrintf( SYS_VRB, "--- LoadMapFile ---\n" );
@@ -2421,8 +2431,8 @@ void LoadMapFile( char* filename, qboolean onlyLights )
 
 	/* initial setup */
 	numMapDrawSurfs = 0;
-	c_detail        = 0;
-	g_bBrushPrimit  = BPRIMIT_UNDEFINED;
+	c_detail		= 0;
+	g_bBrushPrimit	= BPRIMIT_UNDEFINED;
 
 	/* allocate a very large temporary brush for building the brushes as they are loaded */
 	buildBrush = AllocBrush( MAX_BUILD_SIDES );
@@ -2441,14 +2451,14 @@ void LoadMapFile( char* filename, qboolean onlyLights )
 	{
 		/* set map bounds */
 		ClearBounds( mapMins, mapMaxs );
-		for( b = entities[ 0 ].brushes; b; b = b->next )
+		for( b = entities[0].brushes; b; b = b->next )
 		{
 			AddPointToBounds( b->mins, mapMins, mapMaxs );
 			AddPointToBounds( b->maxs, mapMins, mapMaxs );
 		}
 
 		/* get brush counts */
-		numMapBrushes = CountBrushList( entities[ 0 ].brushes );
+		numMapBrushes = CountBrushList( entities[0].brushes );
 		if( ( float )c_detail / ( float )numMapBrushes < 0.10f && numMapBrushes > 500 )
 		{
 			Sys_Printf( "WARNING: Over 90 percent structural map detected. Compile time may be adversely affected.\n" );
@@ -2464,18 +2474,12 @@ void LoadMapFile( char* filename, qboolean onlyLights )
 		Sys_FPrintf( SYS_VRB, "%9d entities\n", numEntities );
 		Sys_FPrintf( SYS_VRB, "%9d planes\n", nummapplanes );
 		Sys_Printf( "%9d areaportals\n", c_areaportals );
-		Sys_Printf( "Size: %5.0f, %5.0f, %5.0f to %5.0f, %5.0f, %5.0f\n",
-			mapMins[ 0 ],
-			mapMins[ 1 ],
-			mapMins[ 2 ],
-			mapMaxs[ 0 ],
-			mapMaxs[ 1 ],
-			mapMaxs[ 2 ] );
+		Sys_Printf( "Size: %5.0f, %5.0f, %5.0f to %5.0f, %5.0f, %5.0f\n", mapMins[0], mapMins[1], mapMins[2], mapMaxs[0], mapMaxs[1], mapMaxs[2] );
 
 		/* write bogus map */
 		if( fakemap )
 		{
-			WriteBSPBrushMap( "fakemap.map", entities[ 0 ].brushes );
+			WriteBSPBrushMap( "fakemap.map", entities[0].brushes );
 		}
 	}
 }

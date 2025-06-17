@@ -30,13 +30,13 @@ CONNECTION SCREEN
 ===============================================================================
 */
 
-qboolean    passwordNeeded = qtrue;
-menufield_s passwordField;
+qboolean		   passwordNeeded = qtrue;
+menufield_s		   passwordField;
 
 static connstate_t lastConnState;
-static char        lastLoadingText[ MAX_INFO_VALUE ];
+static char		   lastLoadingText[MAX_INFO_VALUE];
 
-static void UI_ReadableSize( char* buf, int bufsize, int value )
+static void		   UI_ReadableSize( char* buf, int bufsize, int value )
 {
 	if( value > 1024 * 1024 * 1024 ) // gigs
 	{
@@ -83,11 +83,11 @@ static void UI_DisplayDownloadInfo( const char* downloadName )
 	static char etaText[]  = "Estimated time left:";
 	static char xferText[] = "Transfer rate:";
 
-	int         downloadSize, downloadCount, downloadTime;
-	char        dlSizeBuf[ 64 ], totalSizeBuf[ 64 ], xferRateBuf[ 64 ], dlTimeBuf[ 64 ];
-	int         xferRate;
-	int         width, leftWidth;
-	int         style = UI_LEFT | UI_SMALLFONT | UI_DROPSHADOW;
+	int			downloadSize, downloadCount, downloadTime;
+	char		dlSizeBuf[64], totalSizeBuf[64], xferRateBuf[64], dlTimeBuf[64];
+	int			xferRate;
+	int			width, leftWidth;
+	int			style = UI_LEFT | UI_SMALLFONT | UI_DROPSHADOW;
 	const char* s;
 
 	downloadSize  = trap_Cvar_VariableValue( "cl_downloadSize" );
@@ -95,7 +95,7 @@ static void UI_DisplayDownloadInfo( const char* downloadName )
 	downloadTime  = trap_Cvar_VariableValue( "cl_downloadTime" );
 
 	leftWidth = UI_ProportionalStringWidth( dlText ) * UI_ProportionalSizeScale( style );
-	width     = UI_ProportionalStringWidth( etaText ) * UI_ProportionalSizeScale( style );
+	width	  = UI_ProportionalStringWidth( etaText ) * UI_ProportionalSizeScale( style );
 	if( width > leftWidth )
 	{
 		leftWidth = width;
@@ -135,7 +135,7 @@ static void UI_DisplayDownloadInfo( const char* downloadName )
 		if( ( uis.realtime - downloadTime ) / 1000 )
 		{
 			xferRate = downloadCount / ( ( uis.realtime - downloadTime ) / 1000 );
-			//xferRate = (int)( ((float)downloadCount) / elapsedTime);
+			// xferRate = (int)( ((float)downloadCount) / elapsedTime);
 		}
 		else
 		{
@@ -188,9 +188,9 @@ to prevent it from blinking away too rapidly on local or lan games.
 */
 void UI_DrawConnectScreen( qboolean overlay )
 {
-	char*           s;
+	char*			s;
 	uiClientState_t cstate;
-	char            info[ MAX_INFO_VALUE ];
+	char			info[MAX_INFO_VALUE];
 
 	Menu_Cache();
 
@@ -204,14 +204,14 @@ void UI_DrawConnectScreen( qboolean overlay )
 	// see what information we should display
 	trap_GetClientState( &cstate );
 
-	info[ 0 ] = '\0';
+	info[0] = '\0';
 	if( trap_GetConfigString( CS_SERVERINFO, info, sizeof( info ) ) )
 	{
 		UI_DrawProportionalString( 320, 16, va( "Loading %s", Info_ValueForKey( info, "mapname" ) ), UI_BIGFONT | UI_CENTER | UI_DROPSHADOW, color_white );
 	}
 
 	UI_DrawProportionalString( 320, 64, va( "Connecting to %s", cstate.servername ), UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, menu_text_color );
-	//UI_DrawProportionalString( 320, 96, "Press Esc to abort", UI_CENTER|UI_SMALLFONT|UI_DROPSHADOW, menu_text_color );
+	// UI_DrawProportionalString( 320, 96, "Press Esc to abort", UI_CENTER|UI_SMALLFONT|UI_DROPSHADOW, menu_text_color );
 
 	// display global MOTD at bottom
 	UI_DrawProportionalString( SCREEN_WIDTH / 2, SCREEN_HEIGHT - 32, Info_ValueForKey( cstate.updateInfoString, "motd" ), UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, menu_text_color );
@@ -249,7 +249,7 @@ void UI_DrawConnectScreen( qboolean overlay )
 
 	if( lastConnState > cstate.connState )
 	{
-		lastLoadingText[ 0 ] = '\0';
+		lastLoadingText[0] = '\0';
 	}
 	lastConnState = cstate.connState;
 
@@ -263,7 +263,7 @@ void UI_DrawConnectScreen( qboolean overlay )
 			break;
 		case CA_CONNECTED:
 		{
-			char downloadName[ MAX_INFO_VALUE ];
+			char downloadName[MAX_INFO_VALUE];
 
 			trap_Cvar_VariableStringBuffer( "cl_downloadName", downloadName, sizeof( downloadName ) );
 			if( *downloadName )

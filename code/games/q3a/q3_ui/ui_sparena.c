@@ -25,8 +25,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 void UI_SPArena_Start( const char* arenaInfo )
 {
 	char* map;
-	int   level;
-	int   n;
+	int	  level;
+	int	  n;
 	char* txt;
 
 	n = ( int )trap_Cvar_VariableValue( "sv_maxclients" );
@@ -36,8 +36,8 @@ void UI_SPArena_Start( const char* arenaInfo )
 	}
 
 	level = atoi( Info_ValueForKey( arenaInfo, "num" ) );
-	txt   = Info_ValueForKey( arenaInfo, "special" );
-	if( txt[ 0 ] )
+	txt	  = Info_ValueForKey( arenaInfo, "special" );
+	if( txt[0] )
 	{
 		if( Q_stricmp( txt, "training" ) == 0 )
 		{

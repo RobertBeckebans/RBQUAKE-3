@@ -27,40 +27,40 @@ int g_console_field_width = 78;
 
 #define NUM_CON_TIMES 5
 
-#define CON_TEXTSIZE 32768
-#define CON_LINESTEP 2
+#define CON_TEXTSIZE  32768
+#define CON_LINESTEP  2
 
 typedef struct
 {
 	qboolean initialized;
 
-	short text[ CON_TEXTSIZE ];
-	int   current; // line where next message will be printed
-	int   x;       // offset in current line for next print
-	int   display; // bottom of console displays this line
+	short	 text[CON_TEXTSIZE];
+	int		 current; // line where next message will be printed
+	int		 x;		  // offset in current line for next print
+	int		 display; // bottom of console displays this line
 
-	int linewidth;  // characters across screen
-	int totallines; // total lines in console scrollback
+	int		 linewidth;	 // characters across screen
+	int		 totallines; // total lines in console scrollback
 
-	float xadjust; // for wide aspect screens
-	float yadjust; // for narrow aspect screens
+	float	 xadjust; // for wide aspect screens
+	float	 yadjust; // for narrow aspect screens
 
-	float displayFrac; // aproaches finalFrac at scr_conspeed
-	float finalFrac;   // 0.0 to 1.0 lines of console to display
+	float	 displayFrac; // aproaches finalFrac at scr_conspeed
+	float	 finalFrac;	  // 0.0 to 1.0 lines of console to display
 
-	int vislines; // in scanlines
+	int		 vislines; // in scanlines
 
-	int times[ NUM_CON_TIMES ]; // cls.realtime time the line was generated
+	int		 times[NUM_CON_TIMES]; // cls.realtime time the line was generated
 	// for transparent notify lines
-	vec4_t color;
+	vec4_t	 color;
 } console_t;
 
 console_t con;
 
-cvar_t* con_shadow;
-cvar_t* con_conspeed;
-cvar_t* con_autoclear;
-cvar_t* con_notifytime;
+cvar_t*	  con_shadow;
+cvar_t*	  con_conspeed;
+cvar_t*	  con_autoclear;
+cvar_t*	  con_notifytime;
 
 #define DEFAULT_CONSOLE_WIDTH 78
 
@@ -71,7 +71,7 @@ vec4_t console_color = { 1.0, 1.0, 1.0, 1.0 };
 Con_ToggleConsole_f
 ================
 */
-void Con_ToggleConsole_f( void )
+void   Con_ToggleConsole_f( void )
 {
 	// Can't toggle the console when it's the only thing available
 	if( clc.state == CA_DISCONNECTED && Key_GetCatcher() == KEYCATCH_CONSOLE )
@@ -109,7 +109,7 @@ Con_MessageMode_f
 void Con_MessageMode_f( void )
 {
 	chat_playerNum = -1;
-	chat_team      = qfalse;
+	chat_team	   = qfalse;
 	Field_Clear( &chatField );
 	chatField.widthInChars = 30;
 
@@ -124,7 +124,7 @@ Con_MessageMode2_f
 void Con_MessageMode2_f( void )
 {
 	chat_playerNum = -1;
-	chat_team      = qtrue;
+	chat_team	   = qtrue;
 	Field_Clear( &chatField );
 	chatField.widthInChars = 25;
 	Key_SetCatcher( Key_GetCatcher() ^ KEYCATCH_MESSAGE );
@@ -179,7 +179,7 @@ void Con_Clear_f( void )
 
 	for( i = 0; i < CON_TEXTSIZE; i++ )
 	{
-		con.text[ i ] = ( ColorIndex( COLOR_WHITE ) << 8 ) | ' ';
+		con.text[i] = ( ColorIndex( COLOR_WHITE ) << 8 ) | ' ';
 	}
 
 	Con_Bottom(); // go to end
@@ -194,12 +194,12 @@ Save the console contents out to a file
 */
 void Con_Dump_f( void )
 {
-	int          l, x, i;
-	short*       line;
+	int			 l, x, i;
+	short*		 line;
 	fileHandle_t f;
-	int          bufferlen;
-	char*        buffer;
-	char         filename[ MAX_QPATH ];
+	int			 bufferlen;
+	char*		 buffer;
+	char		 filename[MAX_QPATH];
 
 	if( Cmd_Argc() != 2 )
 	{
@@ -230,7 +230,7 @@ void Con_Dump_f( void )
 	{
 		line = con.text + ( l % con.totallines ) * con.linewidth;
 		for( x = 0; x < con.linewidth; x++ )
-			if( ( line[ x ] & 0xff ) != ' ' )
+			if( ( line[x] & 0xff ) != ' ' )
 			{
 				break;
 			}
@@ -249,19 +249,19 @@ void Con_Dump_f( void )
 	buffer = Hunk_AllocateTempMemory( bufferlen );
 
 	// write the remaining lines
-	buffer[ bufferlen - 1 ] = 0;
+	buffer[bufferlen - 1] = 0;
 	for( ; l <= con.current; l++ )
 	{
 		line = con.text + ( l % con.totallines ) * con.linewidth;
 		for( i = 0; i < con.linewidth; i++ )
 		{
-			buffer[ i ] = line[ i ] & 0xff;
+			buffer[i] = line[i] & 0xff;
 		}
 		for( x = con.linewidth - 1; x >= 0; x-- )
 		{
-			if( buffer[ x ] == ' ' )
+			if( buffer[x] == ' ' )
 			{
-				buffer[ x ] = 0;
+				buffer[x] = 0;
 			}
 			else
 			{
@@ -291,7 +291,7 @@ void Con_ClearNotify( void )
 
 	for( i = 0; i < NUM_CON_TIMES; i++ )
 	{
-		con.times[ i ] = 0;
+		con.times[i] = 0;
 	}
 }
 
@@ -304,8 +304,8 @@ If the line width has changed, reformat the buffer.
 */
 void Con_CheckResize( void )
 {
-	int   i, j, width, oldwidth, oldtotallines, numlines, numchars;
-	short tbuf[ CON_TEXTSIZE ];
+	int	  i, j, width, oldwidth, oldtotallines, numlines, numchars;
+	short tbuf[CON_TEXTSIZE];
 
 	width = ( SCREEN_WIDTH / SMALLCHAR_WIDTH ) - 2;
 
@@ -316,22 +316,22 @@ void Con_CheckResize( void )
 
 	if( width < 1 ) // video hasn't been initialized yet
 	{
-		width          = DEFAULT_CONSOLE_WIDTH;
+		width		   = DEFAULT_CONSOLE_WIDTH;
 		con.linewidth  = width;
 		con.totallines = CON_TEXTSIZE / con.linewidth;
 		for( i = 0; i < CON_TEXTSIZE; i++ )
 
 		{
-			con.text[ i ] = ( ColorIndex( COLOR_WHITE ) << 8 ) | ' ';
+			con.text[i] = ( ColorIndex( COLOR_WHITE ) << 8 ) | ' ';
 		}
 	}
 	else
 	{
-		oldwidth       = con.linewidth;
+		oldwidth	   = con.linewidth;
 		con.linewidth  = width;
 		oldtotallines  = con.totallines;
 		con.totallines = CON_TEXTSIZE / con.linewidth;
-		numlines       = oldtotallines;
+		numlines	   = oldtotallines;
 
 		if( con.totallines < numlines )
 		{
@@ -349,15 +349,14 @@ void Con_CheckResize( void )
 		for( i = 0; i < CON_TEXTSIZE; i++ )
 
 		{
-			con.text[ i ] = ( ColorIndex( COLOR_WHITE ) << 8 ) | ' ';
+			con.text[i] = ( ColorIndex( COLOR_WHITE ) << 8 ) | ' ';
 		}
 
 		for( i = 0; i < numlines; i++ )
 		{
 			for( j = 0; j < numchars; j++ )
 			{
-				con.text[ ( con.totallines - 1 - i ) * con.linewidth + j ] =
-					tbuf[ ( ( con.current - i + oldtotallines ) % oldtotallines ) * oldwidth + j ];
+				con.text[( con.totallines - 1 - i ) * con.linewidth + j] = tbuf[( ( con.current - i + oldtotallines ) % oldtotallines ) * oldwidth + j];
 			}
 		}
 
@@ -393,14 +392,14 @@ void Con_Init( void )
 	con_notifytime = Cvar_Get( "con_notifytime", "3", 0 );
 	con_conspeed   = Cvar_Get( "scr_conspeed", "3", 0 );
 	con_autoclear  = Cvar_Get( "con_autoclear", "1", CVAR_ARCHIVE );
-	con_shadow     = Cvar_Get( "con_shadow", "1", CVAR_ARCHIVE );
+	con_shadow	   = Cvar_Get( "con_shadow", "1", CVAR_ARCHIVE );
 
 	Field_Clear( &g_consoleField );
 	g_consoleField.widthInChars = g_console_field_width;
 	for( i = 0; i < COMMAND_HISTORY; i++ )
 	{
-		Field_Clear( &historyEditLines[ i ] );
-		historyEditLines[ i ].widthInChars = g_console_field_width;
+		Field_Clear( &historyEditLines[i] );
+		historyEditLines[i].widthInChars = g_console_field_width;
 	}
 	CL_LoadConsoleHistory();
 
@@ -446,11 +445,11 @@ void Con_Linefeed( qboolean skipnotify )
 	{
 		if( skipnotify )
 		{
-			con.times[ con.current % NUM_CON_TIMES ] = 0;
+			con.times[con.current % NUM_CON_TIMES] = 0;
 		}
 		else
 		{
-			con.times[ con.current % NUM_CON_TIMES ] = cls.realtime;
+			con.times[con.current % NUM_CON_TIMES] = cls.realtime;
 		}
 	}
 
@@ -462,7 +461,7 @@ void Con_Linefeed( qboolean skipnotify )
 	con.current++;
 	for( i = 0; i < con.linewidth; i++ )
 	{
-		con.text[ ( con.current % con.totallines ) * con.linewidth + i ] = ( ColorIndex( COLOR_WHITE ) << 8 ) | ' ';
+		con.text[( con.current % con.totallines ) * con.linewidth + i] = ( ColorIndex( COLOR_WHITE ) << 8 ) | ' ';
 	}
 }
 
@@ -477,11 +476,11 @@ If no console is visible, the text will appear at the top of the game window
 */
 void CL_ConsolePrint( char* txt )
 {
-	int            y, l;
+	int			   y, l;
 	unsigned char  c;
 	unsigned short color;
-	qboolean       skipnotify = qfalse; // NERVE - SMF
-	int            prev;                // NERVE - SMF
+	qboolean	   skipnotify = qfalse; // NERVE - SMF
+	int			   prev;				// NERVE - SMF
 
 	// TTimo - prefix for text that shows up in console but not in notify
 	// backported from RTCW
@@ -499,11 +498,8 @@ void CL_ConsolePrint( char* txt )
 
 	if( !con.initialized )
 	{
-		con.color[ 0 ] =
-			con.color[ 1 ] =
-				con.color[ 2 ] =
-					con.color[ 3 ] = 1.0f;
-		con.linewidth              = -1;
+		con.color[0] = con.color[1] = con.color[2] = con.color[3] = 1.0f;
+		con.linewidth											  = -1;
 		Con_CheckResize();
 		con.initialized = qtrue;
 	}
@@ -522,7 +518,7 @@ void CL_ConsolePrint( char* txt )
 		// count word length
 		for( l = 0; l < con.linewidth; l++ )
 		{
-			if( txt[ l ] <= ' ' )
+			if( txt[l] <= ' ' )
 			{
 				break;
 			}
@@ -545,8 +541,8 @@ void CL_ConsolePrint( char* txt )
 				con.x = 0;
 				break;
 			default: // display character and advance
-				y                                     = con.current % con.totallines;
-				con.text[ y * con.linewidth + con.x ] = ( color << 8 ) | c;
+				y									= con.current % con.totallines;
+				con.text[y * con.linewidth + con.x] = ( color << 8 ) | c;
 				con.x++;
 				if( con.x >= con.linewidth )
 				{
@@ -567,12 +563,12 @@ void CL_ConsolePrint( char* txt )
 			{
 				prev = NUM_CON_TIMES - 1;
 			}
-			con.times[ prev ] = 0;
+			con.times[prev] = 0;
 		}
 		else
 		// -NERVE - SMF
 		{
-			con.times[ con.current % NUM_CON_TIMES ] = cls.realtime;
+			con.times[con.current % NUM_CON_TIMES] = cls.realtime;
 		}
 	}
 }
@@ -610,9 +606,9 @@ void Con_DrawInput( vec4_t color )
 		style = 0;
 	}
 
-	//y = con.vislines - (SMALLCHAR_HEIGHT * 2);
+	// y = con.vislines - (SMALLCHAR_HEIGHT * 2);
 
-	//re.SetColor(con.color);
+	// re.SetColor(con.color);
 
 	SCR_Text_Paint( 20, 234, 0.15f, color, "]", 0, 0, style | UI_PULSE, &cls.consoleFont );
 
@@ -628,18 +624,18 @@ Draws the last few lines of output transparently over the game top
 */
 void Con_DrawNotify( void )
 {
-	int    x, v;
+	int	   x, v;
 	short* text;
-	int    i;
-	int    time;
-	int    skip;
-	int    currentColor;
+	int	   i;
+	int	   time;
+	int	   skip;
+	int	   currentColor;
 	vec4_t color;
 	float  alpha;
-	int    offset;
+	int	   offset;
 
 	currentColor = 7;
-	re.SetColor( g_color_table[ currentColor ] );
+	re.SetColor( g_color_table[currentColor] );
 
 	v = 10;
 	for( i = con.current - NUM_CON_TIMES + 1; i <= con.current; i++ )
@@ -648,7 +644,7 @@ void Con_DrawNotify( void )
 		{
 			continue;
 		}
-		time = con.times[ i % NUM_CON_TIMES ];
+		time = con.times[i % NUM_CON_TIMES];
 		if( time == 0 )
 		{
 			continue;
@@ -670,25 +666,25 @@ void Con_DrawNotify( void )
 
 		for( x = 0; x < con.linewidth; x++ )
 		{
-			if( ( text[ x ] & 0xff ) == ' ' )
+			if( ( text[x] & 0xff ) == ' ' )
 			{
 				continue;
 			}
-			if( ColorIndexForNumber( text[ x ] >> 8 ) != currentColor )
+			if( ColorIndexForNumber( text[x] >> 8 ) != currentColor )
 			{
-				currentColor = ColorIndexForNumber( text[ x ] >> 8 );
-				re.SetColor( g_color_table[ currentColor ] );
+				currentColor = ColorIndexForNumber( text[x] >> 8 );
+				re.SetColor( g_color_table[currentColor] );
 			}
-			//SCR_DrawSmallChar( cl_conXOffset->integer + con.xadjust + ( x + 1 ) * SMALLCHAR_WIDTH, v, text[ x ] & 0xff );
+			// SCR_DrawSmallChar( cl_conXOffset->integer + con.xadjust + ( x + 1 ) * SMALLCHAR_WIDTH, v, text[ x ] & 0xff );
 
-			Vector4Copy( g_color_table[ currentColor ], color );
+			Vector4Copy( g_color_table[currentColor], color );
 
-			color[ 3 ] = alpha;
+			color[3] = alpha;
 
-			//offset = 8 - (alpha * 8); otty: good idea, but looks strange
+			// offset = 8 - (alpha * 8); otty: good idea, but looks strange
 			offset = 0;
 
-			SCR_Text_PaintSingleChar( cl_conXOffset->integer + con.xadjust + ( x + 1 ) * 5, v - offset, 0.15f, color, text[ x ] & 0xff, 0, 0, UI_DROPSHADOW, &cls.consoleFont );
+			SCR_Text_PaintSingleChar( cl_conXOffset->integer + con.xadjust + ( x + 1 ) * 5, v - offset, 0.15f, color, text[x] & 0xff, 0, 0, UI_DROPSHADOW, &cls.consoleFont );
 		}
 
 		v += 8;
@@ -733,18 +729,18 @@ Draws the console with the solid background
 */
 void Con_DrawSolidConsole( float frac )
 {
-	int    i, x, y;
-	int    rows;
+	int	   i, x, y;
+	int	   rows;
 	short* text;
-	int    row;
-	int    lines;
-	int    currentColor;
+	int	   row;
+	int	   lines;
+	int	   currentColor;
 	vec4_t color;
 	vec4_t fontColor;
 	vec4_t fontColorHighlight;
 	float  alpha;
-	int    style;
-	int    rowOffset = 0;
+	int	   style;
+	int	   rowOffset = 0;
 
 	lines = cls.glconfig.vidHeight * frac;
 	if( lines <= 0 )
@@ -773,7 +769,7 @@ void Con_DrawSolidConsole( float frac )
 
 	// draw the background
 	alpha = frac;
-	y     = frac * SCREEN_HEIGHT;
+	y	  = frac * SCREEN_HEIGHT;
 	if( y < 1 )
 	{
 		y = 0;
@@ -783,15 +779,15 @@ void Con_DrawSolidConsole( float frac )
 		SCR_DrawPic( 0, 0, SCREEN_WIDTH, y, cls.consoleShader );
 	}
 
-	color[ 0 ] = 1;
-	color[ 1 ] = 0;
-	color[ 2 ] = 0;
-	color[ 3 ] = 1;
+	color[0] = 1;
+	color[1] = 0;
+	color[2] = 0;
+	color[3] = 1;
 	SCR_FillRect( 0, y, SCREEN_WIDTH, 2, color );
 
 	// draw the version number
 
-	re.SetColor( g_color_table[ ColorIndex( COLOR_RED ) ] );
+	re.SetColor( g_color_table[ColorIndex( COLOR_RED )] );
 
 	Vector4Set( fontColor, 1.0f, 1.0f, 1.0f, alpha );
 	Vector4Set( fontColorHighlight, 1.0f, 1.0f, 1.0f, alpha * 1.5f );
@@ -801,9 +797,7 @@ void Con_DrawSolidConsole( float frac )
 #if 1
 	for( x = 0; x < i; x++ )
 	{
-		SCR_DrawSmallChar( cls.glconfig.vidWidth - ( i - x + 1 ) * SMALLCHAR_WIDTH,
-			lines - SMALLCHAR_HEIGHT,
-			Q3_VERSION[ x ] );
+		SCR_DrawSmallChar( cls.glconfig.vidWidth - ( i - x + 1 ) * SMALLCHAR_WIDTH, lines - SMALLCHAR_HEIGHT, Q3_VERSION[x] );
 	}
 #else
 	// version string
@@ -813,7 +807,7 @@ void Con_DrawSolidConsole( float frac )
 
 	// draw the text
 	con.vislines = lines;
-	rows         = ( lines - SMALLCHAR_HEIGHT ) / SMALLCHAR_HEIGHT; // rows of text to draw
+	rows		 = ( lines - SMALLCHAR_HEIGHT ) / SMALLCHAR_HEIGHT; // rows of text to draw
 
 	y = lines - ( SMALLCHAR_HEIGHT * 3 );
 	y = 222;
@@ -822,12 +816,12 @@ void Con_DrawSolidConsole( float frac )
 	if( con.display != con.current )
 	{
 		// draw arrows to show the buffer is backscrolled
-		re.SetColor( g_color_table[ ColorIndex( COLOR_RED ) ] );
+		re.SetColor( g_color_table[ColorIndex( COLOR_RED )] );
 
-		//for( x = 0; x < con.linewidth; x += 4 )
+		// for( x = 0; x < con.linewidth; x += 4 )
 		if( y >= con.yadjust )
 		{
-			//SCR_DrawSmallChar( con.xadjust + ( x + 1 ) * SMALLCHAR_WIDTH, y, '^' );
+			// SCR_DrawSmallChar( con.xadjust + ( x + 1 ) * SMALLCHAR_WIDTH, y, '^' );
 			for( x = 0; x < con.linewidth - 12; x += 3 )
 			{
 				SCR_Text_PaintSingleChar( con.xadjust + ( x + 1 ) * SMALLCHAR_WIDTH + 15, y, 0.15f, fontColorHighlight, '^', 0, 0, style, &cls.consoleBoldFont );
@@ -837,8 +831,8 @@ void Con_DrawSolidConsole( float frac )
 			rows -= CON_LINESTEP;
 			rowOffset = CON_LINESTEP;
 		}
-		//y -= SMALLCHAR_HEIGHT;
-		//rows--;
+		// y -= SMALLCHAR_HEIGHT;
+		// rows--;
 	}
 
 	row = con.display;
@@ -850,7 +844,7 @@ void Con_DrawSolidConsole( float frac )
 	}
 
 	currentColor = 7;
-	re.SetColor( g_color_table[ currentColor ] );
+	re.SetColor( g_color_table[currentColor] );
 
 	for( i = 0; i < rows; i++, y -= 8, row-- )
 	{
@@ -869,22 +863,22 @@ void Con_DrawSolidConsole( float frac )
 
 		for( x = 0; x < con.linewidth; x++ )
 		{
-			if( ( text[ x ] & 0xff ) == ' ' )
+			if( ( text[x] & 0xff ) == ' ' )
 			{
 				continue;
 			}
 
-			if( ColorIndexForNumber( text[ x ] >> 8 ) != currentColor )
+			if( ColorIndexForNumber( text[x] >> 8 ) != currentColor )
 			{
-				currentColor = ColorIndexForNumber( text[ x ] >> 8 );
-				re.SetColor( g_color_table[ currentColor ] );
+				currentColor = ColorIndexForNumber( text[x] >> 8 );
+				re.SetColor( g_color_table[currentColor] );
 			}
-			//SCR_DrawSmallChar( con.xadjust + ( x + 1 ) * SMALLCHAR_WIDTH, y, text[ x ] & 0xff );
+			// SCR_DrawSmallChar( con.xadjust + ( x + 1 ) * SMALLCHAR_WIDTH, y, text[ x ] & 0xff );
 
-			Vector4Copy( g_color_table[ currentColor ], color );
-			color[ 3 ] = alpha * 1.5f;
+			Vector4Copy( g_color_table[currentColor], color );
+			color[3] = alpha * 1.5f;
 
-			SCR_Text_PaintSingleChar( 15 + con.xadjust + ( x + 1 ) * 5, y, 0.15f, color, text[ x ] & 0xff, 0, 0, style, &cls.consoleFont );
+			SCR_Text_PaintSingleChar( 15 + con.xadjust + ( x + 1 ) * 5, y, 0.15f, color, text[x] & 0xff, 0, 0, style, &cls.consoleFont );
 		}
 	}
 
@@ -1009,6 +1003,6 @@ void Con_Close( void )
 	Field_Clear( &g_consoleField );
 	Con_ClearNotify();
 	Key_SetCatcher( Key_GetCatcher() & ~KEYCATCH_CONSOLE );
-	con.finalFrac   = 0; // none visible
+	con.finalFrac	= 0; // none visible
 	con.displayFrac = 0;
 }

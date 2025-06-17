@@ -32,28 +32,28 @@ R_LoadMD5
 */
 qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modName )
 {
-	int            i, j, k;
-	md5Model_t*    md5;
-	md5Bone_t*     bone;
+	int			   i, j, k;
+	md5Model_t*	   md5;
+	md5Bone_t*	   bone;
 	md5Surface_t*  surf;
 	srfTriangle_t* tri;
 	md5Vertex_t*   v;
 	md5Weight_t*   weight;
-	int            version;
-	shader_t*      sh;
-	char*          buf_p;
-	char*          token;
-	vec3_t         boneOrigin;
-	quat_t         boneQuat;
-	matrix_t       boneMat;
+	int			   version;
+	shader_t*	   sh;
+	char*		   buf_p;
+	char*		   token;
+	vec3_t		   boneOrigin;
+	quat_t		   boneQuat;
+	matrix_t	   boneMat;
 
-	int        numRemaining;
-	growList_t sortedTriangles;
-	growList_t vboTriangles;
-	growList_t vboSurfaces;
+	int			   numRemaining;
+	growList_t	   sortedTriangles;
+	growList_t	   vboTriangles;
+	growList_t	   vboSurfaces;
 
-	int numBoneReferences;
-	int boneReferences[ MAX_BONES ];
+	int			   numBoneReferences;
+	int			   boneReferences[MAX_BONES];
 
 	buf_p = ( char* )buffer;
 
@@ -61,7 +61,7 @@ qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modN
 	Com_ParseExt( &buf_p, qfalse );
 
 	// check version
-	token   = Com_ParseExt( &buf_p, qfalse );
+	token	= Com_ParseExt( &buf_p, qfalse );
 	version = atoi( token );
 	if( version != MD5_VERSION )
 	{
@@ -85,7 +85,7 @@ qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modN
 		ri.Printf( PRINT_WARNING, "R_LoadMD5: expected 'numJoints' found '%s' in model '%s'\n", token, modName );
 		return qfalse;
 	}
-	token         = Com_ParseExt( &buf_p, qfalse );
+	token		  = Com_ParseExt( &buf_p, qfalse );
 	md5->numBones = atoi( token );
 
 	// parse numMeshes <number>
@@ -95,9 +95,9 @@ qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modN
 		ri.Printf( PRINT_WARNING, "R_LoadMD5: expected 'numMeshes' found '%s' in model '%s'\n", token, modName );
 		return qfalse;
 	}
-	token            = Com_ParseExt( &buf_p, qfalse );
+	token			 = Com_ParseExt( &buf_p, qfalse );
 	md5->numSurfaces = atoi( token );
-	//ri.Printf(PRINT_ALL, "R_LoadMD5: '%s' has %i surfaces\n", modName, md5->numSurfaces);
+	// ri.Printf(PRINT_ALL, "R_LoadMD5: '%s' has %i surfaces\n", modName, md5->numSurfaces);
 
 	if( md5->numBones < 1 )
 	{
@@ -109,7 +109,7 @@ qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modN
 		ri.Printf( PRINT_WARNING, "R_LoadMD5: '%s' has more than %i bones (%i)\n", modName, MAX_BONES, md5->numBones );
 		return qfalse;
 	}
-	//ri.Printf(PRINT_ALL, "R_LoadMD5: '%s' has %i bones\n", modName, md5->numBones);
+	// ri.Printf(PRINT_ALL, "R_LoadMD5: '%s' has %i bones\n", modName, md5->numBones);
 
 	// parse all the bones
 	md5->bones = ri.Hunk_Alloc( sizeof( *bone ) * md5->numBones, h_low );
@@ -133,12 +133,12 @@ qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modN
 		token = Com_ParseExt( &buf_p, qtrue );
 		Q_strncpyz( bone->name, token, sizeof( bone->name ) );
 
-		//ri.Printf(PRINT_ALL, "R_LoadMD5: '%s' has bone '%s'\n", modName, bone->name);
+		// ri.Printf(PRINT_ALL, "R_LoadMD5: '%s' has bone '%s'\n", modName, bone->name);
 
-		token             = Com_ParseExt( &buf_p, qfalse );
+		token			  = Com_ParseExt( &buf_p, qfalse );
 		bone->parentIndex = atoi( token );
 
-		//ri.Printf(PRINT_ALL, "R_LoadMD5: '%s' has bone '%s' with parent index %i\n", modName, bone->name, bone->parentIndex);
+		// ri.Printf(PRINT_ALL, "R_LoadMD5: '%s' has bone '%s' with parent index %i\n", modName, bone->name, bone->parentIndex);
 
 		if( bone->parentIndex >= md5->numBones )
 		{
@@ -155,8 +155,8 @@ qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modN
 
 		for( j = 0; j < 3; j++ )
 		{
-			token           = Com_ParseExt( &buf_p, qfalse );
-			boneOrigin[ j ] = atof( token );
+			token		  = Com_ParseExt( &buf_p, qfalse );
+			boneOrigin[j] = atof( token );
 		}
 
 		// skip )
@@ -177,8 +177,8 @@ qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modN
 
 		for( j = 0; j < 3; j++ )
 		{
-			token         = Com_ParseExt( &buf_p, qfalse );
-			boneQuat[ j ] = atof( token );
+			token		= Com_ParseExt( &buf_p, qfalse );
+			boneQuat[j] = atof( token );
 		}
 		QuatCalcW( boneQuat );
 		MatrixFromQuat( boneMat, boneQuat );
@@ -212,7 +212,7 @@ qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modN
 		ri.Printf( PRINT_WARNING, "R_LoadMD5: '%s' has no surfaces\n", modName );
 		return qfalse;
 	}
-	//ri.Printf(PRINT_ALL, "R_LoadMD5: '%s' has %i surfaces\n", modName, md5->numSurfaces);
+	// ri.Printf(PRINT_ALL, "R_LoadMD5: '%s' has %i surfaces\n", modName, md5->numSurfaces);
 
 	md5->surfaces = ri.Hunk_Alloc( sizeof( *surf ) * md5->numSurfaces, h_low );
 	for( i = 0, surf = md5->surfaces; i < md5->numSurfaces; i++, surf++ )
@@ -247,12 +247,12 @@ qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modN
 		token = Com_ParseExt( &buf_p, qfalse );
 		Q_strncpyz( surf->shader, token, sizeof( surf->shader ) );
 
-		//ri.Printf(PRINT_ALL, "R_LoadMD5: '%s' uses shader '%s'\n", modName, surf->shader);
+		// ri.Printf(PRINT_ALL, "R_LoadMD5: '%s' uses shader '%s'\n", modName, surf->shader);
 
 		// FIXME .md5mesh meshes don't have surface names
 		// lowercase the surface name so skin compares are faster
-		//Q_strlwr(surf->name);
-		//ri.Printf(PRINT_ALL, "R_LoadMD5: '%s' has surface '%s'\n", modName, surf->name);
+		// Q_strlwr(surf->name);
+		// ri.Printf(PRINT_ALL, "R_LoadMD5: '%s' has surface '%s'\n", modName, surf->name);
 
 		// register the shaders
 		sh = R_FindShader( surf->shader, SHADER_3D_DYNAMIC, qtrue );
@@ -272,7 +272,7 @@ qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modN
 			ri.Printf( PRINT_WARNING, "R_LoadMD5: expected 'numVerts' found '%s' in model '%s'\n", token, modName );
 			return qfalse;
 		}
-		token          = Com_ParseExt( &buf_p, qfalse );
+		token		   = Com_ParseExt( &buf_p, qfalse );
 		surf->numVerts = atoi( token );
 
 		if( surf->numVerts > SHADER_MAX_VERTEXES )
@@ -302,8 +302,8 @@ qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modN
 
 			for( k = 0; k < 2; k++ )
 			{
-				token             = Com_ParseExt( &buf_p, qfalse );
-				v->texCoords[ k ] = atof( token );
+				token			= Com_ParseExt( &buf_p, qfalse );
+				v->texCoords[k] = atof( token );
 			}
 
 			// skip )
@@ -314,10 +314,10 @@ qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modN
 				return qfalse;
 			}
 
-			token          = Com_ParseExt( &buf_p, qfalse );
+			token		   = Com_ParseExt( &buf_p, qfalse );
 			v->firstWeight = atoi( token );
 
-			token         = Com_ParseExt( &buf_p, qfalse );
+			token		  = Com_ParseExt( &buf_p, qfalse );
 			v->numWeights = atoi( token );
 
 			if( v->numWeights > MAX_WEIGHTS )
@@ -333,7 +333,7 @@ qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modN
 			ri.Printf( PRINT_WARNING, "R_LoadMD5: expected 'numTris' found '%s' in model '%s'\n", token, modName );
 			return qfalse;
 		}
-		token              = Com_ParseExt( &buf_p, qfalse );
+		token			   = Com_ParseExt( &buf_p, qfalse );
 		surf->numTriangles = atoi( token );
 
 		if( surf->numTriangles > SHADER_MAX_TRIANGLES )
@@ -355,8 +355,8 @@ qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modN
 
 			for( k = 0; k < 3; k++ )
 			{
-				token             = Com_ParseExt( &buf_p, qfalse );
-				tri->indexes[ k ] = atoi( token );
+				token			= Com_ParseExt( &buf_p, qfalse );
+				tri->indexes[k] = atoi( token );
 			}
 		}
 
@@ -369,7 +369,7 @@ qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modN
 			ri.Printf( PRINT_WARNING, "R_LoadMD5: expected 'numWeights' found '%s' in model '%s'\n", token, modName );
 			return qfalse;
 		}
-		token            = Com_ParseExt( &buf_p, qfalse );
+		token			 = Com_ParseExt( &buf_p, qfalse );
 		surf->numWeights = atoi( token );
 
 		surf->weights = ri.Hunk_Alloc( sizeof( *weight ) * surf->numWeights, h_low );
@@ -384,10 +384,10 @@ qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modN
 			}
 			Com_ParseExt( &buf_p, qfalse );
 
-			token             = Com_ParseExt( &buf_p, qfalse );
+			token			  = Com_ParseExt( &buf_p, qfalse );
 			weight->boneIndex = atoi( token );
 
-			token              = Com_ParseExt( &buf_p, qfalse );
+			token			   = Com_ParseExt( &buf_p, qfalse );
 			weight->boneWeight = atof( token );
 
 			// skip (
@@ -400,8 +400,8 @@ qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modN
 
 			for( k = 0; k < 3; k++ )
 			{
-				token               = Com_ParseExt( &buf_p, qfalse );
-				weight->offset[ k ] = atof( token );
+				token			  = Com_ParseExt( &buf_p, qfalse );
+				weight->offset[k] = atof( token );
 			}
 
 			// skip )
@@ -428,28 +428,28 @@ qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modN
 
 			for( k = 0; k < v->numWeights; k++ )
 			{
-				v->weights[ k ] = surf->weights + ( v->firstWeight + k );
+				v->weights[k] = surf->weights + ( v->firstWeight + k );
 			}
 		}
 	}
 
 	// loading is done now calculate the bounding box and tangent spaces
-	ClearBounds( md5->bounds[ 0 ], md5->bounds[ 1 ] );
+	ClearBounds( md5->bounds[0], md5->bounds[1] );
 
 	for( i = 0, surf = md5->surfaces; i < md5->numSurfaces; i++, surf++ )
 	{
 		for( j = 0, v = surf->verts; j < surf->numVerts; j++, v++ )
 		{
-			vec3_t       tmpVert;
+			vec3_t		 tmpVert;
 			md5Weight_t* w;
 
 			VectorClear( tmpVert );
 
-			for( k = 0, w = v->weights[ 0 ]; k < v->numWeights; k++, w++ )
+			for( k = 0, w = v->weights[0]; k < v->numWeights; k++, w++ )
 			{
 				vec3_t offsetVec;
 
-				bone = &md5->bones[ w->boneIndex ];
+				bone = &md5->bones[w->boneIndex];
 
 				QuatTransformVector( bone->rotation, w->offset, offsetVec );
 				VectorAdd( bone->origin, offsetVec, offsetVec );
@@ -458,7 +458,7 @@ qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modN
 			}
 
 			VectorCopy( tmpVert, v->position );
-			AddPointToBounds( tmpVert, md5->bounds[ 0 ], md5->bounds[ 1 ] );
+			AddPointToBounds( tmpVert, md5->bounds[0], md5->bounds[1] );
 		}
 
 		// calc tangent spaces
@@ -466,9 +466,9 @@ qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modN
 		{
 			const float *v0, *v1, *v2;
 			const float *t0, *t1, *t2;
-			vec3_t       tangent;
-			vec3_t       binormal;
-			vec3_t       normal;
+			vec3_t		 tangent;
+			vec3_t		 binormal;
+			vec3_t		 normal;
 
 			for( j = 0, v = surf->verts; j < surf->numVerts; j++, v++ )
 			{
@@ -479,13 +479,13 @@ qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modN
 
 			for( j = 0, tri = surf->triangles; j < surf->numTriangles; j++, tri++ )
 			{
-				v0 = surf->verts[ tri->indexes[ 0 ] ].position;
-				v1 = surf->verts[ tri->indexes[ 1 ] ].position;
-				v2 = surf->verts[ tri->indexes[ 2 ] ].position;
+				v0 = surf->verts[tri->indexes[0]].position;
+				v1 = surf->verts[tri->indexes[1]].position;
+				v2 = surf->verts[tri->indexes[2]].position;
 
-				t0 = surf->verts[ tri->indexes[ 0 ] ].texCoords;
-				t1 = surf->verts[ tri->indexes[ 1 ] ].texCoords;
-				t2 = surf->verts[ tri->indexes[ 2 ] ].texCoords;
+				t0 = surf->verts[tri->indexes[0]].texCoords;
+				t1 = surf->verts[tri->indexes[1]].texCoords;
+				t2 = surf->verts[tri->indexes[2]].texCoords;
 
 	#if 1
 				R_CalcTangentSpace( tangent, binormal, normal, v0, v1, v2, t0, t1, t2 );
@@ -498,13 +498,13 @@ qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modN
 				{
 					float* v;
 
-					v = surf->verts[ tri->indexes[ k ] ].tangent;
+					v = surf->verts[tri->indexes[k]].tangent;
 					VectorAdd( v, tangent, v );
 
-					v = surf->verts[ tri->indexes[ k ] ].binormal;
+					v = surf->verts[tri->indexes[k]].binormal;
 					VectorAdd( v, binormal, v );
 
-					v = surf->verts[ tri->indexes[ k ] ].normal;
+					v = surf->verts[tri->indexes[k]].normal;
 					VectorAdd( v, normal, v );
 				}
 			}
@@ -518,22 +518,23 @@ qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modN
 		}
 #else
 		{
-			int          k;
-			float        bb, s, t;
-			vec3_t       bary;
-			vec3_t       faceNormal;
-			md5Vertex_t* dv[ 3 ];
+			int			 k;
+			float		 bb, s, t;
+			vec3_t		 bary;
+			vec3_t		 faceNormal;
+			md5Vertex_t* dv[3];
 
 			for( j = 0, tri = surf->triangles; j < surf->numTriangles; j++, tri++ )
 			{
-				dv[ 0 ] = &surf->verts[ tri->indexes[ 0 ] ];
-				dv[ 1 ] = &surf->verts[ tri->indexes[ 1 ] ];
-				dv[ 2 ] = &surf->verts[ tri->indexes[ 2 ] ];
+				dv[0] = &surf->verts[tri->indexes[0]];
+				dv[1] = &surf->verts[tri->indexes[1]];
+				dv[2] = &surf->verts[tri->indexes[2]];
 
-				R_CalcNormalForTriangle( faceNormal, dv[ 0 ]->position, dv[ 1 ]->position, dv[ 2 ]->position );
+				R_CalcNormalForTriangle( faceNormal, dv[0]->position, dv[1]->position, dv[2]->position );
 
 				// calculate barycentric basis for the triangle
-				bb = ( dv[ 1 ]->texCoords[ 0 ] - dv[ 0 ]->texCoords[ 0 ] ) * ( dv[ 2 ]->texCoords[ 1 ] - dv[ 0 ]->texCoords[ 1 ] ) - ( dv[ 2 ]->texCoords[ 0 ] - dv[ 0 ]->texCoords[ 0 ] ) * ( dv[ 1 ]->texCoords[ 1 ] - dv[ 0 ]->texCoords[ 1 ] );
+				bb = ( dv[1]->texCoords[0] - dv[0]->texCoords[0] ) * ( dv[2]->texCoords[1] - dv[0]->texCoords[1] ) -
+					 ( dv[2]->texCoords[0] - dv[0]->texCoords[0] ) * ( dv[1]->texCoords[1] - dv[0]->texCoords[1] );
 				if( fabs( bb ) < 0.00000001f )
 				{
 					continue;
@@ -543,32 +544,32 @@ qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modN
 				for( k = 0; k < 3; k++ )
 				{
 					// calculate s tangent vector
-					s         = dv[ k ]->texCoords[ 0 ] + 10.0f;
-					t         = dv[ k ]->texCoords[ 1 ];
-					bary[ 0 ] = ( ( dv[ 1 ]->texCoords[ 0 ] - s ) * ( dv[ 2 ]->texCoords[ 1 ] - t ) - ( dv[ 2 ]->texCoords[ 0 ] - s ) * ( dv[ 1 ]->texCoords[ 1 ] - t ) ) / bb;
-					bary[ 1 ] = ( ( dv[ 2 ]->texCoords[ 0 ] - s ) * ( dv[ 0 ]->texCoords[ 1 ] - t ) - ( dv[ 0 ]->texCoords[ 0 ] - s ) * ( dv[ 2 ]->texCoords[ 1 ] - t ) ) / bb;
-					bary[ 2 ] = ( ( dv[ 0 ]->texCoords[ 0 ] - s ) * ( dv[ 1 ]->texCoords[ 1 ] - t ) - ( dv[ 1 ]->texCoords[ 0 ] - s ) * ( dv[ 0 ]->texCoords[ 1 ] - t ) ) / bb;
+					s		= dv[k]->texCoords[0] + 10.0f;
+					t		= dv[k]->texCoords[1];
+					bary[0] = ( ( dv[1]->texCoords[0] - s ) * ( dv[2]->texCoords[1] - t ) - ( dv[2]->texCoords[0] - s ) * ( dv[1]->texCoords[1] - t ) ) / bb;
+					bary[1] = ( ( dv[2]->texCoords[0] - s ) * ( dv[0]->texCoords[1] - t ) - ( dv[0]->texCoords[0] - s ) * ( dv[2]->texCoords[1] - t ) ) / bb;
+					bary[2] = ( ( dv[0]->texCoords[0] - s ) * ( dv[1]->texCoords[1] - t ) - ( dv[1]->texCoords[0] - s ) * ( dv[0]->texCoords[1] - t ) ) / bb;
 
-					dv[ k ]->tangent[ 0 ] = bary[ 0 ] * dv[ 0 ]->position[ 0 ] + bary[ 1 ] * dv[ 1 ]->position[ 0 ] + bary[ 2 ] * dv[ 2 ]->position[ 0 ];
-					dv[ k ]->tangent[ 1 ] = bary[ 0 ] * dv[ 0 ]->position[ 1 ] + bary[ 1 ] * dv[ 1 ]->position[ 1 ] + bary[ 2 ] * dv[ 2 ]->position[ 1 ];
-					dv[ k ]->tangent[ 2 ] = bary[ 0 ] * dv[ 0 ]->position[ 2 ] + bary[ 1 ] * dv[ 1 ]->position[ 2 ] + bary[ 2 ] * dv[ 2 ]->position[ 2 ];
+					dv[k]->tangent[0] = bary[0] * dv[0]->position[0] + bary[1] * dv[1]->position[0] + bary[2] * dv[2]->position[0];
+					dv[k]->tangent[1] = bary[0] * dv[0]->position[1] + bary[1] * dv[1]->position[1] + bary[2] * dv[2]->position[1];
+					dv[k]->tangent[2] = bary[0] * dv[0]->position[2] + bary[1] * dv[1]->position[2] + bary[2] * dv[2]->position[2];
 
-					VectorSubtract( dv[ k ]->tangent, dv[ k ]->position, dv[ k ]->tangent );
-					VectorNormalize( dv[ k ]->tangent );
+					VectorSubtract( dv[k]->tangent, dv[k]->position, dv[k]->tangent );
+					VectorNormalize( dv[k]->tangent );
 
 					// calculate t tangent vector (binormal)
-					s         = dv[ k ]->texCoords[ 0 ];
-					t         = dv[ k ]->texCoords[ 1 ] + 10.0f;
-					bary[ 0 ] = ( ( dv[ 1 ]->texCoords[ 0 ] - s ) * ( dv[ 2 ]->texCoords[ 1 ] - t ) - ( dv[ 2 ]->texCoords[ 0 ] - s ) * ( dv[ 1 ]->texCoords[ 1 ] - t ) ) / bb;
-					bary[ 1 ] = ( ( dv[ 2 ]->texCoords[ 0 ] - s ) * ( dv[ 0 ]->texCoords[ 1 ] - t ) - ( dv[ 0 ]->texCoords[ 0 ] - s ) * ( dv[ 2 ]->texCoords[ 1 ] - t ) ) / bb;
-					bary[ 2 ] = ( ( dv[ 0 ]->texCoords[ 0 ] - s ) * ( dv[ 1 ]->texCoords[ 1 ] - t ) - ( dv[ 1 ]->texCoords[ 0 ] - s ) * ( dv[ 0 ]->texCoords[ 1 ] - t ) ) / bb;
+					s		= dv[k]->texCoords[0];
+					t		= dv[k]->texCoords[1] + 10.0f;
+					bary[0] = ( ( dv[1]->texCoords[0] - s ) * ( dv[2]->texCoords[1] - t ) - ( dv[2]->texCoords[0] - s ) * ( dv[1]->texCoords[1] - t ) ) / bb;
+					bary[1] = ( ( dv[2]->texCoords[0] - s ) * ( dv[0]->texCoords[1] - t ) - ( dv[0]->texCoords[0] - s ) * ( dv[2]->texCoords[1] - t ) ) / bb;
+					bary[2] = ( ( dv[0]->texCoords[0] - s ) * ( dv[1]->texCoords[1] - t ) - ( dv[1]->texCoords[0] - s ) * ( dv[0]->texCoords[1] - t ) ) / bb;
 
-					dv[ k ]->binormal[ 0 ] = bary[ 0 ] * dv[ 0 ]->position[ 0 ] + bary[ 1 ] * dv[ 1 ]->position[ 0 ] + bary[ 2 ] * dv[ 2 ]->position[ 0 ];
-					dv[ k ]->binormal[ 1 ] = bary[ 0 ] * dv[ 0 ]->position[ 1 ] + bary[ 1 ] * dv[ 1 ]->position[ 1 ] + bary[ 2 ] * dv[ 2 ]->position[ 1 ];
-					dv[ k ]->binormal[ 2 ] = bary[ 0 ] * dv[ 0 ]->position[ 2 ] + bary[ 1 ] * dv[ 1 ]->position[ 2 ] + bary[ 2 ] * dv[ 2 ]->position[ 2 ];
+					dv[k]->binormal[0] = bary[0] * dv[0]->position[0] + bary[1] * dv[1]->position[0] + bary[2] * dv[2]->position[0];
+					dv[k]->binormal[1] = bary[0] * dv[0]->position[1] + bary[1] * dv[1]->position[1] + bary[2] * dv[2]->position[1];
+					dv[k]->binormal[2] = bary[0] * dv[0]->position[2] + bary[1] * dv[1]->position[2] + bary[2] * dv[2]->position[2];
 
-					VectorSubtract( dv[ k ]->binormal, dv[ k ]->position, dv[ k ]->binormal );
-					VectorNormalize( dv[ k ]->binormal );
+					VectorSubtract( dv[k]->binormal, dv[k]->position, dv[k]->binormal );
+					VectorNormalize( dv[k]->binormal );
 
 					// calculate the normal as cross product N=TxB
 	#if 0
@@ -587,7 +588,7 @@ qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modN
 						//VectorInverse(dv[k]->binormal);
 					}
 	#else
-					VectorAdd( dv[ k ]->normal, faceNormal, dv[ k ]->normal );
+					VectorAdd( dv[k]->normal, faceNormal, dv[k]->normal );
 	#endif
 				}
 			}
@@ -595,8 +596,8 @@ qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modN
 	#if 1
 			for( j = 0, v = surf->verts; j < surf->numVerts; j++, v++ )
 			{
-				//VectorNormalize(v->tangent);
-				//VectorNormalize(v->binormal);
+				// VectorNormalize(v->tangent);
+				// VectorNormalize(v->binormal);
 				VectorNormalize( v->normal );
 			}
 	#endif
@@ -639,15 +640,15 @@ qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modN
 
 			for( k = 0; k < 3; k++ )
 			{
-				sortTri->indexes[ k ]  = tri->indexes[ k ];
-				sortTri->vertexes[ k ] = &surf->verts[ tri->indexes[ k ] ];
+				sortTri->indexes[k]	 = tri->indexes[k];
+				sortTri->vertexes[k] = &surf->verts[tri->indexes[k]];
 			}
 			sortTri->referenced = qfalse;
 
 			Com_AddToGrowList( &sortedTriangles, sortTri );
 		}
 
-		//qsort(sortedTriangles.elements, sortedTriangles.currentElements, sizeof(void *), CompareTrianglesByBoneReferences);
+		// qsort(sortedTriangles.elements, sortedTriangles.currentElements, sizeof(void *), CompareTrianglesByBoneReferences);
 
 #if 0
 		for( j = 0; j < sortedTriangles.currentElements; j++ )
@@ -717,11 +718,11 @@ qboolean R_LoadMD5( model_t* mod, void* buffer, int bufferSize, const char* modN
 
 	// move VBO surfaces list to hunk
 	md5->numVBOSurfaces = vboSurfaces.currentElements;
-	md5->vboSurfaces    = ri.Hunk_Alloc( md5->numVBOSurfaces * sizeof( *md5->vboSurfaces ), h_low );
+	md5->vboSurfaces	= ri.Hunk_Alloc( md5->numVBOSurfaces * sizeof( *md5->vboSurfaces ), h_low );
 
 	for( i = 0; i < md5->numVBOSurfaces; i++ )
 	{
-		md5->vboSurfaces[ i ] = ( srfVBOMD5Mesh_t* )Com_GrowListElement( &vboSurfaces, i );
+		md5->vboSurfaces[i] = ( srfVBOMD5Mesh_t* )Com_GrowListElement( &vboSurfaces, i );
 	}
 
 	Com_DestroyGrowList( &vboSurfaces );

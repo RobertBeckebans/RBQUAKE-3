@@ -34,15 +34,15 @@ Opens/loads a sound, tries codec based on the sound's file extension
 then tries all supported codecs.
 =================
 */
-static void* S_CodecGetSound( const char* filename, snd_info_t* info )
+static void*		S_CodecGetSound( const char* filename, snd_info_t* info )
 {
 	snd_codec_t* codec;
-	snd_codec_t* orgCodec      = NULL;
-	qboolean     orgNameFailed = qfalse;
-	char         localName[ MAX_QPATH ];
-	const char*  ext;
-	char         altName[ MAX_QPATH ];
-	void*        rtn = NULL;
+	snd_codec_t* orgCodec	   = NULL;
+	qboolean	 orgNameFailed = qfalse;
+	char		 localName[MAX_QPATH];
+	const char*	 ext;
+	char		 altName[MAX_QPATH];
+	void*		 rtn = NULL;
 
 	Q_strncpyz( localName, filename, MAX_QPATH );
 
@@ -76,7 +76,7 @@ static void* S_CodecGetSound( const char* filename, snd_info_t* info )
 				// Loader failed, most likely because the file isn't there;
 				// try again without the extension
 				orgNameFailed = qtrue;
-				orgCodec      = codec;
+				orgCodec	  = codec;
 				Com_StripExtension( filename, localName, MAX_QPATH );
 			}
 			else
@@ -112,9 +112,7 @@ static void* S_CodecGetSound( const char* filename, snd_info_t* info )
 		{
 			if( orgNameFailed )
 			{
-				Com_DPrintf( S_COLOR_YELLOW "WARNING: %s not present, using %s instead\n",
-					filename,
-					altName );
+				Com_DPrintf( S_COLOR_YELLOW "WARNING: %s not present, using %s instead\n", filename, altName );
 			}
 
 			return rtn;
@@ -165,7 +163,7 @@ S_CodecRegister
 void S_CodecRegister( snd_codec_t* codec )
 {
 	codec->next = codecs;
-	codecs      = codec;
+	codecs		= codec;
 }
 
 /*
@@ -210,7 +208,7 @@ snd_stream_t* S_CodecUtilOpen( const char* filename, snd_codec_t* codec )
 {
 	snd_stream_t* stream;
 	fileHandle_t  hnd;
-	int           length;
+	int			  length;
 
 	// Try to open the file
 	length = FS_FOpenFileRead( filename, &hnd, qtrue );

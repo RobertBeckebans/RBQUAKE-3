@@ -33,25 +33,25 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "../client/client.h"
 #include "../sys/sys_local.h"
 
-static cvar_t* in_keyboardDebug = NULL;
+static cvar_t*		 in_keyboardDebug = NULL;
 
 static SDL_Joystick* stick = NULL;
 
-static qboolean mouseAvailable = qfalse;
-static qboolean mouseActive    = qfalse;
+static qboolean		 mouseAvailable = qfalse;
+static qboolean		 mouseActive	= qfalse;
 
-static cvar_t* in_mouse = NULL;
-static cvar_t* in_nograb;
+static cvar_t*		 in_mouse = NULL;
+static cvar_t*		 in_nograb;
 
-static cvar_t* in_joystick          = NULL;
-static cvar_t* in_joystickDebug     = NULL;
-static cvar_t* in_joystickThreshold = NULL;
-static cvar_t* in_joystickNo        = NULL;
-static cvar_t* in_joystickUseAnalog = NULL;
+static cvar_t*		 in_joystick		  = NULL;
+static cvar_t*		 in_joystickDebug	  = NULL;
+static cvar_t*		 in_joystickThreshold = NULL;
+static cvar_t*		 in_joystickNo		  = NULL;
+static cvar_t*		 in_joystickUseAnalog = NULL;
 
-static int vidRestartTime = 0;
+static int			 vidRestartTime = 0;
 
-static SDL_Window* SDL_window = NULL;
+static SDL_Window*	 SDL_window = NULL;
 
 #define CTRL( a ) ( ( a ) - 'a' + 1 )
 
@@ -71,11 +71,7 @@ static void IN_PrintKey( const SDL_Keysym* keysym, keyNum_t key, qboolean down )
 		Com_Printf( "  " );
 	}
 
-	Com_Printf( "Scancode: 0x%02x(%s) Sym: 0x%02x(%s)",
-		keysym->scancode,
-		SDL_GetScancodeName( keysym->scancode ),
-		keysym->sym,
-		SDL_GetKeyName( keysym->sym ) );
+	Com_Printf( "Scancode: 0x%02x(%s) Sym: 0x%02x(%s)", keysym->scancode, SDL_GetScancodeName( keysym->scancode ), keysym->sym, SDL_GetKeyName( keysym->sym ) );
 
 	if( keysym->mod & KMOD_LSHIFT )
 	{
@@ -136,7 +132,7 @@ static void IN_PrintKey( const SDL_Keysym* keysym, keyNum_t key, qboolean down )
 IN_IsConsoleKey
 
 TODO: If the SDL_Scancode situation improves, use it instead of
-      both of these methods
+	  both of these methods
 ===============
 */
 static qboolean IN_IsConsoleKey( keyNum_t key, int character )
@@ -152,13 +148,13 @@ static qboolean IN_IsConsoleKey( keyNum_t key, int character )
 		union
 		{
 			keyNum_t key;
-			int      character;
+			int		 character;
 		} u;
 	} consoleKey_t;
 
-	static consoleKey_t consoleKeys[ MAX_CONSOLE_KEYS ];
-	static int          numConsoleKeys = 0;
-	int                 i;
+	static consoleKey_t consoleKeys[MAX_CONSOLE_KEYS];
+	static int			numConsoleKeys = 0;
+	int					i;
 
 	// Only parse the variable when it changes
 	if( cl_consoleKeys->modified )
@@ -166,16 +162,16 @@ static qboolean IN_IsConsoleKey( keyNum_t key, int character )
 		char *text_p, *token;
 
 		cl_consoleKeys->modified = qfalse;
-		text_p                   = cl_consoleKeys->string;
-		numConsoleKeys           = 0;
+		text_p					 = cl_consoleKeys->string;
+		numConsoleKeys			 = 0;
 
 		while( numConsoleKeys < MAX_CONSOLE_KEYS )
 		{
-			consoleKey_t* c        = &consoleKeys[ numConsoleKeys ];
-			int           charCode = 0;
+			consoleKey_t* c		   = &consoleKeys[numConsoleKeys];
+			int			  charCode = 0;
 
 			token = Com_Parse( &text_p );
-			if( !token[ 0 ] )
+			if( !token[0] )
 			{
 				break;
 			}
@@ -187,12 +183,12 @@ static qboolean IN_IsConsoleKey( keyNum_t key, int character )
 
 			if( charCode > 0 )
 			{
-				c->type        = CHARACTER;
+				c->type		   = CHARACTER;
 				c->u.character = charCode;
 			}
 			else
 			{
-				c->type  = QUAKE_KEY;
+				c->type	 = QUAKE_KEY;
 				c->u.key = Key_StringToKeynum( token );
 
 				// 0 isn't a key
@@ -214,7 +210,7 @@ static qboolean IN_IsConsoleKey( keyNum_t key, int character )
 
 	for( i = 0; i < numConsoleKeys; i++ )
 	{
-		consoleKey_t* c = &consoleKeys[ i ];
+		consoleKey_t* c = &consoleKeys[i];
 
 		switch( c->type )
 		{
@@ -472,7 +468,7 @@ IN_GobbleMotionEvents
 */
 static void IN_GobbleMotionEvents( void )
 {
-	SDL_Event dummy[ 1 ];
+	SDL_Event dummy[1];
 
 	// Gobble any mouse motion events
 	SDL_PumpEvents();
@@ -564,21 +560,17 @@ static void IN_DeactivateMouse( void )
 }
 
 // We translate axes movement into keypresses
-static int joy_keys[ 16 ] = {
-	K_LEFTARROW, K_RIGHTARROW, K_UPARROW, K_DOWNARROW, K_JOY17, K_JOY18, K_JOY19, K_JOY20, K_JOY21, K_JOY22, K_JOY23, K_JOY24, K_JOY25, K_JOY26, K_JOY27, K_JOY28
-};
+static int joy_keys[16] = { K_LEFTARROW, K_RIGHTARROW, K_UPARROW, K_DOWNARROW, K_JOY17, K_JOY18, K_JOY19, K_JOY20, K_JOY21, K_JOY22, K_JOY23, K_JOY24, K_JOY25, K_JOY26, K_JOY27, K_JOY28 };
 
 // translate hat events into keypresses
 // the 4 highest buttons are used for the first hat ...
-static int hat_keys[ 16 ] = {
-	K_JOY29, K_JOY30, K_JOY31, K_JOY32, K_JOY25, K_JOY26, K_JOY27, K_JOY28, K_JOY21, K_JOY22, K_JOY23, K_JOY24, K_JOY17, K_JOY18, K_JOY19, K_JOY20
-};
+static int hat_keys[16] = { K_JOY29, K_JOY30, K_JOY31, K_JOY32, K_JOY25, K_JOY26, K_JOY27, K_JOY28, K_JOY21, K_JOY22, K_JOY23, K_JOY24, K_JOY17, K_JOY18, K_JOY19, K_JOY20 };
 
 struct
 {
-	qboolean     buttons[ 16 ]; // !!! FIXME: these might be too many.
+	qboolean	 buttons[16]; // !!! FIXME: these might be too many.
 	unsigned int oldaxes;
-	int          oldaaxes[ MAX_JOYSTICK_AXIS ];
+	int			 oldaaxes[MAX_JOYSTICK_AXIS];
 	unsigned int oldhats;
 } stick_state;
 
@@ -589,9 +581,9 @@ IN_InitJoystick
 */
 static void IN_InitJoystick( void )
 {
-	int  i            = 0;
-	int  total        = 0;
-	char buf[ 16384 ] = "";
+	int	 i			= 0;
+	int	 total		= 0;
+	char buf[16384] = "";
 
 	if( stick != NULL )
 	{
@@ -681,11 +673,11 @@ IN_JoyMove
 */
 static void IN_JoyMove( void )
 {
-	qboolean     joy_pressed[ ARRAY_LEN( joy_keys ) ];
+	qboolean	 joy_pressed[ARRAY_LEN( joy_keys )];
 	unsigned int axes  = 0;
 	unsigned int hats  = 0;
-	int          total = 0;
-	int          i     = 0;
+	int			 total = 0;
+	int			 i	   = 0;
 
 	if( !stick )
 	{
@@ -739,10 +731,10 @@ static void IN_JoyMove( void )
 		{
 			qboolean pressed = ( SDL_JoystickGetButton( stick, i ) != 0 );
 
-			if( pressed != stick_state.buttons[ i ] )
+			if( pressed != stick_state.buttons[i] )
 			{
 				Com_QueueEvent( 0, SE_KEY, K_JOY1 + i, pressed, 0, NULL );
-				stick_state.buttons[ i ] = pressed;
+				stick_state.buttons[i] = pressed;
 			}
 		}
 	}
@@ -757,7 +749,7 @@ static void IN_JoyMove( void )
 		}
 		for( i = 0; i < total; i++ )
 		{
-			( ( Uint8* )&hats )[ i ] = SDL_JoystickGetHat( stick, i );
+			( ( Uint8* )&hats )[i] = SDL_JoystickGetHat( stick, i );
 		}
 	}
 
@@ -766,72 +758,72 @@ static void IN_JoyMove( void )
 	{
 		for( i = 0; i < 4; i++ )
 		{
-			if( ( ( Uint8* )&hats )[ i ] != ( ( Uint8* )&stick_state.oldhats )[ i ] )
+			if( ( ( Uint8* )&hats )[i] != ( ( Uint8* )&stick_state.oldhats )[i] )
 			{
 				// release event
-				switch( ( ( Uint8* )&stick_state.oldhats )[ i ] )
+				switch( ( ( Uint8* )&stick_state.oldhats )[i] )
 				{
 					case SDL_HAT_UP:
-						Com_QueueEvent( 0, SE_KEY, hat_keys[ 4 * i + 0 ], qfalse, 0, NULL );
+						Com_QueueEvent( 0, SE_KEY, hat_keys[4 * i + 0], qfalse, 0, NULL );
 						break;
 					case SDL_HAT_RIGHT:
-						Com_QueueEvent( 0, SE_KEY, hat_keys[ 4 * i + 1 ], qfalse, 0, NULL );
+						Com_QueueEvent( 0, SE_KEY, hat_keys[4 * i + 1], qfalse, 0, NULL );
 						break;
 					case SDL_HAT_DOWN:
-						Com_QueueEvent( 0, SE_KEY, hat_keys[ 4 * i + 2 ], qfalse, 0, NULL );
+						Com_QueueEvent( 0, SE_KEY, hat_keys[4 * i + 2], qfalse, 0, NULL );
 						break;
 					case SDL_HAT_LEFT:
-						Com_QueueEvent( 0, SE_KEY, hat_keys[ 4 * i + 3 ], qfalse, 0, NULL );
+						Com_QueueEvent( 0, SE_KEY, hat_keys[4 * i + 3], qfalse, 0, NULL );
 						break;
 					case SDL_HAT_RIGHTUP:
-						Com_QueueEvent( 0, SE_KEY, hat_keys[ 4 * i + 0 ], qfalse, 0, NULL );
-						Com_QueueEvent( 0, SE_KEY, hat_keys[ 4 * i + 1 ], qfalse, 0, NULL );
+						Com_QueueEvent( 0, SE_KEY, hat_keys[4 * i + 0], qfalse, 0, NULL );
+						Com_QueueEvent( 0, SE_KEY, hat_keys[4 * i + 1], qfalse, 0, NULL );
 						break;
 					case SDL_HAT_RIGHTDOWN:
-						Com_QueueEvent( 0, SE_KEY, hat_keys[ 4 * i + 2 ], qfalse, 0, NULL );
-						Com_QueueEvent( 0, SE_KEY, hat_keys[ 4 * i + 1 ], qfalse, 0, NULL );
+						Com_QueueEvent( 0, SE_KEY, hat_keys[4 * i + 2], qfalse, 0, NULL );
+						Com_QueueEvent( 0, SE_KEY, hat_keys[4 * i + 1], qfalse, 0, NULL );
 						break;
 					case SDL_HAT_LEFTUP:
-						Com_QueueEvent( 0, SE_KEY, hat_keys[ 4 * i + 0 ], qfalse, 0, NULL );
-						Com_QueueEvent( 0, SE_KEY, hat_keys[ 4 * i + 3 ], qfalse, 0, NULL );
+						Com_QueueEvent( 0, SE_KEY, hat_keys[4 * i + 0], qfalse, 0, NULL );
+						Com_QueueEvent( 0, SE_KEY, hat_keys[4 * i + 3], qfalse, 0, NULL );
 						break;
 					case SDL_HAT_LEFTDOWN:
-						Com_QueueEvent( 0, SE_KEY, hat_keys[ 4 * i + 2 ], qfalse, 0, NULL );
-						Com_QueueEvent( 0, SE_KEY, hat_keys[ 4 * i + 3 ], qfalse, 0, NULL );
+						Com_QueueEvent( 0, SE_KEY, hat_keys[4 * i + 2], qfalse, 0, NULL );
+						Com_QueueEvent( 0, SE_KEY, hat_keys[4 * i + 3], qfalse, 0, NULL );
 						break;
 					default:
 						break;
 				}
 				// press event
-				switch( ( ( Uint8* )&hats )[ i ] )
+				switch( ( ( Uint8* )&hats )[i] )
 				{
 					case SDL_HAT_UP:
-						Com_QueueEvent( 0, SE_KEY, hat_keys[ 4 * i + 0 ], qtrue, 0, NULL );
+						Com_QueueEvent( 0, SE_KEY, hat_keys[4 * i + 0], qtrue, 0, NULL );
 						break;
 					case SDL_HAT_RIGHT:
-						Com_QueueEvent( 0, SE_KEY, hat_keys[ 4 * i + 1 ], qtrue, 0, NULL );
+						Com_QueueEvent( 0, SE_KEY, hat_keys[4 * i + 1], qtrue, 0, NULL );
 						break;
 					case SDL_HAT_DOWN:
-						Com_QueueEvent( 0, SE_KEY, hat_keys[ 4 * i + 2 ], qtrue, 0, NULL );
+						Com_QueueEvent( 0, SE_KEY, hat_keys[4 * i + 2], qtrue, 0, NULL );
 						break;
 					case SDL_HAT_LEFT:
-						Com_QueueEvent( 0, SE_KEY, hat_keys[ 4 * i + 3 ], qtrue, 0, NULL );
+						Com_QueueEvent( 0, SE_KEY, hat_keys[4 * i + 3], qtrue, 0, NULL );
 						break;
 					case SDL_HAT_RIGHTUP:
-						Com_QueueEvent( 0, SE_KEY, hat_keys[ 4 * i + 0 ], qtrue, 0, NULL );
-						Com_QueueEvent( 0, SE_KEY, hat_keys[ 4 * i + 1 ], qtrue, 0, NULL );
+						Com_QueueEvent( 0, SE_KEY, hat_keys[4 * i + 0], qtrue, 0, NULL );
+						Com_QueueEvent( 0, SE_KEY, hat_keys[4 * i + 1], qtrue, 0, NULL );
 						break;
 					case SDL_HAT_RIGHTDOWN:
-						Com_QueueEvent( 0, SE_KEY, hat_keys[ 4 * i + 2 ], qtrue, 0, NULL );
-						Com_QueueEvent( 0, SE_KEY, hat_keys[ 4 * i + 1 ], qtrue, 0, NULL );
+						Com_QueueEvent( 0, SE_KEY, hat_keys[4 * i + 2], qtrue, 0, NULL );
+						Com_QueueEvent( 0, SE_KEY, hat_keys[4 * i + 1], qtrue, 0, NULL );
 						break;
 					case SDL_HAT_LEFTUP:
-						Com_QueueEvent( 0, SE_KEY, hat_keys[ 4 * i + 0 ], qtrue, 0, NULL );
-						Com_QueueEvent( 0, SE_KEY, hat_keys[ 4 * i + 3 ], qtrue, 0, NULL );
+						Com_QueueEvent( 0, SE_KEY, hat_keys[4 * i + 0], qtrue, 0, NULL );
+						Com_QueueEvent( 0, SE_KEY, hat_keys[4 * i + 3], qtrue, 0, NULL );
 						break;
 					case SDL_HAT_LEFTDOWN:
-						Com_QueueEvent( 0, SE_KEY, hat_keys[ 4 * i + 2 ], qtrue, 0, NULL );
-						Com_QueueEvent( 0, SE_KEY, hat_keys[ 4 * i + 3 ], qtrue, 0, NULL );
+						Com_QueueEvent( 0, SE_KEY, hat_keys[4 * i + 2], qtrue, 0, NULL );
+						Com_QueueEvent( 0, SE_KEY, hat_keys[4 * i + 3], qtrue, 0, NULL );
 						break;
 					default:
 						break;
@@ -856,17 +848,17 @@ static void IN_JoyMove( void )
 			for( i = 0; i < total; i++ )
 			{
 				Sint16 axis = SDL_JoystickGetAxis( stick, i );
-				float  f    = ( ( float )abs( axis ) ) / 32767.0f;
+				float  f	= ( ( float )abs( axis ) ) / 32767.0f;
 
 				if( f < in_joystickThreshold->value )
 				{
 					axis = 0;
 				}
 
-				if( axis != stick_state.oldaaxes[ i ] )
+				if( axis != stick_state.oldaaxes[i] )
 				{
 					Com_QueueEvent( 0, SE_JOYSTICK_AXIS, i, axis, 0, NULL );
-					stick_state.oldaaxes[ i ] = axis;
+					stick_state.oldaaxes[i] = axis;
 				}
 			}
 		}
@@ -879,7 +871,7 @@ static void IN_JoyMove( void )
 			for( i = 0; i < total; i++ )
 			{
 				Sint16 axis = SDL_JoystickGetAxis( stick, i );
-				float  f    = ( ( float )axis ) / 32767.0f;
+				float  f	= ( ( float )axis ) / 32767.0f;
 				if( f < -in_joystickThreshold->value )
 				{
 					axes |= ( 1 << ( i * 2 ) );
@@ -899,12 +891,12 @@ static void IN_JoyMove( void )
 		{
 			if( ( axes & ( 1 << i ) ) && !( stick_state.oldaxes & ( 1 << i ) ) )
 			{
-				Com_QueueEvent( 0, SE_KEY, joy_keys[ i ], qtrue, 0, NULL );
+				Com_QueueEvent( 0, SE_KEY, joy_keys[i], qtrue, 0, NULL );
 			}
 
 			if( !( axes & ( 1 << i ) ) && ( stick_state.oldaxes & ( 1 << i ) ) )
 			{
-				Com_QueueEvent( 0, SE_KEY, joy_keys[ i ], qfalse, 0, NULL );
+				Com_QueueEvent( 0, SE_KEY, joy_keys[i], qfalse, 0, NULL );
 			}
 		}
 	}
@@ -920,8 +912,8 @@ IN_ProcessEvents
 */
 static void IN_ProcessEvents( void )
 {
-	SDL_Event       e;
-	keyNum_t        key         = 0;
+	SDL_Event		e;
+	keyNum_t		key			= 0;
 	static keyNum_t lastKeyDown = 0;
 
 	if( !SDL_WasInit( SDL_INIT_VIDEO ) )
@@ -1061,7 +1053,7 @@ static void IN_ProcessEvents( void )
 				{
 					case SDL_WINDOWEVENT_RESIZED:
 					{
-						char width[ 32 ], height[ 32 ];
+						char width[32], height[32];
 						Com_sprintf( width, sizeof( width ), "%d", e.window.data1 );
 						Com_sprintf( height, sizeof( height ), "%d", e.window.data2 );
 						Cvar_Set( "r_customwidth", width );
@@ -1148,9 +1140,9 @@ void IN_InitKeyLockStates( void )
 {
 	const unsigned char* keystate = SDL_GetKeyboardState( NULL );
 
-	keys[ K_SCROLLOCK ].down  = keystate[ SDL_SCANCODE_SCROLLLOCK ];
-	keys[ K_KP_NUMLOCK ].down = keystate[ SDL_SCANCODE_NUMLOCKCLEAR ];
-	keys[ K_CAPSLOCK ].down   = keystate[ SDL_SCANCODE_CAPSLOCK ];
+	keys[K_SCROLLOCK].down	= keystate[SDL_SCANCODE_SCROLLLOCK];
+	keys[K_KP_NUMLOCK].down = keystate[SDL_SCANCODE_NUMLOCKCLEAR];
+	keys[K_CAPSLOCK].down	= keystate[SDL_SCANCODE_CAPSLOCK];
 }
 
 /*
@@ -1178,8 +1170,8 @@ void IN_Init( void* windowData )
 	in_mouse  = Cvar_Get( "in_mouse", "1", CVAR_ARCHIVE );
 	in_nograb = Cvar_Get( "in_nograb", "0", CVAR_ARCHIVE );
 
-	in_joystick          = Cvar_Get( "in_joystick", "0", CVAR_ARCHIVE | CVAR_LATCH );
-	in_joystickDebug     = Cvar_Get( "in_joystickDebug", "0", CVAR_TEMP );
+	in_joystick			 = Cvar_Get( "in_joystick", "0", CVAR_ARCHIVE | CVAR_LATCH );
+	in_joystickDebug	 = Cvar_Get( "in_joystickDebug", "0", CVAR_TEMP );
 	in_joystickThreshold = Cvar_Get( "joy_threshold", "0.15", CVAR_ARCHIVE );
 
 	SDL_StartTextInput();

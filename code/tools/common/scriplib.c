@@ -30,31 +30,31 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 typedef struct
 {
-	char  filename[ 1024 ];
+	char  filename[1024];
 	char *buffer, *script_p, *end_p;
-	int   line;
+	int	  line;
 } script_t;
 
 #define MAX_INCLUDES 8
-static script_t  scriptstack[ MAX_INCLUDES ];
+static script_t	 scriptstack[MAX_INCLUDES];
 static script_t* script;
 
-char     token[ MAXTOKEN ];
-qboolean endofscript;
-qboolean tokenready; // only qtrue if UnGetToken was just called
+char			 token[MAXTOKEN];
+qboolean		 endofscript;
+qboolean		 tokenready; // only qtrue if UnGetToken was just called
 
 /*
 ==============
 AddScriptToStack
 ==============
 */
-void AddScriptToStack( const char* filename, int index )
+void			 AddScriptToStack( const char* filename, int index )
 {
 	int size;
 
 	script++;
 
-	if( script == &scriptstack[ MAX_INCLUDES ] )
+	if( script == &scriptstack[MAX_INCLUDES] )
 	{
 		Error( "script file exceeded MAX_INCLUDES" );
 	}
@@ -82,7 +82,7 @@ void AddScriptToStack( const char* filename, int index )
 	script->line = 1;
 
 	script->script_p = script->buffer;
-	script->end_p    = script->buffer + size;
+	script->end_p	 = script->buffer + size;
 }
 
 /*
@@ -96,7 +96,7 @@ void LoadScriptFile( const char* filename, int index )
 	AddScriptToStack( filename, index );
 
 	endofscript = qfalse;
-	tokenready  = qfalse;
+	tokenready	= qfalse;
 }
 
 /*
@@ -109,20 +109,20 @@ void ParseFromMemory( char* buffer, int size )
 	script = scriptstack;
 	script++;
 
-	if( script == &scriptstack[ MAX_INCLUDES ] )
+	if( script == &scriptstack[MAX_INCLUDES] )
 	{
 		Error( "script file exceeded MAX_INCLUDES" );
 	}
 
 	strcpy( script->filename, "memory buffer" );
 
-	script->buffer   = buffer;
-	script->line     = 1;
+	script->buffer	 = buffer;
+	script->line	 = 1;
 	script->script_p = script->buffer;
-	script->end_p    = script->buffer + size;
+	script->end_p	 = script->buffer + size;
 
 	endofscript = qfalse;
-	tokenready  = qfalse;
+	tokenready	= qfalse;
 }
 
 /*
@@ -219,7 +219,7 @@ skipspace:
 		return EndOfScript( crossline );
 
 	// skip ; # // comments
-	if( *script->script_p == ';' || *script->script_p == '#' || ( *script->script_p == '/' && script->script_p[ 1 ] == '/' ) )
+	if( *script->script_p == ';' || *script->script_p == '#' || ( *script->script_p == '/' && script->script_p[1] == '/' ) )
 	{
 		if( !crossline )
 			Error( "Line %i is incomplete\n", script->line );
@@ -235,13 +235,13 @@ skipspace:
 
 	// skip /* */ comments
 #if 1
-	if( *script->script_p == '/' && script->script_p[ 1 ] == '*' )
+	if( *script->script_p == '/' && script->script_p[1] == '*' )
 	{
 		if( !crossline )
 			Error( "Line %i is incomplete\n", script->line );
 
 		script->script_p += 2;
-		while( *script->script_p && ( *script->script_p != '*' || script->script_p[ 1 ] != '/' ) )
+		while( *script->script_p && ( *script->script_p != '*' || script->script_p[1] != '/' ) )
 		{
 			if( *script->script_p == '\n' )
 			{
@@ -275,17 +275,15 @@ skipspace:
 			if( script->script_p == script->end_p )
 				break;
 
-			if( token_p == &token[ MAXTOKEN ] )
+			if( token_p == &token[MAXTOKEN] )
 				Error( "Token too large on line %i\n", script->line );
 		}
 		script->script_p++;
 	}
 	// check for a number
-	else if( ( *script->script_p >= '0' && *script->script_p <= '9' ) ||
-		( *script->script_p == '-' && script->script_p[ 1 ] >= '0' && script->script_p[ 1 ] <= '9' ) ||
-		( *script->script_p == '+' && script->script_p[ 1 ] >= '0' && script->script_p[ 1 ] <= '9' ) ||
-		( *script->script_p == '.' && script->script_p[ 1 ] >= '0' && script->script_p[ 1 ] <= '9' ) ||
-		( *script->script_p == '-' && script->script_p[ 1 ] == '.' && script->script_p[ 2 ] >= '0' && script->script_p[ 2 ] <= '9' ) )
+	else if( ( *script->script_p >= '0' && *script->script_p <= '9' ) || ( *script->script_p == '-' && script->script_p[1] >= '0' && script->script_p[1] <= '9' ) ||
+			 ( *script->script_p == '+' && script->script_p[1] >= '0' && script->script_p[1] <= '9' ) || ( *script->script_p == '.' && script->script_p[1] >= '0' && script->script_p[1] <= '9' ) ||
+			 ( *script->script_p == '-' && script->script_p[1] == '.' && script->script_p[2] >= '0' && script->script_p[2] <= '9' ) )
 	{
 		do
 		{
@@ -294,7 +292,7 @@ skipspace:
 			if( script->script_p == script->end_p )
 				break;
 
-			if( token_p == &token[ MAXTOKEN ] )
+			if( token_p == &token[MAXTOKEN] )
 				Error( "Token too large on line %i\n", script->line );
 
 		} while( ( *script->script_p >= '0' && *script->script_p <= '9' ) || *script->script_p == '.' );
@@ -317,7 +315,7 @@ skipspace:
 				if( script->script_p == script->end_p )
 					break;
 
-				if( token_p == &token[ MAXTOKEN ] )
+				if( token_p == &token[MAXTOKEN] )
 					Error( "Token too large on line %i\n", script->line );
 
 			} while( *script->script_p >= '0' && *script->script_p <= '9' );
@@ -326,12 +324,8 @@ skipspace:
 	// check for a regular word
 	// we still allow forward and back slashes in name tokens for pathnames
 	// and also colons for drive letters
-	else if( ( *script->script_p >= 'a' && *script->script_p <= 'z' ) ||
-		( *script->script_p >= 'A' && *script->script_p <= 'Z' ) ||
-		( *script->script_p == '_' ) ||
-		( *script->script_p == '/' ) ||
-		( *script->script_p == '\\' ) ||
-		( *script->script_p == '$' ) )
+	else if( ( *script->script_p >= 'a' && *script->script_p <= 'z' ) || ( *script->script_p >= 'A' && *script->script_p <= 'Z' ) || ( *script->script_p == '_' ) || ( *script->script_p == '/' ) ||
+			 ( *script->script_p == '\\' ) || ( *script->script_p == '$' ) )
 	{
 		do
 		{
@@ -340,27 +334,18 @@ skipspace:
 			if( script->script_p == script->end_p )
 				break;
 
-			if( token_p == &token[ MAXTOKEN ] )
+			if( token_p == &token[MAXTOKEN] )
 				Error( "Token too large on line %i\n", script->line );
-		} while(
-			( *script->script_p >= 'a' && *script->script_p <= 'z' ) ||
-			( *script->script_p >= 'A' && *script->script_p <= 'Z' ) ||
-			( *script->script_p == '_' ) ||
-			( *script->script_p == '-' ) ||
-			( *script->script_p >= '0' && *script->script_p <= '9' ) ||
-			( *script->script_p == '/' ) ||
-			( *script->script_p == '\\' ) ||
-			( *script->script_p == ':' ) ||
-			( *script->script_p == '.' ) ||
-			( *script->script_p == '$' ) ||
-			( *script->script_p == '@' ) );
+		} while( ( *script->script_p >= 'a' && *script->script_p <= 'z' ) || ( *script->script_p >= 'A' && *script->script_p <= 'Z' ) || ( *script->script_p == '_' ) || ( *script->script_p == '-' ) ||
+				 ( *script->script_p >= '0' && *script->script_p <= '9' ) || ( *script->script_p == '/' ) || ( *script->script_p == '\\' ) || ( *script->script_p == ':' ) ||
+				 ( *script->script_p == '.' ) || ( *script->script_p == '$' ) || ( *script->script_p == '@' ) );
 	}
 	else
 	{
 		// single character punctuation
 		*token_p++ = *script->script_p++;
 
-		if( token_p == &token[ MAXTOKEN ] )
+		if( token_p == &token[MAXTOKEN] )
 			Error( "Token too large on line %i\n", script->line );
 	}
 
@@ -397,11 +382,11 @@ Returns qtrue if there is another token on the line
 */
 qboolean TokenAvailable( void )
 {
-	int      oldLine;
+	int		 oldLine;
 	qboolean r;
 
 	oldLine = script->line;
-	r       = GetToken( qtrue );
+	r		= GetToken( qtrue );
 	if( !r )
 	{
 		return qfalse;
@@ -441,13 +426,13 @@ void SkipBracedSection()
 	do
 	{
 		GetToken( qtrue );
-		if( token[ 1 ] == 0 )
+		if( token[1] == 0 )
 		{
-			if( token[ 0 ] == '{' )
+			if( token[0] == '{' )
 			{
 				depth++;
 			}
-			else if( token[ 0 ] == '}' )
+			else if( token[0] == '}' )
 			{
 				depth--;
 			}
@@ -463,7 +448,7 @@ SkipRestOfLine
 void SkipRestOfLine()
 {
 	char* p;
-	int   c;
+	int	  c;
 
 	p = script->script_p;
 	while( ( c = *p++ ) != 0 )
@@ -487,7 +472,7 @@ void Parse1DMatrix( int x, vec_t* m )
 	for( i = 0; i < x; i++ )
 	{
 		GetToken( qfalse );
-		m[ i ] = atof( token );
+		m[i] = atof( token );
 	}
 
 	MatchToken( ")" );
@@ -528,13 +513,13 @@ void Write1DMatrix( FILE* f, int x, vec_t* m )
 	fprintf( f, " ( " );
 	for( i = 0; i < x; i++ )
 	{
-		if( m[ i ] == ( int )m[ i ] )
+		if( m[i] == ( int )m[i] )
 		{
-			fprintf( f, "%i ", ( int )m[ i ] );
+			fprintf( f, "%i ", ( int )m[i] );
 		}
 		else
 		{
-			fprintf( f, "%f ", m[ i ] );
+			fprintf( f, "%f ", m[i] );
 		}
 	}
 	fprintf( f, " ) " );

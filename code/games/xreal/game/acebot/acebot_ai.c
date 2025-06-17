@@ -39,14 +39,14 @@ about pathing the level
 
 void ACEAI_StartFrame( int time )
 {
-	//G_Printf("ACEAI_StartFrame()\n");
+	// G_Printf("ACEAI_StartFrame()\n");
 
 	ACEIT_BuildItemNodeTable( qtrue );
 }
 
 void ACEAI_CheckServerCommands( gentity_t* self )
 {
-	char buf[ 1024 ];
+	char buf[1024];
 
 	while( trap_BotGetServerCommand( self->client - level.clients, buf, sizeof( buf ) ) )
 	{
@@ -69,7 +69,7 @@ void ACEAI_CheckSnapshotEntities( gentity_t* self )
 	// parse through the bot's list of snapshot entities and scan each of them
 	sequence = 0;
 	while( ( entnum = trap_BotGetSnapshotEntity( self - g_entities, sequence++ ) ) >= 0 ) // && (entnum < MAX_CLIENTS))
-		;                                                                                 //BotScanEntity(bs, &g_entities[entnum], &scan, scan_mode);
+		;																				  // BotScanEntity(bs, &g_entities[entnum], &scan, scan_mode);
 }
 
 /*
@@ -81,13 +81,13 @@ Main Think function for bot
 */
 void ACEAI_Think( gentity_t* self )
 {
-	int   i;
-	int   clientNum;
-	char  userinfo[ MAX_INFO_STRING ];
+	int	  i;
+	int	  clientNum;
+	char  userinfo[MAX_INFO_STRING];
 	char* team;
 
-	//if(ace_debug.integer)
-	//  G_Printf("ACEAI_Think(%s)\n", self->client->pers.netname);
+	// if(ace_debug.integer)
+	//   G_Printf("ACEAI_Think(%s)\n", self->client->pers.netname);
 
 	clientNum = self->client - level.clients;
 	trap_GetUserinfo( clientNum, userinfo, sizeof( userinfo ) );
@@ -132,7 +132,7 @@ void ACEAI_Think( gentity_t* self )
 	// FIXME: needed?
 	memset( &self->client->pers.cmd, 0, sizeof( self->client->pers.cmd ) );
 
-	self->enemy         = NULL;
+	self->enemy			= NULL;
 	self->bs.moveTarget = NULL;
 
 	// do this to avoid a time out
@@ -143,7 +143,7 @@ void ACEAI_Think( gentity_t* self )
 	// force respawn
 	if( self->health <= 0 )
 	{
-		self->client->buttons          = 0;
+		self->client->buttons		   = 0;
 		self->client->pers.cmd.buttons = BUTTON_ATTACK;
 	}
 
@@ -207,25 +207,25 @@ void ACEAI_Think( gentity_t* self )
 	}
 
 	// show random ping values in scoreboard
-	//self->client->ping = ucmd.msec;
+	// self->client->ping = ucmd.msec;
 
 	// copy the state that the cgame is currently sending
-	//cmd->weapon = cl.cgameUserCmdValue;
+	// cmd->weapon = cl.cgameUserCmdValue;
 
 	// send the current server time so the amount of movement
 	// can be determined without allowing cheating
-	//cmd->serverTime = cl.serverTime;
+	// cmd->serverTime = cl.serverTime;
 
 	for( i = 0; i < 3; i++ )
 	{
-		self->client->pers.cmd.angles[ i ] = ANGLE2SHORT( self->bs.viewAngles[ i ] );
+		self->client->pers.cmd.angles[i] = ANGLE2SHORT( self->bs.viewAngles[i] );
 	}
 
 	// send command through id's code, and update server information about this client
 	trap_BotUserCommand( self - g_entities, &self->client->pers.cmd );
 
-	//ClientThink_real(self);
-	//self->nextthink = level.time + FRAMETIME;
+	// ClientThink_real(self);
+	// self->nextthink = level.time + FRAMETIME;
 }
 
 /*
@@ -263,18 +263,18 @@ returns 1 if the entity is visible to self, even if not infront ()
 */
 qboolean ACEAI_Visible( gentity_t* self, gentity_t* other )
 {
-	vec3_t  spot1;
-	vec3_t  spot2;
+	vec3_t	spot1;
+	vec3_t	spot2;
 	trace_t trace;
 
-	//if(!self->client || !other->client)
-	//  return qfalse;
+	// if(!self->client || !other->client)
+	//   return qfalse;
 
 	VectorCopy( self->client->ps.origin, spot1 );
-	//spot1[2] += self->client->ps.viewheight;
+	// spot1[2] += self->client->ps.viewheight;
 
 	VectorCopy( other->client->ps.origin, spot2 );
-	//spot2[2] += other->client->ps.viewheight;
+	// spot2[2] += other->client->ps.viewheight;
 
 	trap_Trace( &trace, spot1, NULL, NULL, spot2, self->s.number, MASK_PLAYERSOLID );
 
@@ -291,18 +291,18 @@ qboolean ACEAI_Visible( gentity_t* self, gentity_t* other )
 // Do not call it for every think cycle.
 void ACEAI_PickLongRangeGoal( gentity_t* self )
 {
-	int        i;
-	int        node;
-	float      weight, bestWeight = 0.0f;
-	int        currentNode, goalNode;
+	int		   i;
+	int		   node;
+	float	   weight, bestWeight = 0.0f;
+	int		   currentNode, goalNode;
 	gentity_t* goalEnt;
 	gclient_t* cl;
 	gentity_t* ent;
 	gentity_t* player;
-	float      cost;
+	float	   cost;
 
 	goalNode = INVALID;
-	goalEnt  = NULL;
+	goalEnt	 = NULL;
 
 	// look for a target
 	currentNode = ACEND_FindClosestReachableNode( self, NODE_DENSITY, NODE_ALL );
@@ -311,14 +311,14 @@ void ACEAI_PickLongRangeGoal( gentity_t* self )
 
 	if( !ace_pickLongRangeGoal.integer || currentNode == INVALID )
 	{
-		self->bs.state          = STATE_WANDER;
+		self->bs.state			= STATE_WANDER;
 		self->bs.wander_timeout = level.time + 1000;
-		self->bs.goalNode       = -1;
+		self->bs.goalNode		= -1;
 		return;
 	}
 
 	// look for items
-	for( i = 0, ent = &g_entities[ 0 ]; i < level.numEntities; i++, ent++ )
+	for( i = 0, ent = &g_entities[0]; i < level.numEntities; i++, ent++ )
 	{
 		if( !ent->inuse )
 		{
@@ -357,13 +357,13 @@ void ACEAI_PickLongRangeGoal( gentity_t* self )
 		weight = ACEIT_ItemNeed( self, ent );
 
 		weight *= random(); // Allow random variations
-		weight /= cost;     // Check against cost of getting there
+		weight /= cost;		// Check against cost of getting there
 
 		if( weight > bestWeight )
 		{
 			bestWeight = weight;
 			goalNode   = ent->node;
-			goalEnt    = ent;
+			goalEnt	   = ent;
 		}
 	}
 
@@ -371,7 +371,7 @@ void ACEAI_PickLongRangeGoal( gentity_t* self )
 	// finds a player to set as the goal
 	for( i = 0; i < g_maxclients.integer; i++ )
 	{
-		cl     = level.clients + i;
+		cl	   = level.clients + i;
 		player = level.gentities + cl->ps.clientNum;
 
 		if( player == self )
@@ -398,8 +398,7 @@ void ACEAI_PickLongRangeGoal( gentity_t* self )
 		}
 
 		// player carrying the flag?
-		if( g_gametype.integer == GT_CTF && !OnSameTeam( self, player ) &&
-			( player->client->ps.powerups[ PW_REDFLAG ] || player->client->ps.powerups[ PW_BLUEFLAG ] ) )
+		if( g_gametype.integer == GT_CTF && !OnSameTeam( self, player ) && ( player->client->ps.powerups[PW_REDFLAG] || player->client->ps.powerups[PW_BLUEFLAG] ) )
 		{
 			weight = 2.0f;
 		}
@@ -409,21 +408,21 @@ void ACEAI_PickLongRangeGoal( gentity_t* self )
 		}
 
 		weight *= random(); // Allow random variations
-		weight /= cost;     // Check against cost of getting there
+		weight /= cost;		// Check against cost of getting there
 
 		if( weight > bestWeight )
 		{
 			bestWeight = weight;
 			goalNode   = node;
-			goalEnt    = player;
+			goalEnt	   = player;
 		}
 	}
 
 	// if do not find a goal, go wandering....
 	if( bestWeight == 0.0f || goalNode == INVALID )
 	{
-		self->bs.goalNode       = INVALID;
-		self->bs.state          = STATE_WANDER;
+		self->bs.goalNode		= INVALID;
+		self->bs.state			= STATE_WANDER;
 		self->bs.wander_timeout = level.time + 1000;
 
 		if( ace_debug.integer )
@@ -438,8 +437,7 @@ void ACEAI_PickLongRangeGoal( gentity_t* self )
 	self->bs.tries = 0; // reset the count of how many times we tried this goal
 
 	if( goalEnt != NULL && ace_debug.integer )
-		trap_SendServerCommand( -1,
-			va( "print \"%s: selected a %s at node %d for LR goal\n\"", self->client->pers.netname, goalEnt->classname, goalNode ) );
+		trap_SendServerCommand( -1, va( "print \"%s: selected a %s at node %d for LR goal\n\"", self->client->pers.netname, goalEnt->classname, goalNode ) );
 
 	ACEND_SetGoal( self, goalNode );
 }
@@ -450,9 +448,9 @@ void ACEAI_PickLongRangeGoal( gentity_t* self )
 void ACEAI_PickShortRangeGoal( gentity_t* self )
 {
 	gentity_t* target;
-	float      weight, bestWeight = 0.0f;
+	float	   weight, bestWeight = 0.0f;
 	gentity_t* best;
-	float      shortRange = 200;
+	float	   shortRange = 200;
 
 	if( !ace_pickShortRangeGoal.integer )
 	{
@@ -468,7 +466,7 @@ void ACEAI_PickShortRangeGoal( gentity_t* self )
 	{
 		if( target->classname == NULL )
 		{
-			return; //goto nextTarget;
+			return; // goto nextTarget;
 		}
 
 		if( target == self )
@@ -526,7 +524,7 @@ void ACEAI_PickShortRangeGoal( gentity_t* self )
 					if( weight > bestWeight )
 					{
 						bestWeight = weight;
-						best       = target;
+						best	   = target;
 					}
 				}
 			}
@@ -542,8 +540,7 @@ void ACEAI_PickShortRangeGoal( gentity_t* self )
 		self->bs.moveTarget = best;
 
 		if( ace_debug.integer && self->bs.goalEntity != self->bs.moveTarget )
-			trap_SendServerCommand( -1,
-				va( "print \"%s: selected a %s for SR goal\n\"", self->client->pers.netname, self->bs.moveTarget->classname ) );
+			trap_SendServerCommand( -1, va( "print \"%s: selected a %s for SR goal\n\"", self->client->pers.netname, self->bs.moveTarget->classname ) );
 
 		self->bs.goalEntity = best;
 	}
@@ -552,11 +549,11 @@ void ACEAI_PickShortRangeGoal( gentity_t* self )
 // Scan for enemy (simplifed for now to just pick any visible enemy)
 qboolean ACEAI_FindEnemy( gentity_t* self )
 {
-	int        i;
+	int		   i;
 	gclient_t* cl;
 	gentity_t* player;
-	float      enemyRange;
-	float      bestRange = 99999;
+	float	   enemyRange;
+	float	   bestRange = 99999;
 
 	if( !ace_attackEnemies.integer )
 	{
@@ -565,7 +562,7 @@ qboolean ACEAI_FindEnemy( gentity_t* self )
 
 	for( i = 0; i < g_maxclients.integer; i++ )
 	{
-		cl     = level.clients + i;
+		cl	   = level.clients + i;
 		player = level.gentities + cl->ps.clientNum;
 
 		if( player == self )
@@ -591,8 +588,7 @@ qboolean ACEAI_FindEnemy( gentity_t* self )
 
 		enemyRange = Distance( self->client->ps.origin, player->client->ps.origin );
 
-		if( ACEAI_InFront( self, player ) && ACEAI_Visible( self, player ) &&
-			trap_InPVS( self->client->ps.origin, player->client->ps.origin ) && enemyRange < bestRange )
+		if( ACEAI_InFront( self, player ) && ACEAI_Visible( self, player ) && trap_InPVS( self->client->ps.origin, player->client->ps.origin ) && enemyRange < bestRange )
 		{
 			/*
 			   if(ace_debug.integer && self->enemy != player)
@@ -605,7 +601,7 @@ qboolean ACEAI_FindEnemy( gentity_t* self )
 			 */
 
 			self->enemy = player;
-			bestRange   = enemyRange;
+			bestRange	= enemyRange;
 		}
 	}
 
@@ -655,7 +651,7 @@ void ACEAI_ChooseWeapon( gentity_t* self )
 	if( range > 300 )
 	{
 		// choose BFG if enough ammo
-		if( self->client->ps.ammo[ WP_BFG ] > 45 )
+		if( self->client->ps.ammo[WP_BFG] > 45 )
 			if( ACEAI_CheckShot( self ) && ACEIT_ChangeWeapon( self, WP_BFG ) )
 			{
 				return;
@@ -668,7 +664,7 @@ void ACEAI_ChooseWeapon( gentity_t* self )
 	}
 
 	// only use GL in certain ranges and only on targets at or below our level
-	if( range > 100 && range < 500 && self->enemy->client->ps.origin[ 2 ] - 20 < self->client->ps.origin[ 2 ] )
+	if( range > 100 && range < 500 && self->enemy->client->ps.origin[2] - 20 < self->client->ps.origin[2] )
 		if( ACEIT_ChangeWeapon( self, WP_GRENADE_LAUNCHER ) )
 		{
 			return;
@@ -682,7 +678,7 @@ void ACEAI_ChooseWeapon( gentity_t* self )
 
 	#ifdef MISSIONPACK
 	// only use CG when ammo > 50
-	if( self->client->pers.inventory[ ITEMLIST_BULLETS ] >= 50 )
+	if( self->client->pers.inventory[ITEMLIST_BULLETS] >= 50 )
 		if( ACEIT_ChangeWeapon( self, FindItem( "chaingun" ) ) )
 		{
 			return;

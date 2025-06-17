@@ -54,30 +54,30 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	#include <glib/gmem.h>
 
 	#ifdef WIN32
-HWND     hwndOut             = NULL;
-qboolean lookedForServer     = qfalse;
-UINT     wm_BroadcastCommand = -1;
-    #endif
+HWND	 hwndOut			 = NULL;
+qboolean lookedForServer	 = qfalse;
+UINT	 wm_BroadcastCommand = -1;
+	#endif
 
-socket_t*    brdcst_socket;
+socket_t*	 brdcst_socket;
 netmessage_t msg;
 
-qboolean verbose = qfalse;
+qboolean	 verbose = qfalse;
 
 // our main document
 // is streamed through the network to Radiant
 // possibly written to disk at the end of the run
 //++timo FIXME: need to be global, required when creating nodes?
-xmlDocPtr  doc;
-xmlNodePtr tree;
+xmlDocPtr	 doc;
+xmlNodePtr	 tree;
 
 // some useful stuff
-xmlNodePtr xml_NodeForVec( vec3_t v )
+xmlNodePtr	 xml_NodeForVec( vec3_t v )
 {
 	xmlNodePtr ret;
-	char       buf[ 1024 ];
+	char	   buf[1024];
 
-	sprintf( buf, "%f %f %f", v[ 0 ], v[ 1 ], v[ 2 ] );
+	sprintf( buf, "%f %f %f", v[0], v[1], v[2] );
 	ret = xmlNewNode( NULL, "point" );
 	xmlNodeSetContent( ret, buf );
 	return ret;
@@ -87,11 +87,11 @@ xmlNodePtr xml_NodeForVec( vec3_t v )
 void xml_SendNode( xmlNodePtr node )
 {
 	xmlBufferPtr xml_buf;
-	char         xmlbuf[ MAX_NETMESSAGE ]; // we have to copy content from the xmlBufferPtr into an aux buffer .. that sucks ..
+	char		 xmlbuf[MAX_NETMESSAGE]; // we have to copy content from the xmlBufferPtr into an aux buffer .. that sucks ..
 
 	// this index loops through the node buffer
-	int pos = 0;
-	int size;
+	int			 pos = 0;
+	int			 size;
 
 	xmlAddChild( doc->children, node );
 
@@ -114,7 +114,7 @@ void xml_SendNode( xmlNodePtr node )
 				Sys_FPrintf( SYS_NOXML, "Got to split the buffer\n" );
 			}
 			memcpy( xmlbuf, xml_buf->content + pos, size );
-			xmlbuf[ size ] = '\0';
+			xmlbuf[size] = '\0';
 			NMSG_Clear( &msg );
 			NMSG_WriteString( &msg, xmlbuf );
 			Net_Send( brdcst_socket, &msg );
@@ -157,15 +157,15 @@ void xml_SendNode( xmlNodePtr node )
 void xml_Select( char* msg, int entitynum, int brushnum, qboolean bError )
 {
 	xmlNodePtr node, select;
-	char       buf[ 1024 ];
-	char       level[ 2 ];
+	char	   buf[1024];
+	char	   level[2];
 
 	// now build a proper "select" XML node
 	sprintf( buf, "Entity %i, Brush %i: %s", entitynum, brushnum, msg );
 	node = xmlNewNode( NULL, "select" );
 	xmlNodeSetContent( node, buf );
-	level[ 0 ] = ( int )'0' + ( bError ? SYS_ERR : SYS_WRN );
-	level[ 1 ] = 0;
+	level[0] = ( int )'0' + ( bError ? SYS_ERR : SYS_WRN );
+	level[1] = 0;
 	xmlSetProp( node, "level", ( char* )&level );
 	// a 'select' information
 	sprintf( buf, "%i %i", entitynum, brushnum );
@@ -188,22 +188,22 @@ void xml_Select( char* msg, int entitynum, int brushnum, qboolean bError )
 void xml_Point( char* msg, vec3_t pt )
 {
 	xmlNodePtr node, point;
-	char       buf[ 1024 ];
-	char       level[ 2 ];
+	char	   buf[1024];
+	char	   level[2];
 
 	node = xmlNewNode( NULL, "pointmsg" );
 	xmlNodeSetContent( node, msg );
-	level[ 0 ] = ( int )'0' + SYS_ERR;
-	level[ 1 ] = 0;
+	level[0] = ( int )'0' + SYS_ERR;
+	level[1] = 0;
 	xmlSetProp( node, "level", ( char* )&level );
 	// a 'point' node
-	sprintf( buf, "%g %g %g", pt[ 0 ], pt[ 1 ], pt[ 2 ] );
+	sprintf( buf, "%g %g %g", pt[0], pt[1], pt[2] );
 	point = xmlNewNode( NULL, "point" );
 	xmlNodeSetContent( point, buf );
 	xmlAddChild( node, point );
 	xml_SendNode( node );
 
-	sprintf( buf, "%s (%g %g %g)", msg, pt[ 0 ], pt[ 1 ], pt[ 2 ] );
+	sprintf( buf, "%s (%g %g %g)", msg, pt[0], pt[1], pt[2] );
 	Error( buf );
 }
 
@@ -211,21 +211,21 @@ void xml_Point( char* msg, vec3_t pt )
 void xml_Winding( char* msg, vec3_t p[], int numpoints, qboolean die )
 {
 	xmlNodePtr node, winding;
-	char       buf[ WINDING_BUFSIZE ];
-	char       smlbuf[ 128 ];
-	char       level[ 2 ];
-	int        i;
+	char	   buf[WINDING_BUFSIZE];
+	char	   smlbuf[128];
+	char	   level[2];
+	int		   i;
 
 	node = xmlNewNode( NULL, "windingmsg" );
 	xmlNodeSetContent( node, msg );
-	level[ 0 ] = ( int )'0' + SYS_ERR;
-	level[ 1 ] = 0;
+	level[0] = ( int )'0' + SYS_ERR;
+	level[1] = 0;
 	xmlSetProp( node, "level", ( char* )&level );
 	// a 'winding' node
 	sprintf( buf, "%i ", numpoints );
 	for( i = 0; i < numpoints; i++ )
 	{
-		sprintf( smlbuf, "(%g %g %g)", p[ i ][ 0 ], p[ i ][ 1 ], p[ i ][ 2 ] );
+		sprintf( smlbuf, "(%g %g %g)", p[i][0], p[i][1], p[i][2] );
 		// don't overflow
 		if( strlen( buf ) + strlen( smlbuf ) > WINDING_BUFSIZE )
 		{
@@ -255,7 +255,7 @@ void Broadcast_Setup( const char* dest )
 {
 #if defined( USE_XML )
 	address_t address;
-	char      sMsg[ 1024 ];
+	char	  sMsg[1024];
 
 	Net_Setup();
 	Net_StringToAddress( ( char* )dest, &address );
@@ -287,10 +287,10 @@ void Broadcast_Shutdown()
 void FPrintf( int flag, char* buf )
 {
 #if defined( USE_XML )
-	xmlNodePtr      node;
+	xmlNodePtr		node;
 	static qboolean bGotXML = qfalse;
 #endif
-	char level[ 2 ];
+	char level[2];
 
 	printf( buf );
 
@@ -312,9 +312,9 @@ void FPrintf( int flag, char* buf )
 	if( !bGotXML )
 	{
 		// initialize
-		doc           = xmlNewDoc( "1.0" );
+		doc			  = xmlNewDoc( "1.0" );
 		doc->children = xmlNewDocRawNode( doc, NULL, "q3map_feedback", NULL );
-		bGotXML       = qtrue;
+		bGotXML		  = qtrue;
 	}
 	node = xmlNewNode( NULL, "message" );
 	{
@@ -323,8 +323,8 @@ void FPrintf( int flag, char* buf )
 		xmlNodeSetContent( node, utf8 );
 		g_free( utf8 );
 	}
-	level[ 0 ] = ( int )'0' + flag;
-	level[ 1 ] = 0;
+	level[0] = ( int )'0' + flag;
+	level[1] = 0;
 	xmlSetProp( node, "level", ( char* )&level );
 
 	xml_SendNode( node );
@@ -340,7 +340,7 @@ void DumpXML()
 
 void Sys_FPrintf( int flag, const char* format, ... )
 {
-	char    out_buffer[ 4096 ];
+	char	out_buffer[4096];
 	va_list argptr;
 
 	if( ( flag == SYS_VRB ) && ( verbose == qfalse ) )
@@ -357,7 +357,7 @@ void Sys_FPrintf( int flag, const char* format, ... )
 
 void Sys_Printf( const char* format, ... )
 {
-	char    out_buffer[ 4096 ];
+	char	out_buffer[4096];
 	va_list argptr;
 
 	va_start( argptr, format );
@@ -376,8 +376,8 @@ For abnormal program terminations
 */
 void Error( const char* error, ... )
 {
-	char    out_buffer[ 4096 ];
-	char    tmp[ 4096 ];
+	char	out_buffer[4096];
+	char	tmp[4096];
 	va_list argptr;
 
 	va_start( argptr, error );

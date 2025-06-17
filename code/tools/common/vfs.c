@@ -49,9 +49,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #else
 	#include <wtypes.h>
 	#include <io.h>
-	#define R_OK            04
+	#define R_OK			04
 	#define S_ISDIR( mode ) ( mode & _S_IFDIR )
-	#define PATH_MAX        260
+	#define PATH_MAX		260
 #endif
 
 #include <string.h>
@@ -67,8 +67,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 typedef struct
 {
-	char*   name;
-	unz_s   zipinfo;
+	char*	name;
+	unz_s	zipinfo;
 	unzFile zipfile;
 	guint32 size;
 } VFS_PAKFILE;
@@ -76,22 +76,22 @@ typedef struct
 // =============================================================================
 // Global variables
 
-static GSList*  g_unzFiles;
-static GSList*  g_pakFiles;
-static char     g_strDirs[ VFS_MAXDIRS ][ PATH_MAX ];
-static int      g_numDirs;
+static GSList*	g_unzFiles;
+static GSList*	g_pakFiles;
+static char		g_strDirs[VFS_MAXDIRS][PATH_MAX];
+static int		g_numDirs;
 static gboolean g_bUsePak = TRUE;
 
 // =============================================================================
 // Static functions
 
-static void vfsAddSlash( char* str )
+static void		vfsAddSlash( char* str )
 {
 	int n = strlen( str );
 
 	if( n > 0 )
 	{
-		if( str[ n - 1 ] != '\\' && str[ n - 1 ] != '/' )
+		if( str[n - 1] != '\\' && str[n - 1] != '/' )
 		{
 			strcat( str, "/" );
 		}
@@ -121,9 +121,9 @@ static void vfsFixDOSName( char* src )
 static void vfsInitPakFile( const char* filename )
 {
 	unz_global_info gi;
-	unzFile         uf;
-	guint32         i;
-	int             err;
+	unzFile			uf;
+	guint32			i;
+	int				err;
 
 	uf = unzOpen( filename );
 	if( uf == NULL )
@@ -144,7 +144,7 @@ static void vfsInitPakFile( const char* filename )
 
 	for( i = 0; i < gi.number_entry; i++ )
 	{
-		char          filename_inzip[ NAME_MAX ];
+		char		  filename_inzip[NAME_MAX];
 		unz_file_info file_info;
 		VFS_PAKFILE*  file;
 
@@ -154,14 +154,14 @@ static void vfsInitPakFile( const char* filename )
 			break;
 		}
 
-		file       = ( VFS_PAKFILE* )safe_malloc( sizeof( VFS_PAKFILE ) );
+		file	   = ( VFS_PAKFILE* )safe_malloc( sizeof( VFS_PAKFILE ) );
 		g_pakFiles = g_slist_append( g_pakFiles, file );
 
 		vfsFixDOSName( filename_inzip );
 		g_strdown( filename_inzip );
 
-		file->name    = strdup( filename_inzip );
-		file->size    = file_info.uncompressed_size;
+		file->name	  = strdup( filename_inzip );
+		file->size	  = file_info.uncompressed_size;
 		file->zipfile = uf;
 		memcpy( &file->zipinfo, uf, sizeof( unz_s ) );
 
@@ -182,7 +182,7 @@ static void vfsInitPakFile( const char* filename )
 // reads all pak files from a dir
 void vfsInitDirectory( const char* path )
 {
-	char  filename[ PATH_MAX ];
+	char  filename[PATH_MAX];
 	char* dirlist;
 	GDir* dir;
 
@@ -193,9 +193,9 @@ void vfsInitDirectory( const char* path )
 
 	Sys_Printf( "VFS Init: %s\n", path );
 
-	strcpy( g_strDirs[ g_numDirs ], path );
-	vfsFixDOSName( g_strDirs[ g_numDirs ] );
-	vfsAddSlash( g_strDirs[ g_numDirs ] );
+	strcpy( g_strDirs[g_numDirs], path );
+	vfsFixDOSName( g_strDirs[g_numDirs] );
+	vfsAddSlash( g_strDirs[g_numDirs] );
 	g_numDirs++;
 
 	if( g_bUsePak )
@@ -224,12 +224,12 @@ void vfsInitDirectory( const char* path )
 						{
 							continue;
 						}
-						//snprintf(g_strDirs[g_numDirs], PATH_MAX, "%s/%s", path, name);
-						sprintf( g_strDirs[ g_numDirs ], "%s/%s", path, name );
-						Sys_Printf( "VFS Init: %s (pk3dir)\n", g_strDirs[ g_numDirs ] );
-						g_strDirs[ g_numDirs ][ PATH_MAX ] = '\0';
-						vfsFixDOSName( g_strDirs[ g_numDirs ] );
-						vfsAddSlash( g_strDirs[ g_numDirs ] );
+						// snprintf(g_strDirs[g_numDirs], PATH_MAX, "%s/%s", path, name);
+						sprintf( g_strDirs[g_numDirs], "%s/%s", path, name );
+						Sys_Printf( "VFS Init: %s (pk3dir)\n", g_strDirs[g_numDirs] );
+						g_strDirs[g_numDirs][PATH_MAX] = '\0';
+						vfsFixDOSName( g_strDirs[g_numDirs] );
+						vfsAddSlash( g_strDirs[g_numDirs] );
 						++g_numDirs;
 					}
 
@@ -271,8 +271,8 @@ void vfsShutdown()
 // return the number of files that match
 int vfsGetFileCount( const char* filename )
 {
-	int     i, count = 0;
-	char    fixed[ NAME_MAX ], tmp[ NAME_MAX ];
+	int		i, count = 0;
+	char	fixed[NAME_MAX], tmp[NAME_MAX];
 	GSList* lst;
 
 	strcpy( fixed, filename );
@@ -291,7 +291,7 @@ int vfsGetFileCount( const char* filename )
 
 	for( i = 0; i < g_numDirs; i++ )
 	{
-		strcpy( tmp, g_strDirs[ i ] );
+		strcpy( tmp, g_strDirs[i] );
 		strcat( tmp, fixed );
 		if( access( tmp, R_OK ) == 0 )
 		{
@@ -305,8 +305,8 @@ int vfsGetFileCount( const char* filename )
 // NOTE: when loading a file, you have to allocate one extra byte and set it to \0
 int vfsLoadFile( const char* filename, void** bufferptr, int index )
 {
-	int     i, count = 0;
-	char    tmp[ NAME_MAX ], fixed[ NAME_MAX ];
+	int		i, count = 0;
+	char	tmp[NAME_MAX], fixed[NAME_MAX];
 	GSList* lst;
 
 	// filename is a full path
@@ -335,7 +335,7 @@ int vfsLoadFile( const char* filename, void** bufferptr, int index )
 		fclose( f );
 
 		// we need to end the buffer with a 0
-		( ( char* )( *bufferptr ) )[ len ] = 0;
+		( ( char* )( *bufferptr ) )[len] = 0;
 
 		return len;
 	}
@@ -347,7 +347,7 @@ int vfsLoadFile( const char* filename, void** bufferptr, int index )
 
 	for( i = 0; i < g_numDirs; i++ )
 	{
-		strcpy( tmp, g_strDirs[ i ] );
+		strcpy( tmp, g_strDirs[i] );
 		strcat( tmp, filename );
 		if( access( tmp, R_OK ) == 0 )
 		{
@@ -376,7 +376,7 @@ int vfsLoadFile( const char* filename, void** bufferptr, int index )
 				fclose( f );
 
 				// we need to end the buffer with a 0
-				( ( char* )( *bufferptr ) )[ len ] = 0;
+				( ( char* )( *bufferptr ) )[len] = 0;
 
 				return len;
 			}
@@ -405,7 +405,7 @@ int vfsLoadFile( const char* filename, void** bufferptr, int index )
 
 			*bufferptr = safe_malloc( file->size + 1 );
 			// we need to end the buffer with a 0
-			( ( char* )( *bufferptr ) )[ file->size ] = 0;
+			( ( char* )( *bufferptr ) )[file->size] = 0;
 
 			i = unzReadCurrentFile( file->zipfile, *bufferptr, file->size );
 			unzCloseCurrentFile( file->zipfile );

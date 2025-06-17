@@ -28,14 +28,14 @@ WriteMapFile
 */
 static void WriteMapFile( char* filename )
 {
-	FILE*        f;
-	int          i, j, k, l;
-	entity_t*    entity;
-	epair_t*     ep;
-	bspBrush_t*  brush;
-	side_t*      side;
-	plane_t*     plane;
-	parseMesh_t* pm;
+	FILE*		  f;
+	int			  i, j, k, l;
+	entity_t*	  entity;
+	epair_t*	  ep;
+	bspBrush_t*	  brush;
+	side_t*		  side;
+	plane_t*	  plane;
+	parseMesh_t*  pm;
 
 	//  winding_t      *w;
 	shaderInfo_t* si;
@@ -51,7 +51,7 @@ static void WriteMapFile( char* filename )
 
 	for( i = 0; i < numEntities; i++ )
 	{
-		entity = &entities[ i ];
+		entity = &entities[i];
 
 		// write entity header
 		fprintf( f, "// entity %i\n", i );
@@ -73,9 +73,9 @@ static void WriteMapFile( char* filename )
 			for( k = 0, side = brush->sides; k < brush->numsides; k++, side++ )
 			{
 				// write plane equation
-				plane = &mapPlanes[ side->planenum ];
+				plane = &mapPlanes[side->planenum];
 
-				fprintf( f, "( %f %f %f %f ) ", plane->normal[ 0 ], plane->normal[ 1 ], plane->normal[ 2 ], -plane->dist );
+				fprintf( f, "( %f %f %f %f ) ", plane->normal[0], plane->normal[1], plane->normal[2], -plane->dist );
 
 				// write texture matrix
 				Write2DMatrix( f, 2, 3, ( float* )side->texMat );
@@ -120,10 +120,10 @@ static void WriteMapFile( char* filename )
 
 			// write patch dimensions
 			if( pm->patchDef3 )
-				fprintf( f, "( %i %i %i %i %i %i %i )\n", ( int )pm->info[ 0 ], ( int )pm->info[ 1 ], ( int )pm->info[ 2 ], ( int )pm->info[ 3 ], ( int )pm->info[ 4 ], ( int )pm->info[ 5 ], ( int )pm->info[ 6 ] );
+				fprintf( f, "( %i %i %i %i %i %i %i )\n", ( int )pm->info[0], ( int )pm->info[1], ( int )pm->info[2], ( int )pm->info[3], ( int )pm->info[4], ( int )pm->info[5], ( int )pm->info[6] );
 			else
 
-				fprintf( f, "( %i %i %i %i %i )\n", ( int )pm->info[ 0 ], ( int )pm->info[ 1 ], ( int )pm->info[ 2 ], ( int )pm->info[ 3 ], ( int )pm->info[ 4 ] );
+				fprintf( f, "( %i %i %i %i %i )\n", ( int )pm->info[0], ( int )pm->info[1], ( int )pm->info[2], ( int )pm->info[3], ( int )pm->info[4] );
 
 			fprintf( f, "(\n" );
 			for( k = 0; k < pm->mesh.width; k++ )
@@ -132,7 +132,7 @@ static void WriteMapFile( char* filename )
 				for( l = 0; l < pm->mesh.height; l++ )
 				{
 					// write drawVert_t::xyz + st
-					Write1DMatrix( f, 5, pm->mesh.verts[ l * pm->mesh.width + k ].xyz );
+					Write1DMatrix( f, 5, pm->mesh.verts[l * pm->mesh.width + k].xyz );
 				}
 				fprintf( f, ")\n" );
 			}
@@ -150,11 +150,11 @@ static void WriteMapFile( char* filename )
 
 static qboolean ParseKeyValue( const char* token )
 {
-	char key[ MAXTOKEN ];
-	char value[ MAXTOKEN ];
+	char key[MAXTOKEN];
+	char value[MAXTOKEN];
 
-	//if(!GetToken(qtrue))
-	//  Error("ParseKeyValue: EOF without closing brace");
+	// if(!GetToken(qtrue))
+	//   Error("ParseKeyValue: EOF without closing brace");
 
 	Q_strncpyz( key, token, sizeof( key ) );
 
@@ -170,7 +170,7 @@ static qboolean ParseKeyValue( const char* token )
 		Q_strcat( key, sizeof( key ), token );
 	}
 
-	value[ 0 ] = '\0';
+	value[0] = '\0';
 	while( TokenAvailable() )
 	{
 		GetToken( qfalse );
@@ -184,7 +184,7 @@ static qboolean ParseKeyValue( const char* token )
 
 static qboolean ParseLocation()
 {
-	char value[ MAXTOKEN ];
+	char value[MAXTOKEN];
 
 	//  Location=(X=-2176.000000,Y=-1280.000000,Z=0.000000)
 
@@ -214,7 +214,7 @@ static qboolean ParseLocation()
 
 	GetToken( qfalse ); // )
 
-	//Sys_Printf("location: %f %f %f\n", mapEnt->origin[0], mapEnt->origin[1], mapEnt->origin[2]);
+	// Sys_Printf("location: %f %f %f\n", mapEnt->origin[0], mapEnt->origin[1], mapEnt->origin[2]);
 	SetKeyValue( mapEnt, "origin", value );
 
 	return qtrue;
@@ -244,7 +244,7 @@ static qboolean ParseObjectClass()
 			}
 		}
 
-		//Sys_Printf("ParseActorClassBrush: token '%s'\n", token);
+		// Sys_Printf("ParseActorClassBrush: token '%s'\n", token);
 	} while( 1 );
 
 	return qtrue;
@@ -309,17 +309,17 @@ static qboolean ParseActorClassWorldInfo()
 
 static qboolean ParsePolygon()
 {
-	int     i;
+	int		i;
 	side_t* side;
-	vec3_t  origin;
-	vec3_t  normal;
-	float   dist;
-	vec3_t  planepts[ 4 ];
-	int     planeptsNum;
+	vec3_t	origin;
+	vec3_t	normal;
+	float	dist;
+	vec3_t	planepts[4];
+	int		planeptsNum;
 
 	Sys_Printf( "ParsePolygon()\n" );
 
-	side = &buildBrush->sides[ buildBrush->numsides ];
+	side = &buildBrush->sides[buildBrush->numsides];
 	memset( side, 0, sizeof( *side ) );
 	buildBrush->numsides++;
 
@@ -358,62 +358,62 @@ static qboolean ParsePolygon()
 			}
 		}
 
-		//Sys_Printf("ParsePolygon: token '%s'\n", token);
+		// Sys_Printf("ParsePolygon: token '%s'\n", token);
 
 		if( !strcmp( token, "Origin" ) )
 		{
 			// Origin   +02048.000000,+02048.000000,-01012.000000
 
 			GetToken( qfalse );
-			origin[ 0 ] = atof( token );
+			origin[0] = atof( token );
 
 			GetToken( qfalse ); // ,
 
 			GetToken( qfalse );
-			origin[ 1 ] = atof( token );
+			origin[1] = atof( token );
 
 			GetToken( qfalse ); // ,
 
 			GetToken( qfalse );
-			origin[ 2 ] = atof( token );
+			origin[2] = atof( token );
 
-			//Sys_Printf("origin: %f %f %f\n", origin[0], origin[1], origin[2]);
+			// Sys_Printf("origin: %f %f %f\n", origin[0], origin[1], origin[2]);
 		}
 		else if( !strcmp( token, "Normal" ) )
 		{
 			GetToken( qfalse );
-			normal[ 0 ] = atof( token );
+			normal[0] = atof( token );
 
 			GetToken( qfalse ); // ,
 
 			GetToken( qfalse );
-			normal[ 1 ] = atof( token );
+			normal[1] = atof( token );
 
 			GetToken( qfalse ); // ,
 
 			GetToken( qfalse );
-			normal[ 2 ] = atof( token );
+			normal[2] = atof( token );
 
-			//Sys_Printf("normal: %f %f %f\n", normal[0], normal[1], normal[2]);
+			// Sys_Printf("normal: %f %f %f\n", normal[0], normal[1], normal[2]);
 		}
 		else if( !strcmp( token, "Vertex" ) )
 		{
 			if( planeptsNum < 4 )
 			{
 				GetToken( qfalse );
-				planepts[ planeptsNum ][ 0 ] = atof( token );
+				planepts[planeptsNum][0] = atof( token );
 
 				GetToken( qfalse ); // ,
 
 				GetToken( qfalse );
-				planepts[ planeptsNum ][ 1 ] = atof( token );
+				planepts[planeptsNum][1] = atof( token );
 
 				GetToken( qfalse ); // ,
 
 				GetToken( qfalse );
-				planepts[ planeptsNum ][ 2 ] = atof( token );
+				planepts[planeptsNum][2] = atof( token );
 
-				//Sys_Printf("vertex: %f %f %f\n", planepts[planeptsNum][0], planepts[planeptsNum][1], planepts[planeptsNum][2]);
+				// Sys_Printf("vertex: %f %f %f\n", planepts[planeptsNum][0], planepts[planeptsNum][1], planepts[planeptsNum][2]);
 
 				planeptsNum++;
 			}
@@ -429,17 +429,17 @@ static qboolean ParsePolygon()
 	dist = DotProduct( origin, normal );
 	side->planenum = FindFloatPlane( normal, dist );
 #else
-	//side->planenum = MapPlaneFromPoints(planepts[0], planepts[1], planepts[2]);
-	side->planenum = MapPlaneFromPoints( planepts[ 2 ], planepts[ 1 ], planepts[ 0 ] );
+	// side->planenum = MapPlaneFromPoints(planepts[0], planepts[1], planepts[2]);
+	side->planenum = MapPlaneFromPoints( planepts[2], planepts[1], planepts[0] );
 #endif
 
 	// FIXME calculate texMat later
-	side->texMat[ 0 ][ 0 ] = 1;
-	side->texMat[ 0 ][ 1 ] = 0;
-	side->texMat[ 0 ][ 2 ] = 0;
-	side->texMat[ 1 ][ 0 ] = 0;
-	side->texMat[ 1 ][ 1 ] = 1;
-	side->texMat[ 1 ][ 2 ] = 0;
+	side->texMat[0][0] = 1;
+	side->texMat[0][1] = 0;
+	side->texMat[0][2] = 0;
+	side->texMat[1][0] = 0;
+	side->texMat[1][1] = 1;
+	side->texMat[1][2] = 0;
 
 	return qtrue;
 }
@@ -468,7 +468,7 @@ static qboolean ParsePolyList()
 			}
 		}
 
-		//Sys_Printf("ParsePolyList: token '%s'\n", token);
+		// Sys_Printf("ParsePolyList: token '%s'\n", token);
 
 		if( !strcmp( token, "Begin" ) )
 		{
@@ -497,7 +497,7 @@ static qboolean ParseBrush()
 	Sys_Printf( "ParseBrush()\n" );
 
 	buildBrush->numsides = 0;
-	buildBrush->detail   = qfalse;
+	buildBrush->detail	 = qfalse;
 
 	do
 	{
@@ -519,7 +519,7 @@ static qboolean ParseBrush()
 			}
 		}
 
-		//Sys_Printf("ParseBrush: token '%s'\n", token);
+		// Sys_Printf("ParseBrush: token '%s'\n", token);
 
 		if( !strcmp( token, "Begin" ) )
 		{
@@ -538,10 +538,10 @@ static qboolean ParseBrush()
 		}
 	} while( 1 );
 
-	buildBrush->portalareas[ 0 ] = -1;
-	buildBrush->portalareas[ 1 ] = -1;
-	buildBrush->entitynum        = numEntities - 1;
-	buildBrush->brushnum         = entitySourceBrushes;
+	buildBrush->portalareas[0] = -1;
+	buildBrush->portalareas[1] = -1;
+	buildBrush->entitynum	   = numEntities - 1;
+	buildBrush->brushnum	   = entitySourceBrushes;
 
 	// if there are mirrored planes, the entire brush is invalid
 	if( !RemoveDuplicateBrushPlanes( buildBrush ) )
@@ -601,7 +601,7 @@ static qboolean ParseActorClassBrush()
 			}
 		}
 
-		//Sys_Printf("ParseActorClassBrush: token '%s'\n", token);
+		// Sys_Printf("ParseActorClassBrush: token '%s'\n", token);
 
 		if( !strcmp( token, "Begin" ) )
 		{
@@ -634,7 +634,7 @@ static qboolean ParseActorClassBrush()
 			}
 
 			GetToken( qfalse );
-			//Sys_Printf("ParseActorClassBrush: Name=%s\n", token);
+			// Sys_Printf("ParseActorClassBrush: Name=%s\n", token);
 			SetKeyValue( mapEnt, "name", token );
 			SetKeyValue( mapEnt, "model", token );
 		}
@@ -673,7 +673,7 @@ static qboolean ParseActorClassPointLight()
 			}
 		}
 
-		//Sys_Printf("ParseActorClassPointLight: token '%s'\n", token);
+		// Sys_Printf("ParseActorClassPointLight: token '%s'\n", token);
 
 		if( !Q_stricmp( token, "SphereRadius" ) )
 		{
@@ -726,7 +726,7 @@ static qboolean ParseActorClassPlayerStart()
 			}
 		}
 
-		//Sys_Printf("ParseActorClassPlayerStart: token '%s'\n", token);
+		// Sys_Printf("ParseActorClassPlayerStart: token '%s'\n", token);
 
 		if( !strcmp( token, "Location" ) )
 		{
@@ -744,14 +744,14 @@ ParseActor
 */
 qboolean ParseActor( void )
 {
-	int         i;
-	entity_t*   otherEnt;
-	epair_t*    e;
+	int			i;
+	entity_t*	otherEnt;
+	epair_t*	e;
 	const char* classname;
 	const char* name;
 	const char* name2;
 	const char* model;
-	char        lastToken[ MAXTOKEN ];
+	char		lastToken[MAXTOKEN];
 
 	if( numEntities == MAX_MAP_ENTITIES )
 	{
@@ -760,13 +760,13 @@ qboolean ParseActor( void )
 
 	entitySourceBrushes = 0;
 
-	mapEnt = &entities[ numEntities ];
+	mapEnt = &entities[numEntities];
 	numEntities++;
 	memset( mapEnt, 0, sizeof( *mapEnt ) );
 
 	SetKeyValue( mapEnt, "classname", "unknown" );
 
-	lastToken[ 0 ] = '\0';
+	lastToken[0] = '\0';
 	strncpy( lastToken, "Actor", strlen( "Actor" ) );
 
 	do
@@ -789,7 +789,7 @@ qboolean ParseActor( void )
 			}
 		}
 
-		//Sys_Printf("ParseActor: token '%s'\n", token);
+		// Sys_Printf("ParseActor: token '%s'\n", token);
 
 		if( !strcmp( token, "Class" ) ) // && !strcmp(lastToken, "Actor"))
 		{
@@ -834,7 +834,7 @@ qboolean ParseActor( void )
 			}
 			else
 			{
-				//Sys_Printf("ParseActor: Class '%s'\n", token);
+				// Sys_Printf("ParseActor: Class '%s'\n", token);
 			}
 		}
 		else if( !strcmp( token, "Location" ) )
@@ -848,7 +848,7 @@ qboolean ParseActor( void )
 
 		strncpy( lastToken, token, sizeof( token ) );
 
-		//entitySourceBrushes++;
+		// entitySourceBrushes++;
 
 		/*
 		   else
@@ -862,15 +862,15 @@ qboolean ParseActor( void )
 	} while( 1 );
 
 	classname = ValueForKey( mapEnt, "classname" );
-	name      = ValueForKey( mapEnt, "name" );
-	model     = ValueForKey( mapEnt, "model" );
+	name	  = ValueForKey( mapEnt, "name" );
+	model	  = ValueForKey( mapEnt, "model" );
 	GetVectorForKey( mapEnt, "origin", mapEnt->origin );
 
 	// Tr3B: check for empty name
-	if( !name[ 0 ] && numEntities != 1 )
+	if( !name[0] && numEntities != 1 )
 	{
 		name = UniqueEntityName( mapEnt, classname );
-		if( !name[ 0 ] )
+		if( !name[0] )
 		{
 			xml_Select( "UniqueEntityName failed", numEntities - 1, 0, qtrue );
 		}
@@ -882,7 +882,7 @@ qboolean ParseActor( void )
 	// Tr3B: check for bad duplicated names
 	for( i = 0; i < numEntities; i++ )
 	{
-		otherEnt = &entities[ i ];
+		otherEnt = &entities[i];
 
 		if( mapEnt == otherEnt )
 		{
@@ -896,7 +896,7 @@ qboolean ParseActor( void )
 			xml_Select( "duplicated entity name", numEntities - 1, 0, qfalse );
 
 			name = UniqueEntityName( mapEnt, classname );
-			if( !name[ 0 ] )
+			if( !name[0] )
 			{
 				xml_Select( "UniqueEntityName failed", numEntities - 1, 0, qtrue );
 			}
@@ -944,11 +944,10 @@ qboolean ParseActor( void )
 #endif
 
 	// HACK: determine if this is a func_static that can be merged into worldspawn
-	if( convertType == CONVERT_NOTHING && !Q_stricmp( "func_static", classname ) && name[ 0 ] != '\0' && model[ 0 ] != '\0' &&
-		!Q_stricmp( name, model ) )
+	if( convertType == CONVERT_NOTHING && !Q_stricmp( "func_static", classname ) && name[0] != '\0' && model[0] != '\0' && !Q_stricmp( name, model ) )
 	{
 		bspBrush_t* brush;
-		vec3_t      originNeg;
+		vec3_t		originNeg;
 
 		VectorNegate( mapEnt->origin, originNeg );
 		AdjustBrushesForOrigin( mapEnt, originNeg );
@@ -958,8 +957,8 @@ qboolean ParseActor( void )
 		{
 			if( !( brush->contents & CONTENTS_DETAIL ) || !brush->detail )
 			{
-				//c_detail++;
-				//c_structural--;
+				// c_detail++;
+				// c_structural--;
 				brush->detail = qtrue;
 			}
 		}
@@ -975,7 +974,7 @@ qboolean ParseActor( void )
 		MoveBrushesToWorld( mapEnt );
 		MovePatchesToWorld( mapEnt );
 
-		//c_mergedFuncStatics++;
+		// c_mergedFuncStatics++;
 		numEntities--;
 		return qtrue;
 	}
@@ -984,9 +983,9 @@ qboolean ParseActor( void )
 	// for all the brushes in the entity
 	if( convertType == CONVERT_NOTHING )
 	{
-		if( mapEnt->origin[ 0 ] || mapEnt->origin[ 1 ] || mapEnt->origin[ 2 ] )
+		if( mapEnt->origin[0] || mapEnt->origin[1] || mapEnt->origin[2] )
 		{
-			if( ( name[ 0 ] != '\0' && model[ 0 ] != '\0' && !Q_stricmp( name, model ) ) ) // || !Q_stricmp("worldspawn", classname))
+			if( ( name[0] != '\0' && model[0] != '\0' && !Q_stricmp( name, model ) ) ) // || !Q_stricmp("worldspawn", classname))
 			{
 				AdjustBrushesForOrigin( mapEnt, vec3_origin );
 				AdjustPatchesForOrigin( mapEnt );
@@ -1055,7 +1054,7 @@ qboolean ParseLevel()
 			}
 		}
 
-		//Sys_Printf("ParseLevel: token '%s'\n", token);
+		// Sys_Printf("ParseLevel: token '%s'\n", token);
 
 		if( !strcmp( token, "Begin" ) )
 		{
@@ -1100,7 +1099,7 @@ void LoadT3DFile( char* filename )
 
 	LoadScriptFile( filename, -1 );
 
-	numEntities     = 0;
+	numEntities		= 0;
 	numMapDrawSurfs = 0;
 	//  c_detail = 0;
 	//  c_mergedFuncStatics = 0;
@@ -1144,7 +1143,7 @@ void LoadT3DFile( char* filename )
 			}
 		}
 
-		//Sys_Printf("ParseActor: token '%s'\n", token);
+		// Sys_Printf("ParseActor: token '%s'\n", token);
 
 		if( !strcmp( token, "Begin" ) )
 		{
@@ -1165,13 +1164,13 @@ void LoadT3DFile( char* filename )
 	} while( 1 );
 
 	ClearBounds( mapMins, mapMaxs );
-	for( b = entities[ 0 ].brushes; b; b = b->next )
+	for( b = entities[0].brushes; b; b = b->next )
 	{
 		AddPointToBounds( b->mins, mapMins, mapMaxs );
 		AddPointToBounds( b->maxs, mapMins, mapMaxs );
 	}
 
-	Sys_FPrintf( SYS_VRB, "%5i total world brushes\n", CountBrushList( entities[ 0 ].brushes ) );
+	Sys_FPrintf( SYS_VRB, "%5i total world brushes\n", CountBrushList( entities[0].brushes ) );
 	//  Sys_FPrintf(SYS_VRB, "%5i detail brushes\n", c_detail);
 	//  Sys_FPrintf(SYS_VRB, "%5i patches\n", numMapPatches);
 	//  Sys_FPrintf(SYS_VRB, "%5i boxbevels\n", c_boxbevels);
@@ -1180,38 +1179,38 @@ void LoadT3DFile( char* filename )
 	Sys_FPrintf( SYS_VRB, "%5i entities\n", numEntities );
 	//  Sys_FPrintf(SYS_VRB, "%5i planes\n", numMapPlanes);
 	//  Sys_FPrintf(SYS_VRB, "%5i areaportals\n", c_areaportals);
-	Sys_FPrintf( SYS_VRB, "size: %5.0f,%5.0f,%5.0f to %5.0f,%5.0f,%5.0f\n", mapMins[ 0 ], mapMins[ 1 ], mapMins[ 2 ], mapMaxs[ 0 ], mapMaxs[ 1 ], mapMaxs[ 2 ] );
+	Sys_FPrintf( SYS_VRB, "size: %5.0f,%5.0f,%5.0f to %5.0f,%5.0f,%5.0f\n", mapMins[0], mapMins[1], mapMins[2], mapMaxs[0], mapMaxs[1], mapMaxs[2] );
 }
 
 int ConvertT3DToMap( int argc, char** argv )
 {
-	int    i;
+	int	   i;
 	double start, end;
-	char   source[ 1024 ];
-	char   name[ 1024 ];
-	char   save[ 1024 ];
+	char   source[1024];
+	char   name[1024];
+	char   save[1024];
 
 	Sys_Printf( "---- convert t3d to map ----\n" );
 
 	for( i = 1; i < argc; i++ )
 	{
-		if( !strcmp( argv[ i ], "-threads" ) )
+		if( !strcmp( argv[i], "-threads" ) )
 		{
-			numthreads = atoi( argv[ i + 1 ] );
+			numthreads = atoi( argv[i + 1] );
 			i++;
 		}
-		else if( !strcmp( argv[ i ], "-v" ) )
+		else if( !strcmp( argv[i], "-v" ) )
 		{
 			Sys_Printf( "verbose = true\n" );
 			verbose = qtrue;
 		}
-		else if( !strcmp( argv[ i ], "-connect" ) )
+		else if( !strcmp( argv[i], "-connect" ) )
 		{
-			Broadcast_Setup( argv[ ++i ] );
+			Broadcast_Setup( argv[++i] );
 		}
-		else if( argv[ i ][ 0 ] == '-' )
+		else if( argv[i][0] == '-' )
 		{
-			Error( "Unknown option \"%s\"", argv[ i ] );
+			Error( "Unknown option \"%s\"", argv[i] );
 		}
 		else
 		{
@@ -1235,12 +1234,12 @@ int ConvertT3DToMap( int argc, char** argv )
 
 	ThreadSetDefault();
 
-	SetQdirFromPath( argv[ i ] );
+	SetQdirFromPath( argv[i] );
 
-	strcpy( source, ExpandArg( argv[ i ] ) );
+	strcpy( source, ExpandArg( argv[i] ) );
 	StripExtension( source );
 
-	strcpy( name, ExpandArg( argv[ i ] ) );
+	strcpy( name, ExpandArg( argv[i] ) );
 	DefaultExtension( name, ".t3d" );
 
 	// start from scratch
@@ -1249,7 +1248,7 @@ int ConvertT3DToMap( int argc, char** argv )
 	LoadT3DFile( name );
 
 	//
-	strcpy( save, ExpandArg( argv[ i ] ) );
+	strcpy( save, ExpandArg( argv[i] ) );
 	StripExtension( save );
 	strcat( save, "_converted" );
 	DefaultExtension( save, ".map" );

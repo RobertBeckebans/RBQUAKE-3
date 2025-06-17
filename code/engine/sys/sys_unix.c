@@ -39,23 +39,23 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include <fenv.h>
 #include <sys/wait.h>
 
-qboolean stdinIsATTY;
+qboolean	stdinIsATTY;
 
 // Used to determine where to store user-specific files
-static char homePath[ MAX_OSPATH ] = { 0 };
+static char homePath[MAX_OSPATH] = { 0 };
 
 // Used to store the Steam Quake 3 installation path
-static char steamPath[ MAX_OSPATH ] = { 0 };
+static char steamPath[MAX_OSPATH] = { 0 };
 
 // Used to store the GOG Quake 3 installation path
-static char gogPath[ MAX_OSPATH ] = { 0 };
+static char gogPath[MAX_OSPATH] = { 0 };
 
 /*
 ==================
 Sys_DefaultHomePath
 ==================
 */
-char* Sys_DefaultHomePath( void )
+char*		Sys_DefaultHomePath( void )
 {
 	char* p;
 
@@ -67,7 +67,7 @@ char* Sys_DefaultHomePath( void )
 #ifdef __APPLE__
 			Q_strcat( homePath, sizeof( homePath ), "Library/Application Support/" );
 
-			if( com_homepath->string[ 0 ] )
+			if( com_homepath->string[0] )
 			{
 				Q_strcat( homePath, sizeof( homePath ), com_homepath->string );
 			}
@@ -76,7 +76,7 @@ char* Sys_DefaultHomePath( void )
 				Q_strcat( homePath, sizeof( homePath ), HOMEPATH_NAME_MACOSX );
 			}
 #else
-			if( com_homepath->string[ 0 ] )
+			if( com_homepath->string[0] )
 			{
 				Q_strcat( homePath, sizeof( homePath ), com_homepath->string );
 			}
@@ -99,7 +99,7 @@ Sys_SteamPath
 char* Sys_SteamPath( void )
 {
 	// Disabled since Steam doesn't let you install Quake 3 on Mac/Linux
-#if 0 //#ifdef STEAMPATH_NAME
+#if 0 // #ifdef STEAMPATH_NAME
 	char* p;
 	
 	if( ( p = getenv( "HOME" ) ) != NULL )
@@ -138,11 +138,11 @@ Sys_Milliseconds
 unsigned long sys_timeBase = 0;
 /* current time in ms, using sys_timeBase as origin
    NOTE: sys_timeBase*1000 + curtime -> ms since the Epoch
-     0x7fffffff ms - ~24 days
+	 0x7fffffff ms - ~24 days
    although timeval:tv_usec is an int, I'm not sure wether it is actually used as an unsigned int
-     (which would affect the wrap period) */
-int curtime;
-int Sys_Milliseconds( void )
+	 (which would affect the wrap period) */
+int			  curtime;
+int			  Sys_Milliseconds( void )
 {
 	struct timeval tp;
 
@@ -288,9 +288,9 @@ Sys_Mkfifo
 */
 FILE* Sys_Mkfifo( const char* ospath )
 {
-	FILE*       fifo;
-	int         result;
-	int         fn;
+	FILE*		fifo;
+	int			result;
+	int			fn;
 	struct stat buf;
 
 	// if file already exists AND is a pipefile, remove it
@@ -322,15 +322,15 @@ Sys_Cwd
 */
 char* Sys_Cwd( void )
 {
-	static char cwd[ MAX_OSPATH ];
+	static char cwd[MAX_OSPATH];
 
-	char* result = getcwd( cwd, sizeof( cwd ) - 1 );
+	char*		result = getcwd( cwd, sizeof( cwd ) - 1 );
 	if( result != cwd )
 	{
 		return NULL;
 	}
 
-	cwd[ MAX_OSPATH - 1 ] = 0;
+	cwd[MAX_OSPATH - 1] = 0;
 
 	return cwd;
 }
@@ -352,11 +352,11 @@ Sys_ListFilteredFiles
 */
 void Sys_ListFilteredFiles( const char* basedir, char* subdirs, char* filter, char** list, int* numfiles )
 {
-	char           search[ MAX_OSPATH ], newsubdirs[ MAX_OSPATH ];
-	char           filename[ MAX_OSPATH ];
-	DIR*           fdir;
+	char		   search[MAX_OSPATH], newsubdirs[MAX_OSPATH];
+	char		   filename[MAX_OSPATH];
+	DIR*		   fdir;
 	struct dirent* d;
-	struct stat    st;
+	struct stat	   st;
 
 	if( *numfiles >= MAX_FOUND_FILES - 1 )
 	{
@@ -409,7 +409,7 @@ void Sys_ListFilteredFiles( const char* basedir, char* subdirs, char* filter, ch
 		{
 			continue;
 		}
-		list[ *numfiles ] = CopyString( filename );
+		list[*numfiles] = CopyString( filename );
 		( *numfiles )++;
 	}
 
@@ -424,24 +424,24 @@ Sys_ListFiles
 char** Sys_ListFiles( const char* directory, const char* extension, char* filter, int* numfiles, qboolean wantsubs )
 {
 	struct dirent* d;
-	DIR*           fdir;
-	qboolean       dironly = wantsubs;
-	char           search[ MAX_OSPATH ];
-	int            nfiles;
-	char**         listCopy;
-	char*          list[ MAX_FOUND_FILES ];
-	int            i;
-	struct stat    st;
+	DIR*		   fdir;
+	qboolean	   dironly = wantsubs;
+	char		   search[MAX_OSPATH];
+	int			   nfiles;
+	char**		   listCopy;
+	char*		   list[MAX_FOUND_FILES];
+	int			   i;
+	struct stat	   st;
 
-	int extLen;
+	int			   extLen;
 
 	if( filter )
 	{
 		nfiles = 0;
 		Sys_ListFilteredFiles( directory, "", filter, list, &nfiles );
 
-		list[ nfiles ] = NULL;
-		*numfiles      = nfiles;
+		list[nfiles] = NULL;
+		*numfiles	 = nfiles;
 
 		if( !nfiles )
 		{
@@ -451,9 +451,9 @@ char** Sys_ListFiles( const char* directory, const char* extension, char* filter
 		listCopy = Z_Malloc( ( nfiles + 1 ) * sizeof( *listCopy ) );
 		for( i = 0; i < nfiles; i++ )
 		{
-			listCopy[ i ] = list[ i ];
+			listCopy[i] = list[i];
 		}
-		listCopy[ i ] = NULL;
+		listCopy[i] = NULL;
 
 		return listCopy;
 	}
@@ -463,10 +463,10 @@ char** Sys_ListFiles( const char* directory, const char* extension, char* filter
 		extension = "";
 	}
 
-	if( extension[ 0 ] == '/' && extension[ 1 ] == 0 )
+	if( extension[0] == '/' && extension[1] == 0 )
 	{
 		extension = "";
-		dironly   = qtrue;
+		dironly	  = qtrue;
 	}
 
 	extLen = strlen( extension );
@@ -487,18 +487,14 @@ char** Sys_ListFiles( const char* directory, const char* extension, char* filter
 		{
 			continue;
 		}
-		if( ( dironly && !( st.st_mode & S_IFDIR ) ) ||
-			( !dironly && ( st.st_mode & S_IFDIR ) ) )
+		if( ( dironly && !( st.st_mode & S_IFDIR ) ) || ( !dironly && ( st.st_mode & S_IFDIR ) ) )
 		{
 			continue;
 		}
 
 		if( *extension )
 		{
-			if( strlen( d->d_name ) < extLen ||
-				Q_stricmp(
-					d->d_name + strlen( d->d_name ) - extLen,
-					extension ) )
+			if( strlen( d->d_name ) < extLen || Q_stricmp( d->d_name + strlen( d->d_name ) - extLen, extension ) )
 			{
 				continue; // didn't match
 			}
@@ -508,11 +504,11 @@ char** Sys_ListFiles( const char* directory, const char* extension, char* filter
 		{
 			break;
 		}
-		list[ nfiles ] = CopyString( d->d_name );
+		list[nfiles] = CopyString( d->d_name );
 		nfiles++;
 	}
 
-	list[ nfiles ] = NULL;
+	list[nfiles] = NULL;
 
 	closedir( fdir );
 
@@ -527,9 +523,9 @@ char** Sys_ListFiles( const char* directory, const char* extension, char* filter
 	listCopy = Z_Malloc( ( nfiles + 1 ) * sizeof( *listCopy ) );
 	for( i = 0; i < nfiles; i++ )
 	{
-		listCopy[ i ] = list[ i ];
+		listCopy[i] = list[i];
 	}
-	listCopy[ i ] = NULL;
+	listCopy[i] = NULL;
 
 	return listCopy;
 }
@@ -548,9 +544,9 @@ void Sys_FreeFileList( char** list )
 		return;
 	}
 
-	for( i = 0; list[ i ]; i++ )
+	for( i = 0; list[i]; i++ )
 	{
-		Z_Free( list[ i ] );
+		Z_Free( list[i] );
 	}
 
 	Z_Free( list );
@@ -584,7 +580,7 @@ void Sys_Sleep( int msec )
 		{
 			struct timeval timeout;
 
-			timeout.tv_sec  = msec / 1000;
+			timeout.tv_sec	= msec / 1000;
 			timeout.tv_usec = ( msec % 1000 ) * 1000;
 			select( STDIN_FILENO + 1, &fdset, NULL, NULL, &timeout );
 		}
@@ -610,14 +606,14 @@ Display an error message
 */
 void Sys_ErrorDialog( const char* error )
 {
-	char         buffer[ 1024 ];
+	char		 buffer[1024];
 	unsigned int size;
-	int          f        = -1;
-	const char*  homepath = Cvar_VariableString( "fs_homepath" );
-	const char*  gamedir  = Cvar_VariableString( "fs_game" );
-	const char*  fileName = "crashlog.txt";
-	char*        dirpath  = FS_BuildOSPath( homepath, gamedir, "" );
-	char*        ospath   = FS_BuildOSPath( homepath, gamedir, fileName );
+	int			 f		  = -1;
+	const char*	 homepath = Cvar_VariableString( "fs_homepath" );
+	const char*	 gamedir  = Cvar_VariableString( "fs_game" );
+	const char*	 fileName = "crashlog.txt";
+	char*		 dirpath  = FS_BuildOSPath( homepath, gamedir, "" );
+	char*		 ospath	  = FS_BuildOSPath( homepath, gamedir, fileName );
 
 	Sys_Print( va( "%s\n", error ) );
 
@@ -663,17 +659,17 @@ void Sys_ErrorDialog( const char* error )
 }
 
 #ifndef __APPLE__
-static char  execBuffer[ 1024 ];
+static char	 execBuffer[1024];
 static char* execBufferPointer;
-static char* execArgv[ 16 ];
-static int   execArgc;
+static char* execArgv[16];
+static int	 execArgc;
 
 /*
 ==============
 Sys_ClearExecBuffer
 ==============
 */
-static void Sys_ClearExecBuffer( void )
+static void	 Sys_ClearExecBuffer( void )
 {
 	execBufferPointer = execBuffer;
 	Com_Memset( execArgv, 0, sizeof( execArgv ) );
@@ -687,8 +683,8 @@ Sys_AppendToExecBuffer
 */
 static void Sys_AppendToExecBuffer( const char* text )
 {
-	size_t size   = sizeof( execBuffer ) - ( execBufferPointer - execBuffer );
-	int    length = strlen( text ) + 1;
+	size_t size	  = sizeof( execBuffer ) - ( execBufferPointer - execBuffer );
+	int	   length = strlen( text ) + 1;
 
 	if( length > size || execArgc >= ARRAY_LEN( execArgv ) )
 	{
@@ -696,7 +692,7 @@ static void Sys_AppendToExecBuffer( const char* text )
 	}
 
 	Q_strncpyz( execBufferPointer, text, size );
-	execArgv[ execArgc++ ] = execBufferPointer;
+	execArgv[execArgc++] = execBufferPointer;
 
 	execBufferPointer += length;
 }
@@ -727,7 +723,7 @@ static int Sys_Exec( void )
 	else
 	{
 		// Child
-		execvp( execArgv[ 0 ], execArgv );
+		execvp( execArgv[0], execArgv );
 
 		// Failed to execute
 		exit( -1 );
@@ -856,15 +852,15 @@ dialogResult_t Sys_Dialog( dialogType_t type, const char* message, const char* t
 	} dialogCommandType_t;
 	typedef void ( *dialogCommandBuilder_t )( dialogType_t, const char*, const char* );
 
-	const char*            session                         = getenv( "DESKTOP_SESSION" );
-	qboolean               tried[ NUM_DIALOG_PROGRAMS ]    = { qfalse };
-	dialogCommandBuilder_t commands[ NUM_DIALOG_PROGRAMS ] = { NULL };
-	dialogCommandType_t    preferredCommandType            = NONE;
-	int                    i;
+	const char*			   session						 = getenv( "DESKTOP_SESSION" );
+	qboolean			   tried[NUM_DIALOG_PROGRAMS]	 = { qfalse };
+	dialogCommandBuilder_t commands[NUM_DIALOG_PROGRAMS] = { NULL };
+	dialogCommandType_t	   preferredCommandType			 = NONE;
+	int					   i;
 
-	commands[ ZENITY ]   = &Sys_ZenityCommand;
-	commands[ KDIALOG ]  = &Sys_KdialogCommand;
-	commands[ XMESSAGE ] = &Sys_XmessageCommand;
+	commands[ZENITY]   = &Sys_ZenityCommand;
+	commands[KDIALOG]  = &Sys_KdialogCommand;
+	commands[XMESSAGE] = &Sys_XmessageCommand;
 
 	// This may not be the best way
 	if( !Q_stricmp( session, "gnome" ) )
@@ -883,11 +879,11 @@ dialogResult_t Sys_Dialog( dialogType_t type, const char* message, const char* t
 			continue;
 		}
 
-		if( !tried[ i ] )
+		if( !tried[i] )
 		{
 			int exitCode;
 
-			commands[ i ]( type, message, title );
+			commands[i]( type, message, title );
 			exitCode = Sys_Exec();
 
 			if( exitCode >= 0 )
@@ -903,13 +899,13 @@ dialogResult_t Sys_Dialog( dialogType_t type, const char* message, const char* t
 				}
 			}
 
-			tried[ i ] = qtrue;
+			tried[i] = qtrue;
 
 			// The preference failed, so start again in order
 			if( preferredCommandType != NONE )
 			{
 				preferredCommandType = NONE;
-				i                    = NONE + 1;
+				i					 = NONE + 1;
 			}
 		}
 	}
@@ -966,8 +962,7 @@ void Sys_PlatformInit( void )
 	signal( SIGABRT, Sys_SigHandler );
 	signal( SIGBUS, Sys_SigHandler );
 
-	stdinIsATTY = isatty( STDIN_FILENO ) &&
-		!( term && ( !strcmp( term, "raw" ) || !strcmp( term, "dumb" ) ) );
+	stdinIsATTY = isatty( STDIN_FILENO ) && !( term && ( !strcmp( term, "raw" ) || !strcmp( term, "dumb" ) ) );
 }
 
 /*
@@ -1031,7 +1026,7 @@ Check if filename should be allowed to be loaded as a DLL.
 qboolean Sys_DllExtension( const char* name )
 {
 	const char* p;
-	char        c = 0;
+	char		c = 0;
 
 	if( Com_CompareExtension( name, DLL_EXT ) )
 	{

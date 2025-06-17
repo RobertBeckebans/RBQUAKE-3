@@ -40,32 +40,32 @@ into the abstracted bsp file used by xmap2.
 ------------------------------------------------------------------------------- */
 
 /* constants */
-#define LUMP_ENTITIES     0
-#define LUMP_SHADERS      1
-#define LUMP_PLANES       2
-#define LUMP_NODES        3
-#define LUMP_LEAFS        4
+#define LUMP_ENTITIES	  0
+#define LUMP_SHADERS	  1
+#define LUMP_PLANES		  2
+#define LUMP_NODES		  3
+#define LUMP_LEAFS		  4
 #define LUMP_LEAFSURFACES 5
 #define LUMP_LEAFBRUSHES  6
-#define LUMP_MODELS       7
-#define LUMP_BRUSHES      8
-#define LUMP_BRUSHSIDES   9
-#define LUMP_DRAWVERTS    10
+#define LUMP_MODELS		  7
+#define LUMP_BRUSHES	  8
+#define LUMP_BRUSHSIDES	  9
+#define LUMP_DRAWVERTS	  10
 #define LUMP_DRAWINDEXES  11
-#define LUMP_FOGS         12
-#define LUMP_SURFACES     13
-#define LUMP_LIGHTMAPS    14
-#define LUMP_LIGHTGRID    15
-#define LUMP_VISIBILITY   16
-#define HEADER_LUMPS      17
+#define LUMP_FOGS		  12
+#define LUMP_SURFACES	  13
+#define LUMP_LIGHTMAPS	  14
+#define LUMP_LIGHTGRID	  15
+#define LUMP_VISIBILITY	  16
+#define HEADER_LUMPS	  17
 
 /* types */
 typedef struct
 {
-	char ident[ 4 ];
-	int  version;
+	char	  ident[4];
+	int		  version;
 
-	bspLump_t lumps[ HEADER_LUMPS ];
+	bspLump_t lumps[HEADER_LUMPS];
 } xbspHeader_t;
 
 /* brush sides */
@@ -77,9 +77,9 @@ typedef struct
 
 static void CopyBrushSidesLump( xbspHeader_t* header )
 {
-	int              i;
+	int				 i;
 	xbspBrushSide_t* in;
-	bspBrushSide_t*  out;
+	bspBrushSide_t*	 out;
 
 	/* get count */
 	numBSPBrushSides = GetLumpElements( ( bspHeader_t* )header, LUMP_BRUSHSIDES, sizeof( *in ) );
@@ -89,9 +89,9 @@ static void CopyBrushSidesLump( xbspHeader_t* header )
 	for( i = 0; i < numBSPBrushSides; i++ )
 	{
 		AUTOEXPAND_BY_REALLOC( bspBrushSides, i, allocatedBSPBrushSides, 1024 );
-		out             = &bspBrushSides[ i ];
-		out->planeNum   = in->planeNum;
-		out->shaderNum  = in->shaderNum;
+		out				= &bspBrushSides[i];
+		out->planeNum	= in->planeNum;
+		out->shaderNum	= in->shaderNum;
 		out->surfaceNum = -1;
 		in++;
 	}
@@ -99,8 +99,8 @@ static void CopyBrushSidesLump( xbspHeader_t* header )
 
 static void AddBrushSidesLump( FILE* file, xbspHeader_t* header )
 {
-	int              i, size;
-	bspBrushSide_t*  in;
+	int				 i, size;
+	bspBrushSide_t*	 in;
 	xbspBrushSide_t *buffer, *out;
 
 	/* allocate output buffer */
@@ -109,7 +109,7 @@ static void AddBrushSidesLump( FILE* file, xbspHeader_t* header )
 	memset( buffer, 0, size );
 
 	/* convert */
-	in  = bspBrushSides;
+	in	= bspBrushSides;
 	out = buffer;
 	for( i = 0; i < numBSPBrushSides; i++ )
 	{
@@ -129,30 +129,30 @@ static void AddBrushSidesLump( FILE* file, xbspHeader_t* header )
 /* drawsurfaces */
 typedef struct xbspDrawSurface_s
 {
-	int shaderNum;
-	int fogNum;
-	int surfaceType;
+	int	   shaderNum;
+	int	   fogNum;
+	int	   surfaceType;
 
-	int firstVert;
-	int numVerts;
+	int	   firstVert;
+	int	   numVerts;
 
-	int firstIndex;
-	int numIndexes;
+	int	   firstIndex;
+	int	   numIndexes;
 
-	int lightmapNum;
-	int lightmapX, lightmapY;
-	int lightmapWidth, lightmapHeight;
+	int	   lightmapNum;
+	int	   lightmapX, lightmapY;
+	int	   lightmapWidth, lightmapHeight;
 
 	vec3_t lightmapOrigin;
-	vec3_t lightmapVecs[ 3 ];
+	vec3_t lightmapVecs[3];
 
-	int patchWidth;
-	int patchHeight;
+	int	   patchWidth;
+	int	   patchHeight;
 } xbspDrawSurface_t;
 
 static void CopyDrawSurfacesLump( xbspHeader_t* header )
 {
-	int                i, j;
+	int				   i, j;
 	xbspDrawSurface_t* in;
 	bspDrawSurface_t*  out;
 
@@ -161,42 +161,42 @@ static void CopyDrawSurfacesLump( xbspHeader_t* header )
 	SetDrawSurfaces( numBSPDrawSurfaces );
 
 	/* copy */
-	in  = GetLump( ( bspHeader_t* )header, LUMP_SURFACES );
+	in	= GetLump( ( bspHeader_t* )header, LUMP_SURFACES );
 	out = bspDrawSurfaces;
 	for( i = 0; i < numBSPDrawSurfaces; i++ )
 	{
-		out->shaderNum   = in->shaderNum;
-		out->fogNum      = in->fogNum;
+		out->shaderNum	 = in->shaderNum;
+		out->fogNum		 = in->fogNum;
 		out->surfaceType = in->surfaceType;
-		out->firstVert   = in->firstVert;
-		out->numVerts    = in->numVerts;
-		out->firstIndex  = in->firstIndex;
-		out->numIndexes  = in->numIndexes;
+		out->firstVert	 = in->firstVert;
+		out->numVerts	 = in->numVerts;
+		out->firstIndex	 = in->firstIndex;
+		out->numIndexes	 = in->numIndexes;
 
-		out->lightmapStyles[ 0 ] = LS_NORMAL;
-		out->vertexStyles[ 0 ]   = LS_NORMAL;
-		out->lightmapNum[ 0 ]    = in->lightmapNum;
-		out->lightmapX[ 0 ]      = in->lightmapX;
-		out->lightmapY[ 0 ]      = in->lightmapY;
+		out->lightmapStyles[0] = LS_NORMAL;
+		out->vertexStyles[0]   = LS_NORMAL;
+		out->lightmapNum[0]	   = in->lightmapNum;
+		out->lightmapX[0]	   = in->lightmapX;
+		out->lightmapY[0]	   = in->lightmapY;
 
 		for( j = 1; j < MAX_LIGHTMAPS; j++ )
 		{
-			out->lightmapStyles[ j ] = LS_NONE;
-			out->vertexStyles[ j ]   = LS_NONE;
-			out->lightmapNum[ j ]    = -3;
-			out->lightmapX[ j ]      = 0;
-			out->lightmapY[ j ]      = 0;
+			out->lightmapStyles[j] = LS_NONE;
+			out->vertexStyles[j]   = LS_NONE;
+			out->lightmapNum[j]	   = -3;
+			out->lightmapX[j]	   = 0;
+			out->lightmapY[j]	   = 0;
 		}
 
-		out->lightmapWidth  = in->lightmapWidth;
+		out->lightmapWidth	= in->lightmapWidth;
 		out->lightmapHeight = in->lightmapHeight;
 
 		VectorCopy( in->lightmapOrigin, out->lightmapOrigin );
-		VectorCopy( in->lightmapVecs[ 0 ], out->lightmapVecs[ 0 ] );
-		VectorCopy( in->lightmapVecs[ 1 ], out->lightmapVecs[ 1 ] );
-		VectorCopy( in->lightmapVecs[ 2 ], out->lightmapVecs[ 2 ] );
+		VectorCopy( in->lightmapVecs[0], out->lightmapVecs[0] );
+		VectorCopy( in->lightmapVecs[1], out->lightmapVecs[1] );
+		VectorCopy( in->lightmapVecs[2], out->lightmapVecs[2] );
 
-		out->patchWidth  = in->patchWidth;
+		out->patchWidth	 = in->patchWidth;
 		out->patchHeight = in->patchHeight;
 
 		in++;
@@ -206,7 +206,7 @@ static void CopyDrawSurfacesLump( xbspHeader_t* header )
 
 static void AddDrawSurfacesLump( FILE* file, xbspHeader_t* header )
 {
-	int                i, size;
+	int				   i, size;
 	bspDrawSurface_t*  in;
 	xbspDrawSurface_t *buffer, *out;
 
@@ -216,30 +216,30 @@ static void AddDrawSurfacesLump( FILE* file, xbspHeader_t* header )
 	memset( buffer, 0, size );
 
 	/* convert */
-	in  = bspDrawSurfaces;
+	in	= bspDrawSurfaces;
 	out = buffer;
 	for( i = 0; i < numBSPDrawSurfaces; i++ )
 	{
-		out->shaderNum   = in->shaderNum;
-		out->fogNum      = in->fogNum;
+		out->shaderNum	 = in->shaderNum;
+		out->fogNum		 = in->fogNum;
 		out->surfaceType = in->surfaceType;
-		out->firstVert   = in->firstVert;
-		out->numVerts    = in->numVerts;
-		out->firstIndex  = in->firstIndex;
-		out->numIndexes  = in->numIndexes;
+		out->firstVert	 = in->firstVert;
+		out->numVerts	 = in->numVerts;
+		out->firstIndex	 = in->firstIndex;
+		out->numIndexes	 = in->numIndexes;
 
-		out->lightmapNum    = in->lightmapNum[ 0 ];
-		out->lightmapX      = in->lightmapX[ 0 ];
-		out->lightmapY      = in->lightmapY[ 0 ];
-		out->lightmapWidth  = in->lightmapWidth;
+		out->lightmapNum	= in->lightmapNum[0];
+		out->lightmapX		= in->lightmapX[0];
+		out->lightmapY		= in->lightmapY[0];
+		out->lightmapWidth	= in->lightmapWidth;
 		out->lightmapHeight = in->lightmapHeight;
 
 		VectorCopy( in->lightmapOrigin, out->lightmapOrigin );
-		VectorCopy( in->lightmapVecs[ 0 ], out->lightmapVecs[ 0 ] );
-		VectorCopy( in->lightmapVecs[ 1 ], out->lightmapVecs[ 1 ] );
-		VectorCopy( in->lightmapVecs[ 2 ], out->lightmapVecs[ 2 ] );
+		VectorCopy( in->lightmapVecs[0], out->lightmapVecs[0] );
+		VectorCopy( in->lightmapVecs[1], out->lightmapVecs[1] );
+		VectorCopy( in->lightmapVecs[2], out->lightmapVecs[2] );
 
-		out->patchWidth  = in->patchWidth;
+		out->patchWidth	 = in->patchWidth;
 		out->patchHeight = in->patchHeight;
 
 		in++;
@@ -257,51 +257,51 @@ static void AddDrawSurfacesLump( FILE* file, xbspHeader_t* header )
 typedef struct
 {
 	vec3_t xyz;
-	float  st[ 2 ];
-	float  lightmap[ 2 ];
+	float  st[2];
+	float  lightmap[2];
 	vec3_t normal;
-	float  paintColor[ 4 ];
-	float  lightColor[ 4 ];
-	float  lightDirection[ 3 ];
+	float  paintColor[4];
+	float  lightColor[4];
+	float  lightDirection[3];
 } xbspDrawVert_t;
 
 static void CopyDrawVertsLump( xbspHeader_t* header )
 {
-	int             i;
+	int				i;
 	xbspDrawVert_t* in;
-	bspDrawVert_t*  out;
+	bspDrawVert_t*	out;
 
 	/* get count */
 	numBSPDrawVerts = GetLumpElements( ( bspHeader_t* )header, LUMP_DRAWVERTS, sizeof( *in ) );
 	SetDrawVerts( numBSPDrawVerts );
 
 	/* copy */
-	in  = GetLump( ( bspHeader_t* )header, LUMP_DRAWVERTS );
+	in	= GetLump( ( bspHeader_t* )header, LUMP_DRAWVERTS );
 	out = bspDrawVerts;
 	for( i = 0; i < numBSPDrawVerts; i++ )
 	{
 		VectorCopy( in->xyz, out->xyz );
-		out->st[ 0 ] = in->st[ 0 ];
-		out->st[ 1 ] = in->st[ 1 ];
+		out->st[0] = in->st[0];
+		out->st[1] = in->st[1];
 
-		out->lightmap[ 0 ][ 0 ] = in->lightmap[ 0 ];
-		out->lightmap[ 0 ][ 1 ] = in->lightmap[ 1 ];
+		out->lightmap[0][0] = in->lightmap[0];
+		out->lightmap[0][1] = in->lightmap[1];
 
 		VectorCopy( in->normal, out->normal );
 
-		out->paintColor[ 0 ] = in->paintColor[ 0 ];
-		out->paintColor[ 1 ] = in->paintColor[ 1 ];
-		out->paintColor[ 2 ] = in->paintColor[ 2 ];
-		out->paintColor[ 3 ] = in->paintColor[ 3 ];
+		out->paintColor[0] = in->paintColor[0];
+		out->paintColor[1] = in->paintColor[1];
+		out->paintColor[2] = in->paintColor[2];
+		out->paintColor[3] = in->paintColor[3];
 
-		out->lightColor[ 0 ][ 0 ] = in->lightColor[ 0 ];
-		out->lightColor[ 0 ][ 1 ] = in->lightColor[ 1 ];
-		out->lightColor[ 0 ][ 2 ] = in->lightColor[ 2 ];
-		out->lightColor[ 0 ][ 3 ] = in->lightColor[ 3 ];
+		out->lightColor[0][0] = in->lightColor[0];
+		out->lightColor[0][1] = in->lightColor[1];
+		out->lightColor[0][2] = in->lightColor[2];
+		out->lightColor[0][3] = in->lightColor[3];
 
-		out->lightDirection[ 0 ][ 0 ] = in->lightDirection[ 0 ];
-		out->lightDirection[ 0 ][ 1 ] = in->lightDirection[ 1 ];
-		out->lightDirection[ 0 ][ 2 ] = in->lightDirection[ 2 ];
+		out->lightDirection[0][0] = in->lightDirection[0];
+		out->lightDirection[0][1] = in->lightDirection[1];
+		out->lightDirection[0][2] = in->lightDirection[2];
 
 		in++;
 		out++;
@@ -310,8 +310,8 @@ static void CopyDrawVertsLump( xbspHeader_t* header )
 
 static void AddDrawVertsLump( FILE* file, xbspHeader_t* header )
 {
-	int             i, size;
-	bspDrawVert_t*  in;
+	int				i, size;
+	bspDrawVert_t*	in;
 	xbspDrawVert_t *buffer, *out;
 
 	/* allocate output buffer */
@@ -320,32 +320,32 @@ static void AddDrawVertsLump( FILE* file, xbspHeader_t* header )
 	memset( buffer, 0, size );
 
 	/* convert */
-	in  = bspDrawVerts;
+	in	= bspDrawVerts;
 	out = buffer;
 	for( i = 0; i < numBSPDrawVerts; i++ )
 	{
 		VectorCopy( in->xyz, out->xyz );
-		out->st[ 0 ] = in->st[ 0 ];
-		out->st[ 1 ] = in->st[ 1 ];
+		out->st[0] = in->st[0];
+		out->st[1] = in->st[1];
 
-		out->lightmap[ 0 ] = in->lightmap[ 0 ][ 0 ];
-		out->lightmap[ 1 ] = in->lightmap[ 0 ][ 1 ];
+		out->lightmap[0] = in->lightmap[0][0];
+		out->lightmap[1] = in->lightmap[0][1];
 
 		VectorCopy( in->normal, out->normal );
 
-		out->paintColor[ 0 ] = in->paintColor[ 0 ];
-		out->paintColor[ 1 ] = in->paintColor[ 1 ];
-		out->paintColor[ 2 ] = in->paintColor[ 2 ];
-		out->paintColor[ 3 ] = in->paintColor[ 3 ];
+		out->paintColor[0] = in->paintColor[0];
+		out->paintColor[1] = in->paintColor[1];
+		out->paintColor[2] = in->paintColor[2];
+		out->paintColor[3] = in->paintColor[3];
 
-		out->lightColor[ 0 ] = in->lightColor[ 0 ][ 0 ];
-		out->lightColor[ 1 ] = in->lightColor[ 0 ][ 1 ];
-		out->lightColor[ 2 ] = in->lightColor[ 0 ][ 2 ];
-		out->lightColor[ 3 ] = in->lightColor[ 0 ][ 3 ];
+		out->lightColor[0] = in->lightColor[0][0];
+		out->lightColor[1] = in->lightColor[0][1];
+		out->lightColor[2] = in->lightColor[0][2];
+		out->lightColor[3] = in->lightColor[0][3];
 
-		out->lightDirection[ 0 ] = in->lightDirection[ 0 ][ 0 ];
-		out->lightDirection[ 1 ] = in->lightDirection[ 0 ][ 1 ];
-		out->lightDirection[ 2 ] = in->lightDirection[ 0 ][ 2 ];
+		out->lightDirection[0] = in->lightDirection[0][0];
+		out->lightDirection[1] = in->lightDirection[0][1];
+		out->lightDirection[2] = in->lightDirection[0][2];
 
 		in++;
 		out++;
@@ -361,16 +361,16 @@ static void AddDrawVertsLump( FILE* file, xbspHeader_t* header )
 /* light grid */
 typedef struct
 {
-	float ambient[ 3 ];
-	float directed[ 3 ];
-	byte  latLong[ 2 ];
+	float ambient[3];
+	float directed[3];
+	byte  latLong[2];
 } xbspGridPoint_t;
 
 static void CopyLightGridLumps( xbspHeader_t* header )
 {
-	int              i, j;
+	int				 i, j;
 	xbspGridPoint_t* in;
-	bspGridPoint_t*  out;
+	bspGridPoint_t*	 out;
 
 	/* get count */
 	numBSPGridPoints = GetLumpElements( ( bspHeader_t* )header, LUMP_LIGHTGRID, sizeof( *in ) );
@@ -380,21 +380,21 @@ static void CopyLightGridLumps( xbspHeader_t* header )
 	memset( bspGridPoints, 0, numBSPGridPoints * sizeof( *bspGridPoints ) );
 
 	/* copy */
-	in  = GetLump( ( bspHeader_t* )header, LUMP_LIGHTGRID );
+	in	= GetLump( ( bspHeader_t* )header, LUMP_LIGHTGRID );
 	out = bspGridPoints;
 	for( i = 0; i < numBSPGridPoints; i++ )
 	{
 		for( j = 0; j < MAX_LIGHTMAPS; j++ )
 		{
-			VectorCopy( in->ambient, out->ambient[ j ] );
-			VectorCopy( in->directed, out->directed[ j ] );
-			out->styles[ j ] = LS_NONE;
+			VectorCopy( in->ambient, out->ambient[j] );
+			VectorCopy( in->directed, out->directed[j] );
+			out->styles[j] = LS_NONE;
 		}
 
-		out->styles[ 0 ] = LS_NORMAL;
+		out->styles[0] = LS_NORMAL;
 
-		out->latLong[ 0 ] = in->latLong[ 0 ];
-		out->latLong[ 1 ] = in->latLong[ 1 ];
+		out->latLong[0] = in->latLong[0];
+		out->latLong[1] = in->latLong[1];
 
 		in++;
 		out++;
@@ -403,8 +403,8 @@ static void CopyLightGridLumps( xbspHeader_t* header )
 
 static void AddLightGridLumps( FILE* file, xbspHeader_t* header )
 {
-	int              i;
-	bspGridPoint_t*  in;
+	int				 i;
+	bspGridPoint_t*	 in;
 	xbspGridPoint_t *buffer, *out;
 
 	/* dummy check */
@@ -417,15 +417,15 @@ static void AddLightGridLumps( FILE* file, xbspHeader_t* header )
 	buffer = safe_malloc( numBSPGridPoints * sizeof( *out ) );
 
 	/* convert */
-	in  = bspGridPoints;
+	in	= bspGridPoints;
 	out = buffer;
 	for( i = 0; i < numBSPGridPoints; i++ )
 	{
-		VectorCopy( in->ambient[ 0 ], out->ambient );
-		VectorCopy( in->directed[ 0 ], out->directed );
+		VectorCopy( in->ambient[0], out->ambient );
+		VectorCopy( in->directed[0], out->directed );
 
-		out->latLong[ 0 ] = in->latLong[ 0 ];
-		out->latLong[ 1 ] = in->latLong[ 1 ];
+		out->latLong[0] = in->latLong[0];
+		out->latLong[1] = in->latLong[1];
 
 		in++;
 		out++;
@@ -464,28 +464,21 @@ void LoadXBSPFile( const char* filename )
 	}
 
 	/* load/convert lumps */
-	numBSPShaders =
-		CopyLump_Allocate( ( bspHeader_t* )header, LUMP_SHADERS, ( void** )&bspShaders, sizeof( bspShader_t ), &allocatedBSPShaders );
+	numBSPShaders = CopyLump_Allocate( ( bspHeader_t* )header, LUMP_SHADERS, ( void** )&bspShaders, sizeof( bspShader_t ), &allocatedBSPShaders );
 
-	numBSPModels =
-		CopyLump_Allocate( ( bspHeader_t* )header, LUMP_MODELS, ( void** )&bspModels, sizeof( bspModel_t ), &allocatedBSPModels );
+	numBSPModels = CopyLump_Allocate( ( bspHeader_t* )header, LUMP_MODELS, ( void** )&bspModels, sizeof( bspModel_t ), &allocatedBSPModels );
 
-	numBSPPlanes =
-		CopyLump_Allocate( ( bspHeader_t* )header, LUMP_PLANES, ( void** )&bspPlanes, sizeof( bspPlane_t ), &allocatedBSPPlanes );
+	numBSPPlanes = CopyLump_Allocate( ( bspHeader_t* )header, LUMP_PLANES, ( void** )&bspPlanes, sizeof( bspPlane_t ), &allocatedBSPPlanes );
 
 	numBSPLeafs = CopyLump( ( bspHeader_t* )header, LUMP_LEAFS, bspLeafs, sizeof( bspLeaf_t ) );
 
-	numBSPNodes =
-		CopyLump_Allocate( ( bspHeader_t* )header, LUMP_NODES, ( void** )&bspNodes, sizeof( bspNode_t ), &allocatedBSPNodes );
+	numBSPNodes = CopyLump_Allocate( ( bspHeader_t* )header, LUMP_NODES, ( void** )&bspNodes, sizeof( bspNode_t ), &allocatedBSPNodes );
 
-	numBSPLeafSurfaces =
-		CopyLump_Allocate( ( bspHeader_t* )header, LUMP_LEAFSURFACES, ( void** )&bspLeafSurfaces, sizeof( bspLeafSurfaces[ 0 ] ), &allocatedBSPLeafSurfaces );
+	numBSPLeafSurfaces = CopyLump_Allocate( ( bspHeader_t* )header, LUMP_LEAFSURFACES, ( void** )&bspLeafSurfaces, sizeof( bspLeafSurfaces[0] ), &allocatedBSPLeafSurfaces );
 
-	numBSPLeafBrushes =
-		CopyLump_Allocate( ( bspHeader_t* )header, LUMP_LEAFBRUSHES, ( void** )&bspLeafBrushes, sizeof( bspLeafBrushes[ 0 ] ), &allocatedBSPLeafBrushes );
+	numBSPLeafBrushes = CopyLump_Allocate( ( bspHeader_t* )header, LUMP_LEAFBRUSHES, ( void** )&bspLeafBrushes, sizeof( bspLeafBrushes[0] ), &allocatedBSPLeafBrushes );
 
-	numBSPBrushes =
-		CopyLump_Allocate( ( bspHeader_t* )header, LUMP_BRUSHES, ( void** )&bspBrushes, sizeof( bspBrush_t ), &allocatedBSPLeafBrushes );
+	numBSPBrushes = CopyLump_Allocate( ( bspHeader_t* )header, LUMP_BRUSHES, ( void** )&bspBrushes, sizeof( bspBrush_t ), &allocatedBSPLeafBrushes );
 
 	CopyBrushSidesLump( header );
 
@@ -495,12 +488,12 @@ void LoadXBSPFile( const char* filename )
 
 	numBSPFogs = CopyLump( ( bspHeader_t* )header, LUMP_FOGS, bspFogs, sizeof( bspFog_t ) );
 
-	numBSPDrawIndexes = CopyLump( ( bspHeader_t* )header, LUMP_DRAWINDEXES, bspDrawIndexes, sizeof( bspDrawIndexes[ 0 ] ) );
+	numBSPDrawIndexes = CopyLump( ( bspHeader_t* )header, LUMP_DRAWINDEXES, bspDrawIndexes, sizeof( bspDrawIndexes[0] ) );
 
 	numBSPVisBytes = CopyLump( ( bspHeader_t* )header, LUMP_VISIBILITY, bspVisBytes, 1 );
 
 	numBSPLightBytes = GetLumpElements( ( bspHeader_t* )header, LUMP_LIGHTMAPS, 1 );
-	bspLightBytes    = safe_malloc( numBSPLightBytes );
+	bspLightBytes	 = safe_malloc( numBSPLightBytes );
 	CopyLump( ( bspHeader_t* )header, LUMP_LIGHTMAPS, bspLightBytes, 1 );
 
 	bspEntDataSize = CopyLump_Allocate( ( bspHeader_t* )header, LUMP_ENTITIES, ( void** )&bspEntData, 1, &allocatedBSPEntData );
@@ -519,10 +512,10 @@ writes an id bsp file
 void WriteXBSPFile( const char* filename )
 {
 	xbspHeader_t outheader, *header;
-	FILE*        file;
-	time_t       t;
-	char         marker[ 1024 ];
-	int          size;
+	FILE*		 file;
+	time_t		 t;
+	char		 marker[1024];
+	int			 size;
 
 	/* set header */
 	header = &outheader;
@@ -532,7 +525,7 @@ void WriteXBSPFile( const char* filename )
 
 	/* set up header */
 	*( ( int* )( bspHeader_t* )header->ident ) = *( ( int* )game->bspIdent );
-	header->version                            = LittleLong( game->bspVersion );
+	header->version							   = LittleLong( game->bspVersion );
 
 	/* write initial header */
 	file = SafeOpenWrite( filename );
@@ -550,8 +543,8 @@ void WriteXBSPFile( const char* filename )
 	AddLump( file, ( bspHeader_t* )header, LUMP_NODES, bspNodes, numBSPNodes * sizeof( bspNode_t ) );
 	AddLump( file, ( bspHeader_t* )header, LUMP_BRUSHES, bspBrushes, numBSPBrushes * sizeof( bspBrush_t ) );
 	AddBrushSidesLump( file, header );
-	AddLump( file, ( bspHeader_t* )header, LUMP_LEAFSURFACES, bspLeafSurfaces, numBSPLeafSurfaces * sizeof( bspLeafSurfaces[ 0 ] ) );
-	AddLump( file, ( bspHeader_t* )header, LUMP_LEAFBRUSHES, bspLeafBrushes, numBSPLeafBrushes * sizeof( bspLeafBrushes[ 0 ] ) );
+	AddLump( file, ( bspHeader_t* )header, LUMP_LEAFSURFACES, bspLeafSurfaces, numBSPLeafSurfaces * sizeof( bspLeafSurfaces[0] ) );
+	AddLump( file, ( bspHeader_t* )header, LUMP_LEAFBRUSHES, bspLeafBrushes, numBSPLeafBrushes * sizeof( bspLeafBrushes[0] ) );
 	AddLump( file, ( bspHeader_t* )header, LUMP_MODELS, bspModels, numBSPModels * sizeof( bspModel_t ) );
 	AddDrawVertsLump( file, header );
 	AddDrawSurfacesLump( file, header );
@@ -560,7 +553,7 @@ void WriteXBSPFile( const char* filename )
 	AddLightGridLumps( file, header );
 	AddLump( file, ( bspHeader_t* )header, LUMP_ENTITIES, bspEntData, bspEntDataSize );
 	AddLump( file, ( bspHeader_t* )header, LUMP_FOGS, bspFogs, numBSPFogs * sizeof( bspFog_t ) );
-	AddLump( file, ( bspHeader_t* )header, LUMP_DRAWINDEXES, bspDrawIndexes, numBSPDrawIndexes * sizeof( bspDrawIndexes[ 0 ] ) );
+	AddLump( file, ( bspHeader_t* )header, LUMP_DRAWINDEXES, bspDrawIndexes, numBSPDrawIndexes * sizeof( bspDrawIndexes[0] ) );
 
 	/* emit bsp size */
 	size = ftell( file );

@@ -24,11 +24,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "tr_local.h"
 #include "gl_shader.h"
 
-#define SKY_SUBDIVISIONS      8
+#define SKY_SUBDIVISIONS	  8
 #define HALF_SKY_SUBDIVISIONS ( SKY_SUBDIVISIONS / 2 )
 
-static float s_cloudTexCoords[ 6 ][ SKY_SUBDIVISIONS + 1 ][ SKY_SUBDIVISIONS + 1 ][ 2 ];
-static float s_cloudTexP[ 6 ][ SKY_SUBDIVISIONS + 1 ][ SKY_SUBDIVISIONS + 1 ];
+static float  s_cloudTexCoords[6][SKY_SUBDIVISIONS + 1][SKY_SUBDIVISIONS + 1][2];
+static float  s_cloudTexP[6][SKY_SUBDIVISIONS + 1][SKY_SUBDIVISIONS + 1];
 
 /*
 ===================================================================================
@@ -38,33 +38,26 @@ POLYGON TO BOX SIDE PROJECTION
 ===================================================================================
 */
 
-static vec3_t sky_clip[ 6 ] = {
-	{ 1, 1, 0 },
-	{ 1, -1, 0 },
-	{ 0, -1, 1 },
-	{ 0, 1, 1 },
-	{ 1, 0, 1 },
-	{ -1, 0, 1 }
-};
+static vec3_t sky_clip[6] = { { 1, 1, 0 }, { 1, -1, 0 }, { 0, -1, 1 }, { 0, 1, 1 }, { 1, 0, 1 }, { -1, 0, 1 } };
 
-static float sky_mins[ 2 ][ 6 ], sky_maxs[ 2 ][ 6 ];
-static float sky_min, sky_max;
+static float  sky_mins[2][6], sky_maxs[2][6];
+static float  sky_min, sky_max;
 
 /*
 ================
 AddSkyPolygon
 ================
 */
-static void AddSkyPolygon( int nump, vec3_t vecs )
+static void	  AddSkyPolygon( int nump, vec3_t vecs )
 {
-	int    i, j;
-	vec3_t v, av;
-	float  s, t, dv;
-	int    axis;
-	float* vp;
+	int		   i, j;
+	vec3_t	   v, av;
+	float	   s, t, dv;
+	int		   axis;
+	float*	   vp;
 
 	// s = [0]/[2], t = [1]/[2]
-	static int vec_to_st[ 6 ][ 3 ] = {
+	static int vec_to_st[6][3] = {
 		{ -2, 3, 1 },
 		{ 2, 3, -1 },
 
@@ -84,12 +77,12 @@ static void AddSkyPolygon( int nump, vec3_t vecs )
 	{
 		VectorAdd( vp, v, v );
 	}
-	av[ 0 ] = fabs( v[ 0 ] );
-	av[ 1 ] = fabs( v[ 1 ] );
-	av[ 2 ] = fabs( v[ 2 ] );
-	if( av[ 0 ] > av[ 1 ] && av[ 0 ] > av[ 2 ] )
+	av[0] = fabs( v[0] );
+	av[1] = fabs( v[1] );
+	av[2] = fabs( v[2] );
+	if( av[0] > av[1] && av[0] > av[2] )
 	{
-		if( v[ 0 ] < 0 )
+		if( v[0] < 0 )
 		{
 			axis = 1;
 		}
@@ -98,9 +91,9 @@ static void AddSkyPolygon( int nump, vec3_t vecs )
 			axis = 0;
 		}
 	}
-	else if( av[ 1 ] > av[ 2 ] && av[ 1 ] > av[ 0 ] )
+	else if( av[1] > av[2] && av[1] > av[0] )
 	{
-		if( v[ 1 ] < 0 )
+		if( v[1] < 0 )
 		{
 			axis = 3;
 		}
@@ -111,7 +104,7 @@ static void AddSkyPolygon( int nump, vec3_t vecs )
 	}
 	else
 	{
-		if( v[ 2 ] < 0 )
+		if( v[2] < 0 )
 		{
 			axis = 5;
 		}
@@ -124,58 +117,58 @@ static void AddSkyPolygon( int nump, vec3_t vecs )
 	// project new texture coords
 	for( i = 0; i < nump; i++, vecs += 3 )
 	{
-		j = vec_to_st[ axis ][ 2 ];
+		j = vec_to_st[axis][2];
 		if( j > 0 )
 		{
-			dv = vecs[ j - 1 ];
+			dv = vecs[j - 1];
 		}
 		else
 		{
-			dv = -vecs[ -j - 1 ];
+			dv = -vecs[-j - 1];
 		}
 		if( dv < 0.001 )
 		{
 			continue; // don't divide by zero
 		}
-		j = vec_to_st[ axis ][ 0 ];
+		j = vec_to_st[axis][0];
 		if( j < 0 )
 		{
-			s = -vecs[ -j - 1 ] / dv;
+			s = -vecs[-j - 1] / dv;
 		}
 		else
 		{
-			s = vecs[ j - 1 ] / dv;
+			s = vecs[j - 1] / dv;
 		}
-		j = vec_to_st[ axis ][ 1 ];
+		j = vec_to_st[axis][1];
 		if( j < 0 )
 		{
-			t = -vecs[ -j - 1 ] / dv;
+			t = -vecs[-j - 1] / dv;
 		}
 		else
 		{
-			t = vecs[ j - 1 ] / dv;
+			t = vecs[j - 1] / dv;
 		}
 
-		if( s < sky_mins[ 0 ][ axis ] )
+		if( s < sky_mins[0][axis] )
 		{
-			sky_mins[ 0 ][ axis ] = s;
+			sky_mins[0][axis] = s;
 		}
-		if( t < sky_mins[ 1 ][ axis ] )
+		if( t < sky_mins[1][axis] )
 		{
-			sky_mins[ 1 ][ axis ] = t;
+			sky_mins[1][axis] = t;
 		}
-		if( s > sky_maxs[ 0 ][ axis ] )
+		if( s > sky_maxs[0][axis] )
 		{
-			sky_maxs[ 0 ][ axis ] = s;
+			sky_maxs[0][axis] = s;
 		}
-		if( t > sky_maxs[ 1 ][ axis ] )
+		if( t > sky_maxs[1][axis] )
 		{
-			sky_maxs[ 1 ][ axis ] = t;
+			sky_maxs[1][axis] = t;
 		}
 	}
 }
 
-#define ON_EPSILON     0.1f // point on plane side epsilon
+#define ON_EPSILON	   0.1f // point on plane side epsilon
 #define MAX_CLIP_VERTS 64
 /*
 ================
@@ -184,15 +177,15 @@ ClipSkyPolygon
 */
 static void ClipSkyPolygon( int nump, vec3_t vecs, int stage )
 {
-	float*   norm;
-	float*   v;
+	float*	 norm;
+	float*	 v;
 	qboolean front, back;
-	float    d, e;
-	float    dists[ MAX_CLIP_VERTS ];
-	int      sides[ MAX_CLIP_VERTS ];
-	vec3_t   newv[ 2 ][ MAX_CLIP_VERTS ];
-	int      newc[ 2 ];
-	int      i, j;
+	float	 d, e;
+	float	 dists[MAX_CLIP_VERTS];
+	int		 sides[MAX_CLIP_VERTS];
+	vec3_t	 newv[2][MAX_CLIP_VERTS];
+	int		 newc[2];
+	int		 i, j;
 
 	if( nump > MAX_CLIP_VERTS - 2 )
 	{
@@ -206,25 +199,25 @@ static void ClipSkyPolygon( int nump, vec3_t vecs, int stage )
 	}
 
 	front = back = qfalse;
-	norm         = sky_clip[ stage ];
+	norm		 = sky_clip[stage];
 	for( i = 0, v = vecs; i < nump; i++, v += 3 )
 	{
 		d = DotProduct( v, norm );
 		if( d > ON_EPSILON )
 		{
-			front      = qtrue;
-			sides[ i ] = SIDE_FRONT;
+			front	 = qtrue;
+			sides[i] = SIDE_FRONT;
 		}
 		else if( d < -ON_EPSILON )
 		{
-			back       = qtrue;
-			sides[ i ] = SIDE_BACK;
+			back	 = qtrue;
+			sides[i] = SIDE_BACK;
 		}
 		else
 		{
-			sides[ i ] = SIDE_ON;
+			sides[i] = SIDE_ON;
 		}
-		dists[ i ] = d;
+		dists[i] = d;
 	}
 
 	if( !front || !back )
@@ -235,50 +228,50 @@ static void ClipSkyPolygon( int nump, vec3_t vecs, int stage )
 	}
 
 	// clip it
-	sides[ i ] = sides[ 0 ];
-	dists[ i ] = dists[ 0 ];
+	sides[i] = sides[0];
+	dists[i] = dists[0];
 	VectorCopy( vecs, ( vecs + ( i * 3 ) ) );
-	newc[ 0 ] = newc[ 1 ] = 0;
+	newc[0] = newc[1] = 0;
 
 	for( i = 0, v = vecs; i < nump; i++, v += 3 )
 	{
-		switch( sides[ i ] )
+		switch( sides[i] )
 		{
 			case SIDE_FRONT:
-				VectorCopy( v, newv[ 0 ][ newc[ 0 ] ] );
-				newc[ 0 ]++;
+				VectorCopy( v, newv[0][newc[0]] );
+				newc[0]++;
 				break;
 			case SIDE_BACK:
-				VectorCopy( v, newv[ 1 ][ newc[ 1 ] ] );
-				newc[ 1 ]++;
+				VectorCopy( v, newv[1][newc[1]] );
+				newc[1]++;
 				break;
 			case SIDE_ON:
-				VectorCopy( v, newv[ 0 ][ newc[ 0 ] ] );
-				newc[ 0 ]++;
-				VectorCopy( v, newv[ 1 ][ newc[ 1 ] ] );
-				newc[ 1 ]++;
+				VectorCopy( v, newv[0][newc[0]] );
+				newc[0]++;
+				VectorCopy( v, newv[1][newc[1]] );
+				newc[1]++;
 				break;
 		}
 
-		if( sides[ i ] == SIDE_ON || sides[ i + 1 ] == SIDE_ON || sides[ i + 1 ] == sides[ i ] )
+		if( sides[i] == SIDE_ON || sides[i + 1] == SIDE_ON || sides[i + 1] == sides[i] )
 		{
 			continue;
 		}
 
-		d = dists[ i ] / ( dists[ i ] - dists[ i + 1 ] );
+		d = dists[i] / ( dists[i] - dists[i + 1] );
 		for( j = 0; j < 3; j++ )
 		{
-			e                           = v[ j ] + d * ( v[ j + 3 ] - v[ j ] );
-			newv[ 0 ][ newc[ 0 ] ][ j ] = e;
-			newv[ 1 ][ newc[ 1 ] ][ j ] = e;
+			e					= v[j] + d * ( v[j + 3] - v[j] );
+			newv[0][newc[0]][j] = e;
+			newv[1][newc[1]][j] = e;
 		}
-		newc[ 0 ]++;
-		newc[ 1 ]++;
+		newc[0]++;
+		newc[1]++;
 	}
 
 	// continue
-	ClipSkyPolygon( newc[ 0 ], newv[ 0 ][ 0 ], stage + 1 );
-	ClipSkyPolygon( newc[ 1 ], newv[ 1 ][ 0 ], stage + 1 );
+	ClipSkyPolygon( newc[0], newv[0][0], stage + 1 );
+	ClipSkyPolygon( newc[1], newv[1][0], stage + 1 );
 }
 
 /*
@@ -292,8 +285,8 @@ static void ClearSkyBox( void )
 
 	for( i = 0; i < 6; i++ )
 	{
-		sky_mins[ 0 ][ i ] = sky_mins[ 1 ][ i ] = 9999;
-		sky_maxs[ 0 ][ i ] = sky_maxs[ 1 ][ i ] = -9999;
+		sky_mins[0][i] = sky_mins[1][i] = 9999;
+		sky_maxs[0][i] = sky_maxs[1][i] = -9999;
 	}
 }
 
@@ -304,8 +297,8 @@ Tess_ClipSkyPolygons
 */
 void Tess_ClipSkyPolygons()
 {
-	vec3_t p[ 5 ]; // need one extra point for clipping
-	int    i, j;
+	vec3_t p[5]; // need one extra point for clipping
+	int	   i, j;
 
 	ClearSkyBox();
 
@@ -313,10 +306,10 @@ void Tess_ClipSkyPolygons()
 	{
 		for( j = 0; j < 3; j++ )
 		{
-			VectorSubtract( tess.xyz[ tess.indexes[ i + j ] ], backEnd.viewParms.orientation.origin, p[ j ] );
+			VectorSubtract( tess.xyz[tess.indexes[i + j]], backEnd.viewParms.orientation.origin, p[j] );
 		}
 
-		ClipSkyPolygon( 3, p[ 0 ], 0 );
+		ClipSkyPolygon( 3, p[0], 0 );
 	}
 }
 
@@ -336,7 +329,7 @@ CLOUD VERTEX GENERATION
 static void MakeSkyVec( float s, float t, int axis, vec4_t outSt, vec4_t outXYZ )
 {
 	// 1 = s, 2 = t, 3 = 2048
-	static int st_to_vec[ 6 ][ 3 ] = {
+	static int st_to_vec[6][3] = {
 		{ 3, -1, 2 },
 		{ -3, 1, 2 },
 
@@ -348,27 +341,27 @@ static void MakeSkyVec( float s, float t, int axis, vec4_t outSt, vec4_t outXYZ 
 	};
 
 	vec3_t b;
-	int    j, k;
+	int	   j, k;
 	float  boxSize;
 
 	boxSize = backEnd.viewParms.zFar / 1.75; // div sqrt(3)
-	b[ 0 ]  = s * boxSize;
-	b[ 1 ]  = t * boxSize;
-	b[ 2 ]  = boxSize;
+	b[0]	= s * boxSize;
+	b[1]	= t * boxSize;
+	b[2]	= boxSize;
 
 	for( j = 0; j < 3; j++ )
 	{
-		k = st_to_vec[ axis ][ j ];
+		k = st_to_vec[axis][j];
 		if( k < 0 )
 		{
-			outXYZ[ j ] = -b[ -k - 1 ];
+			outXYZ[j] = -b[-k - 1];
 		}
 		else
 		{
-			outXYZ[ j ] = b[ k - 1 ];
+			outXYZ[j] = b[k - 1];
 		}
 	}
-	outXYZ[ 3 ] = 1;
+	outXYZ[3] = 1;
 
 	// avoid bilerp seam
 	s = ( s + 1 ) * 0.5;
@@ -395,16 +388,16 @@ static void MakeSkyVec( float s, float t, int axis, vec4_t outSt, vec4_t outXYZ 
 
 	if( outSt )
 	{
-		outSt[ 0 ] = s;
-		outSt[ 1 ] = t;
-		outSt[ 2 ] = 0;
-		outSt[ 3 ] = 1;
+		outSt[0] = s;
+		outSt[1] = t;
+		outSt[2] = 0;
+		outSt[3] = 1;
 	}
 }
 
-//static int      sky_texorder[6] = { 0, 2, 1, 3, 4, 5 };
-static vec4_t s_skyPoints[ SKY_SUBDIVISIONS + 1 ][ SKY_SUBDIVISIONS + 1 ];
-static float  s_skyTexCoords[ SKY_SUBDIVISIONS + 1 ][ SKY_SUBDIVISIONS + 1 ][ 4 ];
+// static int      sky_texorder[6] = { 0, 2, 1, 3, 4, 5 };
+static vec4_t s_skyPoints[SKY_SUBDIVISIONS + 1][SKY_SUBDIVISIONS + 1];
+static float  s_skyTexCoords[SKY_SUBDIVISIONS + 1][SKY_SUBDIVISIONS + 1][4];
 
 /*
 static void DrawSkySide(struct image_s *image, const int mins[2], const int maxs[2])
@@ -432,26 +425,26 @@ static void DrawSkySide(struct image_s *image, const int mins[2], const int maxs
 }
 */
 
-static void FillCloudySkySide( const int mins[ 2 ], const int maxs[ 2 ], qboolean addIndexes )
+static void	  FillCloudySkySide( const int mins[2], const int maxs[2], qboolean addIndexes )
 {
 	int s, t;
 	int vertexStart = tess.numVertexes;
 	int tHeight, sWidth;
 
-	tHeight = maxs[ 1 ] - mins[ 1 ] + 1;
-	sWidth  = maxs[ 0 ] - mins[ 0 ] + 1;
+	tHeight = maxs[1] - mins[1] + 1;
+	sWidth	= maxs[0] - mins[0] + 1;
 
-	for( t = mins[ 1 ] + HALF_SKY_SUBDIVISIONS; t <= maxs[ 1 ] + HALF_SKY_SUBDIVISIONS; t++ )
+	for( t = mins[1] + HALF_SKY_SUBDIVISIONS; t <= maxs[1] + HALF_SKY_SUBDIVISIONS; t++ )
 	{
-		for( s = mins[ 0 ] + HALF_SKY_SUBDIVISIONS; s <= maxs[ 0 ] + HALF_SKY_SUBDIVISIONS; s++ )
+		for( s = mins[0] + HALF_SKY_SUBDIVISIONS; s <= maxs[0] + HALF_SKY_SUBDIVISIONS; s++ )
 		{
-			VectorAdd( s_skyPoints[ t ][ s ], backEnd.viewParms.orientation.origin, tess.xyz[ tess.numVertexes ] );
-			tess.xyz[ tess.numVertexes ][ 3 ] = 1;
+			VectorAdd( s_skyPoints[t][s], backEnd.viewParms.orientation.origin, tess.xyz[tess.numVertexes] );
+			tess.xyz[tess.numVertexes][3] = 1;
 
-			tess.texCoords[ tess.numVertexes ][ 0 ] = s_skyTexCoords[ t ][ s ][ 0 ];
-			tess.texCoords[ tess.numVertexes ][ 1 ] = s_skyTexCoords[ t ][ s ][ 1 ];
-			tess.texCoords[ tess.numVertexes ][ 2 ] = 0;
-			tess.texCoords[ tess.numVertexes ][ 3 ] = 1;
+			tess.texCoords[tess.numVertexes][0] = s_skyTexCoords[t][s][0];
+			tess.texCoords[tess.numVertexes][1] = s_skyTexCoords[t][s][1];
+			tess.texCoords[tess.numVertexes][2] = 0;
+			tess.texCoords[tess.numVertexes][3] = 1;
 
 			tess.numVertexes++;
 
@@ -469,18 +462,18 @@ static void FillCloudySkySide( const int mins[ 2 ], const int maxs[ 2 ], qboolea
 		{
 			for( s = 0; s < sWidth - 1; s++ )
 			{
-				tess.indexes[ tess.numIndexes ] = vertexStart + s + t * ( sWidth );
+				tess.indexes[tess.numIndexes] = vertexStart + s + t * ( sWidth );
 				tess.numIndexes++;
-				tess.indexes[ tess.numIndexes ] = vertexStart + s + ( t + 1 ) * ( sWidth );
+				tess.indexes[tess.numIndexes] = vertexStart + s + ( t + 1 ) * ( sWidth );
 				tess.numIndexes++;
-				tess.indexes[ tess.numIndexes ] = vertexStart + s + 1 + t * ( sWidth );
+				tess.indexes[tess.numIndexes] = vertexStart + s + 1 + t * ( sWidth );
 				tess.numIndexes++;
 
-				tess.indexes[ tess.numIndexes ] = vertexStart + s + ( t + 1 ) * ( sWidth );
+				tess.indexes[tess.numIndexes] = vertexStart + s + ( t + 1 ) * ( sWidth );
 				tess.numIndexes++;
-				tess.indexes[ tess.numIndexes ] = vertexStart + s + 1 + ( t + 1 ) * ( sWidth );
+				tess.indexes[tess.numIndexes] = vertexStart + s + 1 + ( t + 1 ) * ( sWidth );
 				tess.numIndexes++;
-				tess.indexes[ tess.numIndexes ] = vertexStart + s + 1 + t * ( sWidth );
+				tess.indexes[tess.numIndexes] = vertexStart + s + 1 + t * ( sWidth );
 				tess.numIndexes++;
 			}
 		}
@@ -498,77 +491,74 @@ static void DrawSkyBox( shader_t* shader )
 
 	// set up for drawing
 	tess.multiDrawPrimitives = 0;
-	tess.numIndexes          = 0;
-	tess.numVertexes         = 0;
+	tess.numIndexes			 = 0;
+	tess.numVertexes		 = 0;
 
 	for( i = 0; i < 6; i++ )
 	{
-		int sky_mins_subd[ 2 ], sky_maxs_subd[ 2 ];
+		int sky_mins_subd[2], sky_maxs_subd[2];
 		int s, t;
 
-		sky_mins[ 0 ][ i ] = floor( sky_mins[ 0 ][ i ] * HALF_SKY_SUBDIVISIONS ) / HALF_SKY_SUBDIVISIONS;
-		sky_mins[ 1 ][ i ] = floor( sky_mins[ 1 ][ i ] * HALF_SKY_SUBDIVISIONS ) / HALF_SKY_SUBDIVISIONS;
-		sky_maxs[ 0 ][ i ] = ceil( sky_maxs[ 0 ][ i ] * HALF_SKY_SUBDIVISIONS ) / HALF_SKY_SUBDIVISIONS;
-		sky_maxs[ 1 ][ i ] = ceil( sky_maxs[ 1 ][ i ] * HALF_SKY_SUBDIVISIONS ) / HALF_SKY_SUBDIVISIONS;
+		sky_mins[0][i] = floor( sky_mins[0][i] * HALF_SKY_SUBDIVISIONS ) / HALF_SKY_SUBDIVISIONS;
+		sky_mins[1][i] = floor( sky_mins[1][i] * HALF_SKY_SUBDIVISIONS ) / HALF_SKY_SUBDIVISIONS;
+		sky_maxs[0][i] = ceil( sky_maxs[0][i] * HALF_SKY_SUBDIVISIONS ) / HALF_SKY_SUBDIVISIONS;
+		sky_maxs[1][i] = ceil( sky_maxs[1][i] * HALF_SKY_SUBDIVISIONS ) / HALF_SKY_SUBDIVISIONS;
 
-		if( ( sky_mins[ 0 ][ i ] >= sky_maxs[ 0 ][ i ] ) || ( sky_mins[ 1 ][ i ] >= sky_maxs[ 1 ][ i ] ) )
+		if( ( sky_mins[0][i] >= sky_maxs[0][i] ) || ( sky_mins[1][i] >= sky_maxs[1][i] ) )
 		{
 			continue;
 		}
 
-		sky_mins_subd[ 0 ] = sky_mins[ 0 ][ i ] * HALF_SKY_SUBDIVISIONS;
-		sky_mins_subd[ 1 ] = sky_mins[ 1 ][ i ] * HALF_SKY_SUBDIVISIONS;
-		sky_maxs_subd[ 0 ] = sky_maxs[ 0 ][ i ] * HALF_SKY_SUBDIVISIONS;
-		sky_maxs_subd[ 1 ] = sky_maxs[ 1 ][ i ] * HALF_SKY_SUBDIVISIONS;
+		sky_mins_subd[0] = sky_mins[0][i] * HALF_SKY_SUBDIVISIONS;
+		sky_mins_subd[1] = sky_mins[1][i] * HALF_SKY_SUBDIVISIONS;
+		sky_maxs_subd[0] = sky_maxs[0][i] * HALF_SKY_SUBDIVISIONS;
+		sky_maxs_subd[1] = sky_maxs[1][i] * HALF_SKY_SUBDIVISIONS;
 
-		if( sky_mins_subd[ 0 ] < -HALF_SKY_SUBDIVISIONS )
+		if( sky_mins_subd[0] < -HALF_SKY_SUBDIVISIONS )
 		{
-			sky_mins_subd[ 0 ] = -HALF_SKY_SUBDIVISIONS;
+			sky_mins_subd[0] = -HALF_SKY_SUBDIVISIONS;
 		}
-		else if( sky_mins_subd[ 0 ] > HALF_SKY_SUBDIVISIONS )
+		else if( sky_mins_subd[0] > HALF_SKY_SUBDIVISIONS )
 		{
-			sky_mins_subd[ 0 ] = HALF_SKY_SUBDIVISIONS;
+			sky_mins_subd[0] = HALF_SKY_SUBDIVISIONS;
 		}
-		if( sky_mins_subd[ 1 ] < -HALF_SKY_SUBDIVISIONS )
+		if( sky_mins_subd[1] < -HALF_SKY_SUBDIVISIONS )
 		{
-			sky_mins_subd[ 1 ] = -HALF_SKY_SUBDIVISIONS;
+			sky_mins_subd[1] = -HALF_SKY_SUBDIVISIONS;
 		}
-		else if( sky_mins_subd[ 1 ] > HALF_SKY_SUBDIVISIONS )
+		else if( sky_mins_subd[1] > HALF_SKY_SUBDIVISIONS )
 		{
-			sky_mins_subd[ 1 ] = HALF_SKY_SUBDIVISIONS;
+			sky_mins_subd[1] = HALF_SKY_SUBDIVISIONS;
 		}
 
-		if( sky_maxs_subd[ 0 ] < -HALF_SKY_SUBDIVISIONS )
+		if( sky_maxs_subd[0] < -HALF_SKY_SUBDIVISIONS )
 		{
-			sky_maxs_subd[ 0 ] = -HALF_SKY_SUBDIVISIONS;
+			sky_maxs_subd[0] = -HALF_SKY_SUBDIVISIONS;
 		}
-		else if( sky_maxs_subd[ 0 ] > HALF_SKY_SUBDIVISIONS )
+		else if( sky_maxs_subd[0] > HALF_SKY_SUBDIVISIONS )
 		{
-			sky_maxs_subd[ 0 ] = HALF_SKY_SUBDIVISIONS;
+			sky_maxs_subd[0] = HALF_SKY_SUBDIVISIONS;
 		}
-		if( sky_maxs_subd[ 1 ] < -HALF_SKY_SUBDIVISIONS )
+		if( sky_maxs_subd[1] < -HALF_SKY_SUBDIVISIONS )
 		{
-			sky_maxs_subd[ 1 ] = -HALF_SKY_SUBDIVISIONS;
+			sky_maxs_subd[1] = -HALF_SKY_SUBDIVISIONS;
 		}
-		else if( sky_maxs_subd[ 1 ] > HALF_SKY_SUBDIVISIONS )
+		else if( sky_maxs_subd[1] > HALF_SKY_SUBDIVISIONS )
 		{
-			sky_maxs_subd[ 1 ] = HALF_SKY_SUBDIVISIONS;
+			sky_maxs_subd[1] = HALF_SKY_SUBDIVISIONS;
 		}
 
 		// iterate through the subdivisions
-		for( t = sky_mins_subd[ 1 ] + HALF_SKY_SUBDIVISIONS; t <= sky_maxs_subd[ 1 ] + HALF_SKY_SUBDIVISIONS; t++ )
+		for( t = sky_mins_subd[1] + HALF_SKY_SUBDIVISIONS; t <= sky_maxs_subd[1] + HALF_SKY_SUBDIVISIONS; t++ )
 		{
-			for( s = sky_mins_subd[ 0 ] + HALF_SKY_SUBDIVISIONS; s <= sky_maxs_subd[ 0 ] + HALF_SKY_SUBDIVISIONS; s++ )
+			for( s = sky_mins_subd[0] + HALF_SKY_SUBDIVISIONS; s <= sky_maxs_subd[0] + HALF_SKY_SUBDIVISIONS; s++ )
 			{
-				MakeSkyVec( ( s - HALF_SKY_SUBDIVISIONS ) / ( float )HALF_SKY_SUBDIVISIONS,
-					( t - HALF_SKY_SUBDIVISIONS ) / ( float )HALF_SKY_SUBDIVISIONS,
-					i,
-					s_skyTexCoords[ t ][ s ],
-					s_skyPoints[ t ][ s ] );
+				MakeSkyVec(
+					( s - HALF_SKY_SUBDIVISIONS ) / ( float )HALF_SKY_SUBDIVISIONS, ( t - HALF_SKY_SUBDIVISIONS ) / ( float )HALF_SKY_SUBDIVISIONS, i, s_skyTexCoords[t][s], s_skyPoints[t][s] );
 			}
 		}
 
-		//DrawSkySide(shader->sky.outerbox[sky_texorder[i]], sky_mins_subd, sky_maxs_subd);
+		// DrawSkySide(shader->sky.outerbox[sky_texorder[i]], sky_mins_subd, sky_maxs_subd);
 
 		// only add indexes for first stage
 		FillCloudySkySide( sky_mins_subd, sky_maxs_subd, qtrue );
@@ -586,8 +576,8 @@ static void FillCloudBox( const shader_t* shader, int stage )
 
 	for( i = 0; i < 6; i++ )
 	{
-		int   sky_mins_subd[ 2 ], sky_maxs_subd[ 2 ];
-		int   s, t;
+		int	  sky_mins_subd[2], sky_maxs_subd[2];
+		int	  s, t;
 		float MIN_T;
 
 		if( 1 ) // FIXME? shader->sky.fullClouds )
@@ -620,68 +610,64 @@ static void FillCloudBox( const shader_t* shader, int stage )
 			}
 		}
 
-		sky_mins[ 0 ][ i ] = floor( sky_mins[ 0 ][ i ] * HALF_SKY_SUBDIVISIONS ) / HALF_SKY_SUBDIVISIONS;
-		sky_mins[ 1 ][ i ] = floor( sky_mins[ 1 ][ i ] * HALF_SKY_SUBDIVISIONS ) / HALF_SKY_SUBDIVISIONS;
-		sky_maxs[ 0 ][ i ] = ceil( sky_maxs[ 0 ][ i ] * HALF_SKY_SUBDIVISIONS ) / HALF_SKY_SUBDIVISIONS;
-		sky_maxs[ 1 ][ i ] = ceil( sky_maxs[ 1 ][ i ] * HALF_SKY_SUBDIVISIONS ) / HALF_SKY_SUBDIVISIONS;
+		sky_mins[0][i] = floor( sky_mins[0][i] * HALF_SKY_SUBDIVISIONS ) / HALF_SKY_SUBDIVISIONS;
+		sky_mins[1][i] = floor( sky_mins[1][i] * HALF_SKY_SUBDIVISIONS ) / HALF_SKY_SUBDIVISIONS;
+		sky_maxs[0][i] = ceil( sky_maxs[0][i] * HALF_SKY_SUBDIVISIONS ) / HALF_SKY_SUBDIVISIONS;
+		sky_maxs[1][i] = ceil( sky_maxs[1][i] * HALF_SKY_SUBDIVISIONS ) / HALF_SKY_SUBDIVISIONS;
 
-		if( ( sky_mins[ 0 ][ i ] >= sky_maxs[ 0 ][ i ] ) || ( sky_mins[ 1 ][ i ] >= sky_maxs[ 1 ][ i ] ) )
+		if( ( sky_mins[0][i] >= sky_maxs[0][i] ) || ( sky_mins[1][i] >= sky_maxs[1][i] ) )
 		{
 			continue;
 		}
 
-		sky_mins_subd[ 0 ] = Q_ftol( sky_mins[ 0 ][ i ] * HALF_SKY_SUBDIVISIONS );
-		sky_mins_subd[ 1 ] = Q_ftol( sky_mins[ 1 ][ i ] * HALF_SKY_SUBDIVISIONS );
-		sky_maxs_subd[ 0 ] = Q_ftol( sky_maxs[ 0 ][ i ] * HALF_SKY_SUBDIVISIONS );
-		sky_maxs_subd[ 1 ] = Q_ftol( sky_maxs[ 1 ][ i ] * HALF_SKY_SUBDIVISIONS );
+		sky_mins_subd[0] = Q_ftol( sky_mins[0][i] * HALF_SKY_SUBDIVISIONS );
+		sky_mins_subd[1] = Q_ftol( sky_mins[1][i] * HALF_SKY_SUBDIVISIONS );
+		sky_maxs_subd[0] = Q_ftol( sky_maxs[0][i] * HALF_SKY_SUBDIVISIONS );
+		sky_maxs_subd[1] = Q_ftol( sky_maxs[1][i] * HALF_SKY_SUBDIVISIONS );
 
-		if( sky_mins_subd[ 0 ] < -HALF_SKY_SUBDIVISIONS )
+		if( sky_mins_subd[0] < -HALF_SKY_SUBDIVISIONS )
 		{
-			sky_mins_subd[ 0 ] = -HALF_SKY_SUBDIVISIONS;
+			sky_mins_subd[0] = -HALF_SKY_SUBDIVISIONS;
 		}
-		else if( sky_mins_subd[ 0 ] > HALF_SKY_SUBDIVISIONS )
+		else if( sky_mins_subd[0] > HALF_SKY_SUBDIVISIONS )
 		{
-			sky_mins_subd[ 0 ] = HALF_SKY_SUBDIVISIONS;
+			sky_mins_subd[0] = HALF_SKY_SUBDIVISIONS;
 		}
-		if( sky_mins_subd[ 1 ] < MIN_T )
+		if( sky_mins_subd[1] < MIN_T )
 		{
-			sky_mins_subd[ 1 ] = MIN_T;
+			sky_mins_subd[1] = MIN_T;
 		}
-		else if( sky_mins_subd[ 1 ] > HALF_SKY_SUBDIVISIONS )
+		else if( sky_mins_subd[1] > HALF_SKY_SUBDIVISIONS )
 		{
-			sky_mins_subd[ 1 ] = HALF_SKY_SUBDIVISIONS;
+			sky_mins_subd[1] = HALF_SKY_SUBDIVISIONS;
 		}
 
-		if( sky_maxs_subd[ 0 ] < -HALF_SKY_SUBDIVISIONS )
+		if( sky_maxs_subd[0] < -HALF_SKY_SUBDIVISIONS )
 		{
-			sky_maxs_subd[ 0 ] = -HALF_SKY_SUBDIVISIONS;
+			sky_maxs_subd[0] = -HALF_SKY_SUBDIVISIONS;
 		}
-		else if( sky_maxs_subd[ 0 ] > HALF_SKY_SUBDIVISIONS )
+		else if( sky_maxs_subd[0] > HALF_SKY_SUBDIVISIONS )
 		{
-			sky_maxs_subd[ 0 ] = HALF_SKY_SUBDIVISIONS;
+			sky_maxs_subd[0] = HALF_SKY_SUBDIVISIONS;
 		}
-		if( sky_maxs_subd[ 1 ] < MIN_T )
+		if( sky_maxs_subd[1] < MIN_T )
 		{
-			sky_maxs_subd[ 1 ] = MIN_T;
+			sky_maxs_subd[1] = MIN_T;
 		}
-		else if( sky_maxs_subd[ 1 ] > HALF_SKY_SUBDIVISIONS )
+		else if( sky_maxs_subd[1] > HALF_SKY_SUBDIVISIONS )
 		{
-			sky_maxs_subd[ 1 ] = HALF_SKY_SUBDIVISIONS;
+			sky_maxs_subd[1] = HALF_SKY_SUBDIVISIONS;
 		}
 
 		// iterate through the subdivisions
-		for( t = sky_mins_subd[ 1 ] + HALF_SKY_SUBDIVISIONS; t <= sky_maxs_subd[ 1 ] + HALF_SKY_SUBDIVISIONS; t++ )
+		for( t = sky_mins_subd[1] + HALF_SKY_SUBDIVISIONS; t <= sky_maxs_subd[1] + HALF_SKY_SUBDIVISIONS; t++ )
 		{
-			for( s = sky_mins_subd[ 0 ] + HALF_SKY_SUBDIVISIONS; s <= sky_maxs_subd[ 0 ] + HALF_SKY_SUBDIVISIONS; s++ )
+			for( s = sky_mins_subd[0] + HALF_SKY_SUBDIVISIONS; s <= sky_maxs_subd[0] + HALF_SKY_SUBDIVISIONS; s++ )
 			{
-				MakeSkyVec( ( s - HALF_SKY_SUBDIVISIONS ) / ( float )HALF_SKY_SUBDIVISIONS,
-					( t - HALF_SKY_SUBDIVISIONS ) / ( float )HALF_SKY_SUBDIVISIONS,
-					i,
-					NULL,
-					s_skyPoints[ t ][ s ] );
+				MakeSkyVec( ( s - HALF_SKY_SUBDIVISIONS ) / ( float )HALF_SKY_SUBDIVISIONS, ( t - HALF_SKY_SUBDIVISIONS ) / ( float )HALF_SKY_SUBDIVISIONS, i, NULL, s_skyPoints[t][s] );
 
-				s_skyTexCoords[ t ][ s ][ 0 ] = s_cloudTexCoords[ i ][ t ][ s ][ 0 ];
-				s_skyTexCoords[ t ][ s ][ 1 ] = s_cloudTexCoords[ i ][ t ][ s ][ 1 ];
+				s_skyTexCoords[t][s][0] = s_cloudTexCoords[i][t][s][0];
+				s_skyTexCoords[t][s][1] = s_cloudTexCoords[i][t][s][1];
 			}
 		}
 
@@ -692,7 +678,7 @@ static void FillCloudBox( const shader_t* shader, int stage )
 
 static void BuildCloudData()
 {
-	int       i;
+	int		  i;
 	shader_t* shader;
 
 	shader = tess.surfaceShader;
@@ -704,14 +690,14 @@ static void BuildCloudData()
 
 	// set up for drawing
 	tess.multiDrawPrimitives = 0;
-	tess.numIndexes          = 0;
-	tess.numVertexes         = 0;
+	tess.numIndexes			 = 0;
+	tess.numVertexes		 = 0;
 
 	if( tess.surfaceShader->sky.cloudHeight )
 	{
 		for( i = 0; i < MAX_SHADER_STAGES; i++ )
 		{
-			if( !tess.surfaceStages[ i ] )
+			if( !tess.surfaceStages[i] )
 			{
 				break;
 			}
@@ -730,7 +716,7 @@ static void BuildCloudData()
 */
 void R_InitSkyTexCoords( float heightCloud )
 {
-	int    i, s, t;
+	int	   i, s, t;
 	float  radiusWorld = 4096;
 	float  p;
 	float  sRad, tRad;
@@ -748,31 +734,28 @@ void R_InitSkyTexCoords( float heightCloud )
 			for( s = 0; s <= SKY_SUBDIVISIONS; s++ )
 			{
 				// compute vector from view origin to sky side integral point
-				MakeSkyVec( ( s - HALF_SKY_SUBDIVISIONS ) / ( float )HALF_SKY_SUBDIVISIONS,
-					( t - HALF_SKY_SUBDIVISIONS ) / ( float )HALF_SKY_SUBDIVISIONS,
-					i,
-					NULL,
-					skyVec );
+				MakeSkyVec( ( s - HALF_SKY_SUBDIVISIONS ) / ( float )HALF_SKY_SUBDIVISIONS, ( t - HALF_SKY_SUBDIVISIONS ) / ( float )HALF_SKY_SUBDIVISIONS, i, NULL, skyVec );
 
 				// compute parametric value 'p' that intersects with cloud layer
 				p = ( 1.0f / ( 2 * DotProduct( skyVec, skyVec ) ) ) *
-					( -2 * skyVec[ 2 ] * radiusWorld +
-						2 * sqrt( SQR( skyVec[ 2 ] ) * SQR( radiusWorld ) + 2 * SQR( skyVec[ 0 ] ) * radiusWorld * heightCloud + SQR( skyVec[ 0 ] ) * SQR( heightCloud ) + 2 * SQR( skyVec[ 1 ] ) * radiusWorld * heightCloud + SQR( skyVec[ 1 ] ) * SQR( heightCloud ) + 2 * SQR( skyVec[ 2 ] ) * radiusWorld * heightCloud + SQR( skyVec[ 2 ] ) * SQR( heightCloud ) ) );
+					( -2 * skyVec[2] * radiusWorld + 2 * sqrt( SQR( skyVec[2] ) * SQR( radiusWorld ) + 2 * SQR( skyVec[0] ) * radiusWorld * heightCloud + SQR( skyVec[0] ) * SQR( heightCloud ) +
+															   2 * SQR( skyVec[1] ) * radiusWorld * heightCloud + SQR( skyVec[1] ) * SQR( heightCloud ) +
+															   2 * SQR( skyVec[2] ) * radiusWorld * heightCloud + SQR( skyVec[2] ) * SQR( heightCloud ) ) );
 
-				s_cloudTexP[ i ][ t ][ s ] = p;
+				s_cloudTexP[i][t][s] = p;
 
 				// compute intersection point based on p
 				VectorScale( skyVec, p, v );
-				v[ 2 ] += radiusWorld;
+				v[2] += radiusWorld;
 
 				// compute vector from world origin to intersection point 'v'
 				VectorNormalize( v );
 
-				sRad = Q_acos( v[ 0 ] );
-				tRad = Q_acos( v[ 1 ] );
+				sRad = Q_acos( v[0] );
+				tRad = Q_acos( v[1] );
 
-				s_cloudTexCoords[ i ][ t ][ s ][ 0 ] = sRad;
-				s_cloudTexCoords[ i ][ t ][ s ][ 1 ] = tRad;
+				s_cloudTexCoords[i][t][s][0] = sRad;
+				s_cloudTexCoords[i][t][s][1] = tRad;
 			}
 		}
 	}
@@ -785,10 +768,10 @@ void R_InitSkyTexCoords( float heightCloud )
 */
 void RB_DrawSun( void )
 {
-	float    size;
-	float    dist;
-	vec3_t   origin, vec1, vec2;
-	vec3_t   temp;
+	float	 size;
+	float	 dist;
+	vec3_t	 origin, vec1, vec2;
+	vec3_t	 temp;
 	matrix_t transformMatrix;
 	matrix_t modelViewMatrix;
 
@@ -814,25 +797,25 @@ void RB_DrawSun( void )
 	gl_genericShader->BindProgram();
 
 	// set uniforms
-	MatrixSetupTranslation( transformMatrix, backEnd.viewParms.orientation.origin[ 0 ], backEnd.viewParms.orientation.origin[ 1 ], backEnd.viewParms.orientation.origin[ 2 ] );
+	MatrixSetupTranslation( transformMatrix, backEnd.viewParms.orientation.origin[0], backEnd.viewParms.orientation.origin[1], backEnd.viewParms.orientation.origin[2] );
 	MatrixMultiply( backEnd.viewParms.world.viewMatrix, transformMatrix, modelViewMatrix );
 
 	GL_LoadProjectionMatrix( backEnd.viewParms.projectionMatrix );
 	GL_LoadModelViewMatrix( modelViewMatrix );
 
 	gl_genericShader->SetUniform_ModelMatrix( backEnd.orientation.transformMatrix );
-	gl_genericShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[ glState.stackIndex ] );
+	gl_genericShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[glState.stackIndex] );
 
 	gl_genericShader->SetPortalClipping( backEnd.viewParms.isPortal );
 	if( backEnd.viewParms.isPortal )
 	{
-		float plane[ 4 ];
+		float plane[4];
 
 		// clipping plane in world space
-		plane[ 0 ] = backEnd.viewParms.portalPlane.normal[ 0 ];
-		plane[ 1 ] = backEnd.viewParms.portalPlane.normal[ 1 ];
-		plane[ 2 ] = backEnd.viewParms.portalPlane.normal[ 2 ];
-		plane[ 3 ] = backEnd.viewParms.portalPlane.dist;
+		plane[0] = backEnd.viewParms.portalPlane.normal[0];
+		plane[1] = backEnd.viewParms.portalPlane.normal[1];
+		plane[2] = backEnd.viewParms.portalPlane.normal[2];
+		plane[3] = backEnd.viewParms.portalPlane.dist;
 
 		gl_genericShader->SetUniform_PortalPlane( plane );
 	}
@@ -855,65 +838,65 @@ void RB_DrawSun( void )
 	VectorCopy( origin, temp );
 	VectorSubtract( temp, vec1, temp );
 	VectorSubtract( temp, vec2, temp );
-	VectorCopy( temp, tess.xyz[ tess.numVertexes ] );
-	tess.xyz[ tess.numVertexes ][ 3 ]       = 1;
-	tess.texCoords[ tess.numVertexes ][ 0 ] = 0;
-	tess.texCoords[ tess.numVertexes ][ 1 ] = 0;
-	tess.texCoords[ tess.numVertexes ][ 2 ] = 0;
-	tess.texCoords[ tess.numVertexes ][ 3 ] = 1;
-	tess.colors[ tess.numVertexes ][ 0 ]    = 1;
-	tess.colors[ tess.numVertexes ][ 1 ]    = 1;
-	tess.colors[ tess.numVertexes ][ 2 ]    = 1;
+	VectorCopy( temp, tess.xyz[tess.numVertexes] );
+	tess.xyz[tess.numVertexes][3]		= 1;
+	tess.texCoords[tess.numVertexes][0] = 0;
+	tess.texCoords[tess.numVertexes][1] = 0;
+	tess.texCoords[tess.numVertexes][2] = 0;
+	tess.texCoords[tess.numVertexes][3] = 1;
+	tess.colors[tess.numVertexes][0]	= 1;
+	tess.colors[tess.numVertexes][1]	= 1;
+	tess.colors[tess.numVertexes][2]	= 1;
 	tess.numVertexes++;
 
 	VectorCopy( origin, temp );
 	VectorAdd( temp, vec1, temp );
 	VectorSubtract( temp, vec2, temp );
-	VectorCopy( temp, tess.xyz[ tess.numVertexes ] );
-	tess.xyz[ tess.numVertexes ][ 3 ]       = 1;
-	tess.texCoords[ tess.numVertexes ][ 0 ] = 0;
-	tess.texCoords[ tess.numVertexes ][ 1 ] = 1;
-	tess.texCoords[ tess.numVertexes ][ 2 ] = 0;
-	tess.texCoords[ tess.numVertexes ][ 3 ] = 1;
-	tess.colors[ tess.numVertexes ][ 0 ]    = 1;
-	tess.colors[ tess.numVertexes ][ 1 ]    = 1;
-	tess.colors[ tess.numVertexes ][ 2 ]    = 1;
+	VectorCopy( temp, tess.xyz[tess.numVertexes] );
+	tess.xyz[tess.numVertexes][3]		= 1;
+	tess.texCoords[tess.numVertexes][0] = 0;
+	tess.texCoords[tess.numVertexes][1] = 1;
+	tess.texCoords[tess.numVertexes][2] = 0;
+	tess.texCoords[tess.numVertexes][3] = 1;
+	tess.colors[tess.numVertexes][0]	= 1;
+	tess.colors[tess.numVertexes][1]	= 1;
+	tess.colors[tess.numVertexes][2]	= 1;
 	tess.numVertexes++;
 
 	VectorCopy( origin, temp );
 	VectorAdd( temp, vec1, temp );
 	VectorAdd( temp, vec2, temp );
-	VectorCopy( temp, tess.xyz[ tess.numVertexes ] );
-	tess.xyz[ tess.numVertexes ][ 3 ]       = 1;
-	tess.texCoords[ tess.numVertexes ][ 0 ] = 1;
-	tess.texCoords[ tess.numVertexes ][ 1 ] = 1;
-	tess.texCoords[ tess.numVertexes ][ 2 ] = 0;
-	tess.texCoords[ tess.numVertexes ][ 3 ] = 1;
-	tess.colors[ tess.numVertexes ][ 0 ]    = 1;
-	tess.colors[ tess.numVertexes ][ 1 ]    = 1;
-	tess.colors[ tess.numVertexes ][ 2 ]    = 1;
+	VectorCopy( temp, tess.xyz[tess.numVertexes] );
+	tess.xyz[tess.numVertexes][3]		= 1;
+	tess.texCoords[tess.numVertexes][0] = 1;
+	tess.texCoords[tess.numVertexes][1] = 1;
+	tess.texCoords[tess.numVertexes][2] = 0;
+	tess.texCoords[tess.numVertexes][3] = 1;
+	tess.colors[tess.numVertexes][0]	= 1;
+	tess.colors[tess.numVertexes][1]	= 1;
+	tess.colors[tess.numVertexes][2]	= 1;
 	tess.numVertexes++;
 
 	VectorCopy( origin, temp );
 	VectorSubtract( temp, vec1, temp );
 	VectorAdd( temp, vec2, temp );
-	VectorCopy( temp, tess.xyz[ tess.numVertexes ] );
-	tess.xyz[ tess.numVertexes ][ 3 ]       = 1;
-	tess.texCoords[ tess.numVertexes ][ 0 ] = 1;
-	tess.texCoords[ tess.numVertexes ][ 1 ] = 0;
-	tess.texCoords[ tess.numVertexes ][ 2 ] = 0;
-	tess.texCoords[ tess.numVertexes ][ 3 ] = 1;
-	tess.colors[ tess.numVertexes ][ 0 ]    = 1;
-	tess.colors[ tess.numVertexes ][ 1 ]    = 1;
-	tess.colors[ tess.numVertexes ][ 2 ]    = 1;
+	VectorCopy( temp, tess.xyz[tess.numVertexes] );
+	tess.xyz[tess.numVertexes][3]		= 1;
+	tess.texCoords[tess.numVertexes][0] = 1;
+	tess.texCoords[tess.numVertexes][1] = 0;
+	tess.texCoords[tess.numVertexes][2] = 0;
+	tess.texCoords[tess.numVertexes][3] = 1;
+	tess.colors[tess.numVertexes][0]	= 1;
+	tess.colors[tess.numVertexes][1]	= 1;
+	tess.colors[tess.numVertexes][2]	= 1;
 	tess.numVertexes++;
 
-	tess.indexes[ tess.numIndexes++ ] = 0;
-	tess.indexes[ tess.numIndexes++ ] = 1;
-	tess.indexes[ tess.numIndexes++ ] = 2;
-	tess.indexes[ tess.numIndexes++ ] = 0;
-	tess.indexes[ tess.numIndexes++ ] = 2;
-	tess.indexes[ tess.numIndexes++ ] = 3;
+	tess.indexes[tess.numIndexes++] = 0;
+	tess.indexes[tess.numIndexes++] = 1;
+	tess.indexes[tess.numIndexes++] = 2;
+	tess.indexes[tess.numIndexes++] = 0;
+	tess.indexes[tess.numIndexes++] = 2;
+	tess.indexes[tess.numIndexes++] = 3;
 
 	Tess_End();
 
@@ -951,7 +934,7 @@ void Tess_StageIteratorSky( void )
 	// trebor: HACK why does this happen with cg_draw2D 0 ?
 	if( tess.stageIteratorFunc2 == NULL )
 	{
-		//tess.stageIteratorFunc2 = Tess_StageIteratorGeneric;
+		// tess.stageIteratorFunc2 = Tess_StageIteratorGeneric;
 		ri.Error( ERR_FATAL, "tess.stageIteratorFunc == NULL" );
 	}
 
@@ -1009,18 +992,18 @@ void Tess_StageIteratorSky( void )
 			gl_skyboxShader->SetUniform_ViewOrigin( backEnd.viewParms.orientation.origin ); // in world space
 
 			gl_skyboxShader->SetUniform_ModelMatrix( backEnd.orientation.transformMatrix );
-			gl_skyboxShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[ glState.stackIndex ] );
+			gl_skyboxShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[glState.stackIndex] );
 
 			// u_PortalPlane
 			if( backEnd.viewParms.isPortal )
 			{
-				float plane[ 4 ];
+				float plane[4];
 
 				// clipping plane in world space
-				plane[ 0 ] = backEnd.viewParms.portalPlane.normal[ 0 ];
-				plane[ 1 ] = backEnd.viewParms.portalPlane.normal[ 1 ];
-				plane[ 2 ] = backEnd.viewParms.portalPlane.normal[ 2 ];
-				plane[ 3 ] = backEnd.viewParms.portalPlane.dist;
+				plane[0] = backEnd.viewParms.portalPlane.normal[0];
+				plane[1] = backEnd.viewParms.portalPlane.normal[1];
+				plane[2] = backEnd.viewParms.portalPlane.normal[2];
+				plane[3] = backEnd.viewParms.portalPlane.dist;
 
 				gl_skyboxShader->SetUniform_PortalPlane( plane );
 			}

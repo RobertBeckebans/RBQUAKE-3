@@ -31,8 +31,8 @@ extern menuDef_t* menuScoreboard;
 
 void CG_TargetCommand_f( void )
 {
-	int  targetNum;
-	char test[ 4 ];
+	int	 targetNum;
+	char test[4];
 
 	targetNum = CG_CrosshairPlayer();
 	if( targetNum == -1 )
@@ -77,7 +77,7 @@ Debugging command to print the current position
 */
 static void CG_Viewpos_f( void )
 {
-	CG_Printf( "(%i %i %i) : %i\n", ( int )cg.refdef.vieworg[ 0 ], ( int )cg.refdef.vieworg[ 1 ], ( int )cg.refdef.vieworg[ 2 ], ( int )cg.refdefViewAngles[ YAW ] );
+	CG_Printf( "(%i %i %i) : %i\n", ( int )cg.refdef.vieworg[0], ( int )cg.refdef.vieworg[1], ( int )cg.refdef.vieworg[2], ( int )cg.refdefViewAngles[YAW] );
 }
 
 static void CG_ScoresDown_f( void )
@@ -112,18 +112,18 @@ static void CG_ScoresUp_f( void )
 {
 	if( cg.showScores )
 	{
-		cg.showScores    = qfalse;
+		cg.showScores	 = qfalse;
 		cg.scoreFadeTime = cg.time;
 	}
 }
 
 #ifdef MISSIONPACK
 extern menuDef_t* menuScoreboard;
-void              Menu_Reset( void ); // FIXME: add to right include file
+void			  Menu_Reset( void ); // FIXME: add to right include file
 
-static void CG_LoadHud_f( void )
+static void		  CG_LoadHud_f( void )
 {
-	char        buff[ 1024 ];
+	char		buff[1024];
 	const char* hudSet;
 	memset( buff, 0, sizeof( buff ) );
 
@@ -132,7 +132,7 @@ static void CG_LoadHud_f( void )
 
 	trap_Cvar_VariableStringBuffer( "cg_hudFiles", buff, sizeof( buff ) );
 	hudSet = buff;
-	if( hudSet[ 0 ] == '\0' )
+	if( hudSet[0] == '\0' )
 	{
 		hudSet = "ui/hud.txt";
 	}
@@ -169,7 +169,7 @@ static void CG_spWin_f( void )
 	trap_Cvar_Set( "cg_thirdPersonAngle", "0" );
 	trap_Cvar_Set( "cg_thirdPersonRange", "100" );
 	CG_AddBufferedSound( cgs.media.winnerSound );
-	//trap_S_StartLocalSound(cgs.media.winnerSound, CHAN_ANNOUNCER);
+	// trap_S_StartLocalSound(cgs.media.winnerSound, CHAN_ANNOUNCER);
 	CG_CenterPrint( "YOU WIN!", SCREEN_HEIGHT * .30, 0 );
 }
 
@@ -181,7 +181,7 @@ static void CG_spLose_f( void )
 	trap_Cvar_Set( "cg_thirdPersonAngle", "0" );
 	trap_Cvar_Set( "cg_thirdPersonRange", "100" );
 	CG_AddBufferedSound( cgs.media.loserSound );
-	//trap_S_StartLocalSound(cgs.media.loserSound, CHAN_ANNOUNCER);
+	// trap_S_StartLocalSound(cgs.media.loserSound, CHAN_ANNOUNCER);
 	CG_CenterPrint( "YOU LOSE...", SCREEN_HEIGHT * .30, 0 );
 }
 
@@ -189,9 +189,9 @@ static void CG_spLose_f( void )
 
 static void CG_TellTarget_f( void )
 {
-	int  clientNum;
-	char command[ 128 ];
-	char message[ 128 ];
+	int	 clientNum;
+	char command[128];
+	char message[128];
 
 	clientNum = CG_CrosshairPlayer();
 	if( clientNum == -1 )
@@ -206,9 +206,9 @@ static void CG_TellTarget_f( void )
 
 static void CG_TellAttacker_f( void )
 {
-	int  clientNum;
-	char command[ 128 ];
-	char message[ 128 ];
+	int	 clientNum;
+	char command[128];
+	char message[128];
 
 	clientNum = CG_LastAttacker();
 	if( clientNum == -1 )
@@ -224,9 +224,9 @@ static void CG_TellAttacker_f( void )
 #ifdef MISSIONPACK
 static void CG_VoiceTellTarget_f( void )
 {
-	int  clientNum;
-	char command[ 128 ];
-	char message[ 128 ];
+	int	 clientNum;
+	char command[128];
+	char message[128];
 
 	clientNum = CG_CrosshairPlayer();
 	if( clientNum == -1 )
@@ -241,9 +241,9 @@ static void CG_VoiceTellTarget_f( void )
 
 static void CG_VoiceTellAttacker_f( void )
 {
-	int  clientNum;
-	char command[ 128 ];
-	char message[ 128 ];
+	int	 clientNum;
+	char command[128];
+	char message[128];
 
 	clientNum = CG_LastAttacker();
 	if( clientNum == -1 )
@@ -273,7 +273,7 @@ static void CG_NextOrder_f( void )
 	clientInfo_t* ci = cgs.clientinfo + cg.snap->ps.clientNum;
 	if( ci )
 	{
-		if( !ci->teamLeader && sortedTeamPlayers[ cg_currentSelectedPlayer.integer ] != cg.snap->ps.clientNum )
+		if( !ci->teamLeader && sortedTeamPlayers[cg_currentSelectedPlayer.integer] != cg.snap->ps.clientNum )
 		{
 			return;
 		}
@@ -303,7 +303,7 @@ static void CG_NextOrder_f( void )
 		cgs.currentOrder = TEAMTASK_OFFENSE;
 	}
 	cgs.orderPending = qtrue;
-	cgs.orderTime    = cg.time + 3000;
+	cgs.orderTime	 = cg.time + 3000;
 }
 
 static void CG_ConfirmOrder_f( void )
@@ -408,8 +408,8 @@ static void CG_TauntGauntlet_f( void )
 
 static void CG_TaskSuicide_f( void )
 {
-	int  clientNum;
-	char command[ 128 ];
+	int	 clientNum;
+	char command[128];
 
 	clientNum = CG_CrosshairPlayer();
 	if( clientNum == -1 )
@@ -429,11 +429,11 @@ CG_TeamMenu_f
 /*
 static void CG_TeamMenu_f( void ) {
   if (trap_Key_GetCatcher() & KEYCATCH_CGAME) {
-    CG_EventHandling(CGAME_EVENT_NONE);
-    trap_Key_SetCatcher(0);
+	CG_EventHandling(CGAME_EVENT_NONE);
+	trap_Key_SetCatcher(0);
   } else {
-    CG_EventHandling(CGAME_EVENT_TEAMMENU);
-    //trap_Key_SetCatcher(KEYCATCH_CGAME);
+	CG_EventHandling(CGAME_EVENT_TEAMMENU);
+	//trap_Key_SetCatcher(KEYCATCH_CGAME);
   }
 }
 */
@@ -460,7 +460,7 @@ CG_StartOrbit_f
 
 static void CG_StartOrbit_f( void )
 {
-	char var[ MAX_TOKEN_CHARS ];
+	char var[MAX_TOKEN_CHARS];
 
 	trap_Cvar_VariableStringBuffer( "developer", var, sizeof( var ) );
 	if( !atoi( var ) )
@@ -500,8 +500,7 @@ typedef struct
 	void ( *function )( void );
 } consoleCommand_t;
 
-static consoleCommand_t commands[] = {
-	{ "testgun", CG_TestGun_f },
+static consoleCommand_t commands[] = { { "testgun", CG_TestGun_f },
 	{ "testmodel", CG_TestModel_f },
 	{ "nextframe", CG_TestModelNextFrame_f },
 	{ "prevframe", CG_TestModelPrevFrame_f },
@@ -550,8 +549,7 @@ static consoleCommand_t commands[] = {
 #endif
 	{ "startOrbit", CG_StartOrbit_f },
 	//{ "camera", CG_Camera_f },
-	{ "loaddeferred", CG_LoadDeferredPlayers }
-};
+	{ "loaddeferred", CG_LoadDeferredPlayers } };
 
 /*
 =================
@@ -564,15 +562,15 @@ Cmd_Argc() / Cmd_Argv()
 qboolean CG_ConsoleCommand( void )
 {
 	const char* cmd;
-	int         i;
+	int			i;
 
 	cmd = CG_Argv( 0 );
 
 	for( i = 0; i < ARRAY_LEN( commands ); i++ )
 	{
-		if( !Q_stricmp( cmd, commands[ i ].cmd ) )
+		if( !Q_stricmp( cmd, commands[i].cmd ) )
 		{
-			commands[ i ].function();
+			commands[i].function();
 			return qtrue;
 		}
 	}
@@ -594,7 +592,7 @@ void CG_InitConsoleCommands( void )
 
 	for( i = 0; i < ARRAY_LEN( commands ); i++ )
 	{
-		trap_AddCommand( commands[ i ].cmd );
+		trap_AddCommand( commands[i].cmd );
 	}
 
 	//

@@ -35,7 +35,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 void vfsInitDirectory( const char* path );
 void vfsShutdown();
-int  vfsGetFileCount( const char* filename );
-int  vfsLoadFile( const char* filename, void** buffer, int index );
+int	 vfsGetFileCount( const char* filename );
+int	 vfsLoadFile( const char* filename, void** buffer, int index );
 
 #endif // _VFS_H_

@@ -2,7 +2,7 @@
 Copyright 1992 by Stichting Mathematisch Centrum, Amsterdam, The
 Netherlands.
 
-                        All Rights Reserved
+						All Rights Reserved
 
 Permission to use, copy, modify, and distribute this software and its
 documentation for any purpose and without fee is hereby granted,
@@ -34,7 +34,7 @@ OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "snd_local.h"
 
 /* Intel ADPCM step variation table */
-static int indexTable[ 16 ] = {
+static int indexTable[16] = {
 	-1,
 	-1,
 	-1,
@@ -53,34 +53,120 @@ static int indexTable[ 16 ] = {
 	8,
 };
 
-static int stepsizeTable[ 89 ] = {
-	7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 19, 21, 23, 25, 28, 31, 34, 37, 41, 45, 50, 55, 60, 66, 73, 80, 88, 97, 107, 118, 130, 143, 157, 173, 190, 209, 230, 253, 279, 307, 337, 371, 408, 449, 494, 544, 598, 658, 724, 796, 876, 963, 1060, 1166, 1282, 1411, 1552, 1707, 1878, 2066, 2272, 2499, 2749, 3024, 3327, 3660, 4026, 4428, 4871, 5358, 5894, 6484, 7132, 7845, 8630, 9493, 10442, 11487, 12635, 13899, 15289, 16818, 18500, 20350, 22385, 24623, 27086, 29794, 32767
-};
+static int stepsizeTable[89] = { 7,
+	8,
+	9,
+	10,
+	11,
+	12,
+	13,
+	14,
+	16,
+	17,
+	19,
+	21,
+	23,
+	25,
+	28,
+	31,
+	34,
+	37,
+	41,
+	45,
+	50,
+	55,
+	60,
+	66,
+	73,
+	80,
+	88,
+	97,
+	107,
+	118,
+	130,
+	143,
+	157,
+	173,
+	190,
+	209,
+	230,
+	253,
+	279,
+	307,
+	337,
+	371,
+	408,
+	449,
+	494,
+	544,
+	598,
+	658,
+	724,
+	796,
+	876,
+	963,
+	1060,
+	1166,
+	1282,
+	1411,
+	1552,
+	1707,
+	1878,
+	2066,
+	2272,
+	2499,
+	2749,
+	3024,
+	3327,
+	3660,
+	4026,
+	4428,
+	4871,
+	5358,
+	5894,
+	6484,
+	7132,
+	7845,
+	8630,
+	9493,
+	10442,
+	11487,
+	12635,
+	13899,
+	15289,
+	16818,
+	18500,
+	20350,
+	22385,
+	24623,
+	27086,
+	29794,
+	32767 };
 
-void S_AdpcmEncode( short indata[], char outdata[], int len, struct adpcm_state* state )
+void	   S_AdpcmEncode( short indata[], char outdata[], int len, struct adpcm_state* state )
 {
-	short*       inp;          /* Input buffer pointer */
-	signed char* outp;         /* output buffer pointer */
-	int          val;          /* Current input sample value */
-	int          sign;         /* Current adpcm sign bit */
-	int          delta;        /* Current adpcm output value */
-	int          diff;         /* Difference between val and sample */
-	int          step;         /* Stepsize */
-	int          valpred;      /* Predicted output value */
-	int          vpdiff;       /* Current change to valpred */
-	int          index;        /* Current step change index */
-	int          outputbuffer; /* place to keep previous 4-bit value */
-	int          bufferstep;   /* toggle between outputbuffer/output */
+	short*		 inp;		   /* Input buffer pointer */
+	signed char* outp;		   /* output buffer pointer */
+	int			 val;		   /* Current input sample value */
+	int			 sign;		   /* Current adpcm sign bit */
+	int			 delta;		   /* Current adpcm output value */
+	int			 diff;		   /* Difference between val and sample */
+	int			 step;		   /* Stepsize */
+	int			 valpred;	   /* Predicted output value */
+	int			 vpdiff;	   /* Current change to valpred */
+	int			 index;		   /* Current step change index */
+	int			 outputbuffer; /* place to keep previous 4-bit value */
+	int			 bufferstep;   /* toggle between outputbuffer/output */
 
 	outp = ( signed char* )outdata;
-	inp  = indata;
+	inp	 = indata;
 
 	valpred = state->sample;
-	index   = state->index;
-	step    = stepsizeTable[ index ];
+	index	= state->index;
+	step	= stepsizeTable[index];
 
 	outputbuffer = 0; // quiet a compiler warning
-	bufferstep   = 1;
+	bufferstep	 = 1;
 
 	for( ; len > 0; len-- )
 	{
@@ -149,7 +235,7 @@ void S_AdpcmEncode( short indata[], char outdata[], int len, struct adpcm_state*
 		/* Step 5 - Assemble value, update index and step values */
 		delta |= sign;
 
-		index += indexTable[ delta ];
+		index += indexTable[delta];
 		if( index < 0 )
 		{
 			index = 0;
@@ -158,7 +244,7 @@ void S_AdpcmEncode( short indata[], char outdata[], int len, struct adpcm_state*
 		{
 			index = 88;
 		}
-		step = stepsizeTable[ index ];
+		step = stepsizeTable[index];
 
 		/* Step 6 - Output value */
 		if( bufferstep )
@@ -184,25 +270,25 @@ void S_AdpcmEncode( short indata[], char outdata[], int len, struct adpcm_state*
 
 /* static */ void S_AdpcmDecode( const char indata[], short* outdata, int len, struct adpcm_state* state )
 {
-	signed char* inp;         /* Input buffer pointer */
-	int          outp;        /* output buffer pointer */
-	int          sign;        /* Current adpcm sign bit */
-	int          delta;       /* Current adpcm output value */
-	int          step;        /* Stepsize */
-	int          valpred;     /* Predicted value */
-	int          vpdiff;      /* Current change to valpred */
-	int          index;       /* Current step change index */
-	int          inputbuffer; /* place to keep next 4-bit value */
-	int          bufferstep;  /* toggle between inputbuffer/input */
+	signed char* inp;		  /* Input buffer pointer */
+	int			 outp;		  /* output buffer pointer */
+	int			 sign;		  /* Current adpcm sign bit */
+	int			 delta;		  /* Current adpcm output value */
+	int			 step;		  /* Stepsize */
+	int			 valpred;	  /* Predicted value */
+	int			 vpdiff;	  /* Current change to valpred */
+	int			 index;		  /* Current step change index */
+	int			 inputbuffer; /* place to keep next 4-bit value */
+	int			 bufferstep;  /* toggle between inputbuffer/input */
 
 	outp = 0;
-	inp  = ( signed char* )indata;
+	inp	 = ( signed char* )indata;
 
 	valpred = state->sample;
-	index   = state->index;
-	step    = stepsizeTable[ index ];
+	index	= state->index;
+	step	= stepsizeTable[index];
 
-	bufferstep  = 0;
+	bufferstep	= 0;
 	inputbuffer = 0; // quiet a compiler warning
 	for( ; len > 0; len-- )
 	{
@@ -214,12 +300,12 @@ void S_AdpcmEncode( short indata[], char outdata[], int len, struct adpcm_state*
 		else
 		{
 			inputbuffer = *inp++;
-			delta       = ( inputbuffer >> 4 ) & 0xf;
+			delta		= ( inputbuffer >> 4 ) & 0xf;
 		}
 		bufferstep = !bufferstep;
 
 		/* Step 2 - Find new index value (for later) */
-		index += indexTable[ delta ];
+		index += indexTable[delta];
 		if( index < 0 )
 		{
 			index = 0;
@@ -272,10 +358,10 @@ void S_AdpcmEncode( short indata[], char outdata[], int len, struct adpcm_state*
 		}
 
 		/* Step 6 - Update step value */
-		step = stepsizeTable[ index ];
+		step = stepsizeTable[index];
 
 		/* Step 7 - Output value */
-		outdata[ outp ] = valpred;
+		outdata[outp] = valpred;
 		outp++;
 	}
 
@@ -293,10 +379,10 @@ Returns the amount of memory (in bytes) needed to store the samples in out inter
 int S_AdpcmMemoryNeeded( const wavinfo_t* info )
 {
 	float scale;
-	int   scaledSampleCount;
-	int   sampleMemory;
-	int   blockCount;
-	int   headerMemory;
+	int	  scaledSampleCount;
+	int	  sampleMemory;
+	int	  blockCount;
+	int	  headerMemory;
 
 	// determine scale to convert from input sampling rate to desired sampling rate
 	scale = ( float )info->rate / dma.speed;
@@ -328,10 +414,10 @@ S_AdpcmGetSamples
 void S_AdpcmGetSamples( sndBuffer* chunk, short* to )
 {
 	adpcm_state_t state;
-	byte*         out;
+	byte*		  out;
 
 	// get the starting state from the block header
-	state.index  = chunk->adpcm.index;
+	state.index	 = chunk->adpcm.index;
 	state.sample = chunk->adpcm.sample;
 
 	out = ( byte* )chunk->sndChunk;
@@ -347,16 +433,16 @@ S_AdpcmEncodeSound
 void S_AdpcmEncodeSound( sfx_t* sfx, short* samples )
 {
 	adpcm_state_t state;
-	int           inOffset;
-	int           count;
-	int           n;
-	sndBuffer *   newchunk, *chunk;
-	byte*         out;
+	int			  inOffset;
+	int			  count;
+	int			  n;
+	sndBuffer *	  newchunk, *chunk;
+	byte*		  out;
 
-	inOffset     = 0;
-	count        = sfx->soundLength;
-	state.index  = 0;
-	state.sample = samples[ 0 ];
+	inOffset	 = 0;
+	count		 = sfx->soundLength;
+	state.index	 = 0;
+	state.sample = samples[0];
 
 	chunk = NULL;
 	while( count )
@@ -379,7 +465,7 @@ void S_AdpcmEncodeSound( sfx_t* sfx, short* samples )
 		chunk = newchunk;
 
 		// output the header
-		chunk->adpcm.index  = state.index;
+		chunk->adpcm.index	= state.index;
 		chunk->adpcm.sample = state.sample;
 
 		out = ( byte* )chunk->sndChunk;

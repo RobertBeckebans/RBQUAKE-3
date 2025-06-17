@@ -26,16 +26,16 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #define MAX_LOG 32768
 
-static char         consoleLog[ MAX_LOG ];
+static char			consoleLog[MAX_LOG];
 static unsigned int writePos = 0;
-static unsigned int readPos  = 0;
+static unsigned int readPos	 = 0;
 
 /*
 ==================
 CON_LogSize
 ==================
 */
-unsigned int CON_LogSize( void )
+unsigned int		CON_LogSize( void )
 {
 	if( readPos <= writePos )
 	{
@@ -71,7 +71,7 @@ unsigned int CON_LogWrite( const char* in )
 	while( CON_LogFree() < length && CON_LogSize() > 0 )
 	{
 		// Free enough space
-		while( consoleLog[ readPos ] != '\n' && CON_LogSize() > 1 )
+		while( consoleLog[readPos] != '\n' && CON_LogSize() > 1 )
 		{
 			readPos = ( readPos + 1 ) % MAX_LOG;
 		}
@@ -87,12 +87,12 @@ unsigned int CON_LogWrite( const char* in )
 
 	if( writePos + length > MAX_LOG )
 	{
-		firstChunk  = MAX_LOG - writePos;
+		firstChunk	= MAX_LOG - writePos;
 		secondChunk = length - firstChunk;
 	}
 	else
 	{
-		firstChunk  = length;
+		firstChunk	= length;
 		secondChunk = 0;
 	}
 
@@ -121,12 +121,12 @@ unsigned int CON_LogRead( char* out, unsigned int outSize )
 
 	if( readPos + outSize > MAX_LOG )
 	{
-		firstChunk  = MAX_LOG - readPos;
+		firstChunk	= MAX_LOG - readPos;
 		secondChunk = outSize - firstChunk;
 	}
 	else
 	{
-		firstChunk  = outSize;
+		firstChunk	= outSize;
 		secondChunk = 0;
 	}
 

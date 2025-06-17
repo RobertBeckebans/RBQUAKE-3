@@ -33,10 +33,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // on disk representation of a face
 
 #define FLOAT_START 99999.0
-#define FLOAT_END   -FLOAT_START
-#define MAGIC       123322
+#define FLOAT_END	-FLOAT_START
+#define MAGIC		123322
 
-//#define NOISY 1
+// #define NOISY 1
 
 #if defined( __linux__ ) || defined( __APPLE__ ) || defined( __FreeBSD__ )
 	#define strlwr strlower
@@ -44,7 +44,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 typedef struct
 {
-	float v[ 3 ];
+	float v[3];
 } vector;
 
 typedef struct
@@ -58,7 +58,7 @@ typedef struct
 
 typedef struct
 {
-	aliaspoint_t pt[ 3 ];
+	aliaspoint_t pt[3];
 } tf_triangle;
 
 static void ByteSwapTri( tf_triangle* tri )
@@ -67,14 +67,14 @@ static void ByteSwapTri( tf_triangle* tri )
 
 	for( i = 0; i < sizeof( tf_triangle ) / 4; i++ )
 	{
-		( ( int* )tri )[ i ] = BigLong( ( ( int* )tri )[ i ] );
+		( ( int* )tri )[i] = BigLong( ( ( int* )tri )[i] );
 	}
 }
 
 static void ReadPolysetGeometry( triangle_t* tripool, FILE* input, int count, triangle_t* ptri )
 {
 	tf_triangle tri;
-	int         i;
+	int			i;
 
 	for( i = 0; i < count; ++i )
 	{
@@ -88,13 +88,13 @@ static void ReadPolysetGeometry( triangle_t* tripool, FILE* input, int count, tr
 
 			for( k = 0; k < 3; k++ )
 			{
-				ptri->verts[ j ][ k ]   = tri.pt[ j ].p.v[ k ];
-				ptri->normals[ j ][ k ] = tri.pt[ j ].n.v[ k ];
+				ptri->verts[j][k]	= tri.pt[j].p.v[k];
+				ptri->normals[j][k] = tri.pt[j].n.v[k];
 				//              ptri->colors[j][k] = tri.pt[j].c.v[k];
 			}
 
-			ptri->texcoords[ j ][ 0 ] = tri.pt[ j ].u;
-			ptri->texcoords[ j ][ 1 ] = tri.pt[ j ].v;
+			ptri->texcoords[j][0] = tri.pt[j].u;
+			ptri->texcoords[j][1] = tri.pt[j].v;
 		}
 
 		ptri++;
@@ -107,17 +107,17 @@ static void ReadPolysetGeometry( triangle_t* tripool, FILE* input, int count, tr
 
 void TRI_LoadPolysets( const char* filename, polyset_t** ppPSET, int* numpsets )
 {
-	FILE*       input;
-	float       start;
-	char        name[ 256 ], tex[ 256 ];
-	int         i, count, magic, pset = 0;
+	FILE*		input;
+	float		start;
+	char		name[256], tex[256];
+	int			i, count, magic, pset = 0;
 	triangle_t* ptri;
-	polyset_t*  pPSET;
-	int         iLevel;
-	int         exitpattern;
-	float       t;
+	polyset_t*	pPSET;
+	int			iLevel;
+	int			exitpattern;
+	float		t;
 
-	t                                       = -FLOAT_START;
+	t										= -FLOAT_START;
 	*( ( unsigned char* )&exitpattern + 0 ) = *( ( unsigned char* )&t + 3 );
 	*( ( unsigned char* )&exitpattern + 1 ) = *( ( unsigned char* )&t + 2 );
 	*( ( unsigned char* )&exitpattern + 2 ) = *( ( unsigned char* )&t + 1 );
@@ -160,18 +160,18 @@ void TRI_LoadPolysets( const char* filename, polyset_t** ppPSET, int* numpsets )
 					/* a file, but this does allow you to do error checking */
 					/* (which I'm not doing) on a per character basis.      */
 					++i;
-					fread( &( name[ i ] ), sizeof( char ), 1, input );
-				} while( name[ i ] != '\0' );
+					fread( &( name[i] ), sizeof( char ), 1, input );
+				} while( name[i] != '\0' );
 
 				if( i != 0 )
 				{
-					strncpy( pPSET[ pset ].name, name, sizeof( pPSET[ pset ].name ) - 1 );
+					strncpy( pPSET[pset].name, name, sizeof( pPSET[pset].name ) - 1 );
 				}
 				else
 				{
-					strcpy( pPSET[ pset ].name, "(unnamed)" );
+					strcpy( pPSET[pset].name, "(unnamed)" );
 				}
-				strlwr( pPSET[ pset ].name );
+				strlwr( pPSET[pset].name );
 
 				//              indent();
 				//              fprintf(stdout,"OBJECT START: %s\n",name);
@@ -187,8 +187,8 @@ void TRI_LoadPolysets( const char* filename, polyset_t** ppPSET, int* numpsets )
 					do
 					{
 						++i;
-						fread( &( tex[ i ] ), sizeof( char ), 1, input );
-					} while( tex[ i ] != '\0' );
+						fread( &( tex[i] ), sizeof( char ), 1, input );
+					} while( tex[i] != '\0' );
 
 					/*
 										if ( i != 0 )
@@ -217,19 +217,19 @@ void TRI_LoadPolysets( const char* filename, polyset_t** ppPSET, int* numpsets )
 				do
 				{
 					++i;
-					fread( &( name[ i ] ), sizeof( char ), 1, input );
-				} while( name[ i ] != '\0' );
+					fread( &( name[i] ), sizeof( char ), 1, input );
+				} while( name[i] != '\0' );
 
 				if( i != 0 )
 				{
-					strncpy( pPSET[ pset ].name, name, sizeof( pPSET[ pset ].name ) - 1 );
+					strncpy( pPSET[pset].name, name, sizeof( pPSET[pset].name ) - 1 );
 				}
 				else
 				{
-					strcpy( pPSET[ pset ].name, "(unnamed)" );
+					strcpy( pPSET[pset].name, "(unnamed)" );
 				}
 
-				strlwr( pPSET[ pset ].name );
+				strlwr( pPSET[pset].name );
 
 				//              indent();
 				//              fprintf(stdout,"OBJECT END: %s\n",name);
@@ -242,10 +242,10 @@ void TRI_LoadPolysets( const char* filename, polyset_t** ppPSET, int* numpsets )
 		//
 		if( count > 0 )
 		{
-			pPSET[ pset ].triangles = ptri;
-			ReadPolysetGeometry( pPSET[ 0 ].triangles, input, count, ptri );
+			pPSET[pset].triangles = ptri;
+			ReadPolysetGeometry( pPSET[0].triangles, input, count, ptri );
 			ptri += count;
-			pPSET[ pset ].numtriangles = count;
+			pPSET[pset].numtriangles = count;
 			if( ++pset >= POLYSET_MAXPOLYSETS )
 			{
 				Error( "Error: too many polysets; increase POLYSET_MAXPOLYSETS\n" );

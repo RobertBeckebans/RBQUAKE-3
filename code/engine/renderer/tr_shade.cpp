@@ -398,8 +398,8 @@ void Tess_DrawElements()
 
 			for( i = 0; i < tess.multiDrawPrimitives; i++ )
 			{
-				backEnd.pc.c_multiVboIndexes += tess.multiDrawCounts[ i ];
-				backEnd.pc.c_indexes += tess.multiDrawCounts[ i ];
+				backEnd.pc.c_multiVboIndexes += tess.multiDrawCounts[i];
+				backEnd.pc.c_indexes += tess.multiDrawCounts[i];
 			}
 		}
 		else
@@ -441,7 +441,7 @@ shaderCommands_t tess;
 BindLightMap
 =================
 */
-static void BindLightMap()
+static void		 BindLightMap()
 {
 	image_t* lightmap;
 
@@ -521,7 +521,7 @@ static void DrawTris()
 
 	if( r_showBatches->integer || r_showLightBatches->integer )
 	{
-		gl_genericShader->SetUniform_Color( g_color_table[ backEnd.pc.c_batches % 8 ] );
+		gl_genericShader->SetUniform_Color( g_color_table[backEnd.pc.c_batches % 8] );
 	}
 	else if( glState.currentVBO == tess.vbo )
 	{
@@ -539,7 +539,7 @@ static void DrawTris()
 	gl_genericShader->SetUniform_ColorModulate( CGEN_CONST, AGEN_CONST );
 
 	gl_genericShader->SetUniform_ModelMatrix( backEnd.orientation.transformMatrix );
-	gl_genericShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[ glState.stackIndex ] );
+	gl_genericShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[glState.stackIndex] );
 
 	if( glConfig2.vboVertexSkinningAvailable && tess.vboVertexSkinning )
 	{
@@ -556,7 +556,7 @@ static void DrawTris()
 	// bind u_ColorMap
 	GL_SelectTexture( 0 );
 	GL_Bind( tr.whiteImage );
-	gl_genericShader->SetUniform_ColorTextureMatrix( tess.svars.texMatrices[ TB_COLORMAP ] );
+	gl_genericShader->SetUniform_ColorTextureMatrix( tess.svars.texMatrices[TB_COLORMAP] );
 
 	glDepthRange( 0, 0 );
 
@@ -575,18 +575,12 @@ to overflow.
 ==============
 */
 // *INDENT-OFF*
-void Tess_Begin( void ( *stageIteratorFunc )(),
-	void ( *stageIteratorFunc2 )(),
-	shader_t* surfaceShader,
-	shader_t* lightShader,
-	qboolean  skipTangentSpaces,
-	qboolean  skipVBO,
-	int       lightmapNum,
-	int       fogNum )
+void Tess_Begin(
+	void ( *stageIteratorFunc )(), void ( *stageIteratorFunc2 )(), shader_t* surfaceShader, shader_t* lightShader, qboolean skipTangentSpaces, qboolean skipVBO, int lightmapNum, int fogNum )
 {
 	shader_t* state;
 
-	tess.numIndexes  = 0;
+	tess.numIndexes	 = 0;
 	tess.numVertexes = 0;
 
 	tess.multiDrawPrimitives = 0;
@@ -596,8 +590,8 @@ void Tess_Begin( void ( *stageIteratorFunc )(),
 	{
 		state = ( surfaceShader->remappedShader ) ? surfaceShader->remappedShader : surfaceShader;
 
-		tess.surfaceShader    = state;
-		tess.surfaceStages    = state->stages;
+		tess.surfaceShader	  = state;
+		tess.surfaceStages	  = state->stages;
 		tess.numSurfaceStages = state->numStages;
 	}
 	else
@@ -605,20 +599,20 @@ void Tess_Begin( void ( *stageIteratorFunc )(),
 		state = NULL;
 
 		tess.numSurfaceStages = 0;
-		tess.surfaceShader    = NULL;
-		tess.surfaceStages    = NULL;
+		tess.surfaceShader	  = NULL;
+		tess.surfaceStages	  = NULL;
 	}
 
 	bool isSky = ( state != NULL && state->isSky != qfalse );
 
 	tess.lightShader = lightShader;
 
-	tess.stageIteratorFunc  = stageIteratorFunc;
+	tess.stageIteratorFunc	= stageIteratorFunc;
 	tess.stageIteratorFunc2 = stageIteratorFunc2;
 
 	if( !tess.stageIteratorFunc )
 	{
-		//tess.stageIteratorFunc = &Tess_StageIteratorGeneric;
+		// tess.stageIteratorFunc = &Tess_StageIteratorGeneric;
 		ri.Error( ERR_FATAL, "tess.stageIteratorFunc == NULL" );
 	}
 
@@ -626,7 +620,7 @@ void Tess_Begin( void ( *stageIteratorFunc )(),
 	{
 		if( isSky )
 		{
-			tess.stageIteratorFunc  = &Tess_StageIteratorSky;
+			tess.stageIteratorFunc	= &Tess_StageIteratorSky;
 			tess.stageIteratorFunc2 = &Tess_StageIteratorGeneric;
 		}
 	}
@@ -634,7 +628,7 @@ void Tess_Begin( void ( *stageIteratorFunc )(),
 	{
 		if( isSky )
 		{
-			tess.stageIteratorFunc  = &Tess_StageIteratorSky;
+			tess.stageIteratorFunc	= &Tess_StageIteratorSky;
 			tess.stageIteratorFunc2 = &Tess_StageIteratorDepthFill;
 		}
 	}
@@ -642,21 +636,26 @@ void Tess_Begin( void ( *stageIteratorFunc )(),
 	{
 		if( isSky )
 		{
-			tess.stageIteratorFunc  = &Tess_StageIteratorSky;
+			tess.stageIteratorFunc	= &Tess_StageIteratorSky;
 			tess.stageIteratorFunc2 = &Tess_StageIteratorGBuffer;
 		}
 	}
 
 	tess.skipTangentSpaces = skipTangentSpaces;
-	tess.skipVBO           = skipVBO;
-	tess.lightmapNum       = lightmapNum;
-	tess.fogNum            = fogNum;
+	tess.skipVBO		   = skipVBO;
+	tess.lightmapNum	   = lightmapNum;
+	tess.fogNum			   = fogNum;
 
 	if( r_logFile->integer )
 	{
 		// don't just call LogComment, or we will get
 		// a call to va() every frame!
-		GLimp_LogComment( va( "--- Tess_Begin( surfaceShader = %s, lightShader = %s, skipTangentSpaces = %i, lightmapNum = %i, fogNum = %i) ---\n", tess.surfaceShader->name, tess.lightShader ? tess.lightShader->name : NULL, tess.skipTangentSpaces, tess.lightmapNum, tess.fogNum ) );
+		GLimp_LogComment( va( "--- Tess_Begin( surfaceShader = %s, lightShader = %s, skipTangentSpaces = %i, lightmapNum = %i, fogNum = %i) ---\n",
+			tess.surfaceShader->name,
+			tess.lightShader ? tess.lightShader->name : NULL,
+			tess.skipTangentSpaces,
+			tess.lightmapNum,
+			tess.fogNum ) );
 	}
 }
 // *INDENT-ON*
@@ -664,12 +663,12 @@ void Tess_Begin( void ( *stageIteratorFunc )(),
 static void Render_generic( int stage )
 {
 	shaderStage_t* pStage;
-	colorGen_t     rgbGen;
-	alphaGen_t     alphaGen;
+	colorGen_t	   rgbGen;
+	alphaGen_t	   alphaGen;
 
 	GLimp_LogComment( "--- Render_generic ---\n" );
 
-	pStage = tess.surfaceStages[ stage ];
+	pStage = tess.surfaceStages[stage];
 
 	GL_State( pStage->stateBits );
 
@@ -729,7 +728,7 @@ static void Render_generic( int stage )
 	gl_genericShader->SetUniform_Color( tess.svars.color );
 
 	gl_genericShader->SetUniform_ModelMatrix( backEnd.orientation.transformMatrix );
-	gl_genericShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[ glState.stackIndex ] );
+	gl_genericShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[glState.stackIndex] );
 
 	// u_BoneMatrix
 	if( glConfig2.vboVertexSkinningAvailable && tess.vboVertexSkinning )
@@ -752,21 +751,21 @@ static void Render_generic( int stage )
 
 	if( backEnd.viewParms.isPortal )
 	{
-		float plane[ 4 ];
+		float plane[4];
 
 		// clipping plane in world space
-		plane[ 0 ] = backEnd.viewParms.portalPlane.normal[ 0 ];
-		plane[ 1 ] = backEnd.viewParms.portalPlane.normal[ 1 ];
-		plane[ 2 ] = backEnd.viewParms.portalPlane.normal[ 2 ];
-		plane[ 3 ] = backEnd.viewParms.portalPlane.dist;
+		plane[0] = backEnd.viewParms.portalPlane.normal[0];
+		plane[1] = backEnd.viewParms.portalPlane.normal[1];
+		plane[2] = backEnd.viewParms.portalPlane.normal[2];
+		plane[3] = backEnd.viewParms.portalPlane.dist;
 
 		gl_genericShader->SetUniform_PortalPlane( plane );
 	}
 
 	// bind u_ColorMap
 	GL_SelectTexture( 0 );
-	BindAnimatedImage( &pStage->bundle[ TB_COLORMAP ] );
-	gl_genericShader->SetUniform_ColorTextureMatrix( tess.svars.texMatrices[ TB_COLORMAP ] );
+	BindAnimatedImage( &pStage->bundle[TB_COLORMAP] );
+	gl_genericShader->SetUniform_ColorTextureMatrix( tess.svars.texMatrices[TB_COLORMAP] );
 
 	gl_genericShader->SetRequiredVertexPointers();
 
@@ -777,12 +776,12 @@ static void Render_generic( int stage )
 
 static void Render_vertexLighting_DBS_entity( int stage )
 {
-	vec3_t         viewOrigin;
-	vec3_t         ambientColor;
-	vec3_t         lightDir;
-	vec4_t         lightColor;
-	uint32_t       stateBits;
-	shaderStage_t* pStage = tess.surfaceStages[ stage ];
+	vec3_t		   viewOrigin;
+	vec3_t		   ambientColor;
+	vec3_t		   lightDir;
+	vec4_t		   lightColor;
+	uint32_t	   stateBits;
+	shaderStage_t* pStage = tess.surfaceStages[stage];
 
 	GLimp_LogComment( "--- Render_vertexLighting_DBS_entity ---\n" );
 
@@ -790,7 +789,7 @@ static void Render_vertexLighting_DBS_entity( int stage )
 
 	GL_State( stateBits );
 
-	bool normalMapping = r_normalMapping->integer && ( pStage->bundle[ TB_NORMALMAP ].image[ 0 ] != NULL );
+	bool normalMapping = r_normalMapping->integer && ( pStage->bundle[TB_NORMALMAP].image[0] != NULL );
 
 	// choose right shader program ----------------------------------
 	gl_vertexLightingShader_DBS_entity->SetPortalClipping( backEnd.viewParms.isPortal );
@@ -822,9 +821,9 @@ static void Render_vertexLighting_DBS_entity( int stage )
 	// set uniforms
 	VectorCopy( backEnd.viewParms.orientation.origin, viewOrigin ); // in world space
 	VectorCopy( backEnd.currentEntity->ambientLight, ambientColor );
-	//ClampColor(ambientColor);
+	// ClampColor(ambientColor);
 	VectorCopy( backEnd.currentEntity->directedLight, lightColor );
-	//ClampColor(directedLight);
+	// ClampColor(directedLight);
 
 	// lightDir = L vector which means surface to light
 	VectorCopy( backEnd.currentEntity->lightDir, lightDir );
@@ -838,7 +837,7 @@ static void Render_vertexLighting_DBS_entity( int stage )
 	gl_vertexLightingShader_DBS_entity->SetUniform_LightColor( lightColor );
 
 	gl_vertexLightingShader_DBS_entity->SetUniform_ModelMatrix( backEnd.orientation.transformMatrix );
-	gl_vertexLightingShader_DBS_entity->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[ glState.stackIndex ] );
+	gl_vertexLightingShader_DBS_entity->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[glState.stackIndex] );
 
 	// u_VertexInterpolation
 	if( glState.vertexAttribsInterpolation > 0 )
@@ -863,47 +862,47 @@ static void Render_vertexLighting_DBS_entity( int stage )
 
 	if( backEnd.viewParms.isPortal )
 	{
-		float plane[ 4 ];
+		float plane[4];
 
 		// clipping plane in world space
-		plane[ 0 ] = backEnd.viewParms.portalPlane.normal[ 0 ];
-		plane[ 1 ] = backEnd.viewParms.portalPlane.normal[ 1 ];
-		plane[ 2 ] = backEnd.viewParms.portalPlane.normal[ 2 ];
-		plane[ 3 ] = backEnd.viewParms.portalPlane.dist;
+		plane[0] = backEnd.viewParms.portalPlane.normal[0];
+		plane[1] = backEnd.viewParms.portalPlane.normal[1];
+		plane[2] = backEnd.viewParms.portalPlane.normal[2];
+		plane[3] = backEnd.viewParms.portalPlane.dist;
 
 		gl_vertexLightingShader_DBS_entity->SetUniform_PortalPlane( plane );
 	}
 
 	// bind u_DiffuseMap
 	GL_SelectTexture( 0 );
-	GL_Bind( pStage->bundle[ TB_DIFFUSEMAP ].image[ 0 ] );
-	gl_vertexLightingShader_DBS_entity->SetUniform_DiffuseTextureMatrix( tess.svars.texMatrices[ TB_DIFFUSEMAP ] );
+	GL_Bind( pStage->bundle[TB_DIFFUSEMAP].image[0] );
+	gl_vertexLightingShader_DBS_entity->SetUniform_DiffuseTextureMatrix( tess.svars.texMatrices[TB_DIFFUSEMAP] );
 
 	if( normalMapping )
 	{
 		// bind u_NormalMap
 		GL_SelectTexture( 1 );
-		if( pStage->bundle[ TB_NORMALMAP ].image[ 0 ] )
+		if( pStage->bundle[TB_NORMALMAP].image[0] )
 		{
-			GL_Bind( pStage->bundle[ TB_NORMALMAP ].image[ 0 ] );
+			GL_Bind( pStage->bundle[TB_NORMALMAP].image[0] );
 		}
 		else
 		{
 			GL_Bind( tr.flatImage );
 		}
-		gl_vertexLightingShader_DBS_entity->SetUniform_NormalTextureMatrix( tess.svars.texMatrices[ TB_NORMALMAP ] );
+		gl_vertexLightingShader_DBS_entity->SetUniform_NormalTextureMatrix( tess.svars.texMatrices[TB_NORMALMAP] );
 
 		// bind u_SpecularMap
 		GL_SelectTexture( 2 );
-		if( pStage->bundle[ TB_SPECULARMAP ].image[ 0 ] )
+		if( pStage->bundle[TB_SPECULARMAP].image[0] )
 		{
-			GL_Bind( pStage->bundle[ TB_SPECULARMAP ].image[ 0 ] );
+			GL_Bind( pStage->bundle[TB_SPECULARMAP].image[0] );
 		}
 		else
 		{
 			GL_Bind( tr.blackImage );
 		}
-		gl_vertexLightingShader_DBS_entity->SetUniform_SpecularTextureMatrix( tess.svars.texMatrices[ TB_SPECULARMAP ] );
+		gl_vertexLightingShader_DBS_entity->SetUniform_SpecularTextureMatrix( tess.svars.texMatrices[TB_SPECULARMAP] );
 
 		if( tr.cubeHashTable != NULL )
 		{
@@ -952,8 +951,8 @@ static void Render_vertexLighting_DBS_entity( int stage )
 				GL_Bind( cubeProbeNearest->cubemap );
 
 				// bind u_EnvironmentMap1
-				//GL_SelectTexture(4);
-				//GL_Bind(cubeProbeNearest->cubemap);
+				// GL_SelectTexture(4);
+				// GL_Bind(cubeProbeNearest->cubemap);
 
 				// u_EnvironmentInterpolation
 				gl_vertexLightingShader_DBS_entity->SetUniform_EnvironmentInterpolation( 0.0 );
@@ -964,13 +963,13 @@ static void Render_vertexLighting_DBS_entity( int stage )
 
 				if( backEnd.currentEntity && ( backEnd.currentEntity != &tr.worldEntity ) )
 				{
-					cubeProbeNearestDistance       = Distance( backEnd.currentEntity->e.origin, cubeProbeNearest->origin );
+					cubeProbeNearestDistance	   = Distance( backEnd.currentEntity->e.origin, cubeProbeNearest->origin );
 					cubeProbeSecondNearestDistance = Distance( backEnd.currentEntity->e.origin, cubeProbeSecondNearest->origin );
 				}
 				else
 				{
 					// FIXME position
-					cubeProbeNearestDistance       = Distance( backEnd.viewParms.orientation.origin, cubeProbeNearest->origin );
+					cubeProbeNearestDistance	   = Distance( backEnd.viewParms.orientation.origin, cubeProbeNearest->origin );
 					cubeProbeSecondNearestDistance = Distance( backEnd.viewParms.orientation.origin, cubeProbeSecondNearest->origin );
 				}
 
@@ -978,10 +977,8 @@ static void Render_vertexLighting_DBS_entity( int stage )
 
 				if( r_logFile->integer )
 				{
-					GLimp_LogComment( va( "cubeProbeNearestDistance = %f, cubeProbeSecondNearestDistance = %f, interpolation = %f\n",
-						cubeProbeNearestDistance,
-						cubeProbeSecondNearestDistance,
-						interpolate ) );
+					GLimp_LogComment(
+						va( "cubeProbeNearestDistance = %f, cubeProbeSecondNearestDistance = %f, interpolation = %f\n", cubeProbeNearestDistance, cubeProbeSecondNearestDistance, interpolate ) );
 				}
 
 				// bind u_EnvironmentMap0
@@ -1007,17 +1004,17 @@ static void Render_vertexLighting_DBS_entity( int stage )
 
 static void Render_vertexLighting_DBS_world( int stage )
 {
-	vec3_t         viewOrigin;
-	uint32_t       stateBits;
-	colorGen_t     colorGen;
-	alphaGen_t     alphaGen;
-	shaderStage_t* pStage = tess.surfaceStages[ stage ];
+	vec3_t		   viewOrigin;
+	uint32_t	   stateBits;
+	colorGen_t	   colorGen;
+	alphaGen_t	   alphaGen;
+	shaderStage_t* pStage = tess.surfaceStages[stage];
 
 	GLimp_LogComment( "--- Render_vertexLighting_DBS_world ---\n" );
 
 	stateBits = pStage->stateBits;
 
-	bool normalMapping = tr.worldDeluxeMapping && r_normalMapping->integer && ( pStage->bundle[ TB_NORMALMAP ].image[ 0 ] != NULL );
+	bool normalMapping = tr.worldDeluxeMapping && r_normalMapping->integer && ( pStage->bundle[TB_NORMALMAP].image[0] != NULL );
 
 	// choose right shader program ----------------------------------
 	gl_vertexLightingShader_DBS_world->SetPortalClipping( backEnd.viewParms.isPortal );
@@ -1087,11 +1084,11 @@ static void Render_vertexLighting_DBS_world( int stage )
 	gl_vertexLightingShader_DBS_world->SetUniform_ColorModulate( colorGen, alphaGen );
 
 	// u_Color
-	//if(r_showTerrainBlends->integer)
+	// if(r_showTerrainBlends->integer)
 	//{
 	//	gl_vertexLightingShader_DBS_world->SetUniform_Color(g_color_table[backEnd.pc.c_batches % 8]);
 	//}
-	//else
+	// else
 	{
 		gl_vertexLightingShader_DBS_world->SetUniform_Color( tess.svars.color );
 	}
@@ -1099,7 +1096,7 @@ static void Render_vertexLighting_DBS_world( int stage )
 	gl_vertexLightingShader_DBS_world->SetUniform_LightWrapAround( RB_EvalExpression( &pStage->wrapAroundLightingExp, 0 ) );
 
 	gl_vertexLightingShader_DBS_world->SetUniform_ViewOrigin( viewOrigin );
-	gl_vertexLightingShader_DBS_world->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[ glState.stackIndex ] );
+	gl_vertexLightingShader_DBS_world->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[glState.stackIndex] );
 
 	gl_vertexLightingShader_DBS_world->SetUniform_AlphaTest( pStage->stateBits );
 
@@ -1113,47 +1110,47 @@ static void Render_vertexLighting_DBS_world( int stage )
 
 	if( backEnd.viewParms.isPortal )
 	{
-		float plane[ 4 ];
+		float plane[4];
 
 		// clipping plane in world space
-		plane[ 0 ] = backEnd.viewParms.portalPlane.normal[ 0 ];
-		plane[ 1 ] = backEnd.viewParms.portalPlane.normal[ 1 ];
-		plane[ 2 ] = backEnd.viewParms.portalPlane.normal[ 2 ];
-		plane[ 3 ] = backEnd.viewParms.portalPlane.dist;
+		plane[0] = backEnd.viewParms.portalPlane.normal[0];
+		plane[1] = backEnd.viewParms.portalPlane.normal[1];
+		plane[2] = backEnd.viewParms.portalPlane.normal[2];
+		plane[3] = backEnd.viewParms.portalPlane.dist;
 
 		gl_vertexLightingShader_DBS_world->SetUniform_PortalPlane( plane );
 	}
 
 	// bind u_DiffuseMap
 	GL_SelectTexture( 0 );
-	GL_Bind( pStage->bundle[ TB_DIFFUSEMAP ].image[ 0 ] );
-	gl_vertexLightingShader_DBS_world->SetUniform_DiffuseTextureMatrix( tess.svars.texMatrices[ TB_DIFFUSEMAP ] );
+	GL_Bind( pStage->bundle[TB_DIFFUSEMAP].image[0] );
+	gl_vertexLightingShader_DBS_world->SetUniform_DiffuseTextureMatrix( tess.svars.texMatrices[TB_DIFFUSEMAP] );
 
 	if( normalMapping )
 	{
 		// bind u_NormalMap
 		GL_SelectTexture( 1 );
-		if( pStage->bundle[ TB_NORMALMAP ].image[ 0 ] )
+		if( pStage->bundle[TB_NORMALMAP].image[0] )
 		{
-			GL_Bind( pStage->bundle[ TB_NORMALMAP ].image[ 0 ] );
+			GL_Bind( pStage->bundle[TB_NORMALMAP].image[0] );
 		}
 		else
 		{
 			GL_Bind( tr.flatImage );
 		}
-		gl_vertexLightingShader_DBS_world->SetUniform_NormalTextureMatrix( tess.svars.texMatrices[ TB_NORMALMAP ] );
+		gl_vertexLightingShader_DBS_world->SetUniform_NormalTextureMatrix( tess.svars.texMatrices[TB_NORMALMAP] );
 
 		// bind u_SpecularMap
 		GL_SelectTexture( 2 );
-		if( pStage->bundle[ TB_SPECULARMAP ].image[ 0 ] )
+		if( pStage->bundle[TB_SPECULARMAP].image[0] )
 		{
-			GL_Bind( pStage->bundle[ TB_SPECULARMAP ].image[ 0 ] );
+			GL_Bind( pStage->bundle[TB_SPECULARMAP].image[0] );
 		}
 		else
 		{
 			GL_Bind( tr.blackImage );
 		}
-		gl_vertexLightingShader_DBS_world->SetUniform_SpecularTextureMatrix( tess.svars.texMatrices[ TB_SPECULARMAP ] );
+		gl_vertexLightingShader_DBS_world->SetUniform_SpecularTextureMatrix( tess.svars.texMatrices[TB_SPECULARMAP] );
 	}
 
 	gl_vertexLightingShader_DBS_world->SetRequiredVertexPointers();
@@ -1166,13 +1163,13 @@ static void Render_vertexLighting_DBS_world( int stage )
 static void Render_lightMapping( int stage, bool asColorMap, bool normalMapping )
 {
 	shaderStage_t* pStage;
-	uint32_t       stateBits;
-	colorGen_t     rgbGen;
-	alphaGen_t     alphaGen;
+	uint32_t	   stateBits;
+	colorGen_t	   rgbGen;
+	alphaGen_t	   alphaGen;
 
 	GLimp_LogComment( "--- Render_lightMapping ---\n" );
 
-	pStage = tess.surfaceStages[ stage ];
+	pStage = tess.surfaceStages[stage];
 
 	stateBits = pStage->stateBits;
 
@@ -1207,7 +1204,7 @@ static void Render_lightMapping( int stage, bool asColorMap, bool normalMapping 
 
 	GL_State( stateBits );
 
-	if( pStage->bundle[ TB_NORMALMAP ].image[ 0 ] == NULL )
+	if( pStage->bundle[TB_NORMALMAP].image[0] == NULL )
 	{
 		normalMapping = false;
 	}
@@ -1240,7 +1237,7 @@ static void Render_lightMapping( int stage, bool asColorMap, bool normalMapping 
 	gl_lightMappingShader->SetUniform_ViewOrigin( backEnd.viewParms.orientation.origin ); // in world space
 
 	gl_lightMappingShader->SetUniform_ModelMatrix( backEnd.orientation.transformMatrix );
-	gl_lightMappingShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[ glState.stackIndex ] );
+	gl_lightMappingShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[glState.stackIndex] );
 	gl_lightMappingShader->SetUniform_AlphaTest( pStage->stateBits );
 
 	// u_ColorModulate
@@ -1259,13 +1256,13 @@ static void Render_lightMapping( int stage, bool asColorMap, bool normalMapping 
 
 	if( backEnd.viewParms.isPortal )
 	{
-		float plane[ 4 ];
+		float plane[4];
 
 		// clipping plane in world space
-		plane[ 0 ] = backEnd.viewParms.portalPlane.normal[ 0 ];
-		plane[ 1 ] = backEnd.viewParms.portalPlane.normal[ 1 ];
-		plane[ 2 ] = backEnd.viewParms.portalPlane.normal[ 2 ];
-		plane[ 3 ] = backEnd.viewParms.portalPlane.dist;
+		plane[0] = backEnd.viewParms.portalPlane.normal[0];
+		plane[1] = backEnd.viewParms.portalPlane.normal[1];
+		plane[2] = backEnd.viewParms.portalPlane.normal[2];
+		plane[3] = backEnd.viewParms.portalPlane.dist;
 
 		gl_lightMappingShader->SetUniform_PortalPlane( plane );
 	}
@@ -1278,35 +1275,35 @@ static void Render_lightMapping( int stage, bool asColorMap, bool normalMapping 
 	}
 	else
 	{
-		GL_Bind( pStage->bundle[ TB_DIFFUSEMAP ].image[ 0 ] );
-		gl_lightMappingShader->SetUniform_DiffuseTextureMatrix( tess.svars.texMatrices[ TB_DIFFUSEMAP ] );
+		GL_Bind( pStage->bundle[TB_DIFFUSEMAP].image[0] );
+		gl_lightMappingShader->SetUniform_DiffuseTextureMatrix( tess.svars.texMatrices[TB_DIFFUSEMAP] );
 	}
 
 	if( normalMapping )
 	{
 		// bind u_NormalMap
 		GL_SelectTexture( 1 );
-		if( pStage->bundle[ TB_NORMALMAP ].image[ 0 ] )
+		if( pStage->bundle[TB_NORMALMAP].image[0] )
 		{
-			GL_Bind( pStage->bundle[ TB_NORMALMAP ].image[ 0 ] );
+			GL_Bind( pStage->bundle[TB_NORMALMAP].image[0] );
 		}
 		else
 		{
 			GL_Bind( tr.flatImage );
 		}
-		gl_lightMappingShader->SetUniform_NormalTextureMatrix( tess.svars.texMatrices[ TB_NORMALMAP ] );
+		gl_lightMappingShader->SetUniform_NormalTextureMatrix( tess.svars.texMatrices[TB_NORMALMAP] );
 
 		// bind u_SpecularMap
 		GL_SelectTexture( 2 );
-		if( pStage->bundle[ TB_SPECULARMAP ].image[ 0 ] )
+		if( pStage->bundle[TB_SPECULARMAP].image[0] )
 		{
-			GL_Bind( pStage->bundle[ TB_SPECULARMAP ].image[ 0 ] );
+			GL_Bind( pStage->bundle[TB_SPECULARMAP].image[0] );
 		}
 		else
 		{
 			GL_Bind( tr.blackImage );
 		}
-		gl_lightMappingShader->SetUniform_SpecularTextureMatrix( tess.svars.texMatrices[ TB_SPECULARMAP ] );
+		gl_lightMappingShader->SetUniform_SpecularTextureMatrix( tess.svars.texMatrices[TB_SPECULARMAP] );
 
 		// bind u_DeluxeMap
 		GL_SelectTexture( 4 );
@@ -1327,12 +1324,12 @@ static void Render_lightMapping( int stage, bool asColorMap, bool normalMapping 
 static void Render_geometricFill( int stage, bool cmap2black )
 {
 	shaderStage_t* pStage;
-	uint32_t       stateBits;
-	vec4_t         ambientColor;
+	uint32_t	   stateBits;
+	vec4_t		   ambientColor;
 
 	GLimp_LogComment( "--- Render_geometricFill ---\n" );
 
-	pStage = tess.surfaceStages[ stage ];
+	pStage = tess.surfaceStages[stage];
 
 	// remove blend mode
 	stateBits = pStage->stateBits;
@@ -1340,7 +1337,7 @@ static void Render_geometricFill( int stage, bool cmap2black )
 
 	GL_State( stateBits );
 
-	bool normalMapping = r_normalMapping->integer && ( pStage->bundle[ TB_NORMALMAP ].image[ 0 ] != NULL );
+	bool normalMapping = r_normalMapping->integer && ( pStage->bundle[TB_NORMALMAP].image[0] != NULL );
 
 	// choose right shader program ----------------------------------
 	gl_geometricFillShader->SetPortalClipping( backEnd.viewParms.isPortal );
@@ -1354,7 +1351,7 @@ static void Render_geometricFill( int stage, bool cmap2black )
 	gl_geometricFillShader->SetNormalMapping( normalMapping );
 	gl_geometricFillShader->SetParallaxMapping( normalMapping && r_parallaxMapping->integer && tess.surfaceShader->parallax );
 
-	gl_geometricFillShader->SetReflectiveSpecular( false ); //normalMapping && tr.cubeHashTable != NULL);
+	gl_geometricFillShader->SetReflectiveSpecular( false ); // normalMapping && tr.cubeHashTable != NULL);
 
 	//	gl_geometricFillShader->SetMacro_TWOSIDED(tess.surfaceShader->cullType);
 
@@ -1388,7 +1385,7 @@ static void Render_geometricFill( int stage, bool cmap2black )
 
 	gl_geometricFillShader->SetUniform_ModelMatrix( backEnd.orientation.transformMatrix );
 	//	gl_geometricFillShader->SetUniform_ModelViewMatrix(glState.modelViewMatrix[glState.stackIndex]);
-	gl_geometricFillShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[ glState.stackIndex ] );
+	gl_geometricFillShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[glState.stackIndex] );
 
 	// u_BoneMatrix
 	if( glConfig2.vboVertexSkinningAvailable && tess.vboVertexSkinning )
@@ -1421,18 +1418,18 @@ static void Render_geometricFill( int stage, bool cmap2black )
 	// u_PortalPlane
 	if( backEnd.viewParms.isPortal )
 	{
-		float plane[ 4 ];
+		float plane[4];
 
 		// clipping plane in world space
-		plane[ 0 ] = backEnd.viewParms.portalPlane.normal[ 0 ];
-		plane[ 1 ] = backEnd.viewParms.portalPlane.normal[ 1 ];
-		plane[ 2 ] = backEnd.viewParms.portalPlane.normal[ 2 ];
-		plane[ 3 ] = backEnd.viewParms.portalPlane.dist;
+		plane[0] = backEnd.viewParms.portalPlane.normal[0];
+		plane[1] = backEnd.viewParms.portalPlane.normal[1];
+		plane[2] = backEnd.viewParms.portalPlane.normal[2];
+		plane[3] = backEnd.viewParms.portalPlane.dist;
 
 		gl_geometricFillShader->SetUniform_PortalPlane( plane );
 	}
 
-	//if(r_deferredShading->integer == DS_STANDARD)
+	// if(r_deferredShading->integer == DS_STANDARD)
 	{
 		// bind u_DiffuseMap
 		GL_SelectTexture( 0 );
@@ -1442,24 +1439,24 @@ static void Render_geometricFill( int stage, bool cmap2black )
 		}
 		else
 		{
-			GL_Bind( pStage->bundle[ TB_DIFFUSEMAP ].image[ 0 ] );
+			GL_Bind( pStage->bundle[TB_DIFFUSEMAP].image[0] );
 		}
-		gl_geometricFillShader->SetUniform_DiffuseTextureMatrix( tess.svars.texMatrices[ TB_DIFFUSEMAP ] );
+		gl_geometricFillShader->SetUniform_DiffuseTextureMatrix( tess.svars.texMatrices[TB_DIFFUSEMAP] );
 	}
 
 	if( normalMapping )
 	{
 		// bind u_NormalMap
 		GL_SelectTexture( 1 );
-		if( pStage->bundle[ TB_NORMALMAP ].image[ 0 ] )
+		if( pStage->bundle[TB_NORMALMAP].image[0] )
 		{
-			GL_Bind( pStage->bundle[ TB_NORMALMAP ].image[ 0 ] );
+			GL_Bind( pStage->bundle[TB_NORMALMAP].image[0] );
 		}
 		else
 		{
 			GL_Bind( tr.flatImage );
 		}
-		gl_geometricFillShader->SetUniform_NormalTextureMatrix( tess.svars.texMatrices[ TB_NORMALMAP ] );
+		gl_geometricFillShader->SetUniform_NormalTextureMatrix( tess.svars.texMatrices[TB_NORMALMAP] );
 
 		if( r_deferredShading->integer == DS_STANDARD )
 		{
@@ -1467,17 +1464,17 @@ static void Render_geometricFill( int stage, bool cmap2black )
 			GL_SelectTexture( 2 );
 			if( r_forceSpecular->integer )
 			{
-				GL_Bind( pStage->bundle[ TB_DIFFUSEMAP ].image[ 0 ] );
+				GL_Bind( pStage->bundle[TB_DIFFUSEMAP].image[0] );
 			}
-			else if( pStage->bundle[ TB_SPECULARMAP ].image[ 0 ] )
+			else if( pStage->bundle[TB_SPECULARMAP].image[0] )
 			{
-				GL_Bind( pStage->bundle[ TB_SPECULARMAP ].image[ 0 ] );
+				GL_Bind( pStage->bundle[TB_SPECULARMAP].image[0] );
 			}
 			else
 			{
 				GL_Bind( tr.blackImage );
 			}
-			gl_geometricFillShader->SetUniform_SpecularTextureMatrix( tess.svars.texMatrices[ TB_SPECULARMAP ] );
+			gl_geometricFillShader->SetUniform_SpecularTextureMatrix( tess.svars.texMatrices[TB_SPECULARMAP] );
 		}
 	}
 
@@ -1491,13 +1488,13 @@ static void Render_geometricFill( int stage, bool cmap2black )
 static void Render_depthFill( int stage )
 {
 	shaderStage_t* pStage;
-	colorGen_t     rgbGen;
-	alphaGen_t     alphaGen;
-	vec4_t         ambientColor;
+	colorGen_t	   rgbGen;
+	alphaGen_t	   alphaGen;
+	vec4_t		   ambientColor;
 
 	GLimp_LogComment( "--- Render_depthFill ---\n" );
 
-	pStage = tess.surfaceStages[ stage ];
+	pStage = tess.surfaceStages[stage];
 
 	uint32_t stateBits = pStage->stateBits;
 	stateBits &= ~( GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS | GLS_ATEST_BITS );
@@ -1538,22 +1535,22 @@ static void Render_depthFill( int stage )
 	}
 	else if( r_forceAmbient->integer )
 	{
-		ambientColor[ 0 ] = r_forceAmbient->value;
-		ambientColor[ 1 ] = r_forceAmbient->value;
-		ambientColor[ 2 ] = r_forceAmbient->value;
+		ambientColor[0] = r_forceAmbient->value;
+		ambientColor[1] = r_forceAmbient->value;
+		ambientColor[2] = r_forceAmbient->value;
 	}
 	else
 	{
 		VectorClear( ambientColor );
 	}
-	ambientColor[ 3 ] = 1;
+	ambientColor[3] = 1;
 	gl_genericShader->SetUniform_Color( ambientColor );
 #else
 	gl_genericShader->SetUniform_Color( colorMdGrey );
 #endif
 
 	gl_genericShader->SetUniform_ModelMatrix( backEnd.orientation.transformMatrix );
-	gl_genericShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[ glState.stackIndex ] );
+	gl_genericShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[glState.stackIndex] );
 
 	if( glConfig2.vboVertexSkinningAvailable && tess.vboVertexSkinning )
 	{
@@ -1569,13 +1566,13 @@ static void Render_depthFill( int stage )
 
 	if( backEnd.viewParms.isPortal )
 	{
-		float plane[ 4 ];
+		float plane[4];
 
 		// clipping plane in world space
-		plane[ 0 ] = backEnd.viewParms.portalPlane.normal[ 0 ];
-		plane[ 1 ] = backEnd.viewParms.portalPlane.normal[ 1 ];
-		plane[ 2 ] = backEnd.viewParms.portalPlane.normal[ 2 ];
-		plane[ 3 ] = backEnd.viewParms.portalPlane.dist;
+		plane[0] = backEnd.viewParms.portalPlane.normal[0];
+		plane[1] = backEnd.viewParms.portalPlane.normal[1];
+		plane[2] = backEnd.viewParms.portalPlane.normal[2];
+		plane[3] = backEnd.viewParms.portalPlane.dist;
 
 		gl_genericShader->SetUniform_PortalPlane( plane );
 	}
@@ -1584,13 +1581,13 @@ static void Render_depthFill( int stage )
 	GL_SelectTexture( 0 );
 	if( tess.surfaceShader->alphaTest )
 	{
-		GL_Bind( pStage->bundle[ TB_DIFFUSEMAP ].image[ 0 ] );
-		gl_genericShader->SetUniform_ColorTextureMatrix( tess.svars.texMatrices[ TB_DIFFUSEMAP ] );
+		GL_Bind( pStage->bundle[TB_DIFFUSEMAP].image[0] );
+		gl_genericShader->SetUniform_ColorTextureMatrix( tess.svars.texMatrices[TB_DIFFUSEMAP] );
 	}
 	else
 	{
-		//GL_Bind(tr.defaultImage);
-		GL_Bind( pStage->bundle[ TB_DIFFUSEMAP ].image[ 0 ] );
+		// GL_Bind(tr.defaultImage);
+		GL_Bind( pStage->bundle[TB_DIFFUSEMAP].image[0] );
 		gl_genericShader->SetUniform_ColorTextureMatrix( matrixIdentity );
 	}
 
@@ -1604,11 +1601,11 @@ static void Render_depthFill( int stage )
 static void Render_shadowFill( int stage )
 {
 	shaderStage_t* pStage;
-	uint32_t       stateBits;
+	uint32_t	   stateBits;
 
 	GLimp_LogComment( "--- Render_shadowFill ---\n" );
 
-	pStage = tess.surfaceStages[ stage ];
+	pStage = tess.surfaceStages[stage];
 
 	// remove blend modes
 	stateBits = pStage->stateBits;
@@ -1633,7 +1630,7 @@ static void Render_shadowFill( int stage )
 	{
 		vec4_t shadowMapColor;
 
-		Vector4Copy( g_color_table[ backEnd.pc.c_batches % 8 ], shadowMapColor );
+		Vector4Copy( g_color_table[backEnd.pc.c_batches % 8], shadowMapColor );
 
 		gl_shadowFillShader->SetUniform_Color( shadowMapColor );
 	}
@@ -1647,7 +1644,7 @@ static void Render_shadowFill( int stage )
 	}
 
 	gl_shadowFillShader->SetUniform_ModelMatrix( backEnd.orientation.transformMatrix );
-	gl_shadowFillShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[ glState.stackIndex ] );
+	gl_shadowFillShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[glState.stackIndex] );
 
 	// u_BoneMatrix
 	if( glConfig2.vboVertexSkinningAvailable && tess.vboVertexSkinning )
@@ -1670,13 +1667,13 @@ static void Render_shadowFill( int stage )
 
 	if( backEnd.viewParms.isPortal )
 	{
-		float plane[ 4 ];
+		float plane[4];
 
 		// clipping plane in world space
-		plane[ 0 ] = backEnd.viewParms.portalPlane.normal[ 0 ];
-		plane[ 1 ] = backEnd.viewParms.portalPlane.normal[ 1 ];
-		plane[ 2 ] = backEnd.viewParms.portalPlane.normal[ 2 ];
-		plane[ 3 ] = backEnd.viewParms.portalPlane.dist;
+		plane[0] = backEnd.viewParms.portalPlane.normal[0];
+		plane[1] = backEnd.viewParms.portalPlane.normal[1];
+		plane[2] = backEnd.viewParms.portalPlane.normal[2];
+		plane[3] = backEnd.viewParms.portalPlane.dist;
 
 		gl_shadowFillShader->SetUniform_PortalPlane( plane );
 	}
@@ -1686,8 +1683,8 @@ static void Render_shadowFill( int stage )
 
 	if( ( pStage->stateBits & GLS_ATEST_BITS ) != 0 )
 	{
-		GL_Bind( pStage->bundle[ TB_COLORMAP ].image[ 0 ] );
-		gl_shadowFillShader->SetUniform_ColorTextureMatrix( tess.svars.texMatrices[ TB_COLORMAP ] );
+		GL_Bind( pStage->bundle[TB_COLORMAP].image[0] );
+		gl_shadowFillShader->SetUniform_ColorTextureMatrix( tess.svars.texMatrices[TB_COLORMAP] );
 	}
 	else
 	{
@@ -1699,21 +1696,18 @@ static void Render_shadowFill( int stage )
 	GL_CheckErrors();
 }
 
-static void Render_forwardLighting_DBS_omni( shaderStage_t* diffuseStage,
-	shaderStage_t*                                          attenuationXYStage,
-	shaderStage_t*                                          attenuationZStage,
-	trRefLight_t*                                           light )
+static void Render_forwardLighting_DBS_omni( shaderStage_t* diffuseStage, shaderStage_t* attenuationXYStage, shaderStage_t* attenuationZStage, trRefLight_t* light )
 {
-	vec3_t     viewOrigin;
-	vec3_t     lightOrigin;
-	vec4_t     lightColor;
-	float      shadowTexelSize;
+	vec3_t	   viewOrigin;
+	vec3_t	   lightOrigin;
+	vec4_t	   lightColor;
+	float	   shadowTexelSize;
 	colorGen_t colorGen;
 	alphaGen_t alphaGen;
 
 	GLimp_LogComment( "--- Render_forwardLighting_DBS_omni ---\n" );
 
-	bool normalMapping = r_normalMapping->integer && ( diffuseStage->bundle[ TB_NORMALMAP ].image[ 0 ] != NULL );
+	bool normalMapping = r_normalMapping->integer && ( diffuseStage->bundle[TB_NORMALMAP].image[0] != NULL );
 
 	bool shadowCompare = ( r_shadows->integer >= SHADOWING_ESM16 && !light->l.noShadows && light->shadowLOD >= 0 );
 
@@ -1784,7 +1778,7 @@ static void Render_forwardLighting_DBS_omni( shaderStage_t* diffuseStage,
 
 	if( shadowCompare )
 	{
-		shadowTexelSize = 1.0f / shadowMapResolutions[ light->shadowLOD ];
+		shadowTexelSize = 1.0f / shadowMapResolutions[light->shadowLOD];
 	}
 	else
 	{
@@ -1811,7 +1805,7 @@ static void Render_forwardLighting_DBS_omni( shaderStage_t* diffuseStage,
 	GL_CheckErrors();
 
 	gl_forwardLightingShader_omniXYZ->SetUniform_ModelMatrix( backEnd.orientation.transformMatrix );
-	gl_forwardLightingShader_omniXYZ->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[ glState.stackIndex ] );
+	gl_forwardLightingShader_omniXYZ->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[glState.stackIndex] );
 
 	// u_BoneMatrix
 	if( glConfig2.vboVertexSkinningAvailable && tess.vboVertexSkinning )
@@ -1833,13 +1827,13 @@ static void Render_forwardLighting_DBS_omni( shaderStage_t* diffuseStage,
 
 	if( backEnd.viewParms.isPortal )
 	{
-		float plane[ 4 ];
+		float plane[4];
 
 		// clipping plane in world space
-		plane[ 0 ] = backEnd.viewParms.portalPlane.normal[ 0 ];
-		plane[ 1 ] = backEnd.viewParms.portalPlane.normal[ 1 ];
-		plane[ 2 ] = backEnd.viewParms.portalPlane.normal[ 2 ];
-		plane[ 3 ] = backEnd.viewParms.portalPlane.dist;
+		plane[0] = backEnd.viewParms.portalPlane.normal[0];
+		plane[1] = backEnd.viewParms.portalPlane.normal[1];
+		plane[2] = backEnd.viewParms.portalPlane.normal[2];
+		plane[3] = backEnd.viewParms.portalPlane.dist;
 
 		gl_forwardLightingShader_omniXYZ->SetUniform_PortalPlane( plane );
 	}
@@ -1848,53 +1842,53 @@ static void Render_forwardLighting_DBS_omni( shaderStage_t* diffuseStage,
 
 	// bind u_DiffuseMap
 	GL_SelectTexture( 0 );
-	GL_Bind( diffuseStage->bundle[ TB_DIFFUSEMAP ].image[ 0 ] );
-	gl_forwardLightingShader_omniXYZ->SetUniform_DiffuseTextureMatrix( tess.svars.texMatrices[ TB_DIFFUSEMAP ] );
+	GL_Bind( diffuseStage->bundle[TB_DIFFUSEMAP].image[0] );
+	gl_forwardLightingShader_omniXYZ->SetUniform_DiffuseTextureMatrix( tess.svars.texMatrices[TB_DIFFUSEMAP] );
 
 	if( normalMapping )
 	{
 		// bind u_NormalMap
 		GL_SelectTexture( 1 );
-		if( diffuseStage->bundle[ TB_NORMALMAP ].image[ 0 ] )
+		if( diffuseStage->bundle[TB_NORMALMAP].image[0] )
 		{
-			GL_Bind( diffuseStage->bundle[ TB_NORMALMAP ].image[ 0 ] );
+			GL_Bind( diffuseStage->bundle[TB_NORMALMAP].image[0] );
 		}
 		else
 		{
 			GL_Bind( tr.flatImage );
 		}
-		gl_forwardLightingShader_omniXYZ->SetUniform_NormalTextureMatrix( tess.svars.texMatrices[ TB_NORMALMAP ] );
+		gl_forwardLightingShader_omniXYZ->SetUniform_NormalTextureMatrix( tess.svars.texMatrices[TB_NORMALMAP] );
 
 		// bind u_SpecularMap
 		GL_SelectTexture( 2 );
 		if( r_forceSpecular->integer )
 		{
-			GL_Bind( diffuseStage->bundle[ TB_DIFFUSEMAP ].image[ 0 ] );
+			GL_Bind( diffuseStage->bundle[TB_DIFFUSEMAP].image[0] );
 		}
-		else if( diffuseStage->bundle[ TB_SPECULARMAP ].image[ 0 ] )
+		else if( diffuseStage->bundle[TB_SPECULARMAP].image[0] )
 		{
-			GL_Bind( diffuseStage->bundle[ TB_SPECULARMAP ].image[ 0 ] );
+			GL_Bind( diffuseStage->bundle[TB_SPECULARMAP].image[0] );
 		}
 		else
 		{
 			GL_Bind( tr.blackImage );
 		}
-		gl_forwardLightingShader_omniXYZ->SetUniform_SpecularTextureMatrix( tess.svars.texMatrices[ TB_SPECULARMAP ] );
+		gl_forwardLightingShader_omniXYZ->SetUniform_SpecularTextureMatrix( tess.svars.texMatrices[TB_SPECULARMAP] );
 	}
 
 	// bind u_AttenuationMapXY
 	GL_SelectTexture( 3 );
-	BindAnimatedImage( &attenuationXYStage->bundle[ TB_COLORMAP ] );
+	BindAnimatedImage( &attenuationXYStage->bundle[TB_COLORMAP] );
 
 	// bind u_AttenuationMapZ
 	GL_SelectTexture( 4 );
-	BindAnimatedImage( &attenuationZStage->bundle[ TB_COLORMAP ] );
+	BindAnimatedImage( &attenuationZStage->bundle[TB_COLORMAP] );
 
 	// bind u_ShadowMap
 	if( shadowCompare )
 	{
 		GL_SelectTexture( 5 );
-		GL_Bind( tr.shadowCubeFBOImage[ light->shadowLOD ] );
+		GL_Bind( tr.shadowCubeFBOImage[light->shadowLOD] );
 	}
 
 	// bind u_RandomMap
@@ -1908,21 +1902,18 @@ static void Render_forwardLighting_DBS_omni( shaderStage_t* diffuseStage,
 	GL_CheckErrors();
 }
 
-static void Render_forwardLighting_DBS_proj( shaderStage_t* diffuseStage,
-	shaderStage_t*                                          attenuationXYStage,
-	shaderStage_t*                                          attenuationZStage,
-	trRefLight_t*                                           light )
+static void Render_forwardLighting_DBS_proj( shaderStage_t* diffuseStage, shaderStage_t* attenuationXYStage, shaderStage_t* attenuationZStage, trRefLight_t* light )
 {
-	vec3_t     viewOrigin;
-	vec3_t     lightOrigin;
-	vec4_t     lightColor;
-	float      shadowTexelSize;
+	vec3_t	   viewOrigin;
+	vec3_t	   lightOrigin;
+	vec4_t	   lightColor;
+	float	   shadowTexelSize;
 	colorGen_t colorGen;
 	alphaGen_t alphaGen;
 
 	GLimp_LogComment( "--- Render_fowardLighting_DBS_proj ---\n" );
 
-	bool normalMapping = r_normalMapping->integer && ( diffuseStage->bundle[ TB_NORMALMAP ].image[ 0 ] != NULL );
+	bool normalMapping = r_normalMapping->integer && ( diffuseStage->bundle[TB_NORMALMAP].image[0] != NULL );
 
 	bool shadowCompare = ( r_shadows->integer >= SHADOWING_ESM16 && !light->l.noShadows && light->shadowLOD >= 0 );
 
@@ -1993,7 +1984,7 @@ static void Render_forwardLighting_DBS_proj( shaderStage_t* diffuseStage,
 
 	if( shadowCompare )
 	{
-		shadowTexelSize = 1.0f / shadowMapResolutions[ light->shadowLOD ];
+		shadowTexelSize = 1.0f / shadowMapResolutions[light->shadowLOD];
 	}
 	else
 	{
@@ -2021,7 +2012,7 @@ static void Render_forwardLighting_DBS_proj( shaderStage_t* diffuseStage,
 	GL_CheckErrors();
 
 	gl_forwardLightingShader_projXYZ->SetUniform_ModelMatrix( backEnd.orientation.transformMatrix );
-	gl_forwardLightingShader_projXYZ->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[ glState.stackIndex ] );
+	gl_forwardLightingShader_projXYZ->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[glState.stackIndex] );
 
 	// u_BoneMatrix
 	if( glConfig2.vboVertexSkinningAvailable && tess.vboVertexSkinning )
@@ -2043,13 +2034,13 @@ static void Render_forwardLighting_DBS_proj( shaderStage_t* diffuseStage,
 
 	if( backEnd.viewParms.isPortal )
 	{
-		float plane[ 4 ];
+		float plane[4];
 
 		// clipping plane in world space
-		plane[ 0 ] = backEnd.viewParms.portalPlane.normal[ 0 ];
-		plane[ 1 ] = backEnd.viewParms.portalPlane.normal[ 1 ];
-		plane[ 2 ] = backEnd.viewParms.portalPlane.normal[ 2 ];
-		plane[ 3 ] = backEnd.viewParms.portalPlane.dist;
+		plane[0] = backEnd.viewParms.portalPlane.normal[0];
+		plane[1] = backEnd.viewParms.portalPlane.normal[1];
+		plane[2] = backEnd.viewParms.portalPlane.normal[2];
+		plane[3] = backEnd.viewParms.portalPlane.dist;
 
 		gl_forwardLightingShader_projXYZ->SetUniform_PortalPlane( plane );
 	}
@@ -2058,53 +2049,53 @@ static void Render_forwardLighting_DBS_proj( shaderStage_t* diffuseStage,
 
 	// bind u_DiffuseMap
 	GL_SelectTexture( 0 );
-	GL_Bind( diffuseStage->bundle[ TB_DIFFUSEMAP ].image[ 0 ] );
-	gl_forwardLightingShader_projXYZ->SetUniform_DiffuseTextureMatrix( tess.svars.texMatrices[ TB_DIFFUSEMAP ] );
+	GL_Bind( diffuseStage->bundle[TB_DIFFUSEMAP].image[0] );
+	gl_forwardLightingShader_projXYZ->SetUniform_DiffuseTextureMatrix( tess.svars.texMatrices[TB_DIFFUSEMAP] );
 
 	if( normalMapping )
 	{
 		// bind u_NormalMap
 		GL_SelectTexture( 1 );
-		if( diffuseStage->bundle[ TB_NORMALMAP ].image[ 0 ] )
+		if( diffuseStage->bundle[TB_NORMALMAP].image[0] )
 		{
-			GL_Bind( diffuseStage->bundle[ TB_NORMALMAP ].image[ 0 ] );
+			GL_Bind( diffuseStage->bundle[TB_NORMALMAP].image[0] );
 		}
 		else
 		{
 			GL_Bind( tr.flatImage );
 		}
-		gl_forwardLightingShader_projXYZ->SetUniform_NormalTextureMatrix( tess.svars.texMatrices[ TB_NORMALMAP ] );
+		gl_forwardLightingShader_projXYZ->SetUniform_NormalTextureMatrix( tess.svars.texMatrices[TB_NORMALMAP] );
 
 		// bind u_SpecularMap
 		GL_SelectTexture( 2 );
 		if( r_forceSpecular->integer )
 		{
-			GL_Bind( diffuseStage->bundle[ TB_DIFFUSEMAP ].image[ 0 ] );
+			GL_Bind( diffuseStage->bundle[TB_DIFFUSEMAP].image[0] );
 		}
-		else if( diffuseStage->bundle[ TB_SPECULARMAP ].image[ 0 ] )
+		else if( diffuseStage->bundle[TB_SPECULARMAP].image[0] )
 		{
-			GL_Bind( diffuseStage->bundle[ TB_SPECULARMAP ].image[ 0 ] );
+			GL_Bind( diffuseStage->bundle[TB_SPECULARMAP].image[0] );
 		}
 		else
 		{
 			GL_Bind( tr.blackImage );
 		}
-		gl_forwardLightingShader_projXYZ->SetUniform_SpecularTextureMatrix( tess.svars.texMatrices[ TB_SPECULARMAP ] );
+		gl_forwardLightingShader_projXYZ->SetUniform_SpecularTextureMatrix( tess.svars.texMatrices[TB_SPECULARMAP] );
 	}
 
 	// bind u_AttenuationMapXY
 	GL_SelectTexture( 3 );
-	BindAnimatedImage( &attenuationXYStage->bundle[ TB_COLORMAP ] );
+	BindAnimatedImage( &attenuationXYStage->bundle[TB_COLORMAP] );
 
 	// bind u_AttenuationMapZ
 	GL_SelectTexture( 4 );
-	BindAnimatedImage( &attenuationZStage->bundle[ TB_COLORMAP ] );
+	BindAnimatedImage( &attenuationZStage->bundle[TB_COLORMAP] );
 
 	// bind u_ShadowMap
 	if( shadowCompare )
 	{
 		GL_SelectTexture( 5 );
-		GL_Bind( tr.shadowMapFBOImage[ light->shadowLOD ] );
+		GL_Bind( tr.shadowMapFBOImage[light->shadowLOD] );
 	}
 
 	// bind u_RandomMap
@@ -2118,22 +2109,19 @@ static void Render_forwardLighting_DBS_proj( shaderStage_t* diffuseStage,
 	GL_CheckErrors();
 }
 
-static void Render_forwardLighting_DBS_directional( shaderStage_t* diffuseStage,
-	shaderStage_t*                                                 attenuationXYStage,
-	shaderStage_t*                                                 attenuationZStage,
-	trRefLight_t*                                                  light )
+static void Render_forwardLighting_DBS_directional( shaderStage_t* diffuseStage, shaderStage_t* attenuationXYStage, shaderStage_t* attenuationZStage, trRefLight_t* light )
 {
 #if 1
-	vec3_t     viewOrigin;
-	vec3_t     lightDirection;
-	vec4_t     lightColor;
-	float      shadowTexelSize;
+	vec3_t	   viewOrigin;
+	vec3_t	   lightDirection;
+	vec4_t	   lightColor;
+	float	   shadowTexelSize;
 	colorGen_t colorGen;
 	alphaGen_t alphaGen;
 
 	GLimp_LogComment( "--- Render_forwardLighting_DBS_directional ---\n" );
 
-	bool normalMapping = r_normalMapping->integer && ( diffuseStage->bundle[ TB_NORMALMAP ].image[ 0 ] != NULL );
+	bool normalMapping = r_normalMapping->integer && ( diffuseStage->bundle[TB_NORMALMAP].image[0] != NULL );
 
 	bool shadowCompare = ( r_shadows->integer >= SHADOWING_ESM16 && !light->l.noShadows && light->shadowLOD >= 0 );
 
@@ -2210,7 +2198,7 @@ static void Render_forwardLighting_DBS_directional( shaderStage_t* diffuseStage,
 
 	if( shadowCompare )
 	{
-		shadowTexelSize = 1.0f / sunShadowMapResolutions[ light->shadowLOD ];
+		shadowTexelSize = 1.0f / sunShadowMapResolutions[light->shadowLOD];
 	}
 	else
 	{
@@ -2240,7 +2228,7 @@ static void Render_forwardLighting_DBS_directional( shaderStage_t* diffuseStage,
 
 	gl_forwardLightingShader_directionalSun->SetUniform_ModelMatrix( backEnd.orientation.transformMatrix );
 	gl_forwardLightingShader_directionalSun->SetUniform_ViewMatrix( backEnd.viewParms.world.viewMatrix );
-	gl_forwardLightingShader_directionalSun->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[ glState.stackIndex ] );
+	gl_forwardLightingShader_directionalSun->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[glState.stackIndex] );
 
 	// u_BoneMatrix
 	if( glConfig2.vboVertexSkinningAvailable && tess.vboVertexSkinning )
@@ -2262,13 +2250,13 @@ static void Render_forwardLighting_DBS_directional( shaderStage_t* diffuseStage,
 
 	if( backEnd.viewParms.isPortal )
 	{
-		float plane[ 4 ];
+		float plane[4];
 
 		// clipping plane in world space
-		plane[ 0 ] = backEnd.viewParms.portalPlane.normal[ 0 ];
-		plane[ 1 ] = backEnd.viewParms.portalPlane.normal[ 1 ];
-		plane[ 2 ] = backEnd.viewParms.portalPlane.normal[ 2 ];
-		plane[ 3 ] = backEnd.viewParms.portalPlane.dist;
+		plane[0] = backEnd.viewParms.portalPlane.normal[0];
+		plane[1] = backEnd.viewParms.portalPlane.normal[1];
+		plane[2] = backEnd.viewParms.portalPlane.normal[2];
+		plane[3] = backEnd.viewParms.portalPlane.dist;
 
 		gl_forwardLightingShader_directionalSun->SetUniform_PortalPlane( plane );
 	}
@@ -2277,68 +2265,68 @@ static void Render_forwardLighting_DBS_directional( shaderStage_t* diffuseStage,
 
 	// bind u_DiffuseMap
 	GL_SelectTexture( 0 );
-	GL_Bind( diffuseStage->bundle[ TB_DIFFUSEMAP ].image[ 0 ] );
-	gl_forwardLightingShader_directionalSun->SetUniform_DiffuseTextureMatrix( tess.svars.texMatrices[ TB_DIFFUSEMAP ] );
+	GL_Bind( diffuseStage->bundle[TB_DIFFUSEMAP].image[0] );
+	gl_forwardLightingShader_directionalSun->SetUniform_DiffuseTextureMatrix( tess.svars.texMatrices[TB_DIFFUSEMAP] );
 
 	if( normalMapping )
 	{
 		// bind u_NormalMap
 		GL_SelectTexture( 1 );
-		if( diffuseStage->bundle[ TB_NORMALMAP ].image[ 0 ] )
+		if( diffuseStage->bundle[TB_NORMALMAP].image[0] )
 		{
-			GL_Bind( diffuseStage->bundle[ TB_NORMALMAP ].image[ 0 ] );
+			GL_Bind( diffuseStage->bundle[TB_NORMALMAP].image[0] );
 		}
 		else
 		{
 			GL_Bind( tr.flatImage );
 		}
-		gl_forwardLightingShader_directionalSun->SetUniform_NormalTextureMatrix( tess.svars.texMatrices[ TB_NORMALMAP ] );
+		gl_forwardLightingShader_directionalSun->SetUniform_NormalTextureMatrix( tess.svars.texMatrices[TB_NORMALMAP] );
 
 		// bind u_SpecularMap
 		GL_SelectTexture( 2 );
 		if( r_forceSpecular->integer )
 		{
-			GL_Bind( diffuseStage->bundle[ TB_DIFFUSEMAP ].image[ 0 ] );
+			GL_Bind( diffuseStage->bundle[TB_DIFFUSEMAP].image[0] );
 		}
-		else if( diffuseStage->bundle[ TB_SPECULARMAP ].image[ 0 ] )
+		else if( diffuseStage->bundle[TB_SPECULARMAP].image[0] )
 		{
-			GL_Bind( diffuseStage->bundle[ TB_SPECULARMAP ].image[ 0 ] );
+			GL_Bind( diffuseStage->bundle[TB_SPECULARMAP].image[0] );
 		}
 		else
 		{
 			GL_Bind( tr.blackImage );
 		}
-		gl_forwardLightingShader_directionalSun->SetUniform_SpecularTextureMatrix( tess.svars.texMatrices[ TB_SPECULARMAP ] );
+		gl_forwardLightingShader_directionalSun->SetUniform_SpecularTextureMatrix( tess.svars.texMatrices[TB_SPECULARMAP] );
 	}
 
 	// bind u_ShadowMap
 	if( shadowCompare )
 	{
 		GL_SelectTexture( 5 );
-		GL_Bind( tr.sunShadowMapFBOImage[ 0 ] );
+		GL_Bind( tr.sunShadowMapFBOImage[0] );
 
 		if( r_parallelShadowSplits->integer >= 1 )
 		{
 			GL_SelectTexture( 6 );
-			GL_Bind( tr.sunShadowMapFBOImage[ 1 ] );
+			GL_Bind( tr.sunShadowMapFBOImage[1] );
 		}
 
 		if( r_parallelShadowSplits->integer >= 2 )
 		{
 			GL_SelectTexture( 7 );
-			GL_Bind( tr.sunShadowMapFBOImage[ 2 ] );
+			GL_Bind( tr.sunShadowMapFBOImage[2] );
 		}
 
 		if( r_parallelShadowSplits->integer >= 3 )
 		{
 			GL_SelectTexture( 8 );
-			GL_Bind( tr.sunShadowMapFBOImage[ 3 ] );
+			GL_Bind( tr.sunShadowMapFBOImage[3] );
 		}
 
 		if( r_parallelShadowSplits->integer >= 4 )
 		{
 			GL_SelectTexture( 9 );
-			GL_Bind( tr.sunShadowMapFBOImage[ 4 ] );
+			GL_Bind( tr.sunShadowMapFBOImage[4] );
 		}
 	}
 
@@ -2352,13 +2340,13 @@ static void Render_forwardLighting_DBS_directional( shaderStage_t* diffuseStage,
 
 static void Render_reflection_CB( int stage )
 {
-	shaderStage_t* pStage = tess.surfaceStages[ stage ];
+	shaderStage_t* pStage = tess.surfaceStages[stage];
 
 	GLimp_LogComment( "--- Render_reflection_CB ---\n" );
 
 	GL_State( pStage->stateBits );
 
-	bool normalMapping = r_normalMapping->integer && ( pStage->bundle[ TB_NORMALMAP ].image[ 0 ] != NULL );
+	bool normalMapping = r_normalMapping->integer && ( pStage->bundle[TB_NORMALMAP].image[0] != NULL );
 
 	// choose right shader program ----------------------------------
 	gl_reflectionShader->SetPortalClipping( backEnd.viewParms.isPortal );
@@ -2380,7 +2368,7 @@ static void Render_reflection_CB( int stage )
 	gl_reflectionShader->SetUniform_ViewOrigin( backEnd.viewParms.orientation.origin ); // in world space
 
 	gl_reflectionShader->SetUniform_ModelMatrix( backEnd.orientation.transformMatrix );
-	gl_reflectionShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[ glState.stackIndex ] );
+	gl_reflectionShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[glState.stackIndex] );
 
 	// u_BoneMatrix
 	if( glConfig2.vboVertexSkinningAvailable && tess.vboVertexSkinning )
@@ -2406,15 +2394,15 @@ static void Render_reflection_CB( int stage )
 		GL_BindNearestCubeMap( backEnd.viewParms.orientation.origin );
 	}
 #else
-	GL_Bind( pStage->bundle[ TB_COLORMAP ].image[ 0 ] );
+	GL_Bind( pStage->bundle[TB_COLORMAP].image[0] );
 #endif
 
 	// bind u_NormalMap
 	if( normalMapping )
 	{
 		GL_SelectTexture( 1 );
-		GL_Bind( pStage->bundle[ TB_NORMALMAP ].image[ 0 ] );
-		gl_reflectionShader->SetUniform_NormalTextureMatrix( tess.svars.texMatrices[ TB_NORMALMAP ] );
+		GL_Bind( pStage->bundle[TB_NORMALMAP].image[0] );
+		gl_reflectionShader->SetUniform_NormalTextureMatrix( tess.svars.texMatrices[TB_NORMALMAP] );
 	}
 
 	gl_reflectionShader->SetRequiredVertexPointers();
@@ -2426,7 +2414,7 @@ static void Render_reflection_CB( int stage )
 
 static void Render_dispersion_C( int stage )
 {
-#if 0 //!defined(GLSL_COMPILE_STARTUP_ONLY)
+#if 0 //! defined(GLSL_COMPILE_STARTUP_ONLY)
 	vec3_t          viewOrigin;
 	shaderStage_t*  pStage = tess.surfaceStages[stage];
 	float           eta;
@@ -2476,7 +2464,7 @@ static void Render_dispersion_C( int stage )
 
 static void Render_skybox( int stage )
 {
-	shaderStage_t* pStage = tess.surfaceStages[ stage ];
+	shaderStage_t* pStage = tess.surfaceStages[stage];
 
 	GLimp_LogComment( "--- Render_skybox ---\n" );
 
@@ -2488,25 +2476,25 @@ static void Render_skybox( int stage )
 	gl_skyboxShader->SetUniform_ViewOrigin( backEnd.viewParms.orientation.origin ); // in world space
 
 	gl_skyboxShader->SetUniform_ModelMatrix( backEnd.orientation.transformMatrix );
-	gl_skyboxShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[ glState.stackIndex ] );
+	gl_skyboxShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[glState.stackIndex] );
 
 	// u_PortalPlane
 	if( backEnd.viewParms.isPortal )
 	{
-		float plane[ 4 ];
+		float plane[4];
 
 		// clipping plane in world space
-		plane[ 0 ] = backEnd.viewParms.portalPlane.normal[ 0 ];
-		plane[ 1 ] = backEnd.viewParms.portalPlane.normal[ 1 ];
-		plane[ 2 ] = backEnd.viewParms.portalPlane.normal[ 2 ];
-		plane[ 3 ] = backEnd.viewParms.portalPlane.dist;
+		plane[0] = backEnd.viewParms.portalPlane.normal[0];
+		plane[1] = backEnd.viewParms.portalPlane.normal[1];
+		plane[2] = backEnd.viewParms.portalPlane.normal[2];
+		plane[3] = backEnd.viewParms.portalPlane.dist;
 
 		gl_skyboxShader->SetUniform_PortalPlane( plane );
 	}
 
 	// bind u_ColorMap
 	GL_SelectTexture( 0 );
-	GL_Bind( pStage->bundle[ TB_COLORMAP ].image[ 0 ] );
+	GL_Bind( pStage->bundle[TB_COLORMAP].image[0] );
 
 	gl_skyboxShader->SetRequiredVertexPointers();
 
@@ -2517,7 +2505,7 @@ static void Render_skybox( int stage )
 
 static void Render_screen( int stage )
 {
-	shaderStage_t* pStage = tess.surfaceStages[ stage ];
+	shaderStage_t* pStage = tess.surfaceStages[stage];
 
 	GLimp_LogComment( "--- Render_screen ---\n" );
 
@@ -2537,11 +2525,11 @@ static void Render_screen( int stage )
 		glVertexAttrib4fv( ATTR_INDEX_COLOR, tess.svars.color );
 	}
 
-	gl_screenShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[ glState.stackIndex ] );
+	gl_screenShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[glState.stackIndex] );
 
 	// bind u_CurrentMap
 	GL_SelectTexture( 0 );
-	BindAnimatedImage( &pStage->bundle[ TB_COLORMAP ] );
+	BindAnimatedImage( &pStage->bundle[TB_COLORMAP] );
 
 	Tess_DrawElements();
 
@@ -2550,7 +2538,7 @@ static void Render_screen( int stage )
 
 static void Render_portal( int stage )
 {
-	shaderStage_t* pStage = tess.surfaceStages[ stage ];
+	shaderStage_t* pStage = tess.surfaceStages[stage];
 
 	GLimp_LogComment( "--- Render_portal ---\n" );
 
@@ -2573,12 +2561,12 @@ static void Render_portal( int stage )
 
 	gl_portalShader->SetUniform_PortalRange( tess.surfaceShader->portalRange );
 
-	gl_portalShader->SetUniform_ModelViewMatrix( glState.modelViewMatrix[ glState.stackIndex ] );
-	gl_portalShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[ glState.stackIndex ] );
+	gl_portalShader->SetUniform_ModelViewMatrix( glState.modelViewMatrix[glState.stackIndex] );
+	gl_portalShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[glState.stackIndex] );
 
 	// bind u_CurrentMap
 	GL_SelectTexture( 0 );
-	BindAnimatedImage( &pStage->bundle[ TB_COLORMAP ] );
+	BindAnimatedImage( &pStage->bundle[TB_COLORMAP] );
 
 	Tess_DrawElements();
 
@@ -2587,15 +2575,15 @@ static void Render_portal( int stage )
 
 static void Render_heatHaze( int stage )
 {
-	uint32_t       stateBits;
-	float          deformMagnitude;
-	shaderStage_t* pStage = tess.surfaceStages[ stage ];
+	uint32_t	   stateBits;
+	float		   deformMagnitude;
+	shaderStage_t* pStage = tess.surfaceStages[stage];
 
 	GLimp_LogComment( "--- Render_heatHaze ---\n" );
 
 	if( r_heatHazeFix->integer && glConfig2.framebufferBlitAvailable /*&& glConfig.hardwareType != GLHW_ATI && glConfig.hardwareType != GLHW_ATI_DX10*/ && glConfig.driverType != GLDRV_MESA )
 	{
-		FBO_t*   previousFBO;
+		FBO_t*	 previousFBO;
 		uint32_t stateBits;
 
 		GLimp_LogComment( "--- HEATHAZE FIX BEGIN ---\n" );
@@ -2606,7 +2594,7 @@ static void Render_heatHaze( int stage )
 		GL_Bind(tr.currentRenderImage);
 		glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, tr.currentRenderImage->uploadWidth,
 							 tr.currentRenderImage->uploadHeight);
-		
+
 		*/
 
 		previousFBO = glState.currentFBO;
@@ -2659,7 +2647,7 @@ static void Render_heatHaze( int stage )
 		GL_State( stateBits );
 
 		// choose right shader program ----------------------------------
-		//gl_genericShader->SetAlphaTesting((pStage->stateBits & GLS_ATEST_BITS) != 0);
+		// gl_genericShader->SetAlphaTesting((pStage->stateBits & GLS_ATEST_BITS) != 0);
 		gl_genericShader->SetAlphaTesting( false );
 		gl_genericShader->SetPortalClipping( backEnd.viewParms.isPortal );
 
@@ -2679,7 +2667,7 @@ static void Render_heatHaze( int stage )
 		gl_genericShader->SetUniform_Color( colorRed );
 
 		gl_genericShader->SetUniform_ModelMatrix( backEnd.orientation.transformMatrix );
-		gl_genericShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[ glState.stackIndex ] );
+		gl_genericShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[glState.stackIndex] );
 
 		// u_BoneMatrix
 		if( glConfig2.vboVertexSkinningAvailable && tess.vboVertexSkinning )
@@ -2702,13 +2690,13 @@ static void Render_heatHaze( int stage )
 
 		if( backEnd.viewParms.isPortal )
 		{
-			float plane[ 4 ];
+			float plane[4];
 
 			// clipping plane in world space
-			plane[ 0 ] = backEnd.viewParms.portalPlane.normal[ 0 ];
-			plane[ 1 ] = backEnd.viewParms.portalPlane.normal[ 1 ];
-			plane[ 2 ] = backEnd.viewParms.portalPlane.normal[ 2 ];
-			plane[ 3 ] = backEnd.viewParms.portalPlane.dist;
+			plane[0] = backEnd.viewParms.portalPlane.normal[0];
+			plane[1] = backEnd.viewParms.portalPlane.normal[1];
+			plane[2] = backEnd.viewParms.portalPlane.normal[2];
+			plane[3] = backEnd.viewParms.portalPlane.dist;
 
 			gl_genericShader->SetUniform_PortalPlane( plane );
 		}
@@ -2716,7 +2704,7 @@ static void Render_heatHaze( int stage )
 		// bind u_ColorMap
 		GL_SelectTexture( 0 );
 		GL_Bind( tr.whiteImage );
-		//gl_genericShader->SetUniform_ColorTextureMatrix(tess.svars.texMatrices[TB_COLORMAP]);
+		// gl_genericShader->SetUniform_ColorTextureMatrix(tess.svars.texMatrices[TB_COLORMAP]);
 
 		gl_genericShader->SetRequiredVertexPointers();
 
@@ -2738,7 +2726,7 @@ static void Render_heatHaze( int stage )
 
 	// choose right shader program ----------------------------------
 	gl_heatHazeShader->SetPortalClipping( backEnd.viewParms.isPortal );
-	//gl_heatHazeShader->SetAlphaTesting((pStage->stateBits & GLS_ATEST_BITS) != 0);
+	// gl_heatHazeShader->SetAlphaTesting((pStage->stateBits & GLS_ATEST_BITS) != 0);
 
 	gl_heatHazeShader->SetVertexSkinning( glConfig2.vboVertexSkinningAvailable && tess.vboVertexSkinning );
 	gl_heatHazeShader->SetVertexAnimation( glState.vertexAttribsInterpolation > 0 );
@@ -2750,14 +2738,14 @@ static void Render_heatHaze( int stage )
 	// end choose right shader program ------------------------------
 
 	// set uniforms
-	//GLSL_SetUniform_AlphaTest(&tr.heatHazeShader, pStage->stateBits);
+	// GLSL_SetUniform_AlphaTest(&tr.heatHazeShader, pStage->stateBits);
 
 	deformMagnitude = RB_EvalExpression( &pStage->deformMagnitudeExp, 1.0 );
 	gl_heatHazeShader->SetUniform_DeformMagnitude( deformMagnitude );
 
-	gl_heatHazeShader->SetUniform_ModelViewMatrixTranspose( glState.modelViewMatrix[ glState.stackIndex ] );
-	gl_heatHazeShader->SetUniform_ProjectionMatrixTranspose( glState.projectionMatrix[ glState.stackIndex ] );
-	gl_heatHazeShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[ glState.stackIndex ] );
+	gl_heatHazeShader->SetUniform_ModelViewMatrixTranspose( glState.modelViewMatrix[glState.stackIndex] );
+	gl_heatHazeShader->SetUniform_ProjectionMatrixTranspose( glState.projectionMatrix[glState.stackIndex] );
+	gl_heatHazeShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[glState.stackIndex] );
 
 	// u_BoneMatrix
 	if( glConfig2.vboVertexSkinningAvailable && tess.vboVertexSkinning )
@@ -2780,8 +2768,8 @@ static void Render_heatHaze( int stage )
 
 	// bind u_NormalMap
 	GL_SelectTexture( 0 );
-	GL_Bind( pStage->bundle[ TB_COLORMAP ].image[ 0 ] );
-	gl_heatHazeShader->SetUniform_NormalTextureMatrix( tess.svars.texMatrices[ TB_COLORMAP ] );
+	GL_Bind( pStage->bundle[TB_COLORMAP].image[0] );
+	gl_heatHazeShader->SetUniform_NormalTextureMatrix( tess.svars.texMatrices[TB_COLORMAP] );
 
 	// bind u_CurrentMap
 	GL_SelectTexture( 1 );
@@ -2815,10 +2803,10 @@ static void Render_heatHaze( int stage )
 
 static void Render_liquid( int stage )
 {
-	vec3_t         viewOrigin;
-	float          fogDensity;
-	GLfloat        fogColor[ 3 ];
-	shaderStage_t* pStage = tess.surfaceStages[ stage ];
+	vec3_t		   viewOrigin;
+	float		   fogDensity;
+	GLfloat		   fogColor[3];
+	shaderStage_t* pStage = tess.surfaceStages[stage];
 
 	GLimp_LogComment( "--- Render_liquid ---\n" );
 
@@ -2845,11 +2833,11 @@ static void Render_liquid( int stage )
 	gl_liquidShader->SetUniform_FresnelBias( RB_EvalExpression( &pStage->fresnelBiasExp, 0.05 ) );
 	gl_liquidShader->SetUniform_NormalScale( RB_EvalExpression( &pStage->normalScaleExp, 0.05 ) );
 	gl_liquidShader->SetUniform_FogDensity( fogDensity );
-	gl_liquidShader->SetUniform_FogColor( fogColor[ 0 ], fogColor[ 1 ], fogColor[ 2 ] );
+	gl_liquidShader->SetUniform_FogColor( fogColor[0], fogColor[1], fogColor[2] );
 
 	gl_liquidShader->SetUniform_UnprojectMatrix( backEnd.viewParms.unprojectionMatrix );
 	gl_liquidShader->SetUniform_ModelMatrix( backEnd.orientation.transformMatrix );
-	gl_liquidShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[ glState.stackIndex ] );
+	gl_liquidShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[glState.stackIndex] );
 
 	// capture current color buffer for u_CurrentMap
 	GL_SelectTexture( 0 );
@@ -2890,8 +2878,8 @@ static void Render_liquid( int stage )
 
 	// bind u_NormalMap
 	GL_SelectTexture( 3 );
-	GL_Bind( pStage->bundle[ TB_COLORMAP ].image[ 0 ] );
-	gl_liquidShader->SetUniform_NormalTextureMatrix( tess.svars.texMatrices[ TB_COLORMAP ] );
+	GL_Bind( pStage->bundle[TB_COLORMAP].image[0] );
+	gl_liquidShader->SetUniform_NormalTextureMatrix( tess.svars.texMatrices[TB_COLORMAP] );
 
 	Tess_DrawElements();
 
@@ -2900,13 +2888,13 @@ static void Render_liquid( int stage )
 
 static void Render_fog()
 {
-	fog_t*   fog;
-	float    eyeT;
+	fog_t*	 fog;
+	float	 eyeT;
 	qboolean eyeOutside;
-	vec3_t   local;
-	vec4_t   fogDistanceVector, fogDepthVector;
+	vec3_t	 local;
+	vec4_t	 fogDistanceVector, fogDepthVector;
 
-	//ri.Printf(PRINT_ALL, "--- Render_fog ---\n");
+	// ri.Printf(PRINT_ALL, "--- Render_fog ---\n");
 
 #if defined( COMPAT_ET )
 	// no fog pass in snooper
@@ -2939,29 +2927,26 @@ static void Render_fog()
 
 	// all fogging distance is based on world Z units
 	VectorSubtract( backEnd.orientation.origin, backEnd.viewParms.orientation.origin, local );
-	fogDistanceVector[ 0 ] = -backEnd.orientation.modelViewMatrix[ 2 ];
-	fogDistanceVector[ 1 ] = -backEnd.orientation.modelViewMatrix[ 6 ];
-	fogDistanceVector[ 2 ] = -backEnd.orientation.modelViewMatrix[ 10 ];
-	fogDistanceVector[ 3 ] = DotProduct( local, backEnd.viewParms.orientation.axis[ 0 ] );
+	fogDistanceVector[0] = -backEnd.orientation.modelViewMatrix[2];
+	fogDistanceVector[1] = -backEnd.orientation.modelViewMatrix[6];
+	fogDistanceVector[2] = -backEnd.orientation.modelViewMatrix[10];
+	fogDistanceVector[3] = DotProduct( local, backEnd.viewParms.orientation.axis[0] );
 
 	// scale the fog vectors based on the fog's thickness
-	fogDistanceVector[ 0 ] *= fog->tcScale;
-	fogDistanceVector[ 1 ] *= fog->tcScale;
-	fogDistanceVector[ 2 ] *= fog->tcScale;
-	fogDistanceVector[ 3 ] *= fog->tcScale;
+	fogDistanceVector[0] *= fog->tcScale;
+	fogDistanceVector[1] *= fog->tcScale;
+	fogDistanceVector[2] *= fog->tcScale;
+	fogDistanceVector[3] *= fog->tcScale;
 
 	// rotate the gradient vector for this orientation
 	if( fog->hasSurface )
 	{
-		fogDepthVector[ 0 ] = fog->surface[ 0 ] * backEnd.orientation.axis[ 0 ][ 0 ] +
-			fog->surface[ 1 ] * backEnd.orientation.axis[ 0 ][ 1 ] + fog->surface[ 2 ] * backEnd.orientation.axis[ 0 ][ 2 ];
-		fogDepthVector[ 1 ] = fog->surface[ 0 ] * backEnd.orientation.axis[ 1 ][ 0 ] +
-			fog->surface[ 1 ] * backEnd.orientation.axis[ 1 ][ 1 ] + fog->surface[ 2 ] * backEnd.orientation.axis[ 1 ][ 2 ];
-		fogDepthVector[ 2 ] = fog->surface[ 0 ] * backEnd.orientation.axis[ 2 ][ 0 ] +
-			fog->surface[ 1 ] * backEnd.orientation.axis[ 2 ][ 1 ] + fog->surface[ 2 ] * backEnd.orientation.axis[ 2 ][ 2 ];
-		fogDepthVector[ 3 ] = -fog->surface[ 3 ] + DotProduct( backEnd.orientation.origin, fog->surface );
+		fogDepthVector[0] = fog->surface[0] * backEnd.orientation.axis[0][0] + fog->surface[1] * backEnd.orientation.axis[0][1] + fog->surface[2] * backEnd.orientation.axis[0][2];
+		fogDepthVector[1] = fog->surface[0] * backEnd.orientation.axis[1][0] + fog->surface[1] * backEnd.orientation.axis[1][1] + fog->surface[2] * backEnd.orientation.axis[1][2];
+		fogDepthVector[2] = fog->surface[0] * backEnd.orientation.axis[2][0] + fog->surface[1] * backEnd.orientation.axis[2][1] + fog->surface[2] * backEnd.orientation.axis[2][2];
+		fogDepthVector[3] = -fog->surface[3] + DotProduct( backEnd.orientation.origin, fog->surface );
 
-		eyeT = DotProduct( backEnd.orientation.viewOrigin, fogDepthVector ) + fogDepthVector[ 3 ];
+		eyeT = DotProduct( backEnd.orientation.viewOrigin, fogDepthVector ) + fogDepthVector[3];
 	}
 	else
 	{
@@ -2981,7 +2966,7 @@ static void Render_fog()
 		eyeOutside = qfalse;
 	}
 
-	fogDistanceVector[ 3 ] += 1.0 / 512;
+	fogDistanceVector[3] += 1.0 / 512;
 
 	if( tess.surfaceShader->fogPass == FP_EQUAL )
 	{
@@ -3011,7 +2996,7 @@ static void Render_fog()
 	gl_fogQuake3Shader->SetUniform_Color( fog->color );
 
 	gl_fogQuake3Shader->SetUniform_ModelMatrix( backEnd.orientation.transformMatrix );
-	gl_fogQuake3Shader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[ glState.stackIndex ] );
+	gl_fogQuake3Shader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[glState.stackIndex] );
 
 	// u_BoneMatrix
 	if( glConfig2.vboVertexSkinningAvailable && tess.vboVertexSkinning )
@@ -3034,13 +3019,13 @@ static void Render_fog()
 
 	if( backEnd.viewParms.isPortal )
 	{
-		float plane[ 4 ];
+		float plane[4];
 
 		// clipping plane in world space
-		plane[ 0 ] = backEnd.viewParms.portalPlane.normal[ 0 ];
-		plane[ 1 ] = backEnd.viewParms.portalPlane.normal[ 1 ];
-		plane[ 2 ] = backEnd.viewParms.portalPlane.normal[ 2 ];
-		plane[ 3 ] = backEnd.viewParms.portalPlane.dist;
+		plane[0] = backEnd.viewParms.portalPlane.normal[0];
+		plane[1] = backEnd.viewParms.portalPlane.normal[1];
+		plane[2] = backEnd.viewParms.portalPlane.normal[2];
+		plane[3] = backEnd.viewParms.portalPlane.dist;
 
 		gl_fogQuake3Shader->SetUniform_PortalPlane( plane );
 	}
@@ -3048,7 +3033,7 @@ static void Render_fog()
 	// bind u_ColorMap
 	GL_SelectTexture( 0 );
 	GL_Bind( tr.fogImage );
-	//gl_fogQuake3Shader->SetUniform_ColorTextureMatrix(tess.svars.texMatrices[TB_COLORMAP]);
+	// gl_fogQuake3Shader->SetUniform_ColorTextureMatrix(tess.svars.texMatrices[TB_COLORMAP]);
 
 	gl_fogQuake3Shader->SetRequiredVertexPointers();
 
@@ -3224,39 +3209,39 @@ void Tess_ComputeColor( shaderStage_t* pStage )
 	{
 		case CGEN_IDENTITY:
 		{
-			tess.svars.color[ 0 ] = 1.0;
-			tess.svars.color[ 1 ] = 1.0;
-			tess.svars.color[ 2 ] = 1.0;
-			tess.svars.color[ 3 ] = 1.0;
+			tess.svars.color[0] = 1.0;
+			tess.svars.color[1] = 1.0;
+			tess.svars.color[2] = 1.0;
+			tess.svars.color[3] = 1.0;
 			break;
 		}
 
 		case CGEN_VERTEX:
 		case CGEN_ONE_MINUS_VERTEX:
 		{
-			tess.svars.color[ 0 ] = 0.0;
-			tess.svars.color[ 1 ] = 0.0;
-			tess.svars.color[ 2 ] = 0.0;
-			tess.svars.color[ 3 ] = 0.0;
+			tess.svars.color[0] = 0.0;
+			tess.svars.color[1] = 0.0;
+			tess.svars.color[2] = 0.0;
+			tess.svars.color[3] = 0.0;
 			break;
 		}
 
 		default:
 		case CGEN_IDENTITY_LIGHTING:
 		{
-			tess.svars.color[ 0 ] = tr.identityLight;
-			tess.svars.color[ 1 ] = tr.identityLight;
-			tess.svars.color[ 2 ] = tr.identityLight;
-			tess.svars.color[ 3 ] = tr.identityLight;
+			tess.svars.color[0] = tr.identityLight;
+			tess.svars.color[1] = tr.identityLight;
+			tess.svars.color[2] = tr.identityLight;
+			tess.svars.color[3] = tr.identityLight;
 			break;
 		}
 
 		case CGEN_CONST:
 		{
-			tess.svars.color[ 0 ] = pStage->constantColor[ 0 ] * ( 1.0 / 255.0 );
-			tess.svars.color[ 1 ] = pStage->constantColor[ 1 ] * ( 1.0 / 255.0 );
-			tess.svars.color[ 2 ] = pStage->constantColor[ 2 ] * ( 1.0 / 255.0 );
-			tess.svars.color[ 3 ] = pStage->constantColor[ 3 ] * ( 1.0 / 255.0 );
+			tess.svars.color[0] = pStage->constantColor[0] * ( 1.0 / 255.0 );
+			tess.svars.color[1] = pStage->constantColor[1] * ( 1.0 / 255.0 );
+			tess.svars.color[2] = pStage->constantColor[2] * ( 1.0 / 255.0 );
+			tess.svars.color[3] = pStage->constantColor[3] * ( 1.0 / 255.0 );
 			break;
 		}
 
@@ -3264,24 +3249,24 @@ void Tess_ComputeColor( shaderStage_t* pStage )
 		{
 			if( backEnd.currentLight )
 			{
-				tess.svars.color[ 0 ] = Q_bound( 0.0, backEnd.currentLight->l.color[ 0 ], 1.0 );
-				tess.svars.color[ 1 ] = Q_bound( 0.0, backEnd.currentLight->l.color[ 1 ], 1.0 );
-				tess.svars.color[ 2 ] = Q_bound( 0.0, backEnd.currentLight->l.color[ 2 ], 1.0 );
-				tess.svars.color[ 3 ] = 1.0;
+				tess.svars.color[0] = Q_bound( 0.0, backEnd.currentLight->l.color[0], 1.0 );
+				tess.svars.color[1] = Q_bound( 0.0, backEnd.currentLight->l.color[1], 1.0 );
+				tess.svars.color[2] = Q_bound( 0.0, backEnd.currentLight->l.color[2], 1.0 );
+				tess.svars.color[3] = 1.0;
 			}
 			else if( backEnd.currentEntity )
 			{
-				tess.svars.color[ 0 ] = Q_bound( 0.0, backEnd.currentEntity->e.shaderRGBA[ 0 ] * ( 1.0 / 255.0 ), 1.0 );
-				tess.svars.color[ 1 ] = Q_bound( 0.0, backEnd.currentEntity->e.shaderRGBA[ 1 ] * ( 1.0 / 255.0 ), 1.0 );
-				tess.svars.color[ 2 ] = Q_bound( 0.0, backEnd.currentEntity->e.shaderRGBA[ 2 ] * ( 1.0 / 255.0 ), 1.0 );
-				tess.svars.color[ 3 ] = Q_bound( 0.0, backEnd.currentEntity->e.shaderRGBA[ 3 ] * ( 1.0 / 255.0 ), 1.0 );
+				tess.svars.color[0] = Q_bound( 0.0, backEnd.currentEntity->e.shaderRGBA[0] * ( 1.0 / 255.0 ), 1.0 );
+				tess.svars.color[1] = Q_bound( 0.0, backEnd.currentEntity->e.shaderRGBA[1] * ( 1.0 / 255.0 ), 1.0 );
+				tess.svars.color[2] = Q_bound( 0.0, backEnd.currentEntity->e.shaderRGBA[2] * ( 1.0 / 255.0 ), 1.0 );
+				tess.svars.color[3] = Q_bound( 0.0, backEnd.currentEntity->e.shaderRGBA[3] * ( 1.0 / 255.0 ), 1.0 );
 			}
 			else
 			{
-				tess.svars.color[ 0 ] = 1.0;
-				tess.svars.color[ 1 ] = 1.0;
-				tess.svars.color[ 2 ] = 1.0;
-				tess.svars.color[ 3 ] = 1.0;
+				tess.svars.color[0] = 1.0;
+				tess.svars.color[1] = 1.0;
+				tess.svars.color[2] = 1.0;
+				tess.svars.color[3] = 1.0;
 			}
 			break;
 		}
@@ -3290,31 +3275,31 @@ void Tess_ComputeColor( shaderStage_t* pStage )
 		{
 			if( backEnd.currentLight )
 			{
-				tess.svars.color[ 0 ] = 1.0 - Q_bound( 0.0, backEnd.currentLight->l.color[ 0 ], 1.0 );
-				tess.svars.color[ 1 ] = 1.0 - Q_bound( 0.0, backEnd.currentLight->l.color[ 1 ], 1.0 );
-				tess.svars.color[ 2 ] = 1.0 - Q_bound( 0.0, backEnd.currentLight->l.color[ 2 ], 1.0 );
-				tess.svars.color[ 3 ] = 0.0; // FIXME
+				tess.svars.color[0] = 1.0 - Q_bound( 0.0, backEnd.currentLight->l.color[0], 1.0 );
+				tess.svars.color[1] = 1.0 - Q_bound( 0.0, backEnd.currentLight->l.color[1], 1.0 );
+				tess.svars.color[2] = 1.0 - Q_bound( 0.0, backEnd.currentLight->l.color[2], 1.0 );
+				tess.svars.color[3] = 0.0; // FIXME
 			}
 			else if( backEnd.currentEntity )
 			{
-				tess.svars.color[ 0 ] = 1.0 - Q_bound( 0.0, backEnd.currentEntity->e.shaderRGBA[ 0 ] * ( 1.0 / 255.0 ), 1.0 );
-				tess.svars.color[ 1 ] = 1.0 - Q_bound( 0.0, backEnd.currentEntity->e.shaderRGBA[ 1 ] * ( 1.0 / 255.0 ), 1.0 );
-				tess.svars.color[ 2 ] = 1.0 - Q_bound( 0.0, backEnd.currentEntity->e.shaderRGBA[ 2 ] * ( 1.0 / 255.0 ), 1.0 );
-				tess.svars.color[ 3 ] = 1.0 - Q_bound( 0.0, backEnd.currentEntity->e.shaderRGBA[ 3 ] * ( 1.0 / 255.0 ), 1.0 );
+				tess.svars.color[0] = 1.0 - Q_bound( 0.0, backEnd.currentEntity->e.shaderRGBA[0] * ( 1.0 / 255.0 ), 1.0 );
+				tess.svars.color[1] = 1.0 - Q_bound( 0.0, backEnd.currentEntity->e.shaderRGBA[1] * ( 1.0 / 255.0 ), 1.0 );
+				tess.svars.color[2] = 1.0 - Q_bound( 0.0, backEnd.currentEntity->e.shaderRGBA[2] * ( 1.0 / 255.0 ), 1.0 );
+				tess.svars.color[3] = 1.0 - Q_bound( 0.0, backEnd.currentEntity->e.shaderRGBA[3] * ( 1.0 / 255.0 ), 1.0 );
 			}
 			else
 			{
-				tess.svars.color[ 0 ] = 0.0;
-				tess.svars.color[ 1 ] = 0.0;
-				tess.svars.color[ 2 ] = 0.0;
-				tess.svars.color[ 3 ] = 0.0;
+				tess.svars.color[0] = 0.0;
+				tess.svars.color[1] = 0.0;
+				tess.svars.color[2] = 0.0;
+				tess.svars.color[3] = 0.0;
 			}
 			break;
 		}
 
 		case CGEN_WAVEFORM:
 		{
-			float       glow;
+			float		glow;
 			waveForm_t* wf;
 
 			wf = &pStage->rgbWave;
@@ -3337,10 +3322,10 @@ void Tess_ComputeColor( shaderStage_t* pStage )
 				glow = 1;
 			}
 
-			tess.svars.color[ 0 ] = glow;
-			tess.svars.color[ 1 ] = glow;
-			tess.svars.color[ 2 ] = glow;
-			tess.svars.color[ 3 ] = 1.0;
+			tess.svars.color[0] = glow;
+			tess.svars.color[1] = glow;
+			tess.svars.color[2] = glow;
+			tess.svars.color[3] = 1.0;
 			break;
 		}
 
@@ -3348,9 +3333,9 @@ void Tess_ComputeColor( shaderStage_t* pStage )
 		{
 			rgb = Q_bound( 0.0, RB_EvalExpression( &pStage->rgbExp, 1.0 ), 1.0 );
 
-			tess.svars.color[ 0 ] = rgb;
-			tess.svars.color[ 1 ] = rgb;
-			tess.svars.color[ 2 ] = rgb;
+			tess.svars.color[0] = rgb;
+			tess.svars.color[1] = rgb;
+			tess.svars.color[2] = rgb;
 			break;
 		}
 
@@ -3358,29 +3343,26 @@ void Tess_ComputeColor( shaderStage_t* pStage )
 		{
 			if( backEnd.currentLight )
 			{
-				red   = Q_bound( 0.0, RB_EvalExpression( &pStage->redExp, backEnd.currentLight->l.color[ 0 ] ), 1.0 );
-				green = Q_bound( 0.0, RB_EvalExpression( &pStage->greenExp, backEnd.currentLight->l.color[ 1 ] ), 1.0 );
-				blue  = Q_bound( 0.0, RB_EvalExpression( &pStage->blueExp, backEnd.currentLight->l.color[ 2 ] ), 1.0 );
+				red	  = Q_bound( 0.0, RB_EvalExpression( &pStage->redExp, backEnd.currentLight->l.color[0] ), 1.0 );
+				green = Q_bound( 0.0, RB_EvalExpression( &pStage->greenExp, backEnd.currentLight->l.color[1] ), 1.0 );
+				blue  = Q_bound( 0.0, RB_EvalExpression( &pStage->blueExp, backEnd.currentLight->l.color[2] ), 1.0 );
 			}
 			else if( backEnd.currentEntity )
 			{
-				red =
-					Q_bound( 0.0, RB_EvalExpression( &pStage->redExp, backEnd.currentEntity->e.shaderRGBA[ 0 ] * ( 1.0 / 255.0 ) ), 1.0 );
-				green =
-					Q_bound( 0.0, RB_EvalExpression( &pStage->greenExp, backEnd.currentEntity->e.shaderRGBA[ 1 ] * ( 1.0 / 255.0 ) ), 1.0 );
-				blue =
-					Q_bound( 0.0, RB_EvalExpression( &pStage->blueExp, backEnd.currentEntity->e.shaderRGBA[ 2 ] * ( 1.0 / 255.0 ) ), 1.0 );
+				red	  = Q_bound( 0.0, RB_EvalExpression( &pStage->redExp, backEnd.currentEntity->e.shaderRGBA[0] * ( 1.0 / 255.0 ) ), 1.0 );
+				green = Q_bound( 0.0, RB_EvalExpression( &pStage->greenExp, backEnd.currentEntity->e.shaderRGBA[1] * ( 1.0 / 255.0 ) ), 1.0 );
+				blue  = Q_bound( 0.0, RB_EvalExpression( &pStage->blueExp, backEnd.currentEntity->e.shaderRGBA[2] * ( 1.0 / 255.0 ) ), 1.0 );
 			}
 			else
 			{
-				red   = Q_bound( 0.0, RB_EvalExpression( &pStage->redExp, 1.0 ), 1.0 );
+				red	  = Q_bound( 0.0, RB_EvalExpression( &pStage->redExp, 1.0 ), 1.0 );
 				green = Q_bound( 0.0, RB_EvalExpression( &pStage->greenExp, 1.0 ), 1.0 );
 				blue  = Q_bound( 0.0, RB_EvalExpression( &pStage->blueExp, 1.0 ), 1.0 );
 			}
 
-			tess.svars.color[ 0 ] = red;
-			tess.svars.color[ 1 ] = green;
-			tess.svars.color[ 2 ] = blue;
+			tess.svars.color[0] = red;
+			tess.svars.color[1] = green;
+			tess.svars.color[2] = blue;
 			break;
 		}
 	}
@@ -3395,7 +3377,7 @@ void Tess_ComputeColor( shaderStage_t* pStage )
 			{
 				if( ( pStage->rgbGen == CGEN_VERTEX && tr.identityLight != 1 ) || pStage->rgbGen != CGEN_VERTEX )
 				{
-					tess.svars.color[ 3 ] = 1.0;
+					tess.svars.color[3] = 1.0;
 				}
 			}
 			break;
@@ -3404,7 +3386,7 @@ void Tess_ComputeColor( shaderStage_t* pStage )
 		case AGEN_VERTEX:
 		case AGEN_ONE_MINUS_VERTEX:
 		{
-			tess.svars.color[ 3 ] = 0.0;
+			tess.svars.color[3] = 0.0;
 			break;
 		}
 
@@ -3412,7 +3394,7 @@ void Tess_ComputeColor( shaderStage_t* pStage )
 		{
 			if( pStage->rgbGen != CGEN_CONST )
 			{
-				tess.svars.color[ 3 ] = pStage->constantColor[ 3 ] * ( 1.0 / 255.0 );
+				tess.svars.color[3] = pStage->constantColor[3] * ( 1.0 / 255.0 );
 			}
 			break;
 		}
@@ -3421,15 +3403,15 @@ void Tess_ComputeColor( shaderStage_t* pStage )
 		{
 			if( backEnd.currentLight )
 			{
-				tess.svars.color[ 3 ] = 1.0; // FIXME ?
+				tess.svars.color[3] = 1.0; // FIXME ?
 			}
 			else if( backEnd.currentEntity )
 			{
-				tess.svars.color[ 3 ] = Q_bound( 0.0, backEnd.currentEntity->e.shaderRGBA[ 3 ] * ( 1.0 / 255.0 ), 1.0 );
+				tess.svars.color[3] = Q_bound( 0.0, backEnd.currentEntity->e.shaderRGBA[3] * ( 1.0 / 255.0 ), 1.0 );
 			}
 			else
 			{
-				tess.svars.color[ 3 ] = 1.0;
+				tess.svars.color[3] = 1.0;
 			}
 			break;
 		}
@@ -3438,29 +3420,29 @@ void Tess_ComputeColor( shaderStage_t* pStage )
 		{
 			if( backEnd.currentLight )
 			{
-				tess.svars.color[ 3 ] = 0.0; // FIXME ?
+				tess.svars.color[3] = 0.0; // FIXME ?
 			}
 			else if( backEnd.currentEntity )
 			{
-				tess.svars.color[ 3 ] = 1.0 - Q_bound( 0.0, backEnd.currentEntity->e.shaderRGBA[ 3 ] * ( 1.0 / 255.0 ), 1.0 );
+				tess.svars.color[3] = 1.0 - Q_bound( 0.0, backEnd.currentEntity->e.shaderRGBA[3] * ( 1.0 / 255.0 ), 1.0 );
 			}
 			else
 			{
-				tess.svars.color[ 3 ] = 0.0;
+				tess.svars.color[3] = 0.0;
 			}
 			break;
 		}
 
 		case AGEN_WAVEFORM:
 		{
-			float       glow;
+			float		glow;
 			waveForm_t* wf;
 
 			wf = &pStage->alphaWave;
 
 			glow = RB_EvalWaveFormClamped( wf );
 
-			tess.svars.color[ 3 ] = glow;
+			tess.svars.color[3] = glow;
 			break;
 		}
 
@@ -3468,7 +3450,7 @@ void Tess_ComputeColor( shaderStage_t* pStage )
 		{
 			alpha = Q_bound( 0.0, RB_EvalExpression( &pStage->alphaExp, 1.0 ), 1.0 );
 
-			tess.svars.color[ 3 ] = alpha;
+			tess.svars.color[3] = alpha;
 			break;
 		}
 	}
@@ -3481,16 +3463,16 @@ Tess_ComputeTexMatrices
 */
 static void Tess_ComputeTexMatrices( shaderStage_t* pStage )
 {
-	int    i;
+	int	   i;
 	vec_t* matrix;
 
 	GLimp_LogComment( "--- Tess_ComputeTexMatrices ---\n" );
 
 	for( i = 0; i < MAX_TEXTURE_BUNDLES; i++ )
 	{
-		matrix = tess.svars.texMatrices[ i ];
+		matrix = tess.svars.texMatrices[i];
 
-		RB_CalcTexMatrix( &pStage->bundle[ i ], matrix );
+		RB_CalcTexMatrix( &pStage->bundle[i], matrix );
 	}
 }
 
@@ -3515,9 +3497,9 @@ static void SetIteratorFog()
 
 	if( backEnd.refdef.rdflags & RDF_DRAWINGSKY )
 	{
-		if( tr.glfogsettings[ FOG_SKY ].registered )
+		if( tr.glfogsettings[FOG_SKY].registered )
 		{
-			RB_Fog( &tr.glfogsettings[ FOG_SKY ] );
+			RB_Fog( &tr.glfogsettings[FOG_SKY] );
 		}
 		else
 		{
@@ -3529,9 +3511,9 @@ static void SetIteratorFog()
 
 	if( tr.world && tr.world->hasSkyboxPortal && ( backEnd.refdef.rdflags & RDF_SKYBOXPORTAL ) )
 	{
-		if( tr.glfogsettings[ FOG_PORTALVIEW ].registered )
+		if( tr.glfogsettings[FOG_PORTALVIEW].registered )
 		{
-			RB_Fog( &tr.glfogsettings[ FOG_PORTALVIEW ] );
+			RB_Fog( &tr.glfogsettings[FOG_PORTALVIEW] );
 		}
 		else
 		{
@@ -3542,7 +3524,7 @@ static void SetIteratorFog()
 	{
 		if( tr.glfogNum > FOG_NONE )
 		{
-			RB_Fog( &tr.glfogsettings[ FOG_CURRENT ] );
+			RB_Fog( &tr.glfogsettings[FOG_CURRENT] );
 		}
 		else
 		{
@@ -3596,7 +3578,7 @@ void Tess_StageIteratorGeneric()
 	}
 
 	// set GL fog
-	//SetIteratorFog();
+	// SetIteratorFog();
 
 	// set face culling appropriately
 	GL_Cull( tess.surfaceShader->cullType );
@@ -3611,7 +3593,7 @@ void Tess_StageIteratorGeneric()
 	// call shader function
 	for( stage = 0; stage < MAX_SHADER_STAGES; stage++ )
 	{
-		shaderStage_t* pStage = tess.surfaceStages[ stage ];
+		shaderStage_t* pStage = tess.surfaceStages[stage];
 
 		if( !pStage )
 		{
@@ -3663,7 +3645,7 @@ void Tess_StageIteratorGeneric()
 			case ST_COLLAPSE_lighting_DB:
 			case ST_COLLAPSE_lighting_DBS:
 			{
-				//if(tess.surfaceShader->sort <= SS_OPAQUE)
+				// if(tess.surfaceShader->sort <= SS_OPAQUE)
 				{
 					if( r_precomputedLighting->integer || r_vertexLighting->integer )
 					{
@@ -3707,7 +3689,7 @@ void Tess_StageIteratorGeneric()
 
 			case ST_REFRACTIONMAP:
 			{
-				//Render_refraction_C(stage);
+				// Render_refraction_C(stage);
 				break;
 			}
 
@@ -3773,7 +3755,7 @@ void Tess_StageIteratorGeneric()
 
 void Tess_StageIteratorGBuffer()
 {
-	int  stage;
+	int	 stage;
 	bool diffuseRendered = false;
 
 	// log this call
@@ -3807,7 +3789,7 @@ void Tess_StageIteratorGBuffer()
 	// call shader function
 	for( stage = 0; stage < MAX_SHADER_STAGES; stage++ )
 	{
-		shaderStage_t* pStage = tess.surfaceStages[ stage ];
+		shaderStage_t* pStage = tess.surfaceStages[stage];
 
 		if( !pStage )
 		{
@@ -3831,9 +3813,7 @@ void Tess_StageIteratorGBuffer()
 
 				Render_generic( stage );
 
-				if( tess.surfaceShader->sort <= SS_OPAQUE &&
-					!( pStage->stateBits & ( GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS ) ) &&
-					!diffuseRendered )
+				if( tess.surfaceShader->sort <= SS_OPAQUE && !( pStage->stateBits & ( GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS ) ) && !diffuseRendered )
 				{
 					glDrawBuffers( 4, geometricRenderTargets );
 
@@ -3901,7 +3881,7 @@ void Tess_StageIteratorGBuffer()
 				/*
 				if(r_deferredShading->integer == DS_STANDARD)
 				{
-				
+
 					R_BindFBO(tr.deferredRenderFBO);
 					Render_refraction_C(stage);
 				}
@@ -4015,7 +3995,7 @@ void Tess_StageIteratorGBufferNormalsOnly()
 	// call shader function
 	for( stage = 0; stage < MAX_SHADER_STAGES; stage++ )
 	{
-		shaderStage_t* pStage = tess.surfaceStages[ stage ];
+		shaderStage_t* pStage = tess.surfaceStages[stage];
 
 		if( !pStage )
 		{
@@ -4027,7 +4007,7 @@ void Tess_StageIteratorGBufferNormalsOnly()
 			continue;
 		}
 
-		//Tess_ComputeColor(pStage);
+		// Tess_ComputeColor(pStage);
 		Tess_ComputeTexMatrices( pStage );
 
 		switch( pStage->type )
@@ -4035,9 +4015,7 @@ void Tess_StageIteratorGBufferNormalsOnly()
 			case ST_COLORMAP:
 			{
 #if 1
-				if( tess.surfaceShader->sort <= SS_OPAQUE &&
-					!( pStage->stateBits & ( GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS ) ) &&
-					( pStage->stateBits & ( GLS_DEPTHMASK_TRUE ) ) )
+				if( tess.surfaceShader->sort <= SS_OPAQUE && !( pStage->stateBits & ( GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS ) ) && ( pStage->stateBits & ( GLS_DEPTHMASK_TRUE ) ) )
 				{
 	#if defined( OFFSCREEN_PREPASS_LIGHTING )
 					R_BindFBO( tr.geometricRenderFBO );
@@ -4110,7 +4088,7 @@ void Tess_StageIteratorDepthFill()
 	// call shader function
 	for( stage = 0; stage < MAX_SHADER_STAGES; stage++ )
 	{
-		shaderStage_t* pStage = tess.surfaceStages[ stage ];
+		shaderStage_t* pStage = tess.surfaceStages[stage];
 
 		if( !pStage )
 		{
@@ -4193,7 +4171,7 @@ void Tess_StageIteratorShadowFill()
 	// call shader function
 	for( stage = 0; stage < MAX_SHADER_STAGES; stage++ )
 	{
-		shaderStage_t* pStage = tess.surfaceStages[ stage ];
+		shaderStage_t* pStage = tess.surfaceStages[stage];
 
 		if( !pStage )
 		{
@@ -4240,7 +4218,7 @@ void Tess_StageIteratorShadowFill()
 
 void Tess_StageIteratorLighting()
 {
-	int            i, j;
+	int			   i, j;
 	trRefLight_t*  light;
 	shaderStage_t* attenuationXYStage;
 	shaderStage_t* attenuationZStage;
@@ -4293,11 +4271,11 @@ void Tess_StageIteratorLighting()
 	}
 
 	// call shader function
-	attenuationZStage = tess.lightShader->stages[ 0 ];
+	attenuationZStage = tess.lightShader->stages[0];
 
 	for( i = 0; i < MAX_SHADER_STAGES; i++ )
 	{
-		shaderStage_t* diffuseStage = tess.surfaceStages[ i ];
+		shaderStage_t* diffuseStage = tess.surfaceStages[i];
 
 		if( !diffuseStage )
 		{
@@ -4313,7 +4291,7 @@ void Tess_StageIteratorLighting()
 
 		for( j = 1; j < MAX_SHADER_STAGES; j++ )
 		{
-			attenuationXYStage = tess.lightShader->stages[ j ];
+			attenuationXYStage = tess.lightShader->stages[j];
 
 			if( !attenuationXYStage )
 			{
@@ -4351,7 +4329,7 @@ void Tess_StageIteratorLighting()
 					}
 					else if( light->l.rlType == RL_DIRECTIONAL )
 					{
-						//if(!light->l.inverseShadows)
+						// if(!light->l.inverseShadows)
 						{
 							Render_forwardLighting_DBS_directional( diffuseStage, attenuationXYStage, attenuationZStage, light );
 						}
@@ -4385,11 +4363,11 @@ void Tess_End()
 		return;
 	}
 
-	if( tess.indexes[ SHADER_MAX_INDEXES - 1 ] != 0 )
+	if( tess.indexes[SHADER_MAX_INDEXES - 1] != 0 )
 	{
 		ri.Error( ERR_DROP, "Tess_End() - SHADER_MAX_INDEXES hit" );
 	}
-	if( tess.xyz[ SHADER_MAX_VERTEXES - 1 ][ 0 ] != 0 )
+	if( tess.xyz[SHADER_MAX_VERTEXES - 1][0] != 0 )
 	{
 		ri.Error( ERR_DROP, "Tess_End() - SHADER_MAX_VERTEXES hit" );
 	}
@@ -4408,8 +4386,7 @@ void Tess_End()
 	// call off to shader specific tess end function
 	tess.stageIteratorFunc();
 
-	if( ( tess.stageIteratorFunc != Tess_StageIteratorShadowFill ) &&
-		( tess.stageIteratorFunc != Tess_StageIteratorDebug ) )
+	if( ( tess.stageIteratorFunc != Tess_StageIteratorShadowFill ) && ( tess.stageIteratorFunc != Tess_StageIteratorDebug ) )
 	{
 		// draw debugging stuff
 		if( r_showTris->integer || r_showBatches->integer || ( r_showLightBatches->integer && ( tess.stageIteratorFunc == Tess_StageIteratorLighting ) ) )
@@ -4422,8 +4399,8 @@ void Tess_End()
 
 	// clear shader so we can tell we don't have any unclosed surfaces
 	tess.multiDrawPrimitives = 0;
-	tess.numIndexes          = 0;
-	tess.numVertexes         = 0;
+	tess.numIndexes			 = 0;
+	tess.numVertexes		 = 0;
 
 	GLimp_LogComment( "--- Tess_End ---\n" );
 

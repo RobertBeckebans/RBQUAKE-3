@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 #include "qbsp.h"
 
-void PrintCtrl( vec3_t ctrl[ 9 ] )
+void PrintCtrl( vec3_t ctrl[9] )
 {
 	int i, j;
 
@@ -30,7 +30,7 @@ void PrintCtrl( vec3_t ctrl[ 9 ] )
 	{
 		for( j = 0; j < 3; j++ )
 		{
-			Sys_Printf( "(%5.2f %5.2f %5.2f) ", ctrl[ i * 3 + j ][ 0 ], ctrl[ i * 3 + j ][ 1 ], ctrl[ i * 3 + j ][ 2 ] );
+			Sys_Printf( "(%5.2f %5.2f %5.2f) ", ctrl[i * 3 + j][0], ctrl[i * 3 + j][1], ctrl[i * 3 + j][2] );
 		}
 		Sys_Printf( "\n" );
 	}
@@ -44,8 +44,8 @@ DrawSurfaceForMesh
 drawSurface_t* DrawSurfaceForMesh( mesh_t* m )
 {
 	drawSurface_t* ds;
-	int            i, j;
-	mesh_t*        copy;
+	int			   i, j;
+	mesh_t*		   copy;
 
 	// to make valid normals for patches with degenerate edges,
 	// we need to make a copy of the mesh and put the aproximating
@@ -57,24 +57,24 @@ drawSurface_t* DrawSurfaceForMesh( mesh_t* m )
 	{
 		for( i = 0; i < m->height; i++ )
 		{
-			VectorCopy( copy->verts[ i * m->width + j ].normal, m->verts[ i * m->width + j ].normal );
+			VectorCopy( copy->verts[i * m->width + j].normal, m->verts[i * m->width + j].normal );
 		}
 	}
 	FreeMesh( copy );
 
-	ds           = AllocDrawSurf();
+	ds			 = AllocDrawSurf();
 	ds->mapBrush = NULL;
-	ds->side     = NULL;
+	ds->side	 = NULL;
 
-	ds->patch       = qtrue;
-	ds->patchWidth  = m->width;
+	ds->patch		= qtrue;
+	ds->patchWidth	= m->width;
 	ds->patchHeight = m->height;
-	ds->numVerts    = ds->patchWidth * ds->patchHeight;
-	ds->verts       = malloc( ds->numVerts * sizeof( *ds->verts ) );
+	ds->numVerts	= ds->patchWidth * ds->patchHeight;
+	ds->verts		= malloc( ds->numVerts * sizeof( *ds->verts ) );
 	memcpy( ds->verts, m->verts, ds->numVerts * sizeof( *ds->verts ) );
 
 	ds->lightmapNum = -1;
-	ds->fogNum      = -1;
+	ds->fogNum		= -1;
 
 	return ds;
 }
@@ -88,14 +88,14 @@ Creates a drawSurface_t from the patch text
 */
 void ParsePatch( qboolean patchDef3 )
 {
-	vec_t        info[ 7 ];
-	int          i, j;
+	vec_t		 info[7];
+	int			 i, j;
 	parseMesh_t* pm;
-	char         name[ MAX_QPATH ];
-	char         shader[ MAX_QPATH ];
-	mesh_t       m;
-	drawVert_t*  verts;
-	epair_t*     ep;
+	char		 name[MAX_QPATH];
+	char		 shader[MAX_QPATH];
+	mesh_t		 m;
+	drawVert_t*	 verts;
+	epair_t*	 ep;
 
 	MatchToken( "{" );
 
@@ -108,7 +108,7 @@ void ParsePatch( qboolean patchDef3 )
 	{
 		Error( "MAX_MAP_BRUSHSIDES" );
 	}
-	strcpy( mapIndexedShaders[ numMapIndexedShaders ], name );
+	strcpy( mapIndexedShaders[numMapIndexedShaders], name );
 	numMapIndexedShaders++;
 
 	if( patchDef3 )
@@ -120,9 +120,9 @@ void ParsePatch( qboolean patchDef3 )
 		Parse1DMatrix( 5, info );
 	}
 
-	m.width  = info[ 0 ];
-	m.height = info[ 1 ];
-	m.verts = verts = malloc( m.width * m.height * sizeof( m.verts[ 0 ] ) );
+	m.width	 = info[0];
+	m.height = info[1];
+	m.verts = verts = malloc( m.width * m.height * sizeof( m.verts[0] ) );
 
 	if( m.width < 0 || m.width > MAX_PATCH_SIZE || m.height < 0 || m.height > MAX_PATCH_SIZE )
 	{
@@ -135,7 +135,7 @@ void ParsePatch( qboolean patchDef3 )
 		MatchToken( "(" );
 		for( i = 0; i < m.height; i++ )
 		{
-			Parse1DMatrix( 5, verts[ i * m.width + j ].xyz );
+			Parse1DMatrix( 5, verts[i * m.width + j].xyz );
 		}
 		MatchToken( ")" );
 	}
@@ -171,14 +171,14 @@ void ParsePatch( qboolean patchDef3 )
 	{
 		for( j = 0; j < 7; j++ )
 		{
-			pm->info[ j ] = info[ j ];
+			pm->info[j] = info[j];
 		}
 	}
 	else
 	{
 		for( j = 0; j < 5; j++ )
 		{
-			pm->info[ j ] = info[ j ];
+			pm->info[j] = info[j];
 		}
 	}
 
@@ -192,27 +192,27 @@ void ParsePatch( qboolean patchDef3 )
 	}
 
 	pm->shaderInfo = ShaderInfoForShader( shader );
-	pm->mesh       = m;
+	pm->mesh	   = m;
 
 	// link to the entity
-	pm->next        = mapEnt->patches;
+	pm->next		= mapEnt->patches;
 	mapEnt->patches = pm;
 }
 
 void GrowGroup_r( int patchNum, int patchCount, const byte* bordering, byte* group )
 {
-	int         i;
+	int			i;
 	const byte* row;
 
-	if( group[ patchNum ] )
+	if( group[patchNum] )
 	{
 		return;
 	}
-	group[ patchNum ] = 1;
-	row               = bordering + patchNum * patchCount;
+	group[patchNum] = 1;
+	row				= bordering + patchNum * patchCount;
 	for( i = 0; i < patchCount; i++ )
 	{
-		if( row[ i ] )
+		if( row[i] )
 		{
 			GrowGroup_r( i, patchCount, bordering, group );
 		}
@@ -233,21 +233,21 @@ void PatchMapDrawSurfs( entity_t* e )
 	parseMesh_t*   pm;
 	parseMesh_t *  check, *scan;
 	drawSurface_t* ds;
-	int            patchCount, groupCount;
-	int            i, j, k, l, c1, c2;
+	int			   patchCount, groupCount;
+	int			   i, j, k, l, c1, c2;
 	drawVert_t *   v1, *v2;
-	vec3_t         bounds[ 2 ];
-	byte*          bordering;
-	parseMesh_t*   meshes[ MAX_MAP_DRAW_SURFS ];
-	qboolean       grouped[ MAX_MAP_DRAW_SURFS ];
-	byte           group[ MAX_MAP_DRAW_SURFS ];
+	vec3_t		   bounds[2];
+	byte*		   bordering;
+	parseMesh_t*   meshes[MAX_MAP_DRAW_SURFS];
+	qboolean	   grouped[MAX_MAP_DRAW_SURFS];
+	byte		   group[MAX_MAP_DRAW_SURFS];
 
 	Sys_FPrintf( SYS_VRB, "----- PatchMapDrawSurfs -----\n" );
 
 	patchCount = 0;
 	for( pm = e->patches; pm; pm = pm->next )
 	{
-		meshes[ patchCount ] = pm;
+		meshes[patchCount] = pm;
 		patchCount++;
 	}
 
@@ -261,14 +261,14 @@ void PatchMapDrawSurfs( entity_t* e )
 	// build the bordering matrix
 	for( k = 0; k < patchCount; k++ )
 	{
-		bordering[ k * patchCount + k ] = 1;
+		bordering[k * patchCount + k] = 1;
 
 		for( l = k + 1; l < patchCount; l++ )
 		{
-			check = meshes[ k ];
-			scan  = meshes[ l ];
-			c1    = scan->mesh.width * scan->mesh.height;
-			v1    = scan->mesh.verts;
+			check = meshes[k];
+			scan  = meshes[l];
+			c1	  = scan->mesh.width * scan->mesh.height;
+			v1	  = scan->mesh.verts;
 
 			for( i = 0; i < c1; i++, v1++ )
 			{
@@ -276,7 +276,7 @@ void PatchMapDrawSurfs( entity_t* e )
 				v2 = check->mesh.verts;
 				for( j = 0; j < c2; j++, v2++ )
 				{
-					if( fabs( v1->xyz[ 0 ] - v2->xyz[ 0 ] ) < 1.0 && fabs( v1->xyz[ 1 ] - v2->xyz[ 1 ] ) < 1.0 && fabs( v1->xyz[ 2 ] - v2->xyz[ 2 ] ) < 1.0 )
+					if( fabs( v1->xyz[0] - v2->xyz[0] ) < 1.0 && fabs( v1->xyz[1] - v2->xyz[1] ) < 1.0 && fabs( v1->xyz[2] - v2->xyz[2] ) < 1.0 )
 					{
 						break;
 					}
@@ -289,12 +289,12 @@ void PatchMapDrawSurfs( entity_t* e )
 			if( i != c1 )
 			{
 				// we have a connection
-				bordering[ k * patchCount + l ] = bordering[ l * patchCount + k ] = 1;
+				bordering[k * patchCount + l] = bordering[l * patchCount + k] = 1;
 			}
 			else
 			{
 				// no connection
-				bordering[ k * patchCount + l ] = bordering[ l * patchCount + k ] = 0;
+				bordering[k * patchCount + l] = bordering[l * patchCount + k] = 0;
 			}
 		}
 	}
@@ -304,7 +304,7 @@ void PatchMapDrawSurfs( entity_t* e )
 	groupCount = 0;
 	for( i = 0; i < patchCount; i++ )
 	{
-		if( !grouped[ i ] )
+		if( !grouped[i] )
 		{
 			groupCount++;
 		}
@@ -314,29 +314,29 @@ void PatchMapDrawSurfs( entity_t* e )
 		GrowGroup_r( i, patchCount, bordering, group );
 
 		// bound them
-		ClearBounds( bounds[ 0 ], bounds[ 1 ] );
+		ClearBounds( bounds[0], bounds[1] );
 		for( j = 0; j < patchCount; j++ )
 		{
-			if( group[ j ] )
+			if( group[j] )
 			{
-				grouped[ j ] = qtrue;
-				scan         = meshes[ j ];
-				c1           = scan->mesh.width * scan->mesh.height;
-				v1           = scan->mesh.verts;
+				grouped[j] = qtrue;
+				scan	   = meshes[j];
+				c1		   = scan->mesh.width * scan->mesh.height;
+				v1		   = scan->mesh.verts;
 				for( k = 0; k < c1; k++, v1++ )
 				{
-					AddPointToBounds( v1->xyz, bounds[ 0 ], bounds[ 1 ] );
+					AddPointToBounds( v1->xyz, bounds[0], bounds[1] );
 				}
 			}
 		}
 
 		// create drawsurf
-		scan           = meshes[ i ];
+		scan		   = meshes[i];
 		scan->grouped  = qtrue;
-		ds             = DrawSurfaceForMesh( &scan->mesh );
+		ds			   = DrawSurfaceForMesh( &scan->mesh );
 		ds->shaderInfo = scan->shaderInfo;
-		VectorCopy( bounds[ 0 ], ds->lightmapVecs[ 0 ] );
-		VectorCopy( bounds[ 1 ], ds->lightmapVecs[ 1 ] );
+		VectorCopy( bounds[0], ds->lightmapVecs[0] );
+		VectorCopy( bounds[1], ds->lightmapVecs[1] );
 	}
 
 	Sys_FPrintf( SYS_VRB, "%5i patches\n", patchCount );

@@ -28,33 +28,33 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #define RANKSTATUS_FRAME "menu/art/cut_frame"
 
-#define ID_MESSAGE 100
-#define ID_OK      101
+#define ID_MESSAGE		 100
+#define ID_OK			 101
 
 typedef struct
 {
 	menuframework_s menu;
-	menubitmap_s    frame;
-	menutext_s      message;
-	menutext_s      ok;
+	menubitmap_s	frame;
+	menutext_s		message;
+	menutext_s		ok;
 } rankstatus_t;
 
-static rankstatus_t s_rankstatus;
+static rankstatus_t	   s_rankstatus;
 
 static menuframework_s s_rankstatus_menu;
-static menuaction_s    s_rankstatus_ok;
+static menuaction_s	   s_rankstatus_ok;
 
-static grank_status_t s_status             = 0;
-static char*          s_rankstatus_message = NULL;
+static grank_status_t  s_status				= 0;
+static char*		   s_rankstatus_message = NULL;
 
-static vec4_t s_rankingstatus_color_prompt = { 1.00, 0.43, 0.00, 1.00 };
+static vec4_t		   s_rankingstatus_color_prompt = { 1.00, 0.43, 0.00, 1.00 };
 
 /*
 ===============
 RankStatus_MenuEvent
 ===============
 */
-static void RankStatus_MenuEvent( void* ptr, int event )
+static void			   RankStatus_MenuEvent( void* ptr, int event )
 {
 	if( event != QM_ACTIVATED )
 	{
@@ -115,35 +115,35 @@ void RankStatus_MenuInit( void )
 	s_rankstatus.menu.wrapAround = qtrue;
 	s_rankstatus.menu.fullscreen = qfalse;
 
-	s_rankstatus.frame.generic.type  = MTYPE_BITMAP;
+	s_rankstatus.frame.generic.type	 = MTYPE_BITMAP;
 	s_rankstatus.frame.generic.flags = QMF_INACTIVE;
-	s_rankstatus.frame.generic.name  = RANKSTATUS_FRAME;
-	s_rankstatus.frame.generic.x     = 142; //320-233;
-	s_rankstatus.frame.generic.y     = 118; //240-166;
-	s_rankstatus.frame.width         = 359; //466;
-	s_rankstatus.frame.height        = 256; //332;
+	s_rankstatus.frame.generic.name	 = RANKSTATUS_FRAME;
+	s_rankstatus.frame.generic.x	 = 142; // 320-233;
+	s_rankstatus.frame.generic.y	 = 118; // 240-166;
+	s_rankstatus.frame.width		 = 359; // 466;
+	s_rankstatus.frame.height		 = 256; // 332;
 
 	y = 214;
 
 	s_rankstatus.message.generic.type  = MTYPE_PTEXT;
 	s_rankstatus.message.generic.flags = QMF_CENTER_JUSTIFY | QMF_INACTIVE;
-	s_rankstatus.message.generic.id    = ID_MESSAGE;
-	s_rankstatus.message.generic.x     = 320;
-	s_rankstatus.message.generic.y     = y;
-	s_rankstatus.message.string        = s_rankstatus_message;
-	s_rankstatus.message.style         = UI_CENTER | UI_SMALLFONT;
-	s_rankstatus.message.color         = s_rankingstatus_color_prompt;
+	s_rankstatus.message.generic.id	   = ID_MESSAGE;
+	s_rankstatus.message.generic.x	   = 320;
+	s_rankstatus.message.generic.y	   = y;
+	s_rankstatus.message.string		   = s_rankstatus_message;
+	s_rankstatus.message.style		   = UI_CENTER | UI_SMALLFONT;
+	s_rankstatus.message.color		   = s_rankingstatus_color_prompt;
 	y += 40;
 
-	s_rankstatus.ok.generic.type     = MTYPE_PTEXT;
-	s_rankstatus.ok.generic.flags    = QMF_CENTER_JUSTIFY | QMF_PULSEIFFOCUS;
-	s_rankstatus.ok.generic.id       = ID_OK;
+	s_rankstatus.ok.generic.type	 = MTYPE_PTEXT;
+	s_rankstatus.ok.generic.flags	 = QMF_CENTER_JUSTIFY | QMF_PULSEIFFOCUS;
+	s_rankstatus.ok.generic.id		 = ID_OK;
 	s_rankstatus.ok.generic.callback = RankStatus_MenuEvent;
-	s_rankstatus.ok.generic.x        = 320;
-	s_rankstatus.ok.generic.y        = y;
-	s_rankstatus.ok.string           = "OK";
-	s_rankstatus.ok.style            = UI_CENTER | UI_SMALLFONT;
-	s_rankstatus.ok.color            = colorRed;
+	s_rankstatus.ok.generic.x		 = 320;
+	s_rankstatus.ok.generic.y		 = y;
+	s_rankstatus.ok.string			 = "OK";
+	s_rankstatus.ok.style			 = UI_CENTER | UI_SMALLFONT;
+	s_rankstatus.ok.color			 = colorRed;
 
 	Menu_AddItem( &s_rankstatus.menu, ( void* )&s_rankstatus.frame );
 	Menu_AddItem( &s_rankstatus.menu, ( void* )&s_rankstatus.message );

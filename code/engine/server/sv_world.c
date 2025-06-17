@@ -64,32 +64,32 @@ them, which prevents having to deal with multiple fragments of a single entity.
 
 typedef struct worldSector_s
 {
-	int                   axis; // -1 = leaf node
-	float                 dist;
-	struct worldSector_s* children[ 2 ];
-	svEntity_t*           entities;
+	int					  axis; // -1 = leaf node
+	float				  dist;
+	struct worldSector_s* children[2];
+	svEntity_t*			  entities;
 } worldSector_t;
 
 #define AREA_DEPTH 4
 #define AREA_NODES 64
 
-worldSector_t sv_worldSectors[ AREA_NODES ];
-int           sv_numworldSectors;
+worldSector_t sv_worldSectors[AREA_NODES];
+int			  sv_numworldSectors;
 
 /*
 ===============
 SV_SectorList_f
 ===============
 */
-void SV_SectorList_f( void )
+void		  SV_SectorList_f( void )
 {
-	int            i, c;
+	int			   i, c;
 	worldSector_t* sec;
-	svEntity_t*    ent;
+	svEntity_t*	   ent;
 
 	for( i = 0; i < AREA_NODES; i++ )
 	{
-		sec = &sv_worldSectors[ i ];
+		sec = &sv_worldSectors[i];
 
 		c = 0;
 		for( ent = sec->entities; ent; ent = ent->nextEntityInWorldSector )
@@ -110,21 +110,21 @@ Builds a uniformly subdivided tree for the given world size
 static worldSector_t* SV_CreateworldSector( int depth, vec3_t mins, vec3_t maxs )
 {
 	worldSector_t* anode;
-	vec3_t         size;
-	vec3_t         mins1, maxs1, mins2, maxs2;
+	vec3_t		   size;
+	vec3_t		   mins1, maxs1, mins2, maxs2;
 
-	anode = &sv_worldSectors[ sv_numworldSectors ];
+	anode = &sv_worldSectors[sv_numworldSectors];
 	sv_numworldSectors++;
 
 	if( depth == AREA_DEPTH )
 	{
-		anode->axis          = -1;
-		anode->children[ 0 ] = anode->children[ 1 ] = NULL;
+		anode->axis		   = -1;
+		anode->children[0] = anode->children[1] = NULL;
 		return anode;
 	}
 
 	VectorSubtract( maxs, mins, size );
-	if( size[ 0 ] > size[ 1 ] )
+	if( size[0] > size[1] )
 	{
 		anode->axis = 0;
 	}
@@ -133,16 +133,16 @@ static worldSector_t* SV_CreateworldSector( int depth, vec3_t mins, vec3_t maxs 
 		anode->axis = 1;
 	}
 
-	anode->dist = 0.5 * ( maxs[ anode->axis ] + mins[ anode->axis ] );
+	anode->dist = 0.5 * ( maxs[anode->axis] + mins[anode->axis] );
 	VectorCopy( mins, mins1 );
 	VectorCopy( mins, mins2 );
 	VectorCopy( maxs, maxs1 );
 	VectorCopy( maxs, maxs2 );
 
-	maxs1[ anode->axis ] = mins2[ anode->axis ] = anode->dist;
+	maxs1[anode->axis] = mins2[anode->axis] = anode->dist;
 
-	anode->children[ 0 ] = SV_CreateworldSector( depth + 1, mins2, maxs2 );
-	anode->children[ 1 ] = SV_CreateworldSector( depth + 1, mins1, maxs1 );
+	anode->children[0] = SV_CreateworldSector( depth + 1, mins2, maxs2 );
+	anode->children[1] = SV_CreateworldSector( depth + 1, mins1, maxs1 );
 
 	return anode;
 }
@@ -156,7 +156,7 @@ SV_ClearWorld
 void SV_ClearWorld( void )
 {
 	clipHandle_t h;
-	vec3_t       mins, maxs;
+	vec3_t		 mins, maxs;
 
 	Com_Memset( sv_worldSectors, 0, sizeof( sv_worldSectors ) );
 	sv_numworldSectors = 0;
@@ -175,8 +175,8 @@ SV_UnlinkEntity
 */
 void SV_UnlinkEntity( sharedEntity_t* gEnt )
 {
-	svEntity_t*    ent;
-	svEntity_t*    scan;
+	svEntity_t*	   ent;
+	svEntity_t*	   scan;
 	worldSector_t* ws;
 
 	ent = SV_SvEntityForGentity( gEnt );
@@ -218,14 +218,14 @@ SV_LinkEntity
 void SV_LinkEntity( sharedEntity_t* gEnt )
 {
 	worldSector_t* node;
-	int            leafs[ MAX_TOTAL_ENT_LEAFS ];
-	int            cluster;
-	int            num_leafs;
-	int            i, j, k;
-	int            area;
-	int            lastLeaf;
-	float *        origin, *angles;
-	svEntity_t*    ent;
+	int			   leafs[MAX_TOTAL_ENT_LEAFS];
+	int			   cluster;
+	int			   num_leafs;
+	int			   i, j, k;
+	int			   area;
+	int			   lastLeaf;
+	float *		   origin, *angles;
+	svEntity_t*	   ent;
 
 	ent = SV_SvEntityForGentity( gEnt );
 
@@ -242,7 +242,7 @@ void SV_LinkEntity( sharedEntity_t* gEnt )
 	else if( gEnt->r.contents & ( CONTENTS_SOLID | CONTENTS_BODY ) )
 	{
 		// assume that x/y are equal and symetric
-		i = gEnt->r.maxs[ 0 ];
+		i = gEnt->r.maxs[0];
 		if( i < 1 )
 		{
 			i = 1;
@@ -253,7 +253,7 @@ void SV_LinkEntity( sharedEntity_t* gEnt )
 		}
 
 		// z is not symetric
-		j = ( -gEnt->r.mins[ 2 ] );
+		j = ( -gEnt->r.mins[2] );
 		if( j < 1 )
 		{
 			j = 1;
@@ -264,7 +264,7 @@ void SV_LinkEntity( sharedEntity_t* gEnt )
 		}
 
 		// and z maxs can be negative...
-		k = ( gEnt->r.maxs[ 2 ] + 32 );
+		k = ( gEnt->r.maxs[2] + 32 );
 		if( k < 1 )
 		{
 			k = 1;
@@ -286,7 +286,7 @@ void SV_LinkEntity( sharedEntity_t* gEnt )
 	angles = gEnt->r.currentAngles;
 
 	// set the abs box
-	if( gEnt->r.bmodel && ( angles[ 0 ] || angles[ 1 ] || angles[ 2 ] ) )
+	if( gEnt->r.bmodel && ( angles[0] || angles[1] || angles[2] ) )
 	{
 		// expand for rotation
 		float max;
@@ -294,8 +294,8 @@ void SV_LinkEntity( sharedEntity_t* gEnt )
 		max = RadiusFromBounds( gEnt->r.mins, gEnt->r.maxs );
 		for( i = 0; i < 3; i++ )
 		{
-			gEnt->r.absmin[ i ] = origin[ i ] - max;
-			gEnt->r.absmax[ i ] = origin[ i ] + max;
+			gEnt->r.absmin[i] = origin[i] - max;
+			gEnt->r.absmax[i] = origin[i] + max;
 		}
 	}
 	else
@@ -307,20 +307,20 @@ void SV_LinkEntity( sharedEntity_t* gEnt )
 
 	// because movement is clipped an epsilon away from an actual edge,
 	// we must fully check even when bounding boxes don't quite touch
-	gEnt->r.absmin[ 0 ] -= 1;
-	gEnt->r.absmin[ 1 ] -= 1;
-	gEnt->r.absmin[ 2 ] -= 1;
-	gEnt->r.absmax[ 0 ] += 1;
-	gEnt->r.absmax[ 1 ] += 1;
-	gEnt->r.absmax[ 2 ] += 1;
+	gEnt->r.absmin[0] -= 1;
+	gEnt->r.absmin[1] -= 1;
+	gEnt->r.absmin[2] -= 1;
+	gEnt->r.absmax[0] += 1;
+	gEnt->r.absmax[1] += 1;
+	gEnt->r.absmax[2] += 1;
 
 	// link to PVS leafs
 	ent->numClusters = 0;
 	ent->lastCluster = 0;
-	ent->areanum     = -1;
-	ent->areanum2    = -1;
+	ent->areanum	 = -1;
+	ent->areanum2	 = -1;
 
-	//get all leafs, including solids
+	// get all leafs, including solids
 	num_leafs = CM_BoxLeafnums( gEnt->r.absmin, gEnt->r.absmax, leafs, MAX_TOTAL_ENT_LEAFS, &lastLeaf );
 
 	// if none of the leafs were inside the map, the
@@ -333,7 +333,7 @@ void SV_LinkEntity( sharedEntity_t* gEnt )
 	// set areas, even from clusters that don't fit in the entity array
 	for( i = 0; i < num_leafs; i++ )
 	{
-		area = CM_LeafArea( leafs[ i ] );
+		area = CM_LeafArea( leafs[i] );
 		if( area != -1 )
 		{
 			// doors may legally straggle two areas,
@@ -342,11 +342,7 @@ void SV_LinkEntity( sharedEntity_t* gEnt )
 			{
 				if( ent->areanum2 != -1 && ent->areanum2 != area && sv.state == SS_LOADING )
 				{
-					Com_DPrintf( "Object %i touching 3 areas at %f %f %f\n",
-						gEnt->s.number,
-						gEnt->r.absmin[ 0 ],
-						gEnt->r.absmin[ 1 ],
-						gEnt->r.absmin[ 2 ] );
+					Com_DPrintf( "Object %i touching 3 areas at %f %f %f\n", gEnt->s.number, gEnt->r.absmin[0], gEnt->r.absmin[1], gEnt->r.absmin[2] );
 				}
 				ent->areanum2 = area;
 			}
@@ -361,10 +357,10 @@ void SV_LinkEntity( sharedEntity_t* gEnt )
 	ent->numClusters = 0;
 	for( i = 0; i < num_leafs; i++ )
 	{
-		cluster = CM_LeafCluster( leafs[ i ] );
+		cluster = CM_LeafCluster( leafs[i] );
 		if( cluster != -1 )
 		{
-			ent->clusternums[ ent->numClusters++ ] = cluster;
+			ent->clusternums[ent->numClusters++] = cluster;
 			if( ent->numClusters == MAX_ENT_CLUSTERS )
 			{
 				break;
@@ -388,13 +384,13 @@ void SV_LinkEntity( sharedEntity_t* gEnt )
 		{
 			break;
 		}
-		if( gEnt->r.absmin[ node->axis ] > node->dist )
+		if( gEnt->r.absmin[node->axis] > node->dist )
 		{
-			node = node->children[ 0 ];
+			node = node->children[0];
 		}
-		else if( gEnt->r.absmax[ node->axis ] < node->dist )
+		else if( gEnt->r.absmax[node->axis] < node->dist )
 		{
-			node = node->children[ 1 ];
+			node = node->children[1];
 		}
 		else
 		{
@@ -403,9 +399,9 @@ void SV_LinkEntity( sharedEntity_t* gEnt )
 	}
 
 	// link it in
-	ent->worldSector             = node;
+	ent->worldSector			 = node;
 	ent->nextEntityInWorldSector = node->entities;
-	node->entities               = ent;
+	node->entities				 = ent;
 
 	gEnt->r.linked = qtrue;
 }
@@ -424,8 +420,8 @@ typedef struct
 {
 	const float* mins;
 	const float* maxs;
-	int*         list;
-	int          count, maxcount;
+	int*		 list;
+	int			 count, maxcount;
 } areaParms_t;
 
 /*
@@ -436,7 +432,7 @@ SV_AreaEntities_r
 */
 static void SV_AreaEntities_r( worldSector_t* node, areaParms_t* ap )
 {
-	svEntity_t *    check, *next;
+	svEntity_t *	check, *next;
 	sharedEntity_t* gcheck;
 
 	for( check = node->entities; check; check = next )
@@ -445,7 +441,8 @@ static void SV_AreaEntities_r( worldSector_t* node, areaParms_t* ap )
 
 		gcheck = SV_GEntityForSvEntity( check );
 
-		if( gcheck->r.absmin[ 0 ] > ap->maxs[ 0 ] || gcheck->r.absmin[ 1 ] > ap->maxs[ 1 ] || gcheck->r.absmin[ 2 ] > ap->maxs[ 2 ] || gcheck->r.absmax[ 0 ] < ap->mins[ 0 ] || gcheck->r.absmax[ 1 ] < ap->mins[ 1 ] || gcheck->r.absmax[ 2 ] < ap->mins[ 2 ] )
+		if( gcheck->r.absmin[0] > ap->maxs[0] || gcheck->r.absmin[1] > ap->maxs[1] || gcheck->r.absmin[2] > ap->maxs[2] || gcheck->r.absmax[0] < ap->mins[0] || gcheck->r.absmax[1] < ap->mins[1] ||
+			gcheck->r.absmax[2] < ap->mins[2] )
 		{
 			continue;
 		}
@@ -456,7 +453,7 @@ static void SV_AreaEntities_r( worldSector_t* node, areaParms_t* ap )
 			return;
 		}
 
-		ap->list[ ap->count ] = check - sv.svEntities;
+		ap->list[ap->count] = check - sv.svEntities;
 		ap->count++;
 	}
 
@@ -466,13 +463,13 @@ static void SV_AreaEntities_r( worldSector_t* node, areaParms_t* ap )
 	}
 
 	// recurse down both sides
-	if( ap->maxs[ node->axis ] > node->dist )
+	if( ap->maxs[node->axis] > node->dist )
 	{
-		SV_AreaEntities_r( node->children[ 0 ], ap );
+		SV_AreaEntities_r( node->children[0], ap );
 	}
-	if( ap->mins[ node->axis ] < node->dist )
+	if( ap->mins[node->axis] < node->dist )
 	{
-		SV_AreaEntities_r( node->children[ 1 ], ap );
+		SV_AreaEntities_r( node->children[1], ap );
 	}
 }
 
@@ -485,10 +482,10 @@ int SV_AreaEntities( const vec3_t mins, const vec3_t maxs, int* entityList, int 
 {
 	areaParms_t ap;
 
-	ap.mins     = mins;
-	ap.maxs     = maxs;
-	ap.list     = entityList;
-	ap.count    = 0;
+	ap.mins		= mins;
+	ap.maxs		= maxs;
+	ap.list		= entityList;
+	ap.count	= 0;
 	ap.maxcount = maxcount;
 
 	SV_AreaEntities_r( sv_worldSectors, &ap );
@@ -500,15 +497,15 @@ int SV_AreaEntities( const vec3_t mins, const vec3_t maxs, int* entityList, int 
 
 typedef struct
 {
-	vec3_t       boxmins, boxmaxs; // enclose the test object along entire move
+	vec3_t		 boxmins, boxmaxs; // enclose the test object along entire move
 	const float* mins;
 	const float* maxs; // size of the moving object
 	const float* start;
-	vec3_t       end;
-	trace_t      trace;
-	int          passEntityNum;
-	int          contentmask;
-	traceType_t  collisionType;
+	vec3_t		 end;
+	trace_t		 trace;
+	int			 passEntityNum;
+	int			 contentmask;
+	traceType_t	 collisionType;
 } moveclip_t;
 
 /*
@@ -520,8 +517,8 @@ SV_ClipToEntity
 void SV_ClipToEntity( trace_t* trace, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end, int entityNum, int contentmask, traceType_t type )
 {
 	sharedEntity_t* touch;
-	clipHandle_t    clipHandle;
-	float *         origin, *angles;
+	clipHandle_t	clipHandle;
+	float *			origin, *angles;
 
 	touch = SV_GentityNum( entityNum );
 
@@ -562,13 +559,13 @@ SV_ClipMoveToEntities
 */
 static void SV_ClipMoveToEntities( moveclip_t* clip )
 {
-	int             i, num;
-	int             touchlist[ MAX_GENTITIES ];
+	int				i, num;
+	int				touchlist[MAX_GENTITIES];
 	sharedEntity_t* touch;
-	int             passOwnerNum;
-	trace_t         trace;
-	clipHandle_t    clipHandle;
-	float *         origin, *angles;
+	int				passOwnerNum;
+	trace_t			trace;
+	clipHandle_t	clipHandle;
+	float *			origin, *angles;
 
 	num = SV_AreaEntities( clip->boxmins, clip->boxmaxs, touchlist, MAX_GENTITIES );
 
@@ -591,12 +588,12 @@ static void SV_ClipMoveToEntities( moveclip_t* clip )
 		{
 			return;
 		}
-		touch = SV_GentityNum( touchlist[ i ] );
+		touch = SV_GentityNum( touchlist[i] );
 
 		// see if we should ignore this entity
 		if( clip->passEntityNum != ENTITYNUM_NONE )
 		{
-			if( touchlist[ i ] == clip->passEntityNum )
+			if( touchlist[i] == clip->passEntityNum )
 			{
 				continue; // don't clip against the pass entity
 			}
@@ -633,12 +630,12 @@ static void SV_ClipMoveToEntities( moveclip_t* clip )
 		if( trace.allsolid )
 		{
 			clip->trace.allsolid = qtrue;
-			trace.entityNum      = touch->s.number;
+			trace.entityNum		 = touch->s.number;
 		}
 		else if( trace.startsolid )
 		{
 			clip->trace.startsolid = qtrue;
-			trace.entityNum        = touch->s.number;
+			trace.entityNum		   = touch->s.number;
 		}
 
 		if( trace.fraction < clip->trace.fraction )
@@ -649,7 +646,7 @@ static void SV_ClipMoveToEntities( moveclip_t* clip )
 			oldStart = clip->trace.startsolid;
 
 			trace.entityNum = touch->s.number;
-			clip->trace     = trace;
+			clip->trace		= trace;
 			clip->trace.startsolid |= oldStart;
 		}
 	}
@@ -666,7 +663,7 @@ passEntityNum and entities owned by passEntityNum are explicitly not checked.
 void SV_Trace( trace_t* results, const vec3_t start, vec3_t mins, vec3_t maxs, const vec3_t end, int passEntityNum, int contentmask, traceType_t type )
 {
 	moveclip_t clip;
-	int        i;
+	int		   i;
 
 	if( !mins )
 	{
@@ -697,11 +694,11 @@ void SV_Trace( trace_t* results, const vec3_t start, vec3_t mins, vec3_t maxs, c
 	}
 
 	clip.contentmask = contentmask;
-	clip.start       = start;
+	clip.start		 = start;
 	//  VectorCopy( clip.trace.endpos, clip.end );
 	VectorCopy( end, clip.end );
-	clip.mins          = mins;
-	clip.maxs          = maxs;
+	clip.mins		   = mins;
+	clip.maxs		   = maxs;
 	clip.passEntityNum = passEntityNum;
 	clip.collisionType = type;
 
@@ -711,15 +708,15 @@ void SV_Trace( trace_t* results, const vec3_t start, vec3_t mins, vec3_t maxs, c
 	// a significant savings for line of sight and shot traces
 	for( i = 0; i < 3; i++ )
 	{
-		if( end[ i ] > start[ i ] )
+		if( end[i] > start[i] )
 		{
-			clip.boxmins[ i ] = clip.start[ i ] + clip.mins[ i ] - 1;
-			clip.boxmaxs[ i ] = clip.end[ i ] + clip.maxs[ i ] + 1;
+			clip.boxmins[i] = clip.start[i] + clip.mins[i] - 1;
+			clip.boxmaxs[i] = clip.end[i] + clip.maxs[i] + 1;
 		}
 		else
 		{
-			clip.boxmins[ i ] = clip.end[ i ] + clip.mins[ i ] - 1;
-			clip.boxmaxs[ i ] = clip.start[ i ] + clip.maxs[ i ] + 1;
+			clip.boxmins[i] = clip.end[i] + clip.mins[i] - 1;
+			clip.boxmaxs[i] = clip.start[i] + clip.maxs[i] + 1;
 		}
 	}
 
@@ -736,12 +733,12 @@ SV_PointContents
 */
 int SV_PointContents( const vec3_t p, int passEntityNum )
 {
-	int             touch[ MAX_GENTITIES ];
+	int				touch[MAX_GENTITIES];
 	sharedEntity_t* hit;
-	int             i, num;
-	int             contents, c2;
-	clipHandle_t    clipHandle;
-	float*          angles;
+	int				i, num;
+	int				contents, c2;
+	clipHandle_t	clipHandle;
+	float*			angles;
 
 	// get base contents from world
 	contents = CM_PointContents( p, 0 );
@@ -751,14 +748,14 @@ int SV_PointContents( const vec3_t p, int passEntityNum )
 
 	for( i = 0; i < num; i++ )
 	{
-		if( touch[ i ] == passEntityNum )
+		if( touch[i] == passEntityNum )
 		{
 			continue;
 		}
-		hit = SV_GentityNum( touch[ i ] );
+		hit = SV_GentityNum( touch[i] );
 		// might intersect, so do an exact clip
 		clipHandle = SV_ClipHandleForEntity( hit );
-		angles     = hit->r.currentAngles;
+		angles	   = hit->r.currentAngles;
 		if( !hit->r.bmodel )
 		{
 			angles = vec3_origin; // boxes don't rotate

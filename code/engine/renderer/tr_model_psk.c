@@ -30,10 +30,10 @@ static void GetChunkHeader( memStream_t* s, axChunkHeader_t* chunkHeader )
 
 	for( i = 0; i < 20; i++ )
 	{
-		chunkHeader->ident[ i ] = MemStreamGetC( s );
+		chunkHeader->ident[i] = MemStreamGetC( s );
 	}
 
-	chunkHeader->flags    = MemStreamGetLong( s );
+	chunkHeader->flags	  = MemStreamGetLong( s );
 	chunkHeader->dataSize = MemStreamGetLong( s );
 	chunkHeader->numData  = MemStreamGetLong( s );
 }
@@ -55,12 +55,12 @@ static void GetBone( memStream_t* s, axBone_t* bone )
 
 	for( i = 0; i < 4; i++ )
 	{
-		bone->quat[ i ] = MemStreamGetFloat( s );
+		bone->quat[i] = MemStreamGetFloat( s );
 	}
 
 	for( i = 0; i < 3; i++ )
 	{
-		bone->position[ i ] = MemStreamGetFloat( s );
+		bone->position[i] = MemStreamGetFloat( s );
 	}
 
 	bone->length = MemStreamGetFloat( s );
@@ -97,59 +97,59 @@ R_LoadPSK
 */
 qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modName )
 {
-	int          i, j, k;
-	memStream_t* stream;
+	int				   i, j, k;
+	memStream_t*	   stream;
 
-	axChunkHeader_t chunkHeader;
+	axChunkHeader_t	   chunkHeader;
 
-	int        numPoints;
-	axPoint_t* point;
-	axPoint_t* points;
+	int				   numPoints;
+	axPoint_t*		   point;
+	axPoint_t*		   points;
 
-	int         numVertexes;
-	axVertex_t* vertex;
-	axVertex_t* vertexes;
+	int				   numVertexes;
+	axVertex_t*		   vertex;
+	axVertex_t*		   vertexes;
 
-	//int				numSmoothGroups;
-	int           numTriangles;
-	axTriangle_t* triangle;
-	axTriangle_t* triangles;
+	// int				numSmoothGroups;
+	int				   numTriangles;
+	axTriangle_t*	   triangle;
+	axTriangle_t*	   triangles;
 
-	int           numMaterials;
-	axMaterial_t* material;
-	axMaterial_t* materials;
+	int				   numMaterials;
+	axMaterial_t*	   material;
+	axMaterial_t*	   materials;
 
-	int                numReferenceBones;
+	int				   numReferenceBones;
 	axReferenceBone_t* refBone;
 	axReferenceBone_t* refBones;
 
-	int             numWeights;
-	axBoneWeight_t* axWeight;
-	axBoneWeight_t* axWeights;
+	int				   numWeights;
+	axBoneWeight_t*	   axWeight;
+	axBoneWeight_t*	   axWeights;
 
-	md5Model_t*  md5;
-	md5Bone_t*   md5Bone;
-	md5Weight_t* weight;
+	md5Model_t*		   md5;
+	md5Bone_t*		   md5Bone;
+	md5Weight_t*	   weight;
 
-	vec3_t boneOrigin;
-	quat_t boneQuat;
-	//matrix_t        boneMat;
+	vec3_t			   boneOrigin;
+	quat_t			   boneQuat;
+	// matrix_t        boneMat;
 
-	int materialIndex, oldMaterialIndex;
+	int				   materialIndex, oldMaterialIndex;
 
-	int numRemaining;
+	int				   numRemaining;
 
-	growList_t sortedTriangles;
-	growList_t vboVertexes;
-	growList_t vboTriangles;
-	growList_t vboSurfaces;
+	growList_t		   sortedTriangles;
+	growList_t		   vboVertexes;
+	growList_t		   vboTriangles;
+	growList_t		   vboSurfaces;
 
-	int numBoneReferences;
-	int boneReferences[ MAX_BONES ];
+	int				   numBoneReferences;
+	int				   boneReferences[MAX_BONES];
 
-	matrix_t unrealToQuake;
+	matrix_t		   unrealToQuake;
 
-	//MatrixSetupScale(unrealToQuake, 1, -1, 1);
+	// MatrixSetupScale(unrealToQuake, 1, -1, 1);
 	MatrixFromAngles( unrealToQuake, 0, 90, 0 );
 
 	stream = AllocMemStream( buffer, bufferSize );
@@ -188,12 +188,12 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 	PrintChunkHeader( &chunkHeader );
 
 	numPoints = chunkHeader.numData;
-	points    = Com_Allocate( numPoints * sizeof( axPoint_t ) );
+	points	  = Com_Allocate( numPoints * sizeof( axPoint_t ) );
 	for( i = 0, point = points; i < numPoints; i++, point++ )
 	{
-		point->point[ 0 ] = MemStreamGetFloat( stream );
-		point->point[ 1 ] = MemStreamGetFloat( stream );
-		point->point[ 2 ] = MemStreamGetFloat( stream );
+		point->point[0] = MemStreamGetFloat( stream );
+		point->point[1] = MemStreamGetFloat( stream );
+		point->point[2] = MemStreamGetFloat( stream );
 
 #if 0
 		// Tr3B: HACK convert from Unreal coordinate system to the Quake one
@@ -222,7 +222,7 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 	PrintChunkHeader( &chunkHeader );
 
 	numVertexes = chunkHeader.numData;
-	vertexes    = Com_Allocate( numVertexes * sizeof( axVertex_t ) );
+	vertexes	= Com_Allocate( numVertexes * sizeof( axVertex_t ) );
 	for( i = 0, vertex = vertexes; i < numVertexes; i++, vertex++ )
 	{
 		vertex->pointIndex = MemStreamGetShort( stream );
@@ -235,12 +235,12 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 			return qfalse;
 		}
 
-		vertex->unknownA      = MemStreamGetShort( stream );
-		vertex->st[ 0 ]       = MemStreamGetFloat( stream );
-		vertex->st[ 1 ]       = MemStreamGetFloat( stream );
+		vertex->unknownA	  = MemStreamGetShort( stream );
+		vertex->st[0]		  = MemStreamGetFloat( stream );
+		vertex->st[1]		  = MemStreamGetFloat( stream );
 		vertex->materialIndex = MemStreamGetC( stream );
-		vertex->reserved      = MemStreamGetC( stream );
-		vertex->unknownB      = MemStreamGetShort( stream );
+		vertex->reserved	  = MemStreamGetC( stream );
+		vertex->unknownB	  = MemStreamGetShort( stream );
 
 #if 0
 		ri.Printf( PRINT_ALL, "R_LoadPSK: axVertex_t(%i):\n"
@@ -283,16 +283,16 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 	PrintChunkHeader( &chunkHeader );
 
 	numTriangles = chunkHeader.numData;
-	triangles    = Com_Allocate( numTriangles * sizeof( axTriangle_t ) );
+	triangles	 = Com_Allocate( numTriangles * sizeof( axTriangle_t ) );
 	for( i = 0, triangle = triangles; i < numTriangles; i++, triangle++ )
 	{
 		for( j = 0; j < 3; j++ )
-		//for(j = 2; j >= 0; j--)
+		// for(j = 2; j >= 0; j--)
 		{
-			triangle->indexes[ j ] = MemStreamGetShort( stream );
-			if( triangle->indexes[ j ] < 0 || triangle->indexes[ j ] >= numVertexes )
+			triangle->indexes[j] = MemStreamGetShort( stream );
+			if( triangle->indexes[j] < 0 || triangle->indexes[j] >= numVertexes )
 			{
-				ri.Printf( PRINT_WARNING, "R_LoadPSK: '%s' has triangle with vertex index out of range (%i while max %i)\n", modName, triangle->indexes[ j ], numVertexes );
+				ri.Printf( PRINT_WARNING, "R_LoadPSK: '%s' has triangle with vertex index out of range (%i while max %i)\n", modName, triangle->indexes[j], numVertexes );
 				FreeMemStream( stream );
 				Com_Dealloc( points );
 				Com_Dealloc( vertexes );
@@ -301,7 +301,7 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 			}
 		}
 
-		triangle->materialIndex   = MemStreamGetC( stream );
+		triangle->materialIndex	  = MemStreamGetC( stream );
 		triangle->materialIndex2  = MemStreamGetC( stream );
 		triangle->smoothingGroups = MemStreamGetLong( stream );
 	}
@@ -331,7 +331,7 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 	PrintChunkHeader( &chunkHeader );
 
 	numMaterials = chunkHeader.numData;
-	materials    = Com_Allocate( numMaterials * sizeof( axMaterial_t ) );
+	materials	 = Com_Allocate( numMaterials * sizeof( axMaterial_t ) );
 	for( i = 0, material = materials; i < numMaterials; i++, material++ )
 	{
 		MemStreamRead( stream, material->name, sizeof( material->name ) );
@@ -339,11 +339,11 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 		ri.Printf( PRINT_ALL, "R_LoadPSK: material name: '%s'\n", material->name );
 
 		material->shaderIndex = MemStreamGetLong( stream );
-		material->polyFlags   = MemStreamGetLong( stream );
+		material->polyFlags	  = MemStreamGetLong( stream );
 		material->auxMaterial = MemStreamGetLong( stream );
-		material->auxFlags    = MemStreamGetLong( stream );
-		material->lodBias     = MemStreamGetLong( stream );
-		material->lodStyle    = MemStreamGetLong( stream );
+		material->auxFlags	  = MemStreamGetLong( stream );
+		material->lodBias	  = MemStreamGetLong( stream );
+		material->lodStyle	  = MemStreamGetLong( stream );
 	}
 
 	for( i = 0, vertex = vertexes; i < numVertexes; i++, vertex++ )
@@ -401,14 +401,14 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 	PrintChunkHeader( &chunkHeader );
 
 	numReferenceBones = chunkHeader.numData;
-	refBones          = Com_Allocate( numReferenceBones * sizeof( axReferenceBone_t ) );
+	refBones		  = Com_Allocate( numReferenceBones * sizeof( axReferenceBone_t ) );
 	for( i = 0, refBone = refBones; i < numReferenceBones; i++, refBone++ )
 	{
 		MemStreamRead( stream, refBone->name, sizeof( refBone->name ) );
 
-		//ri.Printf(PRINT_ALL, "R_LoadPSK: reference bone name: '%s'\n", refBone->name);
+		// ri.Printf(PRINT_ALL, "R_LoadPSK: reference bone name: '%s'\n", refBone->name);
 
-		refBone->flags       = MemStreamGetLong( stream );
+		refBone->flags		 = MemStreamGetLong( stream );
 		refBone->numChildren = MemStreamGetLong( stream );
 		refBone->parentIndex = MemStreamGetLong( stream );
 
@@ -472,9 +472,9 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 	axWeights  = Com_Allocate( numWeights * sizeof( axBoneWeight_t ) );
 	for( i = 0, axWeight = axWeights; i < numWeights; i++, axWeight++ )
 	{
-		axWeight->weight     = MemStreamGetFloat( stream );
+		axWeight->weight	 = MemStreamGetFloat( stream );
 		axWeight->pointIndex = MemStreamGetLong( stream );
-		axWeight->boneIndex  = MemStreamGetLong( stream );
+		axWeight->boneIndex	 = MemStreamGetLong( stream );
 
 #if 0
 		ri.Printf( PRINT_ALL, "R_LoadPSK: axBoneWeight_t(%i):\n"
@@ -500,7 +500,7 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 	{
 		if(triangle->smoothingGroups)
 		{
-	
+
 		}
 	}
 	*/
@@ -527,7 +527,7 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 		Com_Dealloc( axWeights );
 		return qfalse;
 	}
-	//ri.Printf(PRINT_ALL, "R_LoadPSK: '%s' has %i bones\n", modName, md5->numBones);
+	// ri.Printf(PRINT_ALL, "R_LoadPSK: '%s' has %i bones\n", modName, md5->numBones);
 
 	// copy all reference bones
 	md5->bones = ri.Hunk_Alloc( sizeof( *md5Bone ) * md5->numBones, h_low );
@@ -544,7 +544,7 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 			md5Bone->parentIndex = refBone->parentIndex;
 		}
 
-		//ri.Printf(PRINT_ALL, "R_LoadPSK: '%s' has bone '%s' with parent index %i\n", modName, md5Bone->name, md5Bone->parentIndex);
+		// ri.Printf(PRINT_ALL, "R_LoadPSK: '%s' has bone '%s' with parent index %i\n", modName, md5Bone->name, md5Bone->parentIndex);
 
 		if( md5Bone->parentIndex >= md5->numBones )
 		{
@@ -553,32 +553,32 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 
 		for( j = 0; j < 3; j++ )
 		{
-			boneOrigin[ j ] = refBone->bone.position[ j ];
+			boneOrigin[j] = refBone->bone.position[j];
 		}
 
 		// Tr3B: I have really no idea why the .psk format stores the first quaternion with inverted quats.
 		// Furthermore only the X and Z components of the first quat are inverted ?!?!
 		if( i == 0 )
 		{
-			boneQuat[ 0 ] = refBone->bone.quat[ 0 ];
-			boneQuat[ 1 ] = -refBone->bone.quat[ 1 ];
-			boneQuat[ 2 ] = refBone->bone.quat[ 2 ];
-			boneQuat[ 3 ] = refBone->bone.quat[ 3 ];
+			boneQuat[0] = refBone->bone.quat[0];
+			boneQuat[1] = -refBone->bone.quat[1];
+			boneQuat[2] = refBone->bone.quat[2];
+			boneQuat[3] = refBone->bone.quat[3];
 		}
 		else
 		{
-			boneQuat[ 0 ] = -refBone->bone.quat[ 0 ];
-			boneQuat[ 1 ] = -refBone->bone.quat[ 1 ];
-			boneQuat[ 2 ] = -refBone->bone.quat[ 2 ];
-			boneQuat[ 3 ] = refBone->bone.quat[ 3 ];
+			boneQuat[0] = -refBone->bone.quat[0];
+			boneQuat[1] = -refBone->bone.quat[1];
+			boneQuat[2] = -refBone->bone.quat[2];
+			boneQuat[3] = refBone->bone.quat[3];
 		}
 
 		VectorCopy( boneOrigin, md5Bone->origin );
-		//MatrixTransformPoint(unrealToQuake, boneOrigin, md5Bone->origin);
+		// MatrixTransformPoint(unrealToQuake, boneOrigin, md5Bone->origin);
 
 		QuatCopy( boneQuat, md5Bone->rotation );
 
-		//QuatClear(md5Bone->rotation);
+		// QuatClear(md5Bone->rotation);
 
 #if 0
 		ri.Printf( PRINT_ALL, "R_LoadPSK: md5Bone_t(%i):\n"
@@ -595,15 +595,15 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 
 		if( md5Bone->parentIndex >= 0 )
 		{
-			vec3_t rotated;
-			quat_t quat;
+			vec3_t	   rotated;
+			quat_t	   quat;
 
 			md5Bone_t* parent;
 
-			parent = &md5->bones[ md5Bone->parentIndex ];
+			parent = &md5->bones[md5Bone->parentIndex];
 
 			QuatTransformVector( parent->rotation, md5Bone->origin, rotated );
-			//QuatTransformVector(md5Bone->rotation, md5Bone->origin, rotated);
+			// QuatTransformVector(md5Bone->rotation, md5Bone->origin, rotated);
 
 			VectorAdd( parent->origin, rotated, md5Bone->origin );
 
@@ -635,11 +635,11 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 
 		for( j = 0; j < 3; j++ )
 		{
-			vboVert->position[ j ] = points[ vertex->pointIndex ].point[ j ];
+			vboVert->position[j] = points[vertex->pointIndex].point[j];
 		}
 
-		vboVert->texCoords[ 0 ] = vertex->st[ 0 ];
-		vboVert->texCoords[ 1 ] = vertex->st[ 1 ];
+		vboVert->texCoords[0] = vertex->st[0];
+		vboVert->texCoords[1] = vertex->st[1];
 
 		// find number of associated weights
 		vboVert->numWeights = 0;
@@ -654,7 +654,7 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 		if( vboVert->numWeights > MAX_WEIGHTS )
 		{
 			ri.Error( ERR_DROP, "R_LoadPSK: vertex %i requires more weights %i than the maximum of %i in model '%s'", i, vboVert->numWeights, MAX_WEIGHTS, modName );
-			//ri.Printf(PRINT_WARNING, "R_LoadPSK: vertex %i requires more weights %i than the maximum of %i in model '%s'\n", i, vboVert->numWeights, MAX_WEIGHTS, modName);
+			// ri.Printf(PRINT_WARNING, "R_LoadPSK: vertex %i requires more weights %i than the maximum of %i in model '%s'\n", i, vboVert->numWeights, MAX_WEIGHTS, modName);
 		}
 
 		vboVert->weights = ri.Hunk_Alloc( sizeof( *vboVert->weights ) * vboVert->numWeights, h_low );
@@ -668,21 +668,21 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 				weight->boneWeight = axWeight->weight;
 
 				// FIXME?
-				weight->offset[ 0 ] = refBones[ axWeight->boneIndex ].bone.xSize;
-				weight->offset[ 1 ] = refBones[ axWeight->boneIndex ].bone.ySize;
-				weight->offset[ 2 ] = refBones[ axWeight->boneIndex ].bone.zSize;
+				weight->offset[0] = refBones[axWeight->boneIndex].bone.xSize;
+				weight->offset[1] = refBones[axWeight->boneIndex].bone.ySize;
+				weight->offset[2] = refBones[axWeight->boneIndex].bone.zSize;
 
-				vboVert->weights[ k++ ] = weight;
+				vboVert->weights[k++] = weight;
 			}
 		}
 
 		Com_AddToGrowList( &vboVertexes, vboVert );
 	}
 
-	ClearBounds( md5->bounds[ 0 ], md5->bounds[ 1 ] );
+	ClearBounds( md5->bounds[0], md5->bounds[1] );
 	for( i = 0, vertex = vertexes; i < numVertexes; i++, vertex++ )
 	{
-		AddPointToBounds( points[ vertex->pointIndex ].point, md5->bounds[ 0 ], md5->bounds[ 1 ] );
+		AddPointToBounds( points[vertex->pointIndex].point, md5->bounds[0], md5->bounds[1] );
 	}
 
 #if 0
@@ -705,8 +705,8 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 
 		for( j = 0; j < 3; j++ )
 		{
-			sortTri->indexes[ j ]  = triangle->indexes[ j ];
-			sortTri->vertexes[ j ] = Com_GrowListElement( &vboVertexes, triangle->indexes[ j ] );
+			sortTri->indexes[j]	 = triangle->indexes[j];
+			sortTri->vertexes[j] = Com_GrowListElement( &vboVertexes, triangle->indexes[j] );
 		}
 		sortTri->referenced = qfalse;
 
@@ -719,9 +719,9 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 		md5Vertex_t *v0, *v1, *v2;
 		const float *p0, *p1, *p2;
 		const float *t0, *t1, *t2;
-		vec3_t       tangent;
-		vec3_t       binormal;
-		vec3_t       normal;
+		vec3_t		 tangent;
+		vec3_t		 binormal;
+		vec3_t		 normal;
 
 		for( j = 0; j < vboVertexes.currentElements; j++ )
 		{
@@ -736,9 +736,9 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 		{
 			skelTriangle_t* tri = Com_GrowListElement( &sortedTriangles, j );
 
-			v0 = Com_GrowListElement( &vboVertexes, tri->indexes[ 0 ] );
-			v1 = Com_GrowListElement( &vboVertexes, tri->indexes[ 1 ] );
-			v2 = Com_GrowListElement( &vboVertexes, tri->indexes[ 2 ] );
+			v0 = Com_GrowListElement( &vboVertexes, tri->indexes[0] );
+			v1 = Com_GrowListElement( &vboVertexes, tri->indexes[1] );
+			v2 = Com_GrowListElement( &vboVertexes, tri->indexes[2] );
 
 			p0 = v0->position;
 			p1 = v1->position;
@@ -759,7 +759,7 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 			{
 				float* v;
 
-				v0 = Com_GrowListElement( &vboVertexes, tri->indexes[ k ] );
+				v0 = Com_GrowListElement( &vboVertexes, tri->indexes[k] );
 
 				v = v0->tangent;
 				VectorAdd( v, tangent, v );
@@ -783,23 +783,24 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 	}
 #else
 	{
-		float        bb, s, t;
-		vec3_t       bary;
-		vec3_t       faceNormal;
-		md5Vertex_t* dv[ 3 ];
+		float		 bb, s, t;
+		vec3_t		 bary;
+		vec3_t		 faceNormal;
+		md5Vertex_t* dv[3];
 
 		for( j = 0; j < sortedTriangles.currentElements; j++ )
 		{
 			skelTriangle_t* tri = Com_GrowListElement( &sortedTriangles, j );
 
-			dv[ 0 ] = Com_GrowListElement( &vboVertexes, tri->indexes[ 0 ] );
-			dv[ 1 ] = Com_GrowListElement( &vboVertexes, tri->indexes[ 1 ] );
-			dv[ 2 ] = Com_GrowListElement( &vboVertexes, tri->indexes[ 2 ] );
+			dv[0] = Com_GrowListElement( &vboVertexes, tri->indexes[0] );
+			dv[1] = Com_GrowListElement( &vboVertexes, tri->indexes[1] );
+			dv[2] = Com_GrowListElement( &vboVertexes, tri->indexes[2] );
 
-			R_CalcNormalForTriangle( faceNormal, dv[ 0 ]->position, dv[ 1 ]->position, dv[ 2 ]->position );
+			R_CalcNormalForTriangle( faceNormal, dv[0]->position, dv[1]->position, dv[2]->position );
 
 			// calculate barycentric basis for the triangle
-			bb = ( dv[ 1 ]->texCoords[ 0 ] - dv[ 0 ]->texCoords[ 0 ] ) * ( dv[ 2 ]->texCoords[ 1 ] - dv[ 0 ]->texCoords[ 1 ] ) - ( dv[ 2 ]->texCoords[ 0 ] - dv[ 0 ]->texCoords[ 0 ] ) * ( dv[ 1 ]->texCoords[ 1 ] - dv[ 0 ]->texCoords[ 1 ] );
+			bb = ( dv[1]->texCoords[0] - dv[0]->texCoords[0] ) * ( dv[2]->texCoords[1] - dv[0]->texCoords[1] ) -
+				 ( dv[2]->texCoords[0] - dv[0]->texCoords[0] ) * ( dv[1]->texCoords[1] - dv[0]->texCoords[1] );
 			if( fabs( bb ) < 0.00000001f )
 			{
 				continue;
@@ -809,32 +810,32 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 			for( k = 0; k < 3; k++ )
 			{
 				// calculate s tangent vector
-				s         = dv[ k ]->texCoords[ 0 ] + 10.0f;
-				t         = dv[ k ]->texCoords[ 1 ];
-				bary[ 0 ] = ( ( dv[ 1 ]->texCoords[ 0 ] - s ) * ( dv[ 2 ]->texCoords[ 1 ] - t ) - ( dv[ 2 ]->texCoords[ 0 ] - s ) * ( dv[ 1 ]->texCoords[ 1 ] - t ) ) / bb;
-				bary[ 1 ] = ( ( dv[ 2 ]->texCoords[ 0 ] - s ) * ( dv[ 0 ]->texCoords[ 1 ] - t ) - ( dv[ 0 ]->texCoords[ 0 ] - s ) * ( dv[ 2 ]->texCoords[ 1 ] - t ) ) / bb;
-				bary[ 2 ] = ( ( dv[ 0 ]->texCoords[ 0 ] - s ) * ( dv[ 1 ]->texCoords[ 1 ] - t ) - ( dv[ 1 ]->texCoords[ 0 ] - s ) * ( dv[ 0 ]->texCoords[ 1 ] - t ) ) / bb;
+				s		= dv[k]->texCoords[0] + 10.0f;
+				t		= dv[k]->texCoords[1];
+				bary[0] = ( ( dv[1]->texCoords[0] - s ) * ( dv[2]->texCoords[1] - t ) - ( dv[2]->texCoords[0] - s ) * ( dv[1]->texCoords[1] - t ) ) / bb;
+				bary[1] = ( ( dv[2]->texCoords[0] - s ) * ( dv[0]->texCoords[1] - t ) - ( dv[0]->texCoords[0] - s ) * ( dv[2]->texCoords[1] - t ) ) / bb;
+				bary[2] = ( ( dv[0]->texCoords[0] - s ) * ( dv[1]->texCoords[1] - t ) - ( dv[1]->texCoords[0] - s ) * ( dv[0]->texCoords[1] - t ) ) / bb;
 
-				dv[ k ]->tangent[ 0 ] = bary[ 0 ] * dv[ 0 ]->position[ 0 ] + bary[ 1 ] * dv[ 1 ]->position[ 0 ] + bary[ 2 ] * dv[ 2 ]->position[ 0 ];
-				dv[ k ]->tangent[ 1 ] = bary[ 0 ] * dv[ 0 ]->position[ 1 ] + bary[ 1 ] * dv[ 1 ]->position[ 1 ] + bary[ 2 ] * dv[ 2 ]->position[ 1 ];
-				dv[ k ]->tangent[ 2 ] = bary[ 0 ] * dv[ 0 ]->position[ 2 ] + bary[ 1 ] * dv[ 1 ]->position[ 2 ] + bary[ 2 ] * dv[ 2 ]->position[ 2 ];
+				dv[k]->tangent[0] = bary[0] * dv[0]->position[0] + bary[1] * dv[1]->position[0] + bary[2] * dv[2]->position[0];
+				dv[k]->tangent[1] = bary[0] * dv[0]->position[1] + bary[1] * dv[1]->position[1] + bary[2] * dv[2]->position[1];
+				dv[k]->tangent[2] = bary[0] * dv[0]->position[2] + bary[1] * dv[1]->position[2] + bary[2] * dv[2]->position[2];
 
-				VectorSubtract( dv[ k ]->tangent, dv[ k ]->position, dv[ k ]->tangent );
-				VectorNormalize( dv[ k ]->tangent );
+				VectorSubtract( dv[k]->tangent, dv[k]->position, dv[k]->tangent );
+				VectorNormalize( dv[k]->tangent );
 
 				// calculate t tangent vector (binormal)
-				s         = dv[ k ]->texCoords[ 0 ];
-				t         = dv[ k ]->texCoords[ 1 ] + 10.0f;
-				bary[ 0 ] = ( ( dv[ 1 ]->texCoords[ 0 ] - s ) * ( dv[ 2 ]->texCoords[ 1 ] - t ) - ( dv[ 2 ]->texCoords[ 0 ] - s ) * ( dv[ 1 ]->texCoords[ 1 ] - t ) ) / bb;
-				bary[ 1 ] = ( ( dv[ 2 ]->texCoords[ 0 ] - s ) * ( dv[ 0 ]->texCoords[ 1 ] - t ) - ( dv[ 0 ]->texCoords[ 0 ] - s ) * ( dv[ 2 ]->texCoords[ 1 ] - t ) ) / bb;
-				bary[ 2 ] = ( ( dv[ 0 ]->texCoords[ 0 ] - s ) * ( dv[ 1 ]->texCoords[ 1 ] - t ) - ( dv[ 1 ]->texCoords[ 0 ] - s ) * ( dv[ 0 ]->texCoords[ 1 ] - t ) ) / bb;
+				s		= dv[k]->texCoords[0];
+				t		= dv[k]->texCoords[1] + 10.0f;
+				bary[0] = ( ( dv[1]->texCoords[0] - s ) * ( dv[2]->texCoords[1] - t ) - ( dv[2]->texCoords[0] - s ) * ( dv[1]->texCoords[1] - t ) ) / bb;
+				bary[1] = ( ( dv[2]->texCoords[0] - s ) * ( dv[0]->texCoords[1] - t ) - ( dv[0]->texCoords[0] - s ) * ( dv[2]->texCoords[1] - t ) ) / bb;
+				bary[2] = ( ( dv[0]->texCoords[0] - s ) * ( dv[1]->texCoords[1] - t ) - ( dv[1]->texCoords[0] - s ) * ( dv[0]->texCoords[1] - t ) ) / bb;
 
-				dv[ k ]->binormal[ 0 ] = bary[ 0 ] * dv[ 0 ]->position[ 0 ] + bary[ 1 ] * dv[ 1 ]->position[ 0 ] + bary[ 2 ] * dv[ 2 ]->position[ 0 ];
-				dv[ k ]->binormal[ 1 ] = bary[ 0 ] * dv[ 0 ]->position[ 1 ] + bary[ 1 ] * dv[ 1 ]->position[ 1 ] + bary[ 2 ] * dv[ 2 ]->position[ 1 ];
-				dv[ k ]->binormal[ 2 ] = bary[ 0 ] * dv[ 0 ]->position[ 2 ] + bary[ 1 ] * dv[ 1 ]->position[ 2 ] + bary[ 2 ] * dv[ 2 ]->position[ 2 ];
+				dv[k]->binormal[0] = bary[0] * dv[0]->position[0] + bary[1] * dv[1]->position[0] + bary[2] * dv[2]->position[0];
+				dv[k]->binormal[1] = bary[0] * dv[0]->position[1] + bary[1] * dv[1]->position[1] + bary[2] * dv[2]->position[1];
+				dv[k]->binormal[2] = bary[0] * dv[0]->position[2] + bary[1] * dv[1]->position[2] + bary[2] * dv[2]->position[2];
 
-				VectorSubtract( dv[ k ]->binormal, dv[ k ]->position, dv[ k ]->binormal );
-				VectorNormalize( dv[ k ]->binormal );
+				VectorSubtract( dv[k]->binormal, dv[k]->position, dv[k]->binormal );
+				VectorNormalize( dv[k]->binormal );
 
 				// calculate the normal as cross product N=TxB
 	#if 0
@@ -853,7 +854,7 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 					//VectorInverse(dv[k]->binormal);
 				}
 	#else
-				VectorAdd( dv[ k ]->normal, faceNormal, dv[ k ]->normal );
+				VectorAdd( dv[k]->normal, faceNormal, dv[k]->normal );
 	#endif
 			}
 		}
@@ -861,10 +862,10 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 	#if 1
 		for( j = 0; j < vboVertexes.currentElements; j++ )
 		{
-			dv[ 0 ] = Com_GrowListElement( &vboVertexes, j );
-			//VectorNormalize(dv[0]->tangent);
-			//VectorNormalize(dv[0]->binormal);
-			VectorNormalize( dv[ 0 ]->normal );
+			dv[0] = Com_GrowListElement( &vboVertexes, j );
+			// VectorNormalize(dv[0]->tangent);
+			// VectorNormalize(dv[0]->binormal);
+			VectorNormalize( dv[0]->normal );
 		}
 	#endif
 	}
@@ -905,7 +906,7 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 	materialIndex = oldMaterialIndex = -1;
 	for( i = 0; i < numTriangles; i++ )
 	{
-		triangle      = &triangles[ i ];
+		triangle	  = &triangles[i];
 		materialIndex = triangle->materialIndex;
 
 		if( materialIndex != oldMaterialIndex )
@@ -924,7 +925,7 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 				{
 					skelTriangle_t* sortTri;
 
-					triangle      = &triangles[ j ];
+					triangle	  = &triangles[j];
 					materialIndex = triangle->materialIndex;
 
 					if( materialIndex != oldMaterialIndex )
@@ -947,9 +948,9 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 
 				for( j = 0; j < MAX_BONES; j++ )
 				{
-					if( boneReferences[ j ] > 0 )
+					if( boneReferences[j] > 0 )
 					{
-						ri.Printf( PRINT_ALL, "R_LoadPSK: referenced bone: '%s'\n", ( j < numReferenceBones ) ? refBones[ j ].name : NULL );
+						ri.Printf( PRINT_ALL, "R_LoadPSK: referenced bone: '%s'\n", ( j < numReferenceBones ) ? refBones[j].name : NULL );
 					}
 				}
 
@@ -960,7 +961,7 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 				}
 
 				// FIXME skinIndex
-				AddSurfaceToVBOSurfacesList2( &vboSurfaces, &vboTriangles, &vboVertexes, md5, vboSurfaces.currentElements, materials[ oldMaterialIndex ].name, numBoneReferences, boneReferences );
+				AddSurfaceToVBOSurfacesList2( &vboSurfaces, &vboTriangles, &vboVertexes, md5, vboSurfaces.currentElements, materials[oldMaterialIndex].name, numBoneReferences, boneReferences );
 				numRemaining -= vboTriangles.currentElements;
 
 				Com_DestroyGrowList( &vboTriangles );
@@ -984,11 +985,11 @@ qboolean R_LoadPSK( model_t* mod, void* buffer, int bufferSize, const char* modN
 
 	// move VBO surfaces list to hunk
 	md5->numVBOSurfaces = vboSurfaces.currentElements;
-	md5->vboSurfaces    = ri.Hunk_Alloc( md5->numVBOSurfaces * sizeof( *md5->vboSurfaces ), h_low );
+	md5->vboSurfaces	= ri.Hunk_Alloc( md5->numVBOSurfaces * sizeof( *md5->vboSurfaces ), h_low );
 
 	for( i = 0; i < md5->numVBOSurfaces; i++ )
 	{
-		md5->vboSurfaces[ i ] = ( srfVBOMD5Mesh_t* )Com_GrowListElement( &vboSurfaces, i );
+		md5->vboSurfaces[i] = ( srfVBOMD5Mesh_t* )Com_GrowListElement( &vboSurfaces, i );
 	}
 
 	Com_DestroyGrowList( &vboSurfaces );

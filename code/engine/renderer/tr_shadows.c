@@ -41,10 +41,10 @@ shadowState_t shadowState;
 RB_ProjectionShadowDeform
 =================
 */
-void RB_ProjectionShadowDeform( void )
+void		  RB_ProjectionShadowDeform( void )
 {
 	float* xyz;
-	int    i;
+	int	   i;
 	float  h;
 	vec3_t ground;
 	vec3_t light;
@@ -54,11 +54,11 @@ void RB_ProjectionShadowDeform( void )
 
 	xyz = ( float* )tess.xyz;
 
-	ground[ 0 ] = backEnd.orientation.axis[ 0 ][ 2 ];
-	ground[ 1 ] = backEnd.orientation.axis[ 1 ][ 2 ];
-	ground[ 2 ] = backEnd.orientation.axis[ 2 ][ 2 ];
+	ground[0] = backEnd.orientation.axis[0][2];
+	ground[1] = backEnd.orientation.axis[1][2];
+	ground[2] = backEnd.orientation.axis[2][2];
 
-	groundDist = backEnd.orientation.origin[ 2 ] - backEnd.currentEntity->e.shadowPlane;
+	groundDist = backEnd.orientation.origin[2] - backEnd.currentEntity->e.shadowPlane;
 
 	VectorCopy( backEnd.currentEntity->lightDir, lightDir );
 	d = DotProduct( lightDir, ground );
@@ -70,16 +70,16 @@ void RB_ProjectionShadowDeform( void )
 	}
 	d = 1.0 / d;
 
-	light[ 0 ] = lightDir[ 0 ] * d;
-	light[ 1 ] = lightDir[ 1 ] * d;
-	light[ 2 ] = lightDir[ 2 ] * d;
+	light[0] = lightDir[0] * d;
+	light[1] = lightDir[1] * d;
+	light[2] = lightDir[2] * d;
 
 	for( i = 0; i < tess.numVertexes; i++, xyz += 4 )
 	{
 		h = DotProduct( xyz, ground ) + groundDist;
 
-		xyz[ 0 ] -= light[ 0 ] * h;
-		xyz[ 1 ] -= light[ 1 ] * h;
-		xyz[ 2 ] -= light[ 2 ] * h;
+		xyz[0] -= light[0] * h;
+		xyz[1] -= light[1] * h;
+		xyz[2] -= light[2] * h;
 	}
 }

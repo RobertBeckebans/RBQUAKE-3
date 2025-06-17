@@ -34,20 +34,20 @@ extern "C"
 // A user mod should never modify this file
 
 #if 1
-	#define PRODUCT_NAME        "RBQUAKE-3" // Case, Spaces allowed
-	#define PRODUCT_NAME_UPPPER "RBQUAKE-3" // Case, No spaces
-	#define PRODUCT_NAME_LOWER  "rbquake-3" // No case, No spaces
-	#define PRODUCT_VERSION     "0.5.0"
-	
-	#define HOMEPATH_NAME_UNIX   ".rbquake3"
-	#define HOMEPATH_NAME_WIN    "RBQUAKE-3"
-	#define HOMEPATH_NAME_MACOSX HOMEPATH_NAME_WIN
-	
-	#define ENGINE_NAME    		 "XreaL Engine"
-	#define ENGINE_VERSION		 "0.9.7"
-	#define STEAMPATH_NAME          "Quake 3 Arena"
-	#define STEAMPATH_APPID         "2200"
-	#define GOGPATH_ID              "1441704920"
+#define PRODUCT_NAME        "RBQUAKE-3" // Case, Spaces allowed
+#define PRODUCT_NAME_UPPPER "RBQUAKE-3" // Case, No spaces
+#define PRODUCT_NAME_LOWER  "rbquake-3" // No case, No spaces
+#define PRODUCT_VERSION     "0.5.0"
+
+#define HOMEPATH_NAME_UNIX   ".rbquake3"
+#define HOMEPATH_NAME_WIN    "RBQUAKE-3"
+#define HOMEPATH_NAME_MACOSX HOMEPATH_NAME_WIN
+
+#define ENGINE_NAME    		 "XreaL Engine"
+#define ENGINE_VERSION		 "0.9.7"
+#define STEAMPATH_NAME          "Quake 3 Arena"
+#define STEAMPATH_APPID         "2200"
+#define GOGPATH_ID              "1441704920"
 #endif
 
 // Heartbeat for dpmaster protocol. You shouldn't change this unless you know what you're doing
@@ -82,13 +82,13 @@ extern "C"
 // 1.32 released 7-10-2002
 
 #ifndef PRODUCT_DATE
-	#define PRODUCT_DATE __DATE__
+#define PRODUCT_DATE __DATE__
 #endif
 
 #if defined( STANDALONE )
-	#define BASEGAME            "base"
-#else 
-	#define BASEGAME            "baseq3"
+#define BASEGAME            "base"
+#else
+#define BASEGAME            "baseq3"
 #endif
 
 #define GAMENAME_FOR_MASTER PRODUCT_NAME_UPPPER // must NOT contain whitespaces
@@ -1198,11 +1198,11 @@ void VectorAxisMultiply( const vec3_t p, vec3_t m[ 3 ], vec3_t out );
 void PerpendicularVector( vec3_t dst, const vec3_t src );
 
 #ifndef MAX
-	#define MAX( x, y ) ( ( x ) > ( y ) ? ( x ) : ( y ) )
+#define MAX( x, y ) ( ( x ) > ( y ) ? ( x ) : ( y ) )
 #endif
 
 #ifndef MIN
-	#define MIN( x, y ) ( ( x ) < ( y ) ? ( x ) : ( y ) )
+#define MIN( x, y ) ( ( x ) < ( y ) ? ( x ) : ( y ) )
 #endif
 
 void GetPerpendicularViewVector( const vec3_t point, const vec3_t p1, const vec3_t p2, vec3_t up );
@@ -1648,7 +1648,7 @@ typedef enum cvar_flags_s
 	CVAR_VM_CREATED     = BIT( 12 ), // cvar was created exclusively in one of the VMs.
 	CVAR_PROTECTED      = BIT( 13 ), // prevent modifying this var from VMs or the server
 	CVAR_SHADER         = BIT( 14 ), // tell renderer to recompile shaders.
-	
+
 	// These flags are only returned by the Cvar_Flags() function
 	CVAR_MODIFIED		= BIT( 15 ),
 	CVAR_NONEXISTENT    = 0xFFFFFFFF // cvar doesn't exist

@@ -37,22 +37,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	#define OPUS_SAMPLEWIDTH 2
 
 // Q3 Ogg Opus codec
-snd_codec_t opus_codec = {
-	"opus",
-	S_OggOpus_CodecLoad,
-	S_OggOpus_CodecOpenStream,
-	S_OggOpus_CodecReadStream,
-	S_OggOpus_CodecCloseStream,
-	NULL
-};
+snd_codec_t opus_codec = { "opus", S_OggOpus_CodecLoad, S_OggOpus_CodecOpenStream, S_OggOpus_CodecReadStream, S_OggOpus_CodecCloseStream, NULL };
 
 // callbacks for opusfile
 
 // fread() replacement
-int S_OggOpus_Callback_read( void* datasource, unsigned char* ptr, int size )
+int			S_OggOpus_Callback_read( void* datasource, unsigned char* ptr, int size )
 {
 	snd_stream_t* stream;
-	int           bytesRead = 0;
+	int			  bytesRead = 0;
 
 	// check if input is valid
 	if( !ptr )
@@ -96,7 +89,7 @@ int S_OggOpus_Callback_read( void* datasource, unsigned char* ptr, int size )
 int S_OggOpus_Callback_seek( void* datasource, opus_int64 offset, int whence )
 {
 	snd_stream_t* stream;
-	int           retVal = 0;
+	int			  retVal = 0;
 
 	// check if input is valid
 	if( !datasource )
@@ -200,28 +193,23 @@ opus_int64 S_OggOpus_Callback_tell( void* datasource )
 }
 
 // the callback structure
-const OpusFileCallbacks S_OggOpus_Callbacks = {
-	&S_OggOpus_Callback_read,
-	&S_OggOpus_Callback_seek,
-	&S_OggOpus_Callback_tell,
-	&S_OggOpus_Callback_close
-};
+const OpusFileCallbacks S_OggOpus_Callbacks = { &S_OggOpus_Callback_read, &S_OggOpus_Callback_seek, &S_OggOpus_Callback_tell, &S_OggOpus_Callback_close };
 
 /*
 =================
 S_OggOpus_CodecOpenStream
 =================
 */
-snd_stream_t* S_OggOpus_CodecOpenStream( const char* filename )
+snd_stream_t*			S_OggOpus_CodecOpenStream( const char* filename )
 {
-	snd_stream_t* stream;
+	snd_stream_t*	stream;
 
 	// Opus codec control structure
-	OggOpusFile* of;
+	OggOpusFile*	of;
 
 	// some variables used to get informations about the file
 	const OpusHead* opusInfo;
-	ogg_int64_t     numSamples;
+	ogg_int64_t		numSamples;
 
 	// check if input is valid
 	if( !filename )
@@ -290,11 +278,11 @@ snd_stream_t* S_OggOpus_CodecOpenStream( const char* filename )
 	numSamples = op_pcm_total( of, -1 );
 
 	// fill in the info-structure in the stream
-	stream->info.rate     = 48000;
-	stream->info.width    = OPUS_SAMPLEWIDTH;
+	stream->info.rate	  = 48000;
+	stream->info.width	  = OPUS_SAMPLEWIDTH;
 	stream->info.channels = opusInfo->channel_count;
 	stream->info.samples  = numSamples;
-	stream->info.size     = stream->info.samples * stream->info.channels * stream->info.width;
+	stream->info.size	  = stream->info.samples * stream->info.channels * stream->info.width;
 	stream->info.dataofs  = 0;
 
 	// We use stream->pos for the file pointer in the compressed ogg file
@@ -334,7 +322,7 @@ S_OggOpus_CodecReadStream
 int S_OggOpus_CodecReadStream( snd_stream_t* stream, int bytes, void* buffer )
 {
 	// buffer handling
-	int         samplesRead, samplesLeft, c;
+	int			samplesRead, samplesLeft, c;
 	opus_int16* bufPtr;
 
 	// check if input is valid
@@ -350,7 +338,7 @@ int S_OggOpus_CodecReadStream( snd_stream_t* stream, int bytes, void* buffer )
 
 	samplesRead = 0;
 	samplesLeft = bytes / stream->info.channels / stream->info.width;
-	bufPtr      = buffer;
+	bufPtr		= buffer;
 
 	if( samplesLeft <= 0 )
 	{
@@ -393,8 +381,8 @@ where we read the whole stream at once.
 void* S_OggOpus_CodecLoad( const char* filename, snd_info_t* info )
 {
 	snd_stream_t* stream;
-	byte*         buffer;
-	int           bytesRead;
+	byte*		  buffer;
+	int			  bytesRead;
 
 	// check if input is valid
 	if( !( filename && info ) )
@@ -410,11 +398,11 @@ void* S_OggOpus_CodecLoad( const char* filename, snd_info_t* info )
 	}
 
 	// copy over the info
-	info->rate     = stream->info.rate;
-	info->width    = stream->info.width;
+	info->rate	   = stream->info.rate;
+	info->width	   = stream->info.width;
 	info->channels = stream->info.channels;
 	info->samples  = stream->info.samples;
-	info->size     = stream->info.size;
+	info->size	   = stream->info.size;
 	info->dataofs  = stream->info.dataofs;
 
 	// allocate a buffer

@@ -23,8 +23,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "client.h"
 
-unsigned frame_msec;
-int      old_com_frameTime;
+unsigned  frame_msec;
+int		  old_com_frameTime;
 
 /*
 ===============================================================================
@@ -55,11 +55,11 @@ kbutton_t in_up, in_down;
 kbutton_t in_voiprecord;
 #endif
 
-kbutton_t in_buttons[ 16 ];
+kbutton_t in_buttons[16];
 
-qboolean in_mlooking;
+qboolean  in_mlooking;
 
-void IN_MLookDown( void )
+void	  IN_MLookDown( void )
 {
 	in_mlooking = qtrue;
 }
@@ -75,11 +75,11 @@ void IN_MLookUp( void )
 
 void IN_KeyDown( kbutton_t* b )
 {
-	int   k;
+	int	  k;
 	char* c;
 
 	c = Cmd_Argv( 1 );
-	if( c[ 0 ] )
+	if( c[0] )
 	{
 		k = atoi( c );
 	}
@@ -88,18 +88,18 @@ void IN_KeyDown( kbutton_t* b )
 		k = -1; // typed manually at the console for continuous down
 	}
 
-	if( k == b->down[ 0 ] || k == b->down[ 1 ] )
+	if( k == b->down[0] || k == b->down[1] )
 	{
 		return; // repeating key
 	}
 
-	if( !b->down[ 0 ] )
+	if( !b->down[0] )
 	{
-		b->down[ 0 ] = k;
+		b->down[0] = k;
 	}
-	else if( !b->down[ 1 ] )
+	else if( !b->down[1] )
 	{
-		b->down[ 1 ] = k;
+		b->down[1] = k;
 	}
 	else
 	{
@@ -113,45 +113,45 @@ void IN_KeyDown( kbutton_t* b )
 	}
 
 	// save timestamp for partial frame summing
-	c           = Cmd_Argv( 2 );
+	c			= Cmd_Argv( 2 );
 	b->downtime = atoi( c );
 
-	b->active     = qtrue;
+	b->active	  = qtrue;
 	b->wasPressed = qtrue;
 }
 
 void IN_KeyUp( kbutton_t* b )
 {
-	int      k;
-	char*    c;
+	int		 k;
+	char*	 c;
 	unsigned uptime;
 
 	c = Cmd_Argv( 1 );
-	if( c[ 0 ] )
+	if( c[0] )
 	{
 		k = atoi( c );
 	}
 	else
 	{
 		// typed manually at the console, assume for unsticking, so clear all
-		b->down[ 0 ] = b->down[ 1 ] = 0;
-		b->active                   = qfalse;
+		b->down[0] = b->down[1] = 0;
+		b->active				= qfalse;
 		return;
 	}
 
-	if( b->down[ 0 ] == k )
+	if( b->down[0] == k )
 	{
-		b->down[ 0 ] = 0;
+		b->down[0] = 0;
 	}
-	else if( b->down[ 1 ] == k )
+	else if( b->down[1] == k )
 	{
-		b->down[ 1 ] = 0;
+		b->down[1] = 0;
 	}
 	else
 	{
 		return; // key up without coresponding down (menu pass through)
 	}
-	if( b->down[ 0 ] || b->down[ 1 ] )
+	if( b->down[0] || b->down[1] )
 	{
 		return; // some other key is still holding it down
 	}
@@ -159,7 +159,7 @@ void IN_KeyUp( kbutton_t* b )
 	b->active = qfalse;
 
 	// save timestamp for partial frame summing
-	c      = Cmd_Argv( 2 );
+	c	   = Cmd_Argv( 2 );
 	uptime = atoi( c );
 	if( uptime )
 	{
@@ -183,9 +183,9 @@ Returns the fraction of the frame that the key was down
 float CL_KeyState( kbutton_t* key )
 {
 	float val;
-	int   msec;
+	int	  msec;
 
-	msec      = key->msec;
+	msec	  = key->msec;
 	key->msec = 0;
 
 	if( key->active )
@@ -336,145 +336,145 @@ void IN_VoipRecordUp( void )
 
 void IN_Button0Down( void )
 {
-	IN_KeyDown( &in_buttons[ 0 ] );
+	IN_KeyDown( &in_buttons[0] );
 }
 void IN_Button0Up( void )
 {
-	IN_KeyUp( &in_buttons[ 0 ] );
+	IN_KeyUp( &in_buttons[0] );
 }
 void IN_Button1Down( void )
 {
-	IN_KeyDown( &in_buttons[ 1 ] );
+	IN_KeyDown( &in_buttons[1] );
 }
 void IN_Button1Up( void )
 {
-	IN_KeyUp( &in_buttons[ 1 ] );
+	IN_KeyUp( &in_buttons[1] );
 }
 void IN_Button2Down( void )
 {
-	IN_KeyDown( &in_buttons[ 2 ] );
+	IN_KeyDown( &in_buttons[2] );
 }
 void IN_Button2Up( void )
 {
-	IN_KeyUp( &in_buttons[ 2 ] );
+	IN_KeyUp( &in_buttons[2] );
 }
 void IN_Button3Down( void )
 {
-	IN_KeyDown( &in_buttons[ 3 ] );
+	IN_KeyDown( &in_buttons[3] );
 }
 void IN_Button3Up( void )
 {
-	IN_KeyUp( &in_buttons[ 3 ] );
+	IN_KeyUp( &in_buttons[3] );
 }
 void IN_Button4Down( void )
 {
-	IN_KeyDown( &in_buttons[ 4 ] );
+	IN_KeyDown( &in_buttons[4] );
 }
 void IN_Button4Up( void )
 {
-	IN_KeyUp( &in_buttons[ 4 ] );
+	IN_KeyUp( &in_buttons[4] );
 }
 void IN_Button5Down( void )
 {
-	IN_KeyDown( &in_buttons[ 5 ] );
+	IN_KeyDown( &in_buttons[5] );
 }
 void IN_Button5Up( void )
 {
-	IN_KeyUp( &in_buttons[ 5 ] );
+	IN_KeyUp( &in_buttons[5] );
 }
 void IN_Button6Down( void )
 {
-	IN_KeyDown( &in_buttons[ 6 ] );
+	IN_KeyDown( &in_buttons[6] );
 }
 void IN_Button6Up( void )
 {
-	IN_KeyUp( &in_buttons[ 6 ] );
+	IN_KeyUp( &in_buttons[6] );
 }
 void IN_Button7Down( void )
 {
-	IN_KeyDown( &in_buttons[ 7 ] );
+	IN_KeyDown( &in_buttons[7] );
 }
 void IN_Button7Up( void )
 {
-	IN_KeyUp( &in_buttons[ 7 ] );
+	IN_KeyUp( &in_buttons[7] );
 }
 void IN_Button8Down( void )
 {
-	IN_KeyDown( &in_buttons[ 8 ] );
+	IN_KeyDown( &in_buttons[8] );
 }
 void IN_Button8Up( void )
 {
-	IN_KeyUp( &in_buttons[ 8 ] );
+	IN_KeyUp( &in_buttons[8] );
 }
 void IN_Button9Down( void )
 {
-	IN_KeyDown( &in_buttons[ 9 ] );
+	IN_KeyDown( &in_buttons[9] );
 }
 void IN_Button9Up( void )
 {
-	IN_KeyUp( &in_buttons[ 9 ] );
+	IN_KeyUp( &in_buttons[9] );
 }
 void IN_Button10Down( void )
 {
-	IN_KeyDown( &in_buttons[ 10 ] );
+	IN_KeyDown( &in_buttons[10] );
 }
 void IN_Button10Up( void )
 {
-	IN_KeyUp( &in_buttons[ 10 ] );
+	IN_KeyUp( &in_buttons[10] );
 }
 void IN_Button11Down( void )
 {
-	IN_KeyDown( &in_buttons[ 11 ] );
+	IN_KeyDown( &in_buttons[11] );
 }
 void IN_Button11Up( void )
 {
-	IN_KeyUp( &in_buttons[ 11 ] );
+	IN_KeyUp( &in_buttons[11] );
 }
 void IN_Button12Down( void )
 {
-	IN_KeyDown( &in_buttons[ 12 ] );
+	IN_KeyDown( &in_buttons[12] );
 }
 void IN_Button12Up( void )
 {
-	IN_KeyUp( &in_buttons[ 12 ] );
+	IN_KeyUp( &in_buttons[12] );
 }
 void IN_Button13Down( void )
 {
-	IN_KeyDown( &in_buttons[ 13 ] );
+	IN_KeyDown( &in_buttons[13] );
 }
 void IN_Button13Up( void )
 {
-	IN_KeyUp( &in_buttons[ 13 ] );
+	IN_KeyUp( &in_buttons[13] );
 }
 void IN_Button14Down( void )
 {
-	IN_KeyDown( &in_buttons[ 14 ] );
+	IN_KeyDown( &in_buttons[14] );
 }
 void IN_Button14Up( void )
 {
-	IN_KeyUp( &in_buttons[ 14 ] );
+	IN_KeyUp( &in_buttons[14] );
 }
 void IN_Button15Down( void )
 {
-	IN_KeyDown( &in_buttons[ 15 ] );
+	IN_KeyDown( &in_buttons[15] );
 }
 void IN_Button15Up( void )
 {
-	IN_KeyUp( &in_buttons[ 15 ] );
+	IN_KeyUp( &in_buttons[15] );
 }
 
 void IN_ButtonDown( void )
 {
-	IN_KeyDown( &in_buttons[ 1 ] );
+	IN_KeyDown( &in_buttons[1] );
 }
 void IN_ButtonUp( void )
 {
-	IN_KeyUp( &in_buttons[ 1 ] );
+	IN_KeyUp( &in_buttons[1] );
 }
 
 void IN_CenterView( void )
 {
-	cl.viewangles[ PITCH ] = -SHORT2ANGLE( cl.snap.ps.delta_angles[ PITCH ] );
+	cl.viewangles[PITCH] = -SHORT2ANGLE( cl.snap.ps.delta_angles[PITCH] );
 }
 
 //==========================================================================
@@ -497,7 +497,7 @@ CL_AdjustAngles
 Moves the local angle positions
 ================
 */
-void CL_AdjustAngles( void )
+void	CL_AdjustAngles( void )
 {
 	float speed;
 
@@ -512,12 +512,12 @@ void CL_AdjustAngles( void )
 
 	if( !in_strafe.active )
 	{
-		cl.viewangles[ YAW ] -= speed * cl_yawspeed->value * CL_KeyState( &in_right );
-		cl.viewangles[ YAW ] += speed * cl_yawspeed->value * CL_KeyState( &in_left );
+		cl.viewangles[YAW] -= speed * cl_yawspeed->value * CL_KeyState( &in_right );
+		cl.viewangles[YAW] += speed * cl_yawspeed->value * CL_KeyState( &in_left );
 	}
 
-	cl.viewangles[ PITCH ] -= speed * cl_pitchspeed->value * CL_KeyState( &in_lookup );
-	cl.viewangles[ PITCH ] += speed * cl_pitchspeed->value * CL_KeyState( &in_lookdown );
+	cl.viewangles[PITCH] -= speed * cl_pitchspeed->value * CL_KeyState( &in_lookup );
+	cl.viewangles[PITCH] += speed * cl_pitchspeed->value * CL_KeyState( &in_lookdown );
 }
 
 /*
@@ -549,8 +549,8 @@ void CL_KeyMove( usercmd_t* cmd )
 	}
 
 	forward = 0;
-	side    = 0;
-	up      = 0;
+	side	= 0;
+	up		= 0;
 	if( in_strafe.active )
 	{
 		side += movespeed * CL_KeyState( &in_right );
@@ -567,8 +567,8 @@ void CL_KeyMove( usercmd_t* cmd )
 	forward -= movespeed * CL_KeyState( &in_back );
 
 	cmd->forwardmove = ClampChar( forward );
-	cmd->rightmove   = ClampChar( side );
-	cmd->upmove      = ClampChar( up );
+	cmd->rightmove	 = ClampChar( side );
+	cmd->upmove		 = ClampChar( up );
 }
 
 /*
@@ -588,8 +588,8 @@ void CL_MouseEvent( int dx, int dy, int time )
 	}
 	else
 	{
-		cl.mouseDx[ cl.mouseIndex ] += dx;
-		cl.mouseDy[ cl.mouseIndex ] += dy;
+		cl.mouseDx[cl.mouseIndex] += dx;
+		cl.mouseDy[cl.mouseIndex] += dy;
 	}
 }
 
@@ -606,7 +606,7 @@ void CL_JoystickEvent( int axis, int value, int time )
 	{
 		Com_Error( ERR_DROP, "CL_JoystickEvent: bad axis %i", axis );
 	}
-	cl.joystickAxis[ axis ] = value;
+	cl.joystickAxis[axis] = value;
 }
 
 /*
@@ -616,7 +616,7 @@ CL_JoystickMove
 */
 void CL_JoystickMove( usercmd_t* cmd )
 {
-	int   movespeed;
+	int	  movespeed;
 	float anglespeed;
 
 	if( in_speed.active ^ cl_run->integer )
@@ -640,27 +640,27 @@ void CL_JoystickMove( usercmd_t* cmd )
 
 	if( !in_strafe.active )
 	{
-		cl.viewangles[ YAW ] += anglespeed * j_yaw->value * cl.joystickAxis[ j_yaw_axis->integer ];
-		cmd->rightmove = ClampChar( cmd->rightmove + ( int )( j_side->value * cl.joystickAxis[ j_side_axis->integer ] ) );
+		cl.viewangles[YAW] += anglespeed * j_yaw->value * cl.joystickAxis[j_yaw_axis->integer];
+		cmd->rightmove = ClampChar( cmd->rightmove + ( int )( j_side->value * cl.joystickAxis[j_side_axis->integer] ) );
 	}
 	else
 	{
-		cl.viewangles[ YAW ] += anglespeed * j_side->value * cl.joystickAxis[ j_side_axis->integer ];
-		cmd->rightmove = ClampChar( cmd->rightmove + ( int )( j_yaw->value * cl.joystickAxis[ j_yaw_axis->integer ] ) );
+		cl.viewangles[YAW] += anglespeed * j_side->value * cl.joystickAxis[j_side_axis->integer];
+		cmd->rightmove = ClampChar( cmd->rightmove + ( int )( j_yaw->value * cl.joystickAxis[j_yaw_axis->integer] ) );
 	}
 
 	if( in_mlooking )
 	{
-		cl.viewangles[ PITCH ] += anglespeed * j_forward->value * cl.joystickAxis[ j_forward_axis->integer ];
-		cmd->forwardmove = ClampChar( cmd->forwardmove + ( int )( j_pitch->value * cl.joystickAxis[ j_pitch_axis->integer ] ) );
+		cl.viewangles[PITCH] += anglespeed * j_forward->value * cl.joystickAxis[j_forward_axis->integer];
+		cmd->forwardmove = ClampChar( cmd->forwardmove + ( int )( j_pitch->value * cl.joystickAxis[j_pitch_axis->integer] ) );
 	}
 	else
 	{
-		cl.viewangles[ PITCH ] += anglespeed * j_pitch->value * cl.joystickAxis[ j_pitch_axis->integer ];
-		cmd->forwardmove = ClampChar( cmd->forwardmove + ( int )( j_forward->value * cl.joystickAxis[ j_forward_axis->integer ] ) );
+		cl.viewangles[PITCH] += anglespeed * j_pitch->value * cl.joystickAxis[j_pitch_axis->integer];
+		cmd->forwardmove = ClampChar( cmd->forwardmove + ( int )( j_forward->value * cl.joystickAxis[j_forward_axis->integer] ) );
 	}
 
-	cmd->upmove = ClampChar( cmd->upmove + ( int )( j_up->value * cl.joystickAxis[ j_up_axis->integer ] ) );
+	cmd->upmove = ClampChar( cmd->upmove + ( int )( j_up->value * cl.joystickAxis[j_up_axis->integer] ) );
 }
 
 /*
@@ -676,18 +676,18 @@ void CL_MouseMove( usercmd_t* cmd )
 	// allow mouse smoothing
 	if( m_filter->integer )
 	{
-		mx = ( cl.mouseDx[ 0 ] + cl.mouseDx[ 1 ] ) * 0.5f;
-		my = ( cl.mouseDy[ 0 ] + cl.mouseDy[ 1 ] ) * 0.5f;
+		mx = ( cl.mouseDx[0] + cl.mouseDx[1] ) * 0.5f;
+		my = ( cl.mouseDy[0] + cl.mouseDy[1] ) * 0.5f;
 	}
 	else
 	{
-		mx = cl.mouseDx[ cl.mouseIndex ];
-		my = cl.mouseDy[ cl.mouseIndex ];
+		mx = cl.mouseDx[cl.mouseIndex];
+		my = cl.mouseDy[cl.mouseIndex];
 	}
 
 	cl.mouseIndex ^= 1;
-	cl.mouseDx[ cl.mouseIndex ] = 0;
-	cl.mouseDy[ cl.mouseIndex ] = 0;
+	cl.mouseDx[cl.mouseIndex] = 0;
+	cl.mouseDy[cl.mouseIndex] = 0;
 
 	if( mx == 0.0f && my == 0.0f )
 	{
@@ -714,25 +714,25 @@ void CL_MouseMove( usercmd_t* cmd )
 		}
 		else
 		{
-			float rate[ 2 ];
-			float power[ 2 ];
+			float rate[2];
+			float power[2];
 
 			// sensitivity remains pretty much unchanged at low speeds
 			// cl_mouseAccel is a power value to how the acceleration is shaped
 			// cl_mouseAccelOffset is the rate for which the acceleration will have doubled the non accelerated amplification
 			// NOTE: decouple the config cvars for independent acceleration setup along X and Y?
 
-			rate[ 0 ]  = fabs( mx ) / ( float )frame_msec;
-			rate[ 1 ]  = fabs( my ) / ( float )frame_msec;
-			power[ 0 ] = powf( rate[ 0 ] / cl_mouseAccelOffset->value, cl_mouseAccel->value );
-			power[ 1 ] = powf( rate[ 1 ] / cl_mouseAccelOffset->value, cl_mouseAccel->value );
+			rate[0]	 = fabs( mx ) / ( float )frame_msec;
+			rate[1]	 = fabs( my ) / ( float )frame_msec;
+			power[0] = powf( rate[0] / cl_mouseAccelOffset->value, cl_mouseAccel->value );
+			power[1] = powf( rate[1] / cl_mouseAccelOffset->value, cl_mouseAccel->value );
 
-			mx = cl_sensitivity->value * ( mx + ( ( mx < 0 ) ? -power[ 0 ] : power[ 0 ] ) * cl_mouseAccelOffset->value );
-			my = cl_sensitivity->value * ( my + ( ( my < 0 ) ? -power[ 1 ] : power[ 1 ] ) * cl_mouseAccelOffset->value );
+			mx = cl_sensitivity->value * ( mx + ( ( mx < 0 ) ? -power[0] : power[0] ) * cl_mouseAccelOffset->value );
+			my = cl_sensitivity->value * ( my + ( ( my < 0 ) ? -power[1] : power[1] ) * cl_mouseAccelOffset->value );
 
 			if( cl_showMouseRate->integer )
 			{
-				Com_Printf( "ratex: %f, ratey: %f, powx: %f, powy: %f\n", rate[ 0 ], rate[ 1 ], power[ 0 ], power[ 1 ] );
+				Com_Printf( "ratex: %f, ratey: %f, powx: %f, powy: %f\n", rate[0], rate[1], power[0], power[1] );
 			}
 		}
 	}
@@ -753,12 +753,12 @@ void CL_MouseMove( usercmd_t* cmd )
 	}
 	else
 	{
-		cl.viewangles[ YAW ] -= m_yaw->value * mx;
+		cl.viewangles[YAW] -= m_yaw->value * mx;
 	}
 
 	if( ( in_mlooking || cl_freelook->integer ) && !in_strafe.active )
 	{
-		cl.viewangles[ PITCH ] += m_pitch->value * my;
+		cl.viewangles[PITCH] += m_pitch->value * my;
 	}
 	else
 	{
@@ -782,11 +782,11 @@ void CL_CmdButtons( usercmd_t* cmd )
 	//
 	for( i = 0; i < 15; i++ )
 	{
-		if( in_buttons[ i ].active || in_buttons[ i ].wasPressed )
+		if( in_buttons[i].active || in_buttons[i].wasPressed )
 		{
 			cmd->buttons |= 1 << i;
 		}
-		in_buttons[ i ].wasPressed = qfalse;
+		in_buttons[i].wasPressed = qfalse;
 	}
 
 	if( Key_GetCatcher() )
@@ -820,7 +820,7 @@ void CL_FinishMove( usercmd_t* cmd )
 
 	for( i = 0; i < 3; i++ )
 	{
-		cmd->angles[ i ] = ANGLE2SHORT( cl.viewangles[ i ] );
+		cmd->angles[i] = ANGLE2SHORT( cl.viewangles[i] );
 	}
 }
 
@@ -832,7 +832,7 @@ CL_CreateCmd
 usercmd_t CL_CreateCmd( void )
 {
 	usercmd_t cmd;
-	vec3_t    oldAngles;
+	vec3_t	  oldAngles;
 
 	VectorCopy( cl.viewangles, oldAngles );
 
@@ -853,13 +853,13 @@ usercmd_t CL_CreateCmd( void )
 	CL_JoystickMove( &cmd );
 
 	// check to make sure the angles haven't wrapped
-	if( cl.viewangles[ PITCH ] - oldAngles[ PITCH ] > 90 )
+	if( cl.viewangles[PITCH] - oldAngles[PITCH] > 90 )
 	{
-		cl.viewangles[ PITCH ] = oldAngles[ PITCH ] + 90;
+		cl.viewangles[PITCH] = oldAngles[PITCH] + 90;
 	}
-	else if( oldAngles[ PITCH ] - cl.viewangles[ PITCH ] > 90 )
+	else if( oldAngles[PITCH] - cl.viewangles[PITCH] > 90 )
 	{
-		cl.viewangles[ PITCH ] = oldAngles[ PITCH ] - 90;
+		cl.viewangles[PITCH] = oldAngles[PITCH] - 90;
 	}
 
 	// store out the final values
@@ -870,11 +870,11 @@ usercmd_t CL_CreateCmd( void )
 	{
 		if( cl_debugMove->integer == 1 )
 		{
-			SCR_DebugGraph( fabs( cl.viewangles[ YAW ] - oldAngles[ YAW ] ) );
+			SCR_DebugGraph( fabs( cl.viewangles[YAW] - oldAngles[YAW] ) );
 		}
 		if( cl_debugMove->integer == 2 )
 		{
-			SCR_DebugGraph( fabs( cl.viewangles[ PITCH ] - oldAngles[ PITCH ] ) );
+			SCR_DebugGraph( fabs( cl.viewangles[PITCH] - oldAngles[PITCH] ) );
 		}
 	}
 
@@ -910,8 +910,8 @@ void CL_CreateNewCommands( void )
 
 	// generate a command for this frame
 	cl.cmdNumber++;
-	cmdNum            = cl.cmdNumber & CMD_MASK;
-	cl.cmds[ cmdNum ] = CL_CreateCmd();
+	cmdNum			= cl.cmdNumber & CMD_MASK;
+	cl.cmds[cmdNum] = CL_CreateCmd();
 }
 
 /*
@@ -971,7 +971,7 @@ qboolean CL_ReadyToSendPacket( void )
 		Cvar_Set( "cl_maxpackets", "125" );
 	}
 	oldPacketNum = ( clc.netchan.outgoingSequence - 1 ) & PACKET_MASK;
-	delta        = cls.realtime - cl.outPackets[ oldPacketNum ].p_realtime;
+	delta		 = cls.realtime - cl.outPackets[oldPacketNum].p_realtime;
 	if( delta < 1000 / cl_maxpackets->integer )
 	{
 		// the accumulated commands will go out in the next packet
@@ -1004,14 +1004,14 @@ During normal gameplay, a client packet will contain something like:
 */
 void CL_WritePacket( void )
 {
-	msg_t      buf;
-	byte       data[ MAX_MSGLEN ];
-	int        i, j;
+	msg_t	   buf;
+	byte	   data[MAX_MSGLEN];
+	int		   i, j;
 	usercmd_t *cmd, *oldcmd;
 	usercmd_t  nullcmd;
-	int        packetNum;
-	int        oldPacketNum;
-	int        count, key;
+	int		   packetNum;
+	int		   oldPacketNum;
+	int		   count, key;
 
 	// don't send anything if playing back a demo
 	if( clc.demoplaying || clc.state == CA_CINEMATIC )
@@ -1042,7 +1042,7 @@ void CL_WritePacket( void )
 	{
 		MSG_WriteByte( &buf, clc_clientCommand );
 		MSG_WriteLong( &buf, i );
-		MSG_WriteString( &buf, clc.reliableCommands[ i & ( MAX_RELIABLE_COMMANDS - 1 ) ] );
+		MSG_WriteString( &buf, clc.reliableCommands[i & ( MAX_RELIABLE_COMMANDS - 1 )] );
 	}
 
 	// we want to send all the usercmds that were generated in the last
@@ -1057,7 +1057,7 @@ void CL_WritePacket( void )
 		Cvar_Set( "cl_packetdup", "5" );
 	}
 	oldPacketNum = ( clc.netchan.outgoingSequence - 1 - cl_packetdup->integer ) & PACKET_MASK;
-	count        = cl.cmdNumber - cl.outPackets[ oldPacketNum ].p_cmdNumber;
+	count		 = cl.cmdNumber - cl.outPackets[oldPacketNum].p_cmdNumber;
 	if( count > MAX_PACKET_USERCMDS )
 	{
 		count = MAX_PACKET_USERCMDS;
@@ -1085,8 +1085,8 @@ void CL_WritePacket( void )
 			if( clc.demorecording && !clc.demowaiting )
 			{
 				const int voipSize = clc.voipOutgoingDataSize;
-				msg_t     fakemsg;
-				byte      fakedata[ MAX_MSGLEN ];
+				msg_t	  fakemsg;
+				byte	  fakedata[MAX_MSGLEN];
 				MSG_Init( &fakemsg, fakedata, sizeof( fakedata ) );
 				MSG_Bitstream( &fakemsg );
 				MSG_WriteLong( &fakemsg, clc.reliableAcknowledge );
@@ -1140,13 +1140,13 @@ void CL_WritePacket( void )
 		// also use the message acknowledge
 		key ^= clc.serverMessageSequence;
 		// also use the last acknowledged server command in the key
-		key ^= MSG_HashKey( clc.serverCommands[ clc.serverCommandSequence & ( MAX_RELIABLE_COMMANDS - 1 ) ], 32 );
+		key ^= MSG_HashKey( clc.serverCommands[clc.serverCommandSequence & ( MAX_RELIABLE_COMMANDS - 1 )], 32 );
 
 		// write all the commands, including the predicted command
 		for( i = 0; i < count; i++ )
 		{
-			j   = ( cl.cmdNumber - count + i + 1 ) & CMD_MASK;
-			cmd = &cl.cmds[ j ];
+			j	= ( cl.cmdNumber - count + i + 1 ) & CMD_MASK;
+			cmd = &cl.cmds[j];
 			MSG_WriteDeltaUsercmdKey( &buf, key, oldcmd, cmd );
 			oldcmd = cmd;
 		}
@@ -1155,11 +1155,11 @@ void CL_WritePacket( void )
 	//
 	// deliver the message
 	//
-	packetNum                               = clc.netchan.outgoingSequence & PACKET_MASK;
-	cl.outPackets[ packetNum ].p_realtime   = cls.realtime;
-	cl.outPackets[ packetNum ].p_serverTime = oldcmd->serverTime;
-	cl.outPackets[ packetNum ].p_cmdNumber  = cl.cmdNumber;
-	clc.lastPacketSentTime                  = cls.realtime;
+	packetNum							  = clc.netchan.outgoingSequence & PACKET_MASK;
+	cl.outPackets[packetNum].p_realtime	  = cls.realtime;
+	cl.outPackets[packetNum].p_serverTime = oldcmd->serverTime;
+	cl.outPackets[packetNum].p_cmdNumber  = cl.cmdNumber;
+	clc.lastPacketSentTime				  = cls.realtime;
 
 	if( cl_showSend->integer )
 	{
@@ -1283,7 +1283,7 @@ void CL_InitInput( void )
 	Cmd_AddCommand( "-voiprecord", IN_VoipRecordUp );
 #endif
 
-	cl_nodelta   = Cvar_Get( "cl_nodelta", "0", 0 );
+	cl_nodelta	 = Cvar_Get( "cl_nodelta", "0", 0 );
 	cl_debugMove = Cvar_Get( "cl_debugMove", "0", 0 );
 }
 

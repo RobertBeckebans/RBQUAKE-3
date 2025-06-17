@@ -116,7 +116,7 @@ void MutexUnlock( mutex_t* m )
 
 mutex_t* MutexAlloc( void )
 {
-	pthread_mutex_t*    my_mutex;
+	pthread_mutex_t*	my_mutex;
 	pthread_mutexattr_t mattrib;
 
 	if( numthreads == 1 )

@@ -30,7 +30,7 @@ Gives the activator all the items pointed to.
 void Use_Target_Give( gentity_t* ent, gentity_t* other, gentity_t* activator )
 {
 	gentity_t* t;
-	trace_t    trace;
+	trace_t	   trace;
 
 	if( !activator->client )
 	{
@@ -76,15 +76,15 @@ void Use_target_remove_powerups( gentity_t* ent, gentity_t* other, gentity_t* ac
 		return;
 	}
 
-	if( activator->client->ps.powerups[ PW_REDFLAG ] )
+	if( activator->client->ps.powerups[PW_REDFLAG] )
 	{
 		Team_ReturnFlag( TEAM_RED );
 	}
-	else if( activator->client->ps.powerups[ PW_BLUEFLAG ] )
+	else if( activator->client->ps.powerups[PW_BLUEFLAG] )
 	{
 		Team_ReturnFlag( TEAM_BLUE );
 	}
-	else if( activator->client->ps.powerups[ PW_NEUTRALFLAG ] )
+	else if( activator->client->ps.powerups[PW_NEUTRALFLAG] )
 	{
 		Team_ReturnFlag( TEAM_FREE );
 	}
@@ -111,7 +111,7 @@ void Think_Target_Delay( gentity_t* ent )
 void Use_Target_Delay( gentity_t* ent, gentity_t* other, gentity_t* activator )
 {
 	ent->nextthink = level.time + ( ent->wait + ent->random * crandom() ) * 1000;
-	ent->think     = Think_Target_Delay;
+	ent->think	   = Think_Target_Delay;
 	ent->activator = activator;
 }
 
@@ -232,7 +232,7 @@ void Use_Target_Speaker( gentity_t* ent, gentity_t* other, gentity_t* activator 
 
 void SP_target_speaker( gentity_t* ent )
 {
-	char  buffer[ MAX_QPATH ];
+	char  buffer[MAX_QPATH];
 	char* s;
 
 	G_SpawnFloat( "wait", "0", &ent->wait );
@@ -245,7 +245,7 @@ void SP_target_speaker( gentity_t* ent )
 
 	// force all client relative sounds to be "activator" speakers that
 	// play on the entity that activates it
-	if( s[ 0 ] == '*' )
+	if( s[0] == '*' )
 	{
 		ent->spawnflags |= 8;
 	}
@@ -261,9 +261,9 @@ void SP_target_speaker( gentity_t* ent )
 	ent->noise_index = G_SoundIndex( buffer );
 
 	// a repeating speaker can be done completely client side
-	ent->s.eType     = ET_SPEAKER;
+	ent->s.eType	 = ET_SPEAKER;
 	ent->s.eventParm = ent->noise_index;
-	ent->s.frame     = ent->wait * 10;
+	ent->s.frame	 = ent->wait * 10;
 	ent->s.clientNum = ent->random * 10;
 
 	// check for prestarted looping sound
@@ -293,9 +293,9 @@ When triggered, fires a laser.  You can either set a target or a direction.
 */
 void target_laser_think( gentity_t* self )
 {
-	vec3_t  end;
+	vec3_t	end;
 	trace_t tr;
-	vec3_t  point;
+	vec3_t	point;
 
 	// if pointed at another entity, set movedir to point at it
 	if( self->enemy )
@@ -314,7 +314,7 @@ void target_laser_think( gentity_t* self )
 	if( tr.entityNum )
 	{
 		// hurt it if we can
-		G_Damage( &g_entities[ tr.entityNum ], self, self->activator, self->movedir, tr.endpos, self->damage, DAMAGE_NO_KNOCKBACK, MOD_TARGET_LASER );
+		G_Damage( &g_entities[tr.entityNum], self, self->activator, self->movedir, tr.endpos, self->damage, DAMAGE_NO_KNOCKBACK, MOD_TARGET_LASER );
 	}
 
 	VectorCopy( tr.endpos, self->s.origin2 );
@@ -371,7 +371,7 @@ void target_laser_start( gentity_t* self )
 		G_SetMovedir( self->s.angles, self->movedir );
 	}
 
-	self->use   = target_laser_use;
+	self->use	= target_laser_use;
 	self->think = target_laser_think;
 
 	if( !self->damage )
@@ -392,7 +392,7 @@ void target_laser_start( gentity_t* self )
 void SP_target_laser( gentity_t* self )
 {
 	// let everything else get spawned before we start firing
-	self->think     = target_laser_start;
+	self->think		= target_laser_start;
 	self->nextthink = level.time + FRAMETIME;
 }
 
@@ -504,9 +504,7 @@ static void target_location_linkup( gentity_t* ent )
 
 	trap_SetConfigstring( CS_LOCATIONS, "unknown" );
 
-	for( i = 0, ent = g_entities, n = 1;
-		 i < level.num_entities;
-		 i++, ent++ )
+	for( i = 0, ent = g_entities, n = 1; i < level.num_entities; i++, ent++ )
 	{
 		if( ent->classname && !Q_stricmp( ent->classname, "target_location" ) )
 		{
@@ -514,7 +512,7 @@ static void target_location_linkup( gentity_t* ent )
 			ent->health = n; // use for location marking
 			trap_SetConfigstring( CS_LOCATIONS + n, ent->message );
 			n++;
-			ent->nextTrain     = level.locationHead;
+			ent->nextTrain	   = level.locationHead;
 			level.locationHead = ent;
 		}
 	}
@@ -532,7 +530,7 @@ in site, closest in distance
 */
 void SP_target_location( gentity_t* self )
 {
-	self->think     = target_location_linkup;
+	self->think		= target_location_linkup;
 	self->nextthink = level.time + 200; // Let them all spawn first
 
 	G_SetOrigin( self, self->s.origin );

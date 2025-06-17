@@ -37,14 +37,14 @@ qboolean CG_RegisterAnimation( animation_t* anim, const char* filename, qboolean
 	}
 
 	anim->firstFrame = 0;
-	anim->numFrames  = trap_R_AnimNumFrames( anim->handle );
-	frameRate        = trap_R_AnimFrameRate( anim->handle );
+	anim->numFrames	 = trap_R_AnimNumFrames( anim->handle );
+	frameRate		 = trap_R_AnimFrameRate( anim->handle );
 
 	if( frameRate == 0 )
 	{
 		frameRate = 1;
 	}
-	anim->frameLerp   = 1000 / frameRate;
+	anim->frameLerp	  = 1000 / frameRate;
 	anim->initialLerp = 1000 / frameRate;
 
 	if( loop )
@@ -56,7 +56,7 @@ qboolean CG_RegisterAnimation( animation_t* anim, const char* filename, qboolean
 		anim->loopFrames = 0;
 	}
 
-	anim->reversed    = reversed;
+	anim->reversed	  = reversed;
 	anim->clearOrigin = clearOrigin;
 
 	return qtrue;
@@ -68,7 +68,7 @@ void CG_SetLerpFrameAnimation( lerpFrame_t* lf, animation_t* anims, int animsNum
 
 	// save old animation
 	lf->old_animationNumber = lf->animationNumber;
-	lf->old_animation       = lf->animation;
+	lf->old_animation		= lf->animation;
 
 	lf->animationNumber = newAnimation;
 	newAnimation &= ~ANIM_TOGGLEBIT;
@@ -78,9 +78,9 @@ void CG_SetLerpFrameAnimation( lerpFrame_t* lf, animation_t* anims, int animsNum
 		CG_Error( "CG_SetLerpFrameAnimation: bad animation number: %i", newAnimation );
 	}
 
-	anim = &anims[ newAnimation ];
+	anim = &anims[newAnimation];
 
-	lf->animation          = anim;
+	lf->animation		   = anim;
 	lf->animationStartTime = lf->frameTime + anim->initialLerp;
 
 	if( lf->old_animationNumber <= 0 )
@@ -103,7 +103,7 @@ void CG_SetLerpFrameAnimation( lerpFrame_t* lf, animation_t* anims, int animsNum
 
 	memcpy( &lf->oldSkeleton, &lf->skeleton, sizeof( refSkeleton_t ) );
 
-	//Com_Printf("new: %i old %i\n", newAnimation,lf->old_animationNumber);
+	// Com_Printf("new: %i old %i\n", newAnimation,lf->old_animationNumber);
 
 	if( !trap_R_BuildSkeleton( &lf->oldSkeleton, lf->old_animation->handle, lf->oldFrame, lf->frame, lf->blendlerp, lf->old_animation->clearOrigin ) )
 	{
@@ -119,9 +119,9 @@ CG_RunLerpFrame
 */
 void CG_RunLerpFrame( lerpFrame_t* lf, animation_t* anims, int animsNum, int newAnimation, float speedScale )
 {
-	int          f, numFrames;
+	int			 f, numFrames;
 	animation_t* anim;
-	qboolean     animChanged;
+	qboolean	 animChanged;
 
 	// debugging tool to get no animations
 	if( cg_animSpeed.integer == 0 )
@@ -153,13 +153,13 @@ void CG_RunLerpFrame( lerpFrame_t* lf, animation_t* anims, int animsNum, int new
 	{
 		if( animChanged )
 		{
-			lf->oldFrame     = 0;
+			lf->oldFrame	 = 0;
 			lf->oldFrameTime = cg.time;
 		}
 		else
 
 		{
-			lf->oldFrame     = lf->frame;
+			lf->oldFrame	 = lf->frame;
 			lf->oldFrameTime = lf->frameTime;
 		}
 

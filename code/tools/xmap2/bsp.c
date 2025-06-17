@@ -45,11 +45,11 @@ copies advertisement info into the BSP structures
 
 static void ProcessAdvertisements( void )
 {
-	int               i;
-	const char*       className;
-	const char*       modelKey;
-	int               modelNum;
-	bspModel_t*       adModel;
+	int				  i;
+	const char*		  className;
+	const char*		  modelKey;
+	int				  modelNum;
+	bspModel_t*		  adModel;
 	bspDrawSurface_t* adSurface;
 
 	Sys_FPrintf( SYS_VRB, "--- ProcessAdvertisements ---\n" );
@@ -57,11 +57,11 @@ static void ProcessAdvertisements( void )
 	for( i = 0; i < numEntities; i++ )
 	{
 		/* is an advertisement? */
-		className = ValueForKey( &entities[ i ], "classname" );
+		className = ValueForKey( &entities[i], "classname" );
 
 		if( !Q_stricmp( "advertisement", className ) )
 		{
-			modelKey = ValueForKey( &entities[ i ], "model" );
+			modelKey = ValueForKey( &entities[i], "model" );
 
 			if( strlen( modelKey ) > MAX_QPATH - 1 )
 			{
@@ -71,24 +71,24 @@ static void ProcessAdvertisements( void )
 			{
 				if( numBSPAds < MAX_MAP_ADVERTISEMENTS )
 				{
-					bspAds[ numBSPAds ].cellId = IntForKey( &entities[ i ], "cellId" );
-					strncpy( bspAds[ numBSPAds ].model, modelKey, sizeof( bspAds[ numBSPAds ].model ) );
+					bspAds[numBSPAds].cellId = IntForKey( &entities[i], "cellId" );
+					strncpy( bspAds[numBSPAds].model, modelKey, sizeof( bspAds[numBSPAds].model ) );
 
 					modelKey++;
 					modelNum = atoi( modelKey );
-					adModel  = &bspModels[ modelNum ];
+					adModel	 = &bspModels[modelNum];
 
 					if( adModel->numBSPSurfaces != 1 )
 					{
-						Error( "Ad cell id %d has more than one surface.", bspAds[ numBSPAds ].cellId );
+						Error( "Ad cell id %d has more than one surface.", bspAds[numBSPAds].cellId );
 					}
 
-					adSurface = &bspDrawSurfaces[ adModel->firstBSPSurface ];
+					adSurface = &bspDrawSurfaces[adModel->firstBSPSurface];
 
 					// store the normal for use at run time.. all ad verts are assumed to
 					// have identical normals (because they should be a simple rectangle)
 					// so just use the first vert's normal
-					VectorCopy( bspDrawVerts[ adSurface->firstVert ].normal, bspAds[ numBSPAds ].normal );
+					VectorCopy( bspDrawVerts[adSurface->firstVert].normal, bspAds[numBSPAds].normal );
 
 					// store the ad quad for quick use at run time
 					if( adSurface->surfaceType == MST_PATCH )
@@ -98,14 +98,14 @@ static void ProcessAdvertisements( void )
 						int v2 = adSurface->firstVert + adSurface->numVerts - adSurface->patchWidth;
 						int v3 = adSurface->firstVert;
 
-						VectorCopy( bspDrawVerts[ v0 ].xyz, bspAds[ numBSPAds ].rect[ 0 ] );
-						VectorCopy( bspDrawVerts[ v1 ].xyz, bspAds[ numBSPAds ].rect[ 1 ] );
-						VectorCopy( bspDrawVerts[ v2 ].xyz, bspAds[ numBSPAds ].rect[ 2 ] );
-						VectorCopy( bspDrawVerts[ v3 ].xyz, bspAds[ numBSPAds ].rect[ 3 ] );
+						VectorCopy( bspDrawVerts[v0].xyz, bspAds[numBSPAds].rect[0] );
+						VectorCopy( bspDrawVerts[v1].xyz, bspAds[numBSPAds].rect[1] );
+						VectorCopy( bspDrawVerts[v2].xyz, bspAds[numBSPAds].rect[2] );
+						VectorCopy( bspDrawVerts[v3].xyz, bspAds[numBSPAds].rect[3] );
 					}
 					else
 					{
-						Error( "Ad cell %d has an unsupported Ad Surface type.", bspAds[ numBSPAds ].cellId );
+						Error( "Ad cell %d has an unsupported Ad Surface type.", bspAds[numBSPAds].cellId );
 					}
 
 					numBSPAds++;
@@ -128,10 +128,10 @@ sets the model numbers for brush entities
 
 static void SetCloneModelNumbers( void )
 {
-	int         i, j;
-	entity_t*   ent;
-	int         models;
-	char        modelValue[ 10 ];
+	int			i, j;
+	entity_t*	ent;
+	int			models;
+	char		modelValue[10];
 	const char *value, *value2, *value3;
 	const char* classname;
 	const char* model;
@@ -140,14 +140,13 @@ static void SetCloneModelNumbers( void )
 	models = 1;
 	for( i = 1; i < numEntities; i++ )
 	{
-		ent = &entities[ i ];
+		ent = &entities[i];
 
 		classname = ValueForKey( ent, "classname" );
-		model     = ValueForKey( ent, "model" );
+		model	  = ValueForKey( ent, "model" );
 
 		/* only entities with brushes or patches get a model number */
-		if( ent->brushes || ent->patches ||
-			( inlineEntityModels && !ent->brushes && !ent->patches && model[ 0 ] != '\0' && Q_stricmp( "misc_model", classname ) ) )
+		if( ent->brushes || ent->patches || ( inlineEntityModels && !ent->brushes && !ent->patches && model[0] != '\0' && Q_stricmp( "misc_model", classname ) ) )
 		{
 			/* is this a clone? */
 			/*
@@ -158,7 +157,7 @@ static void SetCloneModelNumbers( void )
 
 			/* add the model key */
 			sprintf( modelValue, "*%d", models );
-			SetKeyValue( &entities[ i ], "model", modelValue );
+			SetKeyValue( &entities[i], "model", modelValue );
 
 			/* increment model count */
 			models++;
@@ -232,10 +231,10 @@ matches brushsides back to their appropriate drawsurface and shader
 
 static void FixBrushSides( entity_t* e )
 {
-	int               i;
+	int				  i;
 	mapDrawSurface_t* ds;
-	sideRef_t*        sideRef;
-	bspBrushSide_t*   side;
+	sideRef_t*		  sideRef;
+	bspBrushSide_t*	  side;
 
 	/* note it */
 	Sys_FPrintf( SYS_VRB, "--- FixBrushSides ---\n" );
@@ -244,7 +243,7 @@ static void FixBrushSides( entity_t* e )
 	for( i = e->firstDrawSurf; i < numMapDrawSurfs; i++ )
 	{
 		/* get surface and try to early out */
-		ds = &mapDrawSurfs[ i ];
+		ds = &mapDrawSurfs[i];
 		if( ds->outputNum < 0 )
 		{
 			continue;
@@ -258,18 +257,17 @@ static void FixBrushSides( entity_t* e )
 			{
 				continue;
 			}
-			side = &bspBrushSides[ sideRef->side->outputNum ];
+			side = &bspBrushSides[sideRef->side->outputNum];
 
 			/* set drawsurface */
 			side->surfaceNum = ds->outputNum;
 			//% Sys_FPrintf( SYS_VRB, "DS: %7d Side: %7d     ", ds->outputNum, sideRef->side->outputNum );
 
 			/* set shader */
-			if( strcmp( bspShaders[ side->shaderNum ].shader, ds->shaderInfo->shader ) )
+			if( strcmp( bspShaders[side->shaderNum].shader, ds->shaderInfo->shader ) )
 			{
 				//% Sys_FPrintf( SYS_VRB, "Remapping %s to %s\n", bspShaders[ side->shaderNum ].shader, ds->shaderInfo->shader );
-				side->shaderNum =
-					EmitShader( ds->shaderInfo->shader, &ds->shaderInfo->contentFlags, &ds->shaderInfo->surfaceFlags );
+				side->shaderNum = EmitShader( ds->shaderInfo->shader, &ds->shaderInfo->contentFlags, &ds->shaderInfo->surfaceFlags );
 			}
 		}
 	}
@@ -284,8 +282,8 @@ int PortalVisibleSides( portal_t* p )
 		return 0; // outside
 	}
 
-	fcon = p->nodes[ 0 ]->opaque;
-	bcon = p->nodes[ 1 ]->opaque;
+	fcon = p->nodes[0]->opaque;
+	bcon = p->nodes[1]->opaque;
 
 	// same contents never create a face
 	if( fcon == bcon )
@@ -307,7 +305,7 @@ int PortalVisibleSides( portal_t* p )
 static void DrawPortal( portal_t* p, qboolean areaportal )
 {
 	winding_t* w;
-	int        sides;
+	int		   sides;
 
 	sides = PortalVisibleSides( p );
 	if( !sides )
@@ -339,26 +337,26 @@ static void DrawPortal( portal_t* p, qboolean areaportal )
 
 static void DrawTreePortals_r( node_t* node )
 {
-	int        s;
+	int		   s;
 	portal_t * p, *nextp;
 	winding_t* w;
 
 	if( node->planenum != PLANENUM_LEAF )
 	{
-		DrawTreePortals_r( node->children[ 0 ] );
-		DrawTreePortals_r( node->children[ 1 ] );
+		DrawTreePortals_r( node->children[0] );
+		DrawTreePortals_r( node->children[1] );
 		return;
 	}
 
 	// draw all the portals
-	for( p = node->portals; p; p = p->next[ s ] )
+	for( p = node->portals; p; p = p->next[s] )
 	{
 		w = p->winding;
-		s = ( p->nodes[ 1 ] == node );
+		s = ( p->nodes[1] == node );
 
 		if( w ) // && p->nodes[0] == node)
 		{
-			//if(PortalPassable(p))
+			// if(PortalPassable(p))
 			//	continue;
 
 			DrawPortal( p, node->areaportal );
@@ -367,19 +365,19 @@ static void DrawTreePortals_r( node_t* node )
 }
 
 static tree_t* drawTree = NULL;
-static int     drawTreeNodesNum;
-static void    DrawTreePortals( void )
+static int	   drawTreeNodesNum;
+static void	   DrawTreePortals( void )
 {
 	DrawTreePortals_r( drawTree->headnode );
 }
 
 static void DrawTreeNodes_r( node_t* node )
 {
-	int        i, s;
+	int		   i, s;
 	brush_t*   b;
 	winding_t* w;
-	vec4_t     nodeColor = { 1, 1, 0, 0.3 };
-	vec4_t     leafColor = { 0, 0, 1, 0.3 };
+	vec4_t	   nodeColor = { 1, 1, 0, 0.3 };
+	vec4_t	   leafColor = { 0, 0, 1, 0.3 };
 
 	if( !node )
 	{
@@ -390,7 +388,7 @@ static void DrawTreeNodes_r( node_t* node )
 
 	if( node->planenum == PLANENUM_LEAF )
 	{
-		//VectorCopy(debugColors[drawTreeNodesNum % 12], leafColor);
+		// VectorCopy(debugColors[drawTreeNodesNum % 12], leafColor);
 
 		Draw_AABB( vec3_origin, node->mins, node->maxs, leafColor );
 
@@ -398,7 +396,7 @@ static void DrawTreeNodes_r( node_t* node )
 		{
 			for( i = 0; i < b->numsides; i++ )
 			{
-				w = b->sides[ i ].winding;
+				w = b->sides[i].winding;
 				if( !w )
 				{
 					continue;
@@ -422,10 +420,10 @@ static void DrawTreeNodes_r( node_t* node )
 		return;
 	}
 
-	//Draw_AABB(vec3_origin, node->mins, node->maxs, nodeColor);
+	// Draw_AABB(vec3_origin, node->mins, node->maxs, nodeColor);
 
-	DrawTreeNodes_r( node->children[ 0 ] );
-	DrawTreeNodes_r( node->children[ 1 ] );
+	DrawTreeNodes_r( node->children[0] );
+	DrawTreeNodes_r( node->children[1] );
 }
 static void DrawNodes( void )
 {
@@ -445,48 +443,48 @@ creates a full bsp + surfaces for the worldspawn entity
 
 void ProcessWorldModel( void )
 {
-	int       i, s;
+	int		  i, s;
 	entity_t* e;
-	tree_t*   tree;
-	face_t*   faces;
+	tree_t*	  tree;
+	face_t*	  faces;
 	qboolean  ignoreLeaks, leaked;
 #if defined( USE_XML )
 	xmlNodePtr polyline, leaknode;
 #endif
-	char        level[ 2 ], shader[ 1024 ];
+	char		level[2], shader[1024];
 	const char* value;
 
 	/* sets integer blockSize from worldspawn "_blocksize" key if it exists */
-	value = ValueForKey( &entities[ 0 ], "_blocksize" );
-	if( value[ 0 ] == '\0' )
+	value = ValueForKey( &entities[0], "_blocksize" );
+	if( value[0] == '\0' )
 	{
-		value = ValueForKey( &entities[ 0 ], "blocksize" );
+		value = ValueForKey( &entities[0], "blocksize" );
 	}
-	if( value[ 0 ] == '\0' )
+	if( value[0] == '\0' )
 	{
-		value = ValueForKey( &entities[ 0 ], "chopsize" ); /* sof2 */
+		value = ValueForKey( &entities[0], "chopsize" ); /* sof2 */
 	}
-	if( value[ 0 ] != '\0' )
+	if( value[0] != '\0' )
 	{
 		/* scan 3 numbers */
-		s = sscanf( value, "%d %d %d", &blockSize[ 0 ], &blockSize[ 1 ], &blockSize[ 2 ] );
+		s = sscanf( value, "%d %d %d", &blockSize[0], &blockSize[1], &blockSize[2] );
 
 		/* handle legacy case */
 		if( s == 1 )
 		{
-			blockSize[ 1 ] = blockSize[ 0 ];
-			blockSize[ 2 ] = blockSize[ 0 ];
+			blockSize[1] = blockSize[0];
+			blockSize[2] = blockSize[0];
 		}
 	}
-	Sys_Printf( "block size = { %d %d %d }\n", blockSize[ 0 ], blockSize[ 1 ], blockSize[ 2 ] );
+	Sys_Printf( "block size = { %d %d %d }\n", blockSize[0], blockSize[1], blockSize[2] );
 
 	/* sof2: ignore leaks? */
-	value = ValueForKey( &entities[ 0 ], "_ignoreleaks" ); /* ydnar */
-	if( value[ 0 ] == '\0' )
+	value = ValueForKey( &entities[0], "_ignoreleaks" ); /* ydnar */
+	if( value[0] == '\0' )
 	{
-		value = ValueForKey( &entities[ 0 ], "ignoreleaks" );
+		value = ValueForKey( &entities[0], "ignoreleaks" );
 	}
-	if( value[ 0 ] == '1' )
+	if( value[0] == '1' )
 	{
 		ignoreLeaks = qtrue;
 	}
@@ -497,7 +495,7 @@ void ProcessWorldModel( void )
 
 	/* begin worldspawn model */
 	BeginModel();
-	e                = &entities[ 0 ];
+	e				 = &entities[0];
 	e->firstDrawSurf = 0;
 
 	/* ydnar: gs mods */
@@ -507,7 +505,7 @@ void ProcessWorldModel( void )
 	PatchMapDrawSurfs( e );
 
 	/* build an initial bsp tree using all of the sides of all of the structural brushes */
-	faces = MakeStructuralBSPFaceList( entities[ 0 ].brushes );
+	faces = MakeStructuralBSPFaceList( entities[0].brushes );
 	tree  = FaceBSP( faces, qtrue );
 	MakeTreePortals( tree );
 	FilterStructuralBrushesIntoTree( e, tree );
@@ -531,7 +529,7 @@ void ProcessWorldModel( void )
 		ClipSidesIntoTree( e, tree );
 
 		/* build a visible face tree */
-		faces = MakeVisibleBSPFaceList( entities[ 0 ].brushes );
+		faces = MakeVisibleBSPFaceList( entities[0].brushes );
 		FreeTree( tree );
 		tree = FaceBSP( faces, qtrue );
 		MakeTreePortals( tree );
@@ -554,8 +552,8 @@ void ProcessWorldModel( void )
 		leaknode = xmlNewNode( NULL, "message" );
 		xmlNodeSetContent( leaknode, "MAP LEAKED\n" );
 		xmlAddChild( leaknode, polyline );
-		level[ 0 ] = ( int )'0' + SYS_ERR;
-		level[ 1 ] = 0;
+		level[0] = ( int )'0' + SYS_ERR;
+		level[1] = 0;
 		xmlSetProp( leaknode, "level", ( char* )&level );
 		xml_SendNode( leaknode );
 #else
@@ -640,8 +638,8 @@ void ProcessWorldModel( void )
 	}
 
 	/* ydnar: fog hull */
-	value = ValueForKey( &entities[ 0 ], "_foghull" );
-	if( value[ 0 ] != '\0' )
+	value = ValueForKey( &entities[0], "_foghull" );
+	if( value[0] != '\0' )
 	{
 		sprintf( shader, "textures/%s", value );
 		MakeFogHullSurfs( e, tree, shader );
@@ -650,20 +648,20 @@ void ProcessWorldModel( void )
 	/* ydnar: bug 645: do flares for lights */
 	for( i = 0; i < numEntities && emitFlares; i++ )
 	{
-		entity_t *  light, *target;
+		entity_t *	light, *target;
 		const char *value, *flareShader;
-		vec3_t      origin, targetOrigin, normal, color;
-		int         lightStyle;
+		vec3_t		origin, targetOrigin, normal, color;
+		int			lightStyle;
 
 		/* get light */
-		light = &entities[ i ];
+		light = &entities[i];
 		value = ValueForKey( light, "classname" );
 		if( !strcmp( value, "light" ) )
 		{
 			/* get flare shader */
 			flareShader = ValueForKey( light, "_flareshader" );
-			value       = ValueForKey( light, "_flare" );
-			if( flareShader[ 0 ] != '\0' || value[ 0 ] != '\0' )
+			value		= ValueForKey( light, "_flare" );
+			if( flareShader[0] != '\0' || value[0] != '\0' )
 			{
 				/* get specifics */
 				GetVectorForKey( light, "origin", origin );
@@ -676,7 +674,7 @@ void ProcessWorldModel( void )
 
 				/* handle directional spotlights */
 				value = ValueForKey( light, "target" );
-				if( value[ 0 ] != '\0' )
+				if( value[0] != '\0' )
 				{
 					/* get target light */
 					target = FindTargetEntity( value );
@@ -728,13 +726,13 @@ creates bsp + surfaces for other brush models
 void ProcessSubModel( void )
 {
 	entity_t* e;
-	tree_t*   tree;
+	tree_t*	  tree;
 	brush_t * b, *bc;
-	node_t*   node;
+	node_t*	  node;
 
 	/* start a brush model */
 	BeginModel();
-	e                = &entities[ mapEntityNum ];
+	e				 = &entities[mapEntityNum];
 	e->firstDrawSurf = numMapDrawSurfs;
 
 	/* ydnar: gs mods */
@@ -744,9 +742,9 @@ void ProcessSubModel( void )
 	PatchMapDrawSurfs( e );
 
 	/* allocate a tree */
-	node           = AllocNode();
+	node		   = AllocNode();
 	node->planenum = PLANENUM_LEAF;
-	tree           = AllocTree();
+	tree		   = AllocTree();
 	tree->headnode = node;
 
 	/* add the sides to the tree */
@@ -764,8 +762,8 @@ void ProcessSubModel( void )
 	/* just put all the brushes in headnode */
 	for( b = e->brushes; b; b = b->next )
 	{
-		bc              = CopyBrush( b );
-		bc->next        = node->brushlist;
+		bc				= CopyBrush( b );
+		bc->next		= node->brushlist;
 		node->brushlist = bc;
 	}
 
@@ -811,8 +809,8 @@ process world + other models into the bsp
 
 void ProcessModels( void )
 {
-	qboolean    oldVerbose;
-	entity_t*   entity;
+	qboolean	oldVerbose;
+	entity_t*	entity;
 	const char* classname;
 	const char* name;
 	const char* model;
@@ -830,14 +828,13 @@ void ProcessModels( void )
 	for( mapEntityNum = 0; mapEntityNum < numEntities; mapEntityNum++ )
 	{
 		/* get entity */
-		entity = &entities[ mapEntityNum ];
+		entity = &entities[mapEntityNum];
 
 		classname = ValueForKey( entity, "classname" );
-		model     = ValueForKey( entity, "model" );
-		name      = ValueForKey( entity, "name" );
+		model	  = ValueForKey( entity, "model" );
+		name	  = ValueForKey( entity, "name" );
 
-		if( entity->brushes || entity->patches ||
-			( inlineEntityModels && !entity->brushes && !entity->patches && model[ 0 ] != '\0' && Q_stricmp( "misc_model", classname ) ) )
+		if( entity->brushes || entity->patches || ( inlineEntityModels && !entity->brushes && !entity->patches && model[0] != '\0' && Q_stricmp( "misc_model", classname ) ) )
 		{
 			/* process the model */
 			Sys_FPrintf( SYS_VRB, "############### model %i '%s' ###############\n", numBSPModels, name );
@@ -873,9 +870,9 @@ this is probably broken unless teamed with a radiant version that preserves enti
 
 void OnlyEnts( void )
 {
-	char out[ 1024 ];
+	char		out[1024];
 
-	char        save_cmdline[ 1024 ], save_version[ 1024 ];
+	char		save_cmdline[1024], save_version[1024];
 	const char* p;
 
 	/* note it */
@@ -885,12 +882,12 @@ void OnlyEnts( void )
 	LoadBSPFile( out );
 
 	ParseEntities();
-	p = ValueForKey( &entities[ 0 ], "_xmap2_cmdline" );
+	p = ValueForKey( &entities[0], "_xmap2_cmdline" );
 	strncpy( save_cmdline, p, sizeof( save_cmdline ) );
-	save_cmdline[ sizeof( save_cmdline ) - 1 ] = 0;
-	p                                          = ValueForKey( &entities[ 0 ], "_xmap2_version" );
+	save_cmdline[sizeof( save_cmdline ) - 1] = 0;
+	p										 = ValueForKey( &entities[0], "_xmap2_version" );
 	strncpy( save_version, p, sizeof( save_version ) );
-	save_version[ sizeof( save_version ) - 1 ] = 0;
+	save_version[sizeof( save_version ) - 1] = 0;
 
 	numEntities = 0;
 
@@ -901,11 +898,11 @@ void OnlyEnts( void )
 
 	if( *save_cmdline )
 	{
-		SetKeyValue( &entities[ 0 ], "_xmap2_cmdline", save_cmdline );
+		SetKeyValue( &entities[0], "_xmap2_cmdline", save_cmdline );
 	}
 	if( *save_version )
 	{
-		SetKeyValue( &entities[ 0 ], "_xmap2_version", save_version );
+		SetKeyValue( &entities[0], "_xmap2_version", save_version );
 	}
 
 	numBSPEntities = numEntities;
@@ -921,8 +918,8 @@ handles creation of a bsp from a map file
 
 int BSPMain( int argc, char** argv )
 {
-	int      i;
-	char     path[ 1024 ], tempSource[ 1024 ];
+	int		 i;
+	char	 path[1024], tempSource[1024];
 	qboolean onlyents = qfalse;
 
 	/* note it */
@@ -933,83 +930,83 @@ int BSPMain( int argc, char** argv )
 	memset( mapDrawSurfs, 0, sizeof( mapDrawSurface_t ) * MAX_MAP_DRAW_SURFS );
 	numMapDrawSurfs = 0;
 
-	tempSource[ 0 ] = '\0';
+	tempSource[0] = '\0';
 
 	/* set standard game flags */
-	maxSurfaceVerts   = game->maxSurfaceVerts;
+	maxSurfaceVerts	  = game->maxSurfaceVerts;
 	maxLMSurfaceVerts = game->maxLMSurfaceVerts;
 	maxSurfaceIndexes = game->maxSurfaceIndexes;
-	emitFlares        = game->emitFlares;
+	emitFlares		  = game->emitFlares;
 
 	/* process arguments */
 	for( i = 1; i < ( argc - 1 ); i++ )
 	{
-		if( !strcmp( argv[ i ], "-onlyents" ) )
+		if( !strcmp( argv[i], "-onlyents" ) )
 		{
 			Sys_Printf( "Running entity-only compile\n" );
 			onlyents = qtrue;
 		}
-		else if( !strcmp( argv[ i ], "-tempname" ) )
+		else if( !strcmp( argv[i], "-tempname" ) )
 		{
-			strcpy( tempSource, argv[ ++i ] );
+			strcpy( tempSource, argv[++i] );
 		}
-		else if( !strcmp( argv[ i ], "-tmpout" ) )
+		else if( !strcmp( argv[i], "-tmpout" ) )
 		{
 			strcpy( outbase, "/tmp" );
 		}
-		else if( !strcmp( argv[ i ], "-nowater" ) )
+		else if( !strcmp( argv[i], "-nowater" ) )
 		{
 			Sys_Printf( "Disabling water\n" );
 			nowater = qtrue;
 		}
-		else if( !strcmp( argv[ i ], "-nodetail" ) )
+		else if( !strcmp( argv[i], "-nodetail" ) )
 		{
 			Sys_Printf( "Ignoring detail brushes\n" );
 			nodetail = qtrue;
 		}
-		else if( !strcmp( argv[ i ], "-fulldetail" ) )
+		else if( !strcmp( argv[i], "-fulldetail" ) )
 		{
 			Sys_Printf( "Turning detail brushes into structural brushes\n" );
 			fulldetail = qtrue;
 		}
-		else if( !strcmp( argv[ i ], "-nofog" ) )
+		else if( !strcmp( argv[i], "-nofog" ) )
 		{
 			Sys_Printf( "Fog volumes disabled\n" );
 			nofog = qtrue;
 		}
-		else if( !strcmp( argv[ i ], "-nosubdivide" ) )
+		else if( !strcmp( argv[i], "-nosubdivide" ) )
 		{
 			Sys_Printf( "Disabling brush face subdivision\n" );
 			nosubdivide = qtrue;
 		}
-		else if( !strcmp( argv[ i ], "-leaktest" ) )
+		else if( !strcmp( argv[i], "-leaktest" ) )
 		{
 			Sys_Printf( "Leaktest enabled\n" );
 			leaktest = qtrue;
 		}
-		else if( !strcmp( argv[ i ], "-verboseentities" ) )
+		else if( !strcmp( argv[i], "-verboseentities" ) )
 		{
 			Sys_Printf( "Verbose entities enabled\n" );
 			verboseEntities = qtrue;
 		}
-		else if( !strcmp( argv[ i ], "-nocurves" ) )
+		else if( !strcmp( argv[i], "-nocurves" ) )
 		{
 			Sys_Printf( "Ignoring curved surfaces (patches)\n" );
 			noCurveBrushes = qtrue;
 		}
-		else if( !strcmp( argv[ i ], "-notjunc" ) )
+		else if( !strcmp( argv[i], "-notjunc" ) )
 		{
 			Sys_Printf( "T-junction fixing disabled\n" );
 			notjunc = qtrue;
 		}
-		else if( !strcmp( argv[ i ], "-fakemap" ) )
+		else if( !strcmp( argv[i], "-fakemap" ) )
 		{
 			Sys_Printf( "Generating fakemap.map\n" );
 			fakemap = qtrue;
 		}
-		else if( !strcmp( argv[ i ], "-samplesize" ) )
+		else if( !strcmp( argv[i], "-samplesize" ) )
 		{
-			sampleSize = atoi( argv[ i + 1 ] );
+			sampleSize = atoi( argv[i + 1] );
 			if( sampleSize < 1 )
 			{
 				sampleSize = 1;
@@ -1017,9 +1014,9 @@ int BSPMain( int argc, char** argv )
 			i++;
 			Sys_Printf( "Lightmap sample size set to %dx%d units\n", sampleSize, sampleSize );
 		}
-		else if( !strcmp( argv[ i ], "-minsamplesize" ) )
+		else if( !strcmp( argv[i], "-minsamplesize" ) )
 		{
-			minSampleSize = atoi( argv[ i + 1 ] );
+			minSampleSize = atoi( argv[i + 1] );
 			if( minSampleSize < 1 )
 			{
 				minSampleSize = 1;
@@ -1027,35 +1024,35 @@ int BSPMain( int argc, char** argv )
 			i++;
 			Sys_Printf( "Minimum lightmap sample size set to %dx%d units\n", minSampleSize, minSampleSize );
 		}
-		else if( !strcmp( argv[ i ], "-custinfoparms" ) )
+		else if( !strcmp( argv[i], "-custinfoparms" ) )
 		{
 			Sys_Printf( "Custom info parms enabled\n" );
 			useCustomInfoParms = qtrue;
 		}
 
 		/* sof2 args */
-		else if( !strcmp( argv[ i ], "-rename" ) )
+		else if( !strcmp( argv[i], "-rename" ) )
 		{
 			Sys_Printf( "Appending _bsp suffix to misc_model shaders (SOF2)\n" );
 			renameModelShaders = qtrue;
 		}
 
 		/* ydnar args */
-		else if( !strcmp( argv[ i ], "-ne" ) )
+		else if( !strcmp( argv[i], "-ne" ) )
 		{
-			normalEpsilon = atof( argv[ i + 1 ] );
+			normalEpsilon = atof( argv[i + 1] );
 			i++;
 			Sys_Printf( "Normal epsilon set to %f\n", normalEpsilon );
 		}
-		else if( !strcmp( argv[ i ], "-de" ) )
+		else if( !strcmp( argv[i], "-de" ) )
 		{
-			distanceEpsilon = atof( argv[ i + 1 ] );
+			distanceEpsilon = atof( argv[i + 1] );
 			i++;
 			Sys_Printf( "Distance epsilon set to %f\n", distanceEpsilon );
 		}
-		else if( !strcmp( argv[ i ], "-mv" ) )
+		else if( !strcmp( argv[i], "-mv" ) )
 		{
-			maxLMSurfaceVerts = atoi( argv[ i + 1 ] );
+			maxLMSurfaceVerts = atoi( argv[i + 1] );
 			if( maxLMSurfaceVerts < 3 )
 			{
 				maxLMSurfaceVerts = 3;
@@ -1067,9 +1064,9 @@ int BSPMain( int argc, char** argv )
 			i++;
 			Sys_Printf( "Maximum lightmapped surface vertex count set to %d\n", maxLMSurfaceVerts );
 		}
-		else if( !strcmp( argv[ i ], "-mi" ) )
+		else if( !strcmp( argv[i], "-mi" ) )
 		{
-			maxSurfaceIndexes = atoi( argv[ i + 1 ] );
+			maxSurfaceIndexes = atoi( argv[i + 1] );
 			if( maxSurfaceIndexes < 3 )
 			{
 				maxSurfaceIndexes = 3;
@@ -1077,9 +1074,9 @@ int BSPMain( int argc, char** argv )
 			i++;
 			Sys_Printf( "Maximum per-surface index count set to %d\n", maxSurfaceIndexes );
 		}
-		else if( !strcmp( argv[ i ], "-np" ) )
+		else if( !strcmp( argv[i], "-np" ) )
 		{
-			npDegrees = atof( argv[ i + 1 ] );
+			npDegrees = atof( argv[i + 1] );
 			if( npDegrees < 0.0f )
 			{
 				shadeAngleDegrees = 0.0f;
@@ -1090,9 +1087,9 @@ int BSPMain( int argc, char** argv )
 			}
 			i++;
 		}
-		else if( !strcmp( argv[ i ], "-snap" ) )
+		else if( !strcmp( argv[i], "-snap" ) )
 		{
-			bevelSnap = atoi( argv[ i + 1 ] );
+			bevelSnap = atoi( argv[i + 1] );
 			if( bevelSnap < 0 )
 			{
 				bevelSnap = 0;
@@ -1103,9 +1100,9 @@ int BSPMain( int argc, char** argv )
 				Sys_Printf( "Snapping brush bevel planes to %d units\n", bevelSnap );
 			}
 		}
-		else if( !strcmp( argv[ i ], "-texrange" ) )
+		else if( !strcmp( argv[i], "-texrange" ) )
 		{
-			texRange = atoi( argv[ i + 1 ] );
+			texRange = atoi( argv[i + 1] );
 			if( texRange < 0 )
 			{
 				texRange = 0;
@@ -1113,78 +1110,78 @@ int BSPMain( int argc, char** argv )
 			i++;
 			Sys_Printf( "Limiting per-surface texture range to %d texels\n", texRange );
 		}
-		else if( !strcmp( argv[ i ], "-nohint" ) )
+		else if( !strcmp( argv[i], "-nohint" ) )
 		{
 			Sys_Printf( "Hint brushes disabled\n" );
 			noHint = qtrue;
 		}
-		else if( !strcmp( argv[ i ], "-flat" ) )
+		else if( !strcmp( argv[i], "-flat" ) )
 		{
 			Sys_Printf( "Flatshading enabled\n" );
 			flat = qtrue;
 		}
-		else if( !strcmp( argv[ i ], "-meta" ) )
+		else if( !strcmp( argv[i], "-meta" ) )
 		{
 			Sys_Printf( "Creating meta surfaces from brush faces\n" );
 			meta = qtrue;
 		}
-		else if( !strcmp( argv[ i ], "-patchmeta" ) )
+		else if( !strcmp( argv[i], "-patchmeta" ) )
 		{
 			Sys_Printf( "Creating meta surfaces from patches\n" );
 			patchMeta = qtrue;
 		}
-		else if( !strcmp( argv[ i ], "-flares" ) )
+		else if( !strcmp( argv[i], "-flares" ) )
 		{
 			Sys_Printf( "Flare surfaces enabled\n" );
 			emitFlares = qtrue;
 		}
-		else if( !strcmp( argv[ i ], "-noflares" ) )
+		else if( !strcmp( argv[i], "-noflares" ) )
 		{
 			Sys_Printf( "Flare surfaces disabled\n" );
 			emitFlares = qfalse;
 		}
-		else if( !strcmp( argv[ i ], "-skyfix" ) )
+		else if( !strcmp( argv[i], "-skyfix" ) )
 		{
 			Sys_Printf( "GL_CLAMP sky fix/hack/workaround enabled\n" );
 			skyFixHack = qtrue;
 		}
-		else if( !strcmp( argv[ i ], "-debugsurfaces" ) )
+		else if( !strcmp( argv[i], "-debugsurfaces" ) )
 		{
 			Sys_Printf( "emitting debug surfaces\n" );
 			debugSurfaces = qtrue;
 		}
-		else if( !strcmp( argv[ i ], "-debuginset" ) )
+		else if( !strcmp( argv[i], "-debuginset" ) )
 		{
 			Sys_Printf( "Debug surface triangle insetting enabled\n" );
 			debugInset = qtrue;
 		}
-		else if( !strcmp( argv[ i ], "-debugportals" ) )
+		else if( !strcmp( argv[i], "-debugportals" ) )
 		{
 			Sys_Printf( "Debug portal surfaces enabled\n" );
 			debugPortals = qtrue;
 		}
-		else if( !strcmp( argv[ i ], "-altsplit" ) )
+		else if( !strcmp( argv[i], "-altsplit" ) )
 		{
 			Sys_Printf( "Alternate BSP splitting (by 27) enabled\n" );
 			bspAlternateSplitWeights = qtrue;
 		}
-		else if( !strcmp( argv[ i ], "-deep" ) )
+		else if( !strcmp( argv[i], "-deep" ) )
 		{
 			Sys_Printf( "Deep BSP tree generation enabled\n" );
 			deepBSP = qtrue;
 		}
-		else if( !strcmp( argv[ i ], "-bsp" ) )
+		else if( !strcmp( argv[i], "-bsp" ) )
 		{
 			Sys_Printf( "-bsp argument unnecessary\n" );
 		}
-		else if( !strcmp( argv[ i ], "-draw" ) )
+		else if( !strcmp( argv[i], "-draw" ) )
 		{
 			Sys_Printf( "SDL BSP tree viewer enabled\n" );
 			drawBSP = qtrue;
 		}
 		else
 		{
-			Sys_Printf( "WARNING: Unknown option \"%s\"\n", argv[ i ] );
+			Sys_Printf( "WARNING: Unknown option \"%s\"\n", argv[i] );
 		}
 	}
 
@@ -1195,7 +1192,7 @@ int BSPMain( int argc, char** argv )
 	}
 
 	/* copy source name */
-	strcpy( source, ExpandArg( argv[ i ] ) );
+	strcpy( source, ExpandArg( argv[i] ) );
 	StripExtension( source );
 
 	/* ydnar: set default sample size */
@@ -1210,7 +1207,7 @@ int BSPMain( int argc, char** argv )
 	//% remove( path );
 
 	/* expand mapname */
-	strcpy( name, ExpandArg( argv[ i ] ) );
+	strcpy( name, ExpandArg( argv[i] ) );
 	if( strcmp( name + strlen( name ) - 4, ".reg" ) )
 	{
 		/* if we are doing a full map, delete the last saved region map */

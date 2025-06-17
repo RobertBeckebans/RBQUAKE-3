@@ -31,7 +31,7 @@ void InitTrigger( gentity_t* self )
 
 	trap_SetBrushModel( self, self->model );
 	self->r.contents = CONTENTS_TRIGGER; // replaces the -1 from trap_SetBrushModel
-	self->r.svFlags  = SVF_NOCLIENT;
+	self->r.svFlags	 = SVF_NOCLIENT;
 }
 
 // the wait time has passed, so set back up for another activation
@@ -53,13 +53,11 @@ void multi_trigger( gentity_t* ent, gentity_t* activator )
 
 	if( activator->client )
 	{
-		if( ( ent->spawnflags & 1 ) &&
-			activator->client->sess.sessionTeam != TEAM_RED )
+		if( ( ent->spawnflags & 1 ) && activator->client->sess.sessionTeam != TEAM_RED )
 		{
 			return;
 		}
-		if( ( ent->spawnflags & 2 ) &&
-			activator->client->sess.sessionTeam != TEAM_BLUE )
+		if( ( ent->spawnflags & 2 ) && activator->client->sess.sessionTeam != TEAM_BLUE )
 		{
 			return;
 		}
@@ -69,16 +67,16 @@ void multi_trigger( gentity_t* ent, gentity_t* activator )
 
 	if( ent->wait > 0 )
 	{
-		ent->think     = multi_wait;
+		ent->think	   = multi_wait;
 		ent->nextthink = level.time + ( ent->wait + ent->random * crandom() ) * 1000;
 	}
 	else
 	{
 		// we can't just remove (self) here, because this is a touch function
 		// called while looping through area links...
-		ent->touch     = 0;
+		ent->touch	   = 0;
 		ent->nextthink = level.time + FRAMETIME;
-		ent->think     = G_FreeEntity;
+		ent->think	   = G_FreeEntity;
 	}
 }
 
@@ -142,7 +140,7 @@ void SP_trigger_always( gentity_t* ent )
 {
 	// we must have some delay to make sure our use targets are present
 	ent->nextthink = level.time + 300;
-	ent->think     = trigger_always_think;
+	ent->think	   = trigger_always_think;
 }
 
 /*
@@ -173,9 +171,9 @@ Calculate origin2 so the target apogee will be hit
 void AimAtTarget( gentity_t* self )
 {
 	gentity_t* ent;
-	vec3_t     origin;
-	float      height, gravity, time, forward;
-	float      dist;
+	vec3_t	   origin;
+	float	   height, gravity, time, forward;
+	float	   dist;
 
 	VectorAdd( self->r.absmin, self->r.absmax, origin );
 	VectorScale( origin, 0.5, origin );
@@ -187,9 +185,9 @@ void AimAtTarget( gentity_t* self )
 		return;
 	}
 
-	height  = ent->s.origin[ 2 ] - origin[ 2 ];
+	height	= ent->s.origin[2] - origin[2];
 	gravity = g_gravity.value;
-	time    = sqrt( height / ( .5 * gravity ) );
+	time	= sqrt( height / ( .5 * gravity ) );
 	if( !time )
 	{
 		G_FreeEntity( self );
@@ -198,13 +196,13 @@ void AimAtTarget( gentity_t* self )
 
 	// set s.origin2 to the push velocity
 	VectorSubtract( ent->s.origin, origin, self->s.origin2 );
-	self->s.origin2[ 2 ] = 0;
-	dist                 = VectorNormalize( self->s.origin2 );
+	self->s.origin2[2] = 0;
+	dist			   = VectorNormalize( self->s.origin2 );
 
 	forward = dist / time;
 	VectorScale( self->s.origin2, forward, self->s.origin2 );
 
-	self->s.origin2[ 2 ] = time * gravity;
+	self->s.origin2[2] = time * gravity;
 }
 
 /*QUAKED trigger_push (.5 .5 .5) ?
@@ -221,9 +219,9 @@ void SP_trigger_push( gentity_t* self )
 	// make sure the client precaches this sound
 	G_SoundIndex( "sound/world/jumppad.wav" );
 
-	self->s.eType   = ET_PUSH_TRIGGER;
-	self->touch     = trigger_push_touch;
-	self->think     = AimAtTarget;
+	self->s.eType	= ET_PUSH_TRIGGER;
+	self->touch		= trigger_push_touch;
+	self->think		= AimAtTarget;
 	self->nextthink = level.time + FRAMETIME;
 	trap_LinkEntity( self );
 }
@@ -239,7 +237,7 @@ void Use_target_push( gentity_t* self, gentity_t* other, gentity_t* activator )
 	{
 		return;
 	}
-	if( activator->client->ps.powerups[ PW_FLIGHT ] )
+	if( activator->client->ps.powerups[PW_FLIGHT] )
 	{
 		return;
 	}
@@ -280,7 +278,7 @@ void SP_target_push( gentity_t* self )
 	{
 		VectorCopy( self->s.origin, self->r.absmin );
 		VectorCopy( self->s.origin, self->r.absmax );
-		self->think     = AimAtTarget;
+		self->think		= AimAtTarget;
 		self->nextthink = level.time + FRAMETIME;
 	}
 	self->use = Use_target_push;
@@ -307,8 +305,7 @@ void trigger_teleporter_touch( gentity_t* self, gentity_t* other, trace_t* trace
 		return;
 	}
 	// Spectators only?
-	if( ( self->spawnflags & 1 ) &&
-		other->client->sess.sessionTeam != TEAM_SPECTATOR )
+	if( ( self->spawnflags & 1 ) && other->client->sess.sessionTeam != TEAM_SPECTATOR )
 	{
 		return;
 	}
@@ -350,7 +347,7 @@ void SP_trigger_teleport( gentity_t* self )
 	G_SoundIndex( "sound/world/jumppad.wav" );
 
 	self->s.eType = ET_TELEPORT_TRIGGER;
-	self->touch   = trigger_teleporter_touch;
+	self->touch	  = trigger_teleporter_touch;
 
 	trap_LinkEntity( self );
 }
@@ -432,7 +429,7 @@ void SP_trigger_hurt( gentity_t* self )
 	InitTrigger( self );
 
 	self->noise_index = G_SoundIndex( "sound/world/electro.wav" );
-	self->touch       = hurt_touch;
+	self->touch		  = hurt_touch;
 
 	if( !self->damage )
 	{
@@ -498,7 +495,7 @@ void SP_func_timer( gentity_t* self )
 	G_SpawnFloat( "random", "1", &self->random );
 	G_SpawnFloat( "wait", "1", &self->wait );
 
-	self->use   = func_timer_use;
+	self->use	= func_timer_use;
 	self->think = func_timer_think;
 
 	if( self->random >= self->wait )

@@ -30,7 +30,8 @@ Permission is granted to anyone to use this software for any purpose,
 including commercial applications, and to alter it and redistribute it freely,
 subject to the following restrictions:
 
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product
+documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
 */
@@ -51,13 +52,13 @@ class BulletPhysics
 {
 public:
 private:
-	btAlignedObjectArray< btCollisionShape* > _collisionShapes;
+	btAlignedObjectArray<btCollisionShape*> _collisionShapes;
 
-	btDynamicsWorld*          _dynamicsWorld;
-	btCollisionConfiguration* _collisionConfiguration;
-	btCollisionDispatcher*    _dispatcher;
-	btBroadphaseInterface*    _broadphase;
-	btConstraintSolver*       _solver;
+	btDynamicsWorld*						_dynamicsWorld;
+	btCollisionConfiguration*				_collisionConfiguration;
+	btCollisionDispatcher*					_dispatcher;
+	btBroadphaseInterface*					_broadphase;
+	btConstraintSolver*						_solver;
 
 public:
 	BulletPhysics()
@@ -66,17 +67,18 @@ public:
 
 		// use the default collision dispatcher. For parallel processing you can use a diffent dispatcher (see Extras/BulletMultiThreaded)
 		_dispatcher = new btCollisionDispatcher( _collisionConfiguration );
-		_dispatcher->registerCollisionCreateFunc( BOX_SHAPE_PROXYTYPE, BOX_SHAPE_PROXYTYPE, _collisionConfiguration->getCollisionAlgorithmCreateFunc( CONVEX_SHAPE_PROXYTYPE, CONVEX_SHAPE_PROXYTYPE ) );
+		_dispatcher->registerCollisionCreateFunc(
+			BOX_SHAPE_PROXYTYPE, BOX_SHAPE_PROXYTYPE, _collisionConfiguration->getCollisionAlgorithmCreateFunc( CONVEX_SHAPE_PROXYTYPE, CONVEX_SHAPE_PROXYTYPE ) );
 
 		_broadphase = new btDbvtBroadphase();
 
 		// the default constraint solver. For parallel processing you can use a different solver (see Extras/BulletMultiThreaded)
 		btSequentialImpulseConstraintSolver* sol = new btSequentialImpulseConstraintSolver;
-		_solver                                  = sol;
+		_solver									 = sol;
 
 		_dynamicsWorld = new btDiscreteDynamicsWorld( _dispatcher, _broadphase, _solver, _collisionConfiguration );
 		//_dynamicsWorld ->setDebugDrawer(&sDebugDrawer);
-		_dynamicsWorld->getSolverInfo().m_splitImpulse  = true;
+		_dynamicsWorld->getSolverInfo().m_splitImpulse	= true;
 		_dynamicsWorld->getSolverInfo().m_numIterations = 20;
 
 		if( g_physUseCCD.integer )
@@ -96,9 +98,9 @@ public:
 		// remove the rigidbodies from the dynamics world and delete them
 		for( int i = _dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i-- )
 		{
-			btCollisionObject* obj = _dynamicsWorld->getCollisionObjectArray()[ i ];
+			btCollisionObject* obj = _dynamicsWorld->getCollisionObjectArray()[i];
 
-			btRigidBody* body = btRigidBody::upcast( obj );
+			btRigidBody*	   body = btRigidBody::upcast( obj );
 			if( body && body->getMotionState() )
 			{
 				delete body->getMotionState();
@@ -110,7 +112,7 @@ public:
 		// delete collision shapes
 		for( int i = 0; i < _collisionShapes.size(); i++ )
 		{
-			btCollisionShape* shape = _collisionShapes[ i ];
+			btCollisionShape* shape = _collisionShapes[i];
 			delete shape;
 		}
 
@@ -130,8 +132,8 @@ public:
 	{
 		btAssert( ( !shape || shape->getShapeType() != INVALID_SHAPE_PROXYTYPE ) );
 
-		//rigidbody is dynamic if and only if mass is non zero, otherwise static
-		bool isDynamic = ( mass != 0.f );
+		// rigidbody is dynamic if and only if mass is non zero, otherwise static
+		bool	  isDynamic = ( mass != 0.f );
 
 		btVector3 localInertia( 0, 0, 0 );
 		if( isDynamic )
@@ -139,13 +141,13 @@ public:
 			shape->calculateLocalInertia( mass, localInertia );
 		}
 
-		//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
+		// using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
 #ifdef USE_MOTIONSTATE
-		btDefaultMotionState* motionState = new btDefaultMotionState( startTransform );
+		btDefaultMotionState*					 motionState = new btDefaultMotionState( startTransform );
 
 		btRigidBody::btRigidBodyConstructionInfo cInfo( mass, motionState, shape, localInertia );
 
-		btRigidBody* body = new btRigidBody( cInfo );
+		btRigidBody*							 body = new btRigidBody( cInfo );
 		body->setContactProcessingThreshold( BT_LARGE_FLOAT );
 
 #else
@@ -167,9 +169,9 @@ public:
 
 		for( int i = _dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i-- )
 		{
-			btCollisionObject* obj = _dynamicsWorld->getCollisionObjectArray()[ i ];
+			btCollisionObject* obj = _dynamicsWorld->getCollisionObjectArray()[i];
 
-			btRigidBody* body = btRigidBody::upcast( obj );
+			btRigidBody*	   body = btRigidBody::upcast( obj );
 			if( body && body->getMotionState() )
 			{
 				gentity_t* ent = ( gentity_t* )body->getUserPointer();
@@ -211,8 +213,8 @@ extern "C"
 
 	static void G_PhysicsBox_Physics( gentity_t* ent )
 	{
-		btCollisionObject* obj  = ( btCollisionObject* )ent->physicsRigidBody;
-		btRigidBody*       body = btRigidBody::upcast( obj );
+		btCollisionObject* obj	= ( btCollisionObject* )ent->physicsRigidBody;
+		btRigidBody*	   body = btRigidBody::upcast( obj );
 
 		if( body && body->getMotionState() )
 		{
@@ -220,7 +222,7 @@ extern "C"
 			btTransform trans;
 			body->getMotionState()->getWorldTransform( trans );
 
-			vec3_t           pos;
+			vec3_t			 pos;
 			const btVector3& p = trans.getOrigin();
 			VectorSet( pos, p.x(), p.y(), p.z() );
 
@@ -231,13 +233,13 @@ extern "C"
 				ent->s.pos.trType = TR_LINEAR;
 
 				const btVector3& linearVelocity = body->getLinearVelocity();
-				ent->s.pos.trDelta[ 0 ]         = linearVelocity[ 0 ];
-				ent->s.pos.trDelta[ 1 ]         = linearVelocity[ 1 ];
-				ent->s.pos.trDelta[ 2 ]         = linearVelocity[ 2 ];
+				ent->s.pos.trDelta[0]			= linearVelocity[0];
+				ent->s.pos.trDelta[1]			= linearVelocity[1];
+				ent->s.pos.trDelta[2]			= linearVelocity[2];
 			}
 			else
 			{
-				ent->s.pos.trType     = TR_STATIONARY;
+				ent->s.pos.trType	  = TR_STATIONARY;
 				ent->s.pos.trDuration = 0;
 				VectorClear( ent->s.pos.trDelta );
 			}
@@ -247,8 +249,8 @@ extern "C"
 
 			// set entityState_t::apos
 			btQuaternion rotation = trans.getRotation();
-			ent->s.apos.trType    = TR_STATIONARY;
-			ent->s.apos.trTime    = level.time;
+			ent->s.apos.trType	  = TR_STATIONARY;
+			ent->s.apos.trTime	  = level.time;
 
 			QuatToAngles( rotation, ent->s.apos.trBase );
 
@@ -262,7 +264,7 @@ extern "C"
 	{
 		btCollisionObject* obj = ( btCollisionObject* )ent->physicsRigidBody;
 
-		btRigidBody* body = btRigidBody::upcast( obj );
+		btRigidBody*	   body = btRigidBody::upcast( obj );
 		if( body && body->getMotionState() )
 		{
 			delete body->getMotionState();
@@ -272,30 +274,30 @@ extern "C"
 
 		G_FreeEntity( ent );
 
-		//ent->nextthink = level.time + FRAMETIME;
-		//trap_LinkEntity(ent);
+		// ent->nextthink = level.time + FRAMETIME;
+		// trap_LinkEntity(ent);
 	}
 
 	static void G_PhysicsBox_InitPhysics( gentity_t* ent, const vec3_t start, const vec3_t dir )
 	{
-		vec3_t mins = { -8, -8, -8 };
-		vec3_t maxs = { 8, 8, 8 };
+		vec3_t		mins = { -8, -8, -8 };
+		vec3_t		maxs = { 8, 8, 8 };
 
-		btBoxShape* boxShape = new btBoxShape( btVector3( maxs[ 0 ], maxs[ 1 ], maxs[ 2 ] ) );
+		btBoxShape* boxShape = new btBoxShape( btVector3( maxs[0], maxs[1], maxs[2] ) );
 		boxShape->initializePolyhedralFeatures();
 
-		//g_bulletPhysics->.getCollisionShapes().add(collisionShape);
+		// g_bulletPhysics->.getCollisionShapes().add(collisionShape);
 
-		const btVector3 btStart( start[ 0 ], start[ 1 ], start[ 2 ] );
+		const btVector3 btStart( start[0], start[1], start[2] );
 
-		btTransform startTransform;
+		btTransform		startTransform;
 		startTransform.setIdentity();
 		startTransform.setOrigin( btStart );
 
-		float mass = 1000.0f;
+		float	  mass = 1000.0f;
 
 		// rigidbody is dynamic if and only if mass is non zero, otherwise static
-		bool isDynamic = ( mass != 0.f );
+		bool	  isDynamic = ( mass != 0.f );
 
 		btVector3 localInertia( 0, 0, 0 );
 		if( isDynamic )
@@ -308,7 +310,7 @@ extern "C"
 
 		body->getWorldTransform().setOrigin( btStart );
 
-		btVector3 vel( dir[ 0 ], dir[ 1 ], dir[ 2 ] );
+		btVector3 vel( dir[0], dir[1], dir[2] );
 		vel *= 150;
 
 		body->setLinearVelocity( vel );
@@ -316,45 +318,45 @@ extern "C"
 		body->setAngularVelocity( btVector3( 0, 0, 0 ) );
 		body->setContactProcessingThreshold( 1e30 );
 
-		//enable CCD if the object moves more than 1 meter in one simulation frame
-		//rigidBody.setCcdSweptSphereRadius(20);
+		// enable CCD if the object moves more than 1 meter in one simulation frame
+		// rigidBody.setCcdSweptSphereRadius(20);
 
 		if( g_physUseCCD.integer )
 		{
-			body->setCcdMotionThreshold( maxs[ 0 ] );
+			body->setCcdMotionThreshold( maxs[0] );
 			body->setCcdSweptSphereRadius( 6 );
 		}
 
 		body->setUserPointer( ent );
-		//ent->physicsCollisionShape = (plCollisionShapeHandle*) boxShape;
+		// ent->physicsCollisionShape = (plCollisionShapeHandle*) boxShape;
 		ent->physicsRigidBody = ( plRigidBodyHandle* )body;
 	}
 
 	static void G_ShootBox( const vec3_t start, const vec3_t dir )
 	{
 		gentity_t* bolt;
-		vec3_t     mins = { -8, -8, -8 };
-		vec3_t     maxs = { 8, 8, 8 };
+		vec3_t	   mins = { -8, -8, -8 };
+		vec3_t	   maxs = { 8, 8, 8 };
 
-		//VectorNormalize(forward);
+		// VectorNormalize(forward);
 
-		bolt            = G_Spawn();
+		bolt			= G_Spawn();
 		bolt->classname = "physicsbox";
 		bolt->nextthink = level.time + 15000;
-		bolt->think     = G_PhysicsBox_Think;
-		bolt->physics   = G_PhysicsBox_Physics;
-		bolt->s.eType   = ET_PHYSICS_BOX;
+		bolt->think		= G_PhysicsBox_Think;
+		bolt->physics	= G_PhysicsBox_Physics;
+		bolt->s.eType	= ET_PHYSICS_BOX;
 		bolt->r.svFlags = SVF_BROADCAST;
-		//bolt->s.weapon = WP_ROCKET_LAUNCHER;
-		//bolt->r.ownerNum = ent->s.number;
-		//bolt->parent = ent;
-		//bolt->damage = 100;
-		//bolt->splashDamage = 100;
-		//bolt->splashRadius = 120;
-		//bolt->methodOfDeath = MOD_ROCKET;
-		//bolt->splashMethodOfDeath = MOD_ROCKET_SPLASH;
-		//bolt->clipmask = MASK_SHOT;
-		//bolt->target_ent = NULL;
+		// bolt->s.weapon = WP_ROCKET_LAUNCHER;
+		// bolt->r.ownerNum = ent->s.number;
+		// bolt->parent = ent;
+		// bolt->damage = 100;
+		// bolt->splashDamage = 100;
+		// bolt->splashRadius = 120;
+		// bolt->methodOfDeath = MOD_ROCKET;
+		// bolt->splashMethodOfDeath = MOD_ROCKET_SPLASH;
+		// bolt->clipmask = MASK_SHOT;
+		// bolt->target_ent = NULL;
 
 		VectorCopy( start, bolt->s.origin );
 
@@ -362,9 +364,9 @@ extern "C"
 		bolt->r.contents = CONTENTS_SOLID;
 		VectorCopy( mins, bolt->r.mins );
 		VectorCopy( maxs, bolt->r.maxs );
-		//bolt->takedamage = qtrue;
-		//bolt->health = 50;
-		//bolt->die = G_Missile_Die;
+		// bolt->takedamage = qtrue;
+		// bolt->health = 50;
+		// bolt->die = G_Missile_Die;
 
 		bolt->s.pos.trType = TR_LINEAR;
 		VectorScale( dir, 30, bolt->s.pos.trDelta );
@@ -372,12 +374,12 @@ extern "C"
 		bolt->s.pos.trTime = level.time; // - 50;	// move a bit on the very first frame
 		VectorCopy( start, bolt->s.pos.trBase );
 
-		//SnapVector(bolt->s.pos.trDelta);	// save net bandwidth
+		// SnapVector(bolt->s.pos.trDelta);	// save net bandwidth
 		VectorCopy( start, bolt->r.currentOrigin );
 
 		G_PhysicsBox_InitPhysics( bolt, start, dir );
 
-		//G_SetOrigin(bolt, start);
+		// G_SetOrigin(bolt, start);
 
 		trap_LinkEntity( bolt );
 	}
@@ -387,7 +389,7 @@ extern "C"
 		vec3_t forward, right, up;
 		vec3_t start, start2;
 
-		//AngleVectors(ent->s.angles2, forward, right, up);
+		// AngleVectors(ent->s.angles2, forward, right, up);
 		VectorCopy( ent->s.pos.trBase, start );
 
 		// set aiming directions
@@ -398,7 +400,7 @@ extern "C"
 		for( int i = -48; i < 48; i += 12 )
 		{
 			VectorMA( start, i, right, start2 );
-			VectorMA( start2, playerMins[ 1 ] + 5, forward, start2 );
+			VectorMA( start2, playerMins[1] + 5, forward, start2 );
 
 			G_ShootBox( start2, forward );
 		}

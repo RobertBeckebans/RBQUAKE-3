@@ -36,10 +36,10 @@ static lua_State* g_luaState = NULL;
 G_InitLua
 ============
 */
-void G_InitLua()
+void			  G_InitLua()
 {
-	char buf[ MAX_STRING_CHARS ];
-	char filename[ MAX_QPATH ];
+	char buf[MAX_STRING_CHARS];
+	char filename[MAX_QPATH];
 
 	G_Printf( "------- Lua Initialization -------\n" );
 
@@ -85,9 +85,9 @@ G_LoadLuaScript
 */
 void G_LoadLuaScript( gentity_t* ent, const char* filename )
 {
-	int          len;
+	int			 len;
 	fileHandle_t f;
-	char         buf[ MAX_LUAFILE ];
+	char		 buf[MAX_LUAFILE];
 
 	G_Printf( "...loading '%s'\n", filename );
 
@@ -106,7 +106,7 @@ void G_LoadLuaScript( gentity_t* ent, const char* filename )
 	}
 
 	trap_FS_Read( buf, len, f );
-	buf[ len ] = 0;
+	buf[len] = 0;
 	trap_FS_FCloseFile( f );
 
 	if( luaL_loadbuffer( g_luaState, buf, strlen( buf ), filename ) )
@@ -127,11 +127,11 @@ G_RunLuaFunction
 */
 void G_RunLuaFunction( const char* func, const char* sig, ... )
 {
-	va_list    vl;
-	int        narg, nres; // number of arguments and results
+	va_list	   vl;
+	int		   narg, nres; // number of arguments and results
 	lua_State* L = g_luaState;
 
-	if( !func || !func[ 0 ] )
+	if( !func || !func[0] )
 	{
 		return;
 	}
@@ -182,7 +182,7 @@ void G_RunLuaFunction( const char* func, const char* sig, ... )
 endwhile:
 
 	// do the call
-	nres = strlen( sig );                    // number of expected results
+	nres = strlen( sig );					 // number of expected results
 	if( lua_pcall( L, narg, nres, 0 ) != 0 ) // do the call
 	{
 		G_Printf( "G_RunLuaFunction: error running function `%s': %s\n", func, lua_tostring( L, -1 ) );
@@ -240,9 +240,9 @@ G_DumpLuaStack
 */
 void G_DumpLuaStack()
 {
-	int        i;
+	int		   i;
 	lua_State* L   = g_luaState;
-	int        top = lua_gettop( L );
+	int		   top = lua_gettop( L );
 
 	for( i = 1; i <= top; i++ )
 	{

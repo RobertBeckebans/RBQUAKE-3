@@ -164,9 +164,9 @@ static int qmath_ldexp( lua_State* L )
 
 static int qmath_min( lua_State* L )
 {
-	int        n    = lua_gettop( L ); /* number of arguments */
+	int		   n	= lua_gettop( L ); /* number of arguments */
 	lua_Number dmin = luaL_checknumber( L, 1 );
-	int        i;
+	int		   i;
 
 	for( i = 2; i <= n; i++ )
 	{
@@ -183,9 +183,9 @@ static int qmath_min( lua_State* L )
 
 static int qmath_max( lua_State* L )
 {
-	int        n    = lua_gettop( L ); /* number of arguments */
+	int		   n	= lua_gettop( L ); /* number of arguments */
 	lua_Number dmax = luaL_checknumber( L, 1 );
-	int        i;
+	int		   i;
 
 	for( i = 2; i <= n; i++ )
 	{
@@ -267,8 +267,7 @@ static int qmath_crandom( lua_State* L )
 	return 1;
 }
 
-static const luaL_reg qmathlib[] = {
-	{ "abs", qmath_abs },
+static const luaL_reg qmathlib[] = { { "abs", qmath_abs },
 	{ "sin", qmath_sin },
 	{ "cos", qmath_cos },
 	{ "tan", qmath_tan },
@@ -295,10 +294,9 @@ static const luaL_reg qmathlib[] = {
 	{ "random", qmath_random },
 	//  {"randomseed", qmath_randomseed},
 	{ "crandom", qmath_crandom },
-	{ NULL, NULL }
-};
+	{ NULL, NULL } };
 
-int luaopen_qmath( lua_State* L )
+int					  luaopen_qmath( lua_State* L )
 {
 	luaL_register( L, "qmath", qmathlib );
 	lua_pushnumber( L, M_PI );

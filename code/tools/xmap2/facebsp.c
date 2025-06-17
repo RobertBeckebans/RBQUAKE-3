@@ -29,13 +29,13 @@ several games based on the Quake III Arena engine, in the form of "Q3Map2."
 /* marker */
 #define FACEBSP_C
 
-//#define DEBUG_SPLITS 1
+// #define DEBUG_SPLITS 1
 
 /* dependencies */
 #include "q3map2.h"
 
-int c_faceLeafs;
-int c_faceNodes;
+int		c_faceLeafs;
+int		c_faceNodes;
 
 /*
 ================
@@ -73,20 +73,20 @@ finds the best split plane for this node
 
 static void SelectSplitPlaneNum( node_t* node, face_t* list, int* splitPlaneNum, int* compileFlags )
 {
-	face_t*  split;
-	face_t*  check;
-	face_t*  bestSplit;
-	int      splits, facing, front, back;
-	int      side;
+	face_t*	 split;
+	face_t*	 check;
+	face_t*	 bestSplit;
+	int		 splits, facing, front, back;
+	int		 side;
 	plane_t* plane;
-	int      value, bestValue;
-	int      i;
-	vec3_t   normal;
-	float    dist;
-	int      planenum;
-	float    sizeBias;
-	//int				checks;
-	int frontC, backC, splitsC, facingC;
+	int		 value, bestValue;
+	int		 i;
+	vec3_t	 normal;
+	float	 dist;
+	int		 planenum;
+	float	 sizeBias;
+	// int				checks;
+	int		 frontC, backC, splitsC, facingC;
 
 	/* ydnar: set some defaults */
 	*splitPlaneNum = -1; /* leaf */
@@ -120,11 +120,11 @@ static void SelectSplitPlaneNum( node_t* node, face_t* list, int* splitPlaneNum,
 	bestValue = -99999;
 	bestSplit = list;
 
-	//checks = 0;
+	// checks = 0;
 
 #if 1
 	// div0: this check causes detail/structural mixes
-	//for(split = list; split; split = split->next)
+	// for(split = list; split; split = split->next)
 	//	split->checked = qfalse;
 
 	#if defined( DEBUG_SPLITS )
@@ -132,12 +132,12 @@ static void SelectSplitPlaneNum( node_t* node, face_t* list, int* splitPlaneNum,
 	#endif
 	for( split = list; split; split = split->next )
 	{
-		//if(split->checked)
+		// if(split->checked)
 		//	continue;
 
-		//checks++;
+		// checks++;
 
-		plane  = &mapplanes[ split->planenum ];
+		plane  = &mapplanes[split->planenum];
 		splits = 0;
 		facing = 0;
 		front  = 0;
@@ -148,7 +148,7 @@ static void SelectSplitPlaneNum( node_t* node, face_t* list, int* splitPlaneNum,
 			if( check->planenum == split->planenum )
 			{
 				facing++;
-				//check->checked = qtrue;   // won't need to test this plane again
+				// check->checked = qtrue;   // won't need to test this plane again
 				continue;
 			}
 			side = WindingOnPlaneSide( check->w, plane->normal, plane->dist );
@@ -168,13 +168,13 @@ static void SelectSplitPlaneNum( node_t* node, face_t* list, int* splitPlaneNum,
 
 		if( bspAlternateSplitWeights )
 		{
-			//Base score = 20000 perfectly balanced
-			value = 0;                    //20000;
+			// Base score = 20000 perfectly balanced
+			value = 0;					  // 20000;
 			value -= abs( front - back ); // prefer centered planes
-			value -= plane->counter;      // if we've already used this plane sometime in the past try not to use it again
-			value += facing * 5;          // if we're going to have alot of other surfs use this plane, we want to get it in quickly.
-			value -= splits * 5;          // more splits = bad
-			//value += sizeBias * 10;		// we want a huge score bias based on plane size
+			value -= plane->counter;	  // if we've already used this plane sometime in the past try not to use it again
+			value += facing * 5;		  // if we're going to have alot of other surfs use this plane, we want to get it in quickly.
+			value -= splits * 5;		  // more splits = bad
+			// value += sizeBias * 10;		// we want a huge score bias based on plane size
 
 			if( plane->type < 3 )
 			{
@@ -247,8 +247,8 @@ static void SelectSplitPlaneNum( node_t* node, face_t* list, int* splitPlaneNum,
 			bestValue = value;
 			bestSplit = split;
 
-			frontC  = front;
-			backC   = back;
+			frontC	= front;
+			backC	= back;
 			splitsC = splits;
 			facingC = facing;
 		}
@@ -265,7 +265,7 @@ static void SelectSplitPlaneNum( node_t* node, face_t* list, int* splitPlaneNum,
 		return;
 	}
 
-	//Sys_FPrintf(SYS_VRB, "F: %9d B:%9d S:%9d FA:%9d\n", frontC, backC, splitsC, facingC);
+	// Sys_FPrintf(SYS_VRB, "F: %9d B:%9d S:%9d FA:%9d\n", frontC, backC, splitsC, facingC);
 
 	/* set best split data */
 	*splitPlaneNum = bestSplit->planenum;
@@ -286,7 +286,7 @@ static void SelectSplitPlaneNum( node_t* node, face_t* list, int* splitPlaneNum,
 
 	if( *splitPlaneNum > -1 )
 	{
-		mapplanes[ *splitPlaneNum ].counter++;
+		mapplanes[*splitPlaneNum].counter++;
 	}
 }
 
@@ -308,13 +308,13 @@ int CountFaceList( face_t* list )
 }
 
 static tree_t* drawTree = NULL;
-static void    DrawTreeNodes_r( node_t* node )
+static void	   DrawTreeNodes_r( node_t* node )
 {
-	int        s;
+	int		   s;
 	portal_t * p, *nextp;
 	winding_t* w;
-	vec4_t     nodeColor = { 1, 1, 0, 0.3 };
-	vec4_t     leafColor = { 0, 0, 1, 0.3 };
+	vec4_t	   nodeColor = { 1, 1, 0, 0.3 };
+	vec4_t	   leafColor = { 0, 0, 1, 0.3 };
 
 	if( !node )
 	{
@@ -329,19 +329,19 @@ static void    DrawTreeNodes_r( node_t* node )
 
 	Draw_AABB( vec3_origin, node->mins, node->maxs, nodeColor );
 
-	DrawTreeNodes_r( node->children[ 0 ] );
-	DrawTreeNodes_r( node->children[ 1 ] );
+	DrawTreeNodes_r( node->children[0] );
+	DrawTreeNodes_r( node->children[1] );
 }
 static void DrawNodes()
 {
 	DrawTreeNodes_r( drawTree->headnode );
 }
 
-static face_t* drawChildLists[ 2 ];
+static face_t* drawChildLists[2];
 static node_t* drawSplitNode;
-static void    DrawPartitions()
+static void	   DrawPartitions()
 {
-	face_t*    face;
+	face_t*	   face;
 	winding_t* w;
 
 	// create temporary winding to draw the split plane
@@ -355,14 +355,14 @@ static void    DrawPartitions()
 		FreeWinding( w );
 	}
 
-	for( face = drawChildLists[ 0 ]; face != NULL; face = face->next )
+	for( face = drawChildLists[0]; face != NULL; face = face->next )
 	{
 		w = face->w;
 
 		Draw_Winding( w, 0, 1, 0, 0.3 );
 	}
 
-	for( face = drawChildLists[ 1 ]; face != NULL; face = face->next )
+	for( face = drawChildLists[1]; face != NULL; face = face->next )
 	{
 		w = face->w;
 
@@ -383,17 +383,17 @@ recursively builds the bsp, splitting on face planes
 
 void BuildFaceTree_r( node_t* node, face_t* list )
 {
-	face_t*    split;
-	face_t*    next;
-	int        side;
+	face_t*	   split;
+	face_t*	   next;
+	int		   side;
 	plane_t*   plane;
-	face_t*    newFace;
-	face_t*    childLists[ 2 ];
+	face_t*	   newFace;
+	face_t*	   childLists[2];
 	winding_t *frontWinding, *backWinding;
-	int        i;
-	int        splitPlaneNum, compileFlags;
+	int		   i;
+	int		   splitPlaneNum, compileFlags;
 	qboolean   isstruct = qfalse;
-	int        splits, front, back;
+	int		   splits, front, back;
 
 	/* count faces left */
 	i = CountFaceList( list );
@@ -408,19 +408,19 @@ void BuildFaceTree_r( node_t* node, face_t* list )
 	/* if we don't have any more faces, this is a leaf */
 	if( splitPlaneNum == -1 )
 	{
-		node->planenum                = PLANENUM_LEAF;
+		node->planenum				  = PLANENUM_LEAF;
 		node->has_structural_children = qfalse;
 		c_faceLeafs++;
 		return;
 	}
 
 	/* partition the list */
-	node->planenum                = splitPlaneNum;
-	node->compileFlags            = compileFlags;
+	node->planenum				  = splitPlaneNum;
+	node->compileFlags			  = compileFlags;
 	node->has_structural_children = !( compileFlags & C_DETAIL ) && !node->opaque;
-	plane                         = &mapplanes[ splitPlaneNum ];
-	childLists[ 0 ]               = NULL;
-	childLists[ 1 ]               = NULL;
+	plane						  = &mapplanes[splitPlaneNum];
+	childLists[0]				  = NULL;
+	childLists[1]				  = NULL;
 
 	splits = front = back = 0;
 
@@ -452,25 +452,25 @@ void BuildFaceTree_r( node_t* node, face_t* list )
 			ClipWindingEpsilon( split->w, plane->normal, plane->dist, CLIP_EPSILON * 2, &frontWinding, &backWinding );
 			if( frontWinding )
 			{
-				newFace               = AllocBspFace();
-				newFace->w            = frontWinding;
-				newFace->next         = childLists[ 0 ];
-				newFace->planenum     = split->planenum;
-				newFace->priority     = split->priority;
+				newFace				  = AllocBspFace();
+				newFace->w			  = frontWinding;
+				newFace->next		  = childLists[0];
+				newFace->planenum	  = split->planenum;
+				newFace->priority	  = split->priority;
 				newFace->compileFlags = split->compileFlags;
-				childLists[ 0 ]       = newFace;
+				childLists[0]		  = newFace;
 
 				front++;
 			}
 			if( backWinding )
 			{
-				newFace               = AllocBspFace();
-				newFace->w            = backWinding;
-				newFace->next         = childLists[ 1 ];
-				newFace->planenum     = split->planenum;
-				newFace->priority     = split->priority;
+				newFace				  = AllocBspFace();
+				newFace->w			  = backWinding;
+				newFace->next		  = childLists[1];
+				newFace->planenum	  = split->planenum;
+				newFace->priority	  = split->priority;
 				newFace->compileFlags = split->compileFlags;
-				childLists[ 1 ]       = newFace;
+				childLists[1]		  = newFace;
 
 				back++;
 			}
@@ -478,15 +478,15 @@ void BuildFaceTree_r( node_t* node, face_t* list )
 		}
 		else if( side == SIDE_FRONT )
 		{
-			split->next     = childLists[ 0 ];
-			childLists[ 0 ] = split;
+			split->next	  = childLists[0];
+			childLists[0] = split;
 
 			front++;
 		}
 		else if( side == SIDE_BACK )
 		{
-			split->next     = childLists[ 1 ];
-			childLists[ 1 ] = split;
+			split->next	  = childLists[1];
+			childLists[1] = split;
 
 			back++;
 		}
@@ -495,20 +495,20 @@ void BuildFaceTree_r( node_t* node, face_t* list )
 	// recursively process children
 	for( i = 0; i < 2; i++ )
 	{
-		node->children[ i ]         = AllocNode();
-		node->children[ i ]->parent = node;
-		VectorCopy( node->mins, node->children[ i ]->mins );
-		VectorCopy( node->maxs, node->children[ i ]->maxs );
+		node->children[i]		  = AllocNode();
+		node->children[i]->parent = node;
+		VectorCopy( node->mins, node->children[i]->mins );
+		VectorCopy( node->maxs, node->children[i]->maxs );
 
 		c_faceNodes++;
 	}
 
 	for( i = 0; i < 3; i++ )
 	{
-		if( plane->normal[ i ] == 1 )
+		if( plane->normal[i] == 1 )
 		{
-			node->children[ 0 ]->mins[ i ] = plane->dist;
-			node->children[ 1 ]->maxs[ i ] = plane->dist;
+			node->children[0]->mins[i] = plane->dist;
+			node->children[1]->maxs[i] = plane->dist;
 			break;
 		}
 	}
@@ -516,9 +516,9 @@ void BuildFaceTree_r( node_t* node, face_t* list )
 #if 1
 	if( drawBSP && drawTree )
 	{
-		drawChildLists[ 0 ] = childLists[ 0 ];
-		drawChildLists[ 1 ] = childLists[ 1 ];
-		drawSplitNode       = node;
+		drawChildLists[0] = childLists[0];
+		drawChildLists[1] = childLists[1];
+		drawSplitNode	  = node;
 		Draw_Scene( DrawAll );
 	}
 #endif
@@ -532,13 +532,12 @@ void BuildFaceTree_r( node_t* node, face_t* list )
 
 	for( i = 0; i < 2; i++ )
 	{
-		BuildFaceTree_r( node->children[ i ], childLists[ i ] );
-		node->has_structural_children |= node->children[ i ]->has_structural_children;
+		BuildFaceTree_r( node->children[i], childLists[i] );
+		node->has_structural_children |= node->children[i]->has_structural_children;
 	}
 
 #if defined( DEBUG_SPLITS )
-	if( ( node->compileFlags & C_DETAIL ) && !( node->children[ 0 ]->compileFlags & C_DETAIL ) &&
-		node->children[ 0 ]->planenum != PLANENUM_LEAF )
+	if( ( node->compileFlags & C_DETAIL ) && !( node->children[0]->compileFlags & C_DETAIL ) && node->children[0]->planenum != PLANENUM_LEAF )
 	{
 		Sys_FPrintf( SYS_ERR, "I am detail, my child is structural\n", node->has_structural_children );
 	}
@@ -560,8 +559,8 @@ tree_t* FaceBSP( face_t* list, qboolean drawDebug )
 {
 	tree_t* tree;
 	face_t* face;
-	int     i;
-	int     count;
+	int		i;
+	int		count;
 
 	Sys_FPrintf( SYS_VRB, "--- FaceBSP ---\n" );
 
@@ -573,14 +572,14 @@ tree_t* FaceBSP( face_t* list, qboolean drawDebug )
 		count++;
 		for( i = 0; i < face->w->numpoints; i++ )
 		{
-			AddPointToBounds( face->w->p[ i ], tree->mins, tree->maxs );
+			AddPointToBounds( face->w->p[i], tree->mins, tree->maxs );
 		}
 	}
 	Sys_FPrintf( SYS_VRB, "%9d faces\n", count );
 
 	for( i = 0; i < nummapplanes; i++ )
 	{
-		mapplanes[ i ].counter = 0;
+		mapplanes[i].counter = 0;
 	}
 
 	tree->headnode = AllocNode();
@@ -613,8 +612,8 @@ get structural brush faces
 face_t* MakeStructuralBSPFaceList( brush_t* list )
 {
 	brush_t*   b;
-	int        i;
-	side_t*    s;
+	int		   i;
+	side_t*	   s;
 	winding_t* w;
 	face_t *   f, *flist;
 
@@ -629,7 +628,7 @@ face_t* MakeStructuralBSPFaceList( brush_t* list )
 		for( i = 0; i < b->numsides; i++ )
 		{
 			/* get side and winding */
-			s = &b->sides[ i ];
+			s = &b->sides[i];
 			w = s->winding;
 			if( w == NULL )
 			{
@@ -643,9 +642,9 @@ face_t* MakeStructuralBSPFaceList( brush_t* list )
 			}
 
 			/* allocate a face */
-			f               = AllocBspFace();
-			f->w            = CopyWinding( w );
-			f->planenum     = s->planenum & ~1;
+			f				= AllocBspFace();
+			f->w			= CopyWinding( w );
+			f->planenum		= s->planenum & ~1;
 			f->compileFlags = s->compileFlags; /* ydnar */
 			if( b->detail )
 			{
@@ -673,7 +672,7 @@ face_t* MakeStructuralBSPFaceList( brush_t* list )
 
 			/* get next face */
 			f->next = flist;
-			flist   = f;
+			flist	= f;
 		}
 	}
 
@@ -688,8 +687,8 @@ get visible brush faces
 face_t* MakeVisibleBSPFaceList( brush_t* list )
 {
 	brush_t*   b;
-	int        i;
-	side_t*    s;
+	int		   i;
+	side_t*	   s;
 	winding_t* w;
 	face_t *   f, *flist;
 
@@ -704,7 +703,7 @@ face_t* MakeVisibleBSPFaceList( brush_t* list )
 		for( i = 0; i < b->numsides; i++ )
 		{
 			/* get side and winding */
-			s = &b->sides[ i ];
+			s = &b->sides[i];
 			w = s->visibleHull;
 			if( w == NULL )
 			{
@@ -718,9 +717,9 @@ face_t* MakeVisibleBSPFaceList( brush_t* list )
 			}
 
 			/* allocate a face */
-			f               = AllocBspFace();
-			f->w            = CopyWinding( w );
-			f->planenum     = s->planenum & ~1;
+			f				= AllocBspFace();
+			f->w			= CopyWinding( w );
+			f->planenum		= s->planenum & ~1;
 			f->compileFlags = s->compileFlags; /* ydnar */
 			if( b->detail )
 			{
@@ -748,7 +747,7 @@ face_t* MakeVisibleBSPFaceList( brush_t* list )
 
 			/* get next face */
 			f->next = flist;
-			flist   = f;
+			flist	= f;
 		}
 	}
 

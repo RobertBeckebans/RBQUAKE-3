@@ -43,13 +43,13 @@ compatable with our normal parsing rules.
 */
 static char* CommaParse( char** data_p )
 {
-	int         c = 0, len;
-	char*       data;
-	static char com_token[ MAX_TOKEN_CHARS ];
+	int			c = 0, len;
+	char*		data;
+	static char com_token[MAX_TOKEN_CHARS];
 
-	data           = *data_p;
-	len            = 0;
-	com_token[ 0 ] = 0;
+	data		 = *data_p;
+	len			 = 0;
+	com_token[0] = 0;
 
 	// make sure incoming data is valid
 	if( !data )
@@ -73,7 +73,7 @@ static char* CommaParse( char** data_p )
 		c = *data;
 
 		// skip double slash comments
-		if( c == '/' && data[ 1 ] == '/' )
+		if( c == '/' && data[1] == '/' )
 		{
 			while( *data && *data != '\n' )
 			{
@@ -81,9 +81,9 @@ static char* CommaParse( char** data_p )
 			}
 		}
 		// skip /* */ comments
-		else if( c == '/' && data[ 1 ] == '*' )
+		else if( c == '/' && data[1] == '*' )
 		{
-			while( *data && ( *data != '*' || data[ 1 ] != '/' ) )
+			while( *data && ( *data != '*' || data[1] != '/' ) )
 			{
 				data++;
 			}
@@ -112,13 +112,13 @@ static char* CommaParse( char** data_p )
 			c = *data++;
 			if( c == '\"' || !c )
 			{
-				com_token[ len ] = 0;
-				*data_p          = ( char* )data;
+				com_token[len] = 0;
+				*data_p		   = ( char* )data;
 				return com_token;
 			}
 			if( len < MAX_TOKEN_CHARS )
 			{
-				com_token[ len ] = c;
+				com_token[len] = c;
 				len++;
 			}
 		}
@@ -129,7 +129,7 @@ static char* CommaParse( char** data_p )
 	{
 		if( len < MAX_TOKEN_CHARS )
 		{
-			com_token[ len ] = c;
+			com_token[len] = c;
 			len++;
 		}
 		data++;
@@ -141,7 +141,7 @@ static char* CommaParse( char** data_p )
 		//      Com_Printf ("Token exceeded %i chars, discarded.\n", MAX_TOKEN_CHARS);
 		len = 0;
 	}
-	com_token[ len ] = 0;
+	com_token[len] = 0;
 
 	*data_p = ( char* )data;
 	return com_token;
@@ -154,23 +154,23 @@ RE_GetSkinModel
 */
 qboolean RE_GetSkinModel( qhandle_t skinid, const char* type, char* name )
 {
-	int     i;
-	int     hash;
+	int		i;
+	int		hash;
 	skin_t* skin;
 
-	skin = tr.skins[ skinid ];
+	skin = tr.skins[skinid];
 	hash = Com_HashKey( ( char* )type, strlen( type ) );
 
 	for( i = 0; i < skin->numModels; i++ )
 	{
-		if( hash != skin->models[ i ]->hash )
+		if( hash != skin->models[i]->hash )
 		{
 			continue;
 		}
-		if( !Q_stricmp( skin->models[ i ]->type, type ) )
+		if( !Q_stricmp( skin->models[i]->type, type ) )
 		{
 			// (SA) whoops, should've been this way
-			Q_strncpyz( name, skin->models[ i ]->model, sizeof( skin->models[ i ]->model ) );
+			Q_strncpyz( name, skin->models[i]->model, sizeof( skin->models[i]->model ) );
 			return qtrue;
 		}
 	}
@@ -189,10 +189,10 @@ RE_GetShaderFromModel
 */
 qhandle_t RE_GetShaderFromModel( qhandle_t modelid, int surfnum, int withlightmap )
 {
-	model_t*      model;
-	bspModel_t*   bmodel;
+	model_t*	  model;
+	bspModel_t*	  bmodel;
 	bspSurface_t* surf;
-	shader_t*     shd;
+	shader_t*	  shd;
 
 	if( surfnum < 0 )
 	{
@@ -227,7 +227,7 @@ qhandle_t RE_GetShaderFromModel( qhandle_t modelid, int surfnum, int withlightma
 				image_t        *image;
 				long            hash;
 				qboolean        mip = qtrue;	// mip generation on by default
-			
+
 				// get mipmap info for original texture
 				hash = GenerateImageHashValue(surf->shader->name);
 				for(image = r_imageHashTable[hash]; image; image = image->next)
@@ -264,15 +264,15 @@ RE_RegisterSkin
 */
 qhandle_t RE_RegisterSkin( const char* name )
 {
-	qhandle_t      hSkin;
-	skin_t*        skin;
+	qhandle_t	   hSkin;
+	skin_t*		   skin;
 	skinSurface_t* surf;
 	skinModel_t*   model; //----(SA) added
-	char *         text, *text_p;
-	char*          token;
-	char           surfName[ MAX_QPATH ];
+	char *		   text, *text_p;
+	char*		   token;
+	char		   surfName[MAX_QPATH];
 
-	if( !name || !name[ 0 ] )
+	if( !name || !name[0] )
 	{
 		Com_Printf( "Empty name passed to RE_RegisterSkin\n" );
 		return 0;
@@ -287,7 +287,7 @@ qhandle_t RE_RegisterSkin( const char* name )
 	// see if the skin is already loaded
 	for( hSkin = 1; hSkin < tr.numSkins; hSkin++ )
 	{
-		skin = tr.skins[ hSkin ];
+		skin = tr.skins[hSkin];
 		if( !Q_stricmp( skin->name, name ) )
 		{
 			if( skin->numSurfaces == 0 )
@@ -331,11 +331,11 @@ qhandle_t RE_RegisterSkin( const char* name )
 	}
 
 	tr.numSkins++;
-	skin              = ri.Hunk_Alloc( sizeof( skin_t ), h_low );
-	tr.skins[ hSkin ] = skin;
+	skin			= ri.Hunk_Alloc( sizeof( skin_t ), h_low );
+	tr.skins[hSkin] = skin;
 	Q_strncpyz( skin->name, name, sizeof( skin->name ) );
 	skin->numSurfaces = 0;
-	skin->numModels   = 0; //----(SA) added
+	skin->numModels	  = 0; //----(SA) added
 
 	//----(SA)  end
 
@@ -346,7 +346,7 @@ qhandle_t RE_RegisterSkin( const char* name )
 		token = CommaParse( &text_p );
 		Q_strncpyz( surfName, token, sizeof( surfName ) );
 
-		if( !token[ 0 ] )
+		if( !token[0] )
 		{
 			break;
 		}
@@ -366,7 +366,7 @@ qhandle_t RE_RegisterSkin( const char* name )
 		if( !Q_stricmpn( token, "md3_", 4 ) )
 		{
 			// this is specifying a model
-			model = skin->models[ skin->numModels ] = ri.Hunk_Alloc( sizeof( *skin->models[ 0 ] ), h_low );
+			model = skin->models[skin->numModels] = ri.Hunk_Alloc( sizeof( *skin->models[0] ), h_low );
 			Q_strncpyz( model->type, token, sizeof( model->type ) );
 			model->hash = Com_HashKey( model->type, sizeof( model->type ) );
 
@@ -382,7 +382,7 @@ qhandle_t RE_RegisterSkin( const char* name )
 		// parse the shader name
 		token = CommaParse( &text_p );
 
-		surf = skin->surfaces[ skin->numSurfaces ] = ri.Hunk_Alloc( sizeof( *skin->surfaces[ 0 ] ), h_low );
+		surf = skin->surfaces[skin->numSurfaces] = ri.Hunk_Alloc( sizeof( *skin->surfaces[0] ), h_low );
 		Q_strncpyz( surf->name, surfName, sizeof( surf->name ) );
 
 		// RB: bspSurface not not have ::hash yet
@@ -414,11 +414,11 @@ void R_InitSkins( void )
 	tr.numSkins = 1;
 
 	// make the default skin have all default shaders
-	skin = tr.skins[ 0 ] = ri.Hunk_Alloc( sizeof( skin_t ), h_low );
+	skin = tr.skins[0] = ri.Hunk_Alloc( sizeof( skin_t ), h_low );
 	Q_strncpyz( skin->name, "<default skin>", sizeof( skin->name ) );
-	skin->numSurfaces           = 1;
-	skin->surfaces[ 0 ]         = ri.Hunk_Alloc( sizeof( *skin->surfaces ), h_low );
-	skin->surfaces[ 0 ]->shader = tr.defaultShader;
+	skin->numSurfaces		  = 1;
+	skin->surfaces[0]		  = ri.Hunk_Alloc( sizeof( *skin->surfaces ), h_low );
+	skin->surfaces[0]->shader = tr.defaultShader;
 }
 
 /*
@@ -430,9 +430,9 @@ skin_t* R_GetSkinByHandle( qhandle_t hSkin )
 {
 	if( hSkin < 1 || hSkin >= tr.numSkins )
 	{
-		return tr.skins[ 0 ];
+		return tr.skins[0];
 	}
-	return tr.skins[ hSkin ];
+	return tr.skins[hSkin];
 }
 
 /*
@@ -442,19 +442,19 @@ R_SkinList_f
 */
 void R_SkinList_f( void )
 {
-	int     i, j;
+	int		i, j;
 	skin_t* skin;
 
 	ri.Printf( PRINT_ALL, "------------------\n" );
 
 	for( i = 0; i < tr.numSkins; i++ )
 	{
-		skin = tr.skins[ i ];
+		skin = tr.skins[i];
 
 		ri.Printf( PRINT_ALL, "%3i:%s\n", i, skin->name );
 		for( j = 0; j < skin->numSurfaces; j++ )
 		{
-			ri.Printf( PRINT_ALL, "       %s = %s\n", skin->surfaces[ j ]->name, skin->surfaces[ j ]->shader->name );
+			ri.Printf( PRINT_ALL, "       %s = %s\n", skin->surfaces[j]->name, skin->surfaces[j]->shader->name );
 		}
 	}
 	ri.Printf( PRINT_ALL, "------------------\n" );

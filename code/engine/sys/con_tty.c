@@ -44,26 +44,26 @@ called before and after a stdout or stderr output
 =============================================================
 */
 
-extern qboolean stdinIsATTY;
-static qboolean stdin_active;
+extern qboolean		  stdinIsATTY;
+static qboolean		  stdin_active;
 // general flag to tell about tty console mode
-static qboolean ttycon_on           = qfalse;
-static int      ttycon_hide         = 0;
-static int      ttycon_show_overdue = 0;
+static qboolean		  ttycon_on			  = qfalse;
+static int			  ttycon_hide		  = 0;
+static int			  ttycon_show_overdue = 0;
 
 // some key codes that the terminal may be using, initialised on start up
-static int TTY_erase;
-static int TTY_eof;
+static int			  TTY_erase;
+static int			  TTY_eof;
 
 static struct termios TTY_tc;
 
-static field_t TTY_con;
+static field_t		  TTY_con;
 
 // This is somewhat of aduplicate of the graphical console history
 // but it's safer more modular to have our own here
 #define CON_HISTORY 32
-static field_t ttyEditLines[ CON_HISTORY ];
-static int     hist_current = -1, hist_count = 0;
+static field_t ttyEditLines[CON_HISTORY];
+static int	   hist_current = -1, hist_count = 0;
 
 #ifndef DEDICATED
 	// Don't use "]" as it would be the same as in-game console,
@@ -86,14 +86,14 @@ send "\b \b"
 */
 static void CON_Back( void )
 {
-	char              key;
+	char			  key;
 	size_t UNUSED_VAR size;
 
-	key  = '\b';
+	key	 = '\b';
 	size = write( STDOUT_FILENO, &key, 1 );
-	key  = ' ';
+	key	 = ' ';
 	size = write( STDOUT_FILENO, &key, 1 );
-	key  = '\b';
+	key	 = '\b';
 	size = write( STDOUT_FILENO, &key, 1 );
 }
 
@@ -203,9 +203,9 @@ void Hist_Add( field_t* field )
 	// make some room
 	for( i = CON_HISTORY - 1; i > 0; i-- )
 	{
-		ttyEditLines[ i ] = ttyEditLines[ i - 1 ];
+		ttyEditLines[i] = ttyEditLines[i - 1];
 	}
-	ttyEditLines[ 0 ] = *field;
+	ttyEditLines[0] = *field;
 	if( hist_count < CON_HISTORY )
 	{
 		hist_count++;
@@ -231,7 +231,7 @@ field_t* Hist_Prev( void )
 		return NULL;
 	}
 	hist_current++;
-	return &( ttyEditLines[ hist_current ] );
+	return &( ttyEditLines[hist_current] );
 }
 
 /*
@@ -253,7 +253,7 @@ field_t* Hist_Next( void )
 	{
 		return NULL;
 	}
-	return &( ttyEditLines[ hist_current ] );
+	return &( ttyEditLines[hist_current] );
 }
 
 /*
@@ -294,16 +294,16 @@ void CON_Init( void )
 	if( !stdinIsATTY )
 	{
 		Com_Printf( "tty console mode disabled\n" );
-		ttycon_on    = qfalse;
+		ttycon_on	 = qfalse;
 		stdin_active = qtrue;
 		return;
 	}
 
 	Field_Clear( &TTY_con );
 	tcgetattr( STDIN_FILENO, &TTY_tc );
-	TTY_erase = TTY_tc.c_cc[ VERASE ];
-	TTY_eof   = TTY_tc.c_cc[ VEOF ];
-	tc        = TTY_tc;
+	TTY_erase = TTY_tc.c_cc[VERASE];
+	TTY_eof	  = TTY_tc.c_cc[VEOF];
+	tc		  = TTY_tc;
 
 	/*
 	ECHO: don't echo input characters
@@ -320,10 +320,10 @@ void CON_Init( void )
 	INPCK enable input parity checking
 	*/
 	tc.c_iflag &= ~( ISTRIP | INPCK );
-	tc.c_cc[ VMIN ]  = 1;
-	tc.c_cc[ VTIME ] = 0;
+	tc.c_cc[VMIN]  = 1;
+	tc.c_cc[VTIME] = 0;
 	tcsetattr( STDIN_FILENO, TCSADRAIN, &tc );
-	ttycon_on   = qtrue;
+	ttycon_on	= qtrue;
 	ttycon_hide = 1; // Mark as hidden, so prompt is shown in CON_Show
 	CON_Show();
 }
@@ -336,10 +336,10 @@ CON_Input
 char* CON_Input( void )
 {
 	// we use this when sending back commands
-	static char       text[ MAX_EDIT_LINE ];
-	int               avail;
-	char              key;
-	field_t*          history;
+	static char		  text[MAX_EDIT_LINE];
+	int				  avail;
+	char			  key;
+	field_t*		  history;
 	size_t UNUSED_VAR size;
 
 	if( ttycon_on )
@@ -355,7 +355,7 @@ char* CON_Input( void )
 				if( TTY_con.cursor > 0 )
 				{
 					TTY_con.cursor--;
-					TTY_con.buffer[ TTY_con.cursor ] = '\0';
+					TTY_con.buffer[TTY_con.cursor] = '\0';
 					CON_Back();
 				}
 				return NULL;
@@ -367,15 +367,14 @@ char* CON_Input( void )
 				{
 #ifndef DEDICATED
 					// if not in the game explicitly prepend a slash if needed
-					if( clc.state != CA_ACTIVE && con_autochat->integer && TTY_con.cursor &&
-						TTY_con.buffer[ 0 ] != '/' && TTY_con.buffer[ 0 ] != '\\' )
+					if( clc.state != CA_ACTIVE && con_autochat->integer && TTY_con.cursor && TTY_con.buffer[0] != '/' && TTY_con.buffer[0] != '\\' )
 					{
 						memmove( TTY_con.buffer + 1, TTY_con.buffer, sizeof( TTY_con.buffer ) - 1 );
-						TTY_con.buffer[ 0 ] = '\\';
+						TTY_con.buffer[0] = '\\';
 						TTY_con.cursor++;
 					}
 
-					if( TTY_con.buffer[ 0 ] == '/' || TTY_con.buffer[ 0 ] == '\\' )
+					if( TTY_con.buffer[0] == '/' || TTY_con.buffer[0] == '\\' )
 					{
 						Q_strncpyz( text, TTY_con.buffer + 1, sizeof( text ) );
 					}
@@ -392,7 +391,7 @@ char* CON_Input( void )
 					}
 					else
 					{
-						text[ 0 ] = '\0';
+						text[0] = '\0';
 					}
 
 					// push it in history
@@ -406,7 +405,7 @@ char* CON_Input( void )
 					Hist_Add( &TTY_con );
 					Q_strncpyz( text, TTY_con.buffer, sizeof( text ) );
 					Field_Clear( &TTY_con );
-					key  = '\n';
+					key	 = '\n';
 					size = write( STDOUT_FILENO, &key, 1 );
 					size = write( STDOUT_FILENO, TTY_CONSOLE_PROMPT, strlen( TTY_CONSOLE_PROMPT ) );
 #endif
@@ -473,7 +472,7 @@ char* CON_Input( void )
 				return NULL;
 			}
 			// push regular character
-			TTY_con.buffer[ TTY_con.cursor ] = key;
+			TTY_con.buffer[TTY_con.cursor] = key;
 			TTY_con.cursor++; // next char will always be '\0'
 			// print the current line (this is differential)
 			size = write( STDOUT_FILENO, &key, 1 );
@@ -483,13 +482,13 @@ char* CON_Input( void )
 	}
 	else if( stdin_active )
 	{
-		int            len;
-		fd_set         fdset;
+		int			   len;
+		fd_set		   fdset;
 		struct timeval timeout;
 
 		FD_ZERO( &fdset );
 		FD_SET( STDIN_FILENO, &fdset ); // stdin
-		timeout.tv_sec  = 0;
+		timeout.tv_sec	= 0;
 		timeout.tv_usec = 0;
 		if( select( STDIN_FILENO + 1, &fdset, NULL, NULL, &timeout ) == -1 || !FD_ISSET( STDIN_FILENO, &fdset ) )
 		{
@@ -508,7 +507,7 @@ char* CON_Input( void )
 		{
 			return NULL;
 		}
-		text[ len - 1 ] = 0; // rip off the /n and terminate
+		text[len - 1] = 0; // rip off the /n and terminate
 
 		return text;
 	}
@@ -522,7 +521,7 @@ CON_Print
 */
 void CON_Print( const char* msg )
 {
-	if( !msg[ 0 ] )
+	if( !msg[0] )
 	{
 		return;
 	}
@@ -546,7 +545,7 @@ void CON_Print( const char* msg )
 
 	// Only print prompt when msg ends with a newline, otherwise the console
 	//   might get garbled when output does not fit on one line.
-	if( msg[ strlen( msg ) - 1 ] == '\n' )
+	if( msg[strlen( msg ) - 1] == '\n' )
 	{
 		CON_Show();
 

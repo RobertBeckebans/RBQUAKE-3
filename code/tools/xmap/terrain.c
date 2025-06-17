@@ -23,42 +23,42 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "qbsp.h"
 #include <assert.h>
 
-#define SURF_WIDTH  2048
-#define SURF_HEIGHT 2048
+#define SURF_WIDTH	  2048
+#define SURF_HEIGHT	  2048
 
-#define GROW_VERTS    512
+#define GROW_VERTS	  512
 #define GROW_INDICES  512
 #define GROW_SURFACES 128
 
-void QuakeTextureVecs( plane_t* plane, vec_t shift[ 2 ], vec_t rotate, vec_t scale[ 2 ], vec_t mappingVecs[ 2 ][ 4 ] );
+void QuakeTextureVecs( plane_t* plane, vec_t shift[2], vec_t rotate, vec_t scale[2], vec_t mappingVecs[2][4] );
 
 typedef struct
 {
 	shaderInfo_t* shader;
-	int           x, y;
+	int			  x, y;
 
-	int         maxVerts;
-	int         numVerts;
-	drawVert_t* verts;
+	int			  maxVerts;
+	int			  numVerts;
+	drawVert_t*	  verts;
 
-	int  maxIndexes;
-	int  numIndexes;
-	int* indexes;
+	int			  maxIndexes;
+	int			  numIndexes;
+	int*		  indexes;
 } terrainSurf_t;
 
-static terrainSurf_t* surfaces    = NULL;
+static terrainSurf_t* surfaces	  = NULL;
 static terrainSurf_t* lastSurface = NULL;
-static int            numsurfaces = 0;
-static int            maxsurfaces = 0;
+static int			  numsurfaces = 0;
+static int			  maxsurfaces = 0;
 
 /*
 ================
 ShaderForLayer
 ================
 */
-shaderInfo_t* ShaderForLayer( int minlayer, int maxlayer, const char* shadername )
+shaderInfo_t*		  ShaderForLayer( int minlayer, int maxlayer, const char* shadername )
 {
-	char shader[ MAX_QPATH ];
+	char shader[MAX_QPATH];
 
 	if( minlayer == maxlayer )
 	{
@@ -83,11 +83,11 @@ qboolean CompareVert( drawVert_t* v1, drawVert_t* v2, qboolean checkst )
 
 	for( i = 0; i < 3; i++ )
 	{
-		if( floor( v1->xyz[ i ] + 0.1 ) != floor( v2->xyz[ i ] + 0.1 ) )
+		if( floor( v1->xyz[i] + 0.1 ) != floor( v2->xyz[i] + 0.1 ) )
 		{
 			return qfalse;
 		}
-		if( checkst && ( ( v1->st[ 0 ] != v2->st[ 0 ] ) || ( v1->st[ 1 ] != v2->st[ 1 ] ) ) )
+		if( checkst && ( ( v1->st[0] != v2->st[0] ) || ( v1->st[1] != v2->st[1] ) ) )
 		{
 			return qfalse;
 		}
@@ -103,15 +103,15 @@ LoadAlphaMap
 */
 byte* LoadAlphaMap( int* num_layers, int* alphawidth, int* alphaheight )
 {
-	int*        alphamap32;
-	byte*       alphamap;
+	int*		alphamap32;
+	byte*		alphamap;
 	const char* alphamapname;
-	char        ext[ 128 ];
-	int         width;
-	int         height;
-	int         layers;
-	int         size;
-	int         i;
+	char		ext[128];
+	int			width;
+	int			height;
+	int			layers;
+	int			size;
+	int			i;
 
 	assert( alphawidth );
 	assert( alphaheight );
@@ -124,7 +124,7 @@ byte* LoadAlphaMap( int* num_layers, int* alphawidth, int* alphaheight )
 	}
 
 	alphamapname = ValueForKey( mapEnt, "alphamap" );
-	if( !alphamapname[ 0 ] )
+	if( !alphamapname[0] )
 	{
 		Error( "LoadAlphaMap: No alphamap specified on terrain" );
 	}
@@ -134,14 +134,14 @@ byte* LoadAlphaMap( int* num_layers, int* alphawidth, int* alphaheight )
 	{
 		Load32BitImage( ExpandGamePath( alphamapname ), ( unsigned** )&alphamap32, &width, &height );
 
-		size     = width * height;
+		size	 = width * height;
 		alphamap = malloc( size );
 		for( i = 0; i < size; i++ )
 		{
-			alphamap[ i ] = ( ( alphamap32[ i ] & 0xff ) * layers ) / 256;
-			if( alphamap[ i ] >= layers )
+			alphamap[i] = ( ( alphamap32[i] & 0xff ) * layers ) / 256;
+			if( alphamap[i] >= layers )
 			{
-				alphamap[ i ] = layers - 1;
+				alphamap[i] = layers - 1;
 			}
 		}
 	}
@@ -151,9 +151,9 @@ byte* LoadAlphaMap( int* num_layers, int* alphawidth, int* alphaheight )
 		size = width * height;
 		for( i = 0; i < size; i++ )
 		{
-			if( alphamap[ i ] >= layers )
+			if( alphamap[i] >= layers )
 			{
-				alphamap[ i ] = layers - 1;
+				alphamap[i] = layers - 1;
 			}
 		}
 	}
@@ -163,8 +163,8 @@ byte* LoadAlphaMap( int* num_layers, int* alphawidth, int* alphaheight )
 		Error( "LoadAlphaMap: alphamap width/height must be at least 2x2." );
 	}
 
-	*num_layers  = layers;
-	*alphawidth  = width;
+	*num_layers	 = layers;
+	*alphawidth	 = width;
 	*alphaheight = height;
 
 	return alphamap;
@@ -178,7 +178,7 @@ CalcTerrainSize
 void CalcTerrainSize( vec3_t mins, vec3_t maxs, vec3_t size )
 {
 	bspBrush_t* brush;
-	int         i;
+	int			i;
 	const char* key;
 
 	// calculate the size of the terrain
@@ -190,28 +190,28 @@ void CalcTerrainSize( vec3_t mins, vec3_t maxs, vec3_t size )
 	}
 
 	key = ValueForKey( mapEnt, "min" );
-	if( key[ 0 ] )
+	if( key[0] )
 	{
 		GetVectorForKey( mapEnt, "min", mins );
 	}
 
 	key = ValueForKey( mapEnt, "max" );
-	if( key[ 0 ] )
+	if( key[0] )
 	{
 		GetVectorForKey( mapEnt, "max", maxs );
 	}
 
 	for( i = 0; i < 3; i++ )
 	{
-		mins[ i ] = floor( mins[ i ] + 0.1 );
-		maxs[ i ] = floor( maxs[ i ] + 0.1 );
+		mins[i] = floor( mins[i] + 0.1 );
+		maxs[i] = floor( maxs[i] + 0.1 );
 	}
 
 	VectorSubtract( maxs, mins, size );
 
-	if( ( size[ 0 ] <= 0 ) || ( size[ 1 ] <= 0 ) )
+	if( ( size[0] <= 0 ) || ( size[1] <= 0 ) )
 	{
-		Error( "CalcTerrainSize: Invalid terrain size: %fx%f", size[ 0 ], size[ 1 ] );
+		Error( "CalcTerrainSize: Invalid terrain size: %fx%f", size[0], size[1] );
 	}
 }
 
@@ -228,8 +228,8 @@ static qboolean IsTriangleDegenerate( drawVert_t* points, int a, int b, int c )
 	vec3_t v1, v2, v3;
 	float  d;
 
-	VectorSubtract( points[ b ].xyz, points[ a ].xyz, v1 );
-	VectorSubtract( points[ c ].xyz, points[ a ].xyz, v2 );
+	VectorSubtract( points[b].xyz, points[a].xyz, v1 );
+	VectorSubtract( points[c].xyz, points[a].xyz, v2 );
 	CrossProduct( v1, v2, v3 );
 	d = VectorLength( v3 );
 
@@ -253,8 +253,8 @@ a point in the middle and create (points-1) triangles in fan order
 */
 static void SideAsTriFan( terrainSurf_t* surf, int* index, int num )
 {
-	int         i;
-	int         colorSum[ 4 ];
+	int			i;
+	int			colorSum[4];
 	drawVert_t *mid, *v;
 
 	// make sure we have enough space for a new vert
@@ -265,53 +265,53 @@ static void SideAsTriFan( terrainSurf_t* surf, int* index, int num )
 	}
 
 	// create a new point in the center of the face
-	mid = &surf->verts[ surf->numVerts ];
+	mid = &surf->verts[surf->numVerts];
 	surf->numVerts++;
 
-	colorSum[ 0 ] = colorSum[ 1 ] = colorSum[ 2 ] = colorSum[ 3 ] = 0;
+	colorSum[0] = colorSum[1] = colorSum[2] = colorSum[3] = 0;
 
 	for( i = 0; i < num; i++ )
 	{
-		v = &surf->verts[ index[ i ] ];
+		v = &surf->verts[index[i]];
 		VectorAdd( mid->xyz, v->xyz, mid->xyz );
-		mid->st[ 0 ] += v->st[ 0 ];
-		mid->st[ 1 ] += v->st[ 1 ];
-		mid->lightmap[ 0 ] += v->lightmap[ 0 ];
-		mid->lightmap[ 1 ] += v->lightmap[ 1 ];
+		mid->st[0] += v->st[0];
+		mid->st[1] += v->st[1];
+		mid->lightmap[0] += v->lightmap[0];
+		mid->lightmap[1] += v->lightmap[1];
 
-		colorSum[ 0 ] += v->lightColor[ 0 ];
-		colorSum[ 1 ] += v->lightColor[ 1 ];
-		colorSum[ 2 ] += v->lightColor[ 2 ];
-		colorSum[ 3 ] += v->lightColor[ 3 ];
+		colorSum[0] += v->lightColor[0];
+		colorSum[1] += v->lightColor[1];
+		colorSum[2] += v->lightColor[2];
+		colorSum[3] += v->lightColor[3];
 	}
 
-	mid->xyz[ 0 ] /= num;
-	mid->xyz[ 1 ] /= num;
-	mid->xyz[ 2 ] /= num;
+	mid->xyz[0] /= num;
+	mid->xyz[1] /= num;
+	mid->xyz[2] /= num;
 
-	mid->st[ 0 ] /= num;
-	mid->st[ 1 ] /= num;
+	mid->st[0] /= num;
+	mid->st[1] /= num;
 
-	mid->lightmap[ 0 ] /= num;
-	mid->lightmap[ 1 ] /= num;
+	mid->lightmap[0] /= num;
+	mid->lightmap[1] /= num;
 
-	mid->lightColor[ 0 ] = colorSum[ 0 ] / num;
-	mid->lightColor[ 1 ] = colorSum[ 1 ] / num;
-	mid->lightColor[ 2 ] = colorSum[ 2 ] / num;
-	mid->lightColor[ 3 ] = colorSum[ 3 ] / num;
+	mid->lightColor[0] = colorSum[0] / num;
+	mid->lightColor[1] = colorSum[1] / num;
+	mid->lightColor[2] = colorSum[2] / num;
+	mid->lightColor[3] = colorSum[3] / num;
 
 	// fill in indices in trifan order
 	if( surf->numIndexes + num * 3 > surf->maxIndexes )
 	{
 		surf->maxIndexes = surf->numIndexes + num * 3;
-		surf->indexes    = realloc( surf->indexes, surf->maxIndexes * sizeof( *surf->indexes ) );
+		surf->indexes	 = realloc( surf->indexes, surf->maxIndexes * sizeof( *surf->indexes ) );
 	}
 
 	for( i = 0; i < num; i++ )
 	{
-		surf->indexes[ surf->numIndexes++ ] = surf->numVerts - 1;
-		surf->indexes[ surf->numIndexes++ ] = index[ i ];
-		surf->indexes[ surf->numIndexes++ ] = index[ ( i + 1 ) % ( surf->numVerts - 1 ) ];
+		surf->indexes[surf->numIndexes++] = surf->numVerts - 1;
+		surf->indexes[surf->numIndexes++] = index[i];
+		surf->indexes[surf->numIndexes++] = index[( i + 1 ) % ( surf->numVerts - 1 )];
 	}
 }
 
@@ -330,7 +330,7 @@ static void SideAsTristrip( terrainSurf_t* surf, int* index, int num )
 	int numIndices;
 	int ni = 0;
 	int a, b, c;
-	int indices[ MAX_INDICES ];
+	int indices[MAX_INDICES];
 
 	// determine the triangle strip order
 	numIndices = ( num - 2 ) * 3;
@@ -345,31 +345,31 @@ static void SideAsTristrip( terrainSurf_t* surf, int* index, int num )
 	{
 		for( ni = 0, i = 0; i < num - 2 - i; i++ )
 		{
-			a = index[ ( num - 1 - i + rotate ) % num ];
-			b = index[ ( i + rotate ) % num ];
-			c = index[ ( num - 2 - i + rotate ) % num ];
+			a = index[( num - 1 - i + rotate ) % num];
+			b = index[( i + rotate ) % num];
+			c = index[( num - 2 - i + rotate ) % num];
 
 			if( IsTriangleDegenerate( surf->verts, a, b, c ) )
 			{
 				break;
 			}
-			indices[ ni++ ] = a;
-			indices[ ni++ ] = b;
-			indices[ ni++ ] = c;
+			indices[ni++] = a;
+			indices[ni++] = b;
+			indices[ni++] = c;
 
 			if( i + 1 != num - 1 - i )
 			{
-				a = index[ ( num - 2 - i + rotate ) % num ];
-				b = index[ ( i + rotate ) % num ];
-				c = index[ ( i + 1 + rotate ) % num ];
+				a = index[( num - 2 - i + rotate ) % num];
+				b = index[( i + rotate ) % num];
+				c = index[( i + 1 + rotate ) % num];
 
 				if( IsTriangleDegenerate( surf->verts, a, b, c ) )
 				{
 					break;
 				}
-				indices[ ni++ ] = a;
-				indices[ ni++ ] = b;
-				indices[ ni++ ] = c;
+				indices[ni++] = a;
+				indices[ni++] = b;
+				indices[ni++] = c;
 			}
 		}
 		if( ni == numIndices )
@@ -390,7 +390,7 @@ static void SideAsTristrip( terrainSurf_t* surf, int* index, int num )
 	if( surf->numIndexes + ni > surf->maxIndexes )
 	{
 		surf->maxIndexes = surf->numIndexes + ni;
-		surf->indexes    = realloc( surf->indexes, surf->maxIndexes * sizeof( *surf->indexes ) );
+		surf->indexes	 = realloc( surf->indexes, surf->maxIndexes * sizeof( *surf->indexes ) );
 	}
 
 	memcpy( surf->indexes + surf->numIndexes, indices, ni * sizeof( *surf->indexes ) );
@@ -404,19 +404,19 @@ CreateTerrainSurface
 */
 void CreateTerrainSurface( terrainSurf_t* surf, shaderInfo_t* shader )
 {
-	int            i, j, k;
-	drawVert_t*    out;
-	drawVert_t*    in;
+	int			   i, j, k;
+	drawVert_t*	   out;
+	drawVert_t*	   in;
 	drawSurface_t* newsurf;
 
 	newsurf = AllocDrawSurf();
 
-	newsurf->miscModel   = qtrue;
-	newsurf->shaderInfo  = shader;
+	newsurf->miscModel	 = qtrue;
+	newsurf->shaderInfo	 = shader;
 	newsurf->lightmapNum = -1;
-	newsurf->fogNum      = -1;
-	newsurf->numIndexes  = surf->numIndexes;
-	newsurf->numVerts    = surf->numVerts;
+	newsurf->fogNum		 = -1;
+	newsurf->numIndexes	 = surf->numIndexes;
+	newsurf->numVerts	 = surf->numVerts;
 
 	// copy the indices
 	newsurf->indexes = malloc( surf->numIndexes * sizeof( *newsurf->indexes ) );
@@ -430,24 +430,24 @@ void CreateTerrainSurface( terrainSurf_t* surf, shaderInfo_t* shader )
 	out = newsurf->verts;
 	for( i = 0; i < newsurf->numVerts; i++, out++ )
 	{
-		VectorCopy( surf->verts[ i ].xyz, out->xyz );
+		VectorCopy( surf->verts[i].xyz, out->xyz );
 
 		// set the texture coordinates
-		out->st[ 0 ] = surf->verts[ i ].st[ 0 ];
-		out->st[ 1 ] = surf->verts[ i ].st[ 1 ];
+		out->st[0] = surf->verts[i].st[0];
+		out->st[1] = surf->verts[i].st[1];
 
 		// the colors will be set by the lighting pass
-		out->lightColor[ 0 ] = 1.0f;
-		out->lightColor[ 1 ] = 1.0f;
-		out->lightColor[ 2 ] = 1.0f;
-		out->lightColor[ 3 ] = surf->verts[ i ].lightColor[ 3 ];
+		out->lightColor[0] = 1.0f;
+		out->lightColor[1] = 1.0f;
+		out->lightColor[2] = 1.0f;
+		out->lightColor[3] = surf->verts[i].lightColor[3];
 
 		// calculate the vertex normal
 		VectorClear( out->normal );
 		for( j = 0; j < numsurfaces; j++ )
 		{
-			in = surfaces[ j ].verts;
-			for( k = 0; k < surfaces[ j ].numVerts; k++, in++ )
+			in = surfaces[j].verts;
+			for( k = 0; k < surfaces[j].numVerts; k++, in++ )
 			{
 				if( CompareVert( out, in, qfalse ) )
 				{
@@ -465,20 +465,20 @@ void CreateTerrainSurface( terrainSurf_t* surf, shaderInfo_t* shader )
 EmitTerrainVerts
 ================
 */
-void EmitTerrainVerts( side_t* side, terrainSurf_t* surf, int maxlayer, int alpha[ MAX_POINTS_ON_WINDING ], qboolean projecttexture )
+void EmitTerrainVerts( side_t* side, terrainSurf_t* surf, int maxlayer, int alpha[MAX_POINTS_ON_WINDING], qboolean projecttexture )
 {
-	int         i;
-	int         j;
+	int			i;
+	int			j;
 	drawVert_t* vert;
-	int*        indices;
-	int         numindices;
-	int         maxindices;
-	int         xyplane;
-	vec3_t      xynorm     = { 0, 0, 1 };
-	vec_t       shift[ 2 ] = { 0, 0 };
-	vec_t       scale[ 2 ] = { 0.5, 0.5 };
-	float       vecs[ 2 ][ 4 ];
-	static int  numtimes = 0;
+	int*		indices;
+	int			numindices;
+	int			maxindices;
+	int			xyplane;
+	vec3_t		xynorm	 = { 0, 0, 1 };
+	vec_t		shift[2] = { 0, 0 };
+	vec_t		scale[2] = { 0.5, 0.5 };
+	float		vecs[2][4];
+	static int	numtimes = 0;
 
 	numtimes++;
 
@@ -486,57 +486,57 @@ void EmitTerrainVerts( side_t* side, terrainSurf_t* surf, int maxlayer, int alph
 	{
 		surf->numVerts = 0;
 		surf->maxVerts = GROW_VERTS;
-		surf->verts    = malloc( surf->maxVerts * sizeof( *surf->verts ) );
+		surf->verts	   = malloc( surf->maxVerts * sizeof( *surf->verts ) );
 
 		surf->numIndexes = 0;
 		surf->maxIndexes = GROW_INDICES;
-		surf->indexes    = malloc( surf->maxIndexes * sizeof( *surf->indexes ) );
+		surf->indexes	 = malloc( surf->maxIndexes * sizeof( *surf->indexes ) );
 	}
 
 	// calculate the texture coordinate vectors
 	xyplane = FindFloatPlane( xynorm, 0 );
-	QuakeTextureVecs( &mapPlanes[ xyplane ], shift, 0, scale, vecs );
+	QuakeTextureVecs( &mapPlanes[xyplane], shift, 0, scale, vecs );
 
 	// emit the vertexes
 	numindices = 0;
 	maxindices = surf->maxIndexes;
-	indices    = malloc( maxindices * sizeof( *indices ) );
+	indices	   = malloc( maxindices * sizeof( *indices ) );
 
 	for( i = 0; i < side->winding->numpoints; i++ )
 	{
-		vert = &surf->verts[ surf->numVerts ];
+		vert = &surf->verts[surf->numVerts];
 
 		// set the final alpha value--0 for texture 1, 255 for texture 2
-		if( alpha[ i ] < maxlayer )
+		if( alpha[i] < maxlayer )
 		{
-			vert->lightColor[ 3 ] = 0;
+			vert->lightColor[3] = 0;
 		}
 		else
 		{
-			vert->lightColor[ 3 ] = 1.0f;
+			vert->lightColor[3] = 1.0f;
 		}
 
-		vert->xyz[ 0 ] = floor( side->winding->p[ i ][ 0 ] + 0.1f );
-		vert->xyz[ 1 ] = floor( side->winding->p[ i ][ 1 ] + 0.1f );
-		vert->xyz[ 2 ] = floor( side->winding->p[ i ][ 2 ] + 0.1f );
+		vert->xyz[0] = floor( side->winding->p[i][0] + 0.1f );
+		vert->xyz[1] = floor( side->winding->p[i][1] + 0.1f );
+		vert->xyz[2] = floor( side->winding->p[i][2] + 0.1f );
 
 		// set the texture coordinates
 		if( projecttexture )
 		{
-			vert->st[ 0 ] = ( vecs[ 0 ][ 3 ] + DotProduct( vecs[ 0 ], vert->xyz ) ) / surf->shader->width;
-			vert->st[ 1 ] = ( vecs[ 1 ][ 3 ] + DotProduct( vecs[ 1 ], vert->xyz ) ) / surf->shader->height;
+			vert->st[0] = ( vecs[0][3] + DotProduct( vecs[0], vert->xyz ) ) / surf->shader->width;
+			vert->st[1] = ( vecs[1][3] + DotProduct( vecs[1], vert->xyz ) ) / surf->shader->height;
 		}
 		else
 		{
-			vert->st[ 0 ] = ( side->vecs[ 0 ][ 3 ] + DotProduct( side->vecs[ 0 ], vert->xyz ) ) / surf->shader->width;
-			vert->st[ 1 ] = ( side->vecs[ 1 ][ 3 ] + DotProduct( side->vecs[ 1 ], vert->xyz ) ) / surf->shader->height;
+			vert->st[0] = ( side->vecs[0][3] + DotProduct( side->vecs[0], vert->xyz ) ) / surf->shader->width;
+			vert->st[1] = ( side->vecs[1][3] + DotProduct( side->vecs[1], vert->xyz ) ) / surf->shader->height;
 		}
 
-		VectorCopy( mapPlanes[ side->planenum ].normal, vert->normal );
+		VectorCopy( mapPlanes[side->planenum].normal, vert->normal );
 
 		for( j = 0; j < surf->numVerts; j++ )
 		{
-			if( CompareVert( vert, &surf->verts[ j ], qtrue ) )
+			if( CompareVert( vert, &surf->verts[j], qtrue ) )
 			{
 				break;
 			}
@@ -550,11 +550,11 @@ void EmitTerrainVerts( side_t* side, terrainSurf_t* surf, int maxlayer, int alph
 
 		if( j != surf->numVerts )
 		{
-			indices[ numindices++ ] = j;
+			indices[numindices++] = j;
 		}
 		else
 		{
-			indices[ numindices++ ] = surf->numVerts;
+			indices[numindices++] = surf->numVerts;
 			surf->numVerts++;
 			if( surf->numVerts >= surf->maxVerts )
 			{
@@ -599,10 +599,10 @@ terrainSurf_t* SurfaceForShader( shaderInfo_t* shader, int x, int y )
 		memset( surfaces + numsurfaces + 1, 0, ( maxsurfaces - numsurfaces - 1 ) * sizeof( *surfaces ) );
 	}
 
-	lastSurface         = &surfaces[ numsurfaces++ ];
+	lastSurface			= &surfaces[numsurfaces++];
 	lastSurface->shader = shader;
-	lastSurface->x      = x;
-	lastSurface->y      = y;
+	lastSurface->x		= x;
+	lastSurface->y		= y;
 
 	return lastSurface;
 }
@@ -614,24 +614,24 @@ SetTerrainTextures
 */
 void SetTerrainTextures( void )
 {
-	int             i;
-	int             x, y;
-	int             layer;
-	int             minlayer, maxlayer;
-	float           s, t;
-	float           min_s, min_t;
-	int             alpha[ MAX_POINTS_ON_WINDING ];
-	shaderInfo_t *  si, *terrainShader;
-	bspBrush_t*     brush;
-	side_t*         side;
-	const char*     shadername;
-	vec3_t          mins, maxs;
-	vec3_t          size;
-	int             surfwidth, surfheight, surfsize;
-	terrainSurf_t*  surf;
-	byte*           alphamap;
-	int             alphawidth, alphaheight;
-	int             num_layers;
+	int				i;
+	int				x, y;
+	int				layer;
+	int				minlayer, maxlayer;
+	float			s, t;
+	float			min_s, min_t;
+	int				alpha[MAX_POINTS_ON_WINDING];
+	shaderInfo_t *	si, *terrainShader;
+	bspBrush_t*		brush;
+	side_t*			side;
+	const char*		shadername;
+	vec3_t			mins, maxs;
+	vec3_t			size;
+	int				surfwidth, surfheight, surfsize;
+	terrainSurf_t*	surf;
+	byte*			alphamap;
+	int				alphawidth, alphaheight;
+	int				num_layers;
 	extern qboolean onlyents;
 
 	if( onlyents )
@@ -640,7 +640,7 @@ void SetTerrainTextures( void )
 	}
 
 	shadername = ValueForKey( mapEnt, "shader" );
-	if( !shadername[ 0 ] )
+	if( !shadername[0] )
 	{
 		Error( "SetTerrainTextures: shader not specified" );
 	}
@@ -652,8 +652,8 @@ void SetTerrainTextures( void )
 	// calculate the size of the terrain
 	CalcTerrainSize( mins, maxs, size );
 
-	surfwidth  = ( size[ 0 ] + SURF_WIDTH - 1 ) / SURF_WIDTH;
-	surfheight = ( size[ 1 ] + SURF_HEIGHT - 1 ) / SURF_HEIGHT;
+	surfwidth  = ( size[0] + SURF_WIDTH - 1 ) / SURF_WIDTH;
+	surfheight = ( size[1] + SURF_HEIGHT - 1 ) / SURF_HEIGHT;
 	surfsize   = surfwidth * surfheight;
 
 	lastSurface = NULL;
@@ -671,15 +671,14 @@ void SetTerrainTextures( void )
 	for( brush = mapEnt->brushes; brush != NULL; brush = brush->next )
 	{
 		// only create surfaces for sides marked as terrain
-		for( side = brush->sides; side < &brush->sides[ brush->numsides ]; side++ )
+		for( side = brush->sides; side < &brush->sides[brush->numsides]; side++ )
 		{
 			if( !side->shaderInfo )
 			{
 				continue;
 			}
 
-			if( ( ( side->surfaceFlags | side->shaderInfo->surfaceFlags ) & SURF_NODRAW ) &&
-				!strstr( side->shaderInfo->shader, "terrain" ) )
+			if( ( ( side->surfaceFlags | side->shaderInfo->surfaceFlags ) & SURF_NODRAW ) && !strstr( side->shaderInfo->shader, "terrain" ) )
 			{
 				continue;
 			}
@@ -693,8 +692,8 @@ void SetTerrainTextures( void )
 			min_t = 1.0;
 			for( i = 0; i < side->winding->numpoints; i++ )
 			{
-				s = floor( side->winding->p[ i ][ 0 ] + 0.1f - mins[ 0 ] ) / size[ 0 ];
-				t = floor( side->winding->p[ i ][ 1 ] + 0.1f - mins[ 0 ] ) / size[ 1 ];
+				s = floor( side->winding->p[i][0] + 0.1f - mins[0] ) / size[0];
+				t = floor( side->winding->p[i][1] + 0.1f - mins[0] ) / size[1];
 
 				if( s < 0 )
 				{
@@ -729,7 +728,7 @@ void SetTerrainTextures( void )
 				x = ( alphawidth - 1 ) * s;
 				y = ( alphaheight - 1 ) * t;
 
-				layer = alphamap[ x + y * alphawidth ];
+				layer = alphamap[x + y * alphawidth];
 				if( layer < minlayer )
 				{
 					minlayer = layer;
@@ -740,7 +739,7 @@ void SetTerrainTextures( void )
 					maxlayer = layer;
 				}
 
-				alpha[ i ] = layer;
+				alpha[i] = layer;
 			}
 
 			x = min_s * surfwidth;
@@ -762,7 +761,7 @@ void SetTerrainTextures( void )
 				{
 					for( i = 0; i < side->winding->numpoints; i++ )
 					{
-						if( ( alpha[ i ] != minlayer ) && ( alpha[ i ] != maxlayer ) )
+						if( ( alpha[i] != minlayer ) && ( alpha[i] != maxlayer ) )
 						{
 							si = ShaderInfoForShader( "textures/common/white" );
 							break;
@@ -774,9 +773,9 @@ void SetTerrainTextures( void )
 			}
 			else
 			{
-				si               = side->shaderInfo;
+				si				 = side->shaderInfo;
 				side->shaderInfo = terrainShader;
-				surf             = SurfaceForShader( si, x, y );
+				surf			 = SurfaceForShader( si, x, y );
 				EmitTerrainVerts( side, surf, maxlayer, alpha, qfalse );
 			}
 		}
@@ -805,7 +804,7 @@ void SetTerrainTextures( void )
 	free( alphamap );
 	free( surfaces );
 
-	surfaces    = NULL;
+	surfaces	= NULL;
 	lastSurface = NULL;
 	numsurfaces = 0;
 	maxsurfaces = 0;
@@ -820,30 +819,30 @@ void SetTerrainTextures( void )
 typedef struct terrainFace_s
 {
 	shaderInfo_t* shaderInfo;
-	//texdef_t              texdef;
+	// texdef_t              texdef;
 
-	float vecs[ 2 ][ 4 ]; // texture coordinate mapping
+	float		  vecs[2][4]; // texture coordinate mapping
 } terrainFace_t;
 
 typedef struct terrainVert_s
 {
-	vec3_t        xyz;
+	vec3_t		  xyz;
 	terrainFace_t tri;
 } terrainVert_t;
 
 typedef struct terrainMesh_s
 {
-	float  scale_x;
-	float  scale_y;
-	vec3_t origin;
+	float		   scale_x;
+	float		   scale_y;
+	vec3_t		   origin;
 
-	int            width, height;
+	int			   width, height;
 	terrainVert_t* map;
 } terrainMesh_t;
 
 terrainVert_t* Terrain_GetVert( terrainMesh_t* pm, int x, int y )
 {
-	return &pm->map[ x + y * pm->width ];
+	return &pm->map[x + y * pm->width];
 }
 
 void Terrain_GetTriangles( terrainMesh_t* pm, int x, int y, terrainVert_t** verts )
@@ -851,26 +850,26 @@ void Terrain_GetTriangles( terrainMesh_t* pm, int x, int y, terrainVert_t** vert
 	if( ( x + y ) & 1 )
 	{
 		// first tri
-		verts[ 0 ] = Terrain_GetVert( pm, x, y );
-		verts[ 1 ] = Terrain_GetVert( pm, x, y + 1 );
-		verts[ 2 ] = Terrain_GetVert( pm, x + 1, y + 1 );
+		verts[0] = Terrain_GetVert( pm, x, y );
+		verts[1] = Terrain_GetVert( pm, x, y + 1 );
+		verts[2] = Terrain_GetVert( pm, x + 1, y + 1 );
 
 		// second tri
-		verts[ 3 ] = verts[ 2 ];
-		verts[ 4 ] = Terrain_GetVert( pm, x + 1, y );
-		verts[ 5 ] = verts[ 0 ];
+		verts[3] = verts[2];
+		verts[4] = Terrain_GetVert( pm, x + 1, y );
+		verts[5] = verts[0];
 	}
 	else
 	{
 		// first tri
-		verts[ 0 ] = Terrain_GetVert( pm, x, y );
-		verts[ 1 ] = Terrain_GetVert( pm, x, y + 1 );
-		verts[ 2 ] = Terrain_GetVert( pm, x + 1, y );
+		verts[0] = Terrain_GetVert( pm, x, y );
+		verts[1] = Terrain_GetVert( pm, x, y + 1 );
+		verts[2] = Terrain_GetVert( pm, x + 1, y );
 
 		// second tri
-		verts[ 3 ] = verts[ 2 ];
-		verts[ 4 ] = verts[ 1 ];
-		verts[ 5 ] = Terrain_GetVert( pm, x + 1, y + 1 );
+		verts[3] = verts[2];
+		verts[4] = verts[1];
+		verts[5] = Terrain_GetVert( pm, x + 1, y + 1 );
 	}
 }
 
@@ -879,35 +878,35 @@ void Terrain_GetTriangles( terrainMesh_t* pm, int x, int y, terrainVert_t** vert
 EmitTerrainVerts2
 ================
 */
-void EmitTerrainVerts2( terrainSurf_t* surf, terrainVert_t** verts, int alpha[ 3 ] )
+void EmitTerrainVerts2( terrainSurf_t* surf, terrainVert_t** verts, int alpha[3] )
 {
-	int         i;
-	int         j;
+	int			i;
+	int			j;
 	drawVert_t* vert;
-	int*        indices;
-	int         numindices;
-	int         maxindices;
-	int         xyplane;
-	vec3_t      xynorm     = { 0, 0, 1 };
-	vec_t       shift[ 2 ] = { 0, 0 };
-	vec_t       scale[ 2 ] = { 0.5, 0.5 };
-	float       vecs[ 2 ][ 4 ];
-	vec4_t      plane;
+	int*		indices;
+	int			numindices;
+	int			maxindices;
+	int			xyplane;
+	vec3_t		xynorm	 = { 0, 0, 1 };
+	vec_t		shift[2] = { 0, 0 };
+	vec_t		scale[2] = { 0.5, 0.5 };
+	float		vecs[2][4];
+	vec4_t		plane;
 
 	if( !surf->verts )
 	{
 		surf->numVerts = 0;
 		surf->maxVerts = GROW_VERTS;
-		surf->verts    = malloc( surf->maxVerts * sizeof( *surf->verts ) );
+		surf->verts	   = malloc( surf->maxVerts * sizeof( *surf->verts ) );
 
 		surf->numIndexes = 0;
 		surf->maxIndexes = GROW_INDICES;
-		surf->indexes    = malloc( surf->maxIndexes * sizeof( *surf->indexes ) );
+		surf->indexes	 = malloc( surf->maxIndexes * sizeof( *surf->indexes ) );
 	}
 
 	// calculate the texture coordinate vectors
 	xyplane = FindFloatPlane( xynorm, 0 );
-	QuakeTextureVecs( &mapPlanes[ xyplane ], shift, 0, scale, vecs );
+	QuakeTextureVecs( &mapPlanes[xyplane], shift, 0, scale, vecs );
 
 	// emit the vertexes
 	numindices = 0;
@@ -915,34 +914,34 @@ void EmitTerrainVerts2( terrainSurf_t* surf, terrainVert_t** verts, int alpha[ 3
 	assert( maxindices >= 0 );
 	indices = malloc( maxindices * sizeof( *indices ) );
 
-	PlaneFromPoints( plane, verts[ 0 ]->xyz, verts[ 1 ]->xyz, verts[ 2 ]->xyz, qtrue );
+	PlaneFromPoints( plane, verts[0]->xyz, verts[1]->xyz, verts[2]->xyz, qtrue );
 
 	for( i = 0; i < 3; i++ )
 	{
-		vert = &surf->verts[ surf->numVerts ];
+		vert = &surf->verts[surf->numVerts];
 
-		if( alpha[ i ] )
+		if( alpha[i] )
 		{
-			vert->lightColor[ 3 ] = 1.0f;
+			vert->lightColor[3] = 1.0f;
 		}
 		else
 		{
-			vert->lightColor[ 3 ] = 0;
+			vert->lightColor[3] = 0;
 		}
 
-		vert->xyz[ 0 ] = floor( verts[ i ]->xyz[ 0 ] + 0.1f );
-		vert->xyz[ 1 ] = floor( verts[ i ]->xyz[ 1 ] + 0.1f );
-		vert->xyz[ 2 ] = floor( verts[ i ]->xyz[ 2 ] + 0.1f );
+		vert->xyz[0] = floor( verts[i]->xyz[0] + 0.1f );
+		vert->xyz[1] = floor( verts[i]->xyz[1] + 0.1f );
+		vert->xyz[2] = floor( verts[i]->xyz[2] + 0.1f );
 
 		// set the texture coordinates
-		vert->st[ 0 ] = ( vecs[ 0 ][ 3 ] + DotProduct( vecs[ 0 ], vert->xyz ) ) / surf->shader->width;
-		vert->st[ 1 ] = ( vecs[ 1 ][ 3 ] + DotProduct( vecs[ 1 ], vert->xyz ) ) / surf->shader->height;
+		vert->st[0] = ( vecs[0][3] + DotProduct( vecs[0], vert->xyz ) ) / surf->shader->width;
+		vert->st[1] = ( vecs[1][3] + DotProduct( vecs[1], vert->xyz ) ) / surf->shader->height;
 
 		VectorCopy( plane, vert->normal );
 
 		for( j = 0; j < surf->numVerts; j++ )
 		{
-			if( CompareVert( vert, &surf->verts[ j ], qtrue ) )
+			if( CompareVert( vert, &surf->verts[j], qtrue ) )
 			{
 				break;
 			}
@@ -956,11 +955,11 @@ void EmitTerrainVerts2( terrainSurf_t* surf, terrainVert_t** verts, int alpha[ 3
 
 		if( j != surf->numVerts )
 		{
-			indices[ numindices++ ] = j;
+			indices[numindices++] = j;
 		}
 		else
 		{
-			indices[ numindices++ ] = surf->numVerts;
+			indices[numindices++] = surf->numVerts;
 			surf->numVerts++;
 			if( surf->numVerts >= surf->maxVerts )
 			{
@@ -975,40 +974,40 @@ void EmitTerrainVerts2( terrainSurf_t* surf, terrainVert_t** verts, int alpha[ 3
 	free( indices );
 }
 
-int      MapPlaneFromPoints( vec3_t p0, vec3_t p1, vec3_t p2 );
-void     QuakeTextureVecs( plane_t* plane, vec_t shift[ 2 ], vec_t rotate, vec_t scale[ 2 ], vec_t mappingVecs[ 2 ][ 4 ] );
+int		 MapPlaneFromPoints( vec3_t p0, vec3_t p1, vec3_t p2 );
+void	 QuakeTextureVecs( plane_t* plane, vec_t shift[2], vec_t rotate, vec_t scale[2], vec_t mappingVecs[2][4] );
 qboolean RemoveDuplicateBrushPlanes( bspBrush_t* b );
-void     SetBrushContents( bspBrush_t* b );
+void	 SetBrushContents( bspBrush_t* b );
 
-void AddBrushSide( vec3_t v1, vec3_t v2, vec3_t v3, shaderInfo_t* terrainShader )
+void	 AddBrushSide( vec3_t v1, vec3_t v2, vec3_t v3, shaderInfo_t* terrainShader )
 {
 	side_t* side;
-	int     planenum;
+	int		planenum;
 
-	side = &buildBrush->sides[ buildBrush->numsides ];
+	side = &buildBrush->sides[buildBrush->numsides];
 	memset( side, 0, sizeof( *side ) );
 	buildBrush->numsides++;
 
 	side->shaderInfo = terrainShader;
 
 	// find the plane number
-	planenum       = MapPlaneFromPoints( v1, v2, v3 );
+	planenum	   = MapPlaneFromPoints( v1, v2, v3 );
 	side->planenum = planenum;
 }
 
 void MakeBrushFromTriangle( vec3_t v1, vec3_t v2, vec3_t v3, shaderInfo_t* terrainShader )
 {
 	bspBrush_t* b;
-	vec3_t      d1;
-	vec3_t      d2;
-	vec3_t      d3;
+	vec3_t		d1;
+	vec3_t		d2;
+	vec3_t		d3;
 
-	VectorSet( d1, v1[ 0 ], v1[ 1 ], MIN_WORLD_COORD + 10 ); //FIXME
-	VectorSet( d2, v2[ 0 ], v2[ 1 ], MIN_WORLD_COORD + 10 );
-	VectorSet( d3, v3[ 0 ], v3[ 1 ], MIN_WORLD_COORD + 10 );
+	VectorSet( d1, v1[0], v1[1], MIN_WORLD_COORD + 10 ); // FIXME
+	VectorSet( d2, v2[0], v2[1], MIN_WORLD_COORD + 10 );
+	VectorSet( d3, v3[0], v3[1], MIN_WORLD_COORD + 10 );
 
 	buildBrush->numsides = 0;
-	buildBrush->detail   = qfalse;
+	buildBrush->detail	 = qfalse;
 
 	AddBrushSide( v1, v2, v3, terrainShader );
 	AddBrushSide( v1, d1, v2, terrainShader );
@@ -1016,10 +1015,10 @@ void MakeBrushFromTriangle( vec3_t v1, vec3_t v2, vec3_t v3, shaderInfo_t* terra
 	AddBrushSide( v3, d3, v1, terrainShader );
 	AddBrushSide( d3, d2, d1, terrainShader );
 
-	buildBrush->portalareas[ 0 ] = -1;
-	buildBrush->portalareas[ 1 ] = -1;
-	buildBrush->entitynum        = numEntities - 1;
-	buildBrush->brushnum         = entitySourceBrushes;
+	buildBrush->portalareas[0] = -1;
+	buildBrush->portalareas[1] = -1;
+	buildBrush->entitynum	   = numEntities - 1;
+	buildBrush->brushnum	   = entitySourceBrushes;
 
 	// if there are mirrored planes, the entire brush is invalid
 	if( !RemoveDuplicateBrushPlanes( buildBrush ) )
@@ -1040,9 +1039,9 @@ void MakeBrushFromTriangle( vec3_t v1, vec3_t v2, vec3_t v3, shaderInfo_t* terra
 
 void MakeTerrainIntoBrushes( terrainMesh_t* tm )
 {
-	int            index[ 6 ];
-	int            y;
-	int            x;
+	int			   index[6];
+	int			   y;
+	int			   x;
 	terrainVert_t* verts;
 	shaderInfo_t*  terrainShader;
 
@@ -1056,26 +1055,26 @@ void MakeTerrainIntoBrushes( terrainMesh_t* tm )
 			if( ( x + y ) & 1 )
 			{
 				// first tri
-				index[ 0 ] = x + y * tm->width;
-				index[ 1 ] = x + ( y + 1 ) * tm->width;
-				index[ 2 ] = ( x + 1 ) + ( y + 1 ) * tm->width;
-				index[ 3 ] = ( x + 1 ) + ( y + 1 ) * tm->width;
-				index[ 4 ] = ( x + 1 ) + y * tm->width;
-				index[ 5 ] = x + y * tm->width;
+				index[0] = x + y * tm->width;
+				index[1] = x + ( y + 1 ) * tm->width;
+				index[2] = ( x + 1 ) + ( y + 1 ) * tm->width;
+				index[3] = ( x + 1 ) + ( y + 1 ) * tm->width;
+				index[4] = ( x + 1 ) + y * tm->width;
+				index[5] = x + y * tm->width;
 			}
 			else
 			{
 				// first tri
-				index[ 0 ] = x + y * tm->width;
-				index[ 1 ] = x + ( y + 1 ) * tm->width;
-				index[ 2 ] = ( x + 1 ) + y * tm->width;
-				index[ 3 ] = ( x + 1 ) + y * tm->width;
-				index[ 4 ] = x + ( y + 1 ) * tm->width;
-				index[ 5 ] = ( x + 1 ) + ( y + 1 ) * tm->width;
+				index[0] = x + y * tm->width;
+				index[1] = x + ( y + 1 ) * tm->width;
+				index[2] = ( x + 1 ) + y * tm->width;
+				index[3] = ( x + 1 ) + y * tm->width;
+				index[4] = x + ( y + 1 ) * tm->width;
+				index[5] = ( x + 1 ) + ( y + 1 ) * tm->width;
 			}
 
-			MakeBrushFromTriangle( verts[ index[ 0 ] ].xyz, verts[ index[ 1 ] ].xyz, verts[ index[ 2 ] ].xyz, terrainShader );
-			MakeBrushFromTriangle( verts[ index[ 3 ] ].xyz, verts[ index[ 4 ] ].xyz, verts[ index[ 5 ] ].xyz, terrainShader );
+			MakeBrushFromTriangle( verts[index[0]].xyz, verts[index[1]].xyz, verts[index[2]].xyz, terrainShader );
+			MakeBrushFromTriangle( verts[index[3]].xyz, verts[index[4]].xyz, verts[index[5]].xyz, terrainShader );
 		}
 	}
 }
@@ -1083,33 +1082,33 @@ void MakeTerrainIntoBrushes( terrainMesh_t* tm )
 void Terrain_ParseFace( terrainFace_t* face )
 {
 	shaderInfo_t* si;
-	vec_t         shift[ 2 ];
-	vec_t         rotate;
-	vec_t         scale[ 2 ];
-	char          name[ MAX_QPATH ];
-	char          shader[ MAX_QPATH ];
-	plane_t       p;
+	vec_t		  shift[2];
+	vec_t		  rotate;
+	vec_t		  scale[2];
+	char		  name[MAX_QPATH];
+	char		  shader[MAX_QPATH];
+	plane_t		  p;
 
 	// read the texturedef
 	GetToken( qfalse );
 	strcpy( name, token );
 
 	GetToken( qfalse );
-	shift[ 0 ] = atof( token );
+	shift[0] = atof( token );
 	GetToken( qfalse );
-	shift[ 1 ] = atof( token );
+	shift[1] = atof( token );
 	GetToken( qfalse );
 	rotate = atof( token );
 	GetToken( qfalse );
-	scale[ 0 ] = atof( token );
+	scale[0] = atof( token );
 	GetToken( qfalse );
-	scale[ 1 ] = atof( token );
+	scale[1] = atof( token );
 
 	// find default flags and values
 	sprintf( shader, "textures/%s", name );
-	si               = ShaderInfoForShader( shader );
+	si				 = ShaderInfoForShader( shader );
 	face->shaderInfo = si;
-	//face->texdef = si->texdef;
+	// face->texdef = si->texdef;
 
 	// skip over old contents
 	GetToken( qfalse );
@@ -1120,8 +1119,8 @@ void Terrain_ParseFace( terrainFace_t* face )
 	// skip over old value
 	GetToken( qfalse );
 
-	//Surface_Parse( &face->texdef );
-	//Surface_BuildTexdef( &face->texdef );
+	// Surface_Parse( &face->texdef );
+	// Surface_BuildTexdef( &face->texdef );
 
 	// make a fake horizontal plane
 	VectorSet( p.normal, 0, 0, 1 );
@@ -1134,9 +1133,9 @@ void Terrain_ParseFace( terrainFace_t* face )
 #define MAX_TERRAIN_TEXTURES 128
 static int numtextures = 0;
 ;
-static shaderInfo_t* textures[ MAX_TERRAIN_TEXTURES ];
+static shaderInfo_t* textures[MAX_TERRAIN_TEXTURES];
 
-void Terrain_AddTexture( shaderInfo_t* texture )
+void				 Terrain_AddTexture( shaderInfo_t* texture )
 {
 	int i;
 
@@ -1147,7 +1146,7 @@ void Terrain_AddTexture( shaderInfo_t* texture )
 
 	for( i = 0; i < numtextures; i++ )
 	{
-		if( textures[ i ] == texture )
+		if( textures[i] == texture )
 		{
 			return;
 		}
@@ -1159,7 +1158,7 @@ void Terrain_AddTexture( shaderInfo_t* texture )
 		return;
 	}
 
-	textures[ numtextures++ ] = texture;
+	textures[numtextures++] = texture;
 }
 
 int LayerForShader( shaderInfo_t* shader )
@@ -1170,9 +1169,9 @@ int LayerForShader( shaderInfo_t* shader )
 	l = strlen( shader->shader );
 	for( i = l - 1; i >= 0; i-- )
 	{
-		if( shader->shader[ i ] == '_' )
+		if( shader->shader[i] == '_' )
 		{
-			return atoi( &shader->shader[ i + 1 ] );
+			return atoi( &shader->shader[i + 1] );
 			break;
 		}
 	}
@@ -1190,19 +1189,19 @@ Creates a drawSurface_t from the terrain text
 
 void ParseTerrain( void )
 {
-	int            i, j;
-	int            x, y;
-	int            x1, y1;
+	int			   i, j;
+	int			   x, y;
+	int			   x1, y1;
 	terrainMesh_t  t;
-	int            index;
-	terrainVert_t* verts[ 6 ];
-	int            num_layers;
-	int            layer, minlayer, maxlayer;
-	int            alpha[ 6 ];
+	int			   index;
+	terrainVert_t* verts[6];
+	int			   num_layers;
+	int			   layer, minlayer, maxlayer;
+	int			   alpha[6];
 	shaderInfo_t * si, *terrainShader;
-	int            surfwidth, surfheight, surfsize;
+	int			   surfwidth, surfheight, surfsize;
 	terrainSurf_t* surf;
-	char           shadername[ MAX_QPATH ];
+	char		   shadername[MAX_QPATH];
 
 	mapEnt->firstDrawSurf = numMapDrawSurfs;
 
@@ -1228,13 +1227,13 @@ void ParseTerrain( void )
 
 	// get origin
 	GetToken( qtrue );
-	t.origin[ 0 ] = atof( token );
+	t.origin[0] = atof( token );
 	GetToken( qfalse );
-	t.origin[ 1 ] = atof( token );
+	t.origin[1] = atof( token );
 	GetToken( qfalse );
-	t.origin[ 2 ] = atof( token );
+	t.origin[2] = atof( token );
 
-	t.map = malloc( t.width * t.height * sizeof( t.map[ 0 ] ) );
+	t.map = malloc( t.width * t.height * sizeof( t.map[0] ) );
 
 	if( t.width <= 0 || t.height <= 0 )
 	{
@@ -1242,19 +1241,19 @@ void ParseTerrain( void )
 	}
 
 	numtextures = 0;
-	index       = 0;
+	index		= 0;
 	for( i = 0; i < t.height; i++ )
 	{
 		for( j = 0; j < t.width; j++, index++ )
 		{
 			// get height
 			GetToken( qtrue );
-			t.map[ index ].xyz[ 0 ] = t.origin[ 0 ] + t.scale_x * ( float )j;
-			t.map[ index ].xyz[ 1 ] = t.origin[ 1 ] + t.scale_y * ( float )i;
-			t.map[ index ].xyz[ 2 ] = t.origin[ 2 ] + atof( token );
+			t.map[index].xyz[0] = t.origin[0] + t.scale_x * ( float )j;
+			t.map[index].xyz[1] = t.origin[1] + t.scale_y * ( float )i;
+			t.map[index].xyz[2] = t.origin[2] + atof( token );
 
-			Terrain_ParseFace( &t.map[ index ].tri );
-			Terrain_AddTexture( t.map[ index ].tri.shaderInfo );
+			Terrain_ParseFace( &t.map[index].tri );
+			Terrain_AddTexture( t.map[index].tri.shaderInfo );
 		}
 	}
 
@@ -1267,11 +1266,11 @@ void ParseTerrain( void )
 	surfheight = ( ( t.scale_y * t.height ) + SURF_HEIGHT - 1 ) / SURF_HEIGHT;
 	surfsize   = surfwidth * surfheight;
 
-	//FIXME
+	// FIXME
 	num_layers = 0;
 	for( i = 0; i < numtextures; i++ )
 	{
-		layer = LayerForShader( textures[ i ] ) + 1;
+		layer = LayerForShader( textures[i] ) + 1;
 		if( layer > num_layers )
 		{
 			num_layers = layer;
@@ -1295,20 +1294,20 @@ void ParseTerrain( void )
 	terrainShader = ShaderInfoForShader( "textures/common/terrain" );
 
 	// get the shadername
-	if( Q_strncasecmp( textures[ 0 ]->shader, "textures/", 9 ) == 0 )
+	if( Q_strncasecmp( textures[0]->shader, "textures/", 9 ) == 0 )
 	{
-		strcpy( shadername, &textures[ 0 ]->shader[ 9 ] );
+		strcpy( shadername, &textures[0]->shader[9] );
 	}
 	else
 	{
-		strcpy( shadername, textures[ 0 ]->shader );
+		strcpy( shadername, textures[0]->shader );
 	}
 	j = strlen( shadername );
 	for( i = j - 1; i >= 0; i-- )
 	{
-		if( shadername[ i ] == '_' )
+		if( shadername[i] == '_' )
 		{
-			shadername[ i ] = 0;
+			shadername[i] = 0;
 			break;
 		}
 	}
@@ -1331,10 +1330,10 @@ void ParseTerrain( void )
 				y1 = surfheight - 1;
 			}
 
-			maxlayer = minlayer = LayerForShader( verts[ 0 ]->tri.shaderInfo );
+			maxlayer = minlayer = LayerForShader( verts[0]->tri.shaderInfo );
 			for( i = 0; i < 3; i++ )
 			{
-				layer = LayerForShader( verts[ i ]->tri.shaderInfo );
+				layer = LayerForShader( verts[i]->tri.shaderInfo );
 				if( layer < minlayer )
 				{
 					minlayer = layer;
@@ -1347,26 +1346,26 @@ void ParseTerrain( void )
 
 			for( i = 0; i < 3; i++ )
 			{
-				layer = LayerForShader( verts[ i ]->tri.shaderInfo );
+				layer = LayerForShader( verts[i]->tri.shaderInfo );
 				if( layer > minlayer )
 				{
-					alpha[ i ] = 1.0f;
+					alpha[i] = 1.0f;
 				}
 				else
 				{
-					alpha[ i ] = 0.0f;
+					alpha[i] = 0.0f;
 				}
 			}
 
-			si   = ShaderForLayer( minlayer, maxlayer, shadername );
+			si	 = ShaderForLayer( minlayer, maxlayer, shadername );
 			surf = SurfaceForShader( si, x1, y1 );
-			EmitTerrainVerts2( surf, &verts[ 0 ], &alpha[ 0 ] );
+			EmitTerrainVerts2( surf, &verts[0], &alpha[0] );
 
 			// second triangle
-			maxlayer = minlayer = LayerForShader( verts[ 3 ]->tri.shaderInfo );
+			maxlayer = minlayer = LayerForShader( verts[3]->tri.shaderInfo );
 			for( i = 3; i < 6; i++ )
 			{
-				layer = LayerForShader( verts[ i ]->tri.shaderInfo );
+				layer = LayerForShader( verts[i]->tri.shaderInfo );
 				if( layer < minlayer )
 				{
 					minlayer = layer;
@@ -1379,20 +1378,20 @@ void ParseTerrain( void )
 
 			for( i = 3; i < 6; i++ )
 			{
-				layer = LayerForShader( verts[ i ]->tri.shaderInfo );
+				layer = LayerForShader( verts[i]->tri.shaderInfo );
 				if( layer > minlayer )
 				{
-					alpha[ i ] = 1.0f;
+					alpha[i] = 1.0f;
 				}
 				else
 				{
-					alpha[ i ] = 0.0f;
+					alpha[i] = 0.0f;
 				}
 			}
 
-			si   = ShaderForLayer( minlayer, maxlayer, shadername );
+			si	 = ShaderForLayer( minlayer, maxlayer, shadername );
 			surf = SurfaceForShader( si, x1, y1 );
-			EmitTerrainVerts2( surf, &verts[ 3 ], &alpha[ 3 ] );
+			EmitTerrainVerts2( surf, &verts[3], &alpha[3] );
 		}
 	}
 
@@ -1418,7 +1417,7 @@ void ParseTerrain( void )
 	}
 	free( surfaces );
 
-	surfaces    = NULL;
+	surfaces	= NULL;
 	lastSurface = NULL;
 	numsurfaces = 0;
 	maxsurfaces = 0;

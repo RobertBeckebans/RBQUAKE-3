@@ -30,29 +30,29 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #if defined( ACEBOT )
 
-static int   g_numBots;
-static char* g_botInfos[ MAX_BOTS ];
+static int		  g_numBots;
+static char*	  g_botInfos[MAX_BOTS];
 
-int          g_numArenas;
-static char* g_arenaInfos[ MAX_ARENAS ];
+int				  g_numArenas;
+static char*	  g_arenaInfos[MAX_ARENAS];
 
 extern gentity_t* podium1;
 extern gentity_t* podium2;
 extern gentity_t* podium3;
 
-static int ACESP_ParseInfos( char* buf, int max, char* infos[] )
+static int		  ACESP_ParseInfos( char* buf, int max, char* infos[] )
 {
 	char* token;
-	int   count;
-	char  key[ MAX_TOKEN_CHARS ];
-	char  info[ MAX_INFO_STRING ];
+	int	  count;
+	char  key[MAX_TOKEN_CHARS];
+	char  info[MAX_INFO_STRING];
 
 	count = 0;
 
 	while( 1 )
 	{
 		token = Com_Parse( &buf );
-		if( !token[ 0 ] )
+		if( !token[0] )
 		{
 			break;
 		}
@@ -68,11 +68,11 @@ static int ACESP_ParseInfos( char* buf, int max, char* infos[] )
 			break;
 		}
 
-		info[ 0 ] = '\0';
+		info[0] = '\0';
 		while( 1 )
 		{
 			token = Com_ParseExt( &buf, qtrue );
-			if( !token[ 0 ] )
+			if( !token[0] )
 			{
 				Com_Printf( "Unexpected end of info file\n" );
 				break;
@@ -84,17 +84,17 @@ static int ACESP_ParseInfos( char* buf, int max, char* infos[] )
 			Q_strncpyz( key, token, sizeof( key ) );
 
 			token = Com_ParseExt( &buf, qfalse );
-			if( !token[ 0 ] )
+			if( !token[0] )
 			{
 				strcpy( token, "<NULL>" );
 			}
 			Info_SetValueForKey( info, key, token );
 		}
-		//NOTE: extra space for arena number
-		infos[ count ] = G_Alloc( strlen( info ) + strlen( "\\num\\" ) + strlen( va( "%d", MAX_ARENAS ) ) + 1 );
-		if( infos[ count ] )
+		// NOTE: extra space for arena number
+		infos[count] = G_Alloc( strlen( info ) + strlen( "\\num\\" ) + strlen( va( "%d", MAX_ARENAS ) ) + 1 );
+		if( infos[count] )
 		{
-			strcpy( infos[ count ], info );
+			strcpy( infos[count], info );
 			count++;
 		}
 	}
@@ -103,9 +103,9 @@ static int ACESP_ParseInfos( char* buf, int max, char* infos[] )
 
 static void ACESP_LoadArenasFromFile( char* filename )
 {
-	int          len;
+	int			 len;
 	fileHandle_t f;
-	char         buf[ MAX_ARENAS_TEXT ];
+	char		 buf[MAX_ARENAS_TEXT];
 
 	len = trap_FS_FOpenFile( filename, &f, FS_READ );
 	if( !f )
@@ -121,21 +121,21 @@ static void ACESP_LoadArenasFromFile( char* filename )
 	}
 
 	trap_FS_Read( buf, len, f );
-	buf[ len ] = 0;
+	buf[len] = 0;
 	trap_FS_FCloseFile( f );
 
-	g_numArenas += ACESP_ParseInfos( buf, MAX_ARENAS - g_numArenas, &g_arenaInfos[ g_numArenas ] );
+	g_numArenas += ACESP_ParseInfos( buf, MAX_ARENAS - g_numArenas, &g_arenaInfos[g_numArenas] );
 }
 
 static void ACESP_LoadArenas( void )
 {
-	int      numdirs;
+	int		 numdirs;
 	vmCvar_t arenasFile;
-	char     filename[ 128 ];
-	char     dirlist[ 1024 ];
-	char*    dirptr;
-	int      i, n;
-	int      dirlen;
+	char	 filename[128];
+	char	 dirlist[1024];
+	char*	 dirptr;
+	int		 i, n;
+	int		 dirlen;
 
 	g_numArenas = 0;
 
@@ -151,7 +151,7 @@ static void ACESP_LoadArenas( void )
 
 	// get all arenas from .arena files
 	numdirs = trap_FS_GetFileList( "scripts", ".arena", dirlist, 1024 );
-	dirptr  = dirlist;
+	dirptr	= dirlist;
 	for( i = 0; i < numdirs; i++, dirptr += dirlen + 1 )
 	{
 		dirlen = strlen( dirptr );
@@ -163,7 +163,7 @@ static void ACESP_LoadArenas( void )
 
 	for( n = 0; n < g_numArenas; n++ )
 	{
-		Info_SetValueForKey( g_arenaInfos[ n ], "num", va( "%i", n ) );
+		Info_SetValueForKey( g_arenaInfos[n], "num", va( "%i", n ) );
 	}
 }
 
@@ -173,9 +173,9 @@ static const char* ACESP_GetArenaInfoByMap( const char* map )
 
 	for( n = 0; n < g_numArenas; n++ )
 	{
-		if( Q_stricmp( Info_ValueForKey( g_arenaInfos[ n ], "map" ), map ) == 0 )
+		if( Q_stricmp( Info_ValueForKey( g_arenaInfos[n], "map" ), map ) == 0 )
 		{
-			return g_arenaInfos[ n ];
+			return g_arenaInfos[n];
 		}
 	}
 
@@ -187,7 +187,7 @@ static void ACESP_SpawnBots( char* botList )
 	char* bot;
 	char* p;
 	float skill;
-	char  bots[ MAX_INFO_VALUE ];
+	char  bots[MAX_INFO_VALUE];
 
 	podium1 = NULL;
 	podium2 = NULL;
@@ -206,10 +206,10 @@ static void ACESP_SpawnBots( char* botList )
 	}
 
 	Q_strncpyz( bots, botList, sizeof( bots ) );
-	p = &bots[ 0 ];
+	p = &bots[0];
 	while( *p )
 	{
-		//skip spaces
+		// skip spaces
 		while( *p && *p == ' ' )
 		{
 			p++;
@@ -240,9 +240,9 @@ static void ACESP_SpawnBots( char* botList )
 
 static void ACESP_LoadBotsFromFile( char* filename )
 {
-	int          len;
+	int			 len;
 	fileHandle_t f;
-	char         buf[ MAX_BOTS_TEXT ];
+	char		 buf[MAX_BOTS_TEXT];
 
 	len = trap_FS_FOpenFile( filename, &f, FS_READ );
 	if( !f )
@@ -258,20 +258,20 @@ static void ACESP_LoadBotsFromFile( char* filename )
 	}
 
 	trap_FS_Read( buf, len, f );
-	buf[ len ] = 0;
+	buf[len] = 0;
 	trap_FS_FCloseFile( f );
 
-	g_numBots += ACESP_ParseInfos( buf, MAX_BOTS - g_numBots, &g_botInfos[ g_numBots ] );
+	g_numBots += ACESP_ParseInfos( buf, MAX_BOTS - g_numBots, &g_botInfos[g_numBots] );
 }
 
 static void ACESP_LoadBots( void )
 {
-	int   numdirs;
-	char  filename[ 128 ];
-	char  dirlist[ 1024 ];
+	int	  numdirs;
+	char  filename[128];
+	char  dirlist[1024];
 	char* dirptr;
-	int   i;
-	int   dirlen;
+	int	  i;
+	int	  dirlen;
 
 	g_numBots = 0;
 
@@ -286,7 +286,7 @@ static void ACESP_LoadBots( void )
 
 	// get all bots from .bot files
 	numdirs = trap_FS_GetFileList( "scripts", ".bot", dirlist, 1024 );
-	dirptr  = dirlist;
+	dirptr	= dirlist;
 	for( i = 0; i < numdirs; i++, dirptr += dirlen + 1 )
 	{
 		dirlen = strlen( dirptr );
@@ -310,15 +310,15 @@ static void ACESP_LoadBots( void )
 
 static char* ACESP_GetBotInfoByName( const char* name )
 {
-	int   n;
+	int	  n;
 	char* value;
 
 	for( n = 0; n < g_numBots; n++ )
 	{
-		value = Info_ValueForKey( g_botInfos[ n ], "name" );
+		value = Info_ValueForKey( g_botInfos[n], "name" );
 		if( !Q_stricmp( value, name ) )
 		{
-			return g_botInfos[ n ];
+			return g_botInfos[n];
 		}
 	}
 
@@ -327,12 +327,12 @@ static char* ACESP_GetBotInfoByName( const char* name )
 
 void ACESP_InitBots( qboolean restart )
 {
-	int         fragLimit;
-	int         timeLimit;
+	int			fragLimit;
+	int			timeLimit;
 	const char* arenainfo;
-	char*       strValue;
-	char        map[ MAX_QPATH ];
-	char        serverinfo[ MAX_INFO_STRING ];
+	char*		strValue;
+	char		map[MAX_QPATH];
+	char		serverinfo[MAX_INFO_STRING];
 
 	ACESP_LoadBots();
 	ACESP_LoadArenas();
@@ -384,7 +384,7 @@ void ACESP_InitBots( qboolean restart )
 
 void ACESP_SpawnBot( char* name, float skill, char* team )
 {
-	int   clientNum;
+	int	  clientNum;
 	char* botinfo;
 
 	//  gentity_t      *bot;
@@ -392,7 +392,7 @@ void ACESP_SpawnBot( char* name, float skill, char* team )
 	char* s;
 	char* botname;
 	char* model;
-	char  userinfo[ MAX_INFO_STRING ];
+	char  userinfo[MAX_INFO_STRING];
 
 	G_Printf( "ACESP_SpawnBot(%s, %f, %s)\n", name, skill, team );
 
@@ -413,12 +413,12 @@ void ACESP_SpawnBot( char* name, float skill, char* team )
 	}
 
 	// create the bot's userinfo
-	userinfo[ 0 ] = '\0';
+	userinfo[0] = '\0';
 
 	botname = Info_ValueForKey( botinfo, "name" );
-	if( !botname[ 0 ] )
+	if( !botname[0] )
 	{
-		if( !name || !name[ 0 ] )
+		if( !name || !name[0] )
 		{
 			botname = va( "ACEBot%d", clientNum );
 		}
@@ -432,7 +432,7 @@ void ACESP_SpawnBot( char* name, float skill, char* team )
 	Info_SetValueForKey( userinfo, "snaps", "20" );
 	Info_SetValueForKey( userinfo, "skill", va( "%1.2f", skill ) );
 
-	key   = "model";
+	key	  = "model";
 	model = Info_ValueForKey( botinfo, key );
 	if( !*model )
 	{
@@ -441,7 +441,7 @@ void ACESP_SpawnBot( char* name, float skill, char* team )
 	Info_SetValueForKey( userinfo, key, model );
 
 	key = "gender";
-	s   = Info_ValueForKey( botinfo, key );
+	s	= Info_ValueForKey( botinfo, key );
 	if( !*s )
 	{
 		s = "male";
@@ -449,7 +449,7 @@ void ACESP_SpawnBot( char* name, float skill, char* team )
 	Info_SetValueForKey( userinfo, "sex", s );
 
 	key = "color1";
-	s   = Info_ValueForKey( botinfo, key );
+	s	= Info_ValueForKey( botinfo, key );
 	if( !*s )
 	{
 		s = "4";
@@ -457,7 +457,7 @@ void ACESP_SpawnBot( char* name, float skill, char* team )
 	Info_SetValueForKey( userinfo, key, s );
 
 	key = "color2";
-	s   = Info_ValueForKey( botinfo, key );
+	s	= Info_ValueForKey( botinfo, key );
 	if( !*s )
 	{
 		s = "5";
@@ -484,8 +484,8 @@ void ACESP_SpawnBot( char* name, float skill, char* team )
 	}
 	Info_SetValueForKey( userinfo, "team", team );
 
-	//Info_SetValueForKey(userinfo, "characterfile", Info_ValueForKey(botinfo, "aifile"));
-	//Info_SetValueForKey(userinfo, "skill", va("%5.2f", skill));
+	// Info_SetValueForKey(userinfo, "characterfile", Info_ValueForKey(botinfo, "aifile"));
+	// Info_SetValueForKey(userinfo, "skill", va("%5.2f", skill));
 
 	// register the userinfo
 	trap_SetUserinfo( clientNum, userinfo );
@@ -538,30 +538,30 @@ void ACESP_RemoveBot( char* name )
 qboolean ACESP_BotConnect( int clientNum, qboolean restart )
 {
 	#if 1
-	char userinfo[ MAX_INFO_STRING ];
+	char userinfo[MAX_INFO_STRING];
 
 	trap_GetUserinfo( clientNum, userinfo, sizeof( userinfo ) );
 
-	//Q_strncpyz(settings.characterfile, Info_ValueForKey(userinfo, "characterfile"), sizeof(settings.characterfile));
-	//settings.skill = atof(Info_ValueForKey(userinfo, "skill"));
-	//Q_strncpyz(settings.team, Info_ValueForKey(userinfo, "team"), sizeof(settings.team));
+	// Q_strncpyz(settings.characterfile, Info_ValueForKey(userinfo, "characterfile"), sizeof(settings.characterfile));
+	// settings.skill = atof(Info_ValueForKey(userinfo, "skill"));
+	// Q_strncpyz(settings.team, Info_ValueForKey(userinfo, "team"), sizeof(settings.team));
 
-	//if(!BotAISetupClient(clientNum, &settings, restart))
+	// if(!BotAISetupClient(clientNum, &settings, restart))
 	//{
-	//  trap_DropClient(clientNum, "BotAISetupClient failed");
-	//  return qfalse;
-	//}
+	//   trap_DropClient(clientNum, "BotAISetupClient failed");
+	//   return qfalse;
+	// }
 
 	/*
 	   bot = &g_entities[clientNum];
-	
+
 	   // set bot state
 	   bot = g_entities + clientNum;
-	
+
 	   bot->enemy = NULL;
 	   bot->bs.moveTarget = NULL;
 	   bot->bs.state = STATE_MOVE;
-	
+
 	   // set the current node
 	   bot->bs.currentNode = ACEND_FindClosestReachableNode(bot, NODE_DENSITY, NODE_ALL);
 	   bot->bs.goalNode = bot->bs.currentNode;
@@ -576,28 +576,28 @@ qboolean ACESP_BotConnect( int clientNum, qboolean restart )
 
 void ACESP_SetupBotState( gentity_t* self )
 {
-	int  clientNum;
-	char userinfo[ MAX_INFO_STRING ];
-	//char           *team;
+	int	 clientNum;
+	char userinfo[MAX_INFO_STRING];
+	// char           *team;
 
-	//G_Printf("ACESP_SetupBotState()\n");
+	// G_Printf("ACESP_SetupBotState()\n");
 
 	clientNum = self->client - level.clients;
 	trap_GetUserinfo( clientNum, userinfo, sizeof( userinfo ) );
 
 	self->classname = "acebot";
-	self->enemy     = NULL;
+	self->enemy		= NULL;
 
-	self->bs.turnSpeed  = 35; // FIXME 100 is deadly fast
+	self->bs.turnSpeed	= 35; // FIXME 100 is deadly fast
 	self->bs.moveTarget = NULL;
-	self->bs.state      = STATE_MOVE;
+	self->bs.state		= STATE_MOVE;
 
 	// set the current node
-	self->bs.currentNode     = ACEND_FindClosestReachableNode( self, NODE_DENSITY, NODE_ALL );
-	self->bs.goalNode        = self->bs.currentNode;
-	self->bs.nextNode        = self->bs.currentNode;
-	self->bs.lastNode        = INVALID;
-	self->bs.next_move_time  = level.time;
+	self->bs.currentNode	 = ACEND_FindClosestReachableNode( self, NODE_DENSITY, NODE_ALL );
+	self->bs.goalNode		 = self->bs.currentNode;
+	self->bs.nextNode		 = self->bs.currentNode;
+	self->bs.lastNode		 = INVALID;
+	self->bs.next_move_time	 = level.time;
 	self->bs.suicide_timeout = level.time + 15000;
 
 	/*
@@ -621,14 +621,14 @@ void ACESP_SetupBotState( gentity_t* self )
 	   team = "red";
 	   }
 	   //Info_SetValueForKey(userinfo, "team", team);
-	
+
 	   // need to send this or bots will be spectators
 	   trap_BotClientCommand(self - g_entities, va("team %s", team));
 	   }
 	 */
 
-	//if(g_gametype.integer >= GT_TEAM)
-	//  trap_BotClientCommand(self - g_entities, va("team %s", Info_ValueForKey(userinfo, "team")));
+	// if(g_gametype.integer >= GT_TEAM)
+	//   trap_BotClientCommand(self - g_entities, va("team %s", Info_ValueForKey(userinfo, "team")));
 }
 
 #endif

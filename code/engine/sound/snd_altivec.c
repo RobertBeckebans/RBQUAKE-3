@@ -35,22 +35,22 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		#include <altivec.h>
 	#endif
 
-void S_PaintChannelFrom16_altivec( portable_samplepair_t paintbuffer[ PAINTBUFFER_SIZE ], int snd_vol, channel_t* ch, const sfx_t* sc, int count, int sampleOffset, int bufferOffset )
+void S_PaintChannelFrom16_altivec( portable_samplepair_t paintbuffer[PAINTBUFFER_SIZE], int snd_vol, channel_t* ch, const sfx_t* sc, int count, int sampleOffset, int bufferOffset )
 {
-	int                    data, aoff, boff;
-	int                    leftvol, rightvol;
-	int                    i, j;
+	int					   data, aoff, boff;
+	int					   leftvol, rightvol;
+	int					   i, j;
 	portable_samplepair_t* samp;
-	sndBuffer*             chunk;
-	short*                 samples;
-	float                  ooff, fdata[ 2 ], fdiv, fleftvol, frightvol;
+	sndBuffer*			   chunk;
+	short*				   samples;
+	float				   ooff, fdata[2], fdiv, fleftvol, frightvol;
 
 	if( sc->soundChannels <= 0 )
 	{
 		return;
 	}
 
-	samp = &paintbuffer[ bufferOffset ];
+	samp = &paintbuffer[bufferOffset];
 
 	if( ch->doppler )
 	{
@@ -82,39 +82,39 @@ void S_PaintChannelFrom16_altivec( portable_samplepair_t paintbuffer[ PAINTBUFFE
 	{
 		vector signed short volume_vec;
 		vector unsigned int volume_shift;
-		int                 vectorCount, samplesLeft, chunkSamplesLeft;
-		leftvol                        = ch->leftvol * snd_vol;
-		rightvol                       = ch->rightvol * snd_vol;
-		samples                        = chunk->sndChunk;
-		( ( short* )&volume_vec )[ 0 ] = leftvol;
-		( ( short* )&volume_vec )[ 1 ] = leftvol;
-		( ( short* )&volume_vec )[ 4 ] = leftvol;
-		( ( short* )&volume_vec )[ 5 ] = leftvol;
-		( ( short* )&volume_vec )[ 2 ] = rightvol;
-		( ( short* )&volume_vec )[ 3 ] = rightvol;
-		( ( short* )&volume_vec )[ 6 ] = rightvol;
-		( ( short* )&volume_vec )[ 7 ] = rightvol;
-		volume_shift                   = vec_splat_u32( 8 );
-		i                              = 0;
+		int					vectorCount, samplesLeft, chunkSamplesLeft;
+		leftvol						 = ch->leftvol * snd_vol;
+		rightvol					 = ch->rightvol * snd_vol;
+		samples						 = chunk->sndChunk;
+		( ( short* )&volume_vec )[0] = leftvol;
+		( ( short* )&volume_vec )[1] = leftvol;
+		( ( short* )&volume_vec )[4] = leftvol;
+		( ( short* )&volume_vec )[5] = leftvol;
+		( ( short* )&volume_vec )[2] = rightvol;
+		( ( short* )&volume_vec )[3] = rightvol;
+		( ( short* )&volume_vec )[6] = rightvol;
+		( ( short* )&volume_vec )[7] = rightvol;
+		volume_shift				 = vec_splat_u32( 8 );
+		i							 = 0;
 
 		while( i < count )
 		{
 			/* Try to align destination to 16-byte boundary */
-			while( i < count && ( ( ( unsigned long )&samp[ i ] & 0x1f ) || ( ( count - i ) < 8 ) || ( ( SND_CHUNK_SIZE - sampleOffset ) < 8 ) ) )
+			while( i < count && ( ( ( unsigned long )&samp[i] & 0x1f ) || ( ( count - i ) < 8 ) || ( ( SND_CHUNK_SIZE - sampleOffset ) < 8 ) ) )
 			{
-				data = samples[ sampleOffset++ ];
-				samp[ i ].left += ( data * leftvol ) >> 8;
+				data = samples[sampleOffset++];
+				samp[i].left += ( data * leftvol ) >> 8;
 
 				if( sc->soundChannels == 2 )
 				{
-					data = samples[ sampleOffset++ ];
+					data = samples[sampleOffset++];
 				}
-				samp[ i ].right += ( data * rightvol ) >> 8;
+				samp[i].right += ( data * rightvol ) >> 8;
 
 				if( sampleOffset == SND_CHUNK_SIZE )
 				{
-					chunk        = chunk->next;
-					samples      = chunk->sndChunk;
+					chunk		 = chunk->next;
+					samples		 = chunk->sndChunk;
 					sampleOffset = 0;
 				}
 				i++;
@@ -122,7 +122,7 @@ void S_PaintChannelFrom16_altivec( portable_samplepair_t paintbuffer[ PAINTBUFFE
 			/* Destination is now aligned.  Process as many 8-sample
 			   chunks as we can before we run out of room from the current
 			   sound chunk.  We do 8 per loop to avoid extra source data reads. */
-			samplesLeft      = count - i;
+			samplesLeft		 = count - i;
 			chunkSamplesLeft = SND_CHUNK_SIZE - sampleOffset;
 			if( samplesLeft > chunkSamplesLeft )
 			{
@@ -134,33 +134,31 @@ void S_PaintChannelFrom16_altivec( portable_samplepair_t paintbuffer[ PAINTBUFFE
 			if( vectorCount )
 			{
 				vector unsigned char tmp;
-				vector short         s0, s1, sampleData0, sampleData1;
-				vector signed int    merge0, merge1;
-				vector signed int    d0, d1, d2, d3;
-				vector unsigned char samplePermute0 =
-					VECCONST_UINT8( 0, 1, 4, 5, 0, 1, 4, 5, 2, 3, 6, 7, 2, 3, 6, 7 );
-				vector unsigned char samplePermute1 =
-					VECCONST_UINT8( 8, 9, 12, 13, 8, 9, 12, 13, 10, 11, 14, 15, 10, 11, 14, 15 );
+				vector short		 s0, s1, sampleData0, sampleData1;
+				vector signed int	 merge0, merge1;
+				vector signed int	 d0, d1, d2, d3;
+				vector unsigned char samplePermute0 = VECCONST_UINT8( 0, 1, 4, 5, 0, 1, 4, 5, 2, 3, 6, 7, 2, 3, 6, 7 );
+				vector unsigned char samplePermute1 = VECCONST_UINT8( 8, 9, 12, 13, 8, 9, 12, 13, 10, 11, 14, 15, 10, 11, 14, 15 );
 				vector unsigned char loadPermute0, loadPermute1;
 
 				// Rather than permute the vectors after we load them to do the sample
 				// replication and rearrangement, we permute the alignment vector so
 				// we do everything in one step below and avoid data shuffling.
-				tmp          = vec_lvsl( 0, &samples[ sampleOffset ] );
+				tmp			 = vec_lvsl( 0, &samples[sampleOffset] );
 				loadPermute0 = vec_perm( tmp, tmp, samplePermute0 );
 				loadPermute1 = vec_perm( tmp, tmp, samplePermute1 );
 
-				s0 = *( vector short* )&samples[ sampleOffset ];
+				s0 = *( vector short* )&samples[sampleOffset];
 				while( vectorCount )
 				{
 					/* Load up source (16-bit) sample data */
-					s1 = *( vector short* )&samples[ sampleOffset + 7 ];
+					s1 = *( vector short* )&samples[sampleOffset + 7];
 
 					/* Load up destination sample data */
-					d0 = *( vector signed int* )&samp[ i ];
-					d1 = *( vector signed int* )&samp[ i + 2 ];
-					d2 = *( vector signed int* )&samp[ i + 4 ];
-					d3 = *( vector signed int* )&samp[ i + 6 ];
+					d0 = *( vector signed int* )&samp[i];
+					d1 = *( vector signed int* )&samp[i + 2];
+					d2 = *( vector signed int* )&samp[i + 4];
+					d3 = *( vector signed int* )&samp[i + 6];
 
 					sampleData0 = vec_perm( s0, s1, loadPermute0 );
 					sampleData1 = vec_perm( s0, s1, loadPermute1 );
@@ -184,10 +182,10 @@ void S_PaintChannelFrom16_altivec( portable_samplepair_t paintbuffer[ PAINTBUFFE
 					d3 = vec_add( merge1, d3 );
 
 					/* Store destination sample data */
-					*( vector signed int* )&samp[ i ]     = d0;
-					*( vector signed int* )&samp[ i + 2 ] = d1;
-					*( vector signed int* )&samp[ i + 4 ] = d2;
-					*( vector signed int* )&samp[ i + 6 ] = d3;
+					*( vector signed int* )&samp[i]		= d0;
+					*( vector signed int* )&samp[i + 2] = d1;
+					*( vector signed int* )&samp[i + 4] = d2;
+					*( vector signed int* )&samp[i + 6] = d3;
 
 					i += 8;
 					vectorCount--;
@@ -196,8 +194,8 @@ void S_PaintChannelFrom16_altivec( portable_samplepair_t paintbuffer[ PAINTBUFFE
 				}
 				if( sampleOffset == SND_CHUNK_SIZE )
 				{
-					chunk        = chunk->next;
-					samples      = chunk->sndChunk;
+					chunk		 = chunk->next;
+					samples		 = chunk->sndChunk;
 					sampleOffset = 0;
 				}
 			}
@@ -208,15 +206,15 @@ void S_PaintChannelFrom16_altivec( portable_samplepair_t paintbuffer[ PAINTBUFFE
 		fleftvol  = ch->leftvol * snd_vol;
 		frightvol = ch->rightvol * snd_vol;
 
-		ooff    = sampleOffset;
+		ooff	= sampleOffset;
 		samples = chunk->sndChunk;
 
 		for( i = 0; i < count; i++ )
 		{
-			aoff       = ooff;
-			ooff       = ooff + ch->dopplerScale * sc->soundChannels;
-			boff       = ooff;
-			fdata[ 0 ] = fdata[ 1 ] = 0;
+			aoff	 = ooff;
+			ooff	 = ooff + ch->dopplerScale * sc->soundChannels;
+			boff	 = ooff;
+			fdata[0] = fdata[1] = 0;
 			for( j = aoff; j < boff; j += sc->soundChannels )
 			{
 				if( j == SND_CHUNK_SIZE )
@@ -231,18 +229,18 @@ void S_PaintChannelFrom16_altivec( portable_samplepair_t paintbuffer[ PAINTBUFFE
 				}
 				if( sc->soundChannels == 2 )
 				{
-					fdata[ 0 ] += samples[ j & ( SND_CHUNK_SIZE - 1 ) ];
-					fdata[ 1 ] += samples[ ( j + 1 ) & ( SND_CHUNK_SIZE - 1 ) ];
+					fdata[0] += samples[j & ( SND_CHUNK_SIZE - 1 )];
+					fdata[1] += samples[( j + 1 ) & ( SND_CHUNK_SIZE - 1 )];
 				}
 				else
 				{
-					fdata[ 0 ] += samples[ j & ( SND_CHUNK_SIZE - 1 ) ];
-					fdata[ 1 ] += samples[ j & ( SND_CHUNK_SIZE - 1 ) ];
+					fdata[0] += samples[j & ( SND_CHUNK_SIZE - 1 )];
+					fdata[1] += samples[j & ( SND_CHUNK_SIZE - 1 )];
 				}
 			}
 			fdiv = 256 * ( boff - aoff ) / sc->soundChannels;
-			samp[ i ].left += ( fdata[ 0 ] * fleftvol ) / fdiv;
-			samp[ i ].right += ( fdata[ 1 ] * frightvol ) / fdiv;
+			samp[i].left += ( fdata[0] * fleftvol ) / fdiv;
+			samp[i].right += ( fdata[1] * frightvol ) / fdiv;
 		}
 	}
 }

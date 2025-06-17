@@ -25,19 +25,19 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "cg_local.h"
 
 #define MAX_LOADING_PLAYER_ICONS 16
-#define MAX_LOADING_ITEM_ICONS   26
+#define MAX_LOADING_ITEM_ICONS	 26
 
-static int       loadingPlayerIconCount;
-static int       loadingItemIconCount;
-static qhandle_t loadingPlayerIcons[ MAX_LOADING_PLAYER_ICONS ];
-static qhandle_t loadingItemIcons[ MAX_LOADING_ITEM_ICONS ];
+static int		 loadingPlayerIconCount;
+static int		 loadingItemIconCount;
+static qhandle_t loadingPlayerIcons[MAX_LOADING_PLAYER_ICONS];
+static qhandle_t loadingItemIcons[MAX_LOADING_ITEM_ICONS];
 
 /*
 ===================
 CG_DrawLoadingIcons
 ===================
 */
-static void CG_DrawLoadingIcons( void )
+static void		 CG_DrawLoadingIcons( void )
 {
 	int n;
 	int x, y;
@@ -46,7 +46,7 @@ static void CG_DrawLoadingIcons( void )
 	{
 		x = 16 + n * 78;
 		y = 324 - 40;
-		CG_DrawPic( x, y, 64, 64, loadingPlayerIcons[ n ] );
+		CG_DrawPic( x, y, 64, 64, loadingPlayerIcons[n] );
 	}
 
 	for( n = 0; n < loadingItemIconCount; n++ )
@@ -57,7 +57,7 @@ static void CG_DrawLoadingIcons( void )
 			y += 40;
 		}
 		x = 16 + n % 13 * 48;
-		CG_DrawPic( x, y, 32, 32, loadingItemIcons[ n ] );
+		CG_DrawPic( x, y, 32, 32, loadingItemIcons[n] );
 	}
 }
 
@@ -83,11 +83,11 @@ void CG_LoadingItem( int itemNum )
 {
 	gitem_t* item;
 
-	item = &bg_itemlist[ itemNum ];
+	item = &bg_itemlist[itemNum];
 
 	if( item->icon && loadingItemIconCount < MAX_LOADING_ITEM_ICONS )
 	{
-		loadingItemIcons[ loadingItemIconCount++ ] = trap_R_RegisterShaderNoMip( item->icon );
+		loadingItemIcons[loadingItemIconCount++] = trap_R_RegisterShaderNoMip( item->icon );
 	}
 
 	CG_LoadingString( item->pickup_name );
@@ -101,10 +101,10 @@ CG_LoadingClient
 void CG_LoadingClient( int clientNum )
 {
 	const char* info;
-	char*       skin;
-	char        personality[ MAX_QPATH ];
-	char        model[ MAX_QPATH ];
-	char        iconName[ MAX_QPATH ];
+	char*		skin;
+	char		personality[MAX_QPATH];
+	char		model[MAX_QPATH];
+	char		iconName[MAX_QPATH];
 
 	info = CG_ConfigString( CS_PLAYERS + clientNum );
 
@@ -123,18 +123,18 @@ void CG_LoadingClient( int clientNum )
 
 		Com_sprintf( iconName, MAX_QPATH, "models/players/%s/icon_%s.tga", model, skin );
 
-		loadingPlayerIcons[ loadingPlayerIconCount ] = trap_R_RegisterShaderNoMip( iconName );
-		if( !loadingPlayerIcons[ loadingPlayerIconCount ] )
+		loadingPlayerIcons[loadingPlayerIconCount] = trap_R_RegisterShaderNoMip( iconName );
+		if( !loadingPlayerIcons[loadingPlayerIconCount] )
 		{
 			Com_sprintf( iconName, MAX_QPATH, "models/players/characters/%s/icon_%s.tga", model, skin );
-			loadingPlayerIcons[ loadingPlayerIconCount ] = trap_R_RegisterShaderNoMip( iconName );
+			loadingPlayerIcons[loadingPlayerIconCount] = trap_R_RegisterShaderNoMip( iconName );
 		}
-		if( !loadingPlayerIcons[ loadingPlayerIconCount ] )
+		if( !loadingPlayerIcons[loadingPlayerIconCount] )
 		{
 			Com_sprintf( iconName, MAX_QPATH, "models/players/%s/icon_%s.tga", DEFAULT_MODEL, "default" );
-			loadingPlayerIcons[ loadingPlayerIconCount ] = trap_R_RegisterShaderNoMip( iconName );
+			loadingPlayerIcons[loadingPlayerIconCount] = trap_R_RegisterShaderNoMip( iconName );
 		}
-		if( loadingPlayerIcons[ loadingPlayerIconCount ] )
+		if( loadingPlayerIcons[loadingPlayerIconCount] )
 		{
 			loadingPlayerIconCount++;
 		}
@@ -163,16 +163,16 @@ void CG_DrawInformation( void )
 	const char* s;
 	const char* info;
 	const char* sysInfo;
-	int         y;
-	int         value;
-	qhandle_t   levelshot;
-	qhandle_t   detail;
-	char        buf[ 1024 ];
+	int			y;
+	int			value;
+	qhandle_t	levelshot;
+	qhandle_t	detail;
+	char		buf[1024];
 
-	info    = CG_ConfigString( CS_SERVERINFO );
+	info	= CG_ConfigString( CS_SERVERINFO );
 	sysInfo = CG_ConfigString( CS_SYSTEMINFO );
 
-	s         = Info_ValueForKey( info, "mapname" );
+	s		  = Info_ValueForKey( info, "mapname" );
 	levelshot = trap_R_RegisterShaderNoMip( va( "levelshots/%s.tga", s ) );
 	if( !levelshot )
 	{
@@ -190,7 +190,7 @@ void CG_DrawInformation( void )
 
 	// the first 150 rows are reserved for the client connection
 	// screen to write into
-	if( cg.infoScreenText[ 0 ] )
+	if( cg.infoScreenText[0] )
 	{
 		UI_DrawProportionalString( 320, 128 - 32, va( "Loading... %s", cg.infoScreenText ), UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite );
 	}
@@ -215,7 +215,7 @@ void CG_DrawInformation( void )
 
 		// pure server
 		s = Info_ValueForKey( sysInfo, "sv_pure" );
-		if( s[ 0 ] == '1' )
+		if( s[0] == '1' )
 		{
 			UI_DrawProportionalString( 320, y, "Pure Server", UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite );
 			y += PROP_HEIGHT;
@@ -223,7 +223,7 @@ void CG_DrawInformation( void )
 
 		// server-specific message of the day
 		s = CG_ConfigString( CS_MOTD );
-		if( s[ 0 ] )
+		if( s[0] )
 		{
 			UI_DrawProportionalString( 320, y, s, UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite );
 			y += PROP_HEIGHT;
@@ -235,7 +235,7 @@ void CG_DrawInformation( void )
 
 	// map-specific message (long map name)
 	s = CG_ConfigString( CS_MESSAGE );
-	if( s[ 0 ] )
+	if( s[0] )
 	{
 		UI_DrawProportionalString( 320, y, s, UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite );
 		y += PROP_HEIGHT;
@@ -243,7 +243,7 @@ void CG_DrawInformation( void )
 
 	// cheats warning
 	s = Info_ValueForKey( sysInfo, "sv_cheats" );
-	if( s[ 0 ] == '1' )
+	if( s[0] == '1' )
 	{
 		UI_DrawProportionalString( 320, y, "CHEATS ARE ENABLED", UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite );
 		y += PROP_HEIGHT;

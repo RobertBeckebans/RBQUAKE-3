@@ -39,7 +39,7 @@ Random()
 returns a pseudorandom number between 0 and 1
 */
 
-vec_t Random( void )
+vec_t		  Random( void )
 {
 	return ( vec_t )rand() / RAND_MAX;
 }
@@ -63,30 +63,30 @@ static void ExitQ3Map( void )
 typedef struct minimap_s
 {
 	bspModel_t* model;
-	int         width;
-	int         height;
-	int         samples;
-	float*      sample_offsets;
-	float       sharpen_boxmult;
-	float       sharpen_centermult;
-	float       boost;
-	float*      data1f;
-	float*      sharpendata1f;
-	vec3_t      mins, size;
+	int			width;
+	int			height;
+	int			samples;
+	float*		sample_offsets;
+	float		sharpen_boxmult;
+	float		sharpen_centermult;
+	float		boost;
+	float*		data1f;
+	float*		sharpendata1f;
+	vec3_t		mins, size;
 } minimap_t;
 static minimap_t minimap;
 
-qboolean BrushIntersectionWithLine( bspBrush_t* brush, vec3_t start, vec3_t dir, float* t_in, float* t_out )
+qboolean		 BrushIntersectionWithLine( bspBrush_t* brush, vec3_t start, vec3_t dir, float* t_in, float* t_out )
 {
-	int             i;
-	qboolean        in = qfalse, out = qfalse;
-	bspBrushSide_t* sides = &bspBrushSides[ brush->firstSide ];
+	int				i;
+	qboolean		in = qfalse, out = qfalse;
+	bspBrushSide_t* sides = &bspBrushSides[brush->firstSide];
 
 	for( i = 0; i < brush->numSides; ++i )
 	{
-		bspPlane_t* p  = &bspPlanes[ sides[ i ].planeNum ];
-		float       sn = DotProduct( start, p->normal );
-		float       dn = DotProduct( dir, p->normal );
+		bspPlane_t* p  = &bspPlanes[sides[i].planeNum];
+		float		sn = DotProduct( start, p->normal );
+		float		dn = DotProduct( dir, p->normal );
 
 		if( dn == 0 )
 		{
@@ -104,7 +104,7 @@ qboolean BrushIntersectionWithLine( bspBrush_t* brush, vec3_t start, vec3_t dir,
 				if( !in || t > *t_in )
 				{
 					*t_in = t;
-					in    = qtrue;
+					in	  = qtrue;
 					// as t_in can only increase, and t_out can only decrease, early out
 					if( out && *t_in >= *t_out )
 					{
@@ -117,7 +117,7 @@ qboolean BrushIntersectionWithLine( bspBrush_t* brush, vec3_t start, vec3_t dir,
 				if( !out || t < *t_out )
 				{
 					*t_out = t;
-					out    = qtrue;
+					out	   = qtrue;
 					// as t_in can only increase, and t_out can only decrease, early out
 					if( in && *t_in >= *t_out )
 					{
@@ -132,45 +132,45 @@ qboolean BrushIntersectionWithLine( bspBrush_t* brush, vec3_t start, vec3_t dir,
 
 static float MiniMapSample( float x, float y )
 {
-	vec3_t          org, dir;
-	int             i, bi;
-	float           t0, t1;
-	float           samp;
-	bspBrush_t*     b;
+	vec3_t			org, dir;
+	int				i, bi;
+	float			t0, t1;
+	float			samp;
+	bspBrush_t*		b;
 	bspBrushSide_t* s;
-	int             cnt;
+	int				cnt;
 
-	org[ 0 ] = x;
-	org[ 1 ] = y;
-	org[ 2 ] = 0;
-	dir[ 0 ] = 0;
-	dir[ 1 ] = 0;
-	dir[ 2 ] = 1;
+	org[0] = x;
+	org[1] = y;
+	org[2] = 0;
+	dir[0] = 0;
+	dir[1] = 0;
+	dir[2] = 1;
 
-	cnt  = 0;
+	cnt	 = 0;
 	samp = 0;
 	for( i = 0; i < minimap.model->numBSPBrushes; ++i )
 	{
 		bi = minimap.model->firstBSPBrush + i;
-		if( opaqueBrushes[ bi >> 3 ] & ( 1 << ( bi & 7 ) ) )
+		if( opaqueBrushes[bi >> 3] & ( 1 << ( bi & 7 ) ) )
 		{
-			b = &bspBrushes[ bi ];
+			b = &bspBrushes[bi];
 
 			// sort out mins/maxs of the brush
-			s = &bspBrushSides[ b->firstSide ];
-			if( x < -bspPlanes[ s[ 0 ].planeNum ].dist )
+			s = &bspBrushSides[b->firstSide];
+			if( x < -bspPlanes[s[0].planeNum].dist )
 			{
 				continue;
 			}
-			if( x > +bspPlanes[ s[ 1 ].planeNum ].dist )
+			if( x > +bspPlanes[s[1].planeNum].dist )
 			{
 				continue;
 			}
-			if( y < -bspPlanes[ s[ 2 ].planeNum ].dist )
+			if( y < -bspPlanes[s[2].planeNum].dist )
 			{
 				continue;
 			}
-			if( y > +bspPlanes[ s[ 3 ].planeNum ].dist )
+			if( y > +bspPlanes[s[3].planeNum].dist )
 			{
 				continue;
 			}
@@ -186,128 +186,127 @@ static float MiniMapSample( float x, float y )
 	return samp;
 }
 
-void RandomVector2f( float v[ 2 ] )
+void RandomVector2f( float v[2] )
 {
 	do
 	{
-		v[ 0 ] = 2 * Random() - 1;
-		v[ 1 ] = 2 * Random() - 1;
-	} while( v[ 0 ] * v[ 0 ] + v[ 1 ] * v[ 1 ] > 1 );
+		v[0] = 2 * Random() - 1;
+		v[1] = 2 * Random() - 1;
+	} while( v[0] * v[0] + v[1] * v[1] > 1 );
 }
 
 static void MiniMapRandomlySupersampled( int y )
 {
-	int    x, i;
-	float* p    = &minimap.data1f[ y * minimap.width ];
-	float  ymin = minimap.mins[ 1 ] + minimap.size[ 1 ] * ( y / ( float )minimap.height );
-	float  dx   = minimap.size[ 0 ] / ( float )minimap.width;
-	float  dy   = minimap.size[ 1 ] / ( float )minimap.height;
-	float  uv[ 2 ];
+	int	   x, i;
+	float* p	= &minimap.data1f[y * minimap.width];
+	float  ymin = minimap.mins[1] + minimap.size[1] * ( y / ( float )minimap.height );
+	float  dx	= minimap.size[0] / ( float )minimap.width;
+	float  dy	= minimap.size[1] / ( float )minimap.height;
+	float  uv[2];
 	float  thisval;
 
 	for( x = 0; x < minimap.width; ++x )
 	{
-		float xmin = minimap.mins[ 0 ] + minimap.size[ 0 ] * ( x / ( float )minimap.width );
+		float xmin = minimap.mins[0] + minimap.size[0] * ( x / ( float )minimap.width );
 		float val  = 0;
 
 		for( i = 0; i < minimap.samples; ++i )
 		{
 			RandomVector2f( uv );
-			thisval = MiniMapSample( xmin + ( uv[ 0 ] + 0.5 ) * dx, /* exaggerated random pattern for better results */
-				ymin + ( uv[ 1 ] + 0.5 ) * dy                       /* exaggerated random pattern for better results */
+			thisval = MiniMapSample( xmin + ( uv[0] + 0.5 ) * dx, /* exaggerated random pattern for better results */
+				ymin + ( uv[1] + 0.5 ) * dy						  /* exaggerated random pattern for better results */
 			);
 			val += thisval;
 		}
-		val /= minimap.samples * minimap.size[ 2 ];
+		val /= minimap.samples * minimap.size[2];
 		*p++ = val;
 	}
 }
 
 static void MiniMapSupersampled( int y )
 {
-	int    x, i;
-	float* p    = &minimap.data1f[ y * minimap.width ];
-	float  ymin = minimap.mins[ 1 ] + minimap.size[ 1 ] * ( y / ( float )minimap.height );
-	float  dx   = minimap.size[ 0 ] / ( float )minimap.width;
-	float  dy   = minimap.size[ 1 ] / ( float )minimap.height;
+	int	   x, i;
+	float* p	= &minimap.data1f[y * minimap.width];
+	float  ymin = minimap.mins[1] + minimap.size[1] * ( y / ( float )minimap.height );
+	float  dx	= minimap.size[0] / ( float )minimap.width;
+	float  dy	= minimap.size[1] / ( float )minimap.height;
 
 	for( x = 0; x < minimap.width; ++x )
 	{
-		float xmin = minimap.mins[ 0 ] + minimap.size[ 0 ] * ( x / ( float )minimap.width );
+		float xmin = minimap.mins[0] + minimap.size[0] * ( x / ( float )minimap.width );
 		float val  = 0;
 
 		for( i = 0; i < minimap.samples; ++i )
 		{
-			float thisval = MiniMapSample( xmin + minimap.sample_offsets[ 2 * i + 0 ] * dx,
-				ymin + minimap.sample_offsets[ 2 * i + 1 ] * dy );
+			float thisval = MiniMapSample( xmin + minimap.sample_offsets[2 * i + 0] * dx, ymin + minimap.sample_offsets[2 * i + 1] * dy );
 
 			val += thisval;
 		}
-		val /= minimap.samples * minimap.size[ 2 ];
+		val /= minimap.samples * minimap.size[2];
 		*p++ = val;
 	}
 }
 
 static void MiniMapNoSupersampling( int y )
 {
-	int    x;
-	float* p    = &minimap.data1f[ y * minimap.width ];
-	float  ymin = minimap.mins[ 1 ] + minimap.size[ 1 ] * ( ( y + 0.5 ) / ( float )minimap.height );
+	int	   x;
+	float* p	= &minimap.data1f[y * minimap.width];
+	float  ymin = minimap.mins[1] + minimap.size[1] * ( ( y + 0.5 ) / ( float )minimap.height );
 
 	for( x = 0; x < minimap.width; ++x )
 	{
-		float xmin = minimap.mins[ 0 ] + minimap.size[ 0 ] * ( ( x + 0.5 ) / ( float )minimap.width );
+		float xmin = minimap.mins[0] + minimap.size[0] * ( ( x + 0.5 ) / ( float )minimap.width );
 
-		*p++ = MiniMapSample( xmin, ymin ) / minimap.size[ 2 ];
+		*p++ = MiniMapSample( xmin, ymin ) / minimap.size[2];
 	}
 }
 
 static void MiniMapSharpen( int y )
 {
-	int      x;
-	qboolean up   = ( y > 0 );
+	int		 x;
+	qboolean up	  = ( y > 0 );
 	qboolean down = ( y < minimap.height - 1 );
-	float*   p    = &minimap.data1f[ y * minimap.width ];
-	float*   q    = &minimap.sharpendata1f[ y * minimap.width ];
+	float*	 p	  = &minimap.data1f[y * minimap.width];
+	float*	 q	  = &minimap.sharpendata1f[y * minimap.width];
 
 	for( x = 0; x < minimap.width; ++x )
 	{
 		qboolean left  = ( x > 0 );
 		qboolean right = ( x < minimap.width - 1 );
-		float    val   = p[ 0 ] * minimap.sharpen_centermult;
+		float	 val   = p[0] * minimap.sharpen_centermult;
 
 		if( left && up )
 		{
-			val += p[ -1 - minimap.width ] * minimap.sharpen_boxmult;
+			val += p[-1 - minimap.width] * minimap.sharpen_boxmult;
 		}
 		if( left && down )
 		{
-			val += p[ -1 + minimap.width ] * minimap.sharpen_boxmult;
+			val += p[-1 + minimap.width] * minimap.sharpen_boxmult;
 		}
 		if( right && up )
 		{
-			val += p[ +1 - minimap.width ] * minimap.sharpen_boxmult;
+			val += p[+1 - minimap.width] * minimap.sharpen_boxmult;
 		}
 		if( right && down )
 		{
-			val += p[ +1 + minimap.width ] * minimap.sharpen_boxmult;
+			val += p[+1 + minimap.width] * minimap.sharpen_boxmult;
 		}
 
 		if( left )
 		{
-			val += p[ -1 ] * minimap.sharpen_boxmult;
+			val += p[-1] * minimap.sharpen_boxmult;
 		}
 		if( right )
 		{
-			val += p[ +1 ] * minimap.sharpen_boxmult;
+			val += p[+1] * minimap.sharpen_boxmult;
 		}
 		if( up )
 		{
-			val += p[ -minimap.width ] * minimap.sharpen_boxmult;
+			val += p[-minimap.width] * minimap.sharpen_boxmult;
 		}
 		if( down )
 		{
-			val += p[ +minimap.width ] * minimap.sharpen_boxmult;
+			val += p[+minimap.width] * minimap.sharpen_boxmult;
 		}
 
 		++p;
@@ -317,8 +316,8 @@ static void MiniMapSharpen( int y )
 
 static void MiniMapContrastBoost( int y )
 {
-	int    x;
-	float* q = &minimap.data1f[ y * minimap.width ];
+	int	   x;
+	float* q = &minimap.data1f[y * minimap.width];
 
 	for( x = 0; x < minimap.width; ++x )
 	{
@@ -335,20 +334,20 @@ void MiniMapMakeMinsMaxs( vec3_t mins_in, vec3_t maxs_in, float border, qboolean
 	VectorCopy( maxs_in, maxs );
 
 	// line compatible to nexuiz mapinfo
-	Sys_Printf( "size %f %f %f %f %f %f\n", mins[ 0 ], mins[ 1 ], mins[ 2 ], maxs[ 0 ], maxs[ 1 ], maxs[ 2 ] );
+	Sys_Printf( "size %f %f %f %f %f %f\n", mins[0], mins[1], mins[2], maxs[0], maxs[1], maxs[2] );
 
 	if( keepaspect )
 	{
 		VectorSubtract( maxs, mins, extend );
-		if( extend[ 1 ] > extend[ 0 ] )
+		if( extend[1] > extend[0] )
 		{
-			mins[ 0 ] -= ( extend[ 1 ] - extend[ 0 ] ) * 0.5;
-			maxs[ 0 ] += ( extend[ 1 ] - extend[ 0 ] ) * 0.5;
+			mins[0] -= ( extend[1] - extend[0] ) * 0.5;
+			maxs[0] += ( extend[1] - extend[0] ) * 0.5;
 		}
 		else
 		{
-			mins[ 1 ] -= ( extend[ 0 ] - extend[ 1 ] ) * 0.5;
-			maxs[ 1 ] += ( extend[ 0 ] - extend[ 1 ] ) * 0.5;
+			mins[1] -= ( extend[0] - extend[1] ) * 0.5;
+			maxs[1] += ( extend[0] - extend[1] ) * 0.5;
 		}
 	}
 
@@ -365,7 +364,7 @@ void MiniMapMakeMinsMaxs( vec3_t mins_in, vec3_t maxs_in, float border, qboolean
 	VectorSubtract( maxs, mins, minimap.size );
 
 	// line compatible to nexuiz mapinfo
-	Sys_Printf( "size_texcoords %f %f %f %f %f %f\n", mins[ 0 ], mins[ 1 ], mins[ 2 ], maxs[ 0 ], maxs[ 1 ], maxs[ 2 ] );
+	Sys_Printf( "size_texcoords %f %f %f %f %f %f\n", mins[0], mins[1], mins[2], maxs[0], maxs[1], maxs[2] );
 }
 
 /*
@@ -375,8 +374,8 @@ determines solid non-sky brushes in the world
 
 void MiniMapSetupBrushes( void )
 {
-	int           i, b, compileFlags;
-	bspBrush_t*   brush;
+	int			  i, b, compileFlags;
+	bspBrush_t*	  brush;
 	bspShader_t*  shader;
 	shaderInfo_t* si;
 
@@ -397,8 +396,8 @@ void MiniMapSetupBrushes( void )
 	for( i = 0; i < minimap.model->numBSPBrushes; i++ )
 	{
 		/* get brush */
-		b     = minimap.model->firstBSPBrush + i;
-		brush = &bspBrushes[ b ];
+		b	  = minimap.model->firstBSPBrush + i;
+		brush = &bspBrushes[b];
 
 #if 0
 		/* check all sides */
@@ -420,8 +419,8 @@ void MiniMapSetupBrushes( void )
 			compileFlags |= si->compileFlags;
 		}
 #else
-		shader = &bspShaders[ brush->shaderNum ];
-		si     = ShaderInfoForShader( shader->shader );
+		shader = &bspShaders[brush->shaderNum];
+		si	   = ShaderInfoForShader( shader->shader );
 		if( si == NULL )
 		{
 			compileFlags = 0;
@@ -435,7 +434,7 @@ void MiniMapSetupBrushes( void )
 		/* determine if this brush is solid */
 		if( ( compileFlags & ( C_SOLID | C_SKY ) ) == C_SOLID )
 		{
-			opaqueBrushes[ b >> 3 ] |= ( 1 << ( b & 7 ) );
+			opaqueBrushes[b >> 3] |= ( 1 << ( b & 7 ) );
 			numOpaqueBrushes++;
 			maxOpaqueBrush = i;
 		}
@@ -448,16 +447,16 @@ void MiniMapSetupBrushes( void )
 qboolean MiniMapEvaluateSampleOffsets( int* bestj, int* bestk, float* bestval )
 {
 	float val, dx, dy;
-	int   j, k;
+	int	  j, k;
 
 	*bestj = *bestk = -1;
-	*bestval        = 3; /* max possible val is 2 */
+	*bestval		= 3; /* max possible val is 2 */
 
 	for( j = 0; j < minimap.samples; ++j )
 		for( k = j + 1; k < minimap.samples; ++k )
 		{
-			dx = minimap.sample_offsets[ 2 * j + 0 ] - minimap.sample_offsets[ 2 * k + 0 ];
-			dy = minimap.sample_offsets[ 2 * j + 1 ] - minimap.sample_offsets[ 2 * k + 1 ];
+			dx = minimap.sample_offsets[2 * j + 0] - minimap.sample_offsets[2 * k + 0];
+			dy = minimap.sample_offsets[2 * j + 1] - minimap.sample_offsets[2 * k + 1];
 			if( dx > +0.5 )
 			{
 				dx -= 1;
@@ -477,8 +476,8 @@ qboolean MiniMapEvaluateSampleOffsets( int* bestj, int* bestk, float* bestval )
 			val = dx * dx + dy * dy;
 			if( val < *bestval )
 			{
-				*bestj   = j;
-				*bestk   = k;
+				*bestj	 = j;
+				*bestk	 = k;
 				*bestval = val;
 			}
 		}
@@ -488,7 +487,7 @@ qboolean MiniMapEvaluateSampleOffsets( int* bestj, int* bestk, float* bestval )
 
 void MiniMapMakeSampleOffsets()
 {
-	int   i, j, k, jj, kk;
+	int	  i, j, k, jj, kk;
 	float val, valj, valk, sx, sy, rx, ry;
 
 	Sys_Printf( "Generating good sample offsets (this may take a while)...\n" );
@@ -496,44 +495,44 @@ void MiniMapMakeSampleOffsets()
 	/* start with entirely random samples */
 	for( i = 0; i < minimap.samples; ++i )
 	{
-		minimap.sample_offsets[ 2 * i + 0 ] = Random();
-		minimap.sample_offsets[ 2 * i + 1 ] = Random();
+		minimap.sample_offsets[2 * i + 0] = Random();
+		minimap.sample_offsets[2 * i + 1] = Random();
 	}
 
 	for( i = 0; i < 1000; ++i )
 	{
 		if( MiniMapEvaluateSampleOffsets( &j, &k, &val ) )
 		{
-			sx                                  = minimap.sample_offsets[ 2 * j + 0 ];
-			sy                                  = minimap.sample_offsets[ 2 * j + 1 ];
-			minimap.sample_offsets[ 2 * j + 0 ] = rx = Random();
-			minimap.sample_offsets[ 2 * j + 1 ] = ry = Random();
+			sx								  = minimap.sample_offsets[2 * j + 0];
+			sy								  = minimap.sample_offsets[2 * j + 1];
+			minimap.sample_offsets[2 * j + 0] = rx = Random();
+			minimap.sample_offsets[2 * j + 1] = ry = Random();
 			if( !MiniMapEvaluateSampleOffsets( &jj, &kk, &valj ) )
 			{
 				valj = -1;
 			}
-			minimap.sample_offsets[ 2 * j + 0 ] = sx;
-			minimap.sample_offsets[ 2 * j + 1 ] = sy;
+			minimap.sample_offsets[2 * j + 0] = sx;
+			minimap.sample_offsets[2 * j + 1] = sy;
 
-			sx                                  = minimap.sample_offsets[ 2 * k + 0 ];
-			sy                                  = minimap.sample_offsets[ 2 * k + 1 ];
-			minimap.sample_offsets[ 2 * k + 0 ] = rx;
-			minimap.sample_offsets[ 2 * k + 1 ] = ry;
+			sx								  = minimap.sample_offsets[2 * k + 0];
+			sy								  = minimap.sample_offsets[2 * k + 1];
+			minimap.sample_offsets[2 * k + 0] = rx;
+			minimap.sample_offsets[2 * k + 1] = ry;
 			if( !MiniMapEvaluateSampleOffsets( &jj, &kk, &valk ) )
 			{
 				valk = -1;
 			}
-			minimap.sample_offsets[ 2 * k + 0 ] = sx;
-			minimap.sample_offsets[ 2 * k + 1 ] = sy;
+			minimap.sample_offsets[2 * k + 0] = sx;
+			minimap.sample_offsets[2 * k + 1] = sy;
 
 			if( valj > valk )
 			{
 				if( valj > val )
 				{
 					/* valj is the greatest */
-					minimap.sample_offsets[ 2 * j + 0 ] = rx;
-					minimap.sample_offsets[ 2 * j + 1 ] = ry;
-					i                                   = -1;
+					minimap.sample_offsets[2 * j + 0] = rx;
+					minimap.sample_offsets[2 * j + 1] = ry;
+					i								  = -1;
 				}
 				else
 				{
@@ -545,9 +544,9 @@ void MiniMapMakeSampleOffsets()
 				if( valk > val )
 				{
 					/* valk is the greatest */
-					minimap.sample_offsets[ 2 * k + 0 ] = rx;
-					minimap.sample_offsets[ 2 * k + 1 ] = ry;
-					i                                   = -1;
+					minimap.sample_offsets[2 * k + 0] = rx;
+					minimap.sample_offsets[2 * k + 1] = ry;
+					i								  = -1;
 				}
 				else
 				{
@@ -566,11 +565,11 @@ void MergeRelativePath( char* out, const char* absolute, const char* relative )
 {
 	const char* endpos = absolute + strlen( absolute );
 
-	while( endpos != absolute && ( endpos[ -1 ] == '/' || endpos[ -1 ] == '\\' ) )
+	while( endpos != absolute && ( endpos[-1] == '/' || endpos[-1] == '\\' ) )
 	{
 		--endpos;
 	}
-	while( relative[ 0 ] == '.' && relative[ 1 ] == '.' && ( relative[ 2 ] == '/' || relative[ 2 ] == '\\' ) )
+	while( relative[0] == '.' && relative[1] == '.' && ( relative[2] == '/' || relative[2] == '\\' ) )
 	{
 		relative += 3;
 		while( endpos != absolute )
@@ -581,31 +580,31 @@ void MergeRelativePath( char* out, const char* absolute, const char* relative )
 				break;
 			}
 		}
-		while( endpos != absolute && ( endpos[ -1 ] == '/' || endpos[ -1 ] == '\\' ) )
+		while( endpos != absolute && ( endpos[-1] == '/' || endpos[-1] == '\\' ) )
 		{
 			--endpos;
 		}
 	}
 	memcpy( out, absolute, endpos - absolute );
-	out[ endpos - absolute ] = '/';
+	out[endpos - absolute] = '/';
 	strcpy( out + ( endpos - absolute + 1 ), relative );
 }
 
 int MiniMapBSPMain( int argc, char** argv )
 {
-	char          minimapFilename[ 1024 ];
-	char          basename[ 1024 ];
-	char          path[ 1024 ];
-	char          relativeMinimapFilename[ 1024 ];
-	float         minimapSharpen;
-	float         border;
-	byte *        data4b, *p;
-	float*        q;
-	int           x, y;
-	int           i;
+	char		  minimapFilename[1024];
+	char		  basename[1024];
+	char		  path[1024];
+	char		  relativeMinimapFilename[1024];
+	float		  minimapSharpen;
+	float		  border;
+	byte *		  data4b, *p;
+	float*		  q;
+	int			  x, y;
+	int			  i;
 	miniMapMode_t mode;
-	vec3_t        mins, maxs;
-	qboolean      keepaspect;
+	vec3_t		  mins, maxs;
+	qboolean	  keepaspect;
 
 	/* arg checking */
 	if( argc < 2 )
@@ -615,7 +614,7 @@ int MiniMapBSPMain( int argc, char** argv )
 	}
 
 	/* load the BSP first */
-	strcpy( source, ExpandArg( argv[ argc - 1 ] ) );
+	strcpy( source, ExpandArg( argv[argc - 1] ) );
 	StripExtension( source );
 	DefaultExtension( source, ".bsp" );
 	Sys_Printf( "Loading %s\n", source );
@@ -623,39 +622,39 @@ int MiniMapBSPMain( int argc, char** argv )
 	LoadShaderInfo();
 	LoadBSPFile( source );
 
-	minimap.model = &bspModels[ 0 ];
+	minimap.model = &bspModels[0];
 	VectorCopy( minimap.model->mins, mins );
 	VectorCopy( minimap.model->maxs, maxs );
 
 	*minimapFilename = 0;
-	minimapSharpen   = game->miniMapSharpen;
+	minimapSharpen	 = game->miniMapSharpen;
 	minimap.width = minimap.height = game->miniMapSize;
-	border                         = game->miniMapBorder;
-	keepaspect                     = game->miniMapKeepAspect;
-	mode                           = game->miniMapMode;
+	border						   = game->miniMapBorder;
+	keepaspect					   = game->miniMapKeepAspect;
+	mode						   = game->miniMapMode;
 
-	minimap.samples        = 1;
+	minimap.samples		   = 1;
 	minimap.sample_offsets = NULL;
-	minimap.boost          = 1.0;
+	minimap.boost		   = 1.0;
 
 	/* process arguments */
 	for( i = 1; i < ( argc - 1 ); i++ )
 	{
-		if( !strcmp( argv[ i ], "-size" ) )
+		if( !strcmp( argv[i], "-size" ) )
 		{
-			minimap.width = minimap.height = atoi( argv[ i + 1 ] );
+			minimap.width = minimap.height = atoi( argv[i + 1] );
 			i++;
 			Sys_Printf( "Image size set to %i\n", minimap.width );
 		}
-		else if( !strcmp( argv[ i ], "-sharpen" ) )
+		else if( !strcmp( argv[i], "-sharpen" ) )
 		{
-			minimapSharpen = atof( argv[ i + 1 ] );
+			minimapSharpen = atof( argv[i + 1] );
 			i++;
 			Sys_Printf( "Sharpening coefficient set to %f\n", minimapSharpen );
 		}
-		else if( !strcmp( argv[ i ], "-samples" ) )
+		else if( !strcmp( argv[i], "-samples" ) )
 		{
-			minimap.samples = atoi( argv[ i + 1 ] );
+			minimap.samples = atoi( argv[i + 1] );
 			i++;
 			Sys_Printf( "Samples set to %i\n", minimap.samples );
 			if( minimap.sample_offsets )
@@ -665,9 +664,9 @@ int MiniMapBSPMain( int argc, char** argv )
 			minimap.sample_offsets = malloc( 2 * sizeof( *minimap.sample_offsets ) * minimap.samples );
 			MiniMapMakeSampleOffsets();
 		}
-		else if( !strcmp( argv[ i ], "-random" ) )
+		else if( !strcmp( argv[i], "-random" ) )
 		{
-			minimap.samples = atoi( argv[ i + 1 ] );
+			minimap.samples = atoi( argv[i + 1] );
 			i++;
 			Sys_Printf( "Random samples set to %i\n", minimap.samples );
 			if( minimap.sample_offsets )
@@ -676,52 +675,52 @@ int MiniMapBSPMain( int argc, char** argv )
 			}
 			minimap.sample_offsets = NULL;
 		}
-		else if( !strcmp( argv[ i ], "-border" ) )
+		else if( !strcmp( argv[i], "-border" ) )
 		{
-			border = atof( argv[ i + 1 ] );
+			border = atof( argv[i + 1] );
 			i++;
 			Sys_Printf( "Border set to %f\n", border );
 		}
-		else if( !strcmp( argv[ i ], "-keepaspect" ) )
+		else if( !strcmp( argv[i], "-keepaspect" ) )
 		{
 			keepaspect = qtrue;
 			Sys_Printf( "Keeping aspect ratio by letterboxing\n", border );
 		}
-		else if( !strcmp( argv[ i ], "-nokeepaspect" ) )
+		else if( !strcmp( argv[i], "-nokeepaspect" ) )
 		{
 			keepaspect = qfalse;
 			Sys_Printf( "Not keeping aspect ratio\n", border );
 		}
-		else if( !strcmp( argv[ i ], "-o" ) )
+		else if( !strcmp( argv[i], "-o" ) )
 		{
-			strcpy( minimapFilename, argv[ i + 1 ] );
+			strcpy( minimapFilename, argv[i + 1] );
 			i++;
 			Sys_Printf( "Output file name set to %s\n", minimapFilename );
 		}
-		else if( !strcmp( argv[ i ], "-minmax" ) && i < ( argc - 7 ) )
+		else if( !strcmp( argv[i], "-minmax" ) && i < ( argc - 7 ) )
 		{
-			mins[ 0 ] = atof( argv[ i + 1 ] );
-			mins[ 1 ] = atof( argv[ i + 2 ] );
-			mins[ 2 ] = atof( argv[ i + 3 ] );
-			maxs[ 0 ] = atof( argv[ i + 4 ] );
-			maxs[ 1 ] = atof( argv[ i + 5 ] );
-			maxs[ 2 ] = atof( argv[ i + 6 ] );
+			mins[0] = atof( argv[i + 1] );
+			mins[1] = atof( argv[i + 2] );
+			mins[2] = atof( argv[i + 3] );
+			maxs[0] = atof( argv[i + 4] );
+			maxs[1] = atof( argv[i + 5] );
+			maxs[2] = atof( argv[i + 6] );
 			i += 6;
 			Sys_Printf( "Map mins/maxs overridden\n" );
 		}
-		else if( !strcmp( argv[ i ], "-black" ) )
+		else if( !strcmp( argv[i], "-black" ) )
 		{
 			mode = MINIMAP_MODE_BLACK;
 			Sys_Printf( "Writing as black alpha image\n" );
 		}
-		else if( !strcmp( argv[ i ], "-white" ) )
+		else if( !strcmp( argv[i], "-white" ) )
 		{
 			mode = MINIMAP_MODE_WHITE;
 			Sys_Printf( "Writing as white alpha image\n" );
 		}
-		else if( !strcmp( argv[ i ], "-boost" ) )
+		else if( !strcmp( argv[i], "-boost" ) )
 		{
-			minimap.boost = atof( argv[ i + 1 ] );
+			minimap.boost = atof( argv[i + 1] );
 			i++;
 			Sys_Printf( "Contrast boost set to %f\n", minimap.boost );
 		}
@@ -743,11 +742,11 @@ int MiniMapBSPMain( int argc, char** argv )
 	if( minimapSharpen >= 0 )
 	{
 		minimap.sharpen_centermult = 8 * minimapSharpen + 1;
-		minimap.sharpen_boxmult    = -minimapSharpen;
+		minimap.sharpen_boxmult	   = -minimapSharpen;
 	}
 
 	minimap.data1f = safe_malloc( minimap.width * minimap.height * sizeof( *minimap.data1f ) );
-	data4b         = safe_malloc( minimap.width * minimap.height * 4 );
+	data4b		   = safe_malloc( minimap.width * minimap.height * 4 );
 	if( minimapSharpen >= 0 )
 	{
 		minimap.sharpendata1f = safe_malloc( minimap.width * minimap.height * sizeof( *minimap.data1f ) );
@@ -811,7 +810,7 @@ int MiniMapBSPMain( int argc, char** argv )
 					{
 						v = 255.0 / 256.0;
 					}
-					b    = v * 256;
+					b	 = v * 256;
 					*p++ = 0;
 					*p++ = 0;
 					*p++ = 0;
@@ -836,7 +835,7 @@ int MiniMapBSPMain( int argc, char** argv )
 					{
 						v = 255.0 / 256.0;
 					}
-					b    = v * 256;
+					b	 = v * 256;
 					*p++ = 255;
 					*p++ = 255;
 					*p++ = 255;
@@ -860,30 +859,29 @@ analyzes a Quake engine BSP file
 
 typedef struct abspHeader_s
 {
-	char ident[ 4 ];
-	int  version;
+	char	  ident[4];
+	int		  version;
 
-	bspLump_t lumps[ 1 ]; /* unknown size */
+	bspLump_t lumps[1]; /* unknown size */
 } abspHeader_t;
 
 typedef struct abspLumpTest_s
 {
-	int   radix, minCount;
+	int	  radix, minCount;
 	char* name;
 } abspLumpTest_t;
 
 int AnalyzeBSP( int argc, char** argv )
 {
-	abspHeader_t*         header;
-	int                   size, i, version, offset, length, lumpInt, count;
-	char                  ident[ 5 ];
-	void*                 lump;
-	float                 lumpFloat;
-	char                  lumpString[ 1024 ], source[ 1024 ];
-	qboolean              lumpSwap = qfalse;
-	abspLumpTest_t*       lumpTest;
-	static abspLumpTest_t lumpTests[] = {
-		{ sizeof( bspPlane_t ), 6, "IBSP LUMP_PLANES" },
+	abspHeader_t*		  header;
+	int					  size, i, version, offset, length, lumpInt, count;
+	char				  ident[5];
+	void*				  lump;
+	float				  lumpFloat;
+	char				  lumpString[1024], source[1024];
+	qboolean			  lumpSwap = qfalse;
+	abspLumpTest_t*		  lumpTest;
+	static abspLumpTest_t lumpTests[] = { { sizeof( bspPlane_t ), 6, "IBSP LUMP_PLANES" },
 		{ sizeof( bspBrush_t ), 1, "IBSP LUMP_BRUSHES" },
 		{ 8, 6, "IBSP LUMP_BRUSHSIDES" },
 		{ sizeof( bspBrushSide_t ), 6, "RBSP LUMP_BRUSHSIDES" },
@@ -896,8 +894,7 @@ int AnalyzeBSP( int argc, char** argv )
 		{ 128 * 128 * 3, 1, "IBSP LUMP_LIGHTMAPS" },
 		{ 256 * 256 * 3, 1, "IBSP LUMP_LIGHTMAPS (256 x 256)" },
 		{ 512 * 512 * 3, 1, "IBSP LUMP_LIGHTMAPS (512 x 512)" },
-		{ 0, 0, NULL }
-	};
+		{ 0, 0, NULL } };
 
 	/* arg checking */
 	if( argc < 1 )
@@ -910,7 +907,7 @@ int AnalyzeBSP( int argc, char** argv )
 	for( i = 1; i < ( argc - 1 ); i++ )
 	{
 		/* -format map|ase|... */
-		if( !strcmp( argv[ i ], "-lumpswap" ) )
+		if( !strcmp( argv[i], "-lumpswap" ) )
 		{
 			Sys_Printf( "Swapped lump structs enabled\n" );
 			lumpSwap = qtrue;
@@ -918,7 +915,7 @@ int AnalyzeBSP( int argc, char** argv )
 	}
 
 	/* clean up map name */
-	strcpy( source, ExpandArg( argv[ i ] ) );
+	strcpy( source, ExpandArg( argv[i] ) );
 	Sys_Printf( "Loading %s\n", source );
 
 	/* load the file */
@@ -931,8 +928,8 @@ int AnalyzeBSP( int argc, char** argv )
 
 	/* analyze ident/version */
 	memcpy( ident, header->ident, 4 );
-	ident[ 4 ] = '\0';
-	version    = LittleLong( header->version );
+	ident[4] = '\0';
+	version	 = LittleLong( header->version );
 
 	Sys_Printf( "Identity:      %s\n", ident );
 	Sys_Printf( "Version:       %d\n", version );
@@ -944,23 +941,23 @@ int AnalyzeBSP( int argc, char** argv )
 		/* call of duty swapped lump pairs */
 		if( lumpSwap )
 		{
-			offset = LittleLong( header->lumps[ i ].length );
-			length = LittleLong( header->lumps[ i ].offset );
+			offset = LittleLong( header->lumps[i].length );
+			length = LittleLong( header->lumps[i].offset );
 		}
 
 		/* standard lump pairs */
 		else
 		{
-			offset = LittleLong( header->lumps[ i ].offset );
-			length = LittleLong( header->lumps[ i ].length );
+			offset = LittleLong( header->lumps[i].offset );
+			length = LittleLong( header->lumps[i].length );
 		}
 
 		/* extract data */
-		lump      = ( byte* )header + offset;
-		lumpInt   = LittleLong( ( int )*( ( int* )lump ) );
+		lump	  = ( byte* )header + offset;
+		lumpInt	  = LittleLong( ( int )*( ( int* )lump ) );
 		lumpFloat = LittleFloat( ( float )*( ( float* )lump ) );
 		memcpy( lumpString, ( char* )lump, ( length < 1024 ? length : 1024 ) );
-		lumpString[ 1024 ] = '\0';
+		lumpString[1024] = '\0';
 
 		/* print basic lump info */
 		Sys_Printf( "Lump:          %d\n", i );
@@ -977,7 +974,7 @@ int AnalyzeBSP( int argc, char** argv )
 			Sys_Printf( "As string:     %s\n", lumpString );
 
 			/* guess lump type */
-			if( lumpString[ 0 ] == '{' && lumpString[ 2 ] == '"' )
+			if( lumpString[0] == '{' && lumpString[2] == '"' )
 			{
 				Sys_Printf( "Type guess:    IBSP LUMP_ENTITIES\n" );
 			}
@@ -1028,9 +1025,9 @@ emits statistics about the bsp file
 
 int BSPInfo( int count, char** fileNames )
 {
-	int   i;
-	char  source[ 1024 ], ext[ 64 ];
-	int   size;
+	int	  i;
+	char  source[1024], ext[64];
+	int	  size;
 	FILE* f;
 
 	/* dummy check */
@@ -1049,7 +1046,7 @@ int BSPInfo( int count, char** fileNames )
 		Sys_Printf( "---------------------------------\n" );
 
 		/* mangle filename and get size */
-		strcpy( source, fileNames[ i ] );
+		strcpy( source, fileNames[i] );
 		ExtractFileExtension( source, ext );
 		if( !Q_stricmp( ext, "map" ) )
 		{
@@ -1085,14 +1082,25 @@ int BSPInfo( int count, char** fileNames )
 	return i;
 }
 
-static void ExtrapolateTexcoords( const float* axyz, const float* ast, const float* bxyz, const float* bst, const float* cxyz, const float* cst, const float* axyz_new, float* ast_out, const float* bxyz_new, float* bst_out, const float* cxyz_new, float* cst_out )
+static void ExtrapolateTexcoords( const float* axyz,
+	const float*							   ast,
+	const float*							   bxyz,
+	const float*							   bst,
+	const float*							   cxyz,
+	const float*							   cst,
+	const float*							   axyz_new,
+	float*									   ast_out,
+	const float*							   bxyz_new,
+	float*									   bst_out,
+	const float*							   cxyz_new,
+	float*									   cst_out )
 {
-	vec4_t   scoeffs, tcoeffs;
-	float    md;
+	vec4_t	 scoeffs, tcoeffs;
+	float	 md;
 	matrix_t solvematrix;
 
-	vec3_t norm;
-	vec3_t dab, dac;
+	vec3_t	 norm;
+	vec3_t	 dab, dac;
 
 	VectorSubtract( bxyz, axyz, dab );
 	VectorSubtract( cxyz, axyz, dac );
@@ -1110,22 +1118,22 @@ static void ExtrapolateTexcoords( const float* axyz, const float* ast, const flo
 	//   scoeffs * (cxyz, 1) == cst[0]
 	//   scoeffs * (norm, 0) == 0
 	// scoeffs * [axyz, 1 | bxyz, 1 | cxyz, 1 | norm, 0] = [ast[0], bst[0], cst[0], 0]
-	solvematrix[ 0 ]  = axyz[ 0 ];
-	solvematrix[ 4 ]  = axyz[ 1 ];
-	solvematrix[ 8 ]  = axyz[ 2 ];
-	solvematrix[ 12 ] = 1;
-	solvematrix[ 1 ]  = bxyz[ 0 ];
-	solvematrix[ 5 ]  = bxyz[ 1 ];
-	solvematrix[ 9 ]  = bxyz[ 2 ];
-	solvematrix[ 13 ] = 1;
-	solvematrix[ 2 ]  = cxyz[ 0 ];
-	solvematrix[ 6 ]  = cxyz[ 1 ];
-	solvematrix[ 10 ] = cxyz[ 2 ];
-	solvematrix[ 14 ] = 1;
-	solvematrix[ 3 ]  = norm[ 0 ];
-	solvematrix[ 7 ]  = norm[ 1 ];
-	solvematrix[ 11 ] = norm[ 2 ];
-	solvematrix[ 15 ] = 0;
+	solvematrix[0]	= axyz[0];
+	solvematrix[4]	= axyz[1];
+	solvematrix[8]	= axyz[2];
+	solvematrix[12] = 1;
+	solvematrix[1]	= bxyz[0];
+	solvematrix[5]	= bxyz[1];
+	solvematrix[9]	= bxyz[2];
+	solvematrix[13] = 1;
+	solvematrix[2]	= cxyz[0];
+	solvematrix[6]	= cxyz[1];
+	solvematrix[10] = cxyz[2];
+	solvematrix[14] = 1;
+	solvematrix[3]	= norm[0];
+	solvematrix[7]	= norm[1];
+	solvematrix[11] = norm[2];
+	solvematrix[15] = 0;
 
 	md = MatrixDet( solvematrix );
 	if( md * md < 1e-10 )
@@ -1136,23 +1144,23 @@ static void ExtrapolateTexcoords( const float* axyz, const float* ast, const flo
 
 	MatrixInverse( solvematrix );
 
-	scoeffs[ 0 ] = ast[ 0 ];
-	scoeffs[ 1 ] = bst[ 0 ];
-	scoeffs[ 2 ] = cst[ 0 ];
-	scoeffs[ 3 ] = 0;
+	scoeffs[0] = ast[0];
+	scoeffs[1] = bst[0];
+	scoeffs[2] = cst[0];
+	scoeffs[3] = 0;
 	MatrixTransformVec4( solvematrix, scoeffs );
-	tcoeffs[ 0 ] = ast[ 1 ];
-	tcoeffs[ 1 ] = bst[ 1 ];
-	tcoeffs[ 2 ] = cst[ 1 ];
-	tcoeffs[ 3 ] = 0;
+	tcoeffs[0] = ast[1];
+	tcoeffs[1] = bst[1];
+	tcoeffs[2] = cst[1];
+	tcoeffs[3] = 0;
 	MatrixTransformVec4( solvematrix, tcoeffs );
 
-	ast_out[ 0 ] = scoeffs[ 0 ] * axyz_new[ 0 ] + scoeffs[ 1 ] * axyz_new[ 1 ] + scoeffs[ 2 ] * axyz_new[ 2 ] + scoeffs[ 3 ];
-	ast_out[ 1 ] = tcoeffs[ 0 ] * axyz_new[ 0 ] + tcoeffs[ 1 ] * axyz_new[ 1 ] + tcoeffs[ 2 ] * axyz_new[ 2 ] + tcoeffs[ 3 ];
-	bst_out[ 0 ] = scoeffs[ 0 ] * bxyz_new[ 0 ] + scoeffs[ 1 ] * bxyz_new[ 1 ] + scoeffs[ 2 ] * bxyz_new[ 2 ] + scoeffs[ 3 ];
-	bst_out[ 1 ] = tcoeffs[ 0 ] * bxyz_new[ 0 ] + tcoeffs[ 1 ] * bxyz_new[ 1 ] + tcoeffs[ 2 ] * bxyz_new[ 2 ] + tcoeffs[ 3 ];
-	cst_out[ 0 ] = scoeffs[ 0 ] * cxyz_new[ 0 ] + scoeffs[ 1 ] * cxyz_new[ 1 ] + scoeffs[ 2 ] * cxyz_new[ 2 ] + scoeffs[ 3 ];
-	cst_out[ 1 ] = tcoeffs[ 0 ] * cxyz_new[ 0 ] + tcoeffs[ 1 ] * cxyz_new[ 1 ] + tcoeffs[ 2 ] * cxyz_new[ 2 ] + tcoeffs[ 3 ];
+	ast_out[0] = scoeffs[0] * axyz_new[0] + scoeffs[1] * axyz_new[1] + scoeffs[2] * axyz_new[2] + scoeffs[3];
+	ast_out[1] = tcoeffs[0] * axyz_new[0] + tcoeffs[1] * axyz_new[1] + tcoeffs[2] * axyz_new[2] + tcoeffs[3];
+	bst_out[0] = scoeffs[0] * bxyz_new[0] + scoeffs[1] * bxyz_new[1] + scoeffs[2] * bxyz_new[2] + scoeffs[3];
+	bst_out[1] = tcoeffs[0] * bxyz_new[0] + tcoeffs[1] * bxyz_new[1] + tcoeffs[2] * bxyz_new[2] + tcoeffs[3];
+	cst_out[0] = scoeffs[0] * cxyz_new[0] + scoeffs[1] * cxyz_new[1] + scoeffs[2] * cxyz_new[2] + scoeffs[3];
+	cst_out[1] = tcoeffs[0] * cxyz_new[0] + tcoeffs[1] * cxyz_new[1] + tcoeffs[2] * cxyz_new[2] + tcoeffs[3];
 }
 
 /*
@@ -1162,14 +1170,14 @@ amaze and confuse your enemies with wierd scaled maps!
 
 int ScaleBSPMain( int argc, char** argv )
 {
-	int      i, j;
-	float    f, a;
-	vec3_t   scale;
-	vec3_t   vec;
-	char     str[ 1024 ];
-	int      uniform, axis;
+	int		 i, j;
+	float	 f, a;
+	vec3_t	 scale;
+	vec3_t	 vec;
+	char	 str[1024];
+	int		 uniform, axis;
 	qboolean texscale;
-	float*   old_xyzst = NULL;
+	float*	 old_xyzst = NULL;
 
 	/* arg checking */
 	if( argc < 3 )
@@ -1179,21 +1187,21 @@ int ScaleBSPMain( int argc, char** argv )
 	}
 
 	/* get scale */
-	scale[ 2 ] = scale[ 1 ] = scale[ 0 ] = atof( argv[ argc - 2 ] );
+	scale[2] = scale[1] = scale[0] = atof( argv[argc - 2] );
 	if( argc >= 4 )
 	{
-		scale[ 1 ] = scale[ 0 ] = atof( argv[ argc - 3 ] );
+		scale[1] = scale[0] = atof( argv[argc - 3] );
 	}
 	if( argc >= 5 )
 	{
-		scale[ 0 ] = atof( argv[ argc - 4 ] );
+		scale[0] = atof( argv[argc - 4] );
 	}
 
-	texscale = !strcmp( argv[ 1 ], "-tex" );
+	texscale = !strcmp( argv[1], "-tex" );
 
-	uniform = ( ( scale[ 0 ] == scale[ 1 ] ) && ( scale[ 1 ] == scale[ 2 ] ) );
+	uniform = ( ( scale[0] == scale[1] ) && ( scale[1] == scale[2] ) );
 
-	if( scale[ 0 ] == 0.0f || scale[ 1 ] == 0.0f || scale[ 2 ] == 0.0f )
+	if( scale[0] == 0.0f || scale[1] == 0.0f || scale[2] == 0.0f )
 	{
 		Sys_Printf( "Usage: xmap2 [-v] -scale [-tex] <value> <mapname>\n" );
 		Sys_Printf( "Non-zero scale value required.\n" );
@@ -1201,7 +1209,7 @@ int ScaleBSPMain( int argc, char** argv )
 	}
 
 	/* do some path mangling */
-	strcpy( source, ExpandArg( argv[ argc - 1 ] ) );
+	strcpy( source, ExpandArg( argv[argc - 1] ) );
 	StripExtension( source );
 	DefaultExtension( source, ".bsp" );
 
@@ -1218,17 +1226,17 @@ int ScaleBSPMain( int argc, char** argv )
 	for( i = 0; i < numBSPEntities && i < numEntities; i++ )
 	{
 		/* scale origin */
-		GetVectorForKey( &entities[ i ], "origin", vec );
-		if( ( vec[ 0 ] || vec[ 1 ] || vec[ 2 ] ) )
+		GetVectorForKey( &entities[i], "origin", vec );
+		if( ( vec[0] || vec[1] || vec[2] ) )
 		{
-			vec[ 0 ] *= scale[ 0 ];
-			vec[ 1 ] *= scale[ 1 ];
-			vec[ 2 ] *= scale[ 2 ];
-			sprintf( str, "%f %f %f", vec[ 0 ], vec[ 1 ], vec[ 2 ] );
-			SetKeyValue( &entities[ i ], "origin", str );
+			vec[0] *= scale[0];
+			vec[1] *= scale[1];
+			vec[2] *= scale[2];
+			sprintf( str, "%f %f %f", vec[0], vec[1], vec[2] );
+			SetKeyValue( &entities[i], "origin", str );
 		}
 
-		a = FloatForKey( &entities[ i ], "angle" );
+		a = FloatForKey( &entities[i], "angle" );
 		if( a == -1 || a == -2 ) // z scale
 		{
 			axis = 2;
@@ -1243,21 +1251,21 @@ int ScaleBSPMain( int argc, char** argv )
 		}
 
 		/* scale door lip */
-		f = FloatForKey( &entities[ i ], "lip" );
+		f = FloatForKey( &entities[i], "lip" );
 		if( f )
 		{
-			f *= scale[ axis ];
+			f *= scale[axis];
 			sprintf( str, "%f", f );
-			SetKeyValue( &entities[ i ], "lip", str );
+			SetKeyValue( &entities[i], "lip", str );
 		}
 
 		/* scale plat height */
-		f = FloatForKey( &entities[ i ], "height" );
+		f = FloatForKey( &entities[i], "height" );
 		if( f )
 		{
-			f *= scale[ 2 ];
+			f *= scale[2];
 			sprintf( str, "%f", f );
-			SetKeyValue( &entities[ i ], "height", str );
+			SetKeyValue( &entities[i], "height", str );
 		}
 
 		// TODO maybe allow a definition file for entities to specify which values are scaled how?
@@ -1266,34 +1274,34 @@ int ScaleBSPMain( int argc, char** argv )
 	/* scale models */
 	for( i = 0; i < numBSPModels; i++ )
 	{
-		bspModels[ i ].mins[ 0 ] *= scale[ 0 ];
-		bspModels[ i ].mins[ 1 ] *= scale[ 1 ];
-		bspModels[ i ].mins[ 2 ] *= scale[ 2 ];
-		bspModels[ i ].maxs[ 0 ] *= scale[ 0 ];
-		bspModels[ i ].maxs[ 1 ] *= scale[ 1 ];
-		bspModels[ i ].maxs[ 2 ] *= scale[ 2 ];
+		bspModels[i].mins[0] *= scale[0];
+		bspModels[i].mins[1] *= scale[1];
+		bspModels[i].mins[2] *= scale[2];
+		bspModels[i].maxs[0] *= scale[0];
+		bspModels[i].maxs[1] *= scale[1];
+		bspModels[i].maxs[2] *= scale[2];
 	}
 
 	/* scale nodes */
 	for( i = 0; i < numBSPNodes; i++ )
 	{
-		bspNodes[ i ].mins[ 0 ] *= scale[ 0 ];
-		bspNodes[ i ].mins[ 1 ] *= scale[ 1 ];
-		bspNodes[ i ].mins[ 2 ] *= scale[ 2 ];
-		bspNodes[ i ].maxs[ 0 ] *= scale[ 0 ];
-		bspNodes[ i ].maxs[ 1 ] *= scale[ 1 ];
-		bspNodes[ i ].maxs[ 2 ] *= scale[ 2 ];
+		bspNodes[i].mins[0] *= scale[0];
+		bspNodes[i].mins[1] *= scale[1];
+		bspNodes[i].mins[2] *= scale[2];
+		bspNodes[i].maxs[0] *= scale[0];
+		bspNodes[i].maxs[1] *= scale[1];
+		bspNodes[i].maxs[2] *= scale[2];
 	}
 
 	/* scale leafs */
 	for( i = 0; i < numBSPLeafs; i++ )
 	{
-		bspLeafs[ i ].mins[ 0 ] *= scale[ 0 ];
-		bspLeafs[ i ].mins[ 1 ] *= scale[ 1 ];
-		bspLeafs[ i ].mins[ 2 ] *= scale[ 2 ];
-		bspLeafs[ i ].maxs[ 0 ] *= scale[ 0 ];
-		bspLeafs[ i ].maxs[ 1 ] *= scale[ 1 ];
-		bspLeafs[ i ].maxs[ 2 ] *= scale[ 2 ];
+		bspLeafs[i].mins[0] *= scale[0];
+		bspLeafs[i].mins[1] *= scale[1];
+		bspLeafs[i].mins[2] *= scale[2];
+		bspLeafs[i].maxs[0] *= scale[0];
+		bspLeafs[i].maxs[1] *= scale[1];
+		bspLeafs[i].maxs[2] *= scale[2];
 	}
 
 	if( texscale )
@@ -1302,50 +1310,49 @@ int ScaleBSPMain( int argc, char** argv )
 		old_xyzst = safe_malloc( sizeof( *old_xyzst ) * numBSPDrawVerts * 5 );
 		for( i = 0; i < numBSPDrawVerts; i++ )
 		{
-			old_xyzst[ 5 * i + 0 ] = bspDrawVerts[ i ].xyz[ 0 ];
-			old_xyzst[ 5 * i + 1 ] = bspDrawVerts[ i ].xyz[ 1 ];
-			old_xyzst[ 5 * i + 2 ] = bspDrawVerts[ i ].xyz[ 2 ];
-			old_xyzst[ 5 * i + 3 ] = bspDrawVerts[ i ].st[ 0 ];
-			old_xyzst[ 5 * i + 4 ] = bspDrawVerts[ i ].st[ 1 ];
+			old_xyzst[5 * i + 0] = bspDrawVerts[i].xyz[0];
+			old_xyzst[5 * i + 1] = bspDrawVerts[i].xyz[1];
+			old_xyzst[5 * i + 2] = bspDrawVerts[i].xyz[2];
+			old_xyzst[5 * i + 3] = bspDrawVerts[i].st[0];
+			old_xyzst[5 * i + 4] = bspDrawVerts[i].st[1];
 		}
 	}
 
 	/* scale drawverts */
 	for( i = 0; i < numBSPDrawVerts; i++ )
 	{
-		bspDrawVerts[ i ].xyz[ 0 ] *= scale[ 0 ];
-		bspDrawVerts[ i ].xyz[ 1 ] *= scale[ 1 ];
-		bspDrawVerts[ i ].xyz[ 2 ] *= scale[ 2 ];
-		bspDrawVerts[ i ].normal[ 0 ] /= scale[ 0 ];
-		bspDrawVerts[ i ].normal[ 1 ] /= scale[ 1 ];
-		bspDrawVerts[ i ].normal[ 2 ] /= scale[ 2 ];
-		VectorNormalize( bspDrawVerts[ i ].normal );
+		bspDrawVerts[i].xyz[0] *= scale[0];
+		bspDrawVerts[i].xyz[1] *= scale[1];
+		bspDrawVerts[i].xyz[2] *= scale[2];
+		bspDrawVerts[i].normal[0] /= scale[0];
+		bspDrawVerts[i].normal[1] /= scale[1];
+		bspDrawVerts[i].normal[2] /= scale[2];
+		VectorNormalize( bspDrawVerts[i].normal );
 	}
 
 	if( texscale )
 	{
 		for( i = 0; i < numBSPDrawSurfaces; i++ )
 		{
-			switch( bspDrawSurfaces[ i ].surfaceType )
+			switch( bspDrawSurfaces[i].surfaceType )
 			{
 				case SURFACE_FACE:
 				case SURFACE_META:
-					if( bspDrawSurfaces[ i ].numIndexes % 3 )
+					if( bspDrawSurfaces[i].numIndexes % 3 )
 					{
 						Error( "Not a triangulation!" );
 					}
-					for( j = bspDrawSurfaces[ i ].firstIndex; j < bspDrawSurfaces[ i ].firstIndex + bspDrawSurfaces[ i ].numIndexes;
-						 j += 3 )
+					for( j = bspDrawSurfaces[i].firstIndex; j < bspDrawSurfaces[i].firstIndex + bspDrawSurfaces[i].numIndexes; j += 3 )
 					{
-						int            ia = bspDrawIndexes[ j ] + bspDrawSurfaces[ i ].firstVert, ib = bspDrawIndexes[ j + 1 ] + bspDrawSurfaces[ i ].firstVert, ic = bspDrawIndexes[ j + 2 ] + bspDrawSurfaces[ i ].firstVert;
-						bspDrawVert_t *a = &bspDrawVerts[ ia ], *b = &bspDrawVerts[ ib ], *c = &bspDrawVerts[ ic ];
-						float *        oa = &old_xyzst[ ia * 5 ], *ob = &old_xyzst[ ib * 5 ], *oc = &old_xyzst[ ic * 5 ];
+						int ia = bspDrawIndexes[j] + bspDrawSurfaces[i].firstVert, ib = bspDrawIndexes[j + 1] + bspDrawSurfaces[i].firstVert, ic = bspDrawIndexes[j + 2] + bspDrawSurfaces[i].firstVert;
+						bspDrawVert_t *a = &bspDrawVerts[ia], *b = &bspDrawVerts[ib], *c = &bspDrawVerts[ic];
+						float *		   oa = &old_xyzst[ia * 5], *ob = &old_xyzst[ib * 5], *oc = &old_xyzst[ic * 5];
 
 						// extrapolate:
 						//   a->xyz -> oa
 						//   b->xyz -> ob
 						//   c->xyz -> oc
-						ExtrapolateTexcoords( &oa[ 0 ], &oa[ 3 ], &ob[ 0 ], &ob[ 3 ], &oc[ 0 ], &oc[ 3 ], a->xyz, a->st, b->xyz, b->st, c->xyz, c->st );
+						ExtrapolateTexcoords( &oa[0], &oa[3], &ob[0], &ob[3], &oc[0], &oc[3], a->xyz, a->st, b->xyz, b->st, c->xyz, c->st );
 					}
 					break;
 			}
@@ -1357,33 +1364,33 @@ int ScaleBSPMain( int argc, char** argv )
 	{
 		for( i = 0; i < numBSPPlanes; i++ )
 		{
-			bspPlanes[ i ].dist *= scale[ 0 ];
+			bspPlanes[i].dist *= scale[0];
 		}
 	}
 	else
 	{
 		for( i = 0; i < numBSPPlanes; i++ )
 		{
-			bspPlanes[ i ].normal[ 0 ] /= scale[ 0 ];
-			bspPlanes[ i ].normal[ 1 ] /= scale[ 1 ];
-			bspPlanes[ i ].normal[ 2 ] /= scale[ 2 ];
-			f = 1 / VectorLength( bspPlanes[ i ].normal );
-			VectorScale( bspPlanes[ i ].normal, f, bspPlanes[ i ].normal );
-			bspPlanes[ i ].dist *= f;
+			bspPlanes[i].normal[0] /= scale[0];
+			bspPlanes[i].normal[1] /= scale[1];
+			bspPlanes[i].normal[2] /= scale[2];
+			f = 1 / VectorLength( bspPlanes[i].normal );
+			VectorScale( bspPlanes[i].normal, f, bspPlanes[i].normal );
+			bspPlanes[i].dist *= f;
 		}
 	}
 
 	/* scale gridsize */
-	GetVectorForKey( &entities[ 0 ], "gridsize", vec );
-	if( ( vec[ 0 ] + vec[ 1 ] + vec[ 2 ] ) == 0.0f )
+	GetVectorForKey( &entities[0], "gridsize", vec );
+	if( ( vec[0] + vec[1] + vec[2] ) == 0.0f )
 	{
 		VectorCopy( gridSize, vec );
 	}
-	vec[ 0 ] *= scale[ 0 ];
-	vec[ 1 ] *= scale[ 1 ];
-	vec[ 2 ] *= scale[ 2 ];
-	sprintf( str, "%f %f %f", vec[ 0 ], vec[ 1 ], vec[ 2 ] );
-	SetKeyValue( &entities[ 0 ], "gridsize", str );
+	vec[0] *= scale[0];
+	vec[1] *= scale[1];
+	vec[2] *= scale[2];
+	sprintf( str, "%f %f %f", vec[0], vec[1], vec[2] );
+	SetKeyValue( &entities[0], "gridsize", str );
 
 	/* inject command line parameters */
 	InjectCommandLine( argv, 0, argc - 1 );
@@ -1425,42 +1432,42 @@ int ConvertBSPMain( int argc, char** argv )
 	for( i = 1; i < ( argc - 1 ); i++ )
 	{
 		/* -format map|ase|... */
-		if( !strcmp( argv[ i ], "-format" ) )
+		if( !strcmp( argv[i], "-format" ) )
 		{
 			i++;
-			if( !Q_stricmp( argv[ i ], "ase" ) )
+			if( !Q_stricmp( argv[i], "ase" ) )
 			{
 				convertFunc = ConvertBSPToASE;
 			}
-			else if( !Q_stricmp( argv[ i ], "map" ) )
+			else if( !Q_stricmp( argv[i], "map" ) )
 			{
 				convertFunc = ConvertBSPToMap;
 			}
 			else
 			{
-				convertGame = GetGame( argv[ i ] );
+				convertGame = GetGame( argv[i] );
 				if( convertGame == NULL )
 				{
-					Sys_Printf( "Unknown conversion format \"%s\". Defaulting to ASE.\n", argv[ i ] );
+					Sys_Printf( "Unknown conversion format \"%s\". Defaulting to ASE.\n", argv[i] );
 				}
 			}
 		}
-		else if( !strcmp( argv[ i ], "-ne" ) )
+		else if( !strcmp( argv[i], "-ne" ) )
 		{
-			normalEpsilon = atof( argv[ i + 1 ] );
+			normalEpsilon = atof( argv[i + 1] );
 			i++;
 			Sys_Printf( "Normal epsilon set to %f\n", normalEpsilon );
 		}
-		else if( !strcmp( argv[ i ], "-de" ) )
+		else if( !strcmp( argv[i], "-de" ) )
 		{
-			distanceEpsilon = atof( argv[ i + 1 ] );
+			distanceEpsilon = atof( argv[i + 1] );
 			i++;
 			Sys_Printf( "Distance epsilon set to %f\n", distanceEpsilon );
 		}
 	}
 
 	/* clean up map name */
-	strcpy( source, ExpandArg( argv[ i ] ) );
+	strcpy( source, ExpandArg( argv[i] ) );
 	StripExtension( source );
 	DefaultExtension( source, ".bsp" );
 
@@ -1503,14 +1510,14 @@ WriteMapFileDoom3
 */
 void WriteMapFileDoom3( char* filename )
 {
-	FILE*        f;
-	int          i, j, k, l;
-	entity_t*    entity;
-	epair_t*     ep;
-	brush_t*     brush;
-	side_t*      side;
-	plane_t*     plane;
-	parseMesh_t* pm;
+	FILE*		  f;
+	int			  i, j, k, l;
+	entity_t*	  entity;
+	epair_t*	  ep;
+	brush_t*	  brush;
+	side_t*		  side;
+	plane_t*	  plane;
+	parseMesh_t*  pm;
 
 	//  winding_t      *w;
 	shaderInfo_t* si;
@@ -1526,7 +1533,7 @@ void WriteMapFileDoom3( char* filename )
 
 	for( i = 0; i < numEntities; i++ )
 	{
-		entity = &entities[ i ];
+		entity = &entities[i];
 
 		// write entity header
 		fprintf( f, "// entity %i\n", i );
@@ -1548,9 +1555,9 @@ void WriteMapFileDoom3( char* filename )
 			for( k = 0, side = brush->sides; k < brush->numsides; k++, side++ )
 			{
 				// write plane equation
-				plane = &mapplanes[ side->planenum ];
+				plane = &mapplanes[side->planenum];
 
-				fprintf( f, "( %f %f %f %f ) ", plane->normal[ 0 ], plane->normal[ 1 ], plane->normal[ 2 ], -plane->dist );
+				fprintf( f, "( %f %f %f %f ) ", plane->normal[0], plane->normal[1], plane->normal[2], -plane->dist );
 
 				// write texture matrix
 				if( g_bBrushPrimit == BPRIMIT_OLDBRUSHES )
@@ -1558,16 +1565,16 @@ void WriteMapFileDoom3( char* filename )
 					// old quake-style texturing
 					// Tr3B: ported code from Q3Radiant void FaceToBrushPrimitFace(face_t *f)
 
-					float STfromXYZ[ 2 ][ 4 ];
-					float texMat[ 2 ][ 3 ];
+					float  STfromXYZ[2][4];
+					float  texMat[2][3];
 
 					vec3_t texX, texY;
 					vec3_t proj;
 
 					// ST of (0,0) (1,0) (0,1)
-					vec_t ST[ 3 ][ 5 ]; // [ point index ] [ xyz ST ]
+					vec_t  ST[3][5]; // [ point index ] [ xyz ST ]
 
-#if 0 //def _DEBUG
+#if 0 // def _DEBUG
 					if( f->plane.normal[0] == 0.0f && f->plane.normal[1] == 0.0f && f->plane.normal[2] == 0.0f )
 					{
 						Sys_Printf( "Warning : f->plane.normal is (0,0,0) in FaceToBrushPrimitFace\n" );
@@ -1575,47 +1582,47 @@ void WriteMapFileDoom3( char* filename )
 #endif
 
 					// compute axis base
-					ComputeAxisBase( mapplanes[ side->planenum ].normal, texX, texY );
+					ComputeAxisBase( mapplanes[side->planenum].normal, texX, texY );
 
 					// compute projection vector
-					VectorCopy( mapplanes[ side->planenum ].normal, proj );
-					VectorScale( proj, mapplanes[ side->planenum ].dist, proj );
+					VectorCopy( mapplanes[side->planenum].normal, proj );
+					VectorScale( proj, mapplanes[side->planenum].dist, proj );
 
 					si = side->shaderInfo;
 					for( l = 0; l < 4; l++ )
 					{
-						STfromXYZ[ 0 ][ l ] = side->vecs[ 0 ][ l ];
-						STfromXYZ[ 1 ][ l ] = side->vecs[ 1 ][ l ];
+						STfromXYZ[0][l] = side->vecs[0][l];
+						STfromXYZ[1][l] = side->vecs[1][l];
 
-						STfromXYZ[ 0 ][ l ] /= si->shaderWidth;
-						STfromXYZ[ 1 ][ l ] /= si->shaderHeight;
+						STfromXYZ[0][l] /= si->shaderWidth;
+						STfromXYZ[1][l] /= si->shaderHeight;
 					}
 
 					// (0,0) in plane axis base is (0,0,0) in world coordinates + projection on the affine plane
 					// (1,0) in plane axis base is texX in world coordinates + projection on the affine plane
 					// (0,1) in plane axis base is texY in world coordinates + projection on the affine plane
 					// use old texture code to compute the ST coords of these points
-					VectorCopy( proj, ST[ 0 ] );
-					ST[ 0 ][ 3 ] = DotProduct( ST[ 0 ], STfromXYZ[ 0 ] ) + STfromXYZ[ 0 ][ 3 ];
-					ST[ 0 ][ 4 ] = DotProduct( ST[ 0 ], STfromXYZ[ 1 ] ) + STfromXYZ[ 1 ][ 3 ];
+					VectorCopy( proj, ST[0] );
+					ST[0][3] = DotProduct( ST[0], STfromXYZ[0] ) + STfromXYZ[0][3];
+					ST[0][4] = DotProduct( ST[0], STfromXYZ[1] ) + STfromXYZ[1][3];
 
-					VectorCopy( texX, ST[ 1 ] );
-					VectorAdd( ST[ 1 ], proj, ST[ 1 ] );
-					ST[ 1 ][ 3 ] = DotProduct( ST[ 1 ], STfromXYZ[ 0 ] ) + STfromXYZ[ 0 ][ 3 ];
-					ST[ 1 ][ 4 ] = DotProduct( ST[ 1 ], STfromXYZ[ 1 ] ) + STfromXYZ[ 1 ][ 3 ];
+					VectorCopy( texX, ST[1] );
+					VectorAdd( ST[1], proj, ST[1] );
+					ST[1][3] = DotProduct( ST[1], STfromXYZ[0] ) + STfromXYZ[0][3];
+					ST[1][4] = DotProduct( ST[1], STfromXYZ[1] ) + STfromXYZ[1][3];
 
-					VectorCopy( texY, ST[ 2 ] );
-					VectorAdd( ST[ 2 ], proj, ST[ 2 ] );
-					ST[ 2 ][ 3 ] = DotProduct( ST[ 2 ], STfromXYZ[ 0 ] ) + STfromXYZ[ 0 ][ 3 ];
-					ST[ 2 ][ 4 ] = DotProduct( ST[ 2 ], STfromXYZ[ 1 ] ) + STfromXYZ[ 1 ][ 3 ];
+					VectorCopy( texY, ST[2] );
+					VectorAdd( ST[2], proj, ST[2] );
+					ST[2][3] = DotProduct( ST[2], STfromXYZ[0] ) + STfromXYZ[0][3];
+					ST[2][4] = DotProduct( ST[2], STfromXYZ[1] ) + STfromXYZ[1][3];
 
 					// compute texture matrix
-					texMat[ 0 ][ 2 ] = ST[ 0 ][ 3 ];
-					texMat[ 1 ][ 2 ] = ST[ 0 ][ 4 ];
-					texMat[ 0 ][ 0 ] = ST[ 1 ][ 3 ] - texMat[ 0 ][ 2 ];
-					texMat[ 1 ][ 0 ] = ST[ 1 ][ 4 ] - texMat[ 1 ][ 2 ];
-					texMat[ 0 ][ 1 ] = ST[ 2 ][ 3 ] - texMat[ 0 ][ 2 ];
-					texMat[ 1 ][ 1 ] = ST[ 2 ][ 4 ] - texMat[ 1 ][ 2 ];
+					texMat[0][2] = ST[0][3];
+					texMat[1][2] = ST[0][4];
+					texMat[0][0] = ST[1][3] - texMat[0][2];
+					texMat[1][0] = ST[1][4] - texMat[1][2];
+					texMat[0][1] = ST[2][3] - texMat[0][2];
+					texMat[1][1] = ST[2][4] - texMat[1][2];
 
 					Write2DMatrix( f, 2, 3, ( float* )texMat );
 				}
@@ -1665,10 +1672,10 @@ void WriteMapFileDoom3( char* filename )
 
 			// write patch dimensions
 			if( pm->patchDef3 )
-				fprintf( f, "( %i %i %i %i %i %i %i )\n", ( int )pm->info[ 0 ], ( int )pm->info[ 1 ], ( int )pm->info[ 2 ], ( int )pm->info[ 3 ], ( int )pm->info[ 4 ], ( int )pm->info[ 5 ], ( int )pm->info[ 6 ] );
+				fprintf( f, "( %i %i %i %i %i %i %i )\n", ( int )pm->info[0], ( int )pm->info[1], ( int )pm->info[2], ( int )pm->info[3], ( int )pm->info[4], ( int )pm->info[5], ( int )pm->info[6] );
 			else
 
-				fprintf( f, "( %i %i %i %i %i )\n", ( int )pm->info[ 0 ], ( int )pm->info[ 1 ], ( int )pm->info[ 2 ], ( int )pm->info[ 3 ], ( int )pm->info[ 4 ] );
+				fprintf( f, "( %i %i %i %i %i )\n", ( int )pm->info[0], ( int )pm->info[1], ( int )pm->info[2], ( int )pm->info[3], ( int )pm->info[4] );
 
 			fprintf( f, "(\n" );
 			for( k = 0; k < pm->mesh.width; k++ )
@@ -1677,7 +1684,7 @@ void WriteMapFileDoom3( char* filename )
 				for( l = 0; l < pm->mesh.height; l++ )
 				{
 					// write drawVert_t::xyz + st
-					Write1DMatrix( f, 5, pm->mesh.verts[ l * pm->mesh.width + k ].xyz );
+					Write1DMatrix( f, 5, pm->mesh.verts[l * pm->mesh.width + k].xyz );
 				}
 				fprintf( f, ")\n" );
 			}
@@ -1703,50 +1710,50 @@ void WriteMapFileDoom3( char* filename )
 int ConvertMapMain( int argc, char** argv )
 {
 	int i;
-	//const char     *name;
-	//int             (*convertFunc) (char *);
-	//game_t         *convertGame;
+	// const char     *name;
+	// int             (*convertFunc) (char *);
+	// game_t         *convertGame;
 
 	// set default
 	convertType = CONVERT_QUAKE3;
-	//convertGame = NULL;
+	// convertGame = NULL;
 
 	// process arguments
 	for( i = 1; i < ( argc - 1 ); i++ )
 	{
 		/* -format map|ase|... */
-		if( !strcmp( argv[ i ], "-format" ) )
+		if( !strcmp( argv[i], "-format" ) )
 		{
 			i++;
-			if( !Q_stricmp( argv[ i ], "quake3" ) )
+			if( !Q_stricmp( argv[i], "quake3" ) )
 			{
 				convertType = CONVERT_QUAKE3;
 				Sys_Printf( "converting from Quake 3 to Doom 3\n" );
 			}
-			else if( !Q_stricmp( argv[ i ], "quake4" ) )
+			else if( !Q_stricmp( argv[i], "quake4" ) )
 			{
 				convertType = CONVERT_QUAKE4;
 				Sys_Printf( "converting from Quake 3 to Doom 3\n" );
 			}
 			else
 			{
-				//convertGame = GetGame(argv[i]);
-				//if(convertGame == NULL)
+				// convertGame = GetGame(argv[i]);
+				// if(convertGame == NULL)
 				{
 					convertType = CONVERT_QUAKE3;
-					Sys_Printf( "Unknown conversion format \"%s\". Defaulting to Quake 3.\n", argv[ i ] );
+					Sys_Printf( "Unknown conversion format \"%s\". Defaulting to Quake 3.\n", argv[i] );
 				}
 			}
 		}
-		else if( !strcmp( argv[ i ], "-ne" ) )
+		else if( !strcmp( argv[i], "-ne" ) )
 		{
-			normalEpsilon = atof( argv[ i + 1 ] );
+			normalEpsilon = atof( argv[i + 1] );
 			i++;
 			Sys_Printf( "Normal epsilon set to %f\n", normalEpsilon );
 		}
-		else if( !strcmp( argv[ i ], "-de" ) )
+		else if( !strcmp( argv[i], "-de" ) )
 		{
-			distanceEpsilon = atof( argv[ i + 1 ] );
+			distanceEpsilon = atof( argv[i + 1] );
 			i++;
 			Sys_Printf( "Distance epsilon set to %f\n", distanceEpsilon );
 		}
@@ -1765,7 +1772,7 @@ int ConvertMapMain( int argc, char** argv )
 	}
 
 	/* clean up map name */
-	strcpy( source, ExpandArg( argv[ i ] ) );
+	strcpy( source, ExpandArg( argv[i] ) );
 	StripExtension( source );
 	DefaultExtension( source, ".map" );
 
@@ -1782,7 +1789,7 @@ int ConvertMapMain( int argc, char** argv )
 		mapEnt = &entities[numEntities];
 		numEntities++;
 		memcpy(mapEnt, &convertDetailBrushesFuncStaticEntity, sizeof(*mapEnt));
-	
+
 		// true entity numbering
 		mapEnt->mapEntityNum = numMapEntities;
 		numMapEntities++;
@@ -1804,7 +1811,7 @@ q3map mojo...
 
 int main( int argc, char** argv )
 {
-	int    i, r;
+	int	   i, r;
 	double start, end;
 
 	/* we want consistent 'randomness' */
@@ -1823,38 +1830,38 @@ int main( int argc, char** argv )
 	for( i = 1; i < argc; i++ )
 	{
 		/* -connect */
-		if( !strcmp( argv[ i ], "-connect" ) )
+		if( !strcmp( argv[i], "-connect" ) )
 		{
-			argv[ i ] = NULL;
+			argv[i] = NULL;
 			i++;
-			Broadcast_Setup( argv[ i ] );
-			argv[ i ] = NULL;
+			Broadcast_Setup( argv[i] );
+			argv[i] = NULL;
 		}
 
 		/* verbose */
-		else if( !strcmp( argv[ i ], "-v" ) )
+		else if( !strcmp( argv[i], "-v" ) )
 		{
 			if( !verbose )
 			{
-				verbose   = qtrue;
-				argv[ i ] = NULL;
+				verbose = qtrue;
+				argv[i] = NULL;
 			}
 		}
 
 		/* force */
-		else if( !strcmp( argv[ i ], "-force" ) )
+		else if( !strcmp( argv[i], "-force" ) )
 		{
-			force     = qtrue;
-			argv[ i ] = NULL;
+			force	= qtrue;
+			argv[i] = NULL;
 		}
 
 		/* patch subdivisions */
-		else if( !strcmp( argv[ i ], "-subdivisions" ) )
+		else if( !strcmp( argv[i], "-subdivisions" ) )
 		{
-			argv[ i ] = NULL;
+			argv[i] = NULL;
 			i++;
-			patchSubdivisions = atoi( argv[ i ] );
-			argv[ i ]         = NULL;
+			patchSubdivisions = atoi( argv[i] );
+			argv[i]			  = NULL;
 			if( patchSubdivisions <= 0 )
 			{
 				patchSubdivisions = 1;
@@ -1862,12 +1869,12 @@ int main( int argc, char** argv )
 		}
 
 		/* threads */
-		else if( !strcmp( argv[ i ], "-threads" ) )
+		else if( !strcmp( argv[i], "-threads" ) )
 		{
-			argv[ i ] = NULL;
+			argv[i] = NULL;
 			i++;
-			numthreads = atoi( argv[ i ] );
-			argv[ i ]  = NULL;
+			numthreads = atoi( argv[i] );
+			argv[i]	   = NULL;
 		}
 	}
 
@@ -1885,7 +1892,7 @@ int main( int argc, char** argv )
 	/* generate sinusoid jitter table */
 	for( i = 0; i < MAX_JITTERS; i++ )
 	{
-		jitters[ i ] = sin( i * 139.54152147 );
+		jitters[i] = sin( i * 139.54152147 );
 		//% Sys_Printf( "Jitter %4d: %f\n", i, jitters[ i ] );
 	}
 
@@ -1909,73 +1916,73 @@ int main( int argc, char** argv )
 	/* check if we have enough options left to attempt something */
 	if( argc < 2 )
 	{
-		Error( "Usage: %s [general options] [options] mapfile", argv[ 0 ] );
+		Error( "Usage: %s [general options] [options] mapfile", argv[0] );
 	}
 
 	/* analyze */
-	if( !strcmp( argv[ 1 ], "-analyze" ) )
+	if( !strcmp( argv[1], "-analyze" ) )
 	{
 		r = AnalyzeBSP( argc - 1, argv + 1 );
 	}
 
 	/* info */
-	else if( !strcmp( argv[ 1 ], "-info" ) )
+	else if( !strcmp( argv[1], "-info" ) )
 	{
 		r = BSPInfo( argc - 2, argv + 2 );
 	}
 
 	/* vis */
-	else if( !strcmp( argv[ 1 ], "-vis" ) )
+	else if( !strcmp( argv[1], "-vis" ) )
 	{
 		r = VisMain( argc - 1, argv + 1 );
 	}
 
 	/* light */
-	else if( !strcmp( argv[ 1 ], "-light" ) )
+	else if( !strcmp( argv[1], "-light" ) )
 	{
 		r = LightMain( argc - 1, argv + 1 );
 	}
 
 	/* vlight */
-	else if( !strcmp( argv[ 1 ], "-vlight" ) )
+	else if( !strcmp( argv[1], "-vlight" ) )
 	{
 		Sys_Printf( "WARNING: VLight is no longer supported, defaulting to -light -fast instead\n\n" );
-		argv[ 1 ] = "-fast"; /* eek a hack */
-		r         = LightMain( argc, argv );
+		argv[1] = "-fast"; /* eek a hack */
+		r		= LightMain( argc, argv );
 	}
 
 	/* ydnar: lightmap export */
-	else if( !strcmp( argv[ 1 ], "-export" ) )
+	else if( !strcmp( argv[1], "-export" ) )
 	{
 		r = ExportLightmapsMain( argc - 1, argv + 1 );
 	}
 
 	/* ydnar: lightmap import */
-	else if( !strcmp( argv[ 1 ], "-import" ) )
+	else if( !strcmp( argv[1], "-import" ) )
 	{
 		r = ImportLightmapsMain( argc - 1, argv + 1 );
 	}
 
 	/* ydnar: bsp scaling */
-	else if( !strcmp( argv[ 1 ], "-scale" ) )
+	else if( !strcmp( argv[1], "-scale" ) )
 	{
 		r = ScaleBSPMain( argc - 1, argv + 1 );
 	}
 
 	/* ydnar: bsp conversion */
-	else if( !strcmp( argv[ 1 ], "-convert" ) )
+	else if( !strcmp( argv[1], "-convert" ) )
 	{
 		r = ConvertBSPMain( argc - 1, argv + 1 );
 	}
 
 	/* Tr3B: map conversion */
-	else if( !strcmp( argv[ 1 ], "-map2map" ) )
+	else if( !strcmp( argv[1], "-map2map" ) )
 	{
 		r = ConvertMapMain( argc - 1, argv + 1 );
 	}
 
 	/* div0: minimap */
-	else if( !strcmp( argv[ 1 ], "-minimap" ) )
+	else if( !strcmp( argv[1], "-minimap" ) )
 	{
 		r = MiniMapBSPMain( argc - 1, argv + 1 );
 	}

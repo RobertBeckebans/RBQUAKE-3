@@ -40,7 +40,7 @@ static int game_Print( lua_State* L )
 		const char* s;
 
 		lua_pushvalue( L, -1 ); // function to be called
-		lua_pushvalue( L, i );  // value to print
+		lua_pushvalue( L, i );	// value to print
 		lua_call( L, 1, 1 );
 		s = lua_tostring( L, -1 ); // get result
 
@@ -58,9 +58,9 @@ static int game_Print( lua_State* L )
 
 static int game_Broadcast( lua_State* L )
 {
-	int  i;
-	char buf[ MAX_STRING_CHARS ];
-	int  n = lua_gettop( L ); // number of arguments
+	int	 i;
+	char buf[MAX_STRING_CHARS];
+	int	 n = lua_gettop( L ); // number of arguments
 
 	memset( buf, 0, sizeof( buf ) );
 
@@ -70,7 +70,7 @@ static int game_Broadcast( lua_State* L )
 		const char* s;
 
 		lua_pushvalue( L, -1 ); // function to be called
-		lua_pushvalue( L, i );  // value to print
+		lua_pushvalue( L, i );	// value to print
 		lua_call( L, 1, 1 );
 		s = lua_tostring( L, -1 ); // get result
 
@@ -89,13 +89,9 @@ static int game_Broadcast( lua_State* L )
 	return 0;
 }
 
-static const luaL_reg gamelib[] = {
-	{ "Print", game_Print },
-	{ "Broadcast", game_Broadcast },
-	{ NULL, NULL }
-};
+static const luaL_reg gamelib[] = { { "Print", game_Print }, { "Broadcast", game_Broadcast }, { NULL, NULL } };
 
-int luaopen_game( lua_State* L )
+int					  luaopen_game( lua_State* L )
 {
 	luaL_register( L, "game", gamelib );
 

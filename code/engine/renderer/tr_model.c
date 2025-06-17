@@ -29,8 +29,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 qboolean R_LoadMD3( model_t* mod, int lod, void* buffer, int bufferSize, const char* name );
 
 #if defined( COMPAT_ET )
-qboolean        R_LoadMDC( model_t* mod, int lod, void* buffer, int bufferSize, const char* name );
-qboolean        R_LoadMDM( model_t* mod, void* buffer, const char* name );
+qboolean		R_LoadMDC( model_t* mod, int lod, void* buffer, int bufferSize, const char* name );
+qboolean		R_LoadMDM( model_t* mod, void* buffer, const char* name );
 static qboolean R_LoadMDX( model_t* mod, void* buffer, const char* name );
 #endif
 
@@ -49,10 +49,10 @@ model_t* R_GetModelByHandle( qhandle_t index )
 	// out of range gets the defualt model
 	if( index < 1 || index >= tr.numModels )
 	{
-		return tr.models[ 0 ];
+		return tr.models[0];
 	}
 
-	mod = tr.models[ index ];
+	mod = tr.models[index];
 
 	return mod;
 }
@@ -71,9 +71,9 @@ model_t* R_AllocModel( void )
 		return NULL;
 	}
 
-	mod                       = ri.Hunk_Alloc( sizeof( *tr.models[ tr.numModels ] ), h_low );
-	mod->index                = tr.numModels;
-	tr.models[ tr.numModels ] = mod;
+	mod						= ri.Hunk_Alloc( sizeof( *tr.models[tr.numModels] ), h_low );
+	mod->index				= tr.numModels;
+	tr.models[tr.numModels] = mod;
 	tr.numModels++;
 
 	return mod;
@@ -95,14 +95,14 @@ qhandle_t RE_RegisterModel( const char* name )
 {
 	model_t*  mod;
 	unsigned* buffer;
-	int       bufferLen = 0;
-	int       lod;
-	int       ident;
+	int		  bufferLen = 0;
+	int		  lod;
+	int		  ident;
 	qboolean  loaded;
 	qhandle_t hModel;
-	int       numLoaded;
+	int		  numLoaded;
 
-	if( !name || !name[ 0 ] )
+	if( !name || !name[0] )
 	{
 		ri.Printf( PRINT_DEVELOPER, "RE_RegisterModel: NULL name\n" );
 		return 0;
@@ -117,7 +117,7 @@ qhandle_t RE_RegisterModel( const char* name )
 	// search the currently loaded models
 	for( hModel = 1; hModel < tr.numModels; hModel++ )
 	{
-		mod = tr.models[ hModel ];
+		mod = tr.models[hModel];
 		if( !strcmp( mod->name, name ) )
 		{
 			if( mod->type == MOD_BAD )
@@ -154,7 +154,7 @@ qhandle_t RE_RegisterModel( const char* name )
 	{
 		// try loading skeletal file
 
-		loaded    = qfalse;
+		loaded	  = qfalse;
 		bufferLen = ri.FS_ReadFile( name, ( void** )&buffer );
 		if( buffer )
 		{
@@ -204,13 +204,13 @@ qhandle_t RE_RegisterModel( const char* name )
 
 	for( lod = MD3_MAX_LODS - 1; lod >= 0; lod-- )
 	{
-		char filename[ 1024 ];
+		char filename[1024];
 
 		strcpy( filename, name );
 
 		if( lod != 0 )
 		{
-			char namebuf[ 80 ];
+			char namebuf[80];
 
 			if( strrchr( filename, '.' ) )
 			{
@@ -220,12 +220,12 @@ qhandle_t RE_RegisterModel( const char* name )
 			strcat( filename, namebuf );
 		}
 
-		filename[ strlen( filename ) - 1 ] = 'c'; // try MDC first
+		filename[strlen( filename ) - 1] = 'c'; // try MDC first
 		ri.FS_ReadFile( filename, ( void** )&buffer );
 
 		if( !buffer )
 		{
-			filename[ strlen( filename ) - 1 ] = '3'; // try MD3 second
+			filename[strlen( filename ) - 1] = '3'; // try MD3 second
 			ri.FS_ReadFile( filename, ( void** )&buffer );
 			if( !buffer )
 			{
@@ -296,7 +296,7 @@ qhandle_t RE_RegisterModel( const char* name )
 		for( lod--; lod >= 0; lod-- )
 		{
 			mod->numLods++;
-			mod->mdv[ lod ] = mod->mdv[ lod + 1 ];
+			mod->mdv[lod] = mod->mdv[lod + 1];
 		}
 
 		return mod->index;
@@ -328,14 +328,14 @@ R_LoadMDX
 #if defined( COMPAT_ET )
 static qboolean R_LoadMDX( model_t* mod, void* buffer, const char* mod_name )
 {
-	int            i, j;
+	int			   i, j;
 	mdxHeader_t *  pinmodel, *mdx;
-	mdxFrame_t*    frame;
-	short*         bframe;
+	mdxFrame_t*	   frame;
+	short*		   bframe;
 	mdxBoneInfo_t* bi;
-	int            version;
-	int            size;
-	int            frameSize;
+	int			   version;
+	int			   size;
+	int			   frameSize;
 
 	pinmodel = ( mdxHeader_t* )buffer;
 
@@ -347,7 +347,7 @@ static qboolean R_LoadMDX( model_t* mod, void* buffer, const char* mod_name )
 	}
 
 	mod->type = MOD_MDX;
-	size      = LittleLong( pinmodel->ofsEnd );
+	size	  = LittleLong( pinmodel->ofsEnd );
 	mod->dataSize += size;
 	mdx = mod->mdx = ri.Hunk_Alloc( size, h_low );
 
@@ -368,20 +368,20 @@ static qboolean R_LoadMDX( model_t* mod, void* buffer, const char* mod_name )
 		frameSize = ( int )( sizeof( mdxBoneFrameCompressed_t ) ) * mdx->numBones;
 		for( i = 0; i < mdx->numFrames; i++ )
 		{
-			frame         = ( mdxFrame_t* )( ( byte* )mdx + mdx->ofsFrames + i * frameSize + i * sizeof( mdxFrame_t ) );
+			frame		  = ( mdxFrame_t* )( ( byte* )mdx + mdx->ofsFrames + i * frameSize + i * sizeof( mdxFrame_t ) );
 			frame->radius = LittleFloat( frame->radius );
 			for( j = 0; j < 3; j++ )
 			{
-				frame->bounds[ 0 ][ j ]  = LittleFloat( frame->bounds[ 0 ][ j ] );
-				frame->bounds[ 1 ][ j ]  = LittleFloat( frame->bounds[ 1 ][ j ] );
-				frame->localOrigin[ j ]  = LittleFloat( frame->localOrigin[ j ] );
-				frame->parentOffset[ j ] = LittleFloat( frame->parentOffset[ j ] );
+				frame->bounds[0][j]	   = LittleFloat( frame->bounds[0][j] );
+				frame->bounds[1][j]	   = LittleFloat( frame->bounds[1][j] );
+				frame->localOrigin[j]  = LittleFloat( frame->localOrigin[j] );
+				frame->parentOffset[j] = LittleFloat( frame->parentOffset[j] );
 			}
 
 			bframe = ( short* )( ( byte* )mdx + mdx->ofsFrames + i * frameSize + ( ( i + 1 ) * sizeof( mdxFrame_t ) ) );
 			for( j = 0; j < mdx->numBones * sizeof( mdxBoneFrameCompressed_t ) / sizeof( short ); j++ )
 			{
-				( ( short* )bframe )[ j ] = LittleShort( ( ( short* )bframe )[ j ] );
+				( ( short* )bframe )[j] = LittleShort( ( ( short* )bframe )[j] );
 			}
 		}
 
@@ -391,7 +391,7 @@ static qboolean R_LoadMDX( model_t* mod, void* buffer, const char* mod_name )
 			bi = ( mdxBoneInfo_t* )( ( byte* )mdx + mdx->ofsBones + i * sizeof( mdxBoneInfo_t ) );
 			LL( bi->parent );
 			bi->torsoWeight = LittleFloat( bi->torsoWeight );
-			bi->parentDist  = LittleFloat( bi->parentDist );
+			bi->parentDist	= LittleFloat( bi->parentDist );
 			LL( bi->flags );
 		}
 	}
@@ -409,8 +409,8 @@ R_XMLError
 */
 void R_XMLError( void* ctx, const char* fmt, ... )
 {
-	va_list     argptr;
-	static char msg[ 4096 ];
+	va_list		argptr;
+	static char msg[4096];
 
 	va_start( argptr, fmt );
 	Q_vsnprintf( msg, sizeof( msg ), fmt, argptr );
@@ -494,10 +494,10 @@ void RE_BeginRegistration( glconfig_t* glconfigOut, glconfig2_t* glconfigOut2 )
 	RE_ClearScene();
 
 	// HACK: give world entity white color for "colored" shader keyword
-	tr.worldEntity.e.shaderRGBA[ 0 ] = 255;
-	tr.worldEntity.e.shaderRGBA[ 1 ] = 255;
-	tr.worldEntity.e.shaderRGBA[ 2 ] = 255;
-	tr.worldEntity.e.shaderRGBA[ 3 ] = 255;
+	tr.worldEntity.e.shaderRGBA[0] = 255;
+	tr.worldEntity.e.shaderRGBA[1] = 255;
+	tr.worldEntity.e.shaderRGBA[2] = 255;
+	tr.worldEntity.e.shaderRGBA[3] = 255;
 
 	tr.worldEntity.e.nonNormalizedAxes = qfalse;
 
@@ -526,7 +526,7 @@ void R_ModelInit( void )
 	// leave a space for NULL model
 	tr.numModels = 0;
 
-	mod       = R_AllocModel();
+	mod		  = R_AllocModel();
 	mod->type = MOD_BAD;
 }
 
@@ -537,10 +537,10 @@ R_Modellist_f
 */
 void R_Modellist_f( void )
 {
-	int      i, j, k;
+	int		 i, j, k;
 	model_t* mod;
-	int      total;
-	int      totalDataSize;
+	int		 total;
+	int		 totalDataSize;
 	qboolean showFrames;
 
 	if( !strcmp( ri.Cmd_Argv( 1 ), "frames" ) )
@@ -552,23 +552,23 @@ void R_Modellist_f( void )
 		showFrames = qfalse;
 	}
 
-	total         = 0;
+	total		  = 0;
 	totalDataSize = 0;
 	for( i = 1; i < tr.numModels; i++ )
 	{
-		mod = tr.models[ i ];
+		mod = tr.models[i];
 
 		if( mod->type == MOD_MESH )
 		{
 			for( j = 0; j < MD3_MAX_LODS; j++ )
 			{
-				if( mod->mdv[ j ] && mod->mdv[ j ] != mod->mdv[ j - 1 ] )
+				if( mod->mdv[j] && mod->mdv[j] != mod->mdv[j - 1] )
 				{
-					mdvModel_t*   mdvModel;
+					mdvModel_t*	  mdvModel;
 					mdvSurface_t* mdvSurface;
 					mdvTagName_t* mdvTagName;
 
-					mdvModel = mod->mdv[ j ];
+					mdvModel = mod->mdv[j];
 
 					total++;
 					ri.Printf( PRINT_ALL, "%d.%02d MB '%s' LOD = %i\n", mod->dataSize / ( 1024 * 1024 ), ( mod->dataSize % ( 1024 * 1024 ) ) * 100 / ( 1024 * 1024 ), mod->name, j );
@@ -624,8 +624,8 @@ R_GetTag
 */
 static int R_GetTag( mdvModel_t* model, int frame, const char* _tagName, int startTagIndex, mdvTag_t** outTag )
 {
-	int           i;
-	mdvTag_t*     tag;
+	int			  i;
+	mdvTag_t*	  tag;
 	mdvTagName_t* tagName;
 
 	// it is possible to have a bad frame while changing models, so don't error
@@ -638,7 +638,7 @@ static int R_GetTag( mdvModel_t* model, int frame, const char* _tagName, int sta
 	}
 
 #if 1
-	tag     = model->tags + frame * model->numTags;
+	tag		= model->tags + frame * model->numTags;
 	tagName = model->tagNames;
 	for( i = 0; i < model->numTags; i++, tag++, tagName++ )
 	{
@@ -662,16 +662,16 @@ RE_LerpTagQ3A
 int RE_LerpTagQ3A( orientation_t* tag, qhandle_t handle, int startFrame, int endFrame, float frac, const char* tagNameIn )
 {
 	mdvTag_t *start, *end;
-	int       i;
-	float     frontLerp, backLerp;
+	int		  i;
+	float	  frontLerp, backLerp;
 	model_t*  model;
-	char      tagName[ MAX_QPATH ];
-	int       retval;
+	char	  tagName[MAX_QPATH];
+	int		  retval;
 
 	Q_strncpyz( tagName, tagNameIn, MAX_QPATH );
 
 	model = R_GetModelByHandle( handle );
-	if( !model->mdv[ 0 ] )
+	if( !model->mdv[0] )
 	{
 		AxisClear( tag->axis );
 		VectorClear( tag->origin );
@@ -680,8 +680,8 @@ int RE_LerpTagQ3A( orientation_t* tag, qhandle_t handle, int startFrame, int end
 
 	start = end = NULL;
 
-	retval = R_GetTag( model->mdv[ 0 ], startFrame, tagName, 0, &start );
-	retval = R_GetTag( model->mdv[ 0 ], endFrame, tagName, 0, &end );
+	retval = R_GetTag( model->mdv[0], startFrame, tagName, 0, &start );
+	retval = R_GetTag( model->mdv[0], endFrame, tagName, 0, &end );
 	if( !start || !end )
 	{
 		AxisClear( tag->axis );
@@ -694,14 +694,14 @@ int RE_LerpTagQ3A( orientation_t* tag, qhandle_t handle, int startFrame, int end
 
 	for( i = 0; i < 3; i++ )
 	{
-		tag->origin[ i ]    = start->origin[ i ] * backLerp + end->origin[ i ] * frontLerp;
-		tag->axis[ 0 ][ i ] = start->axis[ 0 ][ i ] * backLerp + end->axis[ 0 ][ i ] * frontLerp;
-		tag->axis[ 1 ][ i ] = start->axis[ 1 ][ i ] * backLerp + end->axis[ 1 ][ i ] * frontLerp;
-		tag->axis[ 2 ][ i ] = start->axis[ 2 ][ i ] * backLerp + end->axis[ 2 ][ i ] * frontLerp;
+		tag->origin[i]	= start->origin[i] * backLerp + end->origin[i] * frontLerp;
+		tag->axis[0][i] = start->axis[0][i] * backLerp + end->axis[0][i] * frontLerp;
+		tag->axis[1][i] = start->axis[1][i] * backLerp + end->axis[1][i] * frontLerp;
+		tag->axis[2][i] = start->axis[2][i] * backLerp + end->axis[2][i] * frontLerp;
 	}
-	VectorNormalize( tag->axis[ 0 ] );
-	VectorNormalize( tag->axis[ 1 ] );
-	VectorNormalize( tag->axis[ 2 ] );
+	VectorNormalize( tag->axis[0] );
+	VectorNormalize( tag->axis[1] );
+	VectorNormalize( tag->axis[2] );
 	return retval;
 }
 
@@ -714,19 +714,19 @@ RE_LerpTag
 int RE_LerpTagET( orientation_t* tag, const refEntity_t* refent, const char* tagNameIn, int startIndex )
 {
 	mdvTag_t *start, *end;
-	int       i;
-	float     frontLerp, backLerp;
+	int		  i;
+	float	  frontLerp, backLerp;
 	model_t*  model;
-	char      tagName[ MAX_QPATH ]; //, *ch;
-	int       retval;
+	char	  tagName[MAX_QPATH]; //, *ch;
+	int		  retval;
 	qhandle_t handle;
-	int       startFrame, endFrame;
-	float     frac;
+	int		  startFrame, endFrame;
+	float	  frac;
 
-	handle     = refent->hModel;
+	handle	   = refent->hModel;
 	startFrame = refent->oldframe;
 	endFrame   = refent->frame;
-	frac       = 1.0 - refent->backlerp;
+	frac	   = 1.0 - refent->backlerp;
 
 	Q_strncpyz( tagName, tagNameIn, MAX_QPATH );
 	/*
@@ -755,23 +755,23 @@ int RE_LerpTagET( orientation_t* tag, const refEntity_t* refent, const char* tag
 	if( model->type == MOD_MESH )
 	{
 		// old MD3 style
-		retval = R_GetTag( model->mdv[ 0 ], startFrame, tagName, startIndex, &start );
-		retval = R_GetTag( model->mdv[ 0 ], endFrame, tagName, startIndex, &end );
+		retval = R_GetTag( model->mdv[0], startFrame, tagName, startIndex, &start );
+		retval = R_GetTag( model->mdv[0], endFrame, tagName, startIndex, &end );
 	}
 	/*
 		else if(model->type == MOD_MDS)
 		{
 			// use bone lerping
 			retval = R_GetBoneTag(tag, model->model.mds, startIndex, refent, tagNameIn);
-	
+
 			if(retval >= 0)
 			{
 				return retval;
 			}
-	
+
 			// failed
 			return -1;
-	
+
 		}
 		*/
 	else if( model->type == MOD_MDM )
@@ -797,12 +797,12 @@ int RE_LerpTagET( orientation_t* tag, const refEntity_t* refent, const char* tag
 		{
 			return -1;
 		}
-		VectorCopy( refent->skeleton.bones[ retval ].origin, tag->origin );
-		QuatToAxis( refent->skeleton.bones[ retval ].rotation, tag->axis );
-		VectorCopy( tag->axis[ 2 ], tmp );
-		VectorCopy( tag->axis[ 1 ], tag->axis[ 2 ] );
-		VectorCopy( tag->axis[ 0 ], tag->axis[ 1 ] );
-		VectorCopy( tmp, tag->axis[ 0 ] );
+		VectorCopy( refent->skeleton.bones[retval].origin, tag->origin );
+		QuatToAxis( refent->skeleton.bones[retval].rotation, tag->axis );
+		VectorCopy( tag->axis[2], tmp );
+		VectorCopy( tag->axis[1], tag->axis[2] );
+		VectorCopy( tag->axis[0], tag->axis[1] );
+		VectorCopy( tmp, tag->axis[0] );
 		return retval;
 	}
 
@@ -811,10 +811,10 @@ int RE_LerpTagET( orientation_t* tag, const refEntity_t* refent, const char* tag
 	{
 		// psuedo-compressed MDC tags
 		mdcTag_t       *cstart, *cend;
-	
+
 		retval = R_GetMDCTag((byte *) model->model.mdc[0], startFrame, tagName, startIndex, &cstart);
 		retval = R_GetMDCTag((byte *) model->model.mdc[0], endFrame, tagName, startIndex, &cend);
-	
+
 		// uncompress the MDC tags into MD3 style tags
 		if(cstart && cend)
 		{
@@ -825,10 +825,10 @@ int RE_LerpTagET( orientation_t* tag, const refEntity_t* refent, const char* tag
 				sangles[i] = (float)cstart->angles[i] * MDC_TAG_ANGLE_SCALE;
 				eangles[i] = (float)cend->angles[i] * MDC_TAG_ANGLE_SCALE;
 			}
-	
+
 			AnglesToAxis(sangles, ustart.axis);
 			AnglesToAxis(eangles, uend.axis);
-	
+
 			start = &ustart;
 			end = &uend;
 		}
@@ -849,15 +849,15 @@ int RE_LerpTagET( orientation_t* tag, const refEntity_t* refent, const char* tag
 
 	for( i = 0; i < 3; i++ )
 	{
-		tag->origin[ i ]    = start->origin[ i ] * backLerp + end->origin[ i ] * frontLerp;
-		tag->axis[ 0 ][ i ] = start->axis[ 0 ][ i ] * backLerp + end->axis[ 0 ][ i ] * frontLerp;
-		tag->axis[ 1 ][ i ] = start->axis[ 1 ][ i ] * backLerp + end->axis[ 1 ][ i ] * frontLerp;
-		tag->axis[ 2 ][ i ] = start->axis[ 2 ][ i ] * backLerp + end->axis[ 2 ][ i ] * frontLerp;
+		tag->origin[i]	= start->origin[i] * backLerp + end->origin[i] * frontLerp;
+		tag->axis[0][i] = start->axis[0][i] * backLerp + end->axis[0][i] * frontLerp;
+		tag->axis[1][i] = start->axis[1][i] * backLerp + end->axis[1][i] * frontLerp;
+		tag->axis[2][i] = start->axis[2][i] * backLerp + end->axis[2][i] * frontLerp;
 	}
 
-	VectorNormalize( tag->axis[ 0 ] );
-	VectorNormalize( tag->axis[ 1 ] );
-	VectorNormalize( tag->axis[ 2 ] );
+	VectorNormalize( tag->axis[0] );
+	VectorNormalize( tag->axis[1] );
+	VectorNormalize( tag->axis[2] );
 
 	return retval;
 }
@@ -870,10 +870,10 @@ RE_BoneIndex
 */
 int RE_BoneIndex( qhandle_t hModel, const char* boneName )
 {
-	int         i;
-	md5Bone_t*  bone;
+	int			i;
+	md5Bone_t*	bone;
 	md5Model_t* md5;
-	model_t*    model;
+	model_t*	model;
 
 	model = R_GetModelByHandle( hModel );
 	if( !model->md5 )
@@ -903,7 +903,7 @@ R_ModelBounds
 */
 void R_ModelBounds( qhandle_t handle, vec3_t mins, vec3_t maxs )
 {
-	model_t*    model;
+	model_t*	model;
 	mdvModel_t* header;
 	mdvFrame_t* frame;
 
@@ -911,22 +911,22 @@ void R_ModelBounds( qhandle_t handle, vec3_t mins, vec3_t maxs )
 
 	if( model->bsp )
 	{
-		VectorCopy( model->bsp->bounds[ 0 ], mins );
-		VectorCopy( model->bsp->bounds[ 1 ], maxs );
+		VectorCopy( model->bsp->bounds[0], mins );
+		VectorCopy( model->bsp->bounds[1], maxs );
 	}
-	else if( model->mdv[ 0 ] )
+	else if( model->mdv[0] )
 	{
-		header = model->mdv[ 0 ];
+		header = model->mdv[0];
 
 		frame = header->frames;
 
-		VectorCopy( frame->bounds[ 0 ], mins );
-		VectorCopy( frame->bounds[ 1 ], maxs );
+		VectorCopy( frame->bounds[0], mins );
+		VectorCopy( frame->bounds[1], maxs );
 	}
 	else if( model->md5 )
 	{
-		VectorCopy( model->md5->bounds[ 0 ], mins );
-		VectorCopy( model->md5->bounds[ 1 ], maxs );
+		VectorCopy( model->md5->bounds[0], mins );
+		VectorCopy( model->md5->bounds[1], maxs );
 	}
 	else
 	{

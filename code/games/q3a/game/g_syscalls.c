@@ -426,7 +426,8 @@ int trap_AAS_EnableRoutingArea( int areanum, int enable )
 	return syscall( BOTLIB_AAS_ENABLE_ROUTING_AREA, areanum, enable );
 }
 
-int trap_AAS_PredictRoute( void /*struct aas_predictroute_s*/* route, int areanum, vec3_t origin, int goalareanum, int travelflags, int maxareas, int maxtime, int stopevent, int stopcontents, int stoptfl, int stopareanum )
+int trap_AAS_PredictRoute(
+	void /*struct aas_predictroute_s*/* route, int areanum, vec3_t origin, int goalareanum, int travelflags, int maxareas, int maxtime, int stopevent, int stopcontents, int stoptfl, int stopareanum )
 {
 	return syscall( BOTLIB_AAS_PREDICT_ROUTE, route, areanum, origin, goalareanum, travelflags, maxareas, maxtime, stopevent, stopcontents, stoptfl, stopareanum );
 }
@@ -441,9 +442,22 @@ int trap_AAS_Swimming( vec3_t origin )
 	return syscall( BOTLIB_AAS_SWIMMING, origin );
 }
 
-int trap_AAS_PredictClientMovement( void /* struct aas_clientmove_s */* move, int entnum, vec3_t origin, int presencetype, int onground, vec3_t velocity, vec3_t cmdmove, int cmdframes, int maxframes, float frametime, int stopevent, int stopareanum, int visualize )
+int trap_AAS_PredictClientMovement( void /* struct aas_clientmove_s */* move,
+	int																	entnum,
+	vec3_t																origin,
+	int																	presencetype,
+	int																	onground,
+	vec3_t																velocity,
+	vec3_t																cmdmove,
+	int																	cmdframes,
+	int																	maxframes,
+	float																frametime,
+	int																	stopevent,
+	int																	stopareanum,
+	int																	visualize )
 {
-	return syscall( BOTLIB_AAS_PREDICT_CLIENT_MOVEMENT, move, entnum, origin, presencetype, onground, velocity, cmdmove, cmdframes, maxframes, PASSFLOAT( frametime ), stopevent, stopareanum, visualize );
+	return syscall(
+		BOTLIB_AAS_PREDICT_CLIENT_MOVEMENT, move, entnum, origin, presencetype, onground, velocity, cmdmove, cmdframes, maxframes, PASSFLOAT( frametime ), stopevent, stopareanum, visualize );
 }
 
 void trap_EA_Say( int client, char* str )

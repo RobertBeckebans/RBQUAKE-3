@@ -41,21 +41,21 @@ ydnar: srf file module
 typedef struct surfaceExtra_s
 {
 	mapDrawSurface_t* mds;
-	shaderInfo_t*     si;
-	int               parentSurfaceNum;
-	int               entityNum;
-	int               castShadows, recvShadows;
-	int               sampleSize;
-	float             longestCurve;
-	vec3_t            lightmapAxis;
+	shaderInfo_t*	  si;
+	int				  parentSurfaceNum;
+	int				  entityNum;
+	int				  castShadows, recvShadows;
+	int				  sampleSize;
+	float			  longestCurve;
+	vec3_t			  lightmapAxis;
 } surfaceExtra_t;
 
 #define GROW_SURFACE_EXTRAS 1024
 
-int             numSurfaceExtras = 0;
-int             maxSurfaceExtras = 0;
-surfaceExtra_t* surfaceExtras;
-surfaceExtra_t  seDefault = { NULL, NULL, -1, 0, WORLDSPAWN_CAST_SHADOWS, WORLDSPAWN_RECV_SHADOWS, 0, 0, { 0, 0, 0 } };
+int					   numSurfaceExtras = 0;
+int					   maxSurfaceExtras = 0;
+surfaceExtra_t*		   surfaceExtras;
+surfaceExtra_t		   seDefault = { NULL, NULL, -1, 0, WORLDSPAWN_CAST_SHADOWS, WORLDSPAWN_RECV_SHADOWS, 0, 0, { 0, 0, 0 } };
 
 /*
 AllocSurfaceExtra()
@@ -81,7 +81,7 @@ static surfaceExtra_t* AllocSurfaceExtra( void )
 	}
 
 	/* add another */
-	se = &surfaceExtras[ numSurfaceExtras ];
+	se = &surfaceExtras[numSurfaceExtras];
 	numSurfaceExtras++;
 	memcpy( se, &seDefault, sizeof( surfaceExtra_t ) );
 
@@ -118,14 +118,14 @@ void SetSurfaceExtra( mapDrawSurface_t* ds, int num )
 	se = AllocSurfaceExtra();
 
 	/* copy out the relevant bits */
-	se->mds              = ds;
-	se->si               = ds->shaderInfo;
+	se->mds				 = ds;
+	se->si				 = ds->shaderInfo;
 	se->parentSurfaceNum = ds->parent != NULL ? ds->parent->outputNum : -1;
-	se->entityNum        = ds->entityNum;
-	se->castShadows      = ds->castShadows;
-	se->recvShadows      = ds->recvShadows;
-	se->sampleSize       = ds->sampleSize;
-	se->longestCurve     = ds->longestCurve;
+	se->entityNum		 = ds->entityNum;
+	se->castShadows		 = ds->castShadows;
+	se->recvShadows		 = ds->recvShadows;
+	se->sampleSize		 = ds->sampleSize;
+	se->longestCurve	 = ds->longestCurve;
 	VectorCopy( ds->lightmapAxis, se->lightmapAxis );
 
 	/* debug code */
@@ -143,7 +143,7 @@ static surfaceExtra_t* GetSurfaceExtra( int num )
 	{
 		return &seDefault;
 	}
-	return &surfaceExtras[ num ];
+	return &surfaceExtras[num];
 }
 
 shaderInfo_t* GetSurfaceExtraShaderInfo( int num )
@@ -209,13 +209,13 @@ writes out a surface info file (<map>.srf)
 
 void WriteSurfaceExtraFile( const char* path )
 {
-	char            srfPath[ 1024 ];
-	FILE*           sf;
+	char			srfPath[1024];
+	FILE*			sf;
 	surfaceExtra_t* se;
-	int             i;
+	int				i;
 
 	/* dummy check */
-	if( path == NULL || path[ 0 ] == '\0' )
+	if( path == NULL || path[0] == '\0' )
 	{
 		return;
 	}
@@ -257,7 +257,7 @@ void WriteSurfaceExtraFile( const char* path )
 		}
 		else
 		{
-			fprintf( sf, " // %s V: %d I: %d %s\n", surfaceTypes[ se->mds->type ], se->mds->numVerts, se->mds->numIndexes, ( se->mds->planar ? "planar" : "" ) );
+			fprintf( sf, " // %s V: %d I: %d %s\n", surfaceTypes[se->mds->type], se->mds->numVerts, se->mds->numIndexes, ( se->mds->planar ? "planar" : "" ) );
 		}
 
 		/* open braces */
@@ -308,7 +308,7 @@ void WriteSurfaceExtraFile( const char* path )
 		/* lightmap axis vector */
 		if( VectorCompare( se->lightmapAxis, seDefault.lightmapAxis ) == qfalse )
 		{
-			fprintf( sf, "\tlightmapAxis ( %f %f %f )\n", se->lightmapAxis[ 0 ], se->lightmapAxis[ 1 ], se->lightmapAxis[ 2 ] );
+			fprintf( sf, "\tlightmapAxis ( %f %f %f )\n", se->lightmapAxis[0], se->lightmapAxis[1], se->lightmapAxis[2] );
 		}
 
 		/* close braces */
@@ -326,13 +326,13 @@ reads a surface info file (<map>.srf)
 
 void LoadSurfaceExtraFile( const char* path )
 {
-	char            srfPath[ 1024 ];
+	char			srfPath[1024];
 	surfaceExtra_t* se;
-	int             surfaceNum, size;
-	byte*           buffer;
+	int				surfaceNum, size;
+	byte*			buffer;
 
 	/* dummy check */
-	if( path == NULL || path[ 0 ] == '\0' )
+	if( path == NULL || path[0] == '\0' )
 	{
 		return;
 	}
@@ -379,7 +379,7 @@ void LoadSurfaceExtraFile( const char* path )
 			{
 				se = AllocSurfaceExtra();
 			}
-			se = &surfaceExtras[ surfaceNum ];
+			se = &surfaceExtras[surfaceNum];
 		}
 
 		/* handle { } section */

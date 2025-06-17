@@ -37,16 +37,16 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define DEFAULT_BACKSPLASH_FRACTION 0.05
 #define DEFAULT_BACKSPLASH_DISTANCE 24
 
-#define MAX_SURFACE_INFO 4096 * 2
+#define MAX_SURFACE_INFO			4096 * 2
 
 shaderInfo_t defaultInfo;
-shaderInfo_t shaderInfo[ MAX_SURFACE_INFO ];
-int          numShaderInfo;
+shaderInfo_t shaderInfo[MAX_SURFACE_INFO];
+int			 numShaderInfo;
 
 typedef struct
 {
 	char* name;
-	int   clearSolid, surfaceFlags, contents;
+	int	  clearSolid, surfaceFlags, contents;
 } infoParm_t;
 
 // *INDENT-OFF*
@@ -57,35 +57,35 @@ infoParm_t infoParms[] = {
 	{ "lava", 1, 0, CONTENTS_LAVA },   // very damaging
 	{ "playerclip", 1, 0, CONTENTS_PLAYERCLIP },
 	{ "monsterclip", 1, 0, CONTENTS_MONSTERCLIP },
-	{ "moveableclip", 1, 0, 0 },         // FIXME
-	{ "ikclip", 1, 0, 0 },               // FIXME
+	{ "moveableclip", 1, 0, 0 },		 // FIXME
+	{ "ikclip", 1, 0, 0 },				 // FIXME
 	{ "nodrop", 1, 0, CONTENTS_NODROP }, // don't drop items or leave bodies (death fog, lava, etc)
 	{ "nonsolid", 1, SURF_NONSOLID, 0 }, // clears the solid flag
 
 	{ "blood", 1, 0, CONTENTS_WATER },
 
 	// utility relevant attributes
-	{ "origin", 1, 0, CONTENTS_ORIGIN },               // center of rotating brushes
-	{ "trans", 0, 0, CONTENTS_TRANSLUCENT },           // don't eat contained surfaces
-	{ "translucent", 0, 0, CONTENTS_TRANSLUCENT },     // don't eat contained surfaces
-	{ "detail", 0, 0, CONTENTS_DETAIL },               // don't include in structural bsp
-	{ "structural", 0, 0, CONTENTS_STRUCTURAL },       // force into structural bsp even if trnas
-	{ "areaportal", 1, 0, CONTENTS_AREAPORTAL },       // divides areas
+	{ "origin", 1, 0, CONTENTS_ORIGIN },			   // center of rotating brushes
+	{ "trans", 0, 0, CONTENTS_TRANSLUCENT },		   // don't eat contained surfaces
+	{ "translucent", 0, 0, CONTENTS_TRANSLUCENT },	   // don't eat contained surfaces
+	{ "detail", 0, 0, CONTENTS_DETAIL },			   // don't include in structural bsp
+	{ "structural", 0, 0, CONTENTS_STRUCTURAL },	   // force into structural bsp even if trnas
+	{ "areaportal", 1, 0, CONTENTS_AREAPORTAL },	   // divides areas
 	{ "clusterportal", 1, 0, CONTENTS_CLUSTERPORTAL }, // for bots
-	{ "donotenter", 1, 0, CONTENTS_DONOTENTER },       // for bots
-	{ "botclip", 1, 0, CONTENTS_BOTCLIP },             // for bots
+	{ "donotenter", 1, 0, CONTENTS_DONOTENTER },	   // for bots
+	{ "botclip", 1, 0, CONTENTS_BOTCLIP },			   // for bots
 
-	{ "fog", 1, 0, CONTENTS_FOG },             // carves surfaces entering
-	{ "sky", 0, SURF_SKY, 0 },                 // emit light from an environment map
+	{ "fog", 1, 0, CONTENTS_FOG },			   // carves surfaces entering
+	{ "sky", 0, SURF_SKY, 0 },				   // emit light from an environment map
 	{ "lightfilter", 0, SURF_LIGHTFILTER, 0 }, // filter light going through it
 	{ "alphashadow", 0, SURF_ALPHASHADOW, 0 }, // test light on a per-pixel basis
-	{ "hint", 0, SURF_HINT, 0 },               // use as a primary splitter
+	{ "hint", 0, SURF_HINT, 0 },			   // use as a primary splitter
 
 	// server attributes
 	{ "slick", 0, SURF_SLICK, 0 },
 	{ "collision", 0, SURF_COLLISION, 0 },
 	{ "noimpact", 0, SURF_NOIMPACT, 0 },  // don't make impact explosions or marks
-	{ "nomarks", 0, SURF_NOMARKS, 0 },    // don't make impact marks, but still explode
+	{ "nomarks", 0, SURF_NOMARKS, 0 },	  // don't make impact marks, but still explode
 	{ "nooverlays", 0, SURF_NOMARKS, 0 }, // don't make impact marks, but still explode
 	{ "ladder", 0, SURF_LADDER, 0 },
 	{ "nodamage", 0, SURF_NODAMAGE, 0 },
@@ -94,11 +94,11 @@ infoParm_t infoParms[] = {
 	{ "nosteps", 0, SURF_NOSTEPS, 0 },
 
 	// drawsurf attributes
-	{ "nodraw", 0, SURF_NODRAW, 0 },         // don't generate a drawsurface (or a lightmap)
+	{ "nodraw", 0, SURF_NODRAW, 0 },		 // don't generate a drawsurface (or a lightmap)
 	{ "pointlight", 0, SURF_POINTLIGHT, 0 }, // sample lighting at vertexes
 	{ "nolightmap", 0, SURF_NOLIGHTMAP, 0 }, // don't generate a lightmap
-	{ "nodlight", 0, 0, 0 },                 // OBSELETE: don't ever add dynamic lights
-	{ "dust", 0, SURF_DUST, 0 },             // leave a dust trail when walking on this surface
+	{ "nodlight", 0, 0, 0 },				 // OBSELETE: don't ever add dynamic lights
+	{ "dust", 0, SURF_DUST, 0 },			 // leave a dust trail when walking on this surface
 
 	// unsupported Doom3 surface types for sound effects and blood splats
 	{ "metal", 0, SURF_METALSTEPS, 0 },
@@ -136,7 +136,7 @@ LoadShaderImage
 static byte* LoadImageFile( char* filename )
 {
 	byte* buffer = NULL;
-	int   nLen   = 0;
+	int	  nLen	 = 0;
 
 	if( FileExists( filename ) )
 	{
@@ -145,10 +145,10 @@ static byte* LoadImageFile( char* filename )
 
 	if( buffer == NULL )
 	{
-		nLen                 = strlen( filename );
-		filename[ nLen - 3 ] = 'j';
-		filename[ nLen - 2 ] = 'p';
-		filename[ nLen - 1 ] = 'g';
+		nLen			   = strlen( filename );
+		filename[nLen - 3] = 'j';
+		filename[nLen - 2] = 'p';
+		filename[nLen - 1] = 'g';
 
 		if( FileExists( filename ) )
 		{
@@ -165,10 +165,10 @@ LoadShaderImage
 */
 static void LoadShaderImage( shaderInfo_t* si )
 {
-	char     filename[ 1024 ];
-	int      i, count;
-	float    color[ 4 ];
-	byte*    buffer;
+	char	 filename[1024];
+	int		 i, count;
+	float	 color[4];
+	byte*	 buffer;
 	qboolean bTGA = qtrue;
 
 #if 0
@@ -216,12 +216,12 @@ static void LoadShaderImage( shaderInfo_t* si )
 	Sys_Printf( "WARNING: Couldn't find image for shader %s\n", si->shader );
 #endif
 
-	si->color[ 0 ] = 1;
-	si->color[ 1 ] = 1;
-	si->color[ 2 ] = 1;
-	si->width      = 64;
-	si->height     = 64;
-	si->pixels     = malloc( si->width * si->height * 4 );
+	si->color[0] = 1;
+	si->color[1] = 1;
+	si->color[2] = 1;
+	si->width	 = 64;
+	si->height	 = 64;
+	si->pixels	 = malloc( si->width * si->height * 4 );
 	memset( si->pixels, 255, si->width * si->height * 4 );
 	return;
 
@@ -241,13 +241,13 @@ loadTga:
 	count = si->width * si->height;
 
 	VectorClear( color );
-	color[ 3 ] = 0;
+	color[3] = 0;
 	for( i = 0; i < count; i++ )
 	{
-		color[ 0 ] += si->pixels[ i * 4 + 0 ];
-		color[ 1 ] += si->pixels[ i * 4 + 1 ];
-		color[ 2 ] += si->pixels[ i * 4 + 2 ];
-		color[ 3 ] += si->pixels[ i * 4 + 3 ];
+		color[0] += si->pixels[i * 4 + 0];
+		color[1] += si->pixels[i * 4 + 1];
+		color[2] += si->pixels[i * 4 + 2];
+		color[3] += si->pixels[i * 4 + 3];
 	}
 	ColorNormalize( color, si->color );
 	VectorScale( color, 1.0 / count, si->averageColor );
@@ -266,7 +266,7 @@ static shaderInfo_t* AllocShaderInfo( void )
 	{
 		Error( "MAX_SURFACE_INFO" );
 	}
-	si = &shaderInfo[ numShaderInfo ];
+	si = &shaderInfo[numShaderInfo];
 	numShaderInfo++;
 
 	// set defaults
@@ -277,15 +277,15 @@ static shaderInfo_t* AllocShaderInfo( void )
 	si->backsplashDistance = DEFAULT_BACKSPLASH_DISTANCE;
 
 	si->lightmapSampleSize = 0;
-	si->hasPasses          = qfalse;
-	si->forceTraceLight    = qfalse;
-	si->forceVLight        = qfalse;
-	si->patchShadows       = qfalse;
-	si->vertexShadows      = qfalse;
-	si->noVertexShadows    = qfalse;
-	si->forceSunLight      = qfalse;
-	si->vertexScale        = 1.0;
-	si->notjunc            = qfalse;
+	si->hasPasses		   = qfalse;
+	si->forceTraceLight	   = qfalse;
+	si->forceVLight		   = qfalse;
+	si->patchShadows	   = qfalse;
+	si->vertexShadows	   = qfalse;
+	si->noVertexShadows	   = qfalse;
+	si->forceSunLight	   = qfalse;
+	si->vertexScale		   = 1.0;
+	si->notjunc			   = qfalse;
 
 	return si;
 }
@@ -297,9 +297,9 @@ ShaderInfoForShader
 */
 shaderInfo_t* ShaderInfoForShader( const char* shaderName )
 {
-	int           i;
+	int			  i;
 	shaderInfo_t* si;
-	char          shader[ MAX_QPATH ];
+	char		  shader[MAX_QPATH];
 
 	// strip off extension
 	strcpy( shader, shaderName );
@@ -310,7 +310,7 @@ shaderInfo_t* ShaderInfoForShader( const char* shaderName )
 	// search for it
 	for( i = 0; i < numShaderInfo; i++ )
 	{
-		si = &shaderInfo[ i ];
+		si = &shaderInfo[i];
 		if( !Q_stricmp( shader, si->shader ) )
 		{
 			if( !si->width )
@@ -336,8 +336,8 @@ ParseShaderFile
 */
 static void ParseShaderFile( const char* filename )
 {
-	int           i;
-	int           numInfoParms = sizeof( infoParms ) / sizeof( infoParms[ 0 ] );
+	int			  i;
+	int			  numInfoParms = sizeof( infoParms ) / sizeof( infoParms[0] );
 	shaderInfo_t* si;
 
 	//  Sys_FPrintf(SYS_VRB,  "shaderFile: %s\n", filename );
@@ -366,8 +366,8 @@ static void ParseShaderFile( const char* filename )
 
 			Sys_FPrintf( SYS_VRB, "shader '%s' is guided\n", token );
 
-			//si = AllocShaderInfo();
-			//strcpy(si->shader, token);
+			// si = AllocShaderInfo();
+			// strcpy(si->shader, token);
 
 			// skip guide name
 			GetToken( qtrue );
@@ -379,7 +379,7 @@ static void ParseShaderFile( const char* filename )
 			{
 				GetToken( qtrue );
 
-				if( !token[ 0 ] )
+				if( !token[0] )
 				{
 					break;
 				}
@@ -577,11 +577,11 @@ static void ParseShaderFile( const char* filename )
 				float a, b;
 
 				GetToken( qfalse );
-				si->sunLight[ 0 ] = atof( token );
+				si->sunLight[0] = atof( token );
 				GetToken( qfalse );
-				si->sunLight[ 1 ] = atof( token );
+				si->sunLight[1] = atof( token );
 				GetToken( qfalse );
-				si->sunLight[ 2 ] = atof( token );
+				si->sunLight[2] = atof( token );
 
 				VectorNormalize( si->sunLight );
 
@@ -597,9 +597,9 @@ static void ParseShaderFile( const char* filename )
 				b = atof( token );
 				b = b / 180 * Q_PI;
 
-				si->sunDirection[ 0 ] = cos( a ) * cos( b );
-				si->sunDirection[ 1 ] = sin( a ) * cos( b );
-				si->sunDirection[ 2 ] = sin( b );
+				si->sunDirection[0] = cos( a ) * cos( b );
+				si->sunDirection[1] = sin( a ) * cos( b );
+				si->sunDirection[2] = sin( b );
 
 				si->surfaceFlags |= SURF_SKY;
 				continue;
@@ -701,12 +701,12 @@ static void ParseShaderFile( const char* filename )
 				GetToken( qfalse );
 				for( i = 0; i < numInfoParms; i++ )
 				{
-					if( !Q_stricmp( token, infoParms[ i ].name ) )
+					if( !Q_stricmp( token, infoParms[i].name ) )
 					{
-						si->surfaceFlags |= infoParms[ i ].surfaceFlags;
-						si->contents |= infoParms[ i ].contents;
+						si->surfaceFlags |= infoParms[i].surfaceFlags;
+						si->contents |= infoParms[i].contents;
 
-						if( infoParms[ i ].clearSolid && !si->forceSolid )
+						if( infoParms[i].clearSolid && !si->forceSolid )
 						{
 							si->contents &= ~CONTENTS_SOLID;
 						}
@@ -728,11 +728,11 @@ static void ParseShaderFile( const char* filename )
 			{
 				for( i = 0; i < numInfoParms; i++ )
 				{
-					if( !Q_stricmp( token, infoParms[ i ].name ) )
+					if( !Q_stricmp( token, infoParms[i].name ) )
 					{
-						si->surfaceFlags |= infoParms[ i ].surfaceFlags;
-						si->contents |= infoParms[ i ].contents;
-						if( infoParms[ i ].clearSolid )
+						si->surfaceFlags |= infoParms[i].surfaceFlags;
+						si->contents |= infoParms[i].contents;
+						if( infoParms[i].clearSolid )
 						{
 							si->contents &= ~CONTENTS_SOLID;
 						}
@@ -782,10 +782,10 @@ LoadShaderInfo
 #define MAX_SHADER_FILES 128
 void LoadShaderInfo( void )
 {
-	char  filename[ 1024 ];
-	int   i;
-	char* shaderFiles[ MAX_SHADER_FILES ];
-	int   numShaderFiles;
+	char  filename[1024];
+	int	  i;
+	char* shaderFiles[MAX_SHADER_FILES];
+	int	  numShaderFiles;
 
 	sprintf( filename, "%smaterials/shaderlist.txt", gamedir );
 	LoadScriptFile( filename, -1 );
@@ -797,17 +797,17 @@ void LoadShaderInfo( void )
 		{
 			break;
 		}
-		shaderFiles[ numShaderFiles ] = malloc( MAX_QPATH );
-		strcpy( shaderFiles[ numShaderFiles ], token );
+		shaderFiles[numShaderFiles] = malloc( MAX_QPATH );
+		strcpy( shaderFiles[numShaderFiles], token );
 		numShaderFiles++;
 	}
 
 	for( i = 0; i < numShaderFiles; i++ )
 	{
-		sprintf( filename, "%smaterials/%s.mtr", gamedir, shaderFiles[ i ] );
+		sprintf( filename, "%smaterials/%s.mtr", gamedir, shaderFiles[i] );
 
 		ParseShaderFile( filename );
-		free( shaderFiles[ i ] );
+		free( shaderFiles[i] );
 	}
 
 	Sys_FPrintf( SYS_VRB, "%5i shaderInfo\n", numShaderInfo );

@@ -30,7 +30,7 @@ R_CreateVBO
 VBO_t* R_CreateVBO( const char* name, byte* vertexes, int vertexesSize, vboUsage_t usage )
 {
 	VBO_t* vbo;
-	int    glUsage;
+	int	   glUsage;
 
 	switch( usage )
 	{
@@ -59,19 +59,19 @@ VBO_t* R_CreateVBO( const char* name, byte* vertexes, int vertexesSize, vboUsage
 
 	Q_strncpyz( vbo->name, name, sizeof( vbo->name ) );
 
-	vbo->ofsXYZ             = 0;
-	vbo->ofsTexCoords       = 0;
-	vbo->ofsLightCoords     = 0;
-	vbo->ofsBinormals       = 0;
-	vbo->ofsTangents        = 0;
-	vbo->ofsNormals         = 0;
-	vbo->ofsColors          = 0;
-	vbo->ofsPaintColors     = 0;
+	vbo->ofsXYZ				= 0;
+	vbo->ofsTexCoords		= 0;
+	vbo->ofsLightCoords		= 0;
+	vbo->ofsBinormals		= 0;
+	vbo->ofsTangents		= 0;
+	vbo->ofsNormals			= 0;
+	vbo->ofsColors			= 0;
+	vbo->ofsPaintColors		= 0;
 	vbo->ofsLightDirections = 0;
-	vbo->ofsBoneIndexes     = 0;
-	vbo->ofsBoneWeights     = 0;
+	vbo->ofsBoneIndexes		= 0;
+	vbo->ofsBoneWeights		= 0;
 
-	vbo->sizeXYZ       = 0;
+	vbo->sizeXYZ	   = 0;
 	vbo->sizeTangents  = 0;
 	vbo->sizeBinormals = 0;
 	vbo->sizeNormals   = 0;
@@ -100,14 +100,14 @@ RB: OPTIMIZE rewrite to not use memcpy
 VBO_t* R_CreateVBO2( const char* name, int numVertexes, srfVert_t* verts, unsigned int stateBits, vboUsage_t usage )
 {
 	VBO_t* vbo;
-	int    i, j;
+	int	   i, j;
 
-	byte* data;
-	int   dataSize;
-	int   dataOfs;
+	byte*  data;
+	int	   dataSize;
+	int	   dataOfs;
 
 	vec4_t tmp;
-	int    glUsage;
+	int	   glUsage;
 
 	switch( usage )
 	{
@@ -141,36 +141,36 @@ VBO_t* R_CreateVBO2( const char* name, int numVertexes, srfVert_t* verts, unsign
 
 	Q_strncpyz( vbo->name, name, sizeof( vbo->name ) );
 
-	vbo->ofsXYZ             = 0;
-	vbo->ofsTexCoords       = 0;
-	vbo->ofsLightCoords     = 0;
-	vbo->ofsBinormals       = 0;
-	vbo->ofsTangents        = 0;
-	vbo->ofsNormals         = 0;
-	vbo->ofsColors          = 0;
-	vbo->ofsPaintColors     = 0;
+	vbo->ofsXYZ				= 0;
+	vbo->ofsTexCoords		= 0;
+	vbo->ofsLightCoords		= 0;
+	vbo->ofsBinormals		= 0;
+	vbo->ofsTangents		= 0;
+	vbo->ofsNormals			= 0;
+	vbo->ofsColors			= 0;
+	vbo->ofsPaintColors		= 0;
 	vbo->ofsLightDirections = 0;
-	vbo->ofsBoneIndexes     = 0;
-	vbo->ofsBoneWeights     = 0;
+	vbo->ofsBoneIndexes		= 0;
+	vbo->ofsBoneWeights		= 0;
 
-	vbo->sizeXYZ       = 0;
+	vbo->sizeXYZ	   = 0;
 	vbo->sizeTangents  = 0;
 	vbo->sizeBinormals = 0;
 	vbo->sizeNormals   = 0;
 
 	// create VBO
 	dataSize = numVertexes * ( sizeof( vec4_t ) * 9 );
-	data     = ri.Hunk_AllocateTempMemory( dataSize );
-	dataOfs  = 0;
+	data	 = ri.Hunk_AllocateTempMemory( dataSize );
+	dataOfs	 = 0;
 
 	// set up xyz array
 	for( i = 0; i < numVertexes; i++ )
 	{
 		for( j = 0; j < 3; j++ )
 		{
-			tmp[ j ] = verts[ i ].xyz[ j ];
+			tmp[j] = verts[i].xyz[j];
 		}
-		tmp[ 3 ] = 1;
+		tmp[3] = 1;
 
 		memcpy( data + dataOfs, ( vec_t* )tmp, sizeof( vec4_t ) );
 		dataOfs += sizeof( vec4_t );
@@ -184,10 +184,10 @@ VBO_t* R_CreateVBO2( const char* name, int numVertexes, srfVert_t* verts, unsign
 		{
 			for( j = 0; j < 2; j++ )
 			{
-				tmp[ j ] = verts[ i ].st[ j ];
+				tmp[j] = verts[i].st[j];
 			}
-			tmp[ 2 ] = 0;
-			tmp[ 3 ] = 1;
+			tmp[2] = 0;
+			tmp[3] = 1;
 
 			memcpy( data + dataOfs, ( vec_t* )tmp, sizeof( vec4_t ) );
 			dataOfs += sizeof( vec4_t );
@@ -202,10 +202,10 @@ VBO_t* R_CreateVBO2( const char* name, int numVertexes, srfVert_t* verts, unsign
 		{
 			for( j = 0; j < 2; j++ )
 			{
-				tmp[ j ] = verts[ i ].lightmap[ j ];
+				tmp[j] = verts[i].lightmap[j];
 			}
-			tmp[ 2 ] = 0;
-			tmp[ 3 ] = 1;
+			tmp[2] = 0;
+			tmp[3] = 1;
 
 			memcpy( data + dataOfs, ( vec_t* )tmp, sizeof( vec4_t ) );
 			dataOfs += sizeof( vec4_t );
@@ -220,9 +220,9 @@ VBO_t* R_CreateVBO2( const char* name, int numVertexes, srfVert_t* verts, unsign
 		{
 			for( j = 0; j < 3; j++ )
 			{
-				tmp[ j ] = verts[ i ].tangent[ j ];
+				tmp[j] = verts[i].tangent[j];
 			}
-			tmp[ 3 ] = 1;
+			tmp[3] = 1;
 
 			memcpy( data + dataOfs, ( vec_t* )tmp, sizeof( vec4_t ) );
 			dataOfs += sizeof( vec4_t );
@@ -237,9 +237,9 @@ VBO_t* R_CreateVBO2( const char* name, int numVertexes, srfVert_t* verts, unsign
 		{
 			for( j = 0; j < 3; j++ )
 			{
-				tmp[ j ] = verts[ i ].binormal[ j ];
+				tmp[j] = verts[i].binormal[j];
 			}
-			tmp[ 3 ] = 1;
+			tmp[3] = 1;
 
 			memcpy( data + dataOfs, ( vec_t* )tmp, sizeof( vec4_t ) );
 			dataOfs += sizeof( vec4_t );
@@ -254,9 +254,9 @@ VBO_t* R_CreateVBO2( const char* name, int numVertexes, srfVert_t* verts, unsign
 		{
 			for( j = 0; j < 3; j++ )
 			{
-				tmp[ j ] = verts[ i ].normal[ j ];
+				tmp[j] = verts[i].normal[j];
 			}
-			tmp[ 3 ] = 1;
+			tmp[3] = 1;
 
 			memcpy( data + dataOfs, ( vec_t* )tmp, sizeof( vec4_t ) );
 			dataOfs += sizeof( vec4_t );
@@ -271,7 +271,7 @@ VBO_t* R_CreateVBO2( const char* name, int numVertexes, srfVert_t* verts, unsign
 		{
 			for( j = 0; j < 4; j++ )
 			{
-				tmp[ j ] = verts[ i ].lightColor[ j ];
+				tmp[j] = verts[i].lightColor[j];
 			}
 
 			memcpy( data + dataOfs, ( vec_t* )tmp, sizeof( vec4_t ) );
@@ -288,7 +288,7 @@ VBO_t* R_CreateVBO2( const char* name, int numVertexes, srfVert_t* verts, unsign
 		{
 			for( j = 0; j < 4; j++ )
 			{
-				tmp[ j ] = verts[ i ].paintColor[ j ];
+				tmp[j] = verts[i].paintColor[j];
 			}
 
 			memcpy( data + dataOfs, ( vec_t* )tmp, sizeof( vec4_t ) );
@@ -304,9 +304,9 @@ VBO_t* R_CreateVBO2( const char* name, int numVertexes, srfVert_t* verts, unsign
 		{
 			for( j = 0; j < 3; j++ )
 			{
-				tmp[ j ] = verts[ i ].lightDirection[ j ];
+				tmp[j] = verts[i].lightDirection[j];
 			}
-			tmp[ 3 ] = 1;
+			tmp[3] = 1;
 
 			memcpy( data + dataOfs, ( vec_t* )tmp, sizeof( vec4_t ) );
 			dataOfs += sizeof( vec4_t );
@@ -339,7 +339,7 @@ R_CreateIBO
 IBO_t* R_CreateIBO( const char* name, byte* indexes, int indexesSize, vboUsage_t usage )
 {
 	IBO_t* ibo;
-	int    glUsage;
+	int	   glUsage;
 
 	switch( usage )
 	{
@@ -389,16 +389,16 @@ R_CreateIBO2
 */
 IBO_t* R_CreateIBO2( const char* name, int numTriangles, srfTriangle_t* triangles, vboUsage_t usage )
 {
-	IBO_t* ibo;
-	int    i, j;
+	IBO_t*		   ibo;
+	int			   i, j;
 
-	byte* indexes;
-	int   indexesSize;
-	int   indexesOfs;
+	byte*		   indexes;
+	int			   indexesSize;
+	int			   indexesOfs;
 
 	srfTriangle_t* tri;
-	glIndex_t      index;
-	int            glUsage;
+	glIndex_t	   index;
+	int			   glUsage;
 
 	switch( usage )
 	{
@@ -433,23 +433,23 @@ IBO_t* R_CreateIBO2( const char* name, int numTriangles, srfTriangle_t* triangle
 	Q_strncpyz( ibo->name, name, sizeof( ibo->name ) );
 
 	indexesSize = numTriangles * 3 * sizeof( glIndex_t );
-	indexes     = ri.Hunk_AllocateTempMemory( indexesSize );
-	indexesOfs  = 0;
+	indexes		= ri.Hunk_AllocateTempMemory( indexesSize );
+	indexesOfs	= 0;
 
-	//ri.Printf(PRINT_ALL, "sizeof(glIndex_t) = %i\n", sizeof(glIndex_t));
+	// ri.Printf(PRINT_ALL, "sizeof(glIndex_t) = %i\n", sizeof(glIndex_t));
 
 	for( i = 0, tri = triangles; i < numTriangles; i++, tri++ )
 	{
 		for( j = 0; j < 3; j++ )
 		{
-			index = tri->indexes[ j ];
+			index = tri->indexes[j];
 			memcpy( indexes + indexesOfs, &index, sizeof( glIndex_t ) );
 			indexesOfs += sizeof( glIndex_t );
 		}
 	}
 
 	ibo->indexesSize = indexesSize;
-	ibo->indexesNum  = numTriangles * 3;
+	ibo->indexesNum	 = numTriangles * 3;
 
 	glGenBuffers( 1, &ibo->indexesVBO );
 
@@ -474,7 +474,7 @@ void R_BindVBO( VBO_t* vbo )
 {
 	if( !vbo )
 	{
-		//R_BindNullVBO();
+		// R_BindNullVBO();
 		ri.Error( ERR_DROP, "R_BindNullVBO: NULL vbo" );
 		return;
 	}
@@ -487,18 +487,18 @@ void R_BindVBO( VBO_t* vbo )
 
 	if( glState.currentVBO != vbo )
 	{
-		glState.currentVBO              = vbo;
+		glState.currentVBO				= vbo;
 		glState.vertexAttribPointersSet = 0;
 
 		glState.vertexAttribsInterpolation = 0;
-		glState.vertexAttribsOldFrame      = 0;
-		glState.vertexAttribsNewFrame      = 0;
+		glState.vertexAttribsOldFrame	   = 0;
+		glState.vertexAttribsNewFrame	   = 0;
 
 		glBindBuffer( GL_ARRAY_BUFFER, vbo->vertexesVBO );
 
 		backEnd.pc.c_vboVertexBuffers++;
 
-		//GL_VertexAttribPointers(ATTR_BITS);
+		// GL_VertexAttribPointers(ATTR_BITS);
 	}
 }
 
@@ -529,7 +529,7 @@ void R_BindIBO( IBO_t* ibo )
 {
 	if( !ibo )
 	{
-		//R_BindNullIBO();
+		// R_BindNullIBO();
 		ri.Error( ERR_DROP, "R_BindIBO: NULL ibo" );
 		return;
 	}
@@ -562,40 +562,40 @@ void R_BindNullIBO( void )
 	if( glState.currentIBO )
 	{
 		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
-		glState.currentIBO              = NULL;
+		glState.currentIBO				= NULL;
 		glState.vertexAttribPointersSet = 0;
 	}
 }
 
 static void R_InitUnitCubeVBO()
 {
-	vec3_t         mins = { -1, -1, -1 };
-	vec3_t         maxs = { 1, 1, 1 };
-	int            i;
-	srfVert_t*     verts;
+	vec3_t		   mins = { -1, -1, -1 };
+	vec3_t		   maxs = { 1, 1, 1 };
+	int			   i;
+	srfVert_t*	   verts;
 	srfTriangle_t* triangles;
 
 	R_SyncRenderThread();
 
 	tess.multiDrawPrimitives = 0;
-	tess.numIndexes          = 0;
-	tess.numVertexes         = 0;
+	tess.numIndexes			 = 0;
+	tess.numVertexes		 = 0;
 
 	Tess_AddCube( vec3_origin, mins, maxs, colorWhite );
 
-	verts     = ri.Hunk_AllocateTempMemory( tess.numVertexes * sizeof( srfVert_t ) );
+	verts	  = ri.Hunk_AllocateTempMemory( tess.numVertexes * sizeof( srfVert_t ) );
 	triangles = ri.Hunk_AllocateTempMemory( ( tess.numIndexes / 3 ) * sizeof( srfTriangle_t ) );
 
 	for( i = 0; i < tess.numVertexes; i++ )
 	{
-		VectorCopy( tess.xyz[ i ], verts[ i ].xyz );
+		VectorCopy( tess.xyz[i], verts[i].xyz );
 	}
 
 	for( i = 0; i < ( tess.numIndexes / 3 ); i++ )
 	{
-		triangles[ i ].indexes[ 0 ] = tess.indexes[ i * 3 + 0 ];
-		triangles[ i ].indexes[ 1 ] = tess.indexes[ i * 3 + 1 ];
-		triangles[ i ].indexes[ 2 ] = tess.indexes[ i * 3 + 2 ];
+		triangles[i].indexes[0] = tess.indexes[i * 3 + 0];
+		triangles[i].indexes[1] = tess.indexes[i * 3 + 1];
+		triangles[i].indexes[2] = tess.indexes[i * 3 + 2];
 	}
 
 	tr.unitCubeVBO = R_CreateVBO2( "unitCube_VBO", tess.numVertexes, verts, ATTR_POSITION, VBO_USAGE_STATIC );
@@ -605,8 +605,8 @@ static void R_InitUnitCubeVBO()
 	ri.Hunk_FreeTempMemory( verts );
 
 	tess.multiDrawPrimitives = 0;
-	tess.numIndexes          = 0;
-	tess.numVertexes         = 0;
+	tess.numIndexes			 = 0;
+	tess.numVertexes		 = 0;
 }
 
 /*
@@ -616,7 +616,7 @@ R_InitVBOs
 */
 void R_InitVBOs( void )
 {
-	int   dataSize;
+	int	  dataSize;
 	byte* data;
 
 	ri.Printf( PRINT_DEVELOPER, "------- R_InitVBOs -------\n" );
@@ -625,32 +625,32 @@ void R_InitVBOs( void )
 	Com_InitGrowList( &tr.ibos, 100 );
 
 	dataSize = sizeof( vec4_t ) * SHADER_MAX_VERTEXES * 11;
-	data     = Com_Allocate( dataSize );
+	data	 = Com_Allocate( dataSize );
 	memset( data, 0, dataSize );
 
-	tess.vbo                 = R_CreateVBO( "tessVertexArray_VBO", data, dataSize, VBO_USAGE_DYNAMIC );
-	tess.vbo->ofsXYZ         = 0;
-	tess.vbo->ofsTexCoords   = tess.vbo->ofsXYZ + sizeof( tess.xyz );
+	tess.vbo				 = R_CreateVBO( "tessVertexArray_VBO", data, dataSize, VBO_USAGE_DYNAMIC );
+	tess.vbo->ofsXYZ		 = 0;
+	tess.vbo->ofsTexCoords	 = tess.vbo->ofsXYZ + sizeof( tess.xyz );
 	tess.vbo->ofsLightCoords = tess.vbo->ofsTexCoords + sizeof( tess.texCoords );
-	tess.vbo->ofsTangents    = tess.vbo->ofsLightCoords + sizeof( tess.lightCoords );
-	tess.vbo->ofsBinormals   = tess.vbo->ofsTangents + sizeof( tess.tangents );
-	tess.vbo->ofsNormals     = tess.vbo->ofsBinormals + sizeof( tess.binormals );
-	tess.vbo->ofsColors      = tess.vbo->ofsNormals + sizeof( tess.normals );
+	tess.vbo->ofsTangents	 = tess.vbo->ofsLightCoords + sizeof( tess.lightCoords );
+	tess.vbo->ofsBinormals	 = tess.vbo->ofsTangents + sizeof( tess.tangents );
+	tess.vbo->ofsNormals	 = tess.vbo->ofsBinormals + sizeof( tess.binormals );
+	tess.vbo->ofsColors		 = tess.vbo->ofsNormals + sizeof( tess.normals );
 
 #if !defined( COMPAT_Q3A ) && !defined( COMPAT_ET )
-	tess.vbo->ofsPaintColors     = tess.vbo->ofsColors + sizeof( tess.colors );
+	tess.vbo->ofsPaintColors	 = tess.vbo->ofsColors + sizeof( tess.colors );
 	tess.vbo->ofsLightDirections = tess.vbo->ofsPaintColors + sizeof( tess.paintColors );
 #endif
 
-	tess.vbo->sizeXYZ       = sizeof( tess.xyz );
-	tess.vbo->sizeTangents  = sizeof( tess.tangents );
+	tess.vbo->sizeXYZ		= sizeof( tess.xyz );
+	tess.vbo->sizeTangents	= sizeof( tess.tangents );
 	tess.vbo->sizeBinormals = sizeof( tess.binormals );
-	tess.vbo->sizeNormals   = sizeof( tess.normals );
+	tess.vbo->sizeNormals	= sizeof( tess.normals );
 
 	Com_Dealloc( data );
 
 	dataSize = sizeof( tess.indexes );
-	data     = Com_Allocate( dataSize );
+	data	 = Com_Allocate( dataSize );
 	memset( data, 0, dataSize );
 
 	tess.ibo = R_CreateIBO( "tessVertexArray_IBO", data, dataSize, VBO_USAGE_DYNAMIC );
@@ -672,7 +672,7 @@ R_ShutdownVBOs
 */
 void R_ShutdownVBOs( void )
 {
-	int    i, j;
+	int	   i, j;
 	VBO_t* vbo;
 	IBO_t* ibo;
 
@@ -708,12 +708,12 @@ void R_ShutdownVBOs( void )
 		for( j = 0; j < MAX_VISCOUNTS; j++ )
 		{
 			// FIXME: clean up this code
-			for( i = 0; i < tr.world->clusterVBOSurfaces[ j ].currentElements; i++ )
+			for( i = 0; i < tr.world->clusterVBOSurfaces[j].currentElements; i++ )
 			{
 				srfVBOMesh_t* vboSurf;
 
-				vboSurf = ( srfVBOMesh_t* )Com_GrowListElement( &tr.world->clusterVBOSurfaces[ j ], i );
-				ibo     = vboSurf->ibo;
+				vboSurf = ( srfVBOMesh_t* )Com_GrowListElement( &tr.world->clusterVBOSurfaces[j], i );
+				ibo		= vboSurf->ibo;
 
 				if( ibo->indexesVBO )
 				{
@@ -721,7 +721,7 @@ void R_ShutdownVBOs( void )
 				}
 			}
 
-			Com_DestroyGrowList( &tr.world->clusterVBOSurfaces[ j ] );
+			Com_DestroyGrowList( &tr.world->clusterVBOSurfaces[j] );
 		}
 	}
 
@@ -738,11 +738,11 @@ R_VBOList_f
 */
 void R_VBOList_f( void )
 {
-	int    i;
+	int	   i;
 	VBO_t* vbo;
 	IBO_t* ibo;
-	int    vertexesSize = 0;
-	int    indexesSize  = 0;
+	int	   vertexesSize = 0;
+	int	   indexesSize	= 0;
 
 	ri.Printf( PRINT_ALL, " size          name\n" );
 	ri.Printf( PRINT_ALL, "----------------------------------------------------------\n" );
@@ -765,12 +765,12 @@ void R_VBOList_f( void )
 		for( j = 0; j < MAX_VISCOUNTS; j++ )
 		{
 			// FIXME: clean up this code
-			for( i = 0; i < tr.world->clusterVBOSurfaces[ j ].currentElements; i++ )
+			for( i = 0; i < tr.world->clusterVBOSurfaces[j].currentElements; i++ )
 			{
 				srfVBOMesh_t* vboSurf;
 
-				vboSurf = ( srfVBOMesh_t* )Com_GrowListElement( &tr.world->clusterVBOSurfaces[ j ], i );
-				ibo     = vboSurf->ibo;
+				vboSurf = ( srfVBOMesh_t* )Com_GrowListElement( &tr.world->clusterVBOSurfaces[j], i );
+				ibo		= vboSurf->ibo;
 
 				ri.Printf( PRINT_ALL, "%d.%02d MB %s\n", ibo->indexesSize / ( 1024 * 1024 ), ( ibo->indexesSize % ( 1024 * 1024 ) ) * 100 / ( 1024 * 1024 ), ibo->name );
 

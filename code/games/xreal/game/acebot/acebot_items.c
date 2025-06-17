@@ -34,10 +34,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 qboolean ACEIT_IsReachable( gentity_t* self, vec3_t goal )
 {
 	trace_t trace;
-	vec3_t  v;
+	vec3_t	v;
 
 	VectorCopy( self->r.mins, v );
-	v[ 2 ] += STEPSIZE;
+	v[2] += STEPSIZE;
 
 	trap_Trace( &trace, self->client->ps.origin, v, self->r.maxs, goal, self->s.number, MASK_PLAYERSOLID );
 
@@ -78,13 +78,13 @@ qboolean ACEIT_ChangeWeapon( gentity_t* self, weapon_t weapon )
 	//      return qtrue;
 
 	// has not picked up weapon yet
-	if( !( self->client->ps.stats[ STAT_WEAPONS ] & BIT( weapon ) ) )
+	if( !( self->client->ps.stats[STAT_WEAPONS] & BIT( weapon ) ) )
 	{
 		return qfalse;
 	}
 
 	// do we have ammo for it?
-	if( weapon != WP_GAUNTLET && !self->client->ps.ammo[ weapon ] )
+	if( weapon != WP_GAUNTLET && !self->client->ps.ammo[weapon] )
 	{
 		return qfalse;
 	}
@@ -147,7 +147,7 @@ float ACEIT_ItemNeed( gentity_t* self, gentity_t* itemEnt )
 
 		case IT_AMMO:
 		{
-			if( self->client->ps.ammo[ item->giTag ] >= 200 )
+			if( self->client->ps.ammo[item->giTag] >= 200 )
 			{
 				return 0.0f; // can't hold any more
 			}
@@ -189,27 +189,27 @@ float ACEIT_ItemNeed( gentity_t* self, gentity_t* itemEnt )
 		case IT_ARMOR:
 		{
 	#ifdef MISSIONPACK
-			if( bg_itemlist[ ps->stats[ STAT_PERSISTANT_POWERUP ] ].giTag == PW_SCOUT )
+			if( bg_itemlist[ps->stats[STAT_PERSISTANT_POWERUP]].giTag == PW_SCOUT )
 			{
 				return 0.0f;
 			}
 
 			// we also clamp armor to the maxhealth for handicapping
-			if( bg_itemlist[ ps->stats[ STAT_PERSISTANT_POWERUP ] ].giTag == PW_GUARD )
+			if( bg_itemlist[ps->stats[STAT_PERSISTANT_POWERUP]].giTag == PW_GUARD )
 			{
-				upperBound = ps->stats[ STAT_MAX_HEALTH ];
+				upperBound = ps->stats[STAT_MAX_HEALTH];
 			}
 			else
 			{
-				upperBound = ps->stats[ STAT_MAX_HEALTH ] * 2;
+				upperBound = ps->stats[STAT_MAX_HEALTH] * 2;
 			}
 
-			if( ps->stats[ STAT_ARMOR ] >= upperBound )
+			if( ps->stats[STAT_ARMOR] >= upperBound )
 			{
 				return 0.0f;
 			}
 	#else
-			if( self->client->ps.stats[ STAT_ARMOR ] >= self->client->ps.stats[ STAT_MAX_HEALTH ] * 2 )
+			if( self->client->ps.stats[STAT_ARMOR] >= self->client->ps.stats[STAT_MAX_HEALTH] * 2 )
 			{
 				return 0.0f;
 			}
@@ -222,23 +222,23 @@ float ACEIT_ItemNeed( gentity_t* self, gentity_t* itemEnt )
 			// small and mega healths will go over the max, otherwise
 			// don't pick up if already at max
 	#ifdef MISSIONPACK
-			if( bg_itemlist[ self->client->ps->stats[ STAT_PERSISTANT_POWERUP ] ].giTag == PW_GUARD )
+			if( bg_itemlist[self->client->ps->stats[STAT_PERSISTANT_POWERUP]].giTag == PW_GUARD )
 			{
-				upperBound = self->client->ps->stats[ STAT_MAX_HEALTH ];
+				upperBound = self->client->ps->stats[STAT_MAX_HEALTH];
 			}
 			else
 	#endif
 				if( item->quantity == 5 || item->quantity == 100 )
 			{
-				if( self->client->ps.stats[ STAT_HEALTH ] >= self->client->ps.stats[ STAT_MAX_HEALTH ] * 2 )
+				if( self->client->ps.stats[STAT_HEALTH] >= self->client->ps.stats[STAT_MAX_HEALTH] * 2 )
 				{
 					return 0.0f;
 				}
 
-				return 1.0f - ( float )self->health / ( self->client->ps.stats[ STAT_MAX_HEALTH ] * 2 ); // worse off, higher priority;
+				return 1.0f - ( float )self->health / ( self->client->ps.stats[STAT_MAX_HEALTH] * 2 ); // worse off, higher priority;
 			}
 
-			if( self->client->ps.stats[ STAT_HEALTH ] >= self->client->ps.stats[ STAT_MAX_HEALTH ] )
+			if( self->client->ps.stats[STAT_HEALTH] >= self->client->ps.stats[STAT_MAX_HEALTH] )
 			{
 				return 0.0f;
 			}
@@ -298,16 +298,16 @@ float ACEIT_ItemNeed( gentity_t* self, gentity_t* itemEnt )
 				{
 					return 40.0f;
 				}
-				if( self->client->ps.persistant[ PERS_TEAM ] == TEAM_RED )
+				if( self->client->ps.persistant[PERS_TEAM] == TEAM_RED )
 				{
-					if( item->giTag == PW_BLUEFLAG && self->client->ps.powerups[ PW_NEUTRALFLAG ] )
+					if( item->giTag == PW_BLUEFLAG && self->client->ps.powerups[PW_NEUTRALFLAG] )
 					{
 						return 40.0f;
 					}
 				}
-				else if( self->client->ps.persistant[ PERS_TEAM ] == TEAM_BLUE )
+				else if( self->client->ps.persistant[PERS_TEAM] == TEAM_BLUE )
 				{
-					if( item->giTag == PW_REDFLAG && self->client->ps.powerups[ PW_NEUTRALFLAG ] )
+					if( item->giTag == PW_REDFLAG && self->client->ps.powerups[PW_NEUTRALFLAG] )
 					{
 						return 40.0f;
 					}
@@ -319,20 +319,16 @@ float ACEIT_ItemNeed( gentity_t* self, gentity_t* itemEnt )
 				// ent->modelindex2 is non-zero on items if they are dropped
 				// we need to know this because we can pick up our dropped flag (and return it)
 				// but we can't pick up our flag at base
-				if( self->client->ps.persistant[ PERS_TEAM ] == TEAM_RED )
+				if( self->client->ps.persistant[PERS_TEAM] == TEAM_RED )
 				{
-					if( item->giTag == PW_BLUEFLAG ||
-						( item->giTag == PW_REDFLAG && itemEnt->s.modelindex2 ) ||
-						( item->giTag == PW_REDFLAG && self->client->ps.powerups[ PW_BLUEFLAG ] ) )
+					if( item->giTag == PW_BLUEFLAG || ( item->giTag == PW_REDFLAG && itemEnt->s.modelindex2 ) || ( item->giTag == PW_REDFLAG && self->client->ps.powerups[PW_BLUEFLAG] ) )
 					{
 						return 40.0f;
 					}
 				}
-				else if( self->client->ps.persistant[ PERS_TEAM ] == TEAM_BLUE )
+				else if( self->client->ps.persistant[PERS_TEAM] == TEAM_BLUE )
 				{
-					if( item->giTag == PW_REDFLAG ||
-						( item->giTag == PW_BLUEFLAG && itemEnt->s.modelindex2 ) ||
-						( item->giTag == PW_BLUEFLAG && self->client->ps.powerups[ PW_REDFLAG ] ) )
+					if( item->giTag == PW_REDFLAG || ( item->giTag == PW_BLUEFLAG && itemEnt->s.modelindex2 ) || ( item->giTag == PW_BLUEFLAG && self->client->ps.powerups[PW_REDFLAG] ) )
 					{
 						return 40.0f;
 					}
@@ -359,12 +355,12 @@ float ACEIT_ItemNeed( gentity_t* self, gentity_t* itemEnt )
 // are items that spawn at random locations.
 void ACEIT_BuildItemNodeTable( qboolean rebuild )
 {
-	int        i;
+	int		   i;
 	gentity_t* ent;
-	vec3_t     v, v1, v2;
-	int        nodeType;
+	vec3_t	   v, v1, v2;
+	int		   nodeType;
 
-	for( i = 0, ent = &g_entities[ 0 ]; i < level.numEntities; i++, ent++ )
+	for( i = 0, ent = &g_entities[0]; i < level.numEntities; i++, ent++ )
 	{
 		if( !ent->inuse )
 		{
@@ -379,7 +375,7 @@ void ACEIT_BuildItemNodeTable( qboolean rebuild )
 		   ACEND_AddNode(ent, NODE_PLATFORM);
 		   item_index = 99; // to allow to pass the item index test
 		   }
-		
+
 		   // special node dropping for teleporters
 		   if(!Q_stricmp(ent->item->classname, "misc_teleporter_dest") || !Q_stricmp(ent->item->classname, "trigger_teleport"))
 		   {
@@ -431,14 +427,14 @@ void ACEIT_BuildItemNodeTable( qboolean rebuild )
 			// find stored location
 			for( i = 0; i < numNodes; i++ )
 			{
-				if( nodes[ i ].type == NODE_ITEM || nodes[ i ].type == NODE_PLATFORM || nodes[ i ].type == NODE_TRIGGER_TELEPORT || nodes[ i ].type == NODE_JUMPPAD ) // valid types
+				if( nodes[i].type == NODE_ITEM || nodes[i].type == NODE_PLATFORM || nodes[i].type == NODE_TRIGGER_TELEPORT || nodes[i].type == NODE_JUMPPAD ) // valid types
 				{
-					if( nodes[ i ].type == NODE_ITEM )
+					if( nodes[i].type == NODE_ITEM )
 					{
 						VectorCopy( ent->s.origin, v );
-						//v[2] += 16;
+						// v[2] += 16;
 					}
-					else if( nodes[ i ].type == NODE_TRIGGER_TELEPORT )
+					else if( nodes[i].type == NODE_TRIGGER_TELEPORT )
 					{
 						VectorAdd( ent->r.absmin, ent->r.absmax, v );
 						VectorScale( v, 0.5, v );
@@ -449,7 +445,7 @@ void ACEIT_BuildItemNodeTable( qboolean rebuild )
 					   v[2] += 32;
 					   }
 					 */
-					else if( nodes[ i ].type == NODE_JUMPPAD )
+					else if( nodes[i].type == NODE_JUMPPAD )
 					{
 						VectorAdd( ent->r.absmin, ent->r.absmax, v );
 						VectorScale( v, 0.5, v );
@@ -464,14 +460,14 @@ void ACEIT_BuildItemNodeTable( qboolean rebuild )
 						VectorCopy( ent->r.mins, v2 );
 
 						// to get the center
-						v[ 0 ] = ( v1[ 0 ] - v2[ 0 ] ) / 2 + v2[ 0 ];
-						v[ 1 ] = ( v1[ 1 ] - v2[ 1 ] ) / 2 + v2[ 1 ];
-						v[ 2 ] = ent->r.mins[ 2 ] + 64;
+						v[0] = ( v1[0] - v2[0] ) / 2 + v2[0];
+						v[1] = ( v1[1] - v2[1] ) / 2 + v2[1];
+						v[2] = ent->r.mins[2] + 64;
 					}
 
 					SnapVector( v );
 
-					if( /*ent->node != INVALID || */ VectorCompare( v, nodes[ i ].origin ) )
+					if( /*ent->node != INVALID || */ VectorCompare( v, nodes[i].origin ) )
 					{
 						/*
 						   if(!VectorCompare(v, nodes[i].origin))
@@ -486,7 +482,7 @@ void ACEIT_BuildItemNodeTable( qboolean rebuild )
 							ent->node = i;
 						}
 
-	#if 0 //defined(_DEBUG)
+	#if 0 // defined(_DEBUG)
 						if( ent->item )
 						{
 							G_Printf( "relink item: %s node: %d pos: %f %f %f\n", ent->item->classname, ent->node,

@@ -29,7 +29,7 @@ int c_nodes;
 // if a brush just barely pokes onto the other side,
 // let it slide by without chopping
 #define PLANESIDE_EPSILON 0.001
-//0.1
+// 0.1
 
 /*
 ================
@@ -56,9 +56,9 @@ AllocBrush
 bspBrush_t* AllocBrush( int numsides )
 {
 	bspBrush_t* bb;
-	int         c;
+	int			c;
 
-	c  = ( int )&( ( ( bspBrush_t* )0 )->sides[ numsides ] );
+	c  = ( int )&( ( ( bspBrush_t* )0 )->sides[numsides] );
 	bb = malloc( c );
 	memset( bb, 0, c );
 	if( numthreads == 1 )
@@ -78,9 +78,9 @@ void FreeBrush( bspBrush_t* brushes )
 	int i;
 
 	for( i = 0; i < brushes->numsides; i++ )
-		if( brushes->sides[ i ].winding )
+		if( brushes->sides[i].winding )
 		{
-			FreeWinding( brushes->sides[ i ].winding );
+			FreeWinding( brushes->sides[i].winding );
 		}
 	free( brushes );
 	if( numthreads == 1 )
@@ -116,19 +116,19 @@ Duplicates the brush, the sides, and the windings
 bspBrush_t* CopyBrush( bspBrush_t* brush )
 {
 	bspBrush_t* newbrush;
-	int         size;
-	int         i;
+	int			size;
+	int			i;
 
-	size = ( int )&( ( ( bspBrush_t* )0 )->sides[ brush->numsides ] );
+	size = ( int )&( ( ( bspBrush_t* )0 )->sides[brush->numsides] );
 
 	newbrush = AllocBrush( brush->numsides );
 	memcpy( newbrush, brush, size );
 
 	for( i = 0; i < brush->numsides; i++ )
 	{
-		if( brush->sides[ i ].winding )
+		if( brush->sides[i].winding )
 		{
-			newbrush->sides[ i ].winding = CopyWinding( brush->sides[ i ].winding );
+			newbrush->sides[i].winding = CopyWinding( brush->sides[i].winding );
 		}
 	}
 
@@ -142,14 +142,14 @@ DrawBrushList
 */
 void DrawBrushList( bspBrush_t* brush )
 {
-	int     i;
+	int		i;
 	side_t* s;
 
 	for( ; brush; brush = brush->next )
 	{
 		for( i = 0; i < brush->numsides; i++ )
 		{
-			s = &brush->sides[ i ];
+			s = &brush->sides[i];
 
 			if( !s->winding )
 			{
@@ -168,9 +168,9 @@ WriteBrushList
 */
 void WriteBrushList( char* name, bspBrush_t* brush, qboolean onlyvis )
 {
-	int     i;
+	int		i;
 	side_t* s;
-	FILE*   f;
+	FILE*	f;
 
 	Sys_FPrintf( SYS_VRB, "writing %s\n", name );
 	f = SafeOpenWrite( name );
@@ -179,7 +179,7 @@ void WriteBrushList( char* name, bspBrush_t* brush, qboolean onlyvis )
 	{
 		for( i = 0; i < brush->numsides; i++ )
 		{
-			s = &brush->sides[ i ];
+			s = &brush->sides[i];
 
 			if( !s->winding )
 			{
@@ -191,7 +191,7 @@ void WriteBrushList( char* name, bspBrush_t* brush, qboolean onlyvis )
 				continue;
 			}
 
-			OutputWinding( brush->sides[ i ].winding, f );
+			OutputWinding( brush->sides[i].winding, f );
 		}
 	}
 
@@ -210,7 +210,7 @@ void PrintBrush( bspBrush_t* brush )
 	Sys_Printf( "brush: %p\n", brush );
 	for( i = 0; i < brush->numsides; i++ )
 	{
-		pw( brush->sides[ i ].winding );
+		pw( brush->sides[i].winding );
 		Sys_Printf( "\n" );
 	}
 }
@@ -225,26 +225,26 @@ returns false if the brush doesn't enclose a valid volume
 */
 qboolean BoundBrush( bspBrush_t* brush )
 {
-	int        i, j;
+	int		   i, j;
 	winding_t* w;
 
 	ClearBounds( brush->mins, brush->maxs );
 	for( i = 0; i < brush->numsides; i++ )
 	{
-		w = brush->sides[ i ].winding;
+		w = brush->sides[i].winding;
 		if( !w )
 		{
 			continue;
 		}
 		for( j = 0; j < w->numpoints; j++ )
 		{
-			AddPointToBounds( w->p[ j ], brush->mins, brush->maxs );
+			AddPointToBounds( w->p[j], brush->mins, brush->maxs );
 		}
 	}
 
 	for( i = 0; i < 3; i++ )
 	{
-		if( brush->mins[ i ] < MIN_WORLD_COORD || brush->maxs[ i ] > MAX_WORLD_COORD || brush->mins[ i ] >= brush->maxs[ i ] )
+		if( brush->mins[i] < MIN_WORLD_COORD || brush->maxs[i] > MAX_WORLD_COORD || brush->mins[i] >= brush->maxs[i] )
 		{
 			return qfalse;
 		}
@@ -263,41 +263,41 @@ returns false if the brush doesn't enclose a valid volume
 */
 qboolean CreateBrushWindings( bspBrush_t* brush )
 {
-	int        i, j;
+	int		   i, j;
 	winding_t* w;
-	side_t*    side;
+	side_t*	   side;
 	plane_t*   plane;
 
 	for( i = 0; i < brush->numsides; i++ )
 	{
-		side = &brush->sides[ i ];
+		side = &brush->sides[i];
 		// don't create a winding for a bevel
 		if( side->bevel )
 		{
 			continue;
 		}
-		plane = &mapPlanes[ side->planenum ];
-		w     = BaseWindingForPlane( plane->normal, plane->dist );
+		plane = &mapPlanes[side->planenum];
+		w	  = BaseWindingForPlane( plane->normal, plane->dist );
 		for( j = 0; j < brush->numsides && w; j++ )
 		{
 			if( i == j )
 			{
 				continue;
 			}
-			if( brush->sides[ j ].planenum == ( brush->sides[ i ].planenum ^ 1 ) )
+			if( brush->sides[j].planenum == ( brush->sides[i].planenum ^ 1 ) )
 			{
 				continue; // back side clipaway
 			}
-			if( brush->sides[ j ].bevel )
+			if( brush->sides[j].bevel )
 			{
 				continue;
 			}
-			if( brush->sides[ j ].backSide )
+			if( brush->sides[j].backSide )
 			{
 				continue;
 			}
-			plane = &mapPlanes[ brush->sides[ j ].planenum ^ 1 ];
-			ChopWindingInPlace( &w, plane->normal, plane->dist, 0 ); //CLIP_EPSILON);
+			plane = &mapPlanes[brush->sides[j].planenum ^ 1];
+			ChopWindingInPlace( &w, plane->normal, plane->dist, 0 ); // CLIP_EPSILON);
 		}
 		// free any existing winding
 		if( side->winding )
@@ -320,22 +320,22 @@ Creates a new axial brush
 bspBrush_t* BrushFromBounds( vec3_t mins, vec3_t maxs )
 {
 	bspBrush_t* b;
-	int         i;
-	vec3_t      normal;
-	vec_t       dist;
+	int			i;
+	vec3_t		normal;
+	vec_t		dist;
 
-	b           = AllocBrush( 6 );
+	b			= AllocBrush( 6 );
 	b->numsides = 6;
 	for( i = 0; i < 3; i++ )
 	{
 		VectorClear( normal );
-		normal[ i ]            = 1;
-		dist                   = maxs[ i ];
-		b->sides[ i ].planenum = FindFloatPlane( normal, dist );
+		normal[i]			 = 1;
+		dist				 = maxs[i];
+		b->sides[i].planenum = FindFloatPlane( normal, dist );
 
-		normal[ i ]                = -1;
-		dist                       = -mins[ i ];
-		b->sides[ 3 + i ].planenum = FindFloatPlane( normal, dist );
+		normal[i]				 = -1;
+		dist					 = -mins[i];
+		b->sides[3 + i].planenum = FindFloatPlane( normal, dist );
 	}
 
 	CreateBrushWindings( b );
@@ -350,10 +350,10 @@ BrushVolume
 */
 vec_t BrushVolume( bspBrush_t* brush )
 {
-	int        i;
+	int		   i;
 	winding_t* w;
-	vec3_t     corner;
-	vec_t      d, area, volume;
+	vec3_t	   corner;
+	vec_t	   d, area, volume;
 	plane_t*   plane;
 
 	if( !brush )
@@ -366,7 +366,7 @@ vec_t BrushVolume( bspBrush_t* brush )
 	w = NULL;
 	for( i = 0; i < brush->numsides; i++ )
 	{
-		w = brush->sides[ i ].winding;
+		w = brush->sides[i].winding;
 		if( w )
 		{
 			break;
@@ -376,20 +376,20 @@ vec_t BrushVolume( bspBrush_t* brush )
 	{
 		return 0;
 	}
-	VectorCopy( w->p[ 0 ], corner );
+	VectorCopy( w->p[0], corner );
 
 	// make tetrahedrons to all other faces
 
 	volume = 0;
 	for( ; i < brush->numsides; i++ )
 	{
-		w = brush->sides[ i ].winding;
+		w = brush->sides[i].winding;
 		if( !w )
 		{
 			continue;
 		}
-		plane = &mapPlanes[ brush->sides[ i ].planenum ];
-		d     = -( DotProduct( corner, plane->normal ) - plane->dist );
+		plane = &mapPlanes[brush->sides[i].planenum];
+		d	  = -( DotProduct( corner, plane->normal ) - plane->dist );
 		area  = WindingArea( w );
 		volume += d * area;
 	}
@@ -405,9 +405,9 @@ WriteBspBrushMap
 */
 void WriteBspBrushMap( char* name, bspBrush_t* list )
 {
-	FILE*      f;
-	side_t*    s;
-	int        i;
+	FILE*	   f;
+	side_t*	   s;
+	int		   i;
 	winding_t* w;
 
 	Sys_Printf( "writing %s\n", name );
@@ -424,11 +424,11 @@ void WriteBspBrushMap( char* name, bspBrush_t* list )
 		fprintf( f, "{\n" );
 		for( i = 0, s = list->sides; i < list->numsides; i++, s++ )
 		{
-			w = BaseWindingForPlane( mapPlanes[ s->planenum ].normal, mapPlanes[ s->planenum ].dist );
+			w = BaseWindingForPlane( mapPlanes[s->planenum].normal, mapPlanes[s->planenum].dist );
 
-			fprintf( f, "( %i %i %i ) ", ( int )w->p[ 0 ][ 0 ], ( int )w->p[ 0 ][ 1 ], ( int )w->p[ 0 ][ 2 ] );
-			fprintf( f, "( %i %i %i ) ", ( int )w->p[ 1 ][ 0 ], ( int )w->p[ 1 ][ 1 ], ( int )w->p[ 1 ][ 2 ] );
-			fprintf( f, "( %i %i %i ) ", ( int )w->p[ 2 ][ 0 ], ( int )w->p[ 2 ][ 1 ], ( int )w->p[ 2 ][ 2 ] );
+			fprintf( f, "( %i %i %i ) ", ( int )w->p[0][0], ( int )w->p[0][1], ( int )w->p[0][2] );
+			fprintf( f, "( %i %i %i ) ", ( int )w->p[1][0], ( int )w->p[1][1], ( int )w->p[1][2] );
+			fprintf( f, "( %i %i %i ) ", ( int )w->p[2][0], ( int )w->p[2][1], ( int )w->p[2][2] );
 
 			fprintf( f, "notexture 0 0 0 1 1\n" );
 			FreeWinding( w );
@@ -450,7 +450,7 @@ FilterBrushIntoTree_r
 int FilterBrushIntoTree_r( bspBrush_t* b, node_t* node )
 {
 	bspBrush_t *front, *back;
-	int         c;
+	int			c;
 
 	if( !b )
 	{
@@ -460,7 +460,7 @@ int FilterBrushIntoTree_r( bspBrush_t* b, node_t* node )
 	// add it to the leaf list
 	if( node->planenum == PLANENUM_LEAF )
 	{
-		b->next         = node->brushlist;
+		b->next			= node->brushlist;
 		node->brushlist = b;
 
 		// classify the leaf by the structural brush
@@ -468,7 +468,7 @@ int FilterBrushIntoTree_r( bspBrush_t* b, node_t* node )
 		{
 			if( b->opaque )
 			{
-				node->opaque     = qtrue;
+				node->opaque	 = qtrue;
 				node->areaportal = qfalse;
 			}
 			else if( b->contents & CONTENTS_AREAPORTAL )
@@ -488,8 +488,8 @@ int FilterBrushIntoTree_r( bspBrush_t* b, node_t* node )
 	FreeBrush( b );
 
 	c = 0;
-	c += FilterBrushIntoTree_r( front, node->children[ 0 ] );
-	c += FilterBrushIntoTree_r( back, node->children[ 1 ] );
+	c += FilterBrushIntoTree_r( front, node->children[0] );
+	c += FilterBrushIntoTree_r( back, node->children[1] );
 
 	return c;
 }
@@ -504,9 +504,9 @@ Fragment all the detail brushes into the structural leafs
 void FilterDetailBrushesIntoTree( entity_t* e, tree_t* tree )
 {
 	bspBrush_t *b, *newb;
-	int         r;
-	int         c_unique, c_clusters;
-	int         i;
+	int			r;
+	int			c_unique, c_clusters;
+	int			i;
 
 	Sys_FPrintf( SYS_VRB, "----- FilterDetailBrushesIntoTree -----\n" );
 
@@ -520,7 +520,7 @@ void FilterDetailBrushesIntoTree( entity_t* e, tree_t* tree )
 		}
 		c_unique++;
 		newb = CopyBrush( b );
-		r    = FilterBrushIntoTree_r( newb, tree->headnode );
+		r	 = FilterBrushIntoTree_r( newb, tree->headnode );
 		c_clusters += r;
 
 		// mark all sides as visible so drawsurfs are created
@@ -528,9 +528,9 @@ void FilterDetailBrushesIntoTree( entity_t* e, tree_t* tree )
 		{
 			for( i = 0; i < b->numsides; i++ )
 			{
-				if( b->sides[ i ].winding )
+				if( b->sides[i].winding )
 				{
-					b->sides[ i ].visible = qtrue;
+					b->sides[i].visible = qtrue;
 				}
 			}
 		}
@@ -550,9 +550,9 @@ Mark the leafs as opaque and areaportals
 void FilterStructuralBrushesIntoTree( entity_t* e, tree_t* tree )
 {
 	bspBrush_t *b, *newb;
-	int         r;
-	int         c_unique, c_clusters;
-	int         i;
+	int			r;
+	int			c_unique, c_clusters;
+	int			i;
 
 	Sys_FPrintf( SYS_VRB, "----- FilterStructuralBrushesIntoTree -----\n" );
 
@@ -566,7 +566,7 @@ void FilterStructuralBrushesIntoTree( entity_t* e, tree_t* tree )
 		}
 		c_unique++;
 		newb = CopyBrush( b );
-		r    = FilterBrushIntoTree_r( newb, tree->headnode );
+		r	 = FilterBrushIntoTree_r( newb, tree->headnode );
 		c_clusters += r;
 
 		// mark all sides as visible so drawsurfs are created
@@ -574,9 +574,9 @@ void FilterStructuralBrushesIntoTree( entity_t* e, tree_t* tree )
 		{
 			for( i = 0; i < b->numsides; i++ )
 			{
-				if( b->sides[ i ].winding )
+				if( b->sides[i].winding )
 				{
-					b->sides[ i ].visible = qtrue;
+					b->sides[i].visible = qtrue;
 				}
 			}
 		}
@@ -633,16 +633,16 @@ qboolean WindingIsTiny( winding_t* w )
 			return qtrue;
 		return qfalse;
 	*/
-	int    i, j;
+	int	   i, j;
 	vec_t  len;
 	vec3_t delta;
-	int    edges;
+	int	   edges;
 
 	edges = 0;
 	for( i = 0; i < w->numpoints; i++ )
 	{
 		j = i == w->numpoints - 1 ? 0 : i + 1;
-		VectorSubtract( w->p[ j ], w->p[ i ], delta );
+		VectorSubtract( w->p[j], w->p[i], delta );
 		len = VectorLength( delta );
 		if( len > EDGE_LENGTH )
 		{
@@ -670,7 +670,7 @@ qboolean WindingIsHuge( winding_t* w )
 	for( i = 0; i < w->numpoints; i++ )
 	{
 		for( j = 0; j < 3; j++ )
-			if( w->p[ i ][ j ] <= MIN_WORLD_COORD || w->p[ i ][ j ] >= MAX_WORLD_COORD )
+			if( w->p[i][j] <= MIN_WORLD_COORD || w->p[i][j] >= MAX_WORLD_COORD )
 			{
 				return qtrue;
 			}
@@ -687,31 +687,31 @@ BrushMostlyOnSide
 */
 int BrushMostlyOnSide( bspBrush_t* brush, plane_t* plane )
 {
-	int        i, j;
+	int		   i, j;
 	winding_t* w;
-	vec_t      d, max;
-	int        side;
+	vec_t	   d, max;
+	int		   side;
 
-	max  = 0;
+	max	 = 0;
 	side = PSIDE_FRONT;
 	for( i = 0; i < brush->numsides; i++ )
 	{
-		w = brush->sides[ i ].winding;
+		w = brush->sides[i].winding;
 		if( !w )
 		{
 			continue;
 		}
 		for( j = 0; j < w->numpoints; j++ )
 		{
-			d = DotProduct( w->p[ j ], plane->normal ) - plane->dist;
+			d = DotProduct( w->p[j], plane->normal ) - plane->dist;
 			if( d > max )
 			{
-				max  = d;
+				max	 = d;
 				side = PSIDE_FRONT;
 			}
 			if( -d > max )
 			{
-				max  = -d;
+				max	 = -d;
 				side = PSIDE_BACK;
 			}
 		}
@@ -729,28 +729,28 @@ unchanged
 */
 void SplitBrush( bspBrush_t* brush, int planenum, bspBrush_t** front, bspBrush_t** back )
 {
-	bspBrush_t* b[ 2 ];
-	int         i, j;
-	winding_t * w, *cw[ 2 ], *midwinding;
-	plane_t *   plane, *plane2;
-	side_t *    s, *cs;
-	float       d, d_front, d_back;
+	bspBrush_t* b[2];
+	int			i, j;
+	winding_t * w, *cw[2], *midwinding;
+	plane_t *	plane, *plane2;
+	side_t *	s, *cs;
+	float		d, d_front, d_back;
 
 	*front = *back = NULL;
-	plane          = &mapPlanes[ planenum ];
+	plane		   = &mapPlanes[planenum];
 
 	// check all points
 	d_front = d_back = 0;
 	for( i = 0; i < brush->numsides; i++ )
 	{
-		w = brush->sides[ i ].winding;
+		w = brush->sides[i].winding;
 		if( !w )
 		{
 			continue;
 		}
 		for( j = 0; j < w->numpoints; j++ )
 		{
-			d = DotProduct( w->p[ j ], plane->normal ) - plane->dist;
+			d = DotProduct( w->p[j], plane->normal ) - plane->dist;
 			if( d > 0 && d > d_front )
 			{
 				d_front = d;
@@ -779,11 +779,11 @@ void SplitBrush( bspBrush_t* brush, int planenum, bspBrush_t** front, bspBrush_t
 	w = BaseWindingForPlane( plane->normal, plane->dist );
 	for( i = 0; i < brush->numsides && w; i++ )
 	{
-		if( brush->sides[ i ].backSide )
+		if( brush->sides[i].backSide )
 		{
 			continue; // fake back-sided polygons never split
 		}
-		plane2 = &mapPlanes[ brush->sides[ i ].planenum ^ 1 ];
+		plane2 = &mapPlanes[brush->sides[i].planenum ^ 1];
 		ChopWindingInPlace( &w, plane2->normal, plane2->dist, 0 ); // PLANESIDE_EPSILON);
 	}
 
@@ -815,27 +815,27 @@ void SplitBrush( bspBrush_t* brush, int planenum, bspBrush_t** front, bspBrush_t
 
 	for( i = 0; i < 2; i++ )
 	{
-		b[ i ] = AllocBrush( brush->numsides + 1 );
-		memcpy( b[ i ], brush, sizeof( bspBrush_t ) - sizeof( brush->sides ) );
-		b[ i ]->numsides = 0;
-		b[ i ]->next     = NULL;
-		b[ i ]->original = brush->original;
+		b[i] = AllocBrush( brush->numsides + 1 );
+		memcpy( b[i], brush, sizeof( bspBrush_t ) - sizeof( brush->sides ) );
+		b[i]->numsides = 0;
+		b[i]->next	   = NULL;
+		b[i]->original = brush->original;
 	}
 
 	// split all the current windings
 
 	for( i = 0; i < brush->numsides; i++ )
 	{
-		s = &brush->sides[ i ];
+		s = &brush->sides[i];
 		w = s->winding;
 		if( !w )
 		{
 			continue;
 		}
-		ClipWindingEpsilon( w, plane->normal, plane->dist, 0 /*PLANESIDE_EPSILON */, &cw[ 0 ], &cw[ 1 ] );
+		ClipWindingEpsilon( w, plane->normal, plane->dist, 0 /*PLANESIDE_EPSILON */, &cw[0], &cw[1] );
 		for( j = 0; j < 2; j++ )
 		{
-			if( !cw[ j ] )
+			if( !cw[j] )
 			{
 				continue;
 			}
@@ -846,10 +846,10 @@ void SplitBrush( bspBrush_t* brush, int planenum, bspBrush_t** front, bspBrush_t
 							continue;
 						}
 			*/
-			cs = &b[ j ]->sides[ b[ j ]->numsides ];
-			b[ j ]->numsides++;
-			*cs         = *s;
-			cs->winding = cw[ j ];
+			cs = &b[j]->sides[b[j]->numsides];
+			b[j]->numsides++;
+			*cs			= *s;
+			cs->winding = cw[j];
 		}
 	}
 
@@ -857,26 +857,26 @@ void SplitBrush( bspBrush_t* brush, int planenum, bspBrush_t** front, bspBrush_t
 
 	for( i = 0; i < 2; i++ )
 	{
-		BoundBrush( b[ i ] );
+		BoundBrush( b[i] );
 		for( j = 0; j < 3; j++ )
 		{
-			if( b[ i ]->mins[ j ] < MIN_WORLD_COORD || b[ i ]->maxs[ j ] > MAX_WORLD_COORD )
+			if( b[i]->mins[j] < MIN_WORLD_COORD || b[i]->maxs[j] > MAX_WORLD_COORD )
 			{
 				Sys_FPrintf( SYS_VRB, "bogus brush after clip\n" );
 				break;
 			}
 		}
 
-		if( b[ i ]->numsides < 3 || j < 3 )
+		if( b[i]->numsides < 3 || j < 3 )
 		{
-			FreeBrush( b[ i ] );
-			b[ i ] = NULL;
+			FreeBrush( b[i] );
+			b[i] = NULL;
 		}
 	}
 
-	if( !( b[ 0 ] && b[ 1 ] ) )
+	if( !( b[0] && b[1] ) )
 	{
-		if( !b[ 0 ] && !b[ 1 ] )
+		if( !b[0] && !b[1] )
 		{
 			Sys_FPrintf( SYS_VRB, "split removed brush\n" );
 		}
@@ -884,14 +884,14 @@ void SplitBrush( bspBrush_t* brush, int planenum, bspBrush_t** front, bspBrush_t
 		{
 			Sys_FPrintf( SYS_VRB, "split not on both sides\n" );
 		}
-		if( b[ 0 ] )
+		if( b[0] )
 		{
-			FreeBrush( b[ 0 ] );
+			FreeBrush( b[0] );
 			*front = CopyBrush( brush );
 		}
-		if( b[ 1 ] )
+		if( b[1] )
 		{
-			FreeBrush( b[ 1 ] );
+			FreeBrush( b[1] );
 			*back = CopyBrush( brush );
 		}
 		return;
@@ -900,8 +900,8 @@ void SplitBrush( bspBrush_t* brush, int planenum, bspBrush_t** front, bspBrush_t
 	// add the midwinding to both sides
 	for( i = 0; i < 2; i++ )
 	{
-		cs = &b[ i ]->sides[ b[ i ]->numsides ];
-		b[ i ]->numsides++;
+		cs = &b[i]->sides[b[i]->numsides];
+		b[i]->numsides++;
 
 		cs->planenum   = planenum ^ i ^ 1;
 		cs->shaderInfo = NULL;
@@ -917,20 +917,20 @@ void SplitBrush( bspBrush_t* brush, int planenum, bspBrush_t** front, bspBrush_t
 
 	{
 		vec_t v1;
-		int   i;
+		int	  i;
 
 		for( i = 0; i < 2; i++ )
 		{
-			v1 = BrushVolume( b[ i ] );
+			v1 = BrushVolume( b[i] );
 			if( v1 < 1.0 )
 			{
-				FreeBrush( b[ i ] );
-				b[ i ] = NULL;
+				FreeBrush( b[i] );
+				b[i] = NULL;
 				//          qprintf ("tiny volume after clip\n");
 			}
 		}
 	}
 
-	*front = b[ 0 ];
-	*back  = b[ 1 ];
+	*front = b[0];
+	*back  = b[1];
 }

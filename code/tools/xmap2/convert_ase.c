@@ -39,10 +39,10 @@ converts a bsp drawsurface to an ase chunk
 
 static void ConvertSurface( FILE* f, bspModel_t* model, int modelNum, bspDrawSurface_t* ds, int surfaceNum, vec3_t origin )
 {
-	int            i, v, face, a, b, c;
+	int			   i, v, face, a, b, c;
 	bspDrawVert_t* dv;
-	vec3_t         normal;
-	char           name[ 1024 ];
+	vec3_t		   normal;
+	char		   name[1024];
 
 	/* ignore patches for now */
 	if( ds->surfaceType != MST_PLANAR && ds->surfaceType != MST_TRIANGLE_SOUP )
@@ -63,7 +63,7 @@ static void ConvertSurface( FILE* f, bspModel_t* model, int modelNum, bspDrawSur
 	fprintf( f, "\t\t*TM_ROW1\t0\t1.0\t0\r\n" );
 	fprintf( f, "\t\t*TM_ROW2\t0\t0\t1.0\r\n" );
 	fprintf( f, "\t\t*TM_ROW3\t0\t0\t0\r\n" );
-	fprintf( f, "\t\t*TM_POS\t%f\t%f\t%f\r\n", origin[ 0 ], origin[ 1 ], origin[ 2 ] );
+	fprintf( f, "\t\t*TM_POS\t%f\t%f\t%f\r\n", origin[0], origin[1], origin[2] );
 	fprintf( f, "\t}\r\n" );
 
 	/* print mesh header */
@@ -86,8 +86,8 @@ static void ConvertSurface( FILE* f, bspModel_t* model, int modelNum, bspDrawSur
 	for( i = 0; i < ds->numVerts; i++ )
 	{
 		v  = i + ds->firstVert;
-		dv = &bspDrawVerts[ v ];
-		fprintf( f, "\t\t\t*MESH_VERTEX\t%d\t%f\t%f\t%f\r\n", i, dv->xyz[ 0 ], dv->xyz[ 1 ], dv->xyz[ 2 ] );
+		dv = &bspDrawVerts[v];
+		fprintf( f, "\t\t\t*MESH_VERTEX\t%d\t%f\t%f\t%f\r\n", i, dv->xyz[0], dv->xyz[1], dv->xyz[2] );
 	}
 	fprintf( f, "\t\t}\r\n" );
 
@@ -96,22 +96,22 @@ static void ConvertSurface( FILE* f, bspModel_t* model, int modelNum, bspDrawSur
 	for( i = 0; i < ds->numIndexes; i += 3 )
 	{
 		face = ( i / 3 );
-		a    = bspDrawIndexes[ i + ds->firstIndex ];
-		b    = bspDrawIndexes[ i + ds->firstIndex + 1 ];
-		c    = bspDrawIndexes[ i + ds->firstIndex + 2 ];
-		VectorCopy( bspDrawVerts[ a ].normal, normal );
-		VectorAdd( normal, bspDrawVerts[ b ].normal, normal );
-		VectorAdd( normal, bspDrawVerts[ c ].normal, normal );
+		a	 = bspDrawIndexes[i + ds->firstIndex];
+		b	 = bspDrawIndexes[i + ds->firstIndex + 1];
+		c	 = bspDrawIndexes[i + ds->firstIndex + 2];
+		VectorCopy( bspDrawVerts[a].normal, normal );
+		VectorAdd( normal, bspDrawVerts[b].normal, normal );
+		VectorAdd( normal, bspDrawVerts[c].normal, normal );
 		if( VectorNormalize2( normal, normal ) )
 		{
-			fprintf( f, "\t\t\t*MESH_FACENORMAL\t%d\t%f\t%f\t%f\r\n", face, normal[ 0 ], normal[ 1 ], normal[ 2 ] );
+			fprintf( f, "\t\t\t*MESH_FACENORMAL\t%d\t%f\t%f\t%f\r\n", face, normal[0], normal[1], normal[2] );
 		}
 	}
 	for( i = 0; i < ds->numVerts; i++ )
 	{
 		v  = i + ds->firstVert;
-		dv = &bspDrawVerts[ v ];
-		fprintf( f, "\t\t\t*MESH_VERTEXNORMAL\t%d\t%f\t%f\t%f\r\n", i, dv->normal[ 0 ], dv->normal[ 1 ], dv->normal[ 2 ] );
+		dv = &bspDrawVerts[v];
+		fprintf( f, "\t\t\t*MESH_VERTEXNORMAL\t%d\t%f\t%f\t%f\r\n", i, dv->normal[0], dv->normal[1], dv->normal[2] );
 	}
 	fprintf( f, "\t\t}\r\n" );
 
@@ -120,9 +120,9 @@ static void ConvertSurface( FILE* f, bspModel_t* model, int modelNum, bspDrawSur
 	for( i = 0; i < ds->numIndexes; i += 3 )
 	{
 		face = ( i / 3 );
-		a    = bspDrawIndexes[ i + ds->firstIndex ];
-		c    = bspDrawIndexes[ i + ds->firstIndex + 1 ];
-		b    = bspDrawIndexes[ i + ds->firstIndex + 2 ];
+		a	 = bspDrawIndexes[i + ds->firstIndex];
+		c	 = bspDrawIndexes[i + ds->firstIndex + 1];
+		b	 = bspDrawIndexes[i + ds->firstIndex + 2];
 		fprintf( f, "\t\t\t*MESH_FACE\t%d\tA:\t%d\tB:\t%d\tC:\t%d\tAB:\t1\tBC:\t1\tCA:\t1\t*MESH_SMOOTHING\t0\t*MESH_MTLID\t0\r\n", face, a, b, c );
 	}
 	fprintf( f, "\t\t}\r\n" );
@@ -133,8 +133,8 @@ static void ConvertSurface( FILE* f, bspModel_t* model, int modelNum, bspDrawSur
 	for( i = 0; i < ds->numVerts; i++ )
 	{
 		v  = i + ds->firstVert;
-		dv = &bspDrawVerts[ v ];
-		fprintf( f, "\t\t\t*MESH_TVERT\t%d\t%f\t%f\t%f\r\n", i, dv->st[ 0 ], ( 1.0 - dv->st[ 1 ] ), 1.0f );
+		dv = &bspDrawVerts[v];
+		fprintf( f, "\t\t\t*MESH_TVERT\t%d\t%f\t%f\t%f\r\n", i, dv->st[0], ( 1.0 - dv->st[1] ), 1.0f );
 	}
 	fprintf( f, "\t\t}\r\n" );
 
@@ -144,9 +144,9 @@ static void ConvertSurface( FILE* f, bspModel_t* model, int modelNum, bspDrawSur
 	for( i = 0; i < ds->numIndexes; i += 3 )
 	{
 		face = ( i / 3 );
-		a    = bspDrawIndexes[ i + ds->firstIndex ];
-		c    = bspDrawIndexes[ i + ds->firstIndex + 1 ];
-		b    = bspDrawIndexes[ i + ds->firstIndex + 2 ];
+		a	 = bspDrawIndexes[i + ds->firstIndex];
+		c	 = bspDrawIndexes[i + ds->firstIndex + 1];
+		b	 = bspDrawIndexes[i + ds->firstIndex + 2];
 		fprintf( f, "\t\t\t*MESH_TFACE\t%d\t%d\t%d\t%d\r\n", face, a, b, c );
 	}
 	fprintf( f, "\t\t}\r\n" );
@@ -161,8 +161,8 @@ static void ConvertSurface( FILE* f, bspModel_t* model, int modelNum, bspDrawSur
 	for( i = 0; i < ds->numVerts; i++ )
 	{
 		v  = i + ds->firstVert;
-		dv = &bspDrawVerts[ v ];
-		fprintf( f, "\t\t\t\t*MESH_TVERT\t%d\t%f\t%f\t%f\r\n", i, dv->lightmap[ 0 ][ 0 ], ( 1.0 - dv->lightmap[ 0 ][ 1 ] ), 1.0f );
+		dv = &bspDrawVerts[v];
+		fprintf( f, "\t\t\t\t*MESH_TVERT\t%d\t%f\t%f\t%f\r\n", i, dv->lightmap[0][0], ( 1.0 - dv->lightmap[0][1] ), 1.0f );
 	}
 	fprintf( f, "\t\t\t}\r\n" );
 
@@ -172,9 +172,9 @@ static void ConvertSurface( FILE* f, bspModel_t* model, int modelNum, bspDrawSur
 	for( i = 0; i < ds->numIndexes; i += 3 )
 	{
 		face = ( i / 3 );
-		a    = bspDrawIndexes[ i + ds->firstIndex ];
-		c    = bspDrawIndexes[ i + ds->firstIndex + 1 ];
-		b    = bspDrawIndexes[ i + ds->firstIndex + 2 ];
+		a	 = bspDrawIndexes[i + ds->firstIndex];
+		c	 = bspDrawIndexes[i + ds->firstIndex + 1];
+		b	 = bspDrawIndexes[i + ds->firstIndex + 2];
 		fprintf( f, "\t\t\t\t*MESH_TFACE\t%d\t%d\t%d\t%d\r\n", face, a, b, c );
 	}
 	fprintf( f, "\t\t\t}\r\n" );
@@ -200,14 +200,14 @@ exports a bsp model to an ase chunk
 
 static void ConvertModel( FILE* f, bspModel_t* model, int modelNum, vec3_t origin )
 {
-	int               i, s;
+	int				  i, s;
 	bspDrawSurface_t* ds;
 
 	/* go through each drawsurf in the model */
 	for( i = 0; i < model->numBSPSurfaces; i++ )
 	{
 		s  = i + model->firstBSPSurface;
-		ds = &bspDrawSurfaces[ s ];
+		ds = &bspDrawSurfaces[s];
 		ConvertSurface( f, model, modelNum, ds, s, origin );
 	}
 }
@@ -259,7 +259,7 @@ exports a bsp shader to an ase chunk
 static void ConvertShader( FILE* f, bspShader_t* shader, int shaderNum )
 {
 	shaderInfo_t* si;
-	char *        c, filename[ 1024 ];
+	char *		  c, filename[1024];
 
 	/* get shader */
 	si = ShaderInfoForShader( shader->shader );
@@ -270,7 +270,7 @@ static void ConvertShader( FILE* f, bspShader_t* shader, int shaderNum )
 	}
 
 	/* set bitmap filename */
-	if( si->shaderImage->filename[ 0 ] != '*' )
+	if( si->shaderImage->filename[0] != '*' )
 	{
 		strcpy( filename, si->shaderImage->filename );
 	}
@@ -288,7 +288,7 @@ static void ConvertShader( FILE* f, bspShader_t* shader, int shaderNum )
 	fprintf( f, "\t*MATERIAL\t%d\t{\r\n", shaderNum );
 	fprintf( f, "\t\t*MATERIAL_NAME\t\"%s\"\r\n", shader->shader );
 	fprintf( f, "\t\t*MATERIAL_CLASS\t\"Standard\"\r\n" );
-	fprintf( f, "\t\t*MATERIAL_DIFFUSE\t%f\t%f\t%f\r\n", si->color[ 0 ], si->color[ 1 ], si->color[ 2 ] );
+	fprintf( f, "\t\t*MATERIAL_DIFFUSE\t%f\t%f\t%f\r\n", si->color[0], si->color[1], si->color[2] );
 	fprintf( f, "\t\t*MATERIAL_SHADING Phong\r\n" );
 
 	/* print map info */
@@ -353,12 +353,12 @@ exports a bsp light to an ase chunk
 static void ConvertLight( FILE* f, entity_t* e, int lightNum )
 {
 	const char* value;
-	char        name[ 1024 ];
-	vec3_t      origin, color;
+	char		name[1024];
+	vec3_t		origin, color;
 
 	/* get light origin */
 	value = ValueForKey( e, "origin" );
-	if( value[ 0 ] == '\0' )
+	if( value[0] == '\0' )
 	{
 		VectorClear( origin );
 	}
@@ -369,7 +369,7 @@ static void ConvertLight( FILE* f, entity_t* e, int lightNum )
 
 	/* get light color */
 	value = ValueForKey( e, "_color" );
-	if( value[ 0 ] == '\0' )
+	if( value[0] == '\0' )
 	{
 		VectorSet( color, 1, 1, 1 );
 	}
@@ -394,7 +394,7 @@ static void ConvertLight( FILE* f, entity_t* e, int lightNum )
 	fprintf( f, "\t\t*TM_SCALE\t1.0\t1.0\t1.0\r\n" );
 	fprintf( f, "\t\t*TM_SCALEAXIS\t0\t0\t0\r\n" );
 	fprintf( f, "\t\t*TM_SCALEAXISANG\t0\r\n" );
-	fprintf( f, "\t\t*TM_POS\t%f\t%f\t%f\r\n", origin[ 0 ], origin[ 1 ], origin[ 2 ] );
+	fprintf( f, "\t\t*TM_POS\t%f\t%f\t%f\r\n", origin[0], origin[1], origin[2] );
 	fprintf( f, "\t}\r\n" );
 
 	/* print misc settings */
@@ -408,7 +408,7 @@ static void ConvertLight( FILE* f, entity_t* e, int lightNum )
 	/* print light settings */
 	fprintf( f, "\t*LIGHT_SETTINGS\t{\r\n" );
 	fprintf( f, "\t\t*TIMEVALUE\t0\r\n" );
-	fprintf( f, "\t\t*LIGHT_COLOR\t%f\t%f\t%f\r\n", color[ 0 ], color[ 1 ], color[ 2 ] );
+	fprintf( f, "\t\t*LIGHT_COLOR\t%f\t%f\t%f\r\n", color[0], color[1], color[2] );
 	fprintf( f, "\t\t*LIGHT_INTENS\t0.6\r\n" );
 	fprintf( f, "\t\t*LIGHT_ASPECT\t-1.0\r\n" );
 	fprintf( f, "\t\t*LIGHT_TDIST\t-1.0\r\n" );
@@ -429,15 +429,15 @@ exports an 3d studio ase file from the bsp
 
 int ConvertBSPToASE( char* bspName )
 {
-	int          i, modelNum, lightNum;
-	FILE*        f;
+	int			 i, modelNum, lightNum;
+	FILE*		 f;
 	bspShader_t* shader;
-	bspModel_t*  model;
-	entity_t*    e;
-	vec3_t       origin;
-	const char*  key;
-	const char*  classname;
-	char         name[ 1024 ], base[ 1024 ];
+	bspModel_t*	 model;
+	entity_t*	 e;
+	vec3_t		 origin;
+	const char*	 key;
+	const char*	 classname;
+	char		 name[1024], base[1024];
 
 	/* note it */
 	Sys_Printf( "--- Convert BSP to ASE ---\n" );
@@ -476,7 +476,7 @@ int ConvertBSPToASE( char* bspName )
 	fprintf( f, "\t*MATERIAL_COUNT\t%d\r\n", numBSPShaders );
 	for( i = 0; i < numBSPShaders; i++ )
 	{
-		shader = &bspShaders[ i ];
+		shader = &bspShaders[i];
 		ConvertShader( f, shader, i );
 	}
 	fprintf( f, "}\r\n" );
@@ -486,7 +486,7 @@ int ConvertBSPToASE( char* bspName )
 	for( i = 0; i < numEntities; i++ )
 	{
 		/* get entity */
-		e = &entities[ i ];
+		e = &entities[i];
 
 		/* Tr3B: check if it is a light */
 		classname = ValueForKey( e, "classname" );
@@ -505,17 +505,17 @@ int ConvertBSPToASE( char* bspName )
 		else
 		{
 			key = ValueForKey( e, "model" );
-			if( key[ 0 ] != '*' )
+			if( key[0] != '*' )
 			{
 				continue;
 			}
 			modelNum = atoi( key + 1 );
 		}
-		model = &bspModels[ modelNum ];
+		model = &bspModels[modelNum];
 
 		/* get entity origin */
 		key = ValueForKey( e, "origin" );
-		if( key[ 0 ] == '\0' )
+		if( key[0] == '\0' )
 		{
 			VectorClear( origin );
 		}

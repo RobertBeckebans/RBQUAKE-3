@@ -44,13 +44,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #endif
 
 // Used to determine where to store user-specific files
-static char homePath[ MAX_OSPATH ] = { 0 };
+static char homePath[MAX_OSPATH] = { 0 };
 
 // Used to store the Steam Quake 3 installation path
-static char steamPath[ MAX_OSPATH ] = { 0 };
+static char steamPath[MAX_OSPATH] = { 0 };
 
 // Used to store the GOG Quake 3 installation path
-static char gogPath[ MAX_OSPATH ] = { 0 };
+static char gogPath[MAX_OSPATH] = { 0 };
 
 #ifndef DEDICATED
 static UINT timerResolution = 0;
@@ -66,17 +66,17 @@ Set FPU control word to default value
 #ifndef _RC_CHOP
 // mingw doesn't seem to have these defined :(
 
-	#define _MCW_EM  0x0008001fU
-	#define _MCW_RC  0x00000300U
-	#define _MCW_PC  0x00030000U
+	#define _MCW_EM	 0x0008001fU
+	#define _MCW_RC	 0x00000300U
+	#define _MCW_PC	 0x00030000U
 	#define _RC_NEAR 0x00000000U
-	#define _PC_53   0x00010000U
+	#define _PC_53	 0x00010000U
 
 unsigned int _controlfp( unsigned int new, unsigned int mask );
 #endif
 
 #define FPUCWMASK1 ( _MCW_RC | _MCW_EM )
-#define FPUCW      ( _RC_NEAR | _MCW_EM | _PC_53 )
+#define FPUCW	   ( _RC_NEAR | _MCW_EM | _PC_53 )
 
 #if idx64
 	#define FPUCWMASK ( FPUCWMASK1 )
@@ -96,7 +96,7 @@ Sys_DefaultHomePath
 */
 char* Sys_DefaultHomePath( void )
 {
-	TCHAR   szPath[ MAX_PATH ];
+	TCHAR	szPath[MAX_PATH];
 	FARPROC qSHGetFolderPath;
 	HMODULE shfolder = LoadLibrary( "shfolder.dll" );
 
@@ -125,7 +125,7 @@ char* Sys_DefaultHomePath( void )
 
 		Com_sprintf( homePath, sizeof( homePath ), "%s%c", szPath, PATH_SEP );
 
-		if( com_homepath->string[ 0 ] )
+		if( com_homepath->string[0] )
 		{
 			Q_strcat( homePath, sizeof( homePath ), com_homepath->string );
 		}
@@ -147,18 +147,19 @@ Sys_SteamPath
 char* Sys_SteamPath( void )
 {
 #if defined( STEAMPATH_NAME ) || defined( STEAMPATH_APPID )
-	HKEY     steamRegKey;
-	DWORD    pathLen    = MAX_OSPATH;
+	HKEY	 steamRegKey;
+	DWORD	 pathLen	= MAX_OSPATH;
 	qboolean finishPath = qfalse;
 
 	#ifdef STEAMPATH_APPID
 	// Assuming Steam is a 32-bit app
-	if( !steamPath[ 0 ] && !RegOpenKeyEx( HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App " STEAMPATH_APPID, 0, KEY_QUERY_VALUE | KEY_WOW64_32KEY, &steamRegKey ) )
+	if( !steamPath[0] &&
+		!RegOpenKeyEx( HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App " STEAMPATH_APPID, 0, KEY_QUERY_VALUE | KEY_WOW64_32KEY, &steamRegKey ) )
 	{
 		pathLen = MAX_OSPATH;
 		if( RegQueryValueEx( steamRegKey, "InstallLocation", NULL, NULL, ( LPBYTE )steamPath, &pathLen ) )
 		{
-			steamPath[ 0 ] = '\0';
+			steamPath[0] = '\0';
 		}
 
 		RegCloseKey( steamRegKey );
@@ -166,16 +167,16 @@ char* Sys_SteamPath( void )
 	#endif
 
 	#ifdef STEAMPATH_NAME
-	if( !steamPath[ 0 ] && !RegOpenKeyEx( HKEY_CURRENT_USER, "Software\\Valve\\Steam", 0, KEY_QUERY_VALUE, &steamRegKey ) )
+	if( !steamPath[0] && !RegOpenKeyEx( HKEY_CURRENT_USER, "Software\\Valve\\Steam", 0, KEY_QUERY_VALUE, &steamRegKey ) )
 	{
 		pathLen = MAX_OSPATH;
 		if( RegQueryValueEx( steamRegKey, "SteamPath", NULL, NULL, ( LPBYTE )steamPath, &pathLen ) )
 			if( RegQueryValueEx( steamRegKey, "InstallPath", NULL, NULL, ( LPBYTE )steamPath, &pathLen ) )
 			{
-				steamPath[ 0 ] = '\0';
+				steamPath[0] = '\0';
 			}
 
-		if( steamPath[ 0 ] )
+		if( steamPath[0] )
 		{
 			finishPath = qtrue;
 		}
@@ -184,14 +185,14 @@ char* Sys_SteamPath( void )
 	}
 	#endif
 
-	if( steamPath[ 0 ] )
+	if( steamPath[0] )
 	{
 		if( pathLen == MAX_OSPATH )
 		{
 			pathLen--;
 		}
 
-		steamPath[ pathLen ] = '\0';
+		steamPath[pathLen] = '\0';
 
 		if( finishPath )
 		{
@@ -214,25 +215,25 @@ char* Sys_GogPath( void )
 	HKEY  gogRegKey;
 	DWORD pathLen = MAX_OSPATH;
 
-	if( !gogPath[ 0 ] && !RegOpenKeyEx( HKEY_LOCAL_MACHINE, "SOFTWARE\\GOG.com\\Games\\" GOGPATH_ID, 0, KEY_QUERY_VALUE | KEY_WOW64_32KEY, &gogRegKey ) )
+	if( !gogPath[0] && !RegOpenKeyEx( HKEY_LOCAL_MACHINE, "SOFTWARE\\GOG.com\\Games\\" GOGPATH_ID, 0, KEY_QUERY_VALUE | KEY_WOW64_32KEY, &gogRegKey ) )
 	{
 		pathLen = MAX_OSPATH;
 		if( RegQueryValueEx( gogRegKey, "PATH", NULL, NULL, ( LPBYTE )gogPath, &pathLen ) )
 		{
-			gogPath[ 0 ] = '\0';
+			gogPath[0] = '\0';
 		}
 
 		RegCloseKey( gogRegKey );
 	}
 
-	if( gogPath[ 0 ] )
+	if( gogPath[0] )
 	{
 		if( pathLen == MAX_OSPATH )
 		{
 			pathLen--;
 		}
 
-		gogPath[ pathLen ] = '\0';
+		gogPath[pathLen] = '\0';
 	}
 #endif
 
@@ -247,13 +248,13 @@ Sys_Milliseconds
 int sys_timeBase;
 int Sys_Milliseconds( void )
 {
-	int             sys_curtime;
+	int				sys_curtime;
 	static qboolean initialized = qfalse;
 
 	if( !initialized )
 	{
 		sys_timeBase = timeGetTime();
-		initialized  = qtrue;
+		initialized	 = qtrue;
 	}
 	sys_curtime = timeGetTime() - sys_timeBase;
 
@@ -290,7 +291,7 @@ Sys_GetCurrentUser
 */
 char* Sys_GetCurrentUser( void )
 {
-	static char   s_userName[ 1024 ];
+	static char	  s_userName[1024];
 	unsigned long size = sizeof( s_userName );
 
 	if( !GetUserName( s_userName, &size ) )
@@ -298,7 +299,7 @@ char* Sys_GetCurrentUser( void )
 		strcpy( s_userName, "player" );
 	}
 
-	if( !s_userName[ 0 ] )
+	if( !s_userName[0] )
 	{
 		strcpy( s_userName, "player" );
 	}
@@ -357,30 +358,30 @@ Sys_Basename
 */
 const char* Sys_Basename( char* path )
 {
-	static char base[ MAX_OSPATH ] = { 0 };
-	int         length;
+	static char base[MAX_OSPATH] = { 0 };
+	int			length;
 
 	length = strlen( path ) - 1;
 
 	// Skip trailing slashes
-	while( length > 0 && path[ length ] == '\\' )
+	while( length > 0 && path[length] == '\\' )
 	{
 		length--;
 	}
 
-	while( length > 0 && path[ length - 1 ] != '\\' )
+	while( length > 0 && path[length - 1] != '\\' )
 	{
 		length--;
 	}
 
-	Q_strncpyz( base, &path[ length ], sizeof( base ) );
+	Q_strncpyz( base, &path[length], sizeof( base ) );
 
 	length = strlen( base ) - 1;
 
 	// Strip trailing slashes
-	while( length > 0 && base[ length ] == '\\' )
+	while( length > 0 && base[length] == '\\' )
 	{
-		base[ length-- ] = '\0';
+		base[length--] = '\0';
 	}
 
 	return base;
@@ -393,18 +394,18 @@ Sys_Dirname
 */
 const char* Sys_Dirname( char* path )
 {
-	static char dir[ MAX_OSPATH ] = { 0 };
-	int         length;
+	static char dir[MAX_OSPATH] = { 0 };
+	int			length;
 
 	Q_strncpyz( dir, path, sizeof( dir ) );
 	length = strlen( dir ) - 1;
 
-	while( length > 0 && dir[ length ] != '\\' )
+	while( length > 0 && dir[length] != '\\' )
 	{
 		length--;
 	}
 
-	dir[ length ] = '\0';
+	dir[length] = '\0';
 
 	return dir;
 }
@@ -420,7 +421,7 @@ FILE* Sys_FOpen( const char* ospath, const char* mode )
 
 	// Windows API ignores all trailing spaces and periods which can get around Quake 3 file system restrictions.
 	length = strlen( ospath );
-	if( length == 0 || ospath[ length - 1 ] == ' ' || ospath[ length - 1 ] == '.' )
+	if( length == 0 || ospath[length - 1] == ' ' || ospath[length - 1] == '.' )
 	{
 		return NULL;
 	}
@@ -464,10 +465,10 @@ Sys_Cwd
 */
 char* Sys_Cwd( void )
 {
-	static char cwd[ MAX_OSPATH ];
+	static char cwd[MAX_OSPATH];
 
 	_getcwd( cwd, sizeof( cwd ) - 1 );
-	cwd[ MAX_OSPATH - 1 ] = 0;
+	cwd[MAX_OSPATH - 1] = 0;
 
 	return cwd;
 }
@@ -489,9 +490,9 @@ Sys_ListFilteredFiles
 */
 void Sys_ListFilteredFiles( const char* basedir, char* subdirs, char* filter, char** list, int* numfiles )
 {
-	char               search[ MAX_OSPATH ], newsubdirs[ MAX_OSPATH ];
-	char               filename[ MAX_OSPATH ];
-	intptr_t           findhandle;
+	char			   search[MAX_OSPATH], newsubdirs[MAX_OSPATH];
+	char			   filename[MAX_OSPATH];
+	intptr_t		   findhandle;
 	struct _finddata_t findinfo;
 
 	if( *numfiles >= MAX_FOUND_FILES - 1 )
@@ -540,7 +541,7 @@ void Sys_ListFilteredFiles( const char* basedir, char* subdirs, char* filter, ch
 		{
 			continue;
 		}
-		list[ *numfiles ] = CopyString( filename );
+		list[*numfiles] = CopyString( filename );
 		( *numfiles )++;
 	} while( _findnext( findhandle, &findinfo ) != -1 );
 
@@ -566,11 +567,11 @@ static qboolean strgtr( const char* s0, const char* s1 )
 
 	for( i = 0; i < l0; i++ )
 	{
-		if( s1[ i ] > s0[ i ] )
+		if( s1[i] > s0[i] )
 		{
 			return qtrue;
 		}
-		if( s1[ i ] < s0[ i ] )
+		if( s1[i] < s0[i] )
 		{
 			return qfalse;
 		}
@@ -585,23 +586,23 @@ Sys_ListFiles
 */
 char** Sys_ListFiles( const char* directory, const char* extension, char* filter, int* numfiles, qboolean wantsubs )
 {
-	char               search[ MAX_OSPATH ];
-	int                nfiles;
-	char**             listCopy;
-	char*              list[ MAX_FOUND_FILES ];
+	char			   search[MAX_OSPATH];
+	int				   nfiles;
+	char**			   listCopy;
+	char*			   list[MAX_FOUND_FILES];
 	struct _finddata_t findinfo;
-	intptr_t           findhandle;
-	int                flag;
-	int                i;
-	int                extLen;
+	intptr_t		   findhandle;
+	int				   flag;
+	int				   i;
+	int				   extLen;
 
 	if( filter )
 	{
 		nfiles = 0;
 		Sys_ListFilteredFiles( directory, "", filter, list, &nfiles );
 
-		list[ nfiles ] = 0;
-		*numfiles      = nfiles;
+		list[nfiles] = 0;
+		*numfiles	 = nfiles;
 
 		if( !nfiles )
 		{
@@ -611,9 +612,9 @@ char** Sys_ListFiles( const char* directory, const char* extension, char* filter
 		listCopy = Z_Malloc( ( nfiles + 1 ) * sizeof( *listCopy ) );
 		for( i = 0; i < nfiles; i++ )
 		{
-			listCopy[ i ] = list[ i ];
+			listCopy[i] = list[i];
 		}
-		listCopy[ i ] = NULL;
+		listCopy[i] = NULL;
 
 		return listCopy;
 	}
@@ -624,10 +625,10 @@ char** Sys_ListFiles( const char* directory, const char* extension, char* filter
 	}
 
 	// passing a slash as extension will find directories
-	if( extension[ 0 ] == '/' && extension[ 1 ] == 0 )
+	if( extension[0] == '/' && extension[1] == 0 )
 	{
 		extension = "";
-		flag      = 0;
+		flag	  = 0;
 	}
 	else
 	{
@@ -654,10 +655,7 @@ char** Sys_ListFiles( const char* directory, const char* extension, char* filter
 		{
 			if( *extension )
 			{
-				if( strlen( findinfo.name ) < extLen ||
-					Q_stricmp(
-						findinfo.name + strlen( findinfo.name ) - extLen,
-						extension ) )
+				if( strlen( findinfo.name ) < extLen || Q_stricmp( findinfo.name + strlen( findinfo.name ) - extLen, extension ) )
 				{
 					continue; // didn't match
 				}
@@ -666,12 +664,12 @@ char** Sys_ListFiles( const char* directory, const char* extension, char* filter
 			{
 				break;
 			}
-			list[ nfiles ] = CopyString( findinfo.name );
+			list[nfiles] = CopyString( findinfo.name );
 			nfiles++;
 		}
 	} while( _findnext( findhandle, &findinfo ) != -1 );
 
-	list[ nfiles ] = 0;
+	list[nfiles] = 0;
 
 	_findclose( findhandle );
 
@@ -686,21 +684,21 @@ char** Sys_ListFiles( const char* directory, const char* extension, char* filter
 	listCopy = Z_Malloc( ( nfiles + 1 ) * sizeof( *listCopy ) );
 	for( i = 0; i < nfiles; i++ )
 	{
-		listCopy[ i ] = list[ i ];
+		listCopy[i] = list[i];
 	}
-	listCopy[ i ] = NULL;
+	listCopy[i] = NULL;
 
 	do
 	{
 		flag = 0;
 		for( i = 1; i < nfiles; i++ )
 		{
-			if( strgtr( listCopy[ i - 1 ], listCopy[ i ] ) )
+			if( strgtr( listCopy[i - 1], listCopy[i] ) )
 			{
-				char* temp        = listCopy[ i ];
-				listCopy[ i ]     = listCopy[ i - 1 ];
-				listCopy[ i - 1 ] = temp;
-				flag              = 1;
+				char* temp		= listCopy[i];
+				listCopy[i]		= listCopy[i - 1];
+				listCopy[i - 1] = temp;
+				flag			= 1;
 			}
 		}
 	} while( flag );
@@ -722,9 +720,9 @@ void Sys_FreeFileList( char** list )
 		return;
 	}
 
-	for( i = 0; list[ i ]; i++ )
+	for( i = 0; list[i]; i++ )
 	{
-		Z_Free( list[ i ] );
+		Z_Free( list[i] );
 	}
 
 	Z_Free( list );
@@ -776,15 +774,15 @@ void Sys_ErrorDialog( const char* error )
 	if( Sys_Dialog( DT_YES_NO, va( "%s. Copy console log to clipboard?", error ), "Error" ) == DR_YES )
 	{
 		HGLOBAL memoryHandle;
-		char*   clipMemory;
+		char*	clipMemory;
 
 		memoryHandle = GlobalAlloc( GMEM_MOVEABLE | GMEM_DDESHARE, CON_LogSize() + 1 );
-		clipMemory   = ( char* )GlobalLock( memoryHandle );
+		clipMemory	 = ( char* )GlobalLock( memoryHandle );
 
 		if( clipMemory )
 		{
-			char*        p = clipMemory;
-			char         buffer[ 1024 ];
+			char*		 p = clipMemory;
+			char		 buffer[1024];
 			unsigned int size;
 
 			while( ( size = CON_LogRead( buffer, sizeof( buffer ) ) ) > 0 )
@@ -962,9 +960,9 @@ Sys_PIDIsRunning
 */
 qboolean Sys_PIDIsRunning( int pid )
 {
-	DWORD processes[ 1024 ];
+	DWORD processes[1024];
 	DWORD numBytes, numProcesses;
-	int   i;
+	int	  i;
 
 	if( !EnumProcesses( processes, sizeof( processes ), &numBytes ) )
 	{
@@ -976,7 +974,7 @@ qboolean Sys_PIDIsRunning( int pid )
 	// Search for the pid
 	for( i = 0; i < numProcesses; i++ )
 	{
-		if( processes[ i ] == pid )
+		if( processes[i] == pid )
 		{
 			return qtrue;
 		}

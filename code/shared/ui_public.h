@@ -28,11 +28,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 typedef struct
 {
 	connstate_t connState;
-	int         connectPacketCount;
-	int         clientNum;
-	char        servername[ MAX_STRING_CHARS ];
-	char        updateInfoString[ MAX_STRING_CHARS ];
-	char        messageString[ MAX_STRING_CHARS ];
+	int			connectPacketCount;
+	int			clientNum;
+	char		servername[MAX_STRING_CHARS];
+	char		updateInfoString[MAX_STRING_CHARS];
+	char		messageString[MAX_STRING_CHARS];
 } uiClientState_t;
 
 typedef enum

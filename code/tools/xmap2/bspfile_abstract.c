@@ -48,7 +48,7 @@ special-case code messiness out of the rest of the program.
 
 /* FIXME: remove the functions below that handle memory management of bsp file chunks */
 
-int  numBSPDrawVertsBuffer = 0;
+int	 numBSPDrawVertsBuffer = 0;
 void IncDrawVerts()
 {
 	numBSPDrawVerts++;
@@ -87,7 +87,7 @@ void SetDrawVerts( int n )
 		free( bspDrawVerts );
 	}
 
-	numBSPDrawVerts       = n;
+	numBSPDrawVerts		  = n;
 	numBSPDrawVertsBuffer = numBSPDrawVerts;
 
 	bspDrawVerts = safe_malloc_info( sizeof( bspDrawVert_t ) * numBSPDrawVertsBuffer, "IncDrawVerts" );
@@ -95,7 +95,7 @@ void SetDrawVerts( int n )
 	memset( bspDrawVerts, 0, n * sizeof( bspDrawVert_t ) );
 }
 
-int  numBSPDrawSurfacesBuffer = 0;
+int	 numBSPDrawSurfacesBuffer = 0;
 void SetDrawSurfacesBuffer()
 {
 	if( bspDrawSurfaces != 0 )
@@ -117,7 +117,7 @@ void SetDrawSurfaces( int n )
 		free( bspDrawSurfaces );
 	}
 
-	numBSPDrawSurfaces       = n;
+	numBSPDrawSurfaces		 = n;
 	numBSPDrawSurfacesBuffer = numBSPDrawSurfaces;
 
 	bspDrawSurfaces = safe_malloc_info( sizeof( bspDrawSurface_t ) * numBSPDrawSurfacesBuffer, "IncDrawSurfaces" );
@@ -167,7 +167,7 @@ void SwapBlock( int* block, int size )
 	size >>= 2;
 	for( i = 0; i < size; i++ )
 	{
-		block[ i ] = LittleLong( block[ i ] );
+		block[i] = LittleLong( block[i] );
 	}
 }
 
@@ -181,70 +181,70 @@ void SwapBSPFile( void )
 	int i, j;
 
 	/* models */
-	SwapBlock( ( int* )bspModels, numBSPModels * sizeof( bspModels[ 0 ] ) );
+	SwapBlock( ( int* )bspModels, numBSPModels * sizeof( bspModels[0] ) );
 
 	/* shaders (don't swap the name) */
 	for( i = 0; i < numBSPShaders; i++ )
 	{
-		bspShaders[ i ].contentFlags = LittleLong( bspShaders[ i ].contentFlags );
-		bspShaders[ i ].surfaceFlags = LittleLong( bspShaders[ i ].surfaceFlags );
+		bspShaders[i].contentFlags = LittleLong( bspShaders[i].contentFlags );
+		bspShaders[i].surfaceFlags = LittleLong( bspShaders[i].surfaceFlags );
 	}
 
 	/* planes */
-	SwapBlock( ( int* )bspPlanes, numBSPPlanes * sizeof( bspPlanes[ 0 ] ) );
+	SwapBlock( ( int* )bspPlanes, numBSPPlanes * sizeof( bspPlanes[0] ) );
 
 	/* nodes */
-	SwapBlock( ( int* )bspNodes, numBSPNodes * sizeof( bspNodes[ 0 ] ) );
+	SwapBlock( ( int* )bspNodes, numBSPNodes * sizeof( bspNodes[0] ) );
 
 	/* leafs */
-	SwapBlock( ( int* )bspLeafs, numBSPLeafs * sizeof( bspLeafs[ 0 ] ) );
+	SwapBlock( ( int* )bspLeafs, numBSPLeafs * sizeof( bspLeafs[0] ) );
 
 	/* leaffaces */
-	SwapBlock( ( int* )bspLeafSurfaces, numBSPLeafSurfaces * sizeof( bspLeafSurfaces[ 0 ] ) );
+	SwapBlock( ( int* )bspLeafSurfaces, numBSPLeafSurfaces * sizeof( bspLeafSurfaces[0] ) );
 
 	/* leafbrushes */
-	SwapBlock( ( int* )bspLeafBrushes, numBSPLeafBrushes * sizeof( bspLeafBrushes[ 0 ] ) );
+	SwapBlock( ( int* )bspLeafBrushes, numBSPLeafBrushes * sizeof( bspLeafBrushes[0] ) );
 
 	// brushes
-	SwapBlock( ( int* )bspBrushes, numBSPBrushes * sizeof( bspBrushes[ 0 ] ) );
+	SwapBlock( ( int* )bspBrushes, numBSPBrushes * sizeof( bspBrushes[0] ) );
 
 	// brushsides
-	SwapBlock( ( int* )bspBrushSides, numBSPBrushSides * sizeof( bspBrushSides[ 0 ] ) );
+	SwapBlock( ( int* )bspBrushSides, numBSPBrushSides * sizeof( bspBrushSides[0] ) );
 
 	// vis
-	( ( int* )&bspVisBytes )[ 0 ] = LittleLong( ( ( int* )&bspVisBytes )[ 0 ] );
-	( ( int* )&bspVisBytes )[ 1 ] = LittleLong( ( ( int* )&bspVisBytes )[ 1 ] );
+	( ( int* )&bspVisBytes )[0] = LittleLong( ( ( int* )&bspVisBytes )[0] );
+	( ( int* )&bspVisBytes )[1] = LittleLong( ( ( int* )&bspVisBytes )[1] );
 
 	/* drawverts (don't swap colors) */
 	for( i = 0; i < numBSPDrawVerts; i++ )
 	{
-		bspDrawVerts[ i ].xyz[ 0 ]    = LittleFloat( bspDrawVerts[ i ].xyz[ 0 ] );
-		bspDrawVerts[ i ].xyz[ 1 ]    = LittleFloat( bspDrawVerts[ i ].xyz[ 1 ] );
-		bspDrawVerts[ i ].xyz[ 2 ]    = LittleFloat( bspDrawVerts[ i ].xyz[ 2 ] );
-		bspDrawVerts[ i ].normal[ 0 ] = LittleFloat( bspDrawVerts[ i ].normal[ 0 ] );
-		bspDrawVerts[ i ].normal[ 1 ] = LittleFloat( bspDrawVerts[ i ].normal[ 1 ] );
-		bspDrawVerts[ i ].normal[ 2 ] = LittleFloat( bspDrawVerts[ i ].normal[ 2 ] );
-		bspDrawVerts[ i ].st[ 0 ]     = LittleFloat( bspDrawVerts[ i ].st[ 0 ] );
-		bspDrawVerts[ i ].st[ 1 ]     = LittleFloat( bspDrawVerts[ i ].st[ 1 ] );
+		bspDrawVerts[i].xyz[0]	  = LittleFloat( bspDrawVerts[i].xyz[0] );
+		bspDrawVerts[i].xyz[1]	  = LittleFloat( bspDrawVerts[i].xyz[1] );
+		bspDrawVerts[i].xyz[2]	  = LittleFloat( bspDrawVerts[i].xyz[2] );
+		bspDrawVerts[i].normal[0] = LittleFloat( bspDrawVerts[i].normal[0] );
+		bspDrawVerts[i].normal[1] = LittleFloat( bspDrawVerts[i].normal[1] );
+		bspDrawVerts[i].normal[2] = LittleFloat( bspDrawVerts[i].normal[2] );
+		bspDrawVerts[i].st[0]	  = LittleFloat( bspDrawVerts[i].st[0] );
+		bspDrawVerts[i].st[1]	  = LittleFloat( bspDrawVerts[i].st[1] );
 		for( j = 0; j < MAX_LIGHTMAPS; j++ )
 		{
-			bspDrawVerts[ i ].lightmap[ j ][ 0 ] = LittleFloat( bspDrawVerts[ i ].lightmap[ j ][ 0 ] );
-			bspDrawVerts[ i ].lightmap[ j ][ 1 ] = LittleFloat( bspDrawVerts[ i ].lightmap[ j ][ 1 ] );
+			bspDrawVerts[i].lightmap[j][0] = LittleFloat( bspDrawVerts[i].lightmap[j][0] );
+			bspDrawVerts[i].lightmap[j][1] = LittleFloat( bspDrawVerts[i].lightmap[j][1] );
 		}
 	}
 
 	/* drawindexes */
-	SwapBlock( ( int* )bspDrawIndexes, numBSPDrawIndexes * sizeof( bspDrawIndexes[ 0 ] ) );
+	SwapBlock( ( int* )bspDrawIndexes, numBSPDrawIndexes * sizeof( bspDrawIndexes[0] ) );
 
 	/* drawsurfs */
 	/* note: rbsp files (and hence q3map2 abstract bsp) have byte lightstyles index arrays, this follows sof2map convention */
-	SwapBlock( ( int* )bspDrawSurfaces, numBSPDrawSurfaces * sizeof( bspDrawSurfaces[ 0 ] ) );
+	SwapBlock( ( int* )bspDrawSurfaces, numBSPDrawSurfaces * sizeof( bspDrawSurfaces[0] ) );
 
 	/* fogs */
 	for( i = 0; i < numBSPFogs; i++ )
 	{
-		bspFogs[ i ].brushNum    = LittleLong( bspFogs[ i ].brushNum );
-		bspFogs[ i ].visibleSide = LittleLong( bspFogs[ i ].visibleSide );
+		bspFogs[i].brushNum	   = LittleLong( bspFogs[i].brushNum );
+		bspFogs[i].visibleSide = LittleLong( bspFogs[i].visibleSide );
 	}
 }
 
@@ -256,21 +256,21 @@ gets the number of elements in a bsp lump
 int GetLumpElements( bspHeader_t* header, int lump, int size )
 {
 	/* check for odd size */
-	if( header->lumps[ lump ].length % size )
+	if( header->lumps[lump].length % size )
 	{
 		if( force )
 		{
-			Sys_Printf( "WARNING: GetLumpElements: odd lump size (%d) in lump %d\n", header->lumps[ lump ].length, lump );
+			Sys_Printf( "WARNING: GetLumpElements: odd lump size (%d) in lump %d\n", header->lumps[lump].length, lump );
 			return 0;
 		}
 		else
 		{
-			Error( "GetLumpElements: odd lump size (%d) in lump %d", header->lumps[ lump ].length, lump );
+			Error( "GetLumpElements: odd lump size (%d) in lump %d", header->lumps[lump].length, lump );
 		}
 	}
 
 	/* return element count */
-	return header->lumps[ lump ].length / size;
+	return header->lumps[lump].length / size;
 }
 
 /*
@@ -280,7 +280,7 @@ returns a pointer to the specified lump
 
 void* GetLump( bspHeader_t* header, int lump )
 {
-	return ( void* )( ( byte* )header + header->lumps[ lump ].offset );
+	return ( void* )( ( byte* )header + header->lumps[lump].offset );
 }
 
 /*
@@ -293,8 +293,8 @@ int CopyLump( bspHeader_t* header, int lump, void* dest, int size )
 	int length, offset;
 
 	/* get lump length and offset */
-	length = header->lumps[ lump ].length;
-	offset = header->lumps[ lump ].offset;
+	length = header->lumps[lump].length;
+	offset = header->lumps[lump].offset;
 
 	/* handle erroneous cases */
 	if( length == 0 )
@@ -322,8 +322,8 @@ int CopyLump( bspHeader_t* header, int lump, void* dest, int size )
 int CopyLump_Allocate( bspHeader_t* header, int lump, void** dest, int size, int* allocationVariable )
 {
 	/* get lump length and offset */
-	*allocationVariable = header->lumps[ lump ].length / size;
-	*dest               = realloc( *dest, size * *allocationVariable );
+	*allocationVariable = header->lumps[lump].length / size;
+	*dest				= realloc( *dest, size * *allocationVariable );
 	return CopyLump( header, lump, *dest, size );
 }
 
@@ -337,7 +337,7 @@ void AddLump( FILE* file, bspHeader_t* header, int lumpNum, const void* data, in
 	bspLump_t* lump;
 
 	/* add lump to bsp file header */
-	lump         = &header->lumps[ lumpNum ];
+	lump		 = &header->lumps[lumpNum];
 	lump->offset = LittleLong( ftell( file ) );
 	lump->length = LittleLong( length );
 
@@ -370,7 +370,7 @@ writes a bsp file
 
 void WriteBSPFile( const char* filename )
 {
-	char   tempname[ 1024 ];
+	char   tempname[1024];
 	time_t tm;
 
 	/* dummy check */
@@ -519,7 +519,7 @@ qboolean ParseEntity( void )
 	}
 
 	/* create new entity */
-	mapEnt = &entities[ numEntities ];
+	mapEnt = &entities[numEntities];
 	numEntities++;
 
 	/* parse */
@@ -533,8 +533,8 @@ qboolean ParseEntity( void )
 		{
 			break;
 		}
-		e              = ParseEPair();
-		e->next        = mapEnt->epairs;
+		e			   = ParseEPair();
+		e->next		   = mapEnt->epairs;
 		mapEnt->epairs = e;
 	}
 
@@ -564,13 +564,13 @@ void ParseEntities( void )
 void InjectCommandLine( char** argv, int beginArgs, int endArgs )
 {
 	const char* previousCommandLine;
-	char        newCommandLine[ 1024 ];
+	char		newCommandLine[1024];
 	const char* inpos;
-	char*       outpos   = newCommandLine;
-	char*       sentinel = newCommandLine + sizeof( newCommandLine ) - 1;
-	int         i;
+	char*		outpos	 = newCommandLine;
+	char*		sentinel = newCommandLine + sizeof( newCommandLine ) - 1;
+	int			i;
 
-	previousCommandLine = ValueForKey( &entities[ 0 ], "_xmap2_cmdline" );
+	previousCommandLine = ValueForKey( &entities[0], "_xmap2_cmdline" );
 	if( previousCommandLine && *previousCommandLine )
 	{
 		inpos = previousCommandLine;
@@ -594,7 +594,7 @@ void InjectCommandLine( char** argv, int beginArgs, int endArgs )
 		{
 			*outpos++ = ' ';
 		}
-		inpos = argv[ i ];
+		inpos = argv[i];
 		while( outpos != sentinel && *inpos )
 			if( *inpos != '\\' && *inpos != '"' && *inpos != ';' && ( unsigned char )*inpos >= ' ' )
 			{
@@ -603,8 +603,8 @@ void InjectCommandLine( char** argv, int beginArgs, int endArgs )
 	}
 
 	*outpos = 0;
-	SetKeyValue( &entities[ 0 ], "_xmap2_cmdline", newCommandLine );
-	SetKeyValue( &entities[ 0 ], "_xmap2_version", Q3MAP_VERSION );
+	SetKeyValue( &entities[0], "_xmap2_cmdline", newCommandLine );
+	SetKeyValue( &entities[0], "_xmap2_version", Q3MAP_VERSION );
 }
 
 /*
@@ -616,17 +616,17 @@ pairs to the data created by the map editor
 
 void UnparseEntities( void )
 {
-	int         i;
-	char *      buf, *end;
-	epair_t*    ep;
-	char        line[ 2048 ];
-	char        key[ 1024 ], value[ 1024 ];
+	int			i;
+	char *		buf, *end;
+	epair_t*	ep;
+	char		line[2048];
+	char		key[1024], value[1024];
 	const char* value2;
 
 	/* setup */
 	AUTOEXPAND_BY_REALLOC( bspEntData, 0, allocatedBSPEntData, 1024 );
-	buf  = bspEntData;
-	end  = buf;
+	buf	 = bspEntData;
+	end	 = buf;
 	*end = 0;
 
 	/* run through entity list */
@@ -641,14 +641,14 @@ void UnparseEntities( void )
 		}
 
 		/* get epair */
-		ep = entities[ i ].epairs;
+		ep = entities[i].epairs;
 		if( ep == NULL )
 		{
 			continue; /* ent got removed */
 		}
 
 		/* ydnar: certain entities get stripped from bsp file */
-		value2 = ValueForKey( &entities[ i ], "classname" );
+		value2 = ValueForKey( &entities[i], "classname" );
 		if( !Q_stricmp( value2, "misc_model" ) || !Q_stricmp( value2, "_decal" ) || !Q_stricmp( value2, "_skybox" ) )
 		{
 			continue;
@@ -659,7 +659,7 @@ void UnparseEntities( void )
 		end += 2;
 
 		/* walk epair list */
-		for( ep = entities[ i ].epairs; ep != NULL; ep = ep->next )
+		for( ep = entities[i].epairs; ep != NULL; ep = ep->next )
 		{
 			/* copy and clean */
 			strcpy( key, ep->key );
@@ -706,13 +706,13 @@ void PrintEntity( const entity_t* ent )
 
 static qboolean HasUniqueEntityName( const entity_t* ent, const char* name )
 {
-	int         i;
-	entity_t*   ent2;
+	int			i;
+	entity_t*	ent2;
 	const char* name2;
 
 	for( i = 0; i < numEntities; i++ )
 	{
-		ent2 = &entities[ i ];
+		ent2 = &entities[i];
 
 		if( ent == ent2 )
 		{
@@ -736,7 +736,7 @@ suggests a unique name for an entity
 */
 const char* UniqueEntityName( const entity_t* ent, const char* suggestion )
 {
-	int         i;
+	int			i;
 	const char* classname;
 	const char* uniquename;
 
@@ -776,11 +776,11 @@ void SetKeyValue( entity_t* ent, const char* key, const char* value )
 	}
 
 	/* create new epair */
-	ep          = safe_malloc( sizeof( *ep ) );
-	ep->next    = ent->epairs;
+	ep			= safe_malloc( sizeof( *ep ) );
+	ep->next	= ent->epairs;
 	ent->epairs = ep;
-	ep->key     = copystring( key );
-	ep->value   = copystring( value );
+	ep->key		= copystring( key );
+	ep->value	= copystring( value );
 }
 
 /*
@@ -832,7 +832,7 @@ void RemoveKey( entity_t* ent, const char* key )
 			{
 				// first element
 				ep_prev->next = NULL;
-				//ent->epairs = NULL;
+				// ent->epairs = NULL;
 			}
 			else if( ep == ent->epairs )
 			{
@@ -843,7 +843,7 @@ void RemoveKey( entity_t* ent, const char* key )
 			{
 				// in between
 				ep_prev->next = ep->next;
-				//ent->epairs =
+				// ent->epairs =
 			}
 
 			free( ep );
@@ -916,7 +916,7 @@ gets a 3-element vector value for an entity key
 void GetVectorForKey( const entity_t* ent, const char* key, vec3_t vec )
 {
 	const char* k;
-	double      v1, v2, v3;
+	double		v1, v2, v3;
 
 	/* get value */
 	k = ValueForKey( ent, key );
@@ -924,9 +924,9 @@ void GetVectorForKey( const entity_t* ent, const char* key, vec3_t vec )
 	/* scanf into doubles, then assign, so it is vec_t size independent */
 	v1 = v2 = v3 = 0.0;
 	sscanf( k, "%lf %lf %lf", &v1, &v2, &v3 );
-	vec[ 0 ] = v1;
-	vec[ 1 ] = v2;
-	vec[ 2 ] = v3;
+	vec[0] = v1;
+	vec[1] = v2;
+	vec[2] = v3;
 }
 
 /*
@@ -936,22 +936,22 @@ finds an entity target
 
 entity_t* FindTargetEntity( const char* target )
 {
-	int         i;
+	int			i;
 	const char* n;
 
 	/* walk entity list */
 	for( i = 0; i < numEntities; i++ )
 	{
-		n = ValueForKey( &entities[ i ], "name" );
+		n = ValueForKey( &entities[i], "name" );
 		if( !strcmp( n, target ) )
 		{
-			return &entities[ i ];
+			return &entities[i];
 		}
 
-		n = ValueForKey( &entities[ i ], "targetname" );
+		n = ValueForKey( &entities[i], "targetname" );
 		if( !strcmp( n, target ) )
 		{
-			return &entities[ i ];
+			return &entities[i];
 		}
 	}
 
@@ -973,19 +973,19 @@ void GetEntityShadowFlags( const entity_t* ent, const entity_t* ent2, int* castS
 	if( castShadows != NULL )
 	{
 		value = ValueForKey( ent, "_castShadows" );
-		if( value[ 0 ] == '\0' )
+		if( value[0] == '\0' )
 		{
 			value = ValueForKey( ent, "_cs" );
 		}
-		if( value[ 0 ] == '\0' )
+		if( value[0] == '\0' )
 		{
 			value = ValueForKey( ent2, "_castShadows" );
 		}
-		if( value[ 0 ] == '\0' )
+		if( value[0] == '\0' )
 		{
 			value = ValueForKey( ent2, "_cs" );
 		}
-		if( value[ 0 ] != '\0' )
+		if( value[0] != '\0' )
 		{
 			*castShadows = atoi( value );
 		}
@@ -995,19 +995,19 @@ void GetEntityShadowFlags( const entity_t* ent, const entity_t* ent2, int* castS
 	if( recvShadows != NULL )
 	{
 		value = ValueForKey( ent, "_receiveShadows" );
-		if( value[ 0 ] == '\0' )
+		if( value[0] == '\0' )
 		{
 			value = ValueForKey( ent, "_rs" );
 		}
-		if( value[ 0 ] == '\0' )
+		if( value[0] == '\0' )
 		{
 			value = ValueForKey( ent2, "_receiveShadows" );
 		}
-		if( value[ 0 ] == '\0' )
+		if( value[0] == '\0' )
 		{
 			value = ValueForKey( ent2, "_rs" );
 		}
-		if( value[ 0 ] != '\0' )
+		if( value[0] != '\0' )
 		{
 			*recvShadows = atoi( value );
 		}

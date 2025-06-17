@@ -30,12 +30,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 qboolean ACECM_Commands( gentity_t* ent )
 {
-	char cmd[ MAX_TOKEN_CHARS ];
-	char arg1[ MAX_TOKEN_CHARS ];
-	char arg2[ MAX_TOKEN_CHARS ];
-	char arg3[ MAX_TOKEN_CHARS ];
-	char arg4[ MAX_TOKEN_CHARS ];
-	int  node;
+	char cmd[MAX_TOKEN_CHARS];
+	char arg1[MAX_TOKEN_CHARS];
+	char arg2[MAX_TOKEN_CHARS];
+	char arg3[MAX_TOKEN_CHARS];
+	char arg4[MAX_TOKEN_CHARS];
+	int	 node;
 
 	trap_Argv( 0, cmd, sizeof( cmd ) );
 
@@ -65,8 +65,7 @@ qboolean ACECM_Commands( gentity_t* ent )
 	{
 		node = ACEND_FindClosestReachableNode( ent, NODE_DENSITY, NODE_ALL );
 
-		trap_SendServerCommand( ent - g_entities,
-			va( "print \"node: %d type: %d x: %f y: %f z %f\n\"", node, nodes[ node ].type, nodes[ node ].origin[ 0 ], nodes[ node ].origin[ 1 ], nodes[ node ].origin[ 2 ] ) );
+		trap_SendServerCommand( ent - g_entities, va( "print \"node: %d type: %d x: %f y: %f z %f\n\"", node, nodes[node].type, nodes[node].origin[0], nodes[node].origin[1], nodes[node].origin[2] ) );
 	}
 	else if( Q_stricmp( cmd, "movenode" ) == 0 && ace_debug.integer )
 	{
@@ -75,13 +74,13 @@ qboolean ACECM_Commands( gentity_t* ent )
 		trap_Argv( 3, arg3, sizeof( arg3 ) );
 		trap_Argv( 4, arg4, sizeof( arg4 ) );
 
-		node                      = atoi( arg1 );
-		nodes[ node ].origin[ 0 ] = atof( arg2 );
-		nodes[ node ].origin[ 1 ] = atof( arg3 );
-		nodes[ node ].origin[ 2 ] = atof( arg4 );
+		node				  = atoi( arg1 );
+		nodes[node].origin[0] = atof( arg2 );
+		nodes[node].origin[1] = atof( arg3 );
+		nodes[node].origin[2] = atof( arg4 );
 
-		trap_SendServerCommand( ent - g_entities,
-			va( "print \"node: %d moved to: %d x: %f y: %f z %f\n\"", node, nodes[ node ].type, nodes[ node ].origin[ 0 ], nodes[ node ].origin[ 1 ], nodes[ node ].origin[ 2 ] ) );
+		trap_SendServerCommand(
+			ent - g_entities, va( "print \"node: %d moved to: %d x: %f y: %f z %f\n\"", node, nodes[node].type, nodes[node].origin[0], nodes[node].origin[1], nodes[node].origin[2] ) );
 	}
 	else
 	{

@@ -74,9 +74,9 @@ static int entity_GetClientName( lua_State* L )
 static int entity_Print( lua_State* L )
 {
 	lua_Entity* lent;
-	int         i;
-	char        buf[ MAX_STRING_CHARS ];
-	int         n = lua_gettop( L ); // number of arguments
+	int			i;
+	char		buf[MAX_STRING_CHARS];
+	int			n = lua_gettop( L ); // number of arguments
 
 	lent = lua_getentity( L, 1 );
 	if( !lent->e->client )
@@ -92,7 +92,7 @@ static int entity_Print( lua_State* L )
 		const char* s;
 
 		lua_pushvalue( L, -1 ); // function to be called
-		lua_pushvalue( L, i );  // value to print
+		lua_pushvalue( L, i );	// value to print
 		lua_call( L, 1, 1 );
 		s = lua_tostring( L, -1 ); // get result
 
@@ -114,9 +114,9 @@ static int entity_Print( lua_State* L )
 static int entity_CenterPrint( lua_State* L )
 {
 	lua_Entity* lent;
-	int         i;
-	char        buf[ MAX_STRING_CHARS ];
-	int         n = lua_gettop( L ); // number of arguments
+	int			i;
+	char		buf[MAX_STRING_CHARS];
+	int			n = lua_gettop( L ); // number of arguments
 
 	lent = lua_getentity( L, 1 );
 	if( !lent->e->client )
@@ -132,7 +132,7 @@ static int entity_CenterPrint( lua_State* L )
 		const char* s;
 
 		lua_pushvalue( L, -1 ); // function to be called
-		lua_pushvalue( L, i );  // value to print
+		lua_pushvalue( L, i );	// value to print
 		lua_call( L, 1, 1 );
 		s = lua_tostring( L, -1 ); // get result
 
@@ -166,7 +166,7 @@ static int entity_SetClassName( lua_State* L )
 	lua_Entity* lent;
 	//	char           *classname;
 
-	lent               = lua_getentity( L, 1 );
+	lent			   = lua_getentity( L, 1 );
 	lent->e->classname = ( char* )luaL_checkstring( L, 2 );
 
 	//	lent->e->classname = classname;
@@ -187,15 +187,15 @@ static int entity_GetTargetName( lua_State* L )
 static int entity_Rotate( lua_State* L )
 {
 	lua_Entity* lent;
-	vec_t*      vec;
+	vec_t*		vec;
 
 	lent = lua_getentity( L, 1 );
-	vec  = lua_getvector( L, 2 );
+	vec	 = lua_getvector( L, 2 );
 
-	lent->e->s.apos.trType       = TR_LINEAR;
-	lent->e->s.apos.trDelta[ 0 ] = vec[ 0 ];
-	lent->e->s.apos.trDelta[ 1 ] = vec[ 1 ];
-	lent->e->s.apos.trDelta[ 2 ] = vec[ 2 ];
+	lent->e->s.apos.trType	   = TR_LINEAR;
+	lent->e->s.apos.trDelta[0] = vec[0];
+	lent->e->s.apos.trDelta[1] = vec[1];
+	lent->e->s.apos.trDelta[2] = vec[2];
 
 	return 1;
 }
@@ -210,8 +210,8 @@ static int entity_GC( lua_State* L )
 static int entity_ToString( lua_State* L )
 {
 	lua_Entity* lent;
-	gentity_t*  gent;
-	char        buf[ MAX_STRING_CHARS ];
+	gentity_t*	gent;
+	char		buf[MAX_STRING_CHARS];
 
 	lent = lua_getentity( L, 1 );
 	gent = lent->e;
@@ -221,13 +221,9 @@ static int entity_ToString( lua_State* L )
 	return 1;
 }
 
-static const luaL_reg entity_ctor[] = {
-	{ "Spawn", entity_Spawn },
-	{ NULL, NULL }
-};
+static const luaL_reg entity_ctor[] = { { "Spawn", entity_Spawn }, { NULL, NULL } };
 
-static const luaL_reg entity_meta[] = {
-	{ "__gc", entity_GC },
+static const luaL_reg entity_meta[] = { { "__gc", entity_GC },
 	{ "__tostring", entity_ToString },
 	{ "GetNumber", entity_GetNumber },
 	{ "IsClient", entity_IsClient },
@@ -238,16 +234,15 @@ static const luaL_reg entity_meta[] = {
 	{ "SetClassName", entity_SetClassName },
 	{ "GetTargetName", entity_GetTargetName },
 	{ "Rotate", entity_Rotate },
-	{ NULL, NULL }
-};
+	{ NULL, NULL } };
 
-int luaopen_entity( lua_State* L )
+int					  luaopen_entity( lua_State* L )
 {
 	luaL_newmetatable( L, "game.entity" );
 
 	lua_pushstring( L, "__index" );
 	lua_pushvalue( L, -2 ); // pushes the metatable
-	lua_settable( L, -3 );  // metatable.__index = metatable
+	lua_settable( L, -3 );	// metatable.__index = metatable
 
 	luaL_register( L, NULL, entity_meta );
 	luaL_register( L, "entity", entity_ctor );

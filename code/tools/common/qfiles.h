@@ -29,8 +29,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //
 
 // surface geometry should not exceed these limits
-#define SHADER_MAX_VERTEXES  100000
-#define SHADER_MAX_INDEXES   ( SHADER_MAX_VERTEXES * 6 )
+#define SHADER_MAX_VERTEXES	 100000
+#define SHADER_MAX_INDEXES	 ( SHADER_MAX_VERTEXES * 6 )
 #define SHADER_MAX_TRIANGLES ( SHADER_MAX_INDEXES / 3 )
 
 /*
@@ -41,7 +41,7 @@ QVM files
 ========================================================================
 */
 
-#define VM_MAGIC 0x12721444
+#define VM_MAGIC			 0x12721444
 typedef struct
 {
 	int vmMagic;
@@ -67,18 +67,18 @@ PCX files are used for 8 bit images
 
 typedef struct
 {
-	char           manufacturer;
-	char           version;
-	char           encoding;
-	char           bits_per_pixel;
+	char		   manufacturer;
+	char		   version;
+	char		   encoding;
+	char		   bits_per_pixel;
 	unsigned short xmin, ymin, xmax, ymax;
 	unsigned short hres, vres;
-	unsigned char  palette[ 48 ];
-	char           reserved;
-	char           color_planes;
+	unsigned char  palette[48];
+	char		   reserved;
+	char		   color_planes;
 	unsigned short bytes_per_line;
 	unsigned short palette_type;
-	char           filler[ 58 ];
+	char		   filler[58];
 	unsigned char  data; // unbounded
 } pcx_t;
 
@@ -107,34 +107,34 @@ typedef struct _TargaHeader
 ========================================================================
 */
 
-#define MD3_IDENT   ( ( '3' << 24 ) + ( 'P' << 16 ) + ( 'D' << 8 ) + 'I' )
-#define MD3_VERSION 15
+#define MD3_IDENT		  ( ( '3' << 24 ) + ( 'P' << 16 ) + ( 'D' << 8 ) + 'I' )
+#define MD3_VERSION		  15
 
 // limits
-#define MD3_MAX_LODS      3
+#define MD3_MAX_LODS	  3
 #define MD3_MAX_TRIANGLES 8192 // per surface
-#define MD3_MAX_VERTS     4096 // per surface
-#define MD3_MAX_SHADERS   256 // per surface
-#define MD3_MAX_FRAMES    1024 // per model
-#define MD3_MAX_SURFACES  32 // per model
-#define MD3_MAX_TAGS      16 // per frame
+#define MD3_MAX_VERTS	  4096 // per surface
+#define MD3_MAX_SHADERS	  256  // per surface
+#define MD3_MAX_FRAMES	  1024 // per model
+#define MD3_MAX_SURFACES  32   // per model
+#define MD3_MAX_TAGS	  16   // per frame
 
 // vertex scales
-#define MD3_XYZ_SCALE ( 1.0 / 64 )
+#define MD3_XYZ_SCALE	  ( 1.0 / 64 )
 
 typedef struct md3Frame_s
 {
-	float bounds[ 2 ][ 3 ];
-	float localOrigin[ 3 ];
+	float bounds[2][3];
+	float localOrigin[3];
 	float radius;
-	char  name[ 16 ];
+	char  name[16];
 } md3Frame_t;
 
 typedef struct md3Tag_s
 {
-	char  name[ 64 ]; // tag name
-	float origin[ 3 ];
-	float axis[ 3 ][ 3 ];
+	char  name[64]; // tag name
+	float origin[3];
+	float axis[3][3];
 } md3Tag_t;
 
 /*
@@ -149,68 +149,68 @@ typedef struct md3Tag_s
 */
 typedef struct
 {
-	int ident; //
+	int	 ident; //
 
-	char name[ 64 ]; // polyset name
+	char name[64]; // polyset name
 
-	int flags;
-	int numFrames; // all surfaces in a model should have the same
+	int	 flags;
+	int	 numFrames; // all surfaces in a model should have the same
 
-	int numShaders; // all surfaces in a model should have the same
-	int numVerts;
+	int	 numShaders; // all surfaces in a model should have the same
+	int	 numVerts;
 
-	int numTriangles;
-	int ofsTriangles;
+	int	 numTriangles;
+	int	 ofsTriangles;
 
-	int ofsShaders;    // offset from start of md3Surface_t
-	int ofsSt;         // texture coords are common for all frames
-	int ofsXyzNormals; // numVerts * numFrames
+	int	 ofsShaders;	// offset from start of md3Surface_t
+	int	 ofsSt;			// texture coords are common for all frames
+	int	 ofsXyzNormals; // numVerts * numFrames
 
-	int ofsEnd; // next surface follows
+	int	 ofsEnd; // next surface follows
 } md3Surface_t;
 
 typedef struct
 {
-	char name[ 64 ];
-	int  shaderIndex; // for in-game use
+	char name[64];
+	int	 shaderIndex; // for in-game use
 } md3Shader_t;
 
 typedef struct
 {
-	int indexes[ 3 ];
+	int indexes[3];
 } md3Triangle_t;
 
 typedef struct
 {
-	float st[ 2 ];
+	float st[2];
 } md3St_t;
 
 typedef struct
 {
-	short xyz[ 3 ];
+	short xyz[3];
 	short normal;
 } md3XyzNormal_t;
 
 typedef struct
 {
-	int ident;
-	int version;
+	int	 ident;
+	int	 version;
 
-	char name[ 64 ]; // model name
+	char name[64]; // model name
 
-	int flags;
+	int	 flags;
 
-	int numFrames;
-	int numTags;
-	int numSurfaces;
+	int	 numFrames;
+	int	 numTags;
+	int	 numSurfaces;
 
-	int numSkins;
+	int	 numSkins;
 
-	int ofsFrames;   // offset for first frame
-	int ofsTags;     // numFrames * numTags
-	int ofsSurfaces; // first surface, others follow
+	int	 ofsFrames;	  // offset for first frame
+	int	 ofsTags;	  // numFrames * numTags
+	int	 ofsSurfaces; // first surface, others follow
 
-	int ofsEnd; // end of file
+	int	 ofsEnd; // end of file
 } md3Header_t;
 
 /*
@@ -221,50 +221,50 @@ typedef struct
 ==============================================================================
 */
 
-#define BSP_IDENT ( ( 'P' << 24 ) + ( 'S' << 16 ) + ( 'B' << 8 ) + 'X' )
+#define BSP_IDENT			 ( ( 'P' << 24 ) + ( 'S' << 16 ) + ( 'B' << 8 ) + 'X' )
 // little-endian "XBSP"
 
-#define BSP_VERSION 48
+#define BSP_VERSION			 48
 
 // there shouldn't be any problem with increasing these values at the
 // expense of more memory allocation in the utilities
-#define MAX_MAP_MODELS    0x400
-#define MAX_MAP_BRUSHES   0x8000
-#define MAX_MAP_ENTITIES  0x800
-#define MAX_MAP_ENTSTRING 0x80000
-#define MAX_MAP_SHADERS   0x400
+#define MAX_MAP_MODELS		 0x400
+#define MAX_MAP_BRUSHES		 0x8000
+#define MAX_MAP_ENTITIES	 0x800
+#define MAX_MAP_ENTSTRING	 0x80000
+#define MAX_MAP_SHADERS		 0x400
 
-#define MAX_MAP_AREAS       0x100 // MAX_MAP_AREA_BYTES in q_shared must match!
-#define MAX_MAP_FOGS        0x100
-#define MAX_MAP_PLANES      0x20000
-#define MAX_MAP_NODES       0x20000
-#define MAX_MAP_BRUSHSIDES  0x40000 //% 0x20000 /* ydnar */
-#define MAX_MAP_LEAFS       0x20000
-#define MAX_MAP_LEAFFACES   0x20000
-#define MAX_MAP_LEAFBRUSHES 0x40000
-#define MAX_MAP_PORTALS     0x20000
-#define MAX_MAP_LIGHTING    0x800000
-#define MAX_MAP_LIGHTGRID   0x800000
-#define MAX_MAP_VISIBILITY  0x200000
+#define MAX_MAP_AREAS		 0x100 // MAX_MAP_AREA_BYTES in q_shared must match!
+#define MAX_MAP_FOGS		 0x100
+#define MAX_MAP_PLANES		 0x20000
+#define MAX_MAP_NODES		 0x20000
+#define MAX_MAP_BRUSHSIDES	 0x40000 //% 0x20000 /* ydnar */
+#define MAX_MAP_LEAFS		 0x20000
+#define MAX_MAP_LEAFFACES	 0x20000
+#define MAX_MAP_LEAFBRUSHES	 0x40000
+#define MAX_MAP_PORTALS		 0x20000
+#define MAX_MAP_LIGHTING	 0x800000
+#define MAX_MAP_LIGHTGRID	 0x800000
+#define MAX_MAP_VISIBILITY	 0x200000
 
-#define MAX_MAP_DRAW_SURFS   0x20000
-#define MAX_MAP_DRAW_VERTS   0x80000
+#define MAX_MAP_DRAW_SURFS	 0x20000
+#define MAX_MAP_DRAW_VERTS	 0x80000
 #define MAX_MAP_DRAW_INDEXES 0x80000
 
 // key / value pair sizes in the entities lump
-#define MAX_KEY   32
-#define MAX_VALUE 1024
+#define MAX_KEY				 32
+#define MAX_VALUE			 1024
 
 // the editor uses these predefined yaw angles to orient entities up or down
-#define ANGLE_UP   -1
-#define ANGLE_DOWN -2
+#define ANGLE_UP			 -1
+#define ANGLE_DOWN			 -2
 
-#define LIGHTMAP_WIDTH  128
-#define LIGHTMAP_HEIGHT 128
+#define LIGHTMAP_WIDTH		 128
+#define LIGHTMAP_HEIGHT		 128
 
-#define MIN_WORLD_COORD ( -65536 )
-#define MAX_WORLD_COORD ( 65536 )
-#define WORLD_SIZE      ( MAX_WORLD_COORD - MIN_WORLD_COORD )
+#define MIN_WORLD_COORD		 ( -65536 )
+#define MAX_WORLD_COORD		 ( 65536 )
+#define WORLD_SIZE			 ( MAX_WORLD_COORD - MIN_WORLD_COORD )
 
 //=============================================================================
 
@@ -273,61 +273,61 @@ typedef struct
 	int fileofs, filelen;
 } lump_t;
 
-#define LUMP_ENTITIES     0
-#define LUMP_SHADERS      1
-#define LUMP_PLANES       2
-#define LUMP_NODES        3
-#define LUMP_LEAFS        4
+#define LUMP_ENTITIES	  0
+#define LUMP_SHADERS	  1
+#define LUMP_PLANES		  2
+#define LUMP_NODES		  3
+#define LUMP_LEAFS		  4
 #define LUMP_LEAFSURFACES 5
 #define LUMP_LEAFBRUSHES  6
-#define LUMP_MODELS       7
-#define LUMP_BRUSHES      8
-#define LUMP_BRUSHSIDES   9
-#define LUMP_DRAWVERTS    10
+#define LUMP_MODELS		  7
+#define LUMP_BRUSHES	  8
+#define LUMP_BRUSHSIDES	  9
+#define LUMP_DRAWVERTS	  10
 #define LUMP_DRAWINDEXES  11
-#define LUMP_FOGS         12
-#define LUMP_SURFACES     13
-#define LUMP_LIGHTMAPS    14
-#define LUMP_LIGHTGRID    15
-#define LUMP_VISIBILITY   16
-#define HEADER_LUMPS      17
+#define LUMP_FOGS		  12
+#define LUMP_SURFACES	  13
+#define LUMP_LIGHTMAPS	  14
+#define LUMP_LIGHTGRID	  15
+#define LUMP_VISIBILITY	  16
+#define HEADER_LUMPS	  17
 
 typedef struct
 {
-	int ident;
-	int version;
+	int	   ident;
+	int	   version;
 
-	lump_t lumps[ HEADER_LUMPS ];
+	lump_t lumps[HEADER_LUMPS];
 } dheader_t;
 
 typedef struct
 {
-	float mins[ 3 ], maxs[ 3 ];
-	int   firstSurface, numSurfaces;
-	int   firstBrush, numBrushes;
+	float mins[3], maxs[3];
+	int	  firstSurface, numSurfaces;
+	int	  firstBrush, numBrushes;
 } dmodel_t;
 
 typedef struct
 {
-	char shader[ 64 ];
-	int  surfaceFlags;
-	int  contentFlags;
+	char shader[64];
+	int	 surfaceFlags;
+	int	 contentFlags;
 } dshader_t;
 
 // planes x^1 is allways the opposite of plane x
 
 typedef struct
 {
-	float normal[ 3 ];
+	float normal[3];
 	float dist;
 } dplane_t;
 
 typedef struct
 {
 	int planeNum;
-	int children[ 2 ]; // negative numbers are -(leafs+1), not nodes
-	int mins[ 3 ];     // for frustom culling
-	int maxs[ 3 ];
+	int children[2]; // negative numbers are -(leafs+1), not nodes
+	int mins[3];	 // for frustom culling
+	int maxs[3];
 } dnode_t;
 
 typedef struct
@@ -335,8 +335,8 @@ typedef struct
 	int cluster; // -1 = opaque cluster (do I still store these?)
 	int area;
 
-	int mins[ 3 ]; // for frustum culling
-	int maxs[ 3 ];
+	int mins[3]; // for frustum culling
+	int maxs[3];
 
 	int firstLeafSurface;
 	int numLeafSurfaces;
@@ -360,28 +360,28 @@ typedef struct
 
 typedef struct
 {
-	char shader[ 64 ];
-	int  brushNum;
-	int  visibleSide; // the brush side that ray tests need to clip against (-1 == none)
+	char shader[64];
+	int	 brushNum;
+	int	 visibleSide; // the brush side that ray tests need to clip against (-1 == none)
 } dfog_t;
 
 // light grid
 typedef struct
 {
-	float ambient[ 3 ];
-	float directed[ 3 ];
-	byte  latLong[ 2 ];
+	float ambient[3];
+	float directed[3];
+	byte  latLong[2];
 } dgridPoint_t;
 
 typedef struct
 {
-	float xyz[ 3 ];
-	float st[ 2 ];
-	float lightmap[ 2 ];
-	float normal[ 3 ];
-	float paintColor[ 4 ];
-	float lightColor[ 4 ];
-	float lightDirection[ 3 ];
+	float xyz[3];
+	float st[2];
+	float lightmap[2];
+	float normal[3];
+	float paintColor[4];
+	float lightColor[4];
+	float lightDirection[3];
 } drawVert_t;
 
 typedef enum
@@ -396,25 +396,25 @@ typedef enum
 
 typedef struct
 {
-	int shaderNum;
-	int fogNum;
-	int surfaceType;
+	int	  shaderNum;
+	int	  fogNum;
+	int	  surfaceType;
 
-	int firstVert;
-	int numVerts;
+	int	  firstVert;
+	int	  numVerts;
 
-	int firstIndex;
-	int numIndexes;
+	int	  firstIndex;
+	int	  numIndexes;
 
-	int lightmapNum;
-	int lightmapX, lightmapY;
-	int lightmapWidth, lightmapHeight;
+	int	  lightmapNum;
+	int	  lightmapX, lightmapY;
+	int	  lightmapWidth, lightmapHeight;
 
-	float lightmapOrigin[ 3 ];
-	float lightmapVecs[ 3 ][ 3 ]; // for patches, [0] and [1] are lodbounds
+	float lightmapOrigin[3];
+	float lightmapVecs[3][3]; // for patches, [0] and [1] are lodbounds
 
-	int patchWidth;
-	int patchHeight;
+	int	  patchWidth;
+	int	  patchHeight;
 } dsurface_t;
 
 #endif

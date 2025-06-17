@@ -43,160 +43,160 @@ struct bot_moveresult_s;
 struct bot_initmove_s;
 struct weaponinfo_s;
 
-#define BOTFILESBASEFOLDER "botfiles"
-//debug line colors
-#define LINECOLOR_NONE   -1
-#define LINECOLOR_RED    1 //0xf2f2f0f0L
-#define LINECOLOR_GREEN  2 //0xd0d1d2d3L
-#define LINECOLOR_BLUE   3 //0xf3f3f1f1L
-#define LINECOLOR_YELLOW 4 //0xdcdddedfL
-#define LINECOLOR_ORANGE 5 //0xe0e1e2e3L
+#define BOTFILESBASEFOLDER			  "botfiles"
+// debug line colors
+#define LINECOLOR_NONE				  -1
+#define LINECOLOR_RED				  1 // 0xf2f2f0f0L
+#define LINECOLOR_GREEN				  2 // 0xd0d1d2d3L
+#define LINECOLOR_BLUE				  3 // 0xf3f3f1f1L
+#define LINECOLOR_YELLOW			  4 // 0xdcdddedfL
+#define LINECOLOR_ORANGE			  5 // 0xe0e1e2e3L
 
-//Print types
-#define PRT_MESSAGE 1
-#define PRT_WARNING 2
-#define PRT_ERROR   3
-#define PRT_FATAL   4
-#define PRT_EXIT    5
+// Print types
+#define PRT_MESSAGE					  1
+#define PRT_WARNING					  2
+#define PRT_ERROR					  3
+#define PRT_FATAL					  4
+#define PRT_EXIT					  5
 
-//console message types
-#define CMS_NORMAL 0
-#define CMS_CHAT   1
+// console message types
+#define CMS_NORMAL					  0
+#define CMS_CHAT					  1
 
-//botlib error codes
-#define BLERR_NOERROR                 0 //no error
-#define BLERR_LIBRARYNOTSETUP         1 //library not setup
-#define BLERR_INVALIDENTITYNUMBER     2 //invalid entity number
-#define BLERR_NOAASFILE               3 //no AAS file available
-#define BLERR_CANNOTOPENAASFILE       4 //cannot open AAS file
-#define BLERR_WRONGAASFILEID          5 //incorrect AAS file id
-#define BLERR_WRONGAASFILEVERSION     6 //incorrect AAS file version
-#define BLERR_CANNOTREADAASLUMP       7 //cannot read AAS file lump
-#define BLERR_CANNOTLOADICHAT         8 //cannot load initial chats
-#define BLERR_CANNOTLOADITEMWEIGHTS   9 //cannot load item weights
-#define BLERR_CANNOTLOADITEMCONFIG    10 //cannot load item config
-#define BLERR_CANNOTLOADWEAPONWEIGHTS 11 //cannot load weapon weights
-#define BLERR_CANNOTLOADWEAPONCONFIG  12 //cannot load weapon config
+// botlib error codes
+#define BLERR_NOERROR				  0	 // no error
+#define BLERR_LIBRARYNOTSETUP		  1	 // library not setup
+#define BLERR_INVALIDENTITYNUMBER	  2	 // invalid entity number
+#define BLERR_NOAASFILE				  3	 // no AAS file available
+#define BLERR_CANNOTOPENAASFILE		  4	 // cannot open AAS file
+#define BLERR_WRONGAASFILEID		  5	 // incorrect AAS file id
+#define BLERR_WRONGAASFILEVERSION	  6	 // incorrect AAS file version
+#define BLERR_CANNOTREADAASLUMP		  7	 // cannot read AAS file lump
+#define BLERR_CANNOTLOADICHAT		  8	 // cannot load initial chats
+#define BLERR_CANNOTLOADITEMWEIGHTS	  9	 // cannot load item weights
+#define BLERR_CANNOTLOADITEMCONFIG	  10 // cannot load item config
+#define BLERR_CANNOTLOADWEAPONWEIGHTS 11 // cannot load weapon weights
+#define BLERR_CANNOTLOADWEAPONCONFIG  12 // cannot load weapon config
 
-//action flags
-#define ACTION_ATTACK          0x00000001
-#define ACTION_USE             0x00000002
-#define ACTION_RESPAWN         0x00000008
-#define ACTION_JUMP            0x00000010
-#define ACTION_MOVEUP          0x00000020
-#define ACTION_CROUCH          0x00000080
-#define ACTION_MOVEDOWN        0x00000100
-#define ACTION_MOVEFORWARD     0x00000200
-#define ACTION_MOVEBACK        0x00000800
-#define ACTION_MOVELEFT        0x00001000
-#define ACTION_MOVERIGHT       0x00002000
-#define ACTION_DELAYEDJUMP     0x00008000
-#define ACTION_TALK            0x00010000
-#define ACTION_GESTURE         0x00020000
-#define ACTION_WALK            0x00080000
-#define ACTION_AFFIRMATIVE     0x00100000
-#define ACTION_NEGATIVE        0x00200000
-#define ACTION_GETFLAG         0x00800000
-#define ACTION_GUARDBASE       0x01000000
-#define ACTION_PATROL          0x02000000
-#define ACTION_FOLLOWME        0x08000000
-#define ACTION_JUMPEDLASTFRAME 0x10000000
+// action flags
+#define ACTION_ATTACK				  0x00000001
+#define ACTION_USE					  0x00000002
+#define ACTION_RESPAWN				  0x00000008
+#define ACTION_JUMP					  0x00000010
+#define ACTION_MOVEUP				  0x00000020
+#define ACTION_CROUCH				  0x00000080
+#define ACTION_MOVEDOWN				  0x00000100
+#define ACTION_MOVEFORWARD			  0x00000200
+#define ACTION_MOVEBACK				  0x00000800
+#define ACTION_MOVELEFT				  0x00001000
+#define ACTION_MOVERIGHT			  0x00002000
+#define ACTION_DELAYEDJUMP			  0x00008000
+#define ACTION_TALK					  0x00010000
+#define ACTION_GESTURE				  0x00020000
+#define ACTION_WALK					  0x00080000
+#define ACTION_AFFIRMATIVE			  0x00100000
+#define ACTION_NEGATIVE				  0x00200000
+#define ACTION_GETFLAG				  0x00800000
+#define ACTION_GUARDBASE			  0x01000000
+#define ACTION_PATROL				  0x02000000
+#define ACTION_FOLLOWME				  0x08000000
+#define ACTION_JUMPEDLASTFRAME		  0x10000000
 
-//the bot input, will be converted to a usercmd_t
+// the bot input, will be converted to a usercmd_t
 typedef struct bot_input_s
 {
-	float  thinktime;   //time since last output (in seconds)
-	vec3_t dir;         //movement direction
-	float  speed;       //speed in the range [0, 400]
-	vec3_t viewangles;  //the view angles
-	int    actionflags; //one of the ACTION_? flags
-	int    weapon;      //weapon to use
+	float  thinktime;	// time since last output (in seconds)
+	vec3_t dir;			// movement direction
+	float  speed;		// speed in the range [0, 400]
+	vec3_t viewangles;	// the view angles
+	int	   actionflags; // one of the ACTION_? flags
+	int	   weapon;		// weapon to use
 } bot_input_t;
 
 #ifndef BSPTRACE
 
 	#define BSPTRACE
 
-//bsp_trace_t hit surface
+// bsp_trace_t hit surface
 typedef struct bsp_surface_s
 {
-	char name[ 16 ];
-	int  flags;
-	int  value;
+	char name[16];
+	int	 flags;
+	int	 value;
 } bsp_surface_t;
 
-//remove the bsp_trace_s structure definition l8r on
-//a trace is returned when a box is swept through the world
+// remove the bsp_trace_s structure definition l8r on
+// a trace is returned when a box is swept through the world
 typedef struct bsp_trace_s
 {
-	qboolean      allsolid;   // if true, plane is not valid
-	qboolean      startsolid; // if true, the initial point was in a solid area
-	float         fraction;   // time completed, 1.0 = didn't hit anything
-	vec3_t        endpos;     // final position
-	cplane_t      plane;      // surface normal at impact
-	float         exp_dist;   // expanded plane distance
-	int           sidenum;    // number of the brush side hit
-	bsp_surface_t surface;    // the hit point surface
-	int           contents;   // contents on other side of surface hit
-	int           ent;        // number of entity hit
+	qboolean	  allsolid;	  // if true, plane is not valid
+	qboolean	  startsolid; // if true, the initial point was in a solid area
+	float		  fraction;	  // time completed, 1.0 = didn't hit anything
+	vec3_t		  endpos;	  // final position
+	cplane_t	  plane;	  // surface normal at impact
+	float		  exp_dist;	  // expanded plane distance
+	int			  sidenum;	  // number of the brush side hit
+	bsp_surface_t surface;	  // the hit point surface
+	int			  contents;	  // contents on other side of surface hit
+	int			  ent;		  // number of entity hit
 } bsp_trace_t;
 
 #endif // BSPTRACE
 
-//entity state
+// entity state
 typedef struct bot_entitystate_s
 {
-	int    type;        // entity type
-	int    flags;       // entity flags
-	vec3_t origin;      // origin of the entity
-	vec3_t angles;      // angles of the model
-	vec3_t old_origin;  // for lerping
-	vec3_t mins;        // bounding box minimums
-	vec3_t maxs;        // bounding box maximums
-	int    groundent;   // ground entity
-	int    solid;       // solid type
-	int    modelindex;  // model used
-	int    modelindex2; // weapons, CTF flags, etc
-	int    frame;       // model frame number
-	int    event;       // impulse events -- muzzle flashes, footsteps, etc
-	int    eventParm;   // even parameter
-	int    powerups;    // bit flags
-	int    weapon;      // determines weapon and flash model, etc
-	int    legsAnim;    // mask off ANIM_TOGGLEBIT
-	int    torsoAnim;   // mask off ANIM_TOGGLEBIT
+	int	   type;		// entity type
+	int	   flags;		// entity flags
+	vec3_t origin;		// origin of the entity
+	vec3_t angles;		// angles of the model
+	vec3_t old_origin;	// for lerping
+	vec3_t mins;		// bounding box minimums
+	vec3_t maxs;		// bounding box maximums
+	int	   groundent;	// ground entity
+	int	   solid;		// solid type
+	int	   modelindex;	// model used
+	int	   modelindex2; // weapons, CTF flags, etc
+	int	   frame;		// model frame number
+	int	   event;		// impulse events -- muzzle flashes, footsteps, etc
+	int	   eventParm;	// even parameter
+	int	   powerups;	// bit flags
+	int	   weapon;		// determines weapon and flash model, etc
+	int	   legsAnim;	// mask off ANIM_TOGGLEBIT
+	int	   torsoAnim;	// mask off ANIM_TOGGLEBIT
 } bot_entitystate_t;
 
-//bot AI library exported functions
+// bot AI library exported functions
 typedef struct botlib_import_s
 {
-	//print messages from the bot library
+	// print messages from the bot library
 	void( QDECL* Print )( int type, char* fmt, ... ) __attribute__( ( format( printf, 2, 3 ) ) );
-	//trace a bbox through the world
+	// trace a bbox through the world
 	void ( *Trace )( bsp_trace_t* trace, vec3_t start, vec3_t mins, vec3_t maxs, vec3_t end, int passent, int contentmask );
-	//trace a bbox against a specific entity
+	// trace a bbox against a specific entity
 	void ( *EntityTrace )( bsp_trace_t* trace, vec3_t start, vec3_t mins, vec3_t maxs, vec3_t end, int entnum, int contentmask );
-	//retrieve the contents at the given point
+	// retrieve the contents at the given point
 	int ( *PointContents )( vec3_t point );
-	//check if the point is in potential visible sight
+	// check if the point is in potential visible sight
 	int ( *inPVS )( vec3_t p1, vec3_t p2 );
-	//retrieve the BSP entity data lump
+	// retrieve the BSP entity data lump
 	char* ( *BSPEntityData )( void );
 	//
 	void ( *BSPModelMinsMaxsOrigin )( int modelnum, vec3_t angles, vec3_t mins, vec3_t maxs, vec3_t origin );
-	//send a bot client command
+	// send a bot client command
 	void ( *BotClientCommand )( int client, char* command );
-	//memory allocation
+	// memory allocation
 	void* ( *GetMemory )( int size );  // allocate from Zone
 	void ( *FreeMemory )( void* ptr ); // free memory from Zone
 	int ( *AvailableMemory )( void );  // available Zone memory
 	void* ( *HunkAlloc )( int size );  // allocate from hunk
-	//file system access
+	// file system access
 	int ( *FS_FOpenFile )( const char* qpath, fileHandle_t* file, fsMode_t mode );
 	int ( *FS_Read )( void* buffer, int len, fileHandle_t f );
 	int ( *FS_Write )( const void* buffer, int len, fileHandle_t f );
 	void ( *FS_FCloseFile )( fileHandle_t f );
 	int ( *FS_Seek )( fileHandle_t f, long offset, int origin );
-	//debug visualisation stuff
+	// debug visualisation stuff
 	int ( *DebugLineCreate )( void );
 	void ( *DebugLineDelete )( int line );
 	void ( *DebugLineShow )( int line, vec3_t start, vec3_t end, int color );
@@ -243,7 +243,8 @@ typedef struct aas_export_s
 	//--------------------------------------------
 	int ( *AAS_AreaTravelTimeToGoalArea )( int areanum, vec3_t origin, int goalareanum, int travelflags );
 	int ( *AAS_EnableRoutingArea )( int areanum, int enable );
-	int ( *AAS_PredictRoute )( struct aas_predictroute_s* route, int areanum, vec3_t origin, int goalareanum, int travelflags, int maxareas, int maxtime, int stopevent, int stopcontents, int stoptfl, int stopareanum );
+	int ( *AAS_PredictRoute )(
+		struct aas_predictroute_s* route, int areanum, vec3_t origin, int goalareanum, int travelflags, int maxareas, int maxtime, int stopevent, int stopcontents, int stoptfl, int stopareanum );
 	//--------------------------------------------
 	// be_aas_altroute.c
 	//--------------------------------------------
@@ -253,23 +254,23 @@ typedef struct aas_export_s
 	//--------------------------------------------
 	int ( *AAS_Swimming )( vec3_t origin );
 	int ( *AAS_PredictClientMovement )( struct aas_clientmove_s* move,
-		int                                                      entnum,
-		vec3_t                                                   origin,
-		int                                                      presencetype,
-		int                                                      onground,
-		vec3_t                                                   velocity,
-		vec3_t                                                   cmdmove,
-		int                                                      cmdframes,
-		int                                                      maxframes,
-		float                                                    frametime,
-		int                                                      stopevent,
-		int                                                      stopareanum,
-		int                                                      visualize );
+		int														 entnum,
+		vec3_t													 origin,
+		int														 presencetype,
+		int														 onground,
+		vec3_t													 velocity,
+		vec3_t													 cmdmove,
+		int														 cmdframes,
+		int														 maxframes,
+		float													 frametime,
+		int														 stopevent,
+		int														 stopareanum,
+		int														 visualize );
 } aas_export_t;
 
 typedef struct ea_export_s
 {
-	//ClientCommand elementary actions
+	// ClientCommand elementary actions
 	void ( *EA_Command )( int client, char* command );
 	void ( *EA_Say )( int client, char* str );
 	void ( *EA_SayTeam )( int client, char* str );
@@ -293,7 +294,7 @@ typedef struct ea_export_s
 	void ( *EA_DelayedJump )( int client );
 	void ( *EA_Move )( int client, vec3_t dir, float speed );
 	void ( *EA_View )( int client, vec3_t viewangles );
-	//send regular input to the server
+	// send regular input to the server
 	void ( *EA_EndRegular )( int client, float thinktime );
 	void ( *EA_GetInput )( int client, float thinktime, bot_input_t* input );
 	void ( *EA_ResetInput )( int client );
@@ -396,42 +397,42 @@ typedef struct ai_export_s
 	int ( *GeneticParentsAndChildSelection )( int numranks, float* ranks, int* parent1, int* parent2, int* child );
 } ai_export_t;
 
-//bot AI library imported functions
+// bot AI library imported functions
 typedef struct botlib_export_s
 {
-	//Area Awareness System functions
+	// Area Awareness System functions
 	aas_export_t aas;
-	//Elementary Action functions
-	ea_export_t ea;
-	//AI functions
-	ai_export_t ai;
-	//setup the bot library, returns BLERR_
+	// Elementary Action functions
+	ea_export_t	 ea;
+	// AI functions
+	ai_export_t	 ai;
+	// setup the bot library, returns BLERR_
 	int ( *BotLibSetup )( void );
-	//shutdown the bot library, returns BLERR_
+	// shutdown the bot library, returns BLERR_
 	int ( *BotLibShutdown )( void );
-	//sets a library variable returns BLERR_
+	// sets a library variable returns BLERR_
 	int ( *BotLibVarSet )( const char* var_name, const char* value );
-	//gets a library variable returns BLERR_
+	// gets a library variable returns BLERR_
 	int ( *BotLibVarGet )( const char* var_name, char* value, int size );
 
-	//sets a C-like define returns BLERR_
+	// sets a C-like define returns BLERR_
 	int ( *PC_AddGlobalDefine )( char* string );
 	int ( *PC_LoadSourceHandle )( const char* filename );
 	int ( *PC_FreeSourceHandle )( int handle );
 	int ( *PC_ReadTokenHandle )( int handle, pc_token_t* pc_token );
 	int ( *PC_SourceFileAndLine )( int handle, char* filename, int* line );
 
-	//start a frame in the bot library
+	// start a frame in the bot library
 	int ( *BotLibStartFrame )( float time );
-	//load a new map in the bot library
+	// load a new map in the bot library
 	int ( *BotLibLoadMap )( const char* mapname );
-	//entity updates
+	// entity updates
 	int ( *BotLibUpdateEntity )( int ent, bot_entitystate_t* state );
-	//just for testing
+	// just for testing
 	int ( *Test )( int parm0, char* parm1, vec3_t parm2, vec3_t parm3 );
 } botlib_export_t;
 
-//linking of bot library
+// linking of bot library
 botlib_export_t* GetBotLibAPI( int apiVersion, botlib_import_t* import );
 
 /* Library variables:

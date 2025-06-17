@@ -41,37 +41,37 @@ void LerpDrawVert( bspDrawVert_t* a, bspDrawVert_t* b, bspDrawVert_t* out )
 {
 	int k;
 
-	out->xyz[ 0 ] = 0.5 * ( a->xyz[ 0 ] + b->xyz[ 0 ] );
-	out->xyz[ 1 ] = 0.5 * ( a->xyz[ 1 ] + b->xyz[ 1 ] );
-	out->xyz[ 2 ] = 0.5 * ( a->xyz[ 2 ] + b->xyz[ 2 ] );
+	out->xyz[0] = 0.5 * ( a->xyz[0] + b->xyz[0] );
+	out->xyz[1] = 0.5 * ( a->xyz[1] + b->xyz[1] );
+	out->xyz[2] = 0.5 * ( a->xyz[2] + b->xyz[2] );
 
-	out->st[ 0 ] = 0.5 * ( a->st[ 0 ] + b->st[ 0 ] );
-	out->st[ 1 ] = 0.5 * ( a->st[ 1 ] + b->st[ 1 ] );
+	out->st[0] = 0.5 * ( a->st[0] + b->st[0] );
+	out->st[1] = 0.5 * ( a->st[1] + b->st[1] );
 
-	out->paintColor[ 0 ] = 0.5f * ( b->paintColor[ 0 ] - a->paintColor[ 0 ] );
-	out->paintColor[ 1 ] = 0.5f * ( b->paintColor[ 1 ] - a->paintColor[ 1 ] );
-	out->paintColor[ 2 ] = 0.5f * ( b->paintColor[ 2 ] - a->paintColor[ 2 ] );
-	out->paintColor[ 3 ] = 0.5f * ( b->paintColor[ 3 ] - a->paintColor[ 3 ] );
+	out->paintColor[0] = 0.5f * ( b->paintColor[0] - a->paintColor[0] );
+	out->paintColor[1] = 0.5f * ( b->paintColor[1] - a->paintColor[1] );
+	out->paintColor[2] = 0.5f * ( b->paintColor[2] - a->paintColor[2] );
+	out->paintColor[3] = 0.5f * ( b->paintColor[3] - a->paintColor[3] );
 
 	for( k = 0; k < MAX_LIGHTMAPS; k++ )
 	{
-		out->lightmap[ k ][ 0 ] = 0.5f * ( a->lightmap[ k ][ 0 ] + b->lightmap[ k ][ 0 ] );
-		out->lightmap[ k ][ 1 ] = 0.5f * ( a->lightmap[ k ][ 1 ] + b->lightmap[ k ][ 1 ] );
+		out->lightmap[k][0] = 0.5f * ( a->lightmap[k][0] + b->lightmap[k][0] );
+		out->lightmap[k][1] = 0.5f * ( a->lightmap[k][1] + b->lightmap[k][1] );
 
-		out->lightColor[ k ][ 0 ] = 0.5f * ( b->lightColor[ k ][ 0 ] - a->lightColor[ k ][ 0 ] );
-		out->lightColor[ k ][ 1 ] = 0.5f * ( b->lightColor[ k ][ 1 ] - a->lightColor[ k ][ 1 ] );
-		out->lightColor[ k ][ 2 ] = 0.5f * ( b->lightColor[ k ][ 2 ] - a->lightColor[ k ][ 2 ] );
-		out->lightColor[ k ][ 3 ] = 0.5f * ( b->lightColor[ k ][ 3 ] - a->lightColor[ k ][ 3 ] );
+		out->lightColor[k][0] = 0.5f * ( b->lightColor[k][0] - a->lightColor[k][0] );
+		out->lightColor[k][1] = 0.5f * ( b->lightColor[k][1] - a->lightColor[k][1] );
+		out->lightColor[k][2] = 0.5f * ( b->lightColor[k][2] - a->lightColor[k][2] );
+		out->lightColor[k][3] = 0.5f * ( b->lightColor[k][3] - a->lightColor[k][3] );
 
-		out->lightDirection[ k ][ 0 ] = 0.5f * ( b->lightDirection[ k ][ 0 ] - a->lightDirection[ k ][ 0 ] );
-		out->lightDirection[ k ][ 1 ] = 0.5f * ( b->lightDirection[ k ][ 1 ] - a->lightDirection[ k ][ 1 ] );
-		out->lightDirection[ k ][ 2 ] = 0.5f * ( b->lightDirection[ k ][ 2 ] - a->lightDirection[ k ][ 2 ] );
+		out->lightDirection[k][0] = 0.5f * ( b->lightDirection[k][0] - a->lightDirection[k][0] );
+		out->lightDirection[k][1] = 0.5f * ( b->lightDirection[k][1] - a->lightDirection[k][1] );
+		out->lightDirection[k][2] = 0.5f * ( b->lightDirection[k][2] - a->lightDirection[k][2] );
 	}
 
 	/* ydnar: added normal interpolation */
-	out->normal[ 0 ] = 0.5f * ( a->normal[ 0 ] + b->normal[ 0 ] );
-	out->normal[ 1 ] = 0.5f * ( a->normal[ 1 ] + b->normal[ 1 ] );
-	out->normal[ 2 ] = 0.5f * ( a->normal[ 2 ] + b->normal[ 2 ] );
+	out->normal[0] = 0.5f * ( a->normal[0] + b->normal[0] );
+	out->normal[1] = 0.5f * ( a->normal[1] + b->normal[1] );
+	out->normal[2] = 0.5f * ( a->normal[2] + b->normal[2] );
 
 	/* if the interpolant created a bogus normal, just copy the normal from a */
 	if( VectorNormalize( out->normal ) == 0 )
@@ -89,36 +89,36 @@ void LerpDrawVertAmount( bspDrawVert_t* a, bspDrawVert_t* b, float amount, bspDr
 {
 	int k;
 
-	out->xyz[ 0 ] = a->xyz[ 0 ] + amount * ( b->xyz[ 0 ] - a->xyz[ 0 ] );
-	out->xyz[ 1 ] = a->xyz[ 1 ] + amount * ( b->xyz[ 1 ] - a->xyz[ 1 ] );
-	out->xyz[ 2 ] = a->xyz[ 2 ] + amount * ( b->xyz[ 2 ] - a->xyz[ 2 ] );
+	out->xyz[0] = a->xyz[0] + amount * ( b->xyz[0] - a->xyz[0] );
+	out->xyz[1] = a->xyz[1] + amount * ( b->xyz[1] - a->xyz[1] );
+	out->xyz[2] = a->xyz[2] + amount * ( b->xyz[2] - a->xyz[2] );
 
-	out->st[ 0 ] = a->st[ 0 ] + amount * ( b->st[ 0 ] - a->st[ 0 ] );
-	out->st[ 1 ] = a->st[ 1 ] + amount * ( b->st[ 1 ] - a->st[ 1 ] );
+	out->st[0] = a->st[0] + amount * ( b->st[0] - a->st[0] );
+	out->st[1] = a->st[1] + amount * ( b->st[1] - a->st[1] );
 
-	out->paintColor[ 0 ] = a->paintColor[ 0 ] + amount * ( b->paintColor[ 0 ] - a->paintColor[ 0 ] );
-	out->paintColor[ 1 ] = a->paintColor[ 1 ] + amount * ( b->paintColor[ 1 ] - a->paintColor[ 1 ] );
-	out->paintColor[ 2 ] = a->paintColor[ 2 ] + amount * ( b->paintColor[ 2 ] - a->paintColor[ 2 ] );
-	out->paintColor[ 3 ] = a->paintColor[ 3 ] + amount * ( b->paintColor[ 3 ] - a->paintColor[ 3 ] );
+	out->paintColor[0] = a->paintColor[0] + amount * ( b->paintColor[0] - a->paintColor[0] );
+	out->paintColor[1] = a->paintColor[1] + amount * ( b->paintColor[1] - a->paintColor[1] );
+	out->paintColor[2] = a->paintColor[2] + amount * ( b->paintColor[2] - a->paintColor[2] );
+	out->paintColor[3] = a->paintColor[3] + amount * ( b->paintColor[3] - a->paintColor[3] );
 
 	for( k = 0; k < MAX_LIGHTMAPS; k++ )
 	{
-		out->lightmap[ k ][ 0 ] = a->lightmap[ k ][ 0 ] + amount * ( b->lightmap[ k ][ 0 ] - a->lightmap[ k ][ 0 ] );
-		out->lightmap[ k ][ 1 ] = a->lightmap[ k ][ 1 ] + amount * ( b->lightmap[ k ][ 1 ] - a->lightmap[ k ][ 1 ] );
+		out->lightmap[k][0] = a->lightmap[k][0] + amount * ( b->lightmap[k][0] - a->lightmap[k][0] );
+		out->lightmap[k][1] = a->lightmap[k][1] + amount * ( b->lightmap[k][1] - a->lightmap[k][1] );
 
-		out->lightColor[ k ][ 0 ] = a->lightColor[ k ][ 0 ] + amount * ( b->lightColor[ k ][ 0 ] - a->lightColor[ k ][ 0 ] );
-		out->lightColor[ k ][ 1 ] = a->lightColor[ k ][ 1 ] + amount * ( b->lightColor[ k ][ 1 ] - a->lightColor[ k ][ 1 ] );
-		out->lightColor[ k ][ 2 ] = a->lightColor[ k ][ 2 ] + amount * ( b->lightColor[ k ][ 2 ] - a->lightColor[ k ][ 2 ] );
-		out->lightColor[ k ][ 3 ] = a->lightColor[ k ][ 3 ] + amount * ( b->lightColor[ k ][ 3 ] - a->lightColor[ k ][ 3 ] );
+		out->lightColor[k][0] = a->lightColor[k][0] + amount * ( b->lightColor[k][0] - a->lightColor[k][0] );
+		out->lightColor[k][1] = a->lightColor[k][1] + amount * ( b->lightColor[k][1] - a->lightColor[k][1] );
+		out->lightColor[k][2] = a->lightColor[k][2] + amount * ( b->lightColor[k][2] - a->lightColor[k][2] );
+		out->lightColor[k][3] = a->lightColor[k][3] + amount * ( b->lightColor[k][3] - a->lightColor[k][3] );
 
-		out->lightDirection[ k ][ 0 ] = a->lightDirection[ k ][ 0 ] + amount * ( b->lightDirection[ k ][ 0 ] - a->lightDirection[ k ][ 0 ] );
-		out->lightDirection[ k ][ 1 ] = a->lightDirection[ k ][ 1 ] + amount * ( b->lightDirection[ k ][ 1 ] - a->lightDirection[ k ][ 1 ] );
-		out->lightDirection[ k ][ 2 ] = a->lightDirection[ k ][ 2 ] + amount * ( b->lightDirection[ k ][ 2 ] - a->lightDirection[ k ][ 2 ] );
+		out->lightDirection[k][0] = a->lightDirection[k][0] + amount * ( b->lightDirection[k][0] - a->lightDirection[k][0] );
+		out->lightDirection[k][1] = a->lightDirection[k][1] + amount * ( b->lightDirection[k][1] - a->lightDirection[k][1] );
+		out->lightDirection[k][2] = a->lightDirection[k][2] + amount * ( b->lightDirection[k][2] - a->lightDirection[k][2] );
 	}
 
-	out->normal[ 0 ] = a->normal[ 0 ] + amount * ( b->normal[ 0 ] - a->normal[ 0 ] );
-	out->normal[ 1 ] = a->normal[ 1 ] + amount * ( b->normal[ 1 ] - a->normal[ 1 ] );
-	out->normal[ 2 ] = a->normal[ 2 ] + amount * ( b->normal[ 2 ] - a->normal[ 2 ] );
+	out->normal[0] = a->normal[0] + amount * ( b->normal[0] - a->normal[0] );
+	out->normal[1] = a->normal[1] + amount * ( b->normal[1] - a->normal[1] );
+	out->normal[2] = a->normal[2] + amount * ( b->normal[2] - a->normal[2] );
 
 	/* if the interpolant created a bogus normal, just copy the normal from a */
 	if( VectorNormalize( out->normal ) == 0 )
@@ -141,7 +141,7 @@ void PrintMesh( mesh_t* m )
 	{
 		for( j = 0; j < m->width; j++ )
 		{
-			Sys_Printf( "(%5.2f %5.2f %5.2f) ", m->verts[ i * m->width + j ].xyz[ 0 ], m->verts[ i * m->width + j ].xyz[ 1 ], m->verts[ i * m->width + j ].xyz[ 2 ] );
+			Sys_Printf( "(%5.2f %5.2f %5.2f) ", m->verts[i * m->width + j].xyz[0], m->verts[i * m->width + j].xyz[1], m->verts[i * m->width + j].xyz[2] );
 		}
 		Sys_Printf( "\n" );
 	}
@@ -150,13 +150,13 @@ void PrintMesh( mesh_t* m )
 mesh_t* CopyMesh( mesh_t* mesh )
 {
 	mesh_t* out;
-	int     size;
+	int		size;
 
-	out         = safe_malloc( sizeof( *out ) );
-	out->width  = mesh->width;
+	out			= safe_malloc( sizeof( *out ) );
+	out->width	= mesh->width;
 	out->height = mesh->height;
 
-	size       = out->width * out->height * sizeof( *out->verts );
+	size	   = out->width * out->height * sizeof( *out->verts );
 	out->verts = safe_malloc( size );
 	memcpy( out->verts, mesh->verts, size );
 
@@ -170,19 +170,19 @@ returns a transposed copy of the mesh, freeing the original
 
 mesh_t* TransposeMesh( mesh_t* in )
 {
-	int     w, h;
+	int		w, h;
 	mesh_t* out;
 
-	out         = safe_malloc( sizeof( *out ) );
-	out->width  = in->height;
+	out			= safe_malloc( sizeof( *out ) );
+	out->width	= in->height;
 	out->height = in->width;
-	out->verts  = safe_malloc( out->width * out->height * sizeof( bspDrawVert_t ) );
+	out->verts	= safe_malloc( out->width * out->height * sizeof( bspDrawVert_t ) );
 
 	for( h = 0; h < in->height; h++ )
 	{
 		for( w = 0; w < in->width; w++ )
 		{
-			out->verts[ w * in->height + h ] = in->verts[ h * in->width + w ];
+			out->verts[w * in->height + h] = in->verts[h * in->width + w];
 		}
 	}
 
@@ -193,16 +193,16 @@ mesh_t* TransposeMesh( mesh_t* in )
 
 void InvertMesh( mesh_t* in )
 {
-	int           w, h;
+	int			  w, h;
 	bspDrawVert_t temp;
 
 	for( h = 0; h < in->height; h++ )
 	{
 		for( w = 0; w < in->width / 2; w++ )
 		{
-			temp                                           = in->verts[ h * in->width + w ];
-			in->verts[ h * in->width + w ]                 = in->verts[ h * in->width + in->width - 1 - w ];
-			in->verts[ h * in->width + in->width - 1 - w ] = temp;
+			temp										 = in->verts[h * in->width + w];
+			in->verts[h * in->width + w]				 = in->verts[h * in->width + in->width - 1 - w];
+			in->verts[h * in->width + in->width - 1 - w] = temp;
 		}
 	}
 }
@@ -215,26 +215,24 @@ MakeMeshNormals
 */
 void MakeMeshNormals( mesh_t in )
 {
-	int            i, j, k, dist;
-	vec3_t         normal;
-	vec3_t         sum;
-	int            count;
-	vec3_t         base;
-	vec3_t         delta;
-	int            x, y;
+	int			   i, j, k, dist;
+	vec3_t		   normal;
+	vec3_t		   sum;
+	int			   count;
+	vec3_t		   base;
+	vec3_t		   delta;
+	int			   x, y;
 	bspDrawVert_t* dv;
-	vec3_t         around[ 8 ], temp;
-	qboolean       good[ 8 ];
-	qboolean       wrapWidth, wrapHeight;
-	float          len;
-	int            neighbors[ 8 ][ 2 ] = {
-        { 0, 1 }, { 1, 1 }, { 1, 0 }, { 1, -1 }, { 0, -1 }, { -1, -1 }, { -1, 0 }, { -1, 1 }
-	};
+	vec3_t		   around[8], temp;
+	qboolean	   good[8];
+	qboolean	   wrapWidth, wrapHeight;
+	float		   len;
+	int			   neighbors[8][2] = { { 0, 1 }, { 1, 1 }, { 1, 0 }, { 1, -1 }, { 0, -1 }, { -1, -1 }, { -1, 0 }, { -1, 1 } };
 
 	wrapWidth = qfalse;
 	for( i = 0; i < in.height; i++ )
 	{
-		VectorSubtract( in.verts[ i * in.width ].xyz, in.verts[ i * in.width + in.width - 1 ].xyz, delta );
+		VectorSubtract( in.verts[i * in.width].xyz, in.verts[i * in.width + in.width - 1].xyz, delta );
 		len = VectorLength( delta );
 		if( len > 1.0 )
 		{
@@ -249,7 +247,7 @@ void MakeMeshNormals( mesh_t in )
 	wrapHeight = qfalse;
 	for( i = 0; i < in.width; i++ )
 	{
-		VectorSubtract( in.verts[ i ].xyz, in.verts[ i + ( in.height - 1 ) * in.width ].xyz, delta );
+		VectorSubtract( in.verts[i].xyz, in.verts[i + ( in.height - 1 ) * in.width].xyz, delta );
 		len = VectorLength( delta );
 		if( len > 1.0 )
 		{
@@ -266,17 +264,17 @@ void MakeMeshNormals( mesh_t in )
 		for( j = 0; j < in.height; j++ )
 		{
 			count = 0;
-			dv    = &in.verts[ j * in.width + i ];
+			dv	  = &in.verts[j * in.width + i];
 			VectorCopy( dv->xyz, base );
 			for( k = 0; k < 8; k++ )
 			{
-				VectorClear( around[ k ] );
-				good[ k ] = qfalse;
+				VectorClear( around[k] );
+				good[k] = qfalse;
 
 				for( dist = 1; dist <= 3; dist++ )
 				{
-					x = i + neighbors[ k ][ 0 ] * dist;
-					y = j + neighbors[ k ][ 1 ] * dist;
+					x = i + neighbors[k][0] * dist;
+					y = j + neighbors[k][1] * dist;
 					if( wrapWidth )
 					{
 						if( x < 0 )
@@ -304,15 +302,15 @@ void MakeMeshNormals( mesh_t in )
 					{
 						break; // edge of patch
 					}
-					VectorSubtract( in.verts[ y * in.width + x ].xyz, base, temp );
+					VectorSubtract( in.verts[y * in.width + x].xyz, base, temp );
 					if( VectorNormalize( temp ) == 0 )
 					{
 						continue; // degenerate edge, get more dist
 					}
 					else
 					{
-						good[ k ] = qtrue;
-						VectorCopy( temp, around[ k ] );
+						good[k] = qtrue;
+						VectorCopy( temp, around[k] );
 						break; // good edge
 					}
 				}
@@ -321,11 +319,11 @@ void MakeMeshNormals( mesh_t in )
 			VectorClear( sum );
 			for( k = 0; k < 8; k++ )
 			{
-				if( !good[ k ] || !good[ ( k + 1 ) & 7 ] )
+				if( !good[k] || !good[( k + 1 ) & 7] )
 				{
 					continue; // didn't get two points
 				}
-				CrossProduct( around[ ( k + 1 ) & 7 ], around[ k ], normal );
+				CrossProduct( around[( k + 1 ) & 7], around[k], normal );
 				if( VectorNormalize( normal ) == 0 )
 				{
 					continue;
@@ -335,7 +333,7 @@ void MakeMeshNormals( mesh_t in )
 			}
 			if( count == 0 )
 			{
-				//Sys_Printf("bad normal\n");
+				// Sys_Printf("bad normal\n");
 				count = 1;
 			}
 			VectorNormalize2( sum, dv->normal );
@@ -351,7 +349,7 @@ ydnar: fixme: make this use LerpDrawVert() rather than this complicated mess
 
 void PutMeshOnCurve( mesh_t in )
 {
-	int   i, j, l, m;
+	int	  i, j, l, m;
 	float prev, next;
 
 	// put all the aproximating points on the curve
@@ -361,24 +359,22 @@ void PutMeshOnCurve( mesh_t in )
 		{
 			for( l = 0; l < 3; l++ )
 			{
-				prev                                  = ( in.verts[ j * in.width + i ].xyz[ l ] + in.verts[ ( j + 1 ) * in.width + i ].xyz[ l ] ) * 0.5;
-				next                                  = ( in.verts[ j * in.width + i ].xyz[ l ] + in.verts[ ( j - 1 ) * in.width + i ].xyz[ l ] ) * 0.5;
-				in.verts[ j * in.width + i ].xyz[ l ] = ( prev + next ) * 0.5;
+				prev							  = ( in.verts[j * in.width + i].xyz[l] + in.verts[( j + 1 ) * in.width + i].xyz[l] ) * 0.5;
+				next							  = ( in.verts[j * in.width + i].xyz[l] + in.verts[( j - 1 ) * in.width + i].xyz[l] ) * 0.5;
+				in.verts[j * in.width + i].xyz[l] = ( prev + next ) * 0.5;
 
 				/* ydnar: interpolating st coords */
 				if( l < 2 )
 				{
-					prev                                 = ( in.verts[ j * in.width + i ].st[ l ] + in.verts[ ( j + 1 ) * in.width + i ].st[ l ] ) * 0.5;
-					next                                 = ( in.verts[ j * in.width + i ].st[ l ] + in.verts[ ( j - 1 ) * in.width + i ].st[ l ] ) * 0.5;
-					in.verts[ j * in.width + i ].st[ l ] = ( prev + next ) * 0.5;
+					prev							 = ( in.verts[j * in.width + i].st[l] + in.verts[( j + 1 ) * in.width + i].st[l] ) * 0.5;
+					next							 = ( in.verts[j * in.width + i].st[l] + in.verts[( j - 1 ) * in.width + i].st[l] ) * 0.5;
+					in.verts[j * in.width + i].st[l] = ( prev + next ) * 0.5;
 
 					for( m = 0; m < MAX_LIGHTMAPS; m++ )
 					{
-						prev =
-							( in.verts[ j * in.width + i ].lightmap[ m ][ l ] + in.verts[ ( j + 1 ) * in.width + i ].lightmap[ m ][ l ] ) * 0.5;
-						next =
-							( in.verts[ j * in.width + i ].lightmap[ m ][ l ] + in.verts[ ( j - 1 ) * in.width + i ].lightmap[ m ][ l ] ) * 0.5;
-						in.verts[ j * in.width + i ].lightmap[ m ][ l ] = ( prev + next ) * 0.5;
+						prev									  = ( in.verts[j * in.width + i].lightmap[m][l] + in.verts[( j + 1 ) * in.width + i].lightmap[m][l] ) * 0.5;
+						next									  = ( in.verts[j * in.width + i].lightmap[m][l] + in.verts[( j - 1 ) * in.width + i].lightmap[m][l] ) * 0.5;
+						in.verts[j * in.width + i].lightmap[m][l] = ( prev + next ) * 0.5;
 					}
 				}
 			}
@@ -391,22 +387,22 @@ void PutMeshOnCurve( mesh_t in )
 		{
 			for( l = 0; l < 3; l++ )
 			{
-				prev                                  = ( in.verts[ j * in.width + i ].xyz[ l ] + in.verts[ j * in.width + i + 1 ].xyz[ l ] ) * 0.5;
-				next                                  = ( in.verts[ j * in.width + i ].xyz[ l ] + in.verts[ j * in.width + i - 1 ].xyz[ l ] ) * 0.5;
-				in.verts[ j * in.width + i ].xyz[ l ] = ( prev + next ) * 0.5;
+				prev							  = ( in.verts[j * in.width + i].xyz[l] + in.verts[j * in.width + i + 1].xyz[l] ) * 0.5;
+				next							  = ( in.verts[j * in.width + i].xyz[l] + in.verts[j * in.width + i - 1].xyz[l] ) * 0.5;
+				in.verts[j * in.width + i].xyz[l] = ( prev + next ) * 0.5;
 
 				/* ydnar: interpolating st coords */
 				if( l < 2 )
 				{
-					prev                                 = ( in.verts[ j * in.width + i ].st[ l ] + in.verts[ j * in.width + i + 1 ].st[ l ] ) * 0.5;
-					next                                 = ( in.verts[ j * in.width + i ].st[ l ] + in.verts[ j * in.width + i - 1 ].st[ l ] ) * 0.5;
-					in.verts[ j * in.width + i ].st[ l ] = ( prev + next ) * 0.5;
+					prev							 = ( in.verts[j * in.width + i].st[l] + in.verts[j * in.width + i + 1].st[l] ) * 0.5;
+					next							 = ( in.verts[j * in.width + i].st[l] + in.verts[j * in.width + i - 1].st[l] ) * 0.5;
+					in.verts[j * in.width + i].st[l] = ( prev + next ) * 0.5;
 
 					for( m = 0; m < MAX_LIGHTMAPS; m++ )
 					{
-						prev                                            = ( in.verts[ j * in.width + i ].lightmap[ m ][ l ] + in.verts[ j * in.width + i + 1 ].lightmap[ m ][ l ] ) * 0.5;
-						next                                            = ( in.verts[ j * in.width + i ].lightmap[ m ][ l ] + in.verts[ j * in.width + i - 1 ].lightmap[ m ][ l ] ) * 0.5;
-						in.verts[ j * in.width + i ].lightmap[ m ][ l ] = ( prev + next ) * 0.5;
+						prev									  = ( in.verts[j * in.width + i].lightmap[m][l] + in.verts[j * in.width + i + 1].lightmap[m][l] ) * 0.5;
+						next									  = ( in.verts[j * in.width + i].lightmap[m][l] + in.verts[j * in.width + i - 1].lightmap[m][l] ) * 0.5;
+						in.verts[j * in.width + i].lightmap[m][l] = ( prev + next ) * 0.5;
 					}
 				}
 			}
@@ -422,15 +418,15 @@ SubdivideMesh
 */
 mesh_t* SubdivideMesh( mesh_t in, float maxError, float minLength )
 {
-	int           i, j, k, l;
-	bspDrawVert_t prev, next, mid;
-	vec3_t        prevxyz, nextxyz, midxyz;
-	vec3_t        delta;
-	float         len;
-	mesh_t        out;
+	int					 i, j, k, l;
+	bspDrawVert_t		 prev, next, mid;
+	vec3_t				 prevxyz, nextxyz, midxyz;
+	vec3_t				 delta;
+	float				 len;
+	mesh_t				 out;
 
 	/* ydnar: static for os x */
-	static bspDrawVert_t expand[ MAX_EXPANDED_AXIS ][ MAX_EXPANDED_AXIS ];
+	static bspDrawVert_t expand[MAX_EXPANDED_AXIS][MAX_EXPANDED_AXIS];
 
 	out.width  = in.width;
 	out.height = in.height;
@@ -439,7 +435,7 @@ mesh_t* SubdivideMesh( mesh_t in, float maxError, float minLength )
 	{
 		for( j = 0; j < in.height; j++ )
 		{
-			expand[ j ][ i ] = in.verts[ j * in.width + i ];
+			expand[j][i] = in.verts[j * in.width + i];
 		}
 	}
 
@@ -451,9 +447,9 @@ mesh_t* SubdivideMesh( mesh_t in, float maxError, float minLength )
 		{
 			for( l = 0; l < 3; l++ )
 			{
-				prevxyz[ l ] = expand[ i ][ j + 1 ].xyz[ l ] - expand[ i ][ j ].xyz[ l ];
-				nextxyz[ l ] = expand[ i ][ j + 2 ].xyz[ l ] - expand[ i ][ j + 1 ].xyz[ l ];
-				midxyz[ l ]  = ( expand[ i ][ j ].xyz[ l ] + expand[ i ][ j + 1 ].xyz[ l ] * 2 + expand[ i ][ j + 2 ].xyz[ l ] ) * 0.25;
+				prevxyz[l] = expand[i][j + 1].xyz[l] - expand[i][j].xyz[l];
+				nextxyz[l] = expand[i][j + 2].xyz[l] - expand[i][j + 1].xyz[l];
+				midxyz[l]  = ( expand[i][j].xyz[l] + expand[i][j + 1].xyz[l] * 2 + expand[i][j + 2].xyz[l] ) * 0.25;
 			}
 
 			// if the span length is too long, force a subdivision
@@ -463,7 +459,7 @@ mesh_t* SubdivideMesh( mesh_t in, float maxError, float minLength )
 			}
 
 			// see if this midpoint is off far enough to subdivide
-			VectorSubtract( expand[ i ][ j + 1 ].xyz, midxyz, delta );
+			VectorSubtract( expand[i][j + 1].xyz, midxyz, delta );
 			len = VectorLength( delta );
 			if( len > maxError )
 			{
@@ -486,17 +482,17 @@ mesh_t* SubdivideMesh( mesh_t in, float maxError, float minLength )
 
 		for( i = 0; i < out.height; i++ )
 		{
-			LerpDrawVert( &expand[ i ][ j ], &expand[ i ][ j + 1 ], &prev );
-			LerpDrawVert( &expand[ i ][ j + 1 ], &expand[ i ][ j + 2 ], &next );
+			LerpDrawVert( &expand[i][j], &expand[i][j + 1], &prev );
+			LerpDrawVert( &expand[i][j + 1], &expand[i][j + 2], &next );
 			LerpDrawVert( &prev, &next, &mid );
 
 			for( k = out.width - 1; k > j + 3; k-- )
 			{
-				expand[ i ][ k ] = expand[ i ][ k - 2 ];
+				expand[i][k] = expand[i][k - 2];
 			}
-			expand[ i ][ j + 1 ] = prev;
-			expand[ i ][ j + 2 ] = mid;
-			expand[ i ][ j + 3 ] = next;
+			expand[i][j + 1] = prev;
+			expand[i][j + 2] = mid;
+			expand[i][j + 3] = next;
 		}
 
 		// back up and recheck this set again, it may need more subdivision
@@ -511,9 +507,9 @@ mesh_t* SubdivideMesh( mesh_t in, float maxError, float minLength )
 		{
 			for( l = 0; l < 3; l++ )
 			{
-				prevxyz[ l ] = expand[ j + 1 ][ i ].xyz[ l ] - expand[ j ][ i ].xyz[ l ];
-				nextxyz[ l ] = expand[ j + 2 ][ i ].xyz[ l ] - expand[ j + 1 ][ i ].xyz[ l ];
-				midxyz[ l ]  = ( expand[ j ][ i ].xyz[ l ] + expand[ j + 1 ][ i ].xyz[ l ] * 2 + expand[ j + 2 ][ i ].xyz[ l ] ) * 0.25;
+				prevxyz[l] = expand[j + 1][i].xyz[l] - expand[j][i].xyz[l];
+				nextxyz[l] = expand[j + 2][i].xyz[l] - expand[j + 1][i].xyz[l];
+				midxyz[l]  = ( expand[j][i].xyz[l] + expand[j + 1][i].xyz[l] * 2 + expand[j + 2][i].xyz[l] ) * 0.25;
 			}
 
 			// if the span length is too long, force a subdivision
@@ -522,7 +518,7 @@ mesh_t* SubdivideMesh( mesh_t in, float maxError, float minLength )
 				break;
 			}
 			// see if this midpoint is off far enough to subdivide
-			VectorSubtract( expand[ j + 1 ][ i ].xyz, midxyz, delta );
+			VectorSubtract( expand[j + 1][i].xyz, midxyz, delta );
 			len = VectorLength( delta );
 			if( len > maxError )
 			{
@@ -545,17 +541,17 @@ mesh_t* SubdivideMesh( mesh_t in, float maxError, float minLength )
 
 		for( i = 0; i < out.width; i++ )
 		{
-			LerpDrawVert( &expand[ j ][ i ], &expand[ j + 1 ][ i ], &prev );
-			LerpDrawVert( &expand[ j + 1 ][ i ], &expand[ j + 2 ][ i ], &next );
+			LerpDrawVert( &expand[j][i], &expand[j + 1][i], &prev );
+			LerpDrawVert( &expand[j + 1][i], &expand[j + 2][i], &next );
 			LerpDrawVert( &prev, &next, &mid );
 
 			for( k = out.height - 1; k > j + 3; k-- )
 			{
-				expand[ k ][ i ] = expand[ k - 2 ][ i ];
+				expand[k][i] = expand[k - 2][i];
 			}
-			expand[ j + 1 ][ i ] = prev;
-			expand[ j + 2 ][ i ] = mid;
-			expand[ j + 3 ][ i ] = next;
+			expand[j + 1][i] = prev;
+			expand[j + 2][i] = mid;
+			expand[j + 3][i] = next;
 		}
 
 		// back up and recheck this set again, it may need more subdivision
@@ -564,10 +560,10 @@ mesh_t* SubdivideMesh( mesh_t in, float maxError, float minLength )
 
 	// collapse the verts
 
-	out.verts = &expand[ 0 ][ 0 ];
+	out.verts = &expand[0][0];
 	for( i = 1; i < out.height; i++ )
 	{
-		memmove( &out.verts[ i * out.width ], expand[ i ], out.width * sizeof( bspDrawVert_t ) );
+		memmove( &out.verts[i * out.width], expand[i], out.width * sizeof( bspDrawVert_t ) );
 	}
 
 	return CopyMesh( &out );
@@ -604,12 +600,12 @@ subdivides each mesh quad a specified number of times
 
 mesh_t* SubdivideMesh2( mesh_t in, int iterations )
 {
-	int           i, j, k;
-	bspDrawVert_t prev, next, mid;
-	mesh_t        out;
+	int					 i, j, k;
+	bspDrawVert_t		 prev, next, mid;
+	mesh_t				 out;
 
 	/* ydnar: static for os x */
-	static bspDrawVert_t expand[ MAX_EXPANDED_AXIS ][ MAX_EXPANDED_AXIS ];
+	static bspDrawVert_t expand[MAX_EXPANDED_AXIS][MAX_EXPANDED_AXIS];
 
 	/* initial setup */
 	out.width  = in.width;
@@ -618,7 +614,7 @@ mesh_t* SubdivideMesh2( mesh_t in, int iterations )
 	{
 		for( j = 0; j < in.height; j++ )
 		{
-			expand[ j ][ i ] = in.verts[ j * in.width + i ];
+			expand[j][i] = in.verts[j * in.width + i];
 		}
 	}
 
@@ -638,17 +634,17 @@ mesh_t* SubdivideMesh2( mesh_t in, int iterations )
 			out.width += 2;
 			for( i = 0; i < out.height; i++ )
 			{
-				LerpDrawVert( &expand[ i ][ j ], &expand[ i ][ j + 1 ], &prev );
-				LerpDrawVert( &expand[ i ][ j + 1 ], &expand[ i ][ j + 2 ], &next );
+				LerpDrawVert( &expand[i][j], &expand[i][j + 1], &prev );
+				LerpDrawVert( &expand[i][j + 1], &expand[i][j + 2], &next );
 				LerpDrawVert( &prev, &next, &mid );
 
 				for( k = out.width - 1; k > j + 3; k-- )
 				{
-					expand[ i ][ k ] = expand[ i ][ k - 2 ];
+					expand[i][k] = expand[i][k - 2];
 				}
-				expand[ i ][ j + 1 ] = prev;
-				expand[ i ][ j + 2 ] = mid;
-				expand[ i ][ j + 3 ] = next;
+				expand[i][j + 1] = prev;
+				expand[i][j + 2] = mid;
+				expand[i][j + 3] = next;
 			}
 		}
 
@@ -665,26 +661,26 @@ mesh_t* SubdivideMesh2( mesh_t in, int iterations )
 			out.height += 2;
 			for( i = 0; i < out.width; i++ )
 			{
-				LerpDrawVert( &expand[ j ][ i ], &expand[ j + 1 ][ i ], &prev );
-				LerpDrawVert( &expand[ j + 1 ][ i ], &expand[ j + 2 ][ i ], &next );
+				LerpDrawVert( &expand[j][i], &expand[j + 1][i], &prev );
+				LerpDrawVert( &expand[j + 1][i], &expand[j + 2][i], &next );
 				LerpDrawVert( &prev, &next, &mid );
 
 				for( k = out.height - 1; k > j + 3; k-- )
 				{
-					expand[ k ][ i ] = expand[ k - 2 ][ i ];
+					expand[k][i] = expand[k - 2][i];
 				}
-				expand[ j + 1 ][ i ] = prev;
-				expand[ j + 2 ][ i ] = mid;
-				expand[ j + 3 ][ i ] = next;
+				expand[j + 1][i] = prev;
+				expand[j + 2][i] = mid;
+				expand[j + 3][i] = next;
 			}
 		}
 	}
 
 	/* collapse the verts */
-	out.verts = &expand[ 0 ][ 0 ];
+	out.verts = &expand[0][0];
 	for( i = 1; i < out.height; i++ )
 	{
-		memmove( &out.verts[ i * out.width ], expand[ i ], out.width * sizeof( bspDrawVert_t ) );
+		memmove( &out.verts[i * out.width], expand[i], out.width * sizeof( bspDrawVert_t ) );
 	}
 
 	/* return to sender */
@@ -714,13 +710,13 @@ RemoveLinearMeshColumsRows
 */
 mesh_t* RemoveLinearMeshColumnsRows( mesh_t* in )
 {
-	int    i, j, k;
-	float  len, maxLength;
-	vec3_t proj, dir;
-	mesh_t out;
+	int					 i, j, k;
+	float				 len, maxLength;
+	vec3_t				 proj, dir;
+	mesh_t				 out;
 
 	/* ydnar: static for os x */
-	static bspDrawVert_t expand[ MAX_EXPANDED_AXIS ][ MAX_EXPANDED_AXIS ];
+	static bspDrawVert_t expand[MAX_EXPANDED_AXIS][MAX_EXPANDED_AXIS];
 
 	out.width  = in->width;
 	out.height = in->height;
@@ -729,7 +725,7 @@ mesh_t* RemoveLinearMeshColumnsRows( mesh_t* in )
 	{
 		for( j = 0; j < in->height; j++ )
 		{
-			expand[ j ][ i ] = in->verts[ j * in->width + i ];
+			expand[j][i] = in->verts[j * in->width + i];
 		}
 	}
 
@@ -738,8 +734,8 @@ mesh_t* RemoveLinearMeshColumnsRows( mesh_t* in )
 		maxLength = 0;
 		for( i = 0; i < out.height; i++ )
 		{
-			ProjectPointOntoVector( expand[ i ][ j ].xyz, expand[ i ][ j - 1 ].xyz, expand[ i ][ j + 1 ].xyz, proj );
-			VectorSubtract( expand[ i ][ j ].xyz, proj, dir );
+			ProjectPointOntoVector( expand[i][j].xyz, expand[i][j - 1].xyz, expand[i][j + 1].xyz, proj );
+			VectorSubtract( expand[i][j].xyz, proj, dir );
 			len = VectorLength( dir );
 			if( len > maxLength )
 			{
@@ -753,7 +749,7 @@ mesh_t* RemoveLinearMeshColumnsRows( mesh_t* in )
 			{
 				for( k = j; k < out.width; k++ )
 				{
-					expand[ i ][ k ] = expand[ i ][ k + 1 ];
+					expand[i][k] = expand[i][k + 1];
 				}
 			}
 			j--;
@@ -764,8 +760,8 @@ mesh_t* RemoveLinearMeshColumnsRows( mesh_t* in )
 		maxLength = 0;
 		for( i = 0; i < out.width; i++ )
 		{
-			ProjectPointOntoVector( expand[ j ][ i ].xyz, expand[ j - 1 ][ i ].xyz, expand[ j + 1 ][ i ].xyz, proj );
-			VectorSubtract( expand[ j ][ i ].xyz, proj, dir );
+			ProjectPointOntoVector( expand[j][i].xyz, expand[j - 1][i].xyz, expand[j + 1][i].xyz, proj );
+			VectorSubtract( expand[j][i].xyz, proj, dir );
 			len = VectorLength( dir );
 			if( len > maxLength )
 			{
@@ -779,17 +775,17 @@ mesh_t* RemoveLinearMeshColumnsRows( mesh_t* in )
 			{
 				for( k = j; k < out.height; k++ )
 				{
-					expand[ k ][ i ] = expand[ k + 1 ][ i ];
+					expand[k][i] = expand[k + 1][i];
 				}
 			}
 			j--;
 		}
 	}
 	// collapse the verts
-	out.verts = &expand[ 0 ][ 0 ];
+	out.verts = &expand[0][0];
 	for( i = 1; i < out.height; i++ )
 	{
-		memmove( &out.verts[ i * out.width ], expand[ i ], out.width * sizeof( bspDrawVert_t ) );
+		memmove( &out.verts[i * out.width], expand[i], out.width * sizeof( bspDrawVert_t ) );
 	}
 
 	return CopyMesh( &out );
@@ -802,11 +798,11 @@ SubdivideMeshQuads
 */
 mesh_t* SubdivideMeshQuads( mesh_t* in, float minLength, int maxsize, int* widthtable, int* heighttable )
 {
-	int           i, j, k, w, h, maxsubdivisions, subdivisions;
-	vec3_t        dir;
-	float         length, maxLength, amount;
-	mesh_t        out;
-	bspDrawVert_t expand[ MAX_EXPANDED_AXIS ][ MAX_EXPANDED_AXIS ];
+	int			  i, j, k, w, h, maxsubdivisions, subdivisions;
+	vec3_t		  dir;
+	float		  length, maxLength, amount;
+	mesh_t		  out;
+	bspDrawVert_t expand[MAX_EXPANDED_AXIS][MAX_EXPANDED_AXIS];
 
 	out.width  = in->width;
 	out.height = in->height;
@@ -815,7 +811,7 @@ mesh_t* SubdivideMeshQuads( mesh_t* in, float minLength, int maxsize, int* width
 	{
 		for( j = 0; j < in->height; j++ )
 		{
-			expand[ j ][ i ] = in->verts[ j * in->width + i ];
+			expand[j][i] = in->verts[j * in->width + i];
 		}
 	}
 
@@ -833,7 +829,7 @@ mesh_t* SubdivideMeshQuads( mesh_t* in, float minLength, int maxsize, int* width
 		maxLength = 0;
 		for( i = 0; i < out.height; i++ )
 		{
-			VectorSubtract( expand[ i ][ j + 1 ].xyz, expand[ i ][ j ].xyz, dir );
+			VectorSubtract( expand[i][j + 1].xyz, expand[i][j].xyz, dir );
 			length = VectorLength( dir );
 			if( length > maxLength )
 			{
@@ -847,7 +843,7 @@ mesh_t* SubdivideMeshQuads( mesh_t* in, float minLength, int maxsize, int* width
 			subdivisions = maxsubdivisions;
 		}
 
-		widthtable[ w ] = subdivisions + 1;
+		widthtable[w] = subdivisions + 1;
 		if( subdivisions <= 0 )
 		{
 			continue;
@@ -859,12 +855,12 @@ mesh_t* SubdivideMeshQuads( mesh_t* in, float minLength, int maxsize, int* width
 		{
 			for( k = out.width - 1; k > j + subdivisions; k-- )
 			{
-				expand[ i ][ k ] = expand[ i ][ k - subdivisions ];
+				expand[i][k] = expand[i][k - subdivisions];
 			}
 			for( k = 1; k <= subdivisions; k++ )
 			{
 				amount = ( float )k / ( subdivisions + 1 );
-				LerpDrawVertAmount( &expand[ i ][ j ], &expand[ i ][ j + subdivisions + 1 ], amount, &expand[ i ][ j + k ] );
+				LerpDrawVertAmount( &expand[i][j], &expand[i][j + subdivisions + 1], amount, &expand[i][j + k] );
 			}
 		}
 	}
@@ -876,7 +872,7 @@ mesh_t* SubdivideMeshQuads( mesh_t* in, float minLength, int maxsize, int* width
 		maxLength = 0;
 		for( i = 0; i < out.width; i++ )
 		{
-			VectorSubtract( expand[ j + 1 ][ i ].xyz, expand[ j ][ i ].xyz, dir );
+			VectorSubtract( expand[j + 1][i].xyz, expand[j][i].xyz, dir );
 			length = VectorLength( dir );
 			if( length > maxLength )
 			{
@@ -890,7 +886,7 @@ mesh_t* SubdivideMeshQuads( mesh_t* in, float minLength, int maxsize, int* width
 			subdivisions = maxsubdivisions;
 		}
 
-		heighttable[ h ] = subdivisions + 1;
+		heighttable[h] = subdivisions + 1;
 		if( subdivisions <= 0 )
 		{
 			continue;
@@ -902,21 +898,21 @@ mesh_t* SubdivideMeshQuads( mesh_t* in, float minLength, int maxsize, int* width
 		{
 			for( k = out.height - 1; k > j + subdivisions; k-- )
 			{
-				expand[ k ][ i ] = expand[ k - subdivisions ][ i ];
+				expand[k][i] = expand[k - subdivisions][i];
 			}
 			for( k = 1; k <= subdivisions; k++ )
 			{
 				amount = ( float )k / ( subdivisions + 1 );
-				LerpDrawVertAmount( &expand[ j ][ i ], &expand[ j + subdivisions + 1 ][ i ], amount, &expand[ j + k ][ i ] );
+				LerpDrawVertAmount( &expand[j][i], &expand[j + subdivisions + 1][i], amount, &expand[j + k][i] );
 			}
 		}
 	}
 
 	// collapse the verts
-	out.verts = &expand[ 0 ][ 0 ];
+	out.verts = &expand[0][0];
 	for( i = 1; i < out.height; i++ )
 	{
-		memmove( &out.verts[ i * out.width ], expand[ i ], out.width * sizeof( bspDrawVert_t ) );
+		memmove( &out.verts[i * out.width], expand[i], out.width * sizeof( bspDrawVert_t ) );
 	}
 
 	return CopyMesh( &out );

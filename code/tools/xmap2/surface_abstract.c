@@ -52,15 +52,15 @@ mapDrawSurface_t* AllocDrawSurface( surfaceType_t type )
 	{
 		Error( "MAX_MAP_DRAW_SURFS (%d) exceeded", MAX_MAP_DRAW_SURFS );
 	}
-	ds = &mapDrawSurfs[ numMapDrawSurfs ];
+	ds = &mapDrawSurfs[numMapDrawSurfs];
 	numMapDrawSurfs++;
 
 	/* ydnar: do initial surface setup */
 	memset( ds, 0, sizeof( mapDrawSurface_t ) );
-	ds->type       = type;
+	ds->type	   = type;
 	ds->planeNum   = -1;
-	ds->fogNum     = defaultFogNum;       /* ydnar 2003-02-12 */
-	ds->outputNum  = -1;                  /* ydnar 2002-08-13 */
+	ds->fogNum	   = defaultFogNum;		  /* ydnar 2003-02-12 */
+	ds->outputNum  = -1;				  /* ydnar 2002-08-13 */
 	ds->surfaceNum = numMapDrawSurfs - 1; /* ydnar 2003-02-16 */
 
 	return ds;
@@ -94,15 +94,15 @@ void FinishSurface( mapDrawSurface_t* ds )
 	}
 
 	/* ydnar: rocking surface cloning (fur baby yeah!) */
-	if( ds->shaderInfo->cloneShader != NULL && ds->shaderInfo->cloneShader[ 0 ] != '\0' )
+	if( ds->shaderInfo->cloneShader != NULL && ds->shaderInfo->cloneShader[0] != '\0' )
 	{
 		CloneSurface( ds, ShaderInfoForShader( ds->shaderInfo->cloneShader ) );
 	}
 
 	/* ydnar: xmap_backShader support */
-	if( ds->shaderInfo->backShader != NULL && ds->shaderInfo->backShader[ 0 ] != '\0' )
+	if( ds->shaderInfo->backShader != NULL && ds->shaderInfo->backShader[0] != '\0' )
 	{
-		ds2           = CloneSurface( ds, ShaderInfoForShader( ds->shaderInfo->backShader ) );
+		ds2			  = CloneSurface( ds, ShaderInfoForShader( ds->shaderInfo->backShader ) );
 		ds2->backSide = qtrue;
 	}
 }
@@ -186,7 +186,7 @@ mapDrawSurface_t* MakeCelSurface( mapDrawSurface_t* src, shaderInfo_t* si )
 	}
 
 	/* do some fixups for celshading */
-	ds->planar    = qfalse;
+	ds->planar	  = qfalse;
 	ds->planeNum  = -1;
 	ds->celShader = NULL; /* don't cel shade cels :P */
 
@@ -201,7 +201,7 @@ generates a skybox surface, viewable from everywhere there is sky
 
 mapDrawSurface_t* MakeSkyboxSurface( mapDrawSurface_t* src )
 {
-	int               i;
+	int				  i;
 	mapDrawSurface_t* ds;
 
 	/* dummy check */
@@ -223,7 +223,7 @@ mapDrawSurface_t* MakeSkyboxSurface( mapDrawSurface_t* src )
 	/* scale the surface vertexes */
 	for( i = 0; i < ds->numVerts; i++ )
 	{
-		MatrixTransformPoint2( skyboxTransform, ds->verts[ i ].xyz );
+		MatrixTransformPoint2( skyboxTransform, ds->verts[i].xyz );
 
 		/* debug code */
 		//% bspDrawVerts[ bspDrawSurfaces[ ds->outputNum ].firstVert + i ].color[ 0 ][ 1 ] = 0;
@@ -231,7 +231,7 @@ mapDrawSurface_t* MakeSkyboxSurface( mapDrawSurface_t* src )
 	}
 
 	/* so backface culling creep doesn't bork the surface */
-	VectorClear( ds->lightmapVecs[ 2 ] );
+	VectorClear( ds->lightmapVecs[2] );
 
 	/* return the surface */
 	return ds;
@@ -250,8 +250,8 @@ qboolean IsTriangleDegenerate( bspDrawVert_t* points, int a, int b, int c )
 	float  d;
 
 	/* calcuate the area of the triangle */
-	VectorSubtract( points[ b ].xyz, points[ a ].xyz, v1 );
-	VectorSubtract( points[ c ].xyz, points[ a ].xyz, v2 );
+	VectorSubtract( points[b].xyz, points[a].xyz, v1 );
+	VectorSubtract( points[c].xyz, points[a].xyz, v2 );
 	CrossProduct( v1, v2, v3 );
 	d = VectorLength( v3 );
 
@@ -272,15 +272,15 @@ clears a surface and frees any allocated memory
 
 void ClearSurface( mapDrawSurface_t* ds )
 {
-	ds->type     = SURFACE_BAD;
-	ds->planar   = qfalse;
+	ds->type	 = SURFACE_BAD;
+	ds->planar	 = qfalse;
 	ds->planeNum = -1;
 	ds->numVerts = 0;
 	if( ds->verts != NULL )
 	{
 		free( ds->verts );
 	}
-	ds->verts      = NULL;
+	ds->verts	   = NULL;
 	ds->numIndexes = 0;
 	if( ds->indexes != NULL )
 	{
@@ -297,7 +297,7 @@ deletes all empty or bad surfaces from the surface list
 
 void TidyEntitySurfaces( entity_t* e )
 {
-	int               i, j, deleted;
+	int				  i, j, deleted;
 	mapDrawSurface_t *out, *in;
 
 	/* note it */
@@ -308,13 +308,13 @@ void TidyEntitySurfaces( entity_t* e )
 	for( i = e->firstDrawSurf, j = e->firstDrawSurf; j < numMapDrawSurfs; i++, j++ )
 	{
 		/* get out surface */
-		out = &mapDrawSurfs[ i ];
+		out = &mapDrawSurfs[i];
 
 		/* walk the surface list again until a proper surface is found */
 		for( ; j < numMapDrawSurfs; j++ )
 		{
 			/* get in surface */
-			in = &mapDrawSurfs[ j ];
+			in = &mapDrawSurfs[j];
 
 			/* this surface ok? */
 			if( in->type == SURFACE_FLARE || in->type == SURFACE_SHADER || ( in->type != SURFACE_BAD && in->numVerts > 0 ) )
@@ -348,8 +348,8 @@ calculates the clamped texture range for a given surface, returns qtrue if it's 
 
 qboolean CalcSurfaceTextureRange( mapDrawSurface_t* ds )
 {
-	int   i, j, v, size[ 2 ];
-	float mins[ 2 ], maxs[ 2 ];
+	int	  i, j, v, size[2];
+	float mins[2], maxs[2];
 
 	/* try to early out */
 	if( ds->numVerts <= 0 )
@@ -358,21 +358,21 @@ qboolean CalcSurfaceTextureRange( mapDrawSurface_t* ds )
 	}
 
 	/* walk the verts and determine min/max st values */
-	mins[ 0 ] = 999999;
-	mins[ 1 ] = 999999;
-	maxs[ 0 ] = -999999;
-	maxs[ 1 ] = -999999;
+	mins[0] = 999999;
+	mins[1] = 999999;
+	maxs[0] = -999999;
+	maxs[1] = -999999;
 	for( i = 0; i < ds->numVerts; i++ )
 	{
 		for( j = 0; j < 2; j++ )
 		{
-			if( ds->verts[ i ].st[ j ] < mins[ j ] )
+			if( ds->verts[i].st[j] < mins[j] )
 			{
-				mins[ j ] = ds->verts[ i ].st[ j ];
+				mins[j] = ds->verts[i].st[j];
 			}
-			if( ds->verts[ i ].st[ j ] > maxs[ j ] )
+			if( ds->verts[i].st[j] > maxs[j] )
 			{
-				maxs[ j ] = ds->verts[ i ].st[ j ];
+				maxs[j] = ds->verts[i].st[j];
 			}
 		}
 	}
@@ -380,28 +380,28 @@ qboolean CalcSurfaceTextureRange( mapDrawSurface_t* ds )
 	/* clamp to integer range and calculate surface bias values */
 	for( j = 0; j < 2; j++ )
 	{
-		ds->bias[ j ] = -floor( 0.5f * ( mins[ j ] + maxs[ j ] ) );
+		ds->bias[j] = -floor( 0.5f * ( mins[j] + maxs[j] ) );
 	}
 
 	/* find biased texture coordinate mins/maxs */
-	size[ 0 ]        = ds->shaderInfo->shaderWidth;
-	size[ 1 ]        = ds->shaderInfo->shaderHeight;
-	ds->texMins[ 0 ] = 999999;
-	ds->texMins[ 1 ] = 999999;
-	ds->texMaxs[ 0 ] = -999999;
-	ds->texMaxs[ 1 ] = -999999;
+	size[0]		   = ds->shaderInfo->shaderWidth;
+	size[1]		   = ds->shaderInfo->shaderHeight;
+	ds->texMins[0] = 999999;
+	ds->texMins[1] = 999999;
+	ds->texMaxs[0] = -999999;
+	ds->texMaxs[1] = -999999;
 	for( i = 0; i < ds->numVerts; i++ )
 	{
 		for( j = 0; j < 2; j++ )
 		{
-			v = ( ( float )ds->verts[ i ].st[ j ] + ds->bias[ j ] ) * size[ j ];
-			if( v < ds->texMins[ j ] )
+			v = ( ( float )ds->verts[i].st[j] + ds->bias[j] ) * size[j];
+			if( v < ds->texMins[j] )
 			{
-				ds->texMins[ j ] = v;
+				ds->texMins[j] = v;
 			}
-			if( v > ds->texMaxs[ j ] )
+			if( v > ds->texMaxs[j] )
 			{
-				ds->texMaxs[ j ] = v;
+				ds->texMaxs[j] = v;
 			}
 		}
 	}
@@ -409,7 +409,7 @@ qboolean CalcSurfaceTextureRange( mapDrawSurface_t* ds )
 	/* calc ranges */
 	for( j = 0; j < 2; j++ )
 	{
-		ds->texRange[ j ] = ( ds->texMaxs[ j ] - ds->texMins[ j ] );
+		ds->texRange[j] = ( ds->texMaxs[j] - ds->texMins[j] );
 	}
 
 	/* if range is zero, then assume unlimited precision */
@@ -421,7 +421,7 @@ qboolean CalcSurfaceTextureRange( mapDrawSurface_t* ds )
 	/* within range? */
 	for( j = 0; j < 2; j++ )
 	{
-		if( ds->texMins[ j ] < -texRange || ds->texMaxs[ j ] > texRange )
+		if( ds->texMins[j] < -texRange || ds->texMaxs[j] > texRange )
 		{
 			return qfalse;
 		}
@@ -441,21 +441,21 @@ qboolean CalcLightmapAxis( vec3_t normal, vec3_t axis )
 	vec3_t absolute;
 
 	/* test */
-	if( normal[ 0 ] == 0.0f && normal[ 1 ] == 0.0f && normal[ 2 ] == 0.0f )
+	if( normal[0] == 0.0f && normal[1] == 0.0f && normal[2] == 0.0f )
 	{
 		VectorClear( axis );
 		return qfalse;
 	}
 
 	/* get absolute normal */
-	absolute[ 0 ] = fabs( normal[ 0 ] );
-	absolute[ 1 ] = fabs( normal[ 1 ] );
-	absolute[ 2 ] = fabs( normal[ 2 ] );
+	absolute[0] = fabs( normal[0] );
+	absolute[1] = fabs( normal[1] );
+	absolute[2] = fabs( normal[2] );
 
 	/* test and set */
-	if( absolute[ 2 ] > absolute[ 0 ] - 0.0001f && absolute[ 2 ] > absolute[ 1 ] - 0.0001f )
+	if( absolute[2] > absolute[0] - 0.0001f && absolute[2] > absolute[1] - 0.0001f )
 	{
-		if( normal[ 2 ] > 0.0f )
+		if( normal[2] > 0.0f )
 		{
 			VectorSet( axis, 0.0f, 0.0f, 1.0f );
 		}
@@ -464,9 +464,9 @@ qboolean CalcLightmapAxis( vec3_t normal, vec3_t axis )
 			VectorSet( axis, 0.0f, 0.0f, -1.0f );
 		}
 	}
-	else if( absolute[ 0 ] > absolute[ 1 ] - 0.0001f && absolute[ 0 ] > absolute[ 2 ] - 0.0001f )
+	else if( absolute[0] > absolute[1] - 0.0001f && absolute[0] > absolute[2] - 0.0001f )
 	{
-		if( normal[ 0 ] > 0.0f )
+		if( normal[0] > 0.0f )
 		{
 			VectorSet( axis, 1.0f, 0.0f, 0.0f );
 		}
@@ -477,7 +477,7 @@ qboolean CalcLightmapAxis( vec3_t normal, vec3_t axis )
 	}
 	else
 	{
-		if( normal[ 1 ] > 0.0f )
+		if( normal[1] > 0.0f )
 		{
 			VectorSet( axis, 0.0f, 1.0f, 0.0f );
 		}
@@ -500,18 +500,11 @@ fills out a bunch of info in the surfaces, including planar status, lightmap pro
 
 void ClassifySurfaces( int numSurfs, mapDrawSurface_t* ds )
 {
-	int           i, bestAxis;
-	float         dist;
-	vec4_t        plane;
+	int			  i, bestAxis;
+	float		  dist;
+	vec4_t		  plane;
 	shaderInfo_t* si;
-	static vec3_t axii[ 6 ] = {
-		{ 0, 0, -1 },
-		{ 0, 0, 1 },
-		{ -1, 0, 0 },
-		{ 1, 0, 0 },
-		{ 0, -1, 0 },
-		{ 0, 1, 0 }
-	};
+	static vec3_t axii[6] = { { 0, 0, -1 }, { 0, 0, 1 }, { -1, 0, 0 }, { 1, 0, 0 }, { 0, -1, 0 }, { 0, 1, 0 } };
 
 	/* walk the list of surfaces */
 	for( ; numSurfs > 0; numSurfs--, ds++ )
@@ -545,27 +538,27 @@ void ClassifySurfaces( int numSurfs, mapDrawSurface_t* ds )
 		ClearBounds( ds->mins, ds->maxs );
 		for( i = 0; i < ds->numVerts; i++ )
 		{
-			AddPointToBounds( ds->verts[ i ].xyz, ds->mins, ds->maxs );
+			AddPointToBounds( ds->verts[i].xyz, ds->mins, ds->maxs );
 		}
 
 		/* try to get an existing plane */
 		if( ds->planeNum >= 0 )
 		{
-			VectorCopy( mapplanes[ ds->planeNum ].normal, plane );
-			plane[ 3 ] = mapplanes[ ds->planeNum ].dist;
+			VectorCopy( mapplanes[ds->planeNum].normal, plane );
+			plane[3] = mapplanes[ds->planeNum].dist;
 		}
 
 		/* construct one from the first vert with a valid normal */
 		else
 		{
 			VectorClear( plane );
-			plane[ 3 ] = 0.0f;
+			plane[3] = 0.0f;
 			for( i = 0; i < ds->numVerts; i++ )
 			{
-				if( ds->verts[ i ].normal[ 0 ] != 0.0f && ds->verts[ i ].normal[ 1 ] != 0.0f && ds->verts[ i ].normal[ 2 ] != 0.0f )
+				if( ds->verts[i].normal[0] != 0.0f && ds->verts[i].normal[1] != 0.0f && ds->verts[i].normal[2] != 0.0f )
 				{
-					VectorCopy( ds->verts[ i ].normal, plane );
-					plane[ 3 ] = DotProduct( ds->verts[ i ].xyz, plane );
+					VectorCopy( ds->verts[i].normal, plane );
+					plane[3] = DotProduct( ds->verts[i].xyz, plane );
 					break;
 				}
 			}
@@ -574,7 +567,7 @@ void ClassifySurfaces( int numSurfs, mapDrawSurface_t* ds )
 		/* test for bogus plane */
 		if( VectorLength( plane ) <= 0.0f )
 		{
-			ds->planar   = qfalse;
+			ds->planar	 = qfalse;
 			ds->planeNum = -1;
 		}
 		else
@@ -586,7 +579,7 @@ void ClassifySurfaces( int numSurfs, mapDrawSurface_t* ds )
 			for( i = 0; i < ds->numVerts; i++ )
 			{
 				/* point-plane test */
-				dist = DotProduct( ds->verts[ i ].xyz, plane ) - plane[ 3 ];
+				dist = DotProduct( ds->verts[i].xyz, plane ) - plane[3];
 				if( fabs( dist ) > PLANAR_EPSILON )
 				{
 					//% if( ds->planeNum >= 0 )
@@ -605,14 +598,14 @@ void ClassifySurfaces( int numSurfs, mapDrawSurface_t* ds )
 		{
 			if( ds->planeNum < 0 )
 			{
-				ds->planeNum = FindFloatPlane( plane, plane[ 3 ], 1, &ds->verts[ 0 ].xyz );
+				ds->planeNum = FindFloatPlane( plane, plane[3], 1, &ds->verts[0].xyz );
 			}
-			VectorCopy( plane, ds->lightmapVecs[ 2 ] );
+			VectorCopy( plane, ds->lightmapVecs[2] );
 		}
 		else
 		{
 			ds->planeNum = -1;
-			VectorClear( ds->lightmapVecs[ 2 ] );
+			VectorClear( ds->lightmapVecs[2] );
 			//% if( ds->type == SURF_META || ds->type == SURF_FACE )
 			//%     Sys_Printf( "WARNING: Non-planar face (%d): %s\n", ds->planeNum, ds->shaderInfo->shader );
 		}
@@ -631,7 +624,7 @@ void ClassifySurfaces( int numSurfs, mapDrawSurface_t* ds )
 		}
 
 		/* the shader can specify an explicit lightmap axis */
-		if( si->lightmapAxis[ 0 ] || si->lightmapAxis[ 1 ] || si->lightmapAxis[ 2 ] )
+		if( si->lightmapAxis[0] || si->lightmapAxis[1] || si->lightmapAxis[2] )
 		{
 			VectorCopy( si->lightmapAxis, ds->lightmapAxis );
 		}
@@ -653,7 +646,7 @@ void ClassifySurfaces( int numSurfs, mapDrawSurface_t* ds )
 					//% Sys_Printf( "Comparing %1.3f %1.3f %1.3f to %1.3f %1.3f %1.3f\n",
 					//%     ds->verts[ i ].normal[ 0 ], ds->verts[ i ].normal[ 1 ], ds->verts[ i ].normal[ 2 ],
 					//%     axii[ bestAxis ][ 0 ], axii[ bestAxis ][ 1 ], axii[ bestAxis ][ 2 ] );
-					if( DotProduct( ds->verts[ i ].normal, axii[ bestAxis ] ) < 0.25f ) /* fixme: adjust this tolerance to taste */
+					if( DotProduct( ds->verts[i].normal, axii[bestAxis] ) < 0.25f ) /* fixme: adjust this tolerance to taste */
 					{
 						break;
 					}
@@ -670,7 +663,7 @@ void ClassifySurfaces( int numSurfs, mapDrawSurface_t* ds )
 			{
 				//% if( ds->type == SURFACE_PATCH )
 				//%     Sys_Printf( "Mapped axis %d onto patch\n", bestAxis );
-				VectorCopy( axii[ bestAxis ], ds->lightmapAxis );
+				VectorCopy( axii[bestAxis], ds->lightmapAxis );
 			}
 
 			/* debug code */
@@ -690,7 +683,7 @@ void ClassifySurfaces( int numSurfs, mapDrawSurface_t* ds )
 
 		if( ds->lightmapScale > 0.0f ) /* apply surface lightmap scaling factor */
 		{
-			ds->sampleSize    = ds->lightmapScale * ( float )ds->sampleSize;
+			ds->sampleSize	  = ds->lightmapScale * ( float )ds->sampleSize;
 			ds->lightmapScale = 0; /* applied */
 		}
 
@@ -726,8 +719,8 @@ void ClassifyEntitySurfaces( entity_t* e )
 	/* walk the surface list */
 	for( i = e->firstDrawSurf; i < numMapDrawSurfs; i++ )
 	{
-		FinishSurface( &mapDrawSurfs[ i ] );
-		ClassifySurfaces( 1, &mapDrawSurfs[ i ] );
+		FinishSurface( &mapDrawSurfs[i] );
+		ClassifySurfaces( 1, &mapDrawSurfs[i] );
 	}
 
 	/* tidy things up */
@@ -741,7 +734,7 @@ for shader-indexed surfaces (terrain), find a matching index from the indexmap
 
 byte GetShaderIndexForPoint( indexMap_t* im, vec3_t eMins, vec3_t eMaxs, vec3_t point )
 {
-	int    i, x, y;
+	int	   i, x, y;
 	float  s, t;
 	vec3_t mins, maxs, size;
 
@@ -788,14 +781,14 @@ byte GetShaderIndexForPoint( indexMap_t* im, vec3_t eMins, vec3_t eMaxs, vec3_t 
 	/* get size */
 	for( i = 0; i < 3; i++ )
 	{
-		mins[ i ] = eMins[ i ];
-		maxs[ i ] = eMaxs[ i ];
-		size[ i ] = maxs[ i ] - mins[ i ];
+		mins[i] = eMins[i];
+		maxs[i] = eMaxs[i];
+		size[i] = maxs[i] - mins[i];
 	}
 
 	/* calc st */
-	s = ( point[ 0 ] - mins[ 0 ] ) / size[ 0 ];
-	t = ( maxs[ 1 ] - point[ 1 ] ) / size[ 1 ];
+	s = ( point[0] - mins[0] ) / size[0];
+	t = ( maxs[1] - point[1] ) / size[1];
 
 	/* calc xy */
 	x = s * im->w;
@@ -819,7 +812,7 @@ byte GetShaderIndexForPoint( indexMap_t* im, vec3_t eMins, vec3_t eMaxs, vec3_t 
 #endif
 
 	/* return index */
-	return im->pixels[ y * im->w + x ];
+	return im->pixels[y * im->w + x];
 }
 
 /*
@@ -830,9 +823,9 @@ this combines a couple different functions from terrain.c
 
 shaderInfo_t* GetIndexedShader( shaderInfo_t* parent, indexMap_t* im, int numPoints, byte* shaderIndexes )
 {
-	int           i;
-	byte          minShaderIndex, maxShaderIndex;
-	char          shader[ MAX_QPATH ];
+	int			  i;
+	byte		  minShaderIndex, maxShaderIndex;
+	char		  shader[MAX_QPATH];
 	shaderInfo_t* si;
 
 	/* early out if bad data */
@@ -846,13 +839,13 @@ shaderInfo_t* GetIndexedShader( shaderInfo_t* parent, indexMap_t* im, int numPoi
 	maxShaderIndex = 0;
 	for( i = 0; i < numPoints; i++ )
 	{
-		if( shaderIndexes[ i ] < minShaderIndex )
+		if( shaderIndexes[i] < minShaderIndex )
 		{
-			minShaderIndex = shaderIndexes[ i ];
+			minShaderIndex = shaderIndexes[i];
 		}
-		if( shaderIndexes[ i ] > maxShaderIndex )
+		if( shaderIndexes[i] > maxShaderIndex )
 		{
-			maxShaderIndex = shaderIndexes[ i ];
+			maxShaderIndex = shaderIndexes[i];
 		}
 	}
 
@@ -860,13 +853,13 @@ shaderInfo_t* GetIndexedShader( shaderInfo_t* parent, indexMap_t* im, int numPoi
 	for( i = 0; i < numPoints; i++ )
 	{
 		/* straight rip from terrain.c */
-		if( shaderIndexes[ i ] < maxShaderIndex )
+		if( shaderIndexes[i] < maxShaderIndex )
 		{
-			shaderIndexes[ i ] = 0;
+			shaderIndexes[i] = 0;
 		}
 		else
 		{
-			shaderIndexes[ i ] = 255;
+			shaderIndexes[i] = 255;
 		}
 	}
 
@@ -904,8 +897,8 @@ shaderInfo_t* GetIndexedShader( shaderInfo_t* parent, indexMap_t* im, int numPoi
 	{
 		/* set xy texture projection */
 		si->tcGen = qtrue;
-		VectorCopy( parent->vecs[ 0 ], si->vecs[ 0 ] );
-		VectorCopy( parent->vecs[ 1 ], si->vecs[ 1 ] );
+		VectorCopy( parent->vecs[0], si->vecs[0] );
+		VectorCopy( parent->vecs[1], si->vecs[1] );
 	}
 	if( VectorLength( parent->lightmapAxis ) > 0.0f && VectorLength( si->lightmapAxis ) <= 0.0f )
 	{
@@ -927,17 +920,17 @@ creates a SURF_FACE drawsurface from a given brush side and winding
 
 mapDrawSurface_t* DrawSurfaceForSide( entity_t* e, brush_t* b, side_t* s, winding_t* w )
 {
-	int               i, j, k;
+	int				  i, j, k;
 	mapDrawSurface_t* ds;
-	shaderInfo_t *    si, *parent;
-	bspDrawVert_t*    dv;
-	vec3_t            texX, texY;
-	vec_t             x, y;
-	vec3_t            vTranslated;
-	qboolean          indexed;
-	byte              shaderIndexes[ 256 ];
-	float             offsets[ 256 ];
-	char              tempShader[ MAX_QPATH ];
+	shaderInfo_t *	  si, *parent;
+	bspDrawVert_t*	  dv;
+	vec3_t			  texX, texY;
+	vec_t			  x, y;
+	vec3_t			  vTranslated;
+	qboolean		  indexed;
+	byte			  shaderIndexes[256];
+	float			  offsets[256];
+	char			  tempShader[MAX_QPATH];
 
 	/* ydnar: don't make a drawsurf for culled sides */
 	if( s->culled )
@@ -963,14 +956,14 @@ mapDrawSurface_t* DrawSurfaceForSide( entity_t* e, brush_t* b, side_t* s, windin
 		/* get shader indexes for each point */
 		for( i = 0; i < w->numpoints; i++ )
 		{
-			shaderIndexes[ i ] = GetShaderIndexForPoint( b->im, b->eMins, b->eMaxs, w->p[ i ] );
-			offsets[ i ]       = b->im->offsets[ shaderIndexes[ i ] ];
+			shaderIndexes[i] = GetShaderIndexForPoint( b->im, b->eMins, b->eMaxs, w->p[i] );
+			offsets[i]		 = b->im->offsets[shaderIndexes[i]];
 			//% Sys_Printf( "%f ", offsets[ i ] );
 		}
 
 		/* get matching shader and set alpha */
 		parent = si;
-		si     = GetIndexedShader( parent, b->im, w->numpoints, shaderIndexes );
+		si	   = GetIndexedShader( parent, b->im, w->numpoints, shaderIndexes );
 	}
 	else
 	{
@@ -978,7 +971,7 @@ mapDrawSurface_t* DrawSurfaceForSide( entity_t* e, brush_t* b, side_t* s, windin
 	}
 
 	/* ydnar: sky hack/fix for GL_CLAMP borders on ati cards */
-	if( skyFixHack && si->skyParmsImageBase[ 0 ] != '\0' )
+	if( skyFixHack && si->skyParmsImageBase[0] != '\0' )
 	{
 		//% Sys_FPrintf( SYS_VRB, "Enabling sky hack for shader %s using env %s\n", si->shader, si->skyParmsImageBase );
 		sprintf( tempShader, "%s_lf", si->skyParmsImageBase );
@@ -996,27 +989,27 @@ mapDrawSurface_t* DrawSurfaceForSide( entity_t* e, brush_t* b, side_t* s, windin
 	}
 
 	/* ydnar: gs mods */
-	ds              = AllocDrawSurface( SURFACE_FACE );
-	ds->entityNum   = b->entityNum;
+	ds				= AllocDrawSurface( SURFACE_FACE );
+	ds->entityNum	= b->entityNum;
 	ds->castShadows = b->castShadows;
 	ds->recvShadows = b->recvShadows;
 
-	ds->planar   = qtrue;
+	ds->planar	 = qtrue;
 	ds->planeNum = s->planenum;
-	VectorCopy( mapplanes[ s->planenum ].normal, ds->lightmapVecs[ 2 ] );
+	VectorCopy( mapplanes[s->planenum].normal, ds->lightmapVecs[2] );
 
-	ds->shaderInfo    = si;
-	ds->mapBrush      = b;
-	ds->sideRef       = AllocSideRef( s, NULL );
-	ds->fogNum        = -1;
-	ds->sampleSize    = b->lightmapSampleSize;
+	ds->shaderInfo	  = si;
+	ds->mapBrush	  = b;
+	ds->sideRef		  = AllocSideRef( s, NULL );
+	ds->fogNum		  = -1;
+	ds->sampleSize	  = b->lightmapSampleSize;
 	ds->lightmapScale = b->lightmapScale;
-	ds->numVerts      = w->numpoints;
-	ds->verts         = safe_malloc( ds->numVerts * sizeof( *ds->verts ) );
+	ds->numVerts	  = w->numpoints;
+	ds->verts		  = safe_malloc( ds->numVerts * sizeof( *ds->verts ) );
 	memset( ds->verts, 0, ds->numVerts * sizeof( *ds->verts ) );
 
 	/* compute s/t coordinates from brush primitive texture matrix (compute axis base) */
-	ComputeAxisBase( mapplanes[ s->planenum ].normal, texX, texY );
+	ComputeAxisBase( mapplanes[s->planenum].normal, texX, texY );
 
 	/* create the vertexes */
 	for( j = 0; j < w->numpoints; j++ )
@@ -1025,70 +1018,70 @@ mapDrawSurface_t* DrawSurfaceForSide( entity_t* e, brush_t* b, side_t* s, windin
 		dv = ds->verts + j;
 
 		/* copy xyz and do potential z offset */
-		VectorCopy( w->p[ j ], dv->xyz );
+		VectorCopy( w->p[j], dv->xyz );
 		if( indexed )
 		{
-			dv->xyz[ 2 ] += offsets[ j ];
+			dv->xyz[2] += offsets[j];
 		}
 
 		/* round the xyz to a given precision and translate by origin */
 		for( i = 0; i < 3; i++ )
 		{
-			dv->xyz[ i ] = SNAP_INT_TO_FLOAT * floor( dv->xyz[ i ] * SNAP_FLOAT_TO_INT + 0.5f );
+			dv->xyz[i] = SNAP_INT_TO_FLOAT * floor( dv->xyz[i] * SNAP_FLOAT_TO_INT + 0.5f );
 		}
 		VectorAdd( dv->xyz, e->origin, vTranslated );
 
 		/* ydnar: tek-fu celshading support for flat shaded shit */
 		if( flat )
 		{
-			dv->st[ 0 ] = si->stFlat[ 0 ];
-			dv->st[ 1 ] = si->stFlat[ 1 ];
+			dv->st[0] = si->stFlat[0];
+			dv->st[1] = si->stFlat[1];
 		}
 
 		/* ydnar: gs mods: added support for explicit shader texcoord generation */
 		else if( si->tcGen )
 		{
-			dv->st[ 0 ] = DotProduct( si->vecs[ 0 ], vTranslated );
-			dv->st[ 1 ] = DotProduct( si->vecs[ 1 ], vTranslated );
+			dv->st[0] = DotProduct( si->vecs[0], vTranslated );
+			dv->st[1] = DotProduct( si->vecs[1], vTranslated );
 		}
 
 		/* old quake-style texturing */
 		else if( g_bBrushPrimit == BPRIMIT_OLDBRUSHES )
 		{
 			/* nearest-axial projection */
-			dv->st[ 0 ] = s->vecs[ 0 ][ 3 ] + DotProduct( s->vecs[ 0 ], vTranslated );
-			dv->st[ 1 ] = s->vecs[ 1 ][ 3 ] + DotProduct( s->vecs[ 1 ], vTranslated );
-			dv->st[ 0 ] /= si->shaderWidth;
-			dv->st[ 1 ] /= si->shaderHeight;
+			dv->st[0] = s->vecs[0][3] + DotProduct( s->vecs[0], vTranslated );
+			dv->st[1] = s->vecs[1][3] + DotProduct( s->vecs[1], vTranslated );
+			dv->st[0] /= si->shaderWidth;
+			dv->st[1] /= si->shaderHeight;
 		}
 
 		/* brush primitive texturing */
 		else
 		{
 			/* calculate texture s/t from brush primitive texture matrix */
-			x           = DotProduct( vTranslated, texX );
-			y           = DotProduct( vTranslated, texY );
-			dv->st[ 0 ] = s->texMat[ 0 ][ 0 ] * x + s->texMat[ 0 ][ 1 ] * y + s->texMat[ 0 ][ 2 ];
-			dv->st[ 1 ] = s->texMat[ 1 ][ 0 ] * x + s->texMat[ 1 ][ 1 ] * y + s->texMat[ 1 ][ 2 ];
+			x		  = DotProduct( vTranslated, texX );
+			y		  = DotProduct( vTranslated, texY );
+			dv->st[0] = s->texMat[0][0] * x + s->texMat[0][1] * y + s->texMat[0][2];
+			dv->st[1] = s->texMat[1][0] * x + s->texMat[1][1] * y + s->texMat[1][2];
 		}
 
 		/* copy normal */
-		VectorCopy( mapplanes[ s->planenum ].normal, dv->normal );
+		VectorCopy( mapplanes[s->planenum].normal, dv->normal );
 
 		/* ydnar: set color */
-		dv->paintColor[ 0 ] = 1.0f;
-		dv->paintColor[ 1 ] = 1.0f;
-		dv->paintColor[ 2 ] = 1.0f;
-		dv->paintColor[ 3 ] = ( indexed ? shaderIndexes[ i ] : 1 );
+		dv->paintColor[0] = 1.0f;
+		dv->paintColor[1] = 1.0f;
+		dv->paintColor[2] = 1.0f;
+		dv->paintColor[3] = ( indexed ? shaderIndexes[i] : 1 );
 
 		for( k = 0; k < MAX_LIGHTMAPS; k++ )
 		{
-			dv->lightColor[ k ][ 0 ] = 255;
-			dv->lightColor[ k ][ 1 ] = 255;
-			dv->lightColor[ k ][ 2 ] = 255;
+			dv->lightColor[k][0] = 255;
+			dv->lightColor[k][1] = 255;
+			dv->lightColor[k][2] = 255;
 
 			/* ydnar: gs mods: handle indexed shader blending */
-			dv->lightColor[ k ][ 3 ] = ( indexed ? shaderIndexes[ j ] : 255 );
+			dv->lightColor[k][3] = ( indexed ? shaderIndexes[j] : 255 );
 		}
 	}
 
@@ -1118,7 +1111,7 @@ qboolean VectorCompareExt( vec3_t n1, vec3_t n2, float epsilon )
 
 	/* test */
 	for( i = 0; i < 3; i++ )
-		if( fabs( n1[ i ] - n2[ i ] ) > epsilon )
+		if( fabs( n1[i] - n2[i] ) > epsilon )
 		{
 			return qfalse;
 		}
@@ -1127,18 +1120,18 @@ qboolean VectorCompareExt( vec3_t n1, vec3_t n2, float epsilon )
 
 mapDrawSurface_t* DrawSurfaceForMesh( entity_t* e, parseMesh_t* p, mesh_t* mesh )
 {
-	int               i, k, numVerts;
-	vec4_t            plane;
-	qboolean          planar;
-	float             dist;
+	int				  i, k, numVerts;
+	vec4_t			  plane;
+	qboolean		  planar;
+	float			  dist;
 	mapDrawSurface_t* ds;
-	shaderInfo_t *    si, *parent;
-	bspDrawVert_t*    dv;
-	vec3_t            vTranslated;
-	mesh_t*           copy;
-	qboolean          indexed;
-	byte              shaderIndexes[ MAX_EXPANDED_AXIS * MAX_EXPANDED_AXIS ];
-	float             offsets[ MAX_EXPANDED_AXIS * MAX_EXPANDED_AXIS ];
+	shaderInfo_t *	  si, *parent;
+	bspDrawVert_t*	  dv;
+	vec3_t			  vTranslated;
+	mesh_t*			  copy;
+	qboolean		  indexed;
+	byte			  shaderIndexes[MAX_EXPANDED_AXIS * MAX_EXPANDED_AXIS];
+	float			  offsets[MAX_EXPANDED_AXIS * MAX_EXPANDED_AXIS];
 
 	/* get mesh and shader shader */
 	if( mesh == NULL )
@@ -1165,7 +1158,7 @@ mapDrawSurface_t* DrawSurfaceForMesh( entity_t* e, parseMesh_t* p, mesh_t* mesh 
 	MakeMeshNormals( *copy );
 	for( i = 0; i < numVerts; i++ )
 	{
-		VectorCopy( copy->verts[ i ].normal, mesh->verts[ i ].normal );
+		VectorCopy( copy->verts[i].normal, mesh->verts[i].normal );
 	}
 
 	/* put the mesh on the curve */
@@ -1176,9 +1169,9 @@ mapDrawSurface_t* DrawSurfaceForMesh( entity_t* e, parseMesh_t* p, mesh_t* mesh 
 	for( i = 0; i < numVerts; i++ )
 	{
 		/* ydnar: only copy normals that are significantly different from the originals */
-		if( DotProduct( copy->verts[ i ].normal, mesh->verts[ i ].normal ) < 0.75f )
+		if( DotProduct( copy->verts[i].normal, mesh->verts[i].normal ) < 0.75f )
 		{
-			VectorCopy( copy->verts[ i ].normal, mesh->verts[ i ].normal );
+			VectorCopy( copy->verts[i].normal, mesh->verts[i].normal );
 		}
 	}
 
@@ -1194,13 +1187,13 @@ mapDrawSurface_t* DrawSurfaceForMesh( entity_t* e, parseMesh_t* p, mesh_t* mesh 
 		/* get shader indexes for each point */
 		for( i = 0; i < numVerts; i++ )
 		{
-			shaderIndexes[ i ] = GetShaderIndexForPoint( p->im, p->eMins, p->eMaxs, mesh->verts[ i ].xyz );
-			offsets[ i ]       = p->im->offsets[ shaderIndexes[ i ] ];
+			shaderIndexes[i] = GetShaderIndexForPoint( p->im, p->eMins, p->eMaxs, mesh->verts[i].xyz );
+			offsets[i]		 = p->im->offsets[shaderIndexes[i]];
 		}
 
 		/* get matching shader and set alpha */
 		parent = si;
-		si     = GetIndexedShader( parent, p->im, numVerts, shaderIndexes );
+		si	   = GetIndexedShader( parent, p->im, numVerts, shaderIndexes );
 	}
 	else
 	{
@@ -1208,31 +1201,31 @@ mapDrawSurface_t* DrawSurfaceForMesh( entity_t* e, parseMesh_t* p, mesh_t* mesh 
 	}
 
 	/* ydnar: gs mods */
-	ds              = AllocDrawSurface( SURFACE_PATCH );
-	ds->entityNum   = p->entityNum;
+	ds				= AllocDrawSurface( SURFACE_PATCH );
+	ds->entityNum	= p->entityNum;
 	ds->castShadows = p->castShadows;
 	ds->recvShadows = p->recvShadows;
 
-	ds->shaderInfo    = si;
-	ds->mapMesh       = p;
-	ds->sampleSize    = p->lightmapSampleSize;
+	ds->shaderInfo	  = si;
+	ds->mapMesh		  = p;
+	ds->sampleSize	  = p->lightmapSampleSize;
 	ds->lightmapScale = p->lightmapScale; /* ydnar */
-	ds->patchWidth    = mesh->width;
-	ds->patchHeight   = mesh->height;
-	ds->numVerts      = ds->patchWidth * ds->patchHeight;
-	ds->verts         = safe_malloc( ds->numVerts * sizeof( *ds->verts ) );
+	ds->patchWidth	  = mesh->width;
+	ds->patchHeight	  = mesh->height;
+	ds->numVerts	  = ds->patchWidth * ds->patchHeight;
+	ds->verts		  = safe_malloc( ds->numVerts * sizeof( *ds->verts ) );
 	memcpy( ds->verts, mesh->verts, ds->numVerts * sizeof( *ds->verts ) );
 
-	ds->fogNum   = -1;
+	ds->fogNum	 = -1;
 	ds->planeNum = -1;
 
 	ds->longestCurve  = p->longestCurve;
 	ds->maxIterations = p->maxIterations;
 
 	/* construct a plane from the first vert */
-	VectorCopy( mesh->verts[ 0 ].normal, plane );
-	plane[ 3 ] = DotProduct( mesh->verts[ 0 ].xyz, plane );
-	planar     = qtrue;
+	VectorCopy( mesh->verts[0].normal, plane );
+	plane[3] = DotProduct( mesh->verts[0].xyz, plane );
+	planar	 = qtrue;
 
 	/* spew forth errors */
 	if( VectorLength( plane ) < 0.001f )
@@ -1244,13 +1237,13 @@ mapDrawSurface_t* DrawSurfaceForMesh( entity_t* e, parseMesh_t* p, mesh_t* mesh 
 	for( i = 1; i < ds->numVerts && planar; i++ )
 	{
 		/* normal test */
-		if( VectorCompare( plane, mesh->verts[ i ].normal ) == qfalse )
+		if( VectorCompare( plane, mesh->verts[i].normal ) == qfalse )
 		{
 			planar = qfalse;
 		}
 
 		/* point-plane test */
-		dist = DotProduct( mesh->verts[ i ].xyz, plane ) - plane[ 3 ];
+		dist = DotProduct( mesh->verts[i].xyz, plane ) - plane[3];
 		if( fabs( dist ) > EQUAL_EPSILON )
 		{
 			planar = qfalse;
@@ -1261,13 +1254,13 @@ mapDrawSurface_t* DrawSurfaceForMesh( entity_t* e, parseMesh_t* p, mesh_t* mesh 
 	if( planar )
 	{
 		/* make a map plane */
-		ds->planeNum = FindFloatPlane( plane, plane[ 3 ], 1, &mesh->verts[ 0 ].xyz );
-		VectorCopy( plane, ds->lightmapVecs[ 2 ] );
+		ds->planeNum = FindFloatPlane( plane, plane[3], 1, &mesh->verts[0].xyz );
+		VectorCopy( plane, ds->lightmapVecs[2] );
 
 		/* push this normal to all verts (ydnar 2003-02-14: bad idea, small patches get screwed up) */
 		for( i = 0; i < ds->numVerts; i++ )
 		{
-			VectorCopy( plane, ds->verts[ i ].normal );
+			VectorCopy( plane, ds->verts[i].normal );
 		}
 	}
 
@@ -1275,13 +1268,13 @@ mapDrawSurface_t* DrawSurfaceForMesh( entity_t* e, parseMesh_t* p, mesh_t* mesh 
 	for( i = 0; i < ds->numVerts; i++ )
 	{
 		/* get the drawvert */
-		dv = &ds->verts[ i ];
+		dv = &ds->verts[i];
 
 		/* ydnar: tek-fu celshading support for flat shaded shit */
 		if( flat )
 		{
-			dv->st[ 0 ] = si->stFlat[ 0 ];
-			dv->st[ 1 ] = si->stFlat[ 1 ];
+			dv->st[0] = si->stFlat[0];
+			dv->st[1] = si->stFlat[1];
 		}
 
 		/* ydnar: gs mods: added support for explicit shader texcoord generation */
@@ -1289,30 +1282,30 @@ mapDrawSurface_t* DrawSurfaceForMesh( entity_t* e, parseMesh_t* p, mesh_t* mesh 
 		{
 			/* translate by origin and project the texture */
 			VectorAdd( dv->xyz, e->origin, vTranslated );
-			dv->st[ 0 ] = DotProduct( si->vecs[ 0 ], vTranslated );
-			dv->st[ 1 ] = DotProduct( si->vecs[ 1 ], vTranslated );
+			dv->st[0] = DotProduct( si->vecs[0], vTranslated );
+			dv->st[1] = DotProduct( si->vecs[1], vTranslated );
 		}
 
 		/* ydnar: set color */
-		dv->paintColor[ 0 ] = 1;
-		dv->paintColor[ 1 ] = 1;
-		dv->paintColor[ 2 ] = 1;
-		dv->paintColor[ 3 ] = ( indexed ? shaderIndexes[ i ] : 1 );
+		dv->paintColor[0] = 1;
+		dv->paintColor[1] = 1;
+		dv->paintColor[2] = 1;
+		dv->paintColor[3] = ( indexed ? shaderIndexes[i] : 1 );
 
 		for( k = 0; k < MAX_LIGHTMAPS; k++ )
 		{
-			dv->lightColor[ k ][ 0 ] = 255;
-			dv->lightColor[ k ][ 1 ] = 255;
-			dv->lightColor[ k ][ 2 ] = 255;
+			dv->lightColor[k][0] = 255;
+			dv->lightColor[k][1] = 255;
+			dv->lightColor[k][2] = 255;
 
 			/* ydnar: gs mods: handle indexed shader blending */
-			dv->lightColor[ k ][ 3 ] = ( indexed ? shaderIndexes[ i ] : 255 );
+			dv->lightColor[k][3] = ( indexed ? shaderIndexes[i] : 255 );
 		}
 
 		/* ydnar: offset */
 		if( indexed )
 		{
-			dv->xyz[ 2 ] += offsets[ i ];
+			dv->xyz[2] += offsets[i];
 		}
 	}
 
@@ -1339,11 +1332,11 @@ mapDrawSurface_t* DrawSurfaceForFlare( int entNum, vec3_t origin, vec3_t normal,
 	}
 
 	/* allocate drawsurface */
-	ds            = AllocDrawSurface( SURFACE_FLARE );
+	ds			  = AllocDrawSurface( SURFACE_FLARE );
 	ds->entityNum = entNum;
 
 	/* set it up */
-	if( flareShader != NULL && flareShader[ 0 ] != '\0' )
+	if( flareShader != NULL && flareShader[0] != '\0' )
 	{
 		ds->shaderInfo = ShaderInfoForShader( flareShader );
 	}
@@ -1357,11 +1350,11 @@ mapDrawSurface_t* DrawSurfaceForFlare( int entNum, vec3_t origin, vec3_t normal,
 	}
 	if( normal != NULL )
 	{
-		VectorCopy( normal, ds->lightmapVecs[ 2 ] );
+		VectorCopy( normal, ds->lightmapVecs[2] );
 	}
 	if( color != NULL )
 	{
-		VectorCopy( color, ds->lightmapVecs[ 0 ] );
+		VectorCopy( color, ds->lightmapVecs[0] );
 	}
 
 	/* store light style */
@@ -1384,8 +1377,8 @@ creates a bogus surface to forcing the game to load a shader
 
 mapDrawSurface_t* DrawSurfaceForShader( char* shader )
 {
-	int               i;
-	shaderInfo_t*     si;
+	int				  i;
+	shaderInfo_t*	  si;
 	mapDrawSurface_t* ds;
 
 	/* get shader */
@@ -1395,7 +1388,7 @@ mapDrawSurface_t* DrawSurfaceForShader( char* shader )
 	for( i = 0; i < numMapDrawSurfs; i++ )
 	{
 		/* get surface */
-		ds = &mapDrawSurfs[ i ];
+		ds = &mapDrawSurfs[i];
 
 		/* check it */
 		if( ds->shaderInfo == si )
@@ -1405,7 +1398,7 @@ mapDrawSurface_t* DrawSurfaceForShader( char* shader )
 	}
 
 	/* create a new surface */
-	ds             = AllocDrawSurface( SURFACE_SHADER );
+	ds			   = AllocDrawSurface( SURFACE_SHADER );
 	ds->entityNum  = 0;
 	ds->shaderInfo = ShaderInfoForShader( shader );
 
@@ -1421,13 +1414,13 @@ creates flares (coronas) centered on surfaces
 static void AddSurfaceFlare( mapDrawSurface_t* ds, vec3_t entityOrigin )
 {
 	vec3_t origin;
-	int    i;
+	int	   i;
 
 	/* find centroid */
 	VectorClear( origin );
 	for( i = 0; i < ds->numVerts; i++ )
 	{
-		VectorAdd( origin, ds->verts[ i ].xyz, origin );
+		VectorAdd( origin, ds->verts[i].xyz, origin );
 	}
 	VectorScale( origin, ( 1.0f / ds->numVerts ), origin );
 	if( entityOrigin != NULL )
@@ -1436,10 +1429,10 @@ static void AddSurfaceFlare( mapDrawSurface_t* ds, vec3_t entityOrigin )
 	}
 
 	/* push origin off surface a bit */
-	VectorMA( origin, 2.0f, ds->lightmapVecs[ 2 ], origin );
+	VectorMA( origin, 2.0f, ds->lightmapVecs[2], origin );
 
 	/* create the drawsurface */
-	DrawSurfaceForFlare( ds->entityNum, origin, ds->lightmapVecs[ 2 ], ds->shaderInfo->color, ds->shaderInfo->flareShader, ds->shaderInfo->lightStyle );
+	DrawSurfaceForFlare( ds->entityNum, origin, ds->lightmapVecs[2], ds->shaderInfo->color, ds->shaderInfo->flareShader, ds->shaderInfo->lightStyle );
 }
 
 /*
@@ -1449,12 +1442,12 @@ subdivides a face surface until it is smaller than the specified size (subdivisi
 
 static void SubdivideFace_r( entity_t* e, brush_t* brush, side_t* side, winding_t* w, int fogNum, float subdivisions )
 {
-	int               i;
-	int               axis;
-	vec3_t            bounds[ 2 ];
-	const float       epsilon = 0.1;
-	int               subFloor, subCeil;
-	winding_t *       frontWinding, *backWinding;
+	int				  i;
+	int				  axis;
+	vec3_t			  bounds[2];
+	const float		  epsilon = 0.1;
+	int				  subFloor, subCeil;
+	winding_t *		  frontWinding, *backWinding;
 	mapDrawSurface_t* ds;
 
 	/* dummy check */
@@ -1468,10 +1461,10 @@ static void SubdivideFace_r( entity_t* e, brush_t* brush, side_t* side, winding_
 	}
 
 	/* determine surface bounds */
-	ClearBounds( bounds[ 0 ], bounds[ 1 ] );
+	ClearBounds( bounds[0], bounds[1] );
 	for( i = 0; i < w->numpoints; i++ )
 	{
-		AddPointToBounds( w->p[ i ], bounds[ 0 ], bounds[ 1 ] );
+		AddPointToBounds( w->p[i], bounds[0], bounds[1] );
 	}
 
 	/* split the face */
@@ -1482,11 +1475,11 @@ static void SubdivideFace_r( entity_t* e, brush_t* brush, side_t* side, winding_
 		float  d;
 
 		/* create an axial clipping plane */
-		subFloor            = floor( bounds[ 0 ][ axis ] / subdivisions ) * subdivisions;
-		subCeil             = ceil( bounds[ 1 ][ axis ] / subdivisions ) * subdivisions;
-		planePoint[ axis ]  = subFloor + subdivisions;
-		planeNormal[ axis ] = -1;
-		d                   = DotProduct( planePoint, planeNormal );
+		subFloor		  = floor( bounds[0][axis] / subdivisions ) * subdivisions;
+		subCeil			  = ceil( bounds[1][axis] / subdivisions ) * subdivisions;
+		planePoint[axis]  = subFloor + subdivisions;
+		planeNormal[axis] = -1;
+		d				  = DotProduct( planePoint, planeNormal );
 
 		/* subdivide if necessary */
 		if( ( subCeil - subFloor ) > subdivisions )
@@ -1527,13 +1520,13 @@ ydnar: and subdivide surfaces that exceed specified texture coordinate range
 
 void SubdivideFaceSurfaces( entity_t* e, tree_t* tree )
 {
-	int               i, j, numBaseDrawSurfs, fogNum;
+	int				  i, j, numBaseDrawSurfs, fogNum;
 	mapDrawSurface_t* ds;
-	brush_t*          brush;
-	side_t*           side;
-	shaderInfo_t*     si;
-	winding_t*        w;
-	float             range, size, subdivisions, s2;
+	brush_t*		  brush;
+	side_t*			  side;
+	shaderInfo_t*	  si;
+	winding_t*		  w;
+	float			  range, size, subdivisions, s2;
 
 	/* note it */
 	Sys_FPrintf( SYS_VRB, "--- SubdivideFaceSurfaces ---\n" );
@@ -1543,7 +1536,7 @@ void SubdivideFaceSurfaces( entity_t* e, tree_t* tree )
 	for( i = e->firstDrawSurf; i < numBaseDrawSurfs; i++ )
 	{
 		/* get surface */
-		ds = &mapDrawSurfs[ i ];
+		ds = &mapDrawSurfs[i];
 
 		/* only subdivide brush sides */
 		if( ds->type != SURFACE_FACE || ds->mapBrush == NULL || ds->sideRef == NULL || ds->sideRef->side == NULL )
@@ -1573,12 +1566,12 @@ void SubdivideFaceSurfaces( entity_t* e, tree_t* tree )
 		if( CalcSurfaceTextureRange( ds ) == qfalse )
 		{
 			/* calculate subdivisions texture range (this code is shit) */
-			range = ( ds->texRange[ 0 ] > ds->texRange[ 1 ] ? ds->texRange[ 0 ] : ds->texRange[ 1 ] );
-			size  = ds->maxs[ 0 ] - ds->mins[ 0 ];
+			range = ( ds->texRange[0] > ds->texRange[1] ? ds->texRange[0] : ds->texRange[1] );
+			size  = ds->maxs[0] - ds->mins[0];
 			for( j = 1; j < 3; j++ )
-				if( ( ds->maxs[ j ] - ds->mins[ j ] ) > size )
+				if( ( ds->maxs[j] - ds->mins[j] ) > size )
 				{
-					size = ds->maxs[ j ] - ds->mins[ j ];
+					size = ds->maxs[j] - ds->mins[j];
 				}
 			subdivisions = ( size / range ) * texRange;
 			subdivisions = ceil( subdivisions / 2 ) * 2;
@@ -1641,21 +1634,21 @@ void ClipSideIntoTree_r( winding_t* w, side_t* side, node_t* node )
 	{
 		if( side->planenum == node->planenum )
 		{
-			ClipSideIntoTree_r( w, side, node->children[ 0 ] );
+			ClipSideIntoTree_r( w, side, node->children[0] );
 			return;
 		}
 		if( side->planenum == ( node->planenum ^ 1 ) )
 		{
-			ClipSideIntoTree_r( w, side, node->children[ 1 ] );
+			ClipSideIntoTree_r( w, side, node->children[1] );
 			return;
 		}
 
-		plane = &mapplanes[ node->planenum ];
+		plane = &mapplanes[node->planenum];
 		ClipWindingEpsilon( w, plane->normal, plane->dist, ON_EPSILON, &front, &back );
 		FreeWinding( w );
 
-		ClipSideIntoTree_r( front, side, node->children[ 0 ] );
-		ClipSideIntoTree_r( back, side, node->children[ 1 ] );
+		ClipSideIntoTree_r( front, side, node->children[0] );
+		ClipSideIntoTree_r( back, side, node->children[1] );
 
 		return;
 	}
@@ -1663,7 +1656,7 @@ void ClipSideIntoTree_r( winding_t* w, side_t* side, node_t* node )
 	// if opaque leaf, don't add
 	if( !node->opaque )
 	{
-		AddWindingToConvexHull( w, &side->visibleHull, mapplanes[ side->planenum ].normal );
+		AddWindingToConvexHull( w, &side->visibleHull, mapplanes[side->planenum].normal );
 	}
 
 	FreeWinding( w );
@@ -1684,7 +1677,7 @@ qboolean CullVectorCompare( const vec3_t v1, const vec3_t v2 )
 	int i;
 
 	for( i = 0; i < 3; i++ )
-		if( fabs( v1[ i ] - v2[ i ] ) > CULL_EPSILON )
+		if( fabs( v1[i] - v2[i] ) > CULL_EPSILON )
 		{
 			return qfalse;
 		}
@@ -1698,7 +1691,7 @@ determines if a brushside lies inside another brush
 
 qboolean SideInBrush( side_t* side, brush_t* b )
 {
-	int      i, s;
+	int		 i, s;
 	plane_t* plane;
 
 	/* ignore sides w/o windings or shaders */
@@ -1717,14 +1710,14 @@ qboolean SideInBrush( side_t* side, brush_t* b )
 	for( i = 0; i < b->numsides; i++ )
 	{
 		/* fail if any sides are caulk */
-		if( b->sides[ i ].compileFlags & C_NODRAW )
+		if( b->sides[i].compileFlags & C_NODRAW )
 		{
 			return qfalse;
 		}
 
 		/* check if side's winding is on or behind the plane */
-		plane = &mapplanes[ b->sides[ i ].planenum ];
-		s     = WindingOnPlaneSide( side->winding, plane->normal, plane->dist );
+		plane = &mapplanes[b->sides[i].planenum];
+		s	  = WindingOnPlaneSide( side->winding, plane->normal, plane->dist );
 		if( s == SIDE_FRONT || s == SIDE_CROSS )
 		{
 			return qfalse;
@@ -1753,8 +1746,8 @@ culls obscured or buried brushsides from the map
 
 void CullSides( entity_t* e )
 {
-	int        numPoints;
-	int        i, j, k, l, first, second, dir;
+	int		   numPoints;
+	int		   i, j, k, l, first, second, dir;
 	winding_t *w1, *w2;
 	brush_t *  b1, *b2;
 	side_t *   side1, *side2;
@@ -1763,7 +1756,7 @@ void CullSides( entity_t* e )
 	Sys_FPrintf( SYS_VRB, "--- CullSides ---\n" );
 
 	g_numHiddenFaces = 0;
-	g_numCoinFaces   = 0;
+	g_numCoinFaces	 = 0;
 
 	/* brush interator 1 */
 	for( b1 = e->brushes; b1; b1 = b1->next )
@@ -1792,7 +1785,7 @@ void CullSides( entity_t* e )
 			/* bbox check */
 			j = 0;
 			for( i = 0; i < 3; i++ )
-				if( b1->mins[ i ] > b2->maxs[ i ] || b1->maxs[ i ] < b2->mins[ i ] )
+				if( b1->mins[i] > b2->maxs[i] || b1->maxs[i] < b2->mins[i] )
 				{
 					j++;
 				}
@@ -1804,19 +1797,19 @@ void CullSides( entity_t* e )
 			/* cull inside sides */
 			for( i = 0; i < b1->numsides; i++ )
 			{
-				SideInBrush( &b1->sides[ i ], b2 );
+				SideInBrush( &b1->sides[i], b2 );
 			}
 			for( i = 0; i < b2->numsides; i++ )
 			{
-				SideInBrush( &b2->sides[ i ], b1 );
+				SideInBrush( &b2->sides[i], b1 );
 			}
 
 			/* side iterator 1 */
 			for( i = 0; i < b1->numsides; i++ )
 			{
 				/* winding check */
-				side1 = &b1->sides[ i ];
-				w1    = side1->winding;
+				side1 = &b1->sides[i];
+				w1	  = side1->winding;
 				if( w1 == NULL )
 				{
 					continue;
@@ -1831,8 +1824,8 @@ void CullSides( entity_t* e )
 				for( j = 0; j < b2->numsides; j++ )
 				{
 					/* winding check */
-					side2 = &b2->sides[ j ];
-					w2    = side2->winding;
+					side2 = &b2->sides[j];
+					w2	  = side2->winding;
 					if( w2 == NULL )
 					{
 						continue;
@@ -1870,10 +1863,10 @@ void CullSides( entity_t* e )
 					first = -1;
 					for( k = 0; k < numPoints; k++ )
 					{
-						if( VectorCompare( w1->p[ 0 ], w2->p[ k ] ) )
+						if( VectorCompare( w1->p[0], w2->p[k] ) )
 						{
 							first = k;
-							k     = numPoints;
+							k	  = numPoints;
 						}
 					}
 					if( first == -1 )
@@ -1883,7 +1876,7 @@ void CullSides( entity_t* e )
 
 					/* find second common point (regardless of winding order) */
 					second = -1;
-					dir    = 0;
+					dir	   = 0;
 					if( ( first + 1 ) < numPoints )
 					{
 						second = first + 1;
@@ -1892,7 +1885,7 @@ void CullSides( entity_t* e )
 					{
 						second = 0;
 					}
-					if( CullVectorCompare( w1->p[ 1 ], w2->p[ second ] ) )
+					if( CullVectorCompare( w1->p[1], w2->p[second] ) )
 					{
 						dir = 1;
 					}
@@ -1906,7 +1899,7 @@ void CullSides( entity_t* e )
 						{
 							second = numPoints - 1;
 						}
-						if( CullVectorCompare( w1->p[ 1 ], w2->p[ second ] ) )
+						if( CullVectorCompare( w1->p[1], w2->p[second] ) )
 						{
 							dir = -1;
 						}
@@ -1920,7 +1913,7 @@ void CullSides( entity_t* e )
 					l = first;
 					for( k = 0; k < numPoints; k++ )
 					{
-						if( !CullVectorCompare( w1->p[ k ], w2->p[ l ] ) )
+						if( !CullVectorCompare( w1->p[k], w2->p[l] ) )
 						{
 							k = 100000;
 						}
@@ -1980,10 +1973,10 @@ to be trimmed off automatically.
 
 void ClipSidesIntoTree( entity_t* e, tree_t* tree )
 {
-	brush_t*      b;
-	int           i;
-	winding_t*    w;
-	side_t *      side, *newSide;
+	brush_t*	  b;
+	int			  i;
+	winding_t*	  w;
+	side_t *	  side, *newSide;
 	shaderInfo_t* si;
 
 	/* ydnar: cull brush sides */
@@ -1999,14 +1992,14 @@ void ClipSidesIntoTree( entity_t* e, tree_t* tree )
 		for( i = 0; i < b->numsides; i++ )
 		{
 			/* get side */
-			side = &b->sides[ i ];
+			side = &b->sides[i];
 			if( side->winding == NULL )
 			{
 				continue;
 			}
 
 			/* copy the winding */
-			w                 = CopyWinding( side->winding );
+			w				  = CopyWinding( side->winding );
 			side->visibleHull = NULL;
 			ClipSideIntoTree_r( w, side, tree->headnode );
 
@@ -2047,9 +2040,9 @@ void ClipSidesIntoTree( entity_t* e, tree_t* tree )
 			}
 
 			/* duplicate the up-facing side */
-			w                    = ReverseWinding( w );
-			newSide              = safe_malloc( sizeof( *side ) );
-			*newSide             = *side;
+			w					 = ReverseWinding( w );
+			newSide				 = safe_malloc( sizeof( *side ) );
+			*newSide			 = *side;
 			newSide->visibleHull = w;
 			newSide->planenum ^= 1;
 
@@ -2091,9 +2084,9 @@ int AddReferenceToLeaf( mapDrawSurface_t* ds, node_t* node )
 	}
 
 	/* add a new reference */
-	dsr                      = safe_malloc( sizeof( *dsr ) );
-	dsr->outputNum           = numBSPDrawSurfaces;
-	dsr->nextRef             = node->drawSurfReferences;
+	dsr						 = safe_malloc( sizeof( *dsr ) );
+	dsr->outputNum			 = numBSPDrawSurfaces;
+	dsr->nextRef			 = node->drawSurfReferences;
 	node->drawSurfReferences = dsr;
 
 	/* ydnar: sky/skybox surfaces */
@@ -2129,8 +2122,8 @@ int AddReferenceToTree_r( mapDrawSurface_t* ds, node_t* node, qboolean skybox )
 	if( node->planenum != PLANENUM_LEAF )
 	{
 		/* add to child nodes and return */
-		refs += AddReferenceToTree_r( ds, node->children[ 0 ], skybox );
-		refs += AddReferenceToTree_r( ds, node->children[ 1 ], skybox );
+		refs += AddReferenceToTree_r( ds, node->children[0], skybox );
+		refs += AddReferenceToTree_r( ds, node->children[1], skybox );
 		return refs;
 	}
 
@@ -2146,7 +2139,7 @@ int AddReferenceToTree_r( mapDrawSurface_t* ds, node_t* node, qboolean skybox )
 		/* increase the leaf bounds */
 		for( i = 0; i < ds->numVerts; i++ )
 		{
-			AddPointToBounds( ds->verts[ i ].xyz, node->mins, node->maxs );
+			AddPointToBounds( ds->verts[i].xyz, node->mins, node->maxs );
 		}
 	}
 
@@ -2161,26 +2154,26 @@ filters a single point from a surface into the tree
 
 int FilterPointIntoTree_r( vec3_t point, mapDrawSurface_t* ds, node_t* node )
 {
-	float    d;
+	float	 d;
 	plane_t* plane;
-	int      refs = 0;
+	int		 refs = 0;
 
 	/* is this a decision node? */
 	if( node->planenum != PLANENUM_LEAF )
 	{
 		/* classify the point in relation to the plane */
-		plane = &mapplanes[ node->planenum ];
-		d     = DotProduct( point, plane->normal ) - plane->dist;
+		plane = &mapplanes[node->planenum];
+		d	  = DotProduct( point, plane->normal ) - plane->dist;
 
 		/* filter by this plane */
 		refs = 0;
 		if( d >= -ON_EPSILON )
 		{
-			refs += FilterPointIntoTree_r( point, ds, node->children[ 0 ] );
+			refs += FilterPointIntoTree_r( point, ds, node->children[0] );
 		}
 		if( d <= ON_EPSILON )
 		{
-			refs += FilterPointIntoTree_r( point, ds, node->children[ 1 ] );
+			refs += FilterPointIntoTree_r( point, ds, node->children[1] );
 		}
 
 		/* return */
@@ -2198,29 +2191,27 @@ filters a winding from a drawsurface into the tree
 
 int FilterWindingIntoTree_r( winding_t* w, mapDrawSurface_t* ds, node_t* node )
 {
-	int           i, refs = 0;
-	plane_t *     p1, *p2;
-	vec4_t        plane1, plane2, reverse;
-	winding_t *   fat, *front, *back;
+	int			  i, refs = 0;
+	plane_t *	  p1, *p2;
+	vec4_t		  plane1, plane2, reverse;
+	winding_t *	  fat, *front, *back;
 	shaderInfo_t* si;
 
 	/* get shaderinfo */
 	si = ds->shaderInfo;
 
 	/* ydnar: is this the head node? */
-	if( node->parent == NULL && si != NULL &&
-		( si->mins[ 0 ] != 0.0f || si->maxs[ 0 ] != 0.0f ||
-			si->mins[ 1 ] != 0.0f || si->maxs[ 1 ] != 0.0f || si->mins[ 2 ] != 0.0f || si->maxs[ 2 ] != 0.0f ) )
+	if( node->parent == NULL && si != NULL && ( si->mins[0] != 0.0f || si->maxs[0] != 0.0f || si->mins[1] != 0.0f || si->maxs[1] != 0.0f || si->mins[2] != 0.0f || si->maxs[2] != 0.0f ) )
 	{
 		/* 'fatten' the winding by the shader mins/maxs (parsed from vertexDeform move) */
 		/* note this winding is completely invalid (concave, nonplanar, etc) */
-		fat            = AllocWinding( w->numpoints * 3 );
+		fat			   = AllocWinding( w->numpoints * 3 );
 		fat->numpoints = w->numpoints * 3;
 		for( i = 0; i < w->numpoints; i++ )
 		{
-			VectorCopy( w->p[ i ], fat->p[ i ] );
-			VectorAdd( w->p[ i ], si->mins, fat->p[ i * 2 ] );
-			VectorAdd( w->p[ i ], si->maxs, fat->p[ i * 3 ] );
+			VectorCopy( w->p[i], fat->p[i] );
+			VectorAdd( w->p[i], si->mins, fat->p[i * 2] );
+			VectorAdd( w->p[i], si->maxs, fat->p[i * 3] );
 		}
 
 		FreeWinding( w );
@@ -2231,57 +2222,57 @@ int FilterWindingIntoTree_r( winding_t* w, mapDrawSurface_t* ds, node_t* node )
 	if( node->planenum != PLANENUM_LEAF )
 	{
 		/* get node plane */
-		p1 = &mapplanes[ node->planenum ];
+		p1 = &mapplanes[node->planenum];
 		VectorCopy( p1->normal, plane1 );
-		plane1[ 3 ] = p1->dist;
+		plane1[3] = p1->dist;
 
 		/* check if surface is planar */
 		if( ds->planeNum >= 0 )
 		{
 			/* get surface plane */
-			p2 = &mapplanes[ ds->planeNum ];
+			p2 = &mapplanes[ds->planeNum];
 			VectorCopy( p2->normal, plane2 );
-			plane2[ 3 ] = p2->dist;
+			plane2[3] = p2->dist;
 
 #if 1
 			/* invert surface plane */
 			VectorSubtract( vec3_origin, plane2, reverse );
-			reverse[ 3 ] = -plane2[ 3 ];
+			reverse[3] = -plane2[3];
 
 			/* compare planes */
-			if( DotProduct( plane1, plane2 ) > 0.999f && fabs( plane1[ 3 ] - plane2[ 3 ] ) < 0.001f )
+			if( DotProduct( plane1, plane2 ) > 0.999f && fabs( plane1[3] - plane2[3] ) < 0.001f )
 			{
-				return FilterWindingIntoTree_r( w, ds, node->children[ 0 ] );
+				return FilterWindingIntoTree_r( w, ds, node->children[0] );
 			}
-			if( DotProduct( plane1, reverse ) > 0.999f && fabs( plane1[ 3 ] - reverse[ 3 ] ) < 0.001f )
+			if( DotProduct( plane1, reverse ) > 0.999f && fabs( plane1[3] - reverse[3] ) < 0.001f )
 			{
-				return FilterWindingIntoTree_r( w, ds, node->children[ 1 ] );
+				return FilterWindingIntoTree_r( w, ds, node->children[1] );
 			}
 #else
 			/* the drawsurf might have an associated plane, if so, force a filter here */
 			if( ds->planeNum == node->planenum )
 			{
-				return FilterWindingIntoTree_r( w, ds, node->children[ 0 ] );
+				return FilterWindingIntoTree_r( w, ds, node->children[0] );
 			}
 			if( ds->planeNum == ( node->planenum ^ 1 ) )
 			{
-				return FilterWindingIntoTree_r( w, ds, node->children[ 1 ] );
+				return FilterWindingIntoTree_r( w, ds, node->children[1] );
 			}
 #endif
 		}
 
 		/* clip the winding by this plane */
-		ClipWindingEpsilon( w, plane1, plane1[ 3 ], ON_EPSILON, &front, &back );
+		ClipWindingEpsilon( w, plane1, plane1[3], ON_EPSILON, &front, &back );
 
 		/* filter by this plane */
 		refs = 0;
 		if( front != NULL )
 		{
-			refs += FilterWindingIntoTree_r( front, ds, node->children[ 0 ] );
+			refs += FilterWindingIntoTree_r( front, ds, node->children[0] );
 		}
 		if( back != NULL )
 		{
-			refs += FilterWindingIntoTree_r( back, ds, node->children[ 1 ] );
+			refs += FilterWindingIntoTree_r( back, ds, node->children[1] );
 		}
 		FreeWinding( w );
 
@@ -2301,10 +2292,10 @@ filters a planar winding face drawsurface into the bsp tree
 int FilterFaceIntoTree( mapDrawSurface_t* ds, tree_t* tree )
 {
 	winding_t* w;
-	int        refs = 0;
+	int		   refs = 0;
 
 	/* make a winding and filter it into the tree */
-	w    = WindingFromDrawSurf( ds );
+	w	 = WindingFromDrawSurf( ds );
 	refs = FilterWindingIntoTree_r( w, ds, tree->headnode );
 
 	/* return */
@@ -2320,15 +2311,15 @@ subdivides a patch into an approximate curve and filters it into the tree
 
 static int FilterPatchIntoTree( mapDrawSurface_t* ds, tree_t* tree )
 {
-	int        i, x, y, refs;
-	mesh_t     src, *mesh;
+	int		   i, x, y, refs;
+	mesh_t	   src, *mesh;
 	winding_t* w;
 
 	/* subdivide the surface */
 	src.width  = ds->patchWidth;
 	src.height = ds->patchHeight;
 	src.verts  = ds->verts;
-	mesh       = SubdivideMesh( src, FILTER_SUBDIVISION, 32 );
+	mesh	   = SubdivideMesh( src, FILTER_SUBDIVISION, 32 );
 
 	/* filter each quad into the tree (fixme: use new patch x-triangulation code?) */
 	refs = 0;
@@ -2337,19 +2328,19 @@ static int FilterPatchIntoTree( mapDrawSurface_t* ds, tree_t* tree )
 		for( x = 0; x < ( mesh->width - 1 ); x++ )
 		{
 			/* triangle 1 */
-			w            = AllocWinding( 3 );
+			w			 = AllocWinding( 3 );
 			w->numpoints = 3;
-			VectorCopy( mesh->verts[ y * mesh->width + x ].xyz, w->p[ 0 ] );
-			VectorCopy( mesh->verts[ y * mesh->width + x + 1 ].xyz, w->p[ 1 ] );
-			VectorCopy( mesh->verts[ ( y + 1 ) * mesh->width + x ].xyz, w->p[ 2 ] );
+			VectorCopy( mesh->verts[y * mesh->width + x].xyz, w->p[0] );
+			VectorCopy( mesh->verts[y * mesh->width + x + 1].xyz, w->p[1] );
+			VectorCopy( mesh->verts[( y + 1 ) * mesh->width + x].xyz, w->p[2] );
 			refs += FilterWindingIntoTree_r( w, ds, tree->headnode );
 
 			/* triangle 2 */
-			w            = AllocWinding( 3 );
+			w			 = AllocWinding( 3 );
 			w->numpoints = 3;
-			VectorCopy( mesh->verts[ y * mesh->width + x + 1 ].xyz, w->p[ 0 ] );
-			VectorCopy( mesh->verts[ ( y + 1 ) * mesh->width + x + 1 ].xyz, w->p[ 1 ] );
-			VectorCopy( mesh->verts[ ( y + 1 ) * mesh->width + x ].xyz, w->p[ 2 ] );
+			VectorCopy( mesh->verts[y * mesh->width + x + 1].xyz, w->p[0] );
+			VectorCopy( mesh->verts[( y + 1 ) * mesh->width + x + 1].xyz, w->p[1] );
+			VectorCopy( mesh->verts[( y + 1 ) * mesh->width + x].xyz, w->p[2] );
 			refs += FilterWindingIntoTree_r( w, ds, tree->headnode );
 		}
 	}
@@ -2357,7 +2348,7 @@ static int FilterPatchIntoTree( mapDrawSurface_t* ds, tree_t* tree )
 	/* use point filtering as well */
 	for( i = 0; i < ( mesh->width * mesh->height ); i++ )
 	{
-		refs += FilterPointIntoTree_r( mesh->verts[ i ].xyz, ds, tree->headnode );
+		refs += FilterPointIntoTree_r( mesh->verts[i].xyz, ds, tree->headnode );
 	}
 
 	/* free the subdivided mesh and return */
@@ -2372,7 +2363,7 @@ filters a triangle surface (meta, model) into the bsp
 
 static int FilterTrianglesIntoTree( mapDrawSurface_t* ds, tree_t* tree )
 {
-	int        i, refs;
+	int		   i, refs;
 	winding_t* w;
 
 	/* ydnar: gs mods: this was creating bogus triangles before */
@@ -2380,24 +2371,24 @@ static int FilterTrianglesIntoTree( mapDrawSurface_t* ds, tree_t* tree )
 	for( i = 0; i < ds->numIndexes; i += 3 )
 	{
 		/* error check */
-		if( ds->indexes[ i ] >= ds->numVerts || ds->indexes[ i + 1 ] >= ds->numVerts || ds->indexes[ i + 2 ] >= ds->numVerts )
+		if( ds->indexes[i] >= ds->numVerts || ds->indexes[i + 1] >= ds->numVerts || ds->indexes[i + 2] >= ds->numVerts )
 		{
-			Error( "Index %d greater than vertex count %d", ds->indexes[ i ], ds->numVerts );
+			Error( "Index %d greater than vertex count %d", ds->indexes[i], ds->numVerts );
 		}
 
 		/* make a triangle winding and filter it into the tree */
-		w            = AllocWinding( 3 );
+		w			 = AllocWinding( 3 );
 		w->numpoints = 3;
-		VectorCopy( ds->verts[ ds->indexes[ i ] ].xyz, w->p[ 0 ] );
-		VectorCopy( ds->verts[ ds->indexes[ i + 1 ] ].xyz, w->p[ 1 ] );
-		VectorCopy( ds->verts[ ds->indexes[ i + 2 ] ].xyz, w->p[ 2 ] );
+		VectorCopy( ds->verts[ds->indexes[i]].xyz, w->p[0] );
+		VectorCopy( ds->verts[ds->indexes[i + 1]].xyz, w->p[1] );
+		VectorCopy( ds->verts[ds->indexes[i + 2]].xyz, w->p[2] );
 		refs += FilterWindingIntoTree_r( w, ds, tree->headnode );
 	}
 
 	/* use point filtering as well */
 	for( i = 0; i < ds->numVerts; i++ )
 	{
-		refs += FilterPointIntoTree_r( ds->verts[ i ].xyz, ds, tree->headnode );
+		refs += FilterPointIntoTree_r( ds->verts[i].xyz, ds, tree->headnode );
 	}
 
 	return refs;
@@ -2410,10 +2401,10 @@ filters a foliage surface (wolf et/splash damage)
 
 static int FilterFoliageIntoTree( mapDrawSurface_t* ds, tree_t* tree )
 {
-	int            f, i, refs;
+	int			   f, i, refs;
 	bspDrawVert_t* instance;
-	vec3_t         xyz;
-	winding_t*     w;
+	vec3_t		   xyz;
+	winding_t*	   w;
 
 	/* walk origin list */
 	refs = 0;
@@ -2426,24 +2417,24 @@ static int FilterFoliageIntoTree( mapDrawSurface_t* ds, tree_t* tree )
 		for( i = 0; i < ds->numIndexes; i += 3 )
 		{
 			/* error check */
-			if( ds->indexes[ i ] >= ds->numVerts || ds->indexes[ i + 1 ] >= ds->numVerts || ds->indexes[ i + 2 ] >= ds->numVerts )
+			if( ds->indexes[i] >= ds->numVerts || ds->indexes[i + 1] >= ds->numVerts || ds->indexes[i + 2] >= ds->numVerts )
 			{
-				Error( "Index %d greater than vertex count %d", ds->indexes[ i ], ds->numVerts );
+				Error( "Index %d greater than vertex count %d", ds->indexes[i], ds->numVerts );
 			}
 
 			/* make a triangle winding and filter it into the tree */
-			w            = AllocWinding( 3 );
+			w			 = AllocWinding( 3 );
 			w->numpoints = 3;
-			VectorAdd( instance->xyz, ds->verts[ ds->indexes[ i ] ].xyz, w->p[ 0 ] );
-			VectorAdd( instance->xyz, ds->verts[ ds->indexes[ i + 1 ] ].xyz, w->p[ 1 ] );
-			VectorAdd( instance->xyz, ds->verts[ ds->indexes[ i + 2 ] ].xyz, w->p[ 2 ] );
+			VectorAdd( instance->xyz, ds->verts[ds->indexes[i]].xyz, w->p[0] );
+			VectorAdd( instance->xyz, ds->verts[ds->indexes[i + 1]].xyz, w->p[1] );
+			VectorAdd( instance->xyz, ds->verts[ds->indexes[i + 2]].xyz, w->p[2] );
 			refs += FilterWindingIntoTree_r( w, ds, tree->headnode );
 		}
 
 		/* use point filtering as well */
 		for( i = 0; i < ( ds->numVerts - ds->numFoliageInstances ); i++ )
 		{
-			VectorAdd( instance->xyz, ds->verts[ i ].xyz, xyz );
+			VectorAdd( instance->xyz, ds->verts[i].xyz, xyz );
 			refs += FilterPointIntoTree_r( xyz, ds, tree->headnode );
 		}
 	}
@@ -2467,13 +2458,13 @@ emits bsp drawverts from a map drawsurface
 
 void EmitDrawVerts( mapDrawSurface_t* ds, bspDrawSurface_t* out )
 {
-	int            i, k;
+	int			   i, k;
 	bspDrawVert_t* dv;
 	shaderInfo_t*  si;
-	float          offset;
+	float		   offset;
 
 	/* get stuff */
-	si     = ds->shaderInfo;
+	si	   = ds->shaderInfo;
 	offset = si->offset;
 
 	/* copy the verts */
@@ -2483,10 +2474,10 @@ void EmitDrawVerts( mapDrawSurface_t* ds, bspDrawSurface_t* out )
 	{
 		/* allocate a new vert */
 		IncDrawVerts();
-		dv = &bspDrawVerts[ numBSPDrawVerts - 1 ];
+		dv = &bspDrawVerts[numBSPDrawVerts - 1];
 
 		/* copy it */
-		memcpy( dv, &ds->verts[ i ], sizeof( *dv ) );
+		memcpy( dv, &ds->verts[i], sizeof( *dv ) );
 
 		/* offset? */
 		if( offset != 0.0f )
@@ -2499,17 +2490,17 @@ void EmitDrawVerts( mapDrawSurface_t* ds, bspDrawSurface_t* out )
 		   note: does not happen on worldspawn as its bounds is only used for determining lightgrid bounds */
 		if( numBSPModels > 0 )
 		{
-			AddPointToBounds( dv->xyz, bspModels[ numBSPModels ].mins, bspModels[ numBSPModels ].maxs );
+			AddPointToBounds( dv->xyz, bspModels[numBSPModels].mins, bspModels[numBSPModels].maxs );
 		}
 
 		/* debug color? */
 		if( debugSurfaces )
 		{
-			VectorCopy( debugColors[ ( ds - mapDrawSurfs ) % 12 ], dv->paintColor );
+			VectorCopy( debugColors[( ds - mapDrawSurfs ) % 12], dv->paintColor );
 
 			for( k = 0; k < MAX_LIGHTMAPS; k++ )
 			{
-				VectorCopy( debugColors[ ( ds - mapDrawSurfs ) % 12 ], dv->lightColor[ k ] );
+				VectorCopy( debugColors[( ds - mapDrawSurfs ) % 12], dv->lightColor[k] );
 			}
 		}
 	}
@@ -2542,7 +2533,7 @@ int FindDrawIndexes( int numIndexes, int* indexes )
 		for( i = 0; i < numTestIndexes; i++ )
 		{
 			/* test 3 indexes */
-			if( indexes[ 0 ] == bspDrawIndexes[ i ] && indexes[ 1 ] == bspDrawIndexes[ i + 1 ] && indexes[ 2 ] == bspDrawIndexes[ i + 2 ] )
+			if( indexes[0] == bspDrawIndexes[i] && indexes[1] == bspDrawIndexes[i + 1] && indexes[2] == bspDrawIndexes[i + 2] )
 			{
 				numRedundantIndexes += numIndexes;
 				return i;
@@ -2557,8 +2548,7 @@ int FindDrawIndexes( int numIndexes, int* indexes )
 	for( i = 0; i < numTestIndexes; i++ )
 	{
 		/* test first 4 indexes */
-		if( indexes[ 0 ] == bspDrawIndexes[ i ] &&
-			indexes[ 1 ] == bspDrawIndexes[ i + 1 ] && indexes[ 2 ] == bspDrawIndexes[ i + 2 ] && indexes[ 3 ] == bspDrawIndexes[ i + 3 ] )
+		if( indexes[0] == bspDrawIndexes[i] && indexes[1] == bspDrawIndexes[i + 1] && indexes[2] == bspDrawIndexes[i + 2] && indexes[3] == bspDrawIndexes[i + 3] )
 		{
 			/* handle 4 indexes */
 			if( numIndexes == 4 )
@@ -2569,7 +2559,7 @@ int FindDrawIndexes( int numIndexes, int* indexes )
 			/* test the remainder */
 			for( j = 4; j < numIndexes; j++ )
 			{
-				if( indexes[ j ] != bspDrawIndexes[ i + j ] )
+				if( indexes[j] != bspDrawIndexes[i + j] )
 				{
 					break;
 				}
@@ -2607,19 +2597,15 @@ void EmitDrawIndexes( mapDrawSurface_t* ds, bspDrawSurface_t* out )
 			{
 				Error( "MAX_MAP_DRAW_INDEXES" );
 			}
-			bspDrawIndexes[ numBSPDrawIndexes ] = ds->indexes[ i ];
+			bspDrawIndexes[numBSPDrawIndexes] = ds->indexes[i];
 
 			/* validate the index */
 			if( ds->type != SURFACE_PATCH )
 			{
-				if( bspDrawIndexes[ numBSPDrawIndexes ] < 0 || bspDrawIndexes[ numBSPDrawIndexes ] >= ds->numVerts )
+				if( bspDrawIndexes[numBSPDrawIndexes] < 0 || bspDrawIndexes[numBSPDrawIndexes] >= ds->numVerts )
 				{
-					Sys_Printf( "WARNING: %d %s has invalid index %d (%d)\n",
-						numBSPDrawSurfaces,
-						ds->shaderInfo->shader,
-						bspDrawIndexes[ numBSPDrawIndexes ],
-						i );
-					bspDrawIndexes[ numBSPDrawIndexes ] = 0;
+					Sys_Printf( "WARNING: %d %s has invalid index %d (%d)\n", numBSPDrawSurfaces, ds->shaderInfo->shader, bspDrawIndexes[numBSPDrawIndexes], i );
+					bspDrawIndexes[numBSPDrawIndexes] = 0;
 				}
 			}
 
@@ -2636,7 +2622,7 @@ emits a bsp flare drawsurface
 
 void EmitFlareSurface( mapDrawSurface_t* ds )
 {
-	int               i;
+	int				  i;
 	bspDrawSurface_t* out;
 
 	/* ydnar: nuking useless flare drawsurfaces */
@@ -2656,33 +2642,33 @@ void EmitFlareSurface( mapDrawSurface_t* ds )
 	{
 		Error( "MAX_MAP_DRAW_SURFS" );
 	}
-	out           = &bspDrawSurfaces[ numBSPDrawSurfaces ];
+	out			  = &bspDrawSurfaces[numBSPDrawSurfaces];
 	ds->outputNum = numBSPDrawSurfaces;
 	numBSPDrawSurfaces++;
 	memset( out, 0, sizeof( *out ) );
 
 	/* set it up */
 	out->surfaceType = MST_FLARE;
-	out->shaderNum   = EmitShader( ds->shaderInfo->shader, &ds->shaderInfo->contentFlags, &ds->shaderInfo->surfaceFlags );
-	out->fogNum      = ds->fogNum;
+	out->shaderNum	 = EmitShader( ds->shaderInfo->shader, &ds->shaderInfo->contentFlags, &ds->shaderInfo->surfaceFlags );
+	out->fogNum		 = ds->fogNum;
 
 	/* RBSP */
 	for( i = 0; i < MAX_LIGHTMAPS; i++ )
 	{
-		out->lightmapNum[ i ]    = -3;
-		out->lightmapStyles[ i ] = LS_NONE;
-		out->vertexStyles[ i ]   = LS_NONE;
+		out->lightmapNum[i]	   = -3;
+		out->lightmapStyles[i] = LS_NONE;
+		out->vertexStyles[i]   = LS_NONE;
 	}
-	out->lightmapStyles[ 0 ] = ds->lightStyle;
-	out->vertexStyles[ 0 ]   = ds->lightStyle;
+	out->lightmapStyles[0] = ds->lightStyle;
+	out->vertexStyles[0]   = ds->lightStyle;
 
-	VectorCopy( ds->lightmapOrigin, out->lightmapOrigin );       /* origin */
-	VectorCopy( ds->lightmapVecs[ 0 ], out->lightmapVecs[ 0 ] ); /* color */
-	VectorCopy( ds->lightmapVecs[ 1 ], out->lightmapVecs[ 1 ] );
-	VectorCopy( ds->lightmapVecs[ 2 ], out->lightmapVecs[ 2 ] ); /* normal */
+	VectorCopy( ds->lightmapOrigin, out->lightmapOrigin );	 /* origin */
+	VectorCopy( ds->lightmapVecs[0], out->lightmapVecs[0] ); /* color */
+	VectorCopy( ds->lightmapVecs[1], out->lightmapVecs[1] );
+	VectorCopy( ds->lightmapVecs[2], out->lightmapVecs[2] ); /* normal */
 
 	/* add to count */
-	numSurfacesByType[ ds->type ]++;
+	numSurfacesByType[ds->type]++;
 }
 
 /*
@@ -2692,10 +2678,10 @@ emits a bsp patch drawsurface
 
 void EmitPatchSurface( entity_t* e, mapDrawSurface_t* ds )
 {
-	int               i, j;
+	int				  i, j;
 	bspDrawSurface_t* out;
-	int               surfaceFlags, contentFlags;
-	int               forcePatchMeta;
+	int				  surfaceFlags, contentFlags;
+	int				  forcePatchMeta;
 
 	/* vortex: _patchMeta support */
 	forcePatchMeta = IntForKey( e, "_patchMeta" );
@@ -2712,7 +2698,7 @@ void EmitPatchSurface( entity_t* e, mapDrawSurface_t* ds )
 		/* walk the verts, flip the normal */
 		for( i = 0; i < ds->numVerts; i++ )
 		{
-			VectorScale( ds->verts[ i ].normal, -1.0f, ds->verts[ i ].normal );
+			VectorScale( ds->verts[i].normal, -1.0f, ds->verts[i].normal );
 		}
 
 		/* walk the verts again, but this time reverse their order */
@@ -2720,8 +2706,8 @@ void EmitPatchSurface( entity_t* e, mapDrawSurface_t* ds )
 		{
 			for( i = 0; i < ( ds->patchWidth / 2 ); i++ )
 			{
-				dv1 = &ds->verts[ j * ds->patchWidth + i ];
-				dv2 = &ds->verts[ j * ds->patchWidth + ( ds->patchWidth - i - 1 ) ];
+				dv1 = &ds->verts[j * ds->patchWidth + i];
+				dv2 = &ds->verts[j * ds->patchWidth + ( ds->patchWidth - i - 1 )];
 				memcpy( &temp, dv1, sizeof( bspDrawVert_t ) );
 				memcpy( dv1, dv2, sizeof( bspDrawVert_t ) );
 				memcpy( dv2, &temp, sizeof( bspDrawVert_t ) );
@@ -2729,7 +2715,7 @@ void EmitPatchSurface( entity_t* e, mapDrawSurface_t* ds )
 		}
 
 		/* invert facing */
-		VectorScale( ds->lightmapVecs[ 2 ], -1.0f, ds->lightmapVecs[ 2 ] );
+		VectorScale( ds->lightmapVecs[2], -1.0f, ds->lightmapVecs[2] );
 	}
 
 	/* allocate a new surface */
@@ -2737,7 +2723,7 @@ void EmitPatchSurface( entity_t* e, mapDrawSurface_t* ds )
 	{
 		Error( "MAX_MAP_DRAW_SURFS" );
 	}
-	out           = &bspDrawSurfaces[ numBSPDrawSurfaces ];
+	out			  = &bspDrawSurfaces[numBSPDrawSurfaces];
 	ds->outputNum = numBSPDrawSurfaces;
 	numBSPDrawSurfaces++;
 	memset( out, 0, sizeof( *out ) );
@@ -2757,7 +2743,7 @@ void EmitPatchSurface( entity_t* e, mapDrawSurface_t* ds )
 		ApplySurfaceParm( "pointlight", &contentFlags, &surfaceFlags, NULL );
 
 		/* we don't want this patch getting lightmapped */
-		VectorClear( ds->lightmapVecs[ 2 ] );
+		VectorClear( ds->lightmapVecs[2] );
 		VectorClear( ds->lightmapAxis );
 		ds->sampleSize = 0;
 
@@ -2768,30 +2754,30 @@ void EmitPatchSurface( entity_t* e, mapDrawSurface_t* ds )
 	{
 		out->shaderNum = EmitShader( ds->shaderInfo->shader, &ds->shaderInfo->contentFlags, &ds->shaderInfo->surfaceFlags );
 	}
-	out->patchWidth  = ds->patchWidth;
+	out->patchWidth	 = ds->patchWidth;
 	out->patchHeight = ds->patchHeight;
-	out->fogNum      = ds->fogNum;
+	out->fogNum		 = ds->fogNum;
 
 	/* RBSP */
 	for( i = 0; i < MAX_LIGHTMAPS; i++ )
 	{
-		out->lightmapNum[ i ]    = -3;
-		out->lightmapStyles[ i ] = LS_NONE;
-		out->vertexStyles[ i ]   = LS_NONE;
+		out->lightmapNum[i]	   = -3;
+		out->lightmapStyles[i] = LS_NONE;
+		out->vertexStyles[i]   = LS_NONE;
 	}
-	out->lightmapStyles[ 0 ] = LS_NORMAL;
-	out->vertexStyles[ 0 ]   = LS_NORMAL;
+	out->lightmapStyles[0] = LS_NORMAL;
+	out->vertexStyles[0]   = LS_NORMAL;
 
 	/* ydnar: gs mods: previously, the lod bounds were stored in lightmapVecs[ 0 ] and [ 1 ], moved to bounds[ 0 ] and [ 1 ] */
 	VectorCopy( ds->lightmapOrigin, out->lightmapOrigin );
-	VectorCopy( ds->bounds[ 0 ], out->lightmapVecs[ 0 ] );
-	VectorCopy( ds->bounds[ 1 ], out->lightmapVecs[ 1 ] );
-	VectorCopy( ds->lightmapVecs[ 2 ], out->lightmapVecs[ 2 ] );
+	VectorCopy( ds->bounds[0], out->lightmapVecs[0] );
+	VectorCopy( ds->bounds[1], out->lightmapVecs[1] );
+	VectorCopy( ds->lightmapVecs[2], out->lightmapVecs[2] );
 
 	/* ydnar: gs mods: clear out the plane normal */
 	if( ds->planar == qfalse )
 	{
-		VectorClear( out->lightmapVecs[ 2 ] );
+		VectorClear( out->lightmapVecs[2] );
 	}
 
 	/* emit the verts and indexes */
@@ -2799,7 +2785,7 @@ void EmitPatchSurface( entity_t* e, mapDrawSurface_t* ds )
 	EmitDrawIndexes( ds, out );
 
 	/* add to count */
-	numSurfacesByType[ ds->type ]++;
+	numSurfacesByType[ds->type]++;
 }
 
 /*
@@ -2811,8 +2797,8 @@ optimizes the vertex/index data in a triangle surface
 
 static void OptimizeTriangleSurface( mapDrawSurface_t* ds )
 {
-	int  i, j, k, temp, first, best, bestScore, score;
-	int  vertexCache[ VERTEX_CACHE_SIZE + 1 ]; /* one more for optimizing insert */
+	int	 i, j, k, temp, first, best, bestScore, score;
+	int	 vertexCache[VERTEX_CACHE_SIZE + 1]; /* one more for optimizing insert */
 	int* indexes;
 
 	/* certain surfaces don't get optimized */
@@ -2828,20 +2814,20 @@ static void OptimizeTriangleSurface( mapDrawSurface_t* ds )
 	/* setup */
 	for( i = 0; i <= VERTEX_CACHE_SIZE && i < ds->numIndexes; i++ )
 	{
-		vertexCache[ i ] = indexes[ i ];
+		vertexCache[i] = indexes[i];
 	}
 
 	/* add triangles in a vertex cache-aware order */
 	for( i = 0; i < ds->numIndexes; i += 3 )
 	{
 		/* find best triangle given the current vertex cache */
-		first     = -1;
-		best      = -1;
+		first	  = -1;
+		best	  = -1;
 		bestScore = -1;
 		for( j = 0; j < ds->numIndexes; j += 3 )
 		{
 			/* valid triangle? */
-			if( indexes[ j ] != -1 )
+			if( indexes[j] != -1 )
 			{
 				/* set first if necessary */
 				if( first < 0 )
@@ -2853,7 +2839,7 @@ static void OptimizeTriangleSurface( mapDrawSurface_t* ds )
 				score = 0;
 				for( k = 0; k < VERTEX_CACHE_SIZE; k++ )
 				{
-					if( indexes[ j ] == vertexCache[ k ] || indexes[ j + 1 ] == vertexCache[ k ] || indexes[ j + 2 ] == vertexCache[ k ] )
+					if( indexes[j] == vertexCache[k] || indexes[j + 1] == vertexCache[k] || indexes[j + 2] == vertexCache[k] )
 					{
 						score++;
 					}
@@ -2863,7 +2849,7 @@ static void OptimizeTriangleSurface( mapDrawSurface_t* ds )
 				if( score > bestScore )
 				{
 					bestScore = score;
-					best      = j;
+					best	  = j;
 				}
 
 				/* a perfect score of 3 means this triangle's verts are already present in the vertex cache */
@@ -2888,7 +2874,7 @@ static void OptimizeTriangleSurface( mapDrawSurface_t* ds )
 			{
 				for( k = 0; k < VERTEX_CACHE_SIZE; k++ )
 				{
-					if( indexes[ best + j ] == vertexCache[ k ] )
+					if( indexes[best + j] == vertexCache[k] )
 					{
 						break;
 					}
@@ -2899,31 +2885,31 @@ static void OptimizeTriangleSurface( mapDrawSurface_t* ds )
 					/* pop off top of vertex cache */
 					for( k = VERTEX_CACHE_SIZE; k > 0; k-- )
 					{
-						vertexCache[ k ] = vertexCache[ k - 1 ];
+						vertexCache[k] = vertexCache[k - 1];
 					}
 
 					/* add vertex */
-					vertexCache[ 0 ] = indexes[ best + j ];
+					vertexCache[0] = indexes[best + j];
 				}
 			}
 
 			/* add triangle to surface */
-			ds->indexes[ i ]     = indexes[ best ];
-			ds->indexes[ i + 1 ] = indexes[ best + 1 ];
-			ds->indexes[ i + 2 ] = indexes[ best + 2 ];
+			ds->indexes[i]	   = indexes[best];
+			ds->indexes[i + 1] = indexes[best + 1];
+			ds->indexes[i + 2] = indexes[best + 2];
 
 			/* clear from input pool */
-			indexes[ best ]     = -1;
-			indexes[ best + 1 ] = -1;
-			indexes[ best + 2 ] = -1;
+			indexes[best]	  = -1;
+			indexes[best + 1] = -1;
+			indexes[best + 2] = -1;
 
 			/* sort triangle windings (312 -> 123) */
-			while( ds->indexes[ i ] > ds->indexes[ i + 1 ] || ds->indexes[ i ] > ds->indexes[ i + 2 ] )
+			while( ds->indexes[i] > ds->indexes[i + 1] || ds->indexes[i] > ds->indexes[i + 2] )
 			{
-				temp                 = ds->indexes[ i ];
-				ds->indexes[ i ]     = ds->indexes[ i + 1 ];
-				ds->indexes[ i + 1 ] = ds->indexes[ i + 2 ];
-				ds->indexes[ i + 2 ] = temp;
+				temp			   = ds->indexes[i];
+				ds->indexes[i]	   = ds->indexes[i + 1];
+				ds->indexes[i + 1] = ds->indexes[i + 2];
+				ds->indexes[i + 2] = temp;
 			}
 		}
 	}
@@ -2939,7 +2925,7 @@ creates a bsp drawsurface from arbitrary triangle surfaces
 
 void EmitTriangleSurface( mapDrawSurface_t* ds )
 {
-	int               i, temp;
+	int				  i, temp;
 	bspDrawSurface_t* out;
 
 	/* invert the surface if necessary */
@@ -2948,19 +2934,19 @@ void EmitTriangleSurface( mapDrawSurface_t* ds )
 		/* walk the indexes, reverse the triangle order */
 		for( i = 0; i < ds->numIndexes; i += 3 )
 		{
-			temp                 = ds->indexes[ i ];
-			ds->indexes[ i ]     = ds->indexes[ i + 1 ];
-			ds->indexes[ i + 1 ] = temp;
+			temp			   = ds->indexes[i];
+			ds->indexes[i]	   = ds->indexes[i + 1];
+			ds->indexes[i + 1] = temp;
 		}
 
 		/* walk the verts, flip the normal */
 		for( i = 0; i < ds->numVerts; i++ )
 		{
-			VectorScale( ds->verts[ i ].normal, -1.0f, ds->verts[ i ].normal );
+			VectorScale( ds->verts[i].normal, -1.0f, ds->verts[i].normal );
 		}
 
 		/* invert facing */
-		VectorScale( ds->lightmapVecs[ 2 ], -1.0f, ds->lightmapVecs[ 2 ] );
+		VectorScale( ds->lightmapVecs[2], -1.0f, ds->lightmapVecs[2] );
 	}
 
 	/* allocate a new surface */
@@ -2968,7 +2954,7 @@ void EmitTriangleSurface( mapDrawSurface_t* ds )
 	{
 		Error( "MAX_MAP_DRAW_SURFS" );
 	}
-	out           = &bspDrawSurfaces[ numBSPDrawSurfaces ];
+	out			  = &bspDrawSurfaces[numBSPDrawSurfaces];
 	ds->outputNum = numBSPDrawSurfaces;
 	numBSPDrawSurfaces++;
 	memset( out, 0, sizeof( *out ) );
@@ -2981,8 +2967,7 @@ void EmitTriangleSurface( mapDrawSurface_t* ds )
 
 	/* ydnar: gs mods: handle lightmapped terrain (force to planar type) */
 	//% else if( VectorLength( ds->lightmapAxis ) <= 0.0f || ds->type == SURFACE_TRIANGLES || ds->type == SURFACE_FOGHULL || debugSurfaces )
-	else if( ( VectorLength( ds->lightmapAxis ) <= 0.0f && ds->planar == qfalse ) ||
-		ds->type == SURFACE_TRIANGLES || ds->type == SURFACE_FOGHULL || ds->numVerts > maxLMSurfaceVerts || debugSurfaces )
+	else if( ( VectorLength( ds->lightmapAxis ) <= 0.0f && ds->planar == qfalse ) || ds->type == SURFACE_TRIANGLES || ds->type == SURFACE_FOGHULL || ds->numVerts > maxLMSurfaceVerts || debugSurfaces )
 	{
 		out->surfaceType = MST_TRIANGLE_SOUP;
 	}
@@ -3002,23 +2987,23 @@ void EmitTriangleSurface( mapDrawSurface_t* ds )
 	{
 		out->shaderNum = EmitShader( ds->shaderInfo->shader, &ds->shaderInfo->contentFlags, &ds->shaderInfo->surfaceFlags );
 	}
-	out->patchWidth  = ds->patchWidth;
+	out->patchWidth	 = ds->patchWidth;
 	out->patchHeight = ds->patchHeight;
-	out->fogNum      = ds->fogNum;
+	out->fogNum		 = ds->fogNum;
 
 	/* debug inset (push each triangle vertex towards the center of each triangle it is on */
 	if( debugInset )
 	{
 		bspDrawVert_t *a, *b, *c;
-		vec3_t         cent, dir;
+		vec3_t		   cent, dir;
 
 		/* walk triangle list */
 		for( i = 0; i < ds->numIndexes; i += 3 )
 		{
 			/* get verts */
-			a = &ds->verts[ ds->indexes[ i ] ];
-			b = &ds->verts[ ds->indexes[ i + 1 ] ];
-			c = &ds->verts[ ds->indexes[ i + 2 ] ];
+			a = &ds->verts[ds->indexes[i]];
+			b = &ds->verts[ds->indexes[i + 1]];
+			c = &ds->verts[ds->indexes[i + 2]];
 
 			/* calculate centroid */
 			VectorCopy( a->xyz, cent );
@@ -3042,23 +3027,23 @@ void EmitTriangleSurface( mapDrawSurface_t* ds )
 	/* RBSP */
 	for( i = 0; i < MAX_LIGHTMAPS; i++ )
 	{
-		out->lightmapNum[ i ]    = -3;
-		out->lightmapStyles[ i ] = LS_NONE;
-		out->vertexStyles[ i ]   = LS_NONE;
+		out->lightmapNum[i]	   = -3;
+		out->lightmapStyles[i] = LS_NONE;
+		out->vertexStyles[i]   = LS_NONE;
 	}
-	out->lightmapStyles[ 0 ] = LS_NORMAL;
-	out->vertexStyles[ 0 ]   = LS_NORMAL;
+	out->lightmapStyles[0] = LS_NORMAL;
+	out->vertexStyles[0]   = LS_NORMAL;
 
 	/* lightmap vectors (lod bounds for patches */
 	VectorCopy( ds->lightmapOrigin, out->lightmapOrigin );
-	VectorCopy( ds->lightmapVecs[ 0 ], out->lightmapVecs[ 0 ] );
-	VectorCopy( ds->lightmapVecs[ 1 ], out->lightmapVecs[ 1 ] );
-	VectorCopy( ds->lightmapVecs[ 2 ], out->lightmapVecs[ 2 ] );
+	VectorCopy( ds->lightmapVecs[0], out->lightmapVecs[0] );
+	VectorCopy( ds->lightmapVecs[1], out->lightmapVecs[1] );
+	VectorCopy( ds->lightmapVecs[2], out->lightmapVecs[2] );
 
 	/* ydnar: gs mods: clear out the plane normal */
 	if( ds->planar == qfalse )
 	{
-		VectorClear( out->lightmapVecs[ 2 ] );
+		VectorClear( out->lightmapVecs[2] );
 	}
 
 	/* optimize the surface's triangles */
@@ -3069,7 +3054,7 @@ void EmitTriangleSurface( mapDrawSurface_t* ds )
 	EmitDrawIndexes( ds, out );
 
 	/* add to count */
-	numSurfacesByType[ ds->type ]++;
+	numSurfacesByType[ds->type]++;
 }
 
 /*
@@ -3091,17 +3076,17 @@ generates drawsurfaces for passable portals in the bsp
 
 static void MakeDebugPortalSurfs_r( node_t* node, shaderInfo_t* si )
 {
-	int               i, k, c, s;
-	portal_t*         p;
-	winding_t*        w;
+	int				  i, k, c, s;
+	portal_t*		  p;
+	winding_t*		  w;
 	mapDrawSurface_t* ds;
-	bspDrawVert_t*    dv;
+	bspDrawVert_t*	  dv;
 
 	/* recurse if decision node */
 	if( node->planenum != PLANENUM_LEAF )
 	{
-		MakeDebugPortalSurfs_r( node->children[ 0 ], si );
-		MakeDebugPortalSurfs_r( node->children[ 1 ], si );
+		MakeDebugPortalSurfs_r( node->children[0], si );
+		MakeDebugPortalSurfs_r( node->children[1], si );
 		return;
 	}
 
@@ -3112,14 +3097,14 @@ static void MakeDebugPortalSurfs_r( node_t* node, shaderInfo_t* si )
 	}
 
 	/* walk the list of portals */
-	for( c = 0, p = node->portals; p != NULL; c++, p = p->next[ s ] )
+	for( c = 0, p = node->portals; p != NULL; c++, p = p->next[s] )
 	{
 		/* get winding and side even/odd */
 		w = p->winding;
-		s = ( p->nodes[ 1 ] == node );
+		s = ( p->nodes[1] == node );
 
 		/* is this a valid portal for this leaf? */
-		if( w && p->nodes[ 0 ] == node )
+		if( w && p->nodes[0] == node )
 		{
 			/* is this portal passable? */
 			if( PortalPassable( p ) == qfalse )
@@ -3134,15 +3119,15 @@ static void MakeDebugPortalSurfs_r( node_t* node, shaderInfo_t* si )
 			}
 
 			/* allocate a drawsurface */
-			ds             = AllocDrawSurface( SURFACE_FACE );
+			ds			   = AllocDrawSurface( SURFACE_FACE );
 			ds->shaderInfo = si;
-			ds->planar     = qtrue;
-			ds->sideRef    = AllocSideRef( p->side, NULL );
+			ds->planar	   = qtrue;
+			ds->sideRef	   = AllocSideRef( p->side, NULL );
 			ds->planeNum   = FindFloatPlane( p->plane.normal, p->plane.dist, 0, NULL );
-			VectorCopy( p->plane.normal, ds->lightmapVecs[ 2 ] );
-			ds->fogNum   = -1;
+			VectorCopy( p->plane.normal, ds->lightmapVecs[2] );
+			ds->fogNum	 = -1;
 			ds->numVerts = w->numpoints;
-			ds->verts    = safe_malloc( ds->numVerts * sizeof( *ds->verts ) );
+			ds->verts	 = safe_malloc( ds->numVerts * sizeof( *ds->verts ) );
 			memset( ds->verts, 0, ds->numVerts * sizeof( *ds->verts ) );
 
 			/* walk the winding */
@@ -3152,18 +3137,18 @@ static void MakeDebugPortalSurfs_r( node_t* node, shaderInfo_t* si )
 				dv = ds->verts + i;
 
 				/* set it */
-				VectorCopy( w->p[ i ], dv->xyz );
+				VectorCopy( w->p[i], dv->xyz );
 				VectorCopy( p->plane.normal, dv->normal );
-				dv->st[ 0 ] = 0;
-				dv->st[ 1 ] = 0;
+				dv->st[0] = 0;
+				dv->st[1] = 0;
 
-				VectorCopy( debugColors[ c % 12 ], dv->paintColor );
-				dv->paintColor[ 3 ] = 32 / 255.0f;
+				VectorCopy( debugColors[c % 12], dv->paintColor );
+				dv->paintColor[3] = 32 / 255.0f;
 
 				for( k = 0; k < MAX_LIGHTMAPS; k++ )
 				{
-					VectorCopy( debugColors[ c % 12 ], dv->lightColor[ k ] );
-					dv->lightColor[ k ][ 3 ] = 32;
+					VectorCopy( debugColors[c % 12], dv->lightColor[k] );
+					dv->lightColor[k][3] = 32;
 				}
 			}
 		}
@@ -3196,13 +3181,13 @@ generates drawsurfaces for a foghull (this MUST use a sky shader)
 
 void MakeFogHullSurfs( entity_t* e, tree_t* tree, char* shader )
 {
-	shaderInfo_t*     si;
+	shaderInfo_t*	  si;
 	mapDrawSurface_t* ds;
-	vec3_t            fogMins, fogMaxs;
-	int               i, indexes[] = { 0, 1, 2, 0, 2, 3, 4, 7, 5, 5, 7, 6, 1, 5, 6, 1, 6, 2, 0, 4, 5, 0, 5, 1, 2, 6, 7, 2, 7, 3, 3, 7, 4, 3, 4, 0 };
+	vec3_t			  fogMins, fogMaxs;
+	int				  i, indexes[] = { 0, 1, 2, 0, 2, 3, 4, 7, 5, 5, 7, 6, 1, 5, 6, 1, 6, 2, 0, 4, 5, 0, 5, 1, 2, 6, 7, 2, 7, 3, 3, 7, 4, 3, 4, 0 };
 
 	/* dummy check */
-	if( shader == NULL || shader[ 0 ] == '\0' )
+	if( shader == NULL || shader[0] == '\0' )
 	{
 		return;
 	}
@@ -3215,34 +3200,34 @@ void MakeFogHullSurfs( entity_t* e, tree_t* tree, char* shader )
 	VectorCopy( mapMaxs, fogMaxs );
 	for( i = 0; i < 3; i++ )
 	{
-		fogMins[ i ] -= 128;
-		fogMaxs[ i ] += 128;
+		fogMins[i] -= 128;
+		fogMaxs[i] += 128;
 	}
 
 	/* get foghull shader */
 	si = ShaderInfoForShader( shader );
 
 	/* allocate a drawsurface */
-	ds             = AllocDrawSurface( SURFACE_FOGHULL );
+	ds			   = AllocDrawSurface( SURFACE_FOGHULL );
 	ds->shaderInfo = si;
-	ds->fogNum     = -1;
+	ds->fogNum	   = -1;
 	ds->numVerts   = 8;
-	ds->verts      = safe_malloc( ds->numVerts * sizeof( *ds->verts ) );
+	ds->verts	   = safe_malloc( ds->numVerts * sizeof( *ds->verts ) );
 	memset( ds->verts, 0, ds->numVerts * sizeof( *ds->verts ) );
 	ds->numIndexes = 36;
-	ds->indexes    = safe_malloc( ds->numIndexes * sizeof( *ds->indexes ) );
+	ds->indexes	   = safe_malloc( ds->numIndexes * sizeof( *ds->indexes ) );
 	memset( ds->indexes, 0, ds->numIndexes * sizeof( *ds->indexes ) );
 
 	/* set verts */
-	VectorSet( ds->verts[ 0 ].xyz, fogMins[ 0 ], fogMins[ 1 ], fogMins[ 2 ] );
-	VectorSet( ds->verts[ 1 ].xyz, fogMins[ 0 ], fogMaxs[ 1 ], fogMins[ 2 ] );
-	VectorSet( ds->verts[ 2 ].xyz, fogMaxs[ 0 ], fogMaxs[ 1 ], fogMins[ 2 ] );
-	VectorSet( ds->verts[ 3 ].xyz, fogMaxs[ 0 ], fogMins[ 1 ], fogMins[ 2 ] );
+	VectorSet( ds->verts[0].xyz, fogMins[0], fogMins[1], fogMins[2] );
+	VectorSet( ds->verts[1].xyz, fogMins[0], fogMaxs[1], fogMins[2] );
+	VectorSet( ds->verts[2].xyz, fogMaxs[0], fogMaxs[1], fogMins[2] );
+	VectorSet( ds->verts[3].xyz, fogMaxs[0], fogMins[1], fogMins[2] );
 
-	VectorSet( ds->verts[ 4 ].xyz, fogMins[ 0 ], fogMins[ 1 ], fogMaxs[ 2 ] );
-	VectorSet( ds->verts[ 5 ].xyz, fogMins[ 0 ], fogMaxs[ 1 ], fogMaxs[ 2 ] );
-	VectorSet( ds->verts[ 6 ].xyz, fogMaxs[ 0 ], fogMaxs[ 1 ], fogMaxs[ 2 ] );
-	VectorSet( ds->verts[ 7 ].xyz, fogMaxs[ 0 ], fogMins[ 1 ], fogMaxs[ 2 ] );
+	VectorSet( ds->verts[4].xyz, fogMins[0], fogMins[1], fogMaxs[2] );
+	VectorSet( ds->verts[5].xyz, fogMins[0], fogMaxs[1], fogMaxs[2] );
+	VectorSet( ds->verts[6].xyz, fogMaxs[0], fogMaxs[1], fogMaxs[2] );
+	VectorSet( ds->verts[7].xyz, fogMaxs[0], fogMins[1], fogMaxs[2] );
 
 	/* set indexes */
 	memcpy( ds->indexes, indexes, ds->numIndexes * sizeof( *ds->indexes ) );
@@ -3269,8 +3254,8 @@ void BiasSurfaceTextures( mapDrawSurface_t* ds )
 	/* bias the texture coordinates */
 	for( i = 0; i < ds->numVerts; i++ )
 	{
-		ds->verts[ i ].st[ 0 ] += ds->bias[ 0 ];
-		ds->verts[ i ].st[ 1 ] += ds->bias[ 1 ];
+		ds->verts[i].st[0] += ds->bias[0];
+		ds->verts[i].st[1] += ds->bias[1];
 	}
 }
 
@@ -3281,50 +3266,50 @@ adds models to a specified triangle, returns the number of models added
 
 int AddSurfaceModelsToTriangle_r( mapDrawSurface_t* ds, surfaceModel_t* model, bspDrawVert_t** tri )
 {
-	bspDrawVert_t mid, *tri2[ 3 ];
-	int           max, n, localNumSurfaceModels;
+	bspDrawVert_t mid, *tri2[3];
+	int			  max, n, localNumSurfaceModels;
 
 	/* init */
 	localNumSurfaceModels = 0;
 
 	/* subdivide calc */
 	{
-		int    i;
+		int	   i;
 		float *a, *b, dx, dy, dz, dist, maxDist;
 
 		/* find the longest edge and split it */
-		max     = -1;
+		max		= -1;
 		maxDist = 0.0f;
 		for( i = 0; i < 3; i++ )
 		{
 			/* get verts */
-			a = tri[ i ]->xyz;
-			b = tri[ ( i + 1 ) % 3 ]->xyz;
+			a = tri[i]->xyz;
+			b = tri[( i + 1 ) % 3]->xyz;
 
 			/* get dists */
-			dx   = a[ 0 ] - b[ 0 ];
-			dy   = a[ 1 ] - b[ 1 ];
-			dz   = a[ 2 ] - b[ 2 ];
+			dx	 = a[0] - b[0];
+			dy	 = a[1] - b[1];
+			dz	 = a[2] - b[2];
 			dist = ( dx * dx ) + ( dy * dy ) + ( dz * dz );
 
 			/* longer? */
 			if( dist > maxDist )
 			{
 				maxDist = dist;
-				max     = i;
+				max		= i;
 			}
 		}
 
 		/* is the triangle small enough? */
 		if( max < 0 || maxDist <= ( model->density * model->density ) )
 		{
-			float    odds, r, angle;
-			vec3_t   origin, normal, scale, axis[ 3 ], angles;
+			float	 odds, r, angle;
+			vec3_t	 origin, normal, scale, axis[3], angles;
 			matrix_t transform, temp;
 
 			/* roll the dice (model's odds scaled by vertex alpha) */
-			odds = model->odds * ( tri[ 0 ]->lightColor[ 0 ][ 3 ] + tri[ 0 ]->lightColor[ 0 ][ 3 ] + tri[ 0 ]->lightColor[ 0 ][ 3 ] ) / 765.0f;
-			r    = Random();
+			odds = model->odds * ( tri[0]->lightColor[0][3] + tri[0]->lightColor[0][3] + tri[0]->lightColor[0][3] ) / 765.0f;
+			r	 = Random();
 			if( r > model->odds )
 			{
 				return 0;
@@ -3338,9 +3323,9 @@ int AddSurfaceModelsToTriangle_r( mapDrawSurface_t* ds, surfaceModel_t* model, b
 			angle = model->minAngle + Random() * ( model->maxAngle - model->minAngle );
 
 			/* calculate average origin */
-			VectorCopy( tri[ 0 ]->xyz, origin );
-			VectorAdd( origin, tri[ 1 ]->xyz, origin );
-			VectorAdd( origin, tri[ 2 ]->xyz, origin );
+			VectorCopy( tri[0]->xyz, origin );
+			VectorAdd( origin, tri[1]->xyz, origin );
+			VectorAdd( origin, tri[2]->xyz, origin );
 			VectorScale( origin, ( 1.0f / 3.0f ), origin );
 
 			/* clear transform matrix */
@@ -3353,37 +3338,37 @@ int AddSurfaceModelsToTriangle_r( mapDrawSurface_t* ds, surfaceModel_t* model, b
 				VectorSet( angles, 0.0f, 0.0f, angle );
 
 				/* calculate average normal */
-				VectorCopy( tri[ 0 ]->normal, normal );
-				VectorAdd( normal, tri[ 1 ]->normal, normal );
-				VectorAdd( normal, tri[ 2 ]->normal, normal );
-				if( VectorNormalize2( normal, axis[ 2 ] ) == 0.0f )
+				VectorCopy( tri[0]->normal, normal );
+				VectorAdd( normal, tri[1]->normal, normal );
+				VectorAdd( normal, tri[2]->normal, normal );
+				if( VectorNormalize2( normal, axis[2] ) == 0.0f )
 				{
-					VectorCopy( tri[ 0 ]->normal, axis[ 2 ] );
+					VectorCopy( tri[0]->normal, axis[2] );
 				}
 
 				/* make perpendicular vectors */
-				MakeNormalVectors( axis[ 2 ], axis[ 1 ], axis[ 0 ] );
+				MakeNormalVectors( axis[2], axis[1], axis[0] );
 
 				/* copy to matrix */
 				MatrixIdentity( temp );
-				temp[ 0 ]  = axis[ 0 ][ 0 ];
-				temp[ 1 ]  = axis[ 0 ][ 1 ];
-				temp[ 2 ]  = axis[ 0 ][ 2 ];
-				temp[ 4 ]  = axis[ 1 ][ 0 ];
-				temp[ 5 ]  = axis[ 1 ][ 1 ];
-				temp[ 6 ]  = axis[ 1 ][ 2 ];
-				temp[ 8 ]  = axis[ 2 ][ 0 ];
-				temp[ 9 ]  = axis[ 2 ][ 1 ];
-				temp[ 10 ] = axis[ 2 ][ 2 ];
+				temp[0]	 = axis[0][0];
+				temp[1]	 = axis[0][1];
+				temp[2]	 = axis[0][2];
+				temp[4]	 = axis[1][0];
+				temp[5]	 = axis[1][1];
+				temp[6]	 = axis[1][2];
+				temp[8]	 = axis[2][0];
+				temp[9]	 = axis[2][1];
+				temp[10] = axis[2][2];
 
 				/* scale */
-				MatrixSetupScale( temp, scale[ 0 ], scale[ 1 ], scale[ 2 ] );
+				MatrixSetupScale( temp, scale[0], scale[1], scale[2] );
 
 				/* rotate around z axis */
-				MatrixMultiplyRotation( temp, angles[ PITCH ], angles[ YAW ], angles[ ROLL ] );
+				MatrixMultiplyRotation( temp, angles[PITCH], angles[YAW], angles[ROLL] );
 
 				/* translate */
-				MatrixMultiplyTranslation( transform, origin[ 0 ], origin[ 1 ], origin[ 2 ] );
+				MatrixMultiplyTranslation( transform, origin[0], origin[1], origin[2] );
 
 				/* tranform into axis space */
 				MatrixMultiply2( transform, temp );
@@ -3394,7 +3379,7 @@ int AddSurfaceModelsToTriangle_r( mapDrawSurface_t* ds, surfaceModel_t* model, b
 			{
 				/* set angles */
 				VectorSet( angles, 0.0f, 0.0f, angle );
-				MatrixFromAngles( temp, angles[ PITCH ], angles[ YAW ], angles[ ROLL ] );
+				MatrixFromAngles( temp, angles[PITCH], angles[YAW], angles[ROLL] );
 
 				/* set matrix */
 				MatrixSetupTransformFromRotation( transform, temp, origin );
@@ -3411,12 +3396,12 @@ int AddSurfaceModelsToTriangle_r( mapDrawSurface_t* ds, surfaceModel_t* model, b
 	}
 
 	/* split the longest edge and map it */
-	LerpDrawVert( tri[ max ], tri[ ( max + 1 ) % 3 ], &mid );
+	LerpDrawVert( tri[max], tri[( max + 1 ) % 3], &mid );
 
 	/* recurse to first triangle */
 	VectorCopy( tri, tri2 );
-	tri2[ max ] = &mid;
-	n           = AddSurfaceModelsToTriangle_r( ds, model, tri2 );
+	tri2[max] = &mid;
+	n		  = AddSurfaceModelsToTriangle_r( ds, model, tri2 );
 	if( n < 0 )
 	{
 		return n;
@@ -3425,8 +3410,8 @@ int AddSurfaceModelsToTriangle_r( mapDrawSurface_t* ds, surfaceModel_t* model, b
 
 	/* recurse to second triangle */
 	VectorCopy( tri, tri2 );
-	tri2[ ( max + 1 ) % 3 ] = &mid;
-	n                       = AddSurfaceModelsToTriangle_r( ds, model, tri2 );
+	tri2[( max + 1 ) % 3] = &mid;
+	n					  = AddSurfaceModelsToTriangle_r( ds, model, tri2 );
 	if( n < 0 )
 	{
 		return n;
@@ -3445,10 +3430,10 @@ adds a surface's shader models to the surface
 int AddSurfaceModels( mapDrawSurface_t* ds )
 {
 	surfaceModel_t* model;
-	int             i, x, y, n, pw[ 5 ], r, localNumSurfaceModels, iterations;
-	mesh_t          src, *mesh, *subdivided;
-	bspDrawVert_t   centroid, *tri[ 3 ];
-	float           alpha;
+	int				i, x, y, n, pw[5], r, localNumSurfaceModels, iterations;
+	mesh_t			src, *mesh, *subdivided;
+	bspDrawVert_t	centroid, *tri[3];
+	float			alpha;
 
 	/* dummy check */
 	if( ds == NULL || ds->shaderInfo == NULL || ds->shaderInfo->surfaceModel == NULL )
@@ -3475,44 +3460,44 @@ int AddSurfaceModels( mapDrawSurface_t* ds )
 				/* walk verts */
 				for( i = 0; i < ds->numVerts; i++ )
 				{
-					VectorAdd( centroid.xyz, ds->verts[ i ].xyz, centroid.xyz );
-					VectorAdd( centroid.normal, ds->verts[ i ].normal, centroid.normal );
-					centroid.st[ 0 ] += ds->verts[ i ].st[ 0 ];
-					centroid.st[ 1 ] += ds->verts[ i ].st[ 1 ];
-					alpha += ds->verts[ i ].lightColor[ 0 ][ 3 ];
+					VectorAdd( centroid.xyz, ds->verts[i].xyz, centroid.xyz );
+					VectorAdd( centroid.normal, ds->verts[i].normal, centroid.normal );
+					centroid.st[0] += ds->verts[i].st[0];
+					centroid.st[1] += ds->verts[i].st[1];
+					alpha += ds->verts[i].lightColor[0][3];
 				}
 
 				/* average */
-				centroid.xyz[ 0 ] /= ds->numVerts;
-				centroid.xyz[ 1 ] /= ds->numVerts;
-				centroid.xyz[ 2 ] /= ds->numVerts;
+				centroid.xyz[0] /= ds->numVerts;
+				centroid.xyz[1] /= ds->numVerts;
+				centroid.xyz[2] /= ds->numVerts;
 				if( VectorNormalize2( centroid.normal, centroid.normal ) == 0.0f )
 				{
-					VectorCopy( ds->verts[ 0 ].normal, centroid.normal );
+					VectorCopy( ds->verts[0].normal, centroid.normal );
 				}
-				centroid.st[ 0 ] /= ds->numVerts;
-				centroid.st[ 1 ] /= ds->numVerts;
+				centroid.st[0] /= ds->numVerts;
+				centroid.st[1] /= ds->numVerts;
 				alpha /= ds->numVerts;
 
-				centroid.paintColor[ 0 ] = 1.0f;
-				centroid.paintColor[ 1 ] = 1.0f;
-				centroid.paintColor[ 2 ] = 1.0f;
-				centroid.paintColor[ 2 ] = ( alpha > 1.0f ? 1.0f : alpha );
+				centroid.paintColor[0] = 1.0f;
+				centroid.paintColor[1] = 1.0f;
+				centroid.paintColor[2] = 1.0f;
+				centroid.paintColor[2] = ( alpha > 1.0f ? 1.0f : alpha );
 
-				centroid.lightColor[ 0 ][ 0 ] = 255;
-				centroid.lightColor[ 0 ][ 1 ] = 255;
-				centroid.lightColor[ 0 ][ 2 ] = 255;
-				centroid.lightColor[ 0 ][ 2 ] = ( alpha > 255 ? 255 : alpha );
+				centroid.lightColor[0][0] = 255;
+				centroid.lightColor[0][1] = 255;
+				centroid.lightColor[0][2] = 255;
+				centroid.lightColor[0][2] = ( alpha > 255 ? 255 : alpha );
 
 				/* head vert is centroid */
-				tri[ 0 ] = &centroid;
+				tri[0] = &centroid;
 
 				/* walk fanned triangles */
 				for( i = 0; i < ds->numVerts; i++ )
 				{
 					/* set triangle */
-					tri[ 1 ] = &ds->verts[ i ];
-					tri[ 2 ] = &ds->verts[ ( i + 1 ) % ds->numVerts ];
+					tri[1] = &ds->verts[i];
+					tri[2] = &ds->verts[( i + 1 ) % ds->numVerts];
 
 					/* create models */
 					n = AddSurfaceModelsToTriangle_r( ds, model, tri );
@@ -3545,20 +3530,20 @@ int AddSurfaceModels( mapDrawSurface_t* ds )
 					for( x = 0; x < ( mesh->width - 1 ); x++ )
 					{
 						/* set indexes */
-						pw[ 0 ] = x + ( y * mesh->width );
-						pw[ 1 ] = x + ( ( y + 1 ) * mesh->width );
-						pw[ 2 ] = x + 1 + ( ( y + 1 ) * mesh->width );
-						pw[ 3 ] = x + 1 + ( y * mesh->width );
-						pw[ 4 ] = x + ( y * mesh->width ); /* same as pw[ 0 ] */
+						pw[0] = x + ( y * mesh->width );
+						pw[1] = x + ( ( y + 1 ) * mesh->width );
+						pw[2] = x + 1 + ( ( y + 1 ) * mesh->width );
+						pw[3] = x + 1 + ( y * mesh->width );
+						pw[4] = x + ( y * mesh->width ); /* same as pw[ 0 ] */
 
 						/* set radix */
 						r = ( x + y ) & 1;
 
 						/* triangle 1 */
-						tri[ 0 ] = &mesh->verts[ pw[ r + 0 ] ];
-						tri[ 1 ] = &mesh->verts[ pw[ r + 1 ] ];
-						tri[ 2 ] = &mesh->verts[ pw[ r + 2 ] ];
-						n        = AddSurfaceModelsToTriangle_r( ds, model, tri );
+						tri[0] = &mesh->verts[pw[r + 0]];
+						tri[1] = &mesh->verts[pw[r + 1]];
+						tri[2] = &mesh->verts[pw[r + 2]];
+						n	   = AddSurfaceModelsToTriangle_r( ds, model, tri );
 						if( n < 0 )
 						{
 							return n;
@@ -3566,10 +3551,10 @@ int AddSurfaceModels( mapDrawSurface_t* ds )
 						localNumSurfaceModels += n;
 
 						/* triangle 2 */
-						tri[ 0 ] = &mesh->verts[ pw[ r + 0 ] ];
-						tri[ 1 ] = &mesh->verts[ pw[ r + 2 ] ];
-						tri[ 2 ] = &mesh->verts[ pw[ r + 3 ] ];
-						n        = AddSurfaceModelsToTriangle_r( ds, model, tri );
+						tri[0] = &mesh->verts[pw[r + 0]];
+						tri[1] = &mesh->verts[pw[r + 2]];
+						tri[2] = &mesh->verts[pw[r + 3]];
+						n	   = AddSurfaceModelsToTriangle_r( ds, model, tri );
 						if( n < 0 )
 						{
 							return n;
@@ -3589,10 +3574,10 @@ int AddSurfaceModels( mapDrawSurface_t* ds )
 				/* walk the triangle list */
 				for( i = 0; i < ds->numIndexes; i += 3 )
 				{
-					tri[ 0 ] = &ds->verts[ ds->indexes[ i ] ];
-					tri[ 1 ] = &ds->verts[ ds->indexes[ i + 1 ] ];
-					tri[ 2 ] = &ds->verts[ ds->indexes[ i + 2 ] ];
-					n        = AddSurfaceModelsToTriangle_r( ds, model, tri );
+					tri[0] = &ds->verts[ds->indexes[i]];
+					tri[1] = &ds->verts[ds->indexes[i + 1]];
+					tri[2] = &ds->verts[ds->indexes[i + 2]];
+					n	   = AddSurfaceModelsToTriangle_r( ds, model, tri );
 					if( n < 0 )
 					{
 						return n;
@@ -3626,7 +3611,7 @@ void AddEntitySurfaceModels( entity_t* e )
 	/* walk the surface list */
 	for( i = e->firstDrawSurf; i < numMapDrawSurfs; i++ )
 	{
-		numSurfaceModels += AddSurfaceModels( &mapDrawSurfs[ i ] );
+		numSurfaceModels += AddSurfaceModels( &mapDrawSurfs[i] );
 	}
 }
 
@@ -3637,8 +3622,8 @@ applies brush/volumetric color/alpha modulation to vertexes
 
 static void VolumeColorMods( entity_t* e, mapDrawSurface_t* ds )
 {
-	int      i, j;
-	float    d;
+	int		 i, j;
+	float	 d;
 	brush_t* b;
 	plane_t* plane;
 
@@ -3658,8 +3643,7 @@ static void VolumeColorMods( entity_t* e, mapDrawSurface_t* ds )
 		}
 
 		/* test bbox */
-		if( b->mins[ 0 ] > ds->maxs[ 0 ] || b->maxs[ 0 ] < ds->mins[ 0 ] ||
-			b->mins[ 1 ] > ds->maxs[ 1 ] || b->maxs[ 1 ] < ds->mins[ 1 ] || b->mins[ 2 ] > ds->maxs[ 2 ] || b->maxs[ 2 ] < ds->mins[ 2 ] )
+		if( b->mins[0] > ds->maxs[0] || b->maxs[0] < ds->mins[0] || b->mins[1] > ds->maxs[1] || b->maxs[1] < ds->mins[1] || b->mins[2] > ds->maxs[2] || b->maxs[2] < ds->mins[2] )
 		{
 			continue;
 		}
@@ -3671,8 +3655,8 @@ static void VolumeColorMods( entity_t* e, mapDrawSurface_t* ds )
 			for( j = 0; j < b->numsides; j++ )
 			{
 				/* point-plane test */
-				plane = &mapplanes[ b->sides[ j ].planenum ];
-				d     = DotProduct( ds->verts[ i ].xyz, plane->normal ) - plane->dist;
+				plane = &mapplanes[b->sides[j].planenum];
+				d	  = DotProduct( ds->verts[i].xyz, plane->normal ) - plane->dist;
 				if( d > 1.0f )
 				{
 					break;
@@ -3682,7 +3666,7 @@ static void VolumeColorMods( entity_t* e, mapDrawSurface_t* ds )
 			/* apply colormods */
 			if( j == b->numsides )
 			{
-				ColorMod( b->contentShader->colorMod, 1, &ds->verts[ i ] );
+				ColorMod( b->contentShader->colorMod, 1, &ds->verts[i] );
 			}
 		}
 	}
@@ -3697,24 +3681,24 @@ will have valid final indexes
 
 void FilterDrawsurfsIntoTree( entity_t* e, tree_t* tree )
 {
-	int               i, j;
+	int				  i, j;
 	mapDrawSurface_t* ds;
-	shaderInfo_t*     si;
-	vec3_t            origin, mins, maxs;
-	int               refs;
-	int               numSurfs, numRefs, numSkyboxSurfaces;
+	shaderInfo_t*	  si;
+	vec3_t			  origin, mins, maxs;
+	int				  refs;
+	int				  numSurfs, numRefs, numSkyboxSurfaces;
 
 	/* note it */
 	Sys_FPrintf( SYS_VRB, "--- FilterDrawsurfsIntoTree ---\n" );
 
 	/* filter surfaces into the tree */
-	numSurfs          = 0;
-	numRefs           = 0;
+	numSurfs		  = 0;
+	numRefs			  = 0;
 	numSkyboxSurfaces = 0;
 	for( i = e->firstDrawSurf; i < numMapDrawSurfs; i++ )
 	{
 		/* get surface and try to early out */
-		ds = &mapDrawSurfs[ i ];
+		ds = &mapDrawSurfs[i];
 		if( ds->numVerts == 0 && ds->type != SURFACE_FLARE && ds->type != SURFACE_SHADER )
 		{
 			continue;
@@ -3726,7 +3710,7 @@ void FilterDrawsurfsIntoTree( entity_t* e, tree_t* tree )
 		/* ydnar: skybox surfaces are special */
 		if( ds->skybox )
 		{
-			refs       = AddReferenceToTree_r( ds, tree->headnode, qtrue );
+			refs	   = AddReferenceToTree_r( ds, tree->headnode, qtrue );
 			ds->skybox = qfalse;
 		}
 		else
@@ -3737,7 +3721,7 @@ void FilterDrawsurfsIntoTree( entity_t* e, tree_t* tree )
 			/* apply texture coordinate mods */
 			for( j = 0; j < ds->numVerts; j++ )
 			{
-				TCMod( si->mod, ds->verts[ j ].st );
+				TCMod( si->mod, ds->verts[j].st );
 			}
 
 			/* ydnar: apply shader colormod */
@@ -3759,7 +3743,7 @@ void FilterDrawsurfsIntoTree( entity_t* e, tree_t* tree )
 			}
 
 			/* create a flare surface if necessary */
-			if( si->flareShader != NULL && si->flareShader[ 0 ] )
+			if( si->flareShader != NULL && si->flareShader[0] )
 			{
 				AddSurfaceFlare( ds, e->origin );
 			}
@@ -3790,7 +3774,7 @@ void FilterDrawsurfsIntoTree( entity_t* e, tree_t* tree )
 		}
 
 		/* ydnar: remap shader */
-		if( ds->shaderInfo->remapShader && ds->shaderInfo->remapShader[ 0 ] )
+		if( ds->shaderInfo->remapShader && ds->shaderInfo->remapShader[0] )
 		{
 			ds->shaderInfo = ShaderInfoForShader( ds->shaderInfo->remapShader );
 		}
@@ -3902,15 +3886,10 @@ void FilterDrawsurfsIntoTree( entity_t* e, tree_t* tree )
 			{
 				bspDrawSurface_t* out;
 
-				out = &bspDrawSurfaces[ numBSPDrawSurfaces - 1 ];
+				out = &bspDrawSurfaces[numBSPDrawSurfaces - 1];
 				if( out->numVerts == 3 && out->numIndexes > 3 )
 				{
-					Sys_Printf( "\nWARNING: Potentially bad %s surface (%d: %d, %d)\n     %s\n",
-						surfaceTypes[ ds->type ],
-						numBSPDrawSurfaces - 1,
-						out->numVerts,
-						out->numIndexes,
-						si->shader );
+					Sys_Printf( "\nWARNING: Potentially bad %s surface (%d: %d, %d)\n     %s\n", surfaceTypes[ds->type], numBSPDrawSurfaces - 1, out->numVerts, out->numIndexes, si->shader );
 				}
 			}
 
@@ -3932,7 +3911,7 @@ void FilterDrawsurfsIntoTree( entity_t* e, tree_t* tree )
 	Sys_FPrintf( SYS_VRB, "%9d skybox surfaces generated\n", numSkyboxSurfaces );
 	for( i = 0; i < NUM_SURFACE_TYPES; i++ )
 	{
-		Sys_FPrintf( SYS_VRB, "%9d %s surfaces\n", numSurfacesByType[ i ], surfaceTypes[ i ] );
+		Sys_FPrintf( SYS_VRB, "%9d %s surfaces\n", numSurfacesByType[i], surfaceTypes[i] );
 	}
 
 	Sys_FPrintf( SYS_VRB, "%9d redundant indexes supressed, saving %d Kbytes\n", numRedundantIndexes, ( numRedundantIndexes * 4 / 1024 ) );

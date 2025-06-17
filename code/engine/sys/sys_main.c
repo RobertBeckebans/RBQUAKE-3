@@ -47,15 +47,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include <q_shared.h>
 #include "../qcommon/qcommon.h"
 
-static char binaryPath[ MAX_OSPATH ]  = { 0 };
-static char installPath[ MAX_OSPATH ] = { 0 };
+static char binaryPath[MAX_OSPATH]	= { 0 };
+static char installPath[MAX_OSPATH] = { 0 };
 
 /*
 =================
 Sys_SetBinaryPath
 =================
 */
-void Sys_SetBinaryPath( const char* path )
+void		Sys_SetBinaryPath( const char* path )
 {
 	Q_strncpyz( binaryPath, path, sizeof( binaryPath ) );
 }
@@ -79,21 +79,21 @@ void Sys_SetDefaultInstallPath( const char* path )
 {
 	Q_strncpyz( installPath, path, sizeof( installPath ) );
 
-	//Q_strreplace( installPath, sizeof( installPath ), "bin32", "" );
-	//Q_strreplace( installPath, sizeof( installPath ), "bin64", "" );
+	// Q_strreplace( installPath, sizeof( installPath ), "bin32", "" );
+	// Q_strreplace( installPath, sizeof( installPath ), "bin64", "" );
 
-	//Q_strreplace(installPath, sizeof(installPath), "code/engine", "");
-	//Q_strreplace(installPath, sizeof(installPath), "code\\engine", "");
+	// Q_strreplace(installPath, sizeof(installPath), "code/engine", "");
+	// Q_strreplace(installPath, sizeof(installPath), "code\\engine", "");
 
-	//Q_strreplace( installPath, sizeof( installPath ), "bin/win32", "" );
-	//Q_strreplace( installPath, sizeof( installPath ), "bin\\win32", "" );
+	// Q_strreplace( installPath, sizeof( installPath ), "bin/win32", "" );
+	// Q_strreplace( installPath, sizeof( installPath ), "bin\\win32", "" );
 
-	//Q_strreplace( installPath, sizeof( installPath ), "bin/win64", "" );
-	//Q_strreplace( installPath, sizeof( installPath ), "bin\\win64", "" );
+	// Q_strreplace( installPath, sizeof( installPath ), "bin/win64", "" );
+	// Q_strreplace( installPath, sizeof( installPath ), "bin\\win64", "" );
 
-	//Q_strreplace( installPath, sizeof( installPath ), "bin/linux-x86_64", "" );
-	//Q_strreplace( installPath, sizeof( installPath ), "bin/linux-x86", "" );
-	//Q_strreplace( installPath, sizeof( installPath ), "bin/linux-native", "" );
+	// Q_strreplace( installPath, sizeof( installPath ), "bin/linux-x86_64", "" );
+	// Q_strreplace( installPath, sizeof( installPath ), "bin/linux-x86", "" );
+	// Q_strreplace( installPath, sizeof( installPath ), "bin/linux-native", "" );
 }
 
 /*
@@ -196,8 +196,8 @@ Return qtrue if there is an existing stale PID file
 */
 static qboolean Sys_WritePIDFile( const char* gamedir )
 {
-	char*    pidFile = Sys_PIDFileName( gamedir );
-	FILE*    f;
+	char*	 pidFile = Sys_PIDFileName( gamedir );
+	FILE*	 f;
 	qboolean stale = qfalse;
 
 	if( pidFile == NULL )
@@ -208,8 +208,8 @@ static qboolean Sys_WritePIDFile( const char* gamedir )
 	// First, check if the pid file is already there
 	if( ( f = fopen( pidFile, "r" ) ) != NULL )
 	{
-		char pidBuffer[ 64 ] = { 0 };
-		int  pid;
+		char pidBuffer[64] = { 0 };
+		int	 pid;
 
 		pid = fread( pidBuffer, sizeof( char ), sizeof( pidBuffer ) - 1, f );
 		fclose( f );
@@ -256,15 +256,17 @@ void Sys_InitPIDFile( const char* gamedir )
 	if( Sys_WritePIDFile( gamedir ) )
 	{
 #ifndef DEDICATED
-		char message[ 1024 ];
-		char modName[ MAX_OSPATH ];
+		char message[1024];
+		char modName[MAX_OSPATH];
 
 		FS_GetModDescription( gamedir, modName, sizeof( modName ) );
 		Q_CleanStr( modName );
 
-		Com_sprintf( message, sizeof( message ), "The last time %s ran, "
-												 "it didn't exit properly. This may be due to inappropriate video "
-												 "settings. Would you like to start with \"safe\" video settings?",
+		Com_sprintf( message,
+			sizeof( message ),
+			"The last time %s ran, "
+			"it didn't exit properly. This may be due to inappropriate video "
+			"settings. Would you like to start with \"safe\" video settings?",
 			modName );
 
 		if( Sys_Dialog( DT_YES_NO, message, "Abnormal Exit" ) == DR_YES )
@@ -365,17 +367,17 @@ Transform Q3 colour codes to ANSI escape sequences
 */
 void Sys_AnsiColorPrint( const char* msg )
 {
-	static char buffer[ MAXPRINTMSG ];
-	int         length        = 0;
-	static int  q3ToAnsi[ 8 ] = {
-        30, // COLOR_BLACK
-        31, // COLOR_RED
-        32, // COLOR_GREEN
-        33, // COLOR_YELLOW
-        34, // COLOR_BLUE
-        36, // COLOR_CYAN
-        35, // COLOR_MAGENTA
-        0   // COLOR_WHITE
+	static char buffer[MAXPRINTMSG];
+	int			length		= 0;
+	static int	q3ToAnsi[8] = {
+		 30, // COLOR_BLACK
+		 31, // COLOR_RED
+		 32, // COLOR_GREEN
+		 33, // COLOR_YELLOW
+		 34, // COLOR_BLUE
+		 36, // COLOR_CYAN
+		 35, // COLOR_MAGENTA
+		 0	 // COLOR_WHITE
 	};
 
 	while( *msg )
@@ -385,7 +387,7 @@ void Sys_AnsiColorPrint( const char* msg )
 			// First empty the buffer
 			if( length > 0 )
 			{
-				buffer[ length ] = '\0';
+				buffer[length] = '\0';
 				fputs( buffer, stderr );
 				length = 0;
 			}
@@ -399,7 +401,7 @@ void Sys_AnsiColorPrint( const char* msg )
 			else
 			{
 				// Print the color code
-				Com_sprintf( buffer, sizeof( buffer ), "\033[%dm", q3ToAnsi[ ColorIndex( *( msg + 1 ) ) ] );
+				Com_sprintf( buffer, sizeof( buffer ), "\033[%dm", q3ToAnsi[ColorIndex( *( msg + 1 ) )] );
 				fputs( buffer, stderr );
 				msg += 2;
 			}
@@ -411,7 +413,7 @@ void Sys_AnsiColorPrint( const char* msg )
 				break;
 			}
 
-			buffer[ length ] = *msg;
+			buffer[length] = *msg;
 			length++;
 			msg++;
 		}
@@ -420,7 +422,7 @@ void Sys_AnsiColorPrint( const char* msg )
 	// Empty anything still left in the buffer
 	if( length > 0 )
 	{
-		buffer[ length ] = '\0';
+		buffer[length] = '\0';
 		fputs( buffer, stderr );
 	}
 }
@@ -444,7 +446,7 @@ Sys_Error
 void Sys_Error( const char* error, ... )
 {
 	va_list argptr;
-	char    string[ 1024 ];
+	char	string[1024];
 
 	va_start( argptr, error );
 	Q_vsnprintf( string, sizeof( string ), error, argptr );
@@ -537,8 +539,8 @@ void* Sys_LoadDll( const char* name, qboolean useSystemLib )
 	if( !dllhandle )
 	{
 		const char* topDir;
-		char        libPath[ MAX_OSPATH ];
-		int         len;
+		char		libPath[MAX_OSPATH];
+		int			len;
 
 		topDir = Sys_BinaryPath();
 
@@ -598,12 +600,10 @@ Sys_LoadGameDll
 Used to load a development dll instead of a virtual machine
 =================
 */
-void* Sys_LoadGameDll( const char* name,
-	intptr_t( QDECL** entryPoint )( int, ... ),
-	intptr_t ( *systemcalls )( intptr_t, ... ) )
+void* Sys_LoadGameDll( const char* name, intptr_t( QDECL** entryPoint )( int, ... ), intptr_t ( *systemcalls )( intptr_t, ... ) )
 {
 	void* libHandle;
-	void ( *dllEntry )( intptr_t( *syscallptr )( intptr_t, ... ) );
+	void ( *dllEntry )( intptr_t ( *syscallptr )( intptr_t, ... ) );
 
 	assert( name );
 
@@ -622,7 +622,7 @@ void* Sys_LoadGameDll( const char* name,
 		return NULL;
 	}
 
-	dllEntry    = Sys_LoadFunction( libHandle, "dllEntry" );
+	dllEntry	= Sys_LoadFunction( libHandle, "dllEntry" );
 	*entryPoint = Sys_LoadFunction( libHandle, "vmMain" );
 
 	if( !*entryPoint || !dllEntry )
@@ -648,8 +648,7 @@ void Sys_ParseArgs( int argc, char** argv )
 {
 	if( argc == 2 )
 	{
-		if( !strcmp( argv[ 1 ], "--version" ) ||
-			!strcmp( argv[ 1 ], "-v" ) )
+		if( !strcmp( argv[1], "--version" ) || !strcmp( argv[1], "-v" ) )
 		{
 			const char* date = PRODUCT_DATE;
 #ifdef DEDICATED
@@ -711,8 +710,8 @@ main
 */
 int main( int argc, char** argv )
 {
-	int  i;
-	char commandLine[ MAX_STRING_CHARS ] = { 0 };
+	int	 i;
+	char commandLine[MAX_STRING_CHARS] = { 0 };
 
 #ifndef DEDICATED
 	// SDL version check
@@ -730,15 +729,15 @@ int main( int argc, char** argv )
 		XSTRING( MINSDL_MAJOR ) \
 		"." XSTRING( MINSDL_MINOR ) "." XSTRING( MINSDL_PATCH )
 
-	if( SDL_VERSIONNUM( ver.major, ver.minor, ver.patch ) <
-		SDL_VERSIONNUM( MINSDL_MAJOR, MINSDL_MINOR, MINSDL_PATCH ) )
+	if( SDL_VERSIONNUM( ver.major, ver.minor, ver.patch ) < SDL_VERSIONNUM( MINSDL_MAJOR, MINSDL_MINOR, MINSDL_PATCH ) )
 	{
-		Sys_Dialog( DT_ERROR, va( "SDL version " MINSDL_VERSION " or greater is required, "
-								  "but only version %d.%d.%d was found. You may be able to obtain a more recent copy "
-								  "from http://www.libsdl.org/.",
-								  ver.major,
-								  ver.minor,
-								  ver.patch ),
+		Sys_Dialog( DT_ERROR,
+			va( "SDL version " MINSDL_VERSION " or greater is required, "
+				"but only version %d.%d.%d was found. You may be able to obtain a more recent copy "
+				"from http://www.libsdl.org/.",
+				ver.major,
+				ver.minor,
+				ver.patch ),
 			"SDL Library Too Old" );
 
 		Sys_Exit( 1 );
@@ -752,26 +751,26 @@ int main( int argc, char** argv )
 
 #ifdef __APPLE__
 	// This is passed if we are launched by double-clicking
-	if( argc >= 2 && Q_strncmp( argv[ 1 ], "-psn", 4 ) == 0 )
+	if( argc >= 2 && Q_strncmp( argv[1], "-psn", 4 ) == 0 )
 	{
 		argc = 1;
 	}
 #endif
 
 	Sys_ParseArgs( argc, argv );
-	Sys_SetBinaryPath( Sys_Dirname( argv[ 0 ] ) );
+	Sys_SetBinaryPath( Sys_Dirname( argv[0] ) );
 	Sys_SetDefaultInstallPath( DEFAULT_BASEDIR );
 
 	// Concatenate the command line for passing to Com_Init
 	for( i = 1; i < argc; i++ )
 	{
-		const qboolean containsSpaces = strchr( argv[ i ], ' ' ) != NULL;
+		const qboolean containsSpaces = strchr( argv[i], ' ' ) != NULL;
 		if( containsSpaces )
 		{
 			Q_strcat( commandLine, sizeof( commandLine ), "\"" );
 		}
 
-		Q_strcat( commandLine, sizeof( commandLine ), argv[ i ] );
+		Q_strcat( commandLine, sizeof( commandLine ), argv[i] );
 
 		if( containsSpaces )
 		{

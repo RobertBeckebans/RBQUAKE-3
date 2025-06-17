@@ -44,11 +44,11 @@ Save out name.prt for qvis to read
 #define PORTALFILE "PRT1"
 
 FILE* pf;
-int   num_visclusters; // clusters the player can be in
-int   num_visportals;
-int   num_solidfaces;
+int	  num_visclusters; // clusters the player can be in
+int	  num_visportals;
+int	  num_solidfaces;
 
-void WriteFloat( FILE* f, vec_t v )
+void  WriteFloat( FILE* f, vec_t v )
 {
 	if( fabs( v - Q_rint( v ) ) < 0.001 )
 	{
@@ -62,15 +62,15 @@ void WriteFloat( FILE* f, vec_t v )
 
 void CountVisportals_r( node_t* node )
 {
-	int        s;
+	int		   s;
 	portal_t*  p;
 	winding_t* w;
 
 	// decision node
 	if( node->planenum != PLANENUM_LEAF )
 	{
-		CountVisportals_r( node->children[ 0 ] );
-		CountVisportals_r( node->children[ 1 ] );
+		CountVisportals_r( node->children[0] );
+		CountVisportals_r( node->children[1] );
 		return;
 	}
 
@@ -79,17 +79,17 @@ void CountVisportals_r( node_t* node )
 		return;
 	}
 
-	for( p = node->portals; p; p = p->next[ s ] )
+	for( p = node->portals; p; p = p->next[s] )
 	{
 		w = p->winding;
-		s = ( p->nodes[ 1 ] == node );
-		if( w && p->nodes[ 0 ] == node )
+		s = ( p->nodes[1] == node );
+		if( w && p->nodes[0] == node )
 		{
 			if( !PortalPassable( p ) )
 			{
 				continue;
 			}
-			if( p->nodes[ 0 ]->cluster == p->nodes[ 1 ]->cluster )
+			if( p->nodes[0]->cluster == p->nodes[1]->cluster )
 			{
 				continue;
 			}
@@ -105,17 +105,17 @@ WritePortalFile_r
 */
 void WritePortalFile_r( node_t* node )
 {
-	int        i, s;
+	int		   i, s;
 	portal_t*  p;
 	winding_t* w;
-	vec3_t     normal;
-	vec_t      dist;
+	vec3_t	   normal;
+	vec_t	   dist;
 
 	// decision node
 	if( node->planenum != PLANENUM_LEAF )
 	{
-		WritePortalFile_r( node->children[ 0 ] );
-		WritePortalFile_r( node->children[ 1 ] );
+		WritePortalFile_r( node->children[0] );
+		WritePortalFile_r( node->children[1] );
 		return;
 	}
 
@@ -124,17 +124,17 @@ void WritePortalFile_r( node_t* node )
 		return;
 	}
 
-	for( p = node->portals; p; p = p->next[ s ] )
+	for( p = node->portals; p; p = p->next[s] )
 	{
 		w = p->winding;
-		s = ( p->nodes[ 1 ] == node );
-		if( w && p->nodes[ 0 ] == node )
+		s = ( p->nodes[1] == node );
+		if( w && p->nodes[0] == node )
 		{
 			if( !PortalPassable( p ) )
 			{
 				continue;
 			}
-			if( p->nodes[ 0 ]->cluster == p->nodes[ 1 ]->cluster )
+			if( p->nodes[0]->cluster == p->nodes[1]->cluster )
 			{
 				continue;
 			}
@@ -150,11 +150,11 @@ void WritePortalFile_r( node_t* node )
 			if( DotProduct( p->plane.normal, normal ) < 0.99 )
 			{
 				// backwards...
-				fprintf( pf, "%i %i %i ", w->numpoints, p->nodes[ 1 ]->cluster, p->nodes[ 0 ]->cluster );
+				fprintf( pf, "%i %i %i ", w->numpoints, p->nodes[1]->cluster, p->nodes[0]->cluster );
 			}
 			else
 			{
-				fprintf( pf, "%i %i %i ", w->numpoints, p->nodes[ 0 ]->cluster, p->nodes[ 1 ]->cluster );
+				fprintf( pf, "%i %i %i ", w->numpoints, p->nodes[0]->cluster, p->nodes[1]->cluster );
 			}
 
 			/* ydnar: added this change to make antiportals work */
@@ -171,9 +171,9 @@ void WritePortalFile_r( node_t* node )
 			for( i = 0; i < w->numpoints; i++ )
 			{
 				fprintf( pf, "(" );
-				WriteFloat( pf, w->p[ i ][ 0 ] );
-				WriteFloat( pf, w->p[ i ][ 1 ] );
-				WriteFloat( pf, w->p[ i ][ 2 ] );
+				WriteFloat( pf, w->p[i][0] );
+				WriteFloat( pf, w->p[i][1] );
+				WriteFloat( pf, w->p[i][2] );
 				fprintf( pf, ") " );
 			}
 			fprintf( pf, "\n" );
@@ -183,15 +183,15 @@ void WritePortalFile_r( node_t* node )
 
 void CountSolidFaces_r( node_t* node )
 {
-	int        s;
+	int		   s;
 	portal_t*  p;
 	winding_t* w;
 
 	// decision node
 	if( node->planenum != PLANENUM_LEAF )
 	{
-		CountSolidFaces_r( node->children[ 0 ] );
-		CountSolidFaces_r( node->children[ 1 ] );
+		CountSolidFaces_r( node->children[0] );
+		CountSolidFaces_r( node->children[1] );
 		return;
 	}
 
@@ -200,17 +200,17 @@ void CountSolidFaces_r( node_t* node )
 		return;
 	}
 
-	for( p = node->portals; p; p = p->next[ s ] )
+	for( p = node->portals; p; p = p->next[s] )
 	{
 		w = p->winding;
-		s = ( p->nodes[ 1 ] == node );
+		s = ( p->nodes[1] == node );
 		if( w )
 		{
 			if( PortalPassable( p ) )
 			{
 				continue;
 			}
-			if( p->nodes[ 0 ]->cluster == p->nodes[ 1 ]->cluster )
+			if( p->nodes[0]->cluster == p->nodes[1]->cluster )
 			{
 				continue;
 			}
@@ -228,15 +228,15 @@ WriteFaceFile_r
 */
 void WriteFaceFile_r( node_t* node )
 {
-	int        i, s;
+	int		   i, s;
 	portal_t*  p;
 	winding_t* w;
 
 	// decision node
 	if( node->planenum != PLANENUM_LEAF )
 	{
-		WriteFaceFile_r( node->children[ 0 ] );
-		WriteFaceFile_r( node->children[ 1 ] );
+		WriteFaceFile_r( node->children[0] );
+		WriteFaceFile_r( node->children[1] );
 		return;
 	}
 
@@ -245,44 +245,44 @@ void WriteFaceFile_r( node_t* node )
 		return;
 	}
 
-	for( p = node->portals; p; p = p->next[ s ] )
+	for( p = node->portals; p; p = p->next[s] )
 	{
 		w = p->winding;
-		s = ( p->nodes[ 1 ] == node );
+		s = ( p->nodes[1] == node );
 		if( w )
 		{
 			if( PortalPassable( p ) )
 			{
 				continue;
 			}
-			if( p->nodes[ 0 ]->cluster == p->nodes[ 1 ]->cluster )
+			if( p->nodes[0]->cluster == p->nodes[1]->cluster )
 			{
 				continue;
 			}
 			// write out to the file
 
-			if( p->nodes[ 0 ] == node )
+			if( p->nodes[0] == node )
 			{
-				fprintf( pf, "%i %i ", w->numpoints, p->nodes[ 0 ]->cluster );
+				fprintf( pf, "%i %i ", w->numpoints, p->nodes[0]->cluster );
 				for( i = 0; i < w->numpoints; i++ )
 				{
 					fprintf( pf, "(" );
-					WriteFloat( pf, w->p[ i ][ 0 ] );
-					WriteFloat( pf, w->p[ i ][ 1 ] );
-					WriteFloat( pf, w->p[ i ][ 2 ] );
+					WriteFloat( pf, w->p[i][0] );
+					WriteFloat( pf, w->p[i][1] );
+					WriteFloat( pf, w->p[i][2] );
 					fprintf( pf, ") " );
 				}
 				fprintf( pf, "\n" );
 			}
 			else
 			{
-				fprintf( pf, "%i %i ", w->numpoints, p->nodes[ 1 ]->cluster );
+				fprintf( pf, "%i %i ", w->numpoints, p->nodes[1]->cluster );
 				for( i = w->numpoints - 1; i >= 0; i-- )
 				{
 					fprintf( pf, "(" );
-					WriteFloat( pf, w->p[ i ][ 0 ] );
-					WriteFloat( pf, w->p[ i ][ 1 ] );
-					WriteFloat( pf, w->p[ i ][ 2 ] );
+					WriteFloat( pf, w->p[i][0] );
+					WriteFloat( pf, w->p[i][1] );
+					WriteFloat( pf, w->p[i][2] );
 					fprintf( pf, ") " );
 				}
 				fprintf( pf, "\n" );
@@ -314,8 +314,8 @@ void NumberLeafs_r( node_t* node, int c )
 				Sys_FPrintf( SYS_ERR, "THIS CANNOT HAPPEN\n" );
 			}
 #endif
-			NumberLeafs_r( node->children[ 0 ], c );
-			NumberLeafs_r( node->children[ 1 ], c );
+			NumberLeafs_r( node->children[0], c );
+			NumberLeafs_r( node->children[1], c );
 		}
 		else
 		{
@@ -323,8 +323,8 @@ void NumberLeafs_r( node_t* node, int c )
 			{
 				c = num_visclusters++;
 			}
-			NumberLeafs_r( node->children[ 0 ], c );
-			NumberLeafs_r( node->children[ 1 ], c );
+			NumberLeafs_r( node->children[0], c );
+			NumberLeafs_r( node->children[1], c );
 		}
 		return;
 	}
@@ -381,8 +381,8 @@ NumberClusters
 void NumberClusters( tree_t* tree )
 {
 	num_visclusters = 0;
-	num_visportals  = 0;
-	num_solidfaces  = 0;
+	num_visportals	= 0;
+	num_solidfaces	= 0;
 
 	Sys_FPrintf( SYS_VRB, "--- NumberClusters ---\n" );
 
@@ -403,7 +403,7 @@ WritePortalFile
 */
 void WritePortalFile( tree_t* tree )
 {
-	char filename[ 1024 ];
+	char filename[1024];
 
 	Sys_FPrintf( SYS_VRB, "--- WritePortalFile ---\n" );
 

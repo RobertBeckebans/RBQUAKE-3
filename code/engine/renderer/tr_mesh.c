@@ -31,9 +31,9 @@ R_CullMDV
 static void R_CullMDV( mdvModel_t* model, trRefEntity_t* ent )
 {
 	mdvFrame_t *oldFrame, *newFrame;
-	int         i;
-	vec3_t      v;
-	vec3_t      transformed;
+	int			i;
+	vec3_t		v;
+	vec3_t		transformed;
 
 	// compute frame pointers
 	newFrame = model->frames + ent->e.frame;
@@ -42,25 +42,23 @@ static void R_CullMDV( mdvModel_t* model, trRefEntity_t* ent )
 	// calculate a bounding box in the current coordinate system
 	for( i = 0; i < 3; i++ )
 	{
-		ent->localBounds[ 0 ][ i ] =
-			oldFrame->bounds[ 0 ][ i ] < newFrame->bounds[ 0 ][ i ] ? oldFrame->bounds[ 0 ][ i ] : newFrame->bounds[ 0 ][ i ];
-		ent->localBounds[ 1 ][ i ] =
-			oldFrame->bounds[ 1 ][ i ] > newFrame->bounds[ 1 ][ i ] ? oldFrame->bounds[ 1 ][ i ] : newFrame->bounds[ 1 ][ i ];
+		ent->localBounds[0][i] = oldFrame->bounds[0][i] < newFrame->bounds[0][i] ? oldFrame->bounds[0][i] : newFrame->bounds[0][i];
+		ent->localBounds[1][i] = oldFrame->bounds[1][i] > newFrame->bounds[1][i] ? oldFrame->bounds[1][i] : newFrame->bounds[1][i];
 	}
 
 	// setup world bounds for intersection tests
-	ClearBounds( ent->worldBounds[ 0 ], ent->worldBounds[ 1 ] );
+	ClearBounds( ent->worldBounds[0], ent->worldBounds[1] );
 
 	for( i = 0; i < 8; i++ )
 	{
-		v[ 0 ] = ent->localBounds[ i & 1 ][ 0 ];
-		v[ 1 ] = ent->localBounds[ ( i >> 1 ) & 1 ][ 1 ];
-		v[ 2 ] = ent->localBounds[ ( i >> 2 ) & 1 ][ 2 ];
+		v[0] = ent->localBounds[i & 1][0];
+		v[1] = ent->localBounds[( i >> 1 ) & 1][1];
+		v[2] = ent->localBounds[( i >> 2 ) & 1][2];
 
 		// transform local bounds vertices into world space
 		R_LocalPointToWorld( v, transformed );
 
-		AddPointToBounds( transformed, ent->worldBounds[ 0 ], ent->worldBounds[ 1 ] );
+		AddPointToBounds( transformed, ent->worldBounds[0], ent->worldBounds[1] );
 	}
 
 	// cull bounding sphere ONLY if this is not an upscaled entity
@@ -148,11 +146,11 @@ R_ComputeLOD
 */
 int R_ComputeLOD( trRefEntity_t* ent )
 {
-	float       radius;
-	float       flod, lodscale;
-	float       projectedRadius;
+	float		radius;
+	float		flod, lodscale;
+	float		projectedRadius;
 	mdvFrame_t* frame;
-	int         lod;
+	int			lod;
 
 	if( tr.currentModel->numLods < 2 )
 	{
@@ -164,10 +162,10 @@ int R_ComputeLOD( trRefEntity_t* ent )
 		// multiple LODs exist, so compute projected bounding sphere
 		// and use that as a criteria for selecting LOD
 
-		frame = tr.currentModel->mdv[ 0 ]->frames;
+		frame = tr.currentModel->mdv[0]->frames;
 		frame += ent->e.frame;
 
-		radius = RadiusFromBounds( frame->bounds[ 0 ], frame->bounds[ 1 ] );
+		radius = RadiusFromBounds( frame->bounds[0], frame->bounds[1] );
 
 		if( ( projectedRadius = R_ProjectRadius( radius, ent->e.origin ) ) != 0 )
 		{
@@ -222,7 +220,7 @@ static shader_t* GetMDVSurfaceShader( const trRefEntity_t* ent, mdvSurface_t* md
 	else if( ent->e.customSkin > 0 && ent->e.customSkin < tr.numSkins )
 	{
 		skin_t* skin;
-		int     j;
+		int		j;
 
 		skin = R_GetSkinByHandle( ent->e.customSkin );
 
@@ -231,9 +229,9 @@ static shader_t* GetMDVSurfaceShader( const trRefEntity_t* ent, mdvSurface_t* md
 		for( j = 0; j < skin->numSurfaces; j++ )
 		{
 			// the names have both been lowercased
-			if( !strcmp( skin->surfaces[ j ]->name, mdvSurface->name ) )
+			if( !strcmp( skin->surfaces[j]->name, mdvSurface->name ) )
 			{
-				shader = skin->surfaces[ j ]->shader;
+				shader = skin->surfaces[j]->shader;
 				break;
 			}
 		}
@@ -261,21 +259,21 @@ R_AddMDVSurfaces
 */
 void R_AddMDVSurfaces( trRefEntity_t* ent )
 {
-	int           i;
-	mdvModel_t*   model      = 0;
+	int			  i;
+	mdvModel_t*	  model		 = 0;
 	mdvSurface_t* mdvSurface = 0;
-	shader_t*     shader     = 0;
-	int           lod;
-	qboolean      personalModel;
-	int           fogNum;
+	shader_t*	  shader	 = 0;
+	int			  lod;
+	qboolean	  personalModel;
+	int			  fogNum;
 
 	// don't add third_person objects if not in a portal
 	personalModel = ( ent->e.renderfx & RF_THIRD_PERSON ) && !tr.viewParms.isPortal;
 
 	if( ent->e.renderfx & RF_WRAP_FRAMES )
 	{
-		ent->e.frame %= tr.currentModel->mdv[ 0 ]->numFrames;
-		ent->e.oldframe %= tr.currentModel->mdv[ 0 ]->numFrames;
+		ent->e.frame %= tr.currentModel->mdv[0]->numFrames;
+		ent->e.oldframe %= tr.currentModel->mdv[0]->numFrames;
 	}
 
 	// compute LOD
@@ -292,14 +290,14 @@ void R_AddMDVSurfaces( trRefEntity_t* ent )
 	// This will write directly into the entity structure, so
 	// when the surfaces are rendered, they don't need to be
 	// range checked again.
-	if( ( ent->e.frame >= tr.currentModel->mdv[ lod ]->numFrames ) || ( ent->e.frame < 0 ) || ( ent->e.oldframe >= tr.currentModel->mdv[ lod ]->numFrames ) || ( ent->e.oldframe < 0 ) )
+	if( ( ent->e.frame >= tr.currentModel->mdv[lod]->numFrames ) || ( ent->e.frame < 0 ) || ( ent->e.oldframe >= tr.currentModel->mdv[lod]->numFrames ) || ( ent->e.oldframe < 0 ) )
 	{
-		ri.Printf( PRINT_DEVELOPER, "R_AddMDVSurfaces: no such frame %d to %d for '%s' (%d)\n", ent->e.oldframe, ent->e.frame, tr.currentModel->name, tr.currentModel->mdv[ lod ]->numFrames );
-		ent->e.frame    = 0;
+		ri.Printf( PRINT_DEVELOPER, "R_AddMDVSurfaces: no such frame %d to %d for '%s' (%d)\n", ent->e.oldframe, ent->e.frame, tr.currentModel->name, tr.currentModel->mdv[lod]->numFrames );
+		ent->e.frame	= 0;
 		ent->e.oldframe = 0;
 	}
 
-	model = tr.currentModel->mdv[ lod ];
+	model = tr.currentModel->mdv[lod];
 
 	// cull the entire model if merged bounding box of both frames
 	// is outside the view frustum.
@@ -321,13 +319,13 @@ void R_AddMDVSurfaces( trRefEntity_t* ent )
 	// draw all surfaces
 	if( r_vboModels->integer && model->numVBOSurfaces )
 	{
-		int              i;
+		int				 i;
 		srfVBOMDVMesh_t* vboSurface;
-		shader_t*        shader;
+		shader_t*		 shader;
 
 		for( i = 0; i < model->numVBOSurfaces; i++ )
 		{
-			vboSurface = model->vboSurfaces[ i ];
+			vboSurface = model->vboSurfaces[i];
 			mdvSurface = vboSurface->mdvSurface;
 
 			shader = GetMDVSurfaceShader( ent, mdvSurface );
@@ -363,13 +361,13 @@ R_AddMDVInteractions
 */
 void R_AddMDVInteractions( trRefEntity_t* ent, trRefLight_t* light )
 {
-	int               i;
-	mdvModel_t*       model      = 0;
-	mdvSurface_t*     mdvSurface = 0;
-	shader_t*         shader     = 0;
-	int               lod;
-	qboolean          personalModel;
-	byte              cubeSideBits;
+	int				  i;
+	mdvModel_t*		  model		 = 0;
+	mdvSurface_t*	  mdvSurface = 0;
+	shader_t*		  shader	 = 0;
+	int				  lod;
+	qboolean		  personalModel;
+	byte			  cubeSideBits;
 	interactionType_t iaType = IA_DEFAULT;
 
 	// cull the entire model if merged bounding box of both frames
@@ -410,10 +408,10 @@ void R_AddMDVInteractions( trRefEntity_t* ent, trRefLight_t* light )
 	// compute LOD
 	lod = R_ComputeLOD( ent );
 
-	model = tr.currentModel->mdv[ lod ];
+	model = tr.currentModel->mdv[lod];
 
 	// do a quick AABB cull
-	if( !BoundsIntersect( light->worldBounds[ 0 ], light->worldBounds[ 1 ], ent->worldBounds[ 0 ], ent->worldBounds[ 1 ] ) )
+	if( !BoundsIntersect( light->worldBounds[0], light->worldBounds[1], ent->worldBounds[0], ent->worldBounds[1] ) )
 	{
 		tr.pc.c_dlightSurfacesCulled += model->numSurfaces;
 		return;
@@ -435,14 +433,14 @@ void R_AddMDVInteractions( trRefEntity_t* ent, trRefLight_t* light )
 	if( r_vboModels->integer && model->numVBOSurfaces )
 	{
 		// new brute force method: just render everthing with static VBOs
-		int              i;
+		int				 i;
 		srfVBOMDVMesh_t* vboSurface;
-		shader_t*        shader;
+		shader_t*		 shader;
 
 		// static VBOs are fine for lighting and shadow mapping
 		for( i = 0; i < model->numVBOSurfaces; i++ )
 		{
-			vboSurface = model->vboSurfaces[ i ];
+			vboSurface = model->vboSurfaces[i];
 			mdvSurface = vboSurface->mdvSurface;
 
 			shader = GetMDVSurfaceShader( ent, mdvSurface );

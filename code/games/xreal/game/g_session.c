@@ -68,20 +68,20 @@ Called on a reconnect
 */
 void G_ReadSessionData( gclient_t* client )
 {
-	char        s[ MAX_STRING_CHARS ];
+	char		s[MAX_STRING_CHARS];
 	const char* var;
-	int         teamLeader;
-	int         spectatorState;
-	int         sessionTeam;
+	int			teamLeader;
+	int			spectatorState;
+	int			sessionTeam;
 
 	var = va( "session%i", ( int )( client - level.clients ) );
 	trap_Cvar_VariableStringBuffer( var, s, sizeof( s ) );
 
 	sscanf( s, "%i %i %i %i %i %i %i", &sessionTeam, &client->sess.spectatorNum, &spectatorState, &client->sess.spectatorClient, &client->sess.wins, &client->sess.losses, &teamLeader );
 
-	client->sess.sessionTeam    = ( team_t )sessionTeam;
+	client->sess.sessionTeam	= ( team_t )sessionTeam;
 	client->sess.spectatorState = ( spectatorState_t )spectatorState;
-	client->sess.teamLeader     = ( qboolean )teamLeader;
+	client->sess.teamLeader		= ( qboolean )teamLeader;
 }
 
 /*
@@ -94,14 +94,14 @@ Called on a first-time connect
 void G_InitSessionData( gclient_t* client, char* userinfo )
 {
 	clientSession_t* sess;
-	const char*      value;
+	const char*		 value;
 
 	sess = &client->sess;
 
 	// initial team determination
 	if( g_gametype.integer >= GT_TEAM )
 	{
-		if( g_teamAutoJoin.integer && !( g_entities[ client - level.clients ].r.svFlags & SVF_BOT ) )
+		if( g_teamAutoJoin.integer && !( g_entities[client - level.clients].r.svFlags & SVF_BOT ) )
 		{
 			sess->sessionTeam = PickTeam( -1 );
 			BroadcastTeamChange( client, -1 );
@@ -115,7 +115,7 @@ void G_InitSessionData( gclient_t* client, char* userinfo )
 	else
 	{
 		value = Info_ValueForKey( userinfo, "team" );
-		if( value[ 0 ] == 's' )
+		if( value[0] == 's' )
 		{
 			// a willing spectator, not a waiting-in-line
 			sess->sessionTeam = TEAM_SPECTATOR;
@@ -164,8 +164,8 @@ G_InitWorldSession
 */
 void G_InitWorldSession( void )
 {
-	char s[ MAX_STRING_CHARS ];
-	int  gt;
+	char s[MAX_STRING_CHARS];
+	int	 gt;
 
 	trap_Cvar_VariableStringBuffer( "session", s, sizeof( s ) );
 	gt = atoi( s );
@@ -192,9 +192,9 @@ void G_WriteSessionData( void )
 
 	for( i = 0; i < level.maxclients; i++ )
 	{
-		if( level.clients[ i ].pers.connected == CON_CONNECTED )
+		if( level.clients[i].pers.connected == CON_CONNECTED )
 		{
-			G_WriteClientSessionData( &level.clients[ i ] );
+			G_WriteClientSessionData( &level.clients[i] );
 		}
 	}
 }

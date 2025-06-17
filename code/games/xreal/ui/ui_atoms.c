@@ -36,7 +36,7 @@ qboolean m_entersound; // after a frame, so caching won't disrupt the sound
 void QDECL Com_Error( int level, const char* error, ... )
 {
 	va_list argptr;
-	char    text[ 1024 ];
+	char	text[1024];
 
 	va_start( argptr, error );
 	Q_vsnprintf( text, sizeof( text ), error, argptr );
@@ -48,7 +48,7 @@ void QDECL Com_Error( int level, const char* error, ... )
 void QDECL Com_Printf( const char* msg, ... )
 {
 	va_list argptr;
-	char    text[ 1024 ];
+	char	text[1024];
 
 	va_start( argptr, msg );
 	Q_vsnprintf( text, sizeof( text ), msg, argptr );
@@ -89,7 +89,7 @@ void UI_StartDemoLoop( void )
 
 char* UI_Argv( int arg )
 {
-	static char buffer[ MAX_STRING_CHARS ];
+	static char buffer[MAX_STRING_CHARS];
 
 	trap_Argv( arg, buffer, sizeof( buffer ) );
 
@@ -99,7 +99,7 @@ char* UI_Argv( int arg )
 char* UI_ConcatArgs( int arg, char* buf, int len )
 {
 	char* p;
-	int   c;
+	int	  c;
 
 	if( len <= 0 )
 	{
@@ -113,12 +113,12 @@ char* UI_ConcatArgs( int arg, char* buf, int len )
 	{
 		char* argp = UI_Argv( arg );
 
-		while( *argp && p < &buf[ len - 1 ] )
+		while( *argp && p < &buf[len - 1] )
 		{
 			*p++ = *argp++;
 		}
 
-		if( p < &buf[ len - 2 ] )
+		if( p < &buf[len - 2] )
 		{
 			*p++ = ' ';
 		}
@@ -135,7 +135,7 @@ char* UI_ConcatArgs( int arg, char* buf, int len )
 
 char* UI_Cvar_VariableString( const char* var_name )
 {
-	static char buffer[ MAX_STRING_CHARS ];
+	static char buffer[MAX_STRING_CHARS];
 
 	trap_Cvar_VariableStringBuffer( var_name, buffer, sizeof( buffer ) );
 
@@ -173,7 +173,7 @@ static void UI_MessageMode_f( void )
 
 	trap_Cvar_Set( "ui_sayBuffer", "" );
 
-	switch( arg[ 11 ] )
+	switch( arg[11] )
 	{
 		default:
 		case '\0':
@@ -203,7 +203,7 @@ static void UI_MessageMode_f( void )
 
 static void UI_Me_f( void )
 {
-	char buf[ MAX_SAY_TEXT - 4 ];
+	char buf[MAX_SAY_TEXT - 4];
 
 	UI_ConcatArgs( 1, buf, sizeof( buf ) );
 
@@ -214,16 +214,14 @@ struct uicmd
 {
 	char* cmd;
 	void ( *function )( void );
-} commands[] = {
-	{ "closemenus", UI_CloseMenus_f },
+} commands[] = { { "closemenus", UI_CloseMenus_f },
 	{ "me", UI_Me_f },
 	{ "menu", UI_Menu_f },
 	{ "messagemode", UI_MessageMode_f },
 	{ "messagemode2", UI_MessageMode_f },
 	{ "ui_cache", UI_Cache_f },
 	{ "ui_load", UI_Load },
-	{ "ui_report", UI_Report }
-};
+	{ "ui_report", UI_Report } };
 
 // despite what lcc thinks, we do not get cmdcmp here
 static int commandComp( const void* a, const void* b )
@@ -238,7 +236,7 @@ UI_ConsoleCommand
 */
 qboolean UI_ConsoleCommand( int realTime )
 {
-	struct uicmd* cmd = bsearch( UI_Argv( 0 ), commands, ARRAY_LEN( commands ), sizeof( commands[ 0 ] ), commandComp );
+	struct uicmd* cmd = bsearch( UI_Argv( 0 ), commands, ARRAY_LEN( commands ), sizeof( commands[0] ), commandComp );
 
 	uiInfo.uiDC.frameTime = realTime - uiInfo.uiDC.realTime;
 	uiInfo.uiDC.realTime  = realTime;

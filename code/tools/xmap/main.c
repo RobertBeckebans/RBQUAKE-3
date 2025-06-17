@@ -30,15 +30,15 @@ main
 */
 
 void Bspinfo( int count, char** fileNames );
-int  ConvertMapToMap( int argc, char** argv );
-int  ConvertT3DToMap( int argc, char** argv );
-int  ConvertBspToASE( int argc, char** argv );
-int  BspMain( int argc, char** argv );
-int  VisMain( int argc, char** argv );
-int  LightMain( int argc, char** argv );
-int  VLightMain( int argc, char** argv );
+int	 ConvertMapToMap( int argc, char** argv );
+int	 ConvertT3DToMap( int argc, char** argv );
+int	 ConvertBspToASE( int argc, char** argv );
+int	 BspMain( int argc, char** argv );
+int	 VisMain( int argc, char** argv );
+int	 LightMain( int argc, char** argv );
+int	 VLightMain( int argc, char** argv );
 
-int main( int argc, char** argv )
+int	 main( int argc, char** argv )
 {
 	Sys_Printf( "xmap v1.0s (c) 1999-2005 Id Software, Inc. and XreaL contributors\n" );
 	Sys_Printf( "xmap v1.1  (c) 2005-2008 Robert Beckebans\n" );
@@ -49,42 +49,42 @@ int main( int argc, char** argv )
 	}
 
 	// check for general program options
-	if( !strcmp( argv[ 1 ], "-bspinfo" ) )
+	if( !strcmp( argv[1], "-bspinfo" ) )
 	{
 		Bspinfo( argc - 2, argv + 2 );
 		return 0;
 	}
-	if( !strcmp( argv[ 1 ], "-bsp2ase" ) )
+	if( !strcmp( argv[1], "-bsp2ase" ) )
 	{
 		ConvertBspToASE( argc - 1, argv + 1 );
 		return 0;
 	}
-	if( !strcmp( argv[ 1 ], "-map2map" ) )
+	if( !strcmp( argv[1], "-map2map" ) )
 	{
 		ConvertMapToMap( argc - 1, argv + 1 );
 		return 0;
 	}
-	if( !strcmp( argv[ 1 ], "-t3d2map" ) )
+	if( !strcmp( argv[1], "-t3d2map" ) )
 	{
 		ConvertT3DToMap( argc - 1, argv + 1 );
 		return 0;
 	}
-	if( !strcmp( argv[ 1 ], "-map2bsp" ) )
+	if( !strcmp( argv[1], "-map2bsp" ) )
 	{
 		BspMain( argc - 1, argv + 1 );
 		return 0;
 	}
-	if( !strcmp( argv[ 1 ], "-vis" ) )
+	if( !strcmp( argv[1], "-vis" ) )
 	{
 		VisMain( argc - 1, argv + 1 );
 		return 0;
 	}
-	if( !strcmp( argv[ 1 ], "-light" ) )
+	if( !strcmp( argv[1], "-light" ) )
 	{
 		LightMain( argc - 1, argv + 1 );
 		return 0;
 	}
-	if( !strcmp( argv[ 1 ], "-vlight" ) )
+	if( !strcmp( argv[1], "-vlight" ) )
 	{
 		VLightMain( argc - 1, argv + 1 );
 		return 0;

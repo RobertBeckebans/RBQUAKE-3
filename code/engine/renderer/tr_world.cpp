@@ -126,8 +126,8 @@ This will also allow mirrors on both sides of a model without recursion.
 static qboolean R_CullSurface( surfaceType_t* surface, shader_t* shader, int* frontFace )
 {
 	srfGeneric_t* gen;
-	int           cull;
-	float         d;
+	int			  cull;
+	float		  d;
 
 	// force to non-front facing
 	*frontFace = 0;
@@ -224,7 +224,7 @@ static qboolean R_CullSurface( surfaceType_t* surface, shader_t* shader, int* fr
 static qboolean R_LightSurfaceGeneric( srfGeneric_t* face, trRefLight_t* light, byte* cubeSideBits )
 {
 	// do a quick AABB cull
-	if( !BoundsIntersect( light->worldBounds[ 0 ], light->worldBounds[ 1 ], face->bounds[ 0 ], face->bounds[ 1 ] ) )
+	if( !BoundsIntersect( light->worldBounds[0], light->worldBounds[1], face->bounds[0], face->bounds[1] ) )
 	{
 		return qfalse;
 	}
@@ -252,9 +252,9 @@ R_AddInteractionSurface
 */
 static void R_AddInteractionSurface( bspSurface_t* surf, trRefLight_t* light )
 {
-	qboolean          intersects;
-	interactionType_t iaType       = IA_DEFAULT;
-	byte              cubeSideBits = CUBESIDE_CLIPALL;
+	qboolean		  intersects;
+	interactionType_t iaType	   = IA_DEFAULT;
+	byte			  cubeSideBits = CUBESIDE_CLIPALL;
 
 	// Tr3B - this surface is maybe not in this view but it may still cast a shadow
 	// into this view
@@ -324,7 +324,7 @@ R_AddWorldSurface
 */
 static void R_AddWorldSurface( bspSurface_t* surf, int decalBits )
 {
-	int       i, frontFace;
+	int		  i, frontFace;
 	shader_t* shader;
 
 	if( surf->viewCount == tr.viewCountNoReset )
@@ -343,16 +343,14 @@ static void R_AddWorldSurface( bspSurface_t* surf, int decalBits )
 		{
 			if( decalBits & ( 1 << i ) )
 			{
-				R_ProjectDecalOntoSurface( &tr.refdef.decalProjectors[ i ], surf, &tr.world->models[ 0 ] );
+				R_ProjectDecalOntoSurface( &tr.refdef.decalProjectors[i], surf, &tr.world->models[0] );
 			}
 		}
 	}
 
 #if defined( USE_BSP_CLUSTERSURFACE_MERGING )
-	if( r_mergeClusterSurfaces->integer &&
-		!r_dynamicBspOcclusionCulling->integer &&
-		( ( r_mergeClusterFaces->integer && *surf->data == SF_FACE ) ||
-			( r_mergeClusterCurves->integer && *surf->data == SF_GRID ) ||
+	if( r_mergeClusterSurfaces->integer && !r_dynamicBspOcclusionCulling->integer &&
+		( ( r_mergeClusterFaces->integer && *surf->data == SF_FACE ) || ( r_mergeClusterCurves->integer && *surf->data == SF_GRID ) ||
 			( r_mergeClusterTriangles->integer && *surf->data == SF_TRIANGLES ) ) &&
 		!shader->isSky && !shader->isPortal && !ShaderRequiresCPUDeforms( shader ) )
 	{
@@ -409,22 +407,22 @@ R_AddBSPModelSurfaces
 void R_AddBSPModelSurfaces( trRefEntity_t* ent )
 {
 	bspModel_t* bspModel;
-	model_t*    pModel;
-	int         i;
-	vec3_t      v;
-	vec3_t      transformed;
-	vec3_t      boundsCenter;
+	model_t*	pModel;
+	int			i;
+	vec3_t		v;
+	vec3_t		transformed;
+	vec3_t		boundsCenter;
 	//	float			boundsRadius;
-	int fogNum;
+	int			fogNum;
 
-	pModel   = R_GetModelByHandle( ent->e.hModel );
+	pModel	 = R_GetModelByHandle( ent->e.hModel );
 	bspModel = pModel->bsp;
 
 	// copy local bounds
 	for( i = 0; i < 3; i++ )
 	{
-		ent->localBounds[ 0 ][ i ] = bspModel->bounds[ 0 ][ i ];
-		ent->localBounds[ 1 ][ i ] = bspModel->bounds[ 1 ][ i ];
+		ent->localBounds[0][i] = bspModel->bounds[0][i];
+		ent->localBounds[1][i] = bspModel->bounds[1][i];
 	}
 
 #if 0
@@ -439,21 +437,21 @@ void R_AddBSPModelSurfaces( trRefEntity_t* ent )
 #endif
 
 	// setup world bounds for intersection tests
-	ClearBounds( ent->worldBounds[ 0 ], ent->worldBounds[ 1 ] );
+	ClearBounds( ent->worldBounds[0], ent->worldBounds[1] );
 
 	for( i = 0; i < 8; i++ )
 	{
-		v[ 0 ] = ent->localBounds[ i & 1 ][ 0 ];
-		v[ 1 ] = ent->localBounds[ ( i >> 1 ) & 1 ][ 1 ];
-		v[ 2 ] = ent->localBounds[ ( i >> 2 ) & 1 ][ 2 ];
+		v[0] = ent->localBounds[i & 1][0];
+		v[1] = ent->localBounds[( i >> 1 ) & 1][1];
+		v[2] = ent->localBounds[( i >> 2 ) & 1][2];
 
 		// transform local bounds vertices into world space
 		R_LocalPointToWorld( v, transformed );
 
-		AddPointToBounds( transformed, ent->worldBounds[ 0 ], ent->worldBounds[ 1 ] );
+		AddPointToBounds( transformed, ent->worldBounds[0], ent->worldBounds[1] );
 	}
 
-	VectorAdd( ent->worldBounds[ 0 ], ent->worldBounds[ 1 ], boundsCenter );
+	VectorAdd( ent->worldBounds[0], ent->worldBounds[1], boundsCenter );
 	VectorScale( boundsCenter, 0.5f, boundsCenter );
 
 	// Tr3B: BSP inline models should always use vertex lighting
@@ -463,12 +461,12 @@ void R_AddBSPModelSurfaces( trRefEntity_t* ent )
 
 	if( r_vboModels->integer && bspModel->numVBOSurfaces )
 	{
-		int           i;
+		int			  i;
 		srfVBOMesh_t* vboSurface;
 
 		for( i = 0; i < bspModel->numVBOSurfaces; i++ )
 		{
-			vboSurface = bspModel->vboSurfaces[ i ];
+			vboSurface = bspModel->vboSurfaces[i];
 
 			R_AddDrawSurf( ( surfaceType_t* )vboSurface, vboSurface->shader, vboSurface->lightmapNum, fogNum );
 		}
@@ -505,41 +503,41 @@ void R_AddBSPModelSurfaces( trRefEntity_t* ent )
 
 static void R_AddLeafSurfaces( bspNode_t* node, int decalBits )
 {
-	int           c;
+	int			  c;
 	bspSurface_t *surf, **mark;
 
 	tr.pc.c_leafs++;
 
 	// add to z buffer bounds
-	if( node->mins[ 0 ] < tr.viewParms.visBounds[ 0 ][ 0 ] )
+	if( node->mins[0] < tr.viewParms.visBounds[0][0] )
 	{
-		tr.viewParms.visBounds[ 0 ][ 0 ] = node->mins[ 0 ];
+		tr.viewParms.visBounds[0][0] = node->mins[0];
 	}
-	if( node->mins[ 1 ] < tr.viewParms.visBounds[ 0 ][ 1 ] )
+	if( node->mins[1] < tr.viewParms.visBounds[0][1] )
 	{
-		tr.viewParms.visBounds[ 0 ][ 1 ] = node->mins[ 1 ];
+		tr.viewParms.visBounds[0][1] = node->mins[1];
 	}
-	if( node->mins[ 2 ] < tr.viewParms.visBounds[ 0 ][ 2 ] )
+	if( node->mins[2] < tr.viewParms.visBounds[0][2] )
 	{
-		tr.viewParms.visBounds[ 0 ][ 2 ] = node->mins[ 2 ];
+		tr.viewParms.visBounds[0][2] = node->mins[2];
 	}
 
-	if( node->maxs[ 0 ] > tr.viewParms.visBounds[ 1 ][ 0 ] )
+	if( node->maxs[0] > tr.viewParms.visBounds[1][0] )
 	{
-		tr.viewParms.visBounds[ 1 ][ 0 ] = node->maxs[ 0 ];
+		tr.viewParms.visBounds[1][0] = node->maxs[0];
 	}
-	if( node->maxs[ 1 ] > tr.viewParms.visBounds[ 1 ][ 1 ] )
+	if( node->maxs[1] > tr.viewParms.visBounds[1][1] )
 	{
-		tr.viewParms.visBounds[ 1 ][ 1 ] = node->maxs[ 1 ];
+		tr.viewParms.visBounds[1][1] = node->maxs[1];
 	}
-	if( node->maxs[ 2 ] > tr.viewParms.visBounds[ 1 ][ 2 ] )
+	if( node->maxs[2] > tr.viewParms.visBounds[1][2] )
 	{
-		tr.viewParms.visBounds[ 1 ][ 2 ] = node->maxs[ 2 ];
+		tr.viewParms.visBounds[1][2] = node->maxs[2];
 	}
 
 	// add the individual surfaces
 	mark = node->markSurfaces;
-	c    = node->numMarkSurfaces;
+	c	 = node->numMarkSurfaces;
 	while( c-- )
 	{
 		// the surface may have already been added if it
@@ -560,7 +558,7 @@ static void R_RecursiveWorldNode( bspNode_t* node, int planeBits, int decalBits 
 	do
 	{
 		// if the node wasn't marked as potentially visible, exit
-		if( node->visCounts[ tr.visIndex ] != tr.visCounts[ tr.visIndex ] )
+		if( node->visCounts[tr.visIndex] != tr.visCounts[tr.visIndex] )
 		{
 			return;
 		}
@@ -582,7 +580,7 @@ static void R_RecursiveWorldNode( bspNode_t* node, int planeBits, int decalBits 
 			{
 				if( planeBits & ( 1 << i ) )
 				{
-					r = BoxOnPlaneSide( node->mins, node->maxs, &tr.viewParms.frustums[ 0 ][ i ] );
+					r = BoxOnPlaneSide( node->mins, node->maxs, &tr.viewParms.frustums[0][i] );
 					if( r == 2 )
 					{
 						return; // culled
@@ -607,8 +605,7 @@ static void R_RecursiveWorldNode( bspNode_t* node, int planeBits, int decalBits 
 				if( decalBits & ( 1 << i ) )
 				{
 					// test decal bounds against node surface bounds
-					if( tr.refdef.decalProjectors[ i ].shader == NULL ||
-						!R_TestDecalBoundingBox( &tr.refdef.decalProjectors[ i ], node->surfMins, node->surfMaxs ) )
+					if( tr.refdef.decalProjectors[i].shader == NULL || !R_TestDecalBoundingBox( &tr.refdef.decalProjectors[i], node->surfMins, node->surfMaxs ) )
 					{
 						decalBits &= ~( 1 << i );
 					}
@@ -622,10 +619,10 @@ static void R_RecursiveWorldNode( bspNode_t* node, int planeBits, int decalBits 
 		}
 
 		// recurse down the children, front side first
-		R_RecursiveWorldNode( node->children[ 0 ], planeBits, decalBits );
+		R_RecursiveWorldNode( node->children[0], planeBits, decalBits );
 
 		// tail recurse
-		node = node->children[ 1 ];
+		node = node->children[1];
 	} while( 1 );
 
 	if( node->numMarkSurfaces )
@@ -646,7 +643,7 @@ static void R_RecursiveInteractionNode( bspNode_t* node, trRefLight_t* light, in
 	int r;
 
 	// if the node wasn't marked as potentially visible, exit
-	if( node->visCounts[ tr.visIndex ] != tr.visCounts[ tr.visIndex ] )
+	if( node->visCounts[tr.visIndex] != tr.visCounts[tr.visIndex] )
 	{
 		return;
 	}
@@ -669,7 +666,7 @@ static void R_RecursiveInteractionNode( bspNode_t* node, trRefLight_t* light, in
 		{
 			if( planeBits & ( 1 << i ) )
 			{
-				r = BoxOnPlaneSide( node->mins, node->maxs, &tr.viewParms.frustums[ 0 ][ i ] );
+				r = BoxOnPlaneSide( node->mins, node->maxs, &tr.viewParms.frustums[0][i] );
 
 				if( r == 2 )
 				{
@@ -687,12 +684,12 @@ static void R_RecursiveInteractionNode( bspNode_t* node, trRefLight_t* light, in
 	if( node->contents != -1 )
 	{
 		// leaf node, so add mark surfaces
-		int           c;
+		int			  c;
 		bspSurface_t *surf, **mark;
 
 		// add the individual surfaces
 		mark = node->markSurfaces;
-		c    = node->numMarkSurfaces;
+		c	 = node->numMarkSurfaces;
 		while( c-- )
 		{
 			// the surface may have already been added if it
@@ -706,23 +703,23 @@ static void R_RecursiveInteractionNode( bspNode_t* node, trRefLight_t* light, in
 
 	// node is just a decision point, so go down both sides
 	// since we don't care about sort orders, just go positive to negative
-	r = BoxOnPlaneSide( light->worldBounds[ 0 ], light->worldBounds[ 1 ], node->plane );
+	r = BoxOnPlaneSide( light->worldBounds[0], light->worldBounds[1], node->plane );
 
 	switch( r )
 	{
 		case 1:
-			R_RecursiveInteractionNode( node->children[ 0 ], light, planeBits );
+			R_RecursiveInteractionNode( node->children[0], light, planeBits );
 			break;
 
 		case 2:
-			R_RecursiveInteractionNode( node->children[ 1 ], light, planeBits );
+			R_RecursiveInteractionNode( node->children[1], light, planeBits );
 			break;
 
 		case 3:
 		default:
 			// recurse down the children, front side first
-			R_RecursiveInteractionNode( node->children[ 0 ], light, planeBits );
-			R_RecursiveInteractionNode( node->children[ 1 ], light, planeBits );
+			R_RecursiveInteractionNode( node->children[0], light, planeBits );
+			R_RecursiveInteractionNode( node->children[1], light, planeBits );
 			break;
 	}
 }
@@ -735,7 +732,7 @@ R_PointInLeaf
 static bspNode_t* R_PointInLeaf( const vec3_t p )
 {
 	bspNode_t* node;
-	float      d;
+	float	   d;
 	cplane_t*  plane;
 
 	if( !tr.world )
@@ -751,14 +748,14 @@ static bspNode_t* R_PointInLeaf( const vec3_t p )
 			break;
 		}
 		plane = node->plane;
-		d     = DotProduct( p, plane->normal ) - plane->dist;
+		d	  = DotProduct( p, plane->normal ) - plane->dist;
 		if( d > 0 )
 		{
-			node = node->children[ 0 ];
+			node = node->children[0];
 		}
 		else
 		{
-			node = node->children[ 1 ];
+			node = node->children[1];
 		}
 	}
 
@@ -787,14 +784,14 @@ R_inPVS
 */
 qboolean R_inPVS( const vec3_t p1, const vec3_t p2 )
 {
-	bspNode_t*  leaf;
+	bspNode_t*	leaf;
 	const byte* vis;
 
 	leaf = R_PointInLeaf( p1 );
-	vis  = R_ClusterPVS( leaf->cluster );
+	vis	 = R_ClusterPVS( leaf->cluster );
 	leaf = R_PointInLeaf( p2 );
 
-	if( !( vis[ leaf->cluster >> 3 ] & ( 1 << ( leaf->cluster & 7 ) ) ) )
+	if( !( vis[leaf->cluster >> 3] & ( 1 << ( leaf->cluster & 7 ) ) ) )
 	{
 		return qfalse;
 	}
@@ -847,48 +844,48 @@ R_UpdateClusterSurfaces()
 #if defined( USE_BSP_CLUSTERSURFACE_MERGING )
 static void R_UpdateClusterSurfaces()
 {
-	int i, k, l;
+	int			   i, k, l;
 
-	int numVerts;
-	int numTriangles;
+	int			   numVerts;
+	int			   numTriangles;
 
 	//  static glIndex_t indexes[MAX_MAP_DRAW_INDEXES];
 	//  static byte     indexes[MAX_MAP_DRAW_INDEXES * sizeof(glIndex_t)];
-	glIndex_t* indexes;
-	int        indexesSize;
+	glIndex_t*	   indexes;
+	int			   indexesSize;
 
-	shader_t *shader, *oldShader;
-	int       lightmapNum, oldLightmapNum;
+	shader_t *	   shader, *oldShader;
+	int			   lightmapNum, oldLightmapNum;
 
-	int            numSurfaces;
+	int			   numSurfaces;
 	bspSurface_t * surface, *surface2;
 	bspSurface_t** surfacesSorted;
 
-	bspCluster_t* cluster;
+	bspCluster_t*  cluster;
 
-	srfVBOMesh_t* vboSurf;
-	IBO_t*        ibo;
+	srfVBOMesh_t*  vboSurf;
+	IBO_t*		   ibo;
 
-	vec3_t bounds[ 2 ];
+	vec3_t		   bounds[2];
 
-	if( tr.visClusters[ tr.visIndex ] < 0 || tr.visClusters[ tr.visIndex ] >= tr.world->numClusters )
+	if( tr.visClusters[tr.visIndex] < 0 || tr.visClusters[tr.visIndex] >= tr.world->numClusters )
 	{
 		// Tr3B: this is not a bug, the super cluster is the last one in the array
-		cluster = &tr.world->clusters[ tr.world->numClusters ];
+		cluster = &tr.world->clusters[tr.world->numClusters];
 	}
 	else
 	{
-		cluster = &tr.world->clusters[ tr.visClusters[ tr.visIndex ] ];
+		cluster = &tr.world->clusters[tr.visClusters[tr.visIndex]];
 	}
 
-	tr.world->numClusterVBOSurfaces[ tr.visIndex ] = 0;
+	tr.world->numClusterVBOSurfaces[tr.visIndex] = 0;
 
 	// count number of static cluster surfaces
 	numSurfaces = 0;
 	for( k = 0; k < cluster->numMarkSurfaces; k++ )
 	{
-		surface = cluster->markSurfaces[ k ];
-		shader  = surface->shader;
+		surface = cluster->markSurfaces[k];
+		shader	= surface->shader;
 
 		if( shader->isSky )
 		{
@@ -914,13 +911,13 @@ static void R_UpdateClusterSurfaces()
 	}
 
 	// build interaction caches list
-	surfacesSorted = ( bspSurface_t** )ri.Hunk_AllocateTempMemory( numSurfaces * sizeof( surfacesSorted[ 0 ] ) );
+	surfacesSorted = ( bspSurface_t** )ri.Hunk_AllocateTempMemory( numSurfaces * sizeof( surfacesSorted[0] ) );
 
 	numSurfaces = 0;
 	for( k = 0; k < cluster->numMarkSurfaces; k++ )
 	{
-		surface = cluster->markSurfaces[ k ];
-		shader  = surface->shader;
+		surface = cluster->markSurfaces[k];
+		shader	= surface->shader;
 
 		if( shader->isSky )
 		{
@@ -937,7 +934,7 @@ static void R_UpdateClusterSurfaces()
 			continue;
 		}
 
-		surfacesSorted[ numSurfaces ] = surface;
+		surfacesSorted[numSurfaces] = surface;
 		numSurfaces++;
 	}
 
@@ -949,22 +946,22 @@ static void R_UpdateClusterSurfaces()
 
 	for( k = 0; k < numSurfaces; k++ )
 	{
-		surface     = surfacesSorted[ k ];
-		shader      = surface->shader;
+		surface		= surfacesSorted[k];
+		shader		= surface->shader;
 		lightmapNum = surface->lightmapNum;
 
 		if( shader != oldShader || ( r_precomputedLighting->integer ? lightmapNum != oldLightmapNum : 0 ) )
 		{
-			oldShader      = shader;
+			oldShader	   = shader;
 			oldLightmapNum = lightmapNum;
 
 			// count vertices and indices
-			numVerts     = 0;
+			numVerts	 = 0;
 			numTriangles = 0;
 
 			for( l = k; l < numSurfaces; l++ )
 			{
-				surface2 = surfacesSorted[ l ];
+				surface2 = surfacesSorted[l];
 
 				if( surface2->shader != shader || surface2->lightmapNum != lightmapNum )
 				{
@@ -1035,16 +1032,16 @@ static void R_UpdateClusterSurfaces()
 				continue;
 			}
 
-			ClearBounds( bounds[ 0 ], bounds[ 1 ] );
+			ClearBounds( bounds[0], bounds[1] );
 
 			// build triangle indices
 			indexesSize = numTriangles * 3 * sizeof( glIndex_t );
-			indexes     = ( glIndex_t* )ri.Hunk_AllocateTempMemory( indexesSize );
+			indexes		= ( glIndex_t* )ri.Hunk_AllocateTempMemory( indexesSize );
 
 			numTriangles = 0;
 			for( l = k; l < numSurfaces; l++ )
 			{
-				surface2 = surfacesSorted[ l ];
+				surface2 = surfacesSorted[l];
 
 				if( surface2->shader != shader || surface2->lightmapNum != lightmapNum )
 				{
@@ -1067,13 +1064,13 @@ static void R_UpdateClusterSurfaces()
 
 						for( i = 0, tri = tr.world->triangles + srf->firstTriangle; i < srf->numTriangles; i++, tri++ )
 						{
-							indexes[ numTriangles * 3 + i * 3 + 0 ] = tri->indexes[ 0 ];
-							indexes[ numTriangles * 3 + i * 3 + 1 ] = tri->indexes[ 1 ];
-							indexes[ numTriangles * 3 + i * 3 + 2 ] = tri->indexes[ 2 ];
+							indexes[numTriangles * 3 + i * 3 + 0] = tri->indexes[0];
+							indexes[numTriangles * 3 + i * 3 + 1] = tri->indexes[1];
+							indexes[numTriangles * 3 + i * 3 + 2] = tri->indexes[2];
 						}
 
 						numTriangles += srf->numTriangles;
-						BoundsAdd( bounds[ 0 ], bounds[ 1 ], srf->bounds[ 0 ], srf->bounds[ 1 ] );
+						BoundsAdd( bounds[0], bounds[1], srf->bounds[0], srf->bounds[1] );
 					}
 				}
 				else if( *surface2->data == SF_GRID )
@@ -1091,13 +1088,13 @@ static void R_UpdateClusterSurfaces()
 
 						for( i = 0, tri = tr.world->triangles + srf->firstTriangle; i < srf->numTriangles; i++, tri++ )
 						{
-							indexes[ numTriangles * 3 + i * 3 + 0 ] = tri->indexes[ 0 ];
-							indexes[ numTriangles * 3 + i * 3 + 1 ] = tri->indexes[ 1 ];
-							indexes[ numTriangles * 3 + i * 3 + 2 ] = tri->indexes[ 2 ];
+							indexes[numTriangles * 3 + i * 3 + 0] = tri->indexes[0];
+							indexes[numTriangles * 3 + i * 3 + 1] = tri->indexes[1];
+							indexes[numTriangles * 3 + i * 3 + 2] = tri->indexes[2];
 						}
 
 						numTriangles += srf->numTriangles;
-						BoundsAdd( bounds[ 0 ], bounds[ 1 ], srf->bounds[ 0 ], srf->bounds[ 1 ] );
+						BoundsAdd( bounds[0], bounds[1], srf->bounds[0], srf->bounds[1] );
 					}
 				}
 				else if( *surface2->data == SF_TRIANGLES )
@@ -1115,23 +1112,21 @@ static void R_UpdateClusterSurfaces()
 
 						for( i = 0, tri = tr.world->triangles + srf->firstTriangle; i < srf->numTriangles; i++, tri++ )
 						{
-							indexes[ numTriangles * 3 + i * 3 + 0 ] = tri->indexes[ 0 ];
-							indexes[ numTriangles * 3 + i * 3 + 1 ] = tri->indexes[ 1 ];
-							indexes[ numTriangles * 3 + i * 3 + 2 ] = tri->indexes[ 2 ];
+							indexes[numTriangles * 3 + i * 3 + 0] = tri->indexes[0];
+							indexes[numTriangles * 3 + i * 3 + 1] = tri->indexes[1];
+							indexes[numTriangles * 3 + i * 3 + 2] = tri->indexes[2];
 						}
 
 						numTriangles += srf->numTriangles;
-						BoundsAdd( bounds[ 0 ], bounds[ 1 ], srf->bounds[ 0 ], srf->bounds[ 1 ] );
+						BoundsAdd( bounds[0], bounds[1], srf->bounds[0], srf->bounds[1] );
 					}
 				}
 			}
 
-			if( tr.world->numClusterVBOSurfaces[ tr.visIndex ] < tr.world->clusterVBOSurfaces[ tr.visIndex ].currentElements )
+			if( tr.world->numClusterVBOSurfaces[tr.visIndex] < tr.world->clusterVBOSurfaces[tr.visIndex].currentElements )
 			{
-				vboSurf =
-					( srfVBOMesh_t* )Com_GrowListElement( &tr.world->clusterVBOSurfaces[ tr.visIndex ],
-						tr.world->numClusterVBOSurfaces[ tr.visIndex ] );
-				ibo = vboSurf->ibo;
+				vboSurf = ( srfVBOMesh_t* )Com_GrowListElement( &tr.world->clusterVBOSurfaces[tr.visIndex], tr.world->numClusterVBOSurfaces[tr.visIndex] );
+				ibo		= vboSurf->ibo;
 
 				/*
 				   if(ibo->indexesVBO)
@@ -1141,12 +1136,12 @@ static void R_UpdateClusterSurfaces()
 				   }
 				 */
 
-				//Com_Dealloc(ibo);
-				//Com_Dealloc(vboSurf);
+				// Com_Dealloc(ibo);
+				// Com_Dealloc(vboSurf);
 			}
 			else
 			{
-				vboSurf              = ( srfVBOMesh_t* )ri.Hunk_Alloc( sizeof( *vboSurf ), h_low );
+				vboSurf				 = ( srfVBOMesh_t* )ri.Hunk_Alloc( sizeof( *vboSurf ), h_low );
 				vboSurf->surfaceType = SF_VBO_MESH;
 
 				vboSurf->vbo = tr.world->vbo;
@@ -1158,28 +1153,26 @@ static void R_UpdateClusterSurfaces()
 				glGenBuffersARB( 1, &ibo->indexesVBO );
 	#endif
 
-				Com_AddToGrowList( &tr.world->clusterVBOSurfaces[ tr.visIndex ], vboSurf );
+				Com_AddToGrowList( &tr.world->clusterVBOSurfaces[tr.visIndex], vboSurf );
 			}
 
-			//ri.Printf(PRINT_ALL, "creating VBO cluster surface for shader '%s'\n", shader->name);
+			// ri.Printf(PRINT_ALL, "creating VBO cluster surface for shader '%s'\n", shader->name);
 
 			// update surface properties
 			vboSurf->numIndexes = numTriangles * 3;
-			vboSurf->numVerts   = numVerts;
+			vboSurf->numVerts	= numVerts;
 
-			vboSurf->shader      = shader;
+			vboSurf->shader		 = shader;
 			vboSurf->lightmapNum = lightmapNum;
 
-			VectorCopy( bounds[ 0 ], vboSurf->bounds[ 0 ] );
-			VectorCopy( bounds[ 1 ], vboSurf->bounds[ 1 ] );
+			VectorCopy( bounds[0], vboSurf->bounds[0] );
+			VectorCopy( bounds[1], vboSurf->bounds[1] );
 
 			// make sure the render thread is stopped
 			R_SyncRenderThread();
 
 			// update IBO
-			Q_strncpyz( ibo->name,
-				va( "staticWorldMesh_IBO_visIndex%i_surface%i", tr.visIndex, tr.world->numClusterVBOSurfaces[ tr.visIndex ] ),
-				sizeof( ibo->name ) );
+			Q_strncpyz( ibo->name, va( "staticWorldMesh_IBO_visIndex%i_surface%i", tr.visIndex, tr.world->numClusterVBOSurfaces[tr.visIndex] ), sizeof( ibo->name ) );
 			ibo->indexesSize = indexesSize;
 
 			R_BindIBO( ibo );
@@ -1190,11 +1183,11 @@ static void R_UpdateClusterSurfaces()
 	#endif
 			R_BindNullIBO();
 
-			//GL_CheckErrors();
+			// GL_CheckErrors();
 
 			ri.Hunk_FreeTempMemory( indexes );
 
-			tr.world->numClusterVBOSurfaces[ tr.visIndex ]++;
+			tr.world->numClusterVBOSurfaces[tr.visIndex]++;
 		}
 	}
 
@@ -1205,7 +1198,7 @@ static void R_UpdateClusterSurfaces()
 		r_showcluster->modified = qfalse;
 		if( r_showcluster->integer )
 		{
-			ri.Printf( PRINT_ALL, "  surfaces:%i\n", tr.world->numClusterVBOSurfaces[ tr.visIndex ] );
+			ri.Printf( PRINT_ALL, "  surfaces:%i\n", tr.world->numClusterVBOSurfaces[tr.visIndex] );
 		}
 	}
 }
@@ -1223,8 +1216,8 @@ static void R_MarkLeaves( void )
 {
 	const byte* vis;
 	bspNode_t * leaf, *parent;
-	int         i;
-	int         cluster;
+	int			i;
+	int			cluster;
 
 	// lockpvs lets designers walk around to determine the
 	// extent of the current pvs
@@ -1234,7 +1227,7 @@ static void R_MarkLeaves( void )
 	}
 
 	// current viewcluster
-	leaf    = R_PointInLeaf( tr.viewParms.pvsOrigin );
+	leaf	= R_PointInLeaf( tr.viewParms.pvsOrigin );
 	cluster = leaf->cluster;
 
 	// if the cluster is the same and the area visibility matrix
@@ -1242,12 +1235,12 @@ static void R_MarkLeaves( void )
 
 	for( i = 0; i < MAX_VISCOUNTS; i++ )
 	{
-		if( tr.visClusters[ i ] == cluster )
+		if( tr.visClusters[i] == cluster )
 		{
 			// if r_showcluster was just turned on, remark everything
 			if( !tr.refdef.areamaskModified && !r_showcluster->modified ) // && !r_dynamicBspOcclusionCulling->modified)
 			{
-				if( tr.visClusters[ i ] != tr.visClusters[ tr.visIndex ] && r_showcluster->integer )
+				if( tr.visClusters[i] != tr.visClusters[tr.visIndex] && r_showcluster->integer )
 				{
 					ri.Printf( PRINT_ALL, "found cluster:%i  area:%i  index:%i\n", cluster, leaf->area, i );
 				}
@@ -1258,14 +1251,14 @@ static void R_MarkLeaves( void )
 			if( tr.refdef.areamaskModified )
 			{
 				// invalidate old visclusters so they will be updated next time
-				tr.visClusters[ i ] = -1;
+				tr.visClusters[i] = -1;
 			}
 		}
 	}
 
 	tr.visIndex = ( tr.visIndex + 1 ) % MAX_VISCOUNTS;
-	tr.visCounts[ tr.visIndex ]++;
-	tr.visClusters[ tr.visIndex ] = cluster;
+	tr.visCounts[tr.visIndex]++;
+	tr.visClusters[tr.visIndex] = cluster;
 
 	if( r_showcluster->modified || r_showcluster->integer )
 	{
@@ -1290,19 +1283,19 @@ static void R_MarkLeaves( void )
 	}
 #endif
 
-	if( r_novis->integer || tr.visClusters[ tr.visIndex ] == -1 )
+	if( r_novis->integer || tr.visClusters[tr.visIndex] == -1 )
 	{
 		for( i = 0; i < tr.world->numnodes; i++ )
 		{
-			if( tr.world->nodes[ i ].contents != CONTENTS_SOLID )
+			if( tr.world->nodes[i].contents != CONTENTS_SOLID )
 			{
-				tr.world->nodes[ i ].visCounts[ tr.visIndex ] = tr.visCounts[ tr.visIndex ];
+				tr.world->nodes[i].visCounts[tr.visIndex] = tr.visCounts[tr.visIndex];
 			}
 		}
 		return;
 	}
 
-	vis = R_ClusterPVS( tr.visClusters[ tr.visIndex ] );
+	vis = R_ClusterPVS( tr.visClusters[tr.visIndex] );
 
 	for( i = 0, leaf = tr.world->nodes; i < tr.world->numnodes; i++, leaf++ )
 	{
@@ -1313,7 +1306,7 @@ static void R_MarkLeaves( void )
 			if( cluster >= 0 && cluster < tr.world->numClusters )
 			{
 				// check general pvs
-				if( !( vis[ cluster >> 3 ] & ( 1 << ( cluster & 7 ) ) ) )
+				if( !( vis[cluster >> 3] & ( 1 << ( cluster & 7 ) ) ) )
 				{
 					continue;
 				}
@@ -1321,7 +1314,7 @@ static void R_MarkLeaves( void )
 		}
 
 		// check for door connection
-		if( ( tr.refdef.areamask[ leaf->area >> 3 ] & ( 1 << ( leaf->area & 7 ) ) ) )
+		if( ( tr.refdef.areamask[leaf->area >> 3] & ( 1 << ( leaf->area & 7 ) ) ) )
 		{
 			// not visible
 			continue;
@@ -1334,7 +1327,7 @@ static void R_MarkLeaves( void )
 			// this also means the skybox portal cannot move, as this list is calculated once and never again
 			if( tr.world->numSkyNodes < WORLD_MAX_SKY_NODES )
 			{
-				tr.world->skyNodes[ tr.world->numSkyNodes++ ] = leaf;
+				tr.world->skyNodes[tr.world->numSkyNodes++] = leaf;
 			}
 			R_AddLeafSurfaces( leaf, 0 );
 			continue;
@@ -1343,12 +1336,12 @@ static void R_MarkLeaves( void )
 		parent = leaf;
 		do
 		{
-			if( parent->visCounts[ tr.visIndex ] == tr.visCounts[ tr.visIndex ] )
+			if( parent->visCounts[tr.visIndex] == tr.visCounts[tr.visIndex] )
 			{
 				break;
 			}
-			parent->visCounts[ tr.visIndex ] = tr.visCounts[ tr.visIndex ];
-			parent                           = parent->parent;
+			parent->visCounts[tr.visIndex] = tr.visCounts[tr.visIndex];
+			parent						   = parent->parent;
 		} while( parent );
 	}
 }
@@ -1356,41 +1349,41 @@ static void R_MarkLeaves( void )
 static void DrawLeaf( bspNode_t* node, int decalBits )
 {
 	// leaf node, so add mark surfaces
-	int           c;
+	int			  c;
 	bspSurface_t *surf, **mark;
 
 	tr.pc.c_leafs++;
 
 	// add to z buffer bounds
-	if( node->mins[ 0 ] < tr.viewParms.visBounds[ 0 ][ 0 ] )
+	if( node->mins[0] < tr.viewParms.visBounds[0][0] )
 	{
-		tr.viewParms.visBounds[ 0 ][ 0 ] = node->mins[ 0 ];
+		tr.viewParms.visBounds[0][0] = node->mins[0];
 	}
-	if( node->mins[ 1 ] < tr.viewParms.visBounds[ 0 ][ 1 ] )
+	if( node->mins[1] < tr.viewParms.visBounds[0][1] )
 	{
-		tr.viewParms.visBounds[ 0 ][ 1 ] = node->mins[ 1 ];
+		tr.viewParms.visBounds[0][1] = node->mins[1];
 	}
-	if( node->mins[ 2 ] < tr.viewParms.visBounds[ 0 ][ 2 ] )
+	if( node->mins[2] < tr.viewParms.visBounds[0][2] )
 	{
-		tr.viewParms.visBounds[ 0 ][ 2 ] = node->mins[ 2 ];
+		tr.viewParms.visBounds[0][2] = node->mins[2];
 	}
 
-	if( node->maxs[ 0 ] > tr.viewParms.visBounds[ 1 ][ 0 ] )
+	if( node->maxs[0] > tr.viewParms.visBounds[1][0] )
 	{
-		tr.viewParms.visBounds[ 1 ][ 0 ] = node->maxs[ 0 ];
+		tr.viewParms.visBounds[1][0] = node->maxs[0];
 	}
-	if( node->maxs[ 1 ] > tr.viewParms.visBounds[ 1 ][ 1 ] )
+	if( node->maxs[1] > tr.viewParms.visBounds[1][1] )
 	{
-		tr.viewParms.visBounds[ 1 ][ 1 ] = node->maxs[ 1 ];
+		tr.viewParms.visBounds[1][1] = node->maxs[1];
 	}
-	if( node->maxs[ 2 ] > tr.viewParms.visBounds[ 1 ][ 2 ] )
+	if( node->maxs[2] > tr.viewParms.visBounds[1][2] )
 	{
-		tr.viewParms.visBounds[ 1 ][ 2 ] = node->maxs[ 2 ];
+		tr.viewParms.visBounds[1][2] = node->maxs[2];
 	}
 
 	// add the individual surfaces
 	mark = node->markSurfaces;
-	c    = node->numMarkSurfaces;
+	c	 = node->numMarkSurfaces;
 	while( c-- )
 	{
 		// the surface may have already been added if it
@@ -1418,7 +1411,7 @@ static qboolean InsideViewFrustum( bspNode_t* node, int planeBits )
 		{
 			if( planeBits & ( 1 << i ) )
 			{
-				r = BoxOnPlaneSide( node->mins, node->maxs, &tr.viewParms.frustums[ 0 ][ i ] );
+				r = BoxOnPlaneSide( node->mins, node->maxs, &tr.viewParms.frustums[0][i] );
 				if( r == 2 )
 				{
 					return qfalse; // culled
@@ -1434,7 +1427,7 @@ static qboolean InsideViewFrustum( bspNode_t* node, int planeBits )
 	return qtrue;
 }
 
-//#define DEBUG_CHC 1
+// #define DEBUG_CHC 1
 
 static void DrawNode_r( bspNode_t* node, int planeBits )
 {
@@ -1451,7 +1444,7 @@ static void DrawNode_r( bspNode_t* node, int planeBits )
 			{
 				if( planeBits & ( 1 << i ) )
 				{
-					r = BoxOnPlaneSide( node->mins, node->maxs, &tr.viewParms.frustums[ 0 ][ i ] );
+					r = BoxOnPlaneSide( node->mins, node->maxs, &tr.viewParms.frustums[0][i] );
 					if( r == 2 )
 					{
 						return; // culled
@@ -1486,13 +1479,13 @@ static void DrawNode_r( bspNode_t* node, int planeBits )
 			GL_VertexAttribsState( ATTR_POSITION );
 
 			tess.numVertexes = node->volumeVerts;
-			tess.numIndexes  = node->volumeIndexes;
+			tess.numIndexes	 = node->volumeIndexes;
 
 			Tess_DrawElements();
 
 			tess.multiDrawPrimitives = 0;
-			tess.numIndexes          = 0;
-			tess.numVertexes         = 0;
+			tess.numIndexes			 = 0;
+			tess.numVertexes		 = 0;
 		}
 
 		if( node->contents != -1 )
@@ -1501,10 +1494,10 @@ static void DrawNode_r( bspNode_t* node, int planeBits )
 		}
 
 		// recurse down the children, front side first
-		DrawNode_r( node->children[ 0 ], planeBits );
+		DrawNode_r( node->children[0], planeBits );
 
 		// tail recurse
-		node = node->children[ 1 ];
+		node = node->children[1];
 	} while( 1 );
 }
 
@@ -1544,7 +1537,7 @@ static void IssueOcclusionQuery( link_t* queue, bspNode_t* node, qboolean resetM
 #endif
 
 	// begin the occlusion query
-	glBeginQuery( GL_SAMPLES_PASSED, node->occlusionQueryObjects[ tr.viewCount ] );
+	glBeginQuery( GL_SAMPLES_PASSED, node->occlusionQueryObjects[tr.viewCount] );
 
 	GL_CheckErrors();
 
@@ -1554,7 +1547,7 @@ static void IssueOcclusionQuery( link_t* queue, bspNode_t* node, qboolean resetM
 	GL_VertexAttribsState( ATTR_POSITION );
 
 	tess.numVertexes = node->volumeVerts;
-	tess.numIndexes  = node->volumeIndexes;
+	tess.numIndexes	 = node->volumeIndexes;
 
 	Tess_DrawElements();
 
@@ -1562,18 +1555,18 @@ static void IssueOcclusionQuery( link_t* queue, bspNode_t* node, qboolean resetM
 	glEndQuery( GL_SAMPLES_PASSED );
 
 #if 1
-	if( !glIsQuery( node->occlusionQueryObjects[ tr.viewCount ] ) )
+	if( !glIsQuery( node->occlusionQueryObjects[tr.viewCount] ) )
 	{
-		ri.Error( ERR_FATAL, "IssueOcclusionQuery: node %i has no occlusion query object in slot %i: %i", node - tr.world->nodes, tr.viewCount, node->occlusionQueryObjects[ tr.viewCount ] );
+		ri.Error( ERR_FATAL, "IssueOcclusionQuery: node %i has no occlusion query object in slot %i: %i", node - tr.world->nodes, tr.viewCount, node->occlusionQueryObjects[tr.viewCount] );
 	}
 #endif
 
-	node->occlusionQueryNumbers[ tr.viewCount ] = tr.pc.c_occlusionQueries;
+	node->occlusionQueryNumbers[tr.viewCount] = tr.pc.c_occlusionQueries;
 	tr.pc.c_occlusionQueries++;
 
 	tess.multiDrawPrimitives = 0;
-	tess.numIndexes          = 0;
-	tess.numVertexes         = 0;
+	tess.numIndexes			 = 0;
+	tess.numVertexes		 = 0;
 
 	GL_CheckErrors();
 
@@ -1584,7 +1577,7 @@ static void IssueMultiOcclusionQueries( link_t* multiQueue, link_t* individualQu
 {
 	bspNode_t* node;
 	bspNode_t* multiQueryNode;
-	link_t*    l;
+	link_t*	   l;
 
 	if( r_logFile->integer )
 	{
@@ -1616,11 +1609,11 @@ static void IssueMultiOcclusionQueries( link_t* multiQueue, link_t* individualQu
 	}
 #endif
 
-	glBeginQuery( GL_SAMPLES_PASSED, multiQueryNode->occlusionQueryObjects[ tr.viewCount ] );
+	glBeginQuery( GL_SAMPLES_PASSED, multiQueryNode->occlusionQueryObjects[tr.viewCount] );
 
 	GL_CheckErrors();
 
-	//GLimp_LogComment("rendering nodes:[");
+	// GLimp_LogComment("rendering nodes:[");
 	for( l = multiQueue->prev; l != multiQueue; l = l->prev )
 	{
 		node = ( bspNode_t* )l->data;
@@ -1634,12 +1627,12 @@ static void IssueMultiOcclusionQueries( link_t* multiQueue, link_t* individualQu
 			gl_genericShader->SetUniform_Color( colorMdGrey );
 		}
 
-		//if(r_logFile->integer)
+		// if(r_logFile->integer)
 		//{
 		//	GLimp_LogComment(va("%i, ", node - tr.world->nodes));
-		//}
+		// }
 
-		//Tess_EndBegin();
+		// Tess_EndBegin();
 
 		R_BindVBO( node->volumeVBO );
 		R_BindIBO( node->volumeIBO );
@@ -1647,17 +1640,17 @@ static void IssueMultiOcclusionQueries( link_t* multiQueue, link_t* individualQu
 		GL_VertexAttribsState( ATTR_POSITION );
 
 		tess.multiDrawPrimitives = 0;
-		tess.numVertexes         = node->volumeVerts;
-		tess.numIndexes          = node->volumeIndexes;
+		tess.numVertexes		 = node->volumeVerts;
+		tess.numIndexes			 = node->volumeIndexes;
 
 		Tess_DrawElements();
 
-		tess.numIndexes  = 0;
+		tess.numIndexes	 = 0;
 		tess.numVertexes = 0;
 	}
-	//GLimp_LogComment("]\n");
+	// GLimp_LogComment("]\n");
 
-	multiQueryNode->occlusionQueryNumbers[ tr.viewCount ] = tr.pc.c_occlusionQueries;
+	multiQueryNode->occlusionQueryNumbers[tr.viewCount] = tr.pc.c_occlusionQueries;
 	tr.pc.c_occlusionQueries++;
 	tr.pc.c_occlusionQueriesMulti++;
 
@@ -1691,12 +1684,12 @@ static qboolean ResultAvailable( bspNode_t* node )
 {
 	GLint available;
 
-	//glFinish();
+	// glFinish();
 
 	available = 0;
-	//if(glIsQueryARB(node->occlusionQueryObjects[tr.viewCount]))
+	// if(glIsQueryARB(node->occlusionQueryObjects[tr.viewCount]))
 	{
-		glGetQueryObjectiv( node->occlusionQueryObjects[ tr.viewCount ], GL_QUERY_RESULT_AVAILABLE, &available );
+		glGetQueryObjectiv( node->occlusionQueryObjects[tr.viewCount], GL_QUERY_RESULT_AVAILABLE, &available );
 		GL_CheckErrors();
 	}
 
@@ -1706,13 +1699,13 @@ static qboolean ResultAvailable( bspNode_t* node )
 static void GetOcclusionQueryResult( bspNode_t* node )
 {
 	link_t *l, *sentinel;
-	int     ocSamples;
+	int		ocSamples;
 
-	GLint available;
+	GLint	available;
 
 	GLimp_LogComment( "--- GetOcclusionQueryResult ---\n" );
 
-	//glFinish();
+	// glFinish();
 
 #if 0
 	if( !glIsQueryARB( node->occlusionQueryObjects[tr.viewCount] ) )
@@ -1724,14 +1717,14 @@ static void GetOcclusionQueryResult( bspNode_t* node )
 	available = 0;
 	while( !available )
 	{
-		//if(glIsQuery(node->occlusionQueryObjects[tr.viewCount]))
+		// if(glIsQuery(node->occlusionQueryObjects[tr.viewCount]))
 		{
-			glGetQueryObjectiv( node->occlusionQueryObjects[ tr.viewCount ], GL_QUERY_RESULT_AVAILABLE, &available );
-			//GL_CheckErrors();
+			glGetQueryObjectiv( node->occlusionQueryObjects[tr.viewCount], GL_QUERY_RESULT_AVAILABLE, &available );
+			// GL_CheckErrors();
 		}
 	}
 
-	glGetQueryObjectiv( node->occlusionQueryObjects[ tr.viewCount ], GL_QUERY_RESULT, &ocSamples );
+	glGetQueryObjectiv( node->occlusionQueryObjects[tr.viewCount], GL_QUERY_RESULT, &ocSamples );
 
 	if( r_logFile->integer )
 	{
@@ -1740,8 +1733,8 @@ static void GetOcclusionQueryResult( bspNode_t* node )
 
 	GL_CheckErrors();
 
-	node->occlusionQuerySamples[ tr.viewCount ] = ocSamples;
-	node->lastQueried[ tr.viewCount ]           = tr.frameCount;
+	node->occlusionQuerySamples[tr.viewCount] = ocSamples;
+	node->lastQueried[tr.viewCount]			  = tr.frameCount;
 
 	// copy result to all nodes that were linked to this multi query node
 	sentinel = &node->multiQuery;
@@ -1749,8 +1742,8 @@ static void GetOcclusionQueryResult( bspNode_t* node )
 	{
 		node = ( bspNode_t* )l->data;
 
-		node->occlusionQuerySamples[ tr.viewCount ] = ocSamples;
-		node->lastQueried[ tr.viewCount ]           = tr.frameCount;
+		node->occlusionQuerySamples[tr.viewCount] = ocSamples;
+		node->lastQueried[tr.viewCount]			  = tr.frameCount;
 	}
 }
 
@@ -1759,10 +1752,10 @@ static void PullUpVisibility( bspNode_t* node )
 	bspNode_t* parent;
 
 	parent = node;
-	while( parent && !parent->visible[ tr.viewCount ] )
+	while( parent && !parent->visible[tr.viewCount] )
 	{
-		parent->visible[ tr.viewCount ]     = qtrue;
-		parent->lastVisited[ tr.viewCount ] = tr.frameCount;
+		parent->visible[tr.viewCount]	  = qtrue;
+		parent->lastVisited[tr.viewCount] = tr.frameCount;
 
 		parent = parent->parent;
 	};
@@ -1843,30 +1836,30 @@ static void TraverseNode( link_t* distanceQueue, bspNode_t* node )
 			GL_VertexAttribsState( ATTR_POSITION );
 
 			tess.numVertexes = node->volumeVerts;
-			tess.numIndexes  = node->volumeIndexes;
+			tess.numIndexes	 = node->volumeIndexes;
 
 			Tess_DrawElements();
 
 			tess.multiDrawPrimitives = 0;
-			tess.numIndexes          = 0;
-			tess.numVertexes         = 0;
+			tess.numIndexes			 = 0;
+			tess.numVertexes		 = 0;
 		}
 	}
 #endif
 
 	if( node->contents != -1 )
 	{
-		//DrawLeaf(node, tr.refdef.decalBits);
+		// DrawLeaf(node, tr.refdef.decalBits);
 	}
 	else
 	{
-		EnQueue( distanceQueue, node->children[ 0 ] );
-		EnQueue( distanceQueue, node->children[ 1 ] );
+		EnQueue( distanceQueue, node->children[0] );
+		EnQueue( distanceQueue, node->children[1] );
 
 		if( r_logFile->integer )
 		{
-			GLimp_LogComment( va( "distance-queue <-- node %i\n", ( int )( node->children[ 0 ] - tr.world->nodes ) ) );
-			GLimp_LogComment( va( "distance-queue <-- node %i\n", ( int )( node->children[ 1 ] - tr.world->nodes ) ) );
+			GLimp_LogComment( va( "distance-queue <-- node %i\n", ( int )( node->children[0] - tr.world->nodes ) ) );
+			GLimp_LogComment( va( "distance-queue <-- node %i\n", ( int )( node->children[1] - tr.world->nodes ) ) );
 		}
 	}
 }
@@ -1875,7 +1868,7 @@ static void BuildNodeTraversalStackPost_r( bspNode_t* node )
 {
 	do
 	{
-		if( tr.frameCount != node->lastVisited[ tr.viewCount ] )
+		if( tr.frameCount != node->lastVisited[tr.viewCount] )
 		{
 			return;
 		}
@@ -1885,11 +1878,11 @@ static void BuildNodeTraversalStackPost_r( bspNode_t* node )
 		{
 			if( node->contents != -1 )
 			{
-				GLimp_LogComment( va( "--- BuildNodeTraversalStackPost_r( leaf = %i, visible = %i ) ---\n", node - tr.world->nodes, node->visible[ tr.viewCount ] ) );
+				GLimp_LogComment( va( "--- BuildNodeTraversalStackPost_r( leaf = %i, visible = %i ) ---\n", node - tr.world->nodes, node->visible[tr.viewCount] ) );
 			}
 			else
 			{
-				GLimp_LogComment( va( "--- BuildNodeTraversalStackPost_r( node = %i, visible = %i ) ---\n", node - tr.world->nodes, node->visible[ tr.viewCount ] ) );
+				GLimp_LogComment( va( "--- BuildNodeTraversalStackPost_r( node = %i, visible = %i ) ---\n", node - tr.world->nodes, node->visible[tr.viewCount] ) );
 			}
 		}
 #endif
@@ -1898,7 +1891,7 @@ static void BuildNodeTraversalStackPost_r( bspNode_t* node )
 
 		if( node->contents != -1 )
 		{
-			if( node->visible[ tr.viewCount ] )
+			if( node->visible[tr.viewCount] )
 			{
 				DrawLeaf( node, tr.refdef.decalBits );
 			}
@@ -1906,23 +1899,24 @@ static void BuildNodeTraversalStackPost_r( bspNode_t* node )
 		}
 
 		// recurse down the children, front side first
-		BuildNodeTraversalStackPost_r( node->children[ 0 ] );
+		BuildNodeTraversalStackPost_r( node->children[0] );
 
 		// tail recurse
-		node = node->children[ 1 ];
+		node = node->children[1];
 	} while( 1 );
 }
 
 static bool WasVisible( bspNode_t* node )
 {
-	return ( node->visible[ tr.viewCount ] && ( ( tr.frameCount - node->lastVisited[ tr.viewCount ] ) <= r_chcMaxVisibleFrames->integer ) );
+	return ( node->visible[tr.viewCount] && ( ( tr.frameCount - node->lastVisited[tr.viewCount] ) <= r_chcMaxVisibleFrames->integer ) );
 }
 
 static bool QueryReasonable( bspNode_t* node )
 {
 	// if r_chcMaxVisibleFrames 10 then range from 5 to 10
-	//return ((tr.frameCount - node->lastQueried[tr.viewCount]) > r_chcMaxVisibleFrames->integer);
-	return ( ( tr.frameCount - node->lastQueried[ tr.viewCount ] ) > Q_min( ( int )ceil( ( r_chcMaxVisibleFrames->value * 0.5f ) + ( r_chcMaxVisibleFrames->value * 0.5f ) * random() ), r_chcMaxVisibleFrames->integer ) );
+	// return ((tr.frameCount - node->lastQueried[tr.viewCount]) > r_chcMaxVisibleFrames->integer);
+	return ( ( tr.frameCount - node->lastQueried[tr.viewCount] ) >
+			 Q_min( ( int )ceil( ( r_chcMaxVisibleFrames->value * 0.5f ) + ( r_chcMaxVisibleFrames->value * 0.5f ) * random() ), r_chcMaxVisibleFrames->integer ) );
 }
 
 static void R_CoherentHierachicalCulling()
@@ -1931,14 +1925,14 @@ static void R_CoherentHierachicalCulling()
 	bspNode_t* multiQueryNode;
 
 	//	link_t			traversalStack;
-	link_t distanceQueue;
-	link_t occlusionQueryQueue;
-	link_t visibleQueue;   // CHC++
-	link_t invisibleQueue; // CHC++
-	//link_t		renderQueue;
-	int startTime = 0, endTime = 0;
+	link_t	   distanceQueue;
+	link_t	   occlusionQueryQueue;
+	link_t	   visibleQueue;   // CHC++
+	link_t	   invisibleQueue; // CHC++
+	// link_t		renderQueue;
+	int		   startTime = 0, endTime = 0;
 
-	//ri.Cvar_Set("r_logFile", "1");
+	// ri.Cvar_Set("r_logFile", "1");
 
 	GLimp_LogComment( "--- R_CoherentHierachicalCulling ---\n" );
 
@@ -1988,7 +1982,7 @@ static void R_CoherentHierachicalCulling()
 
 	// set up the transformation matrix
 	GL_LoadModelViewMatrix( tr.orientation.modelViewMatrix );
-	gl_genericShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[ glState.stackIndex ] );
+	gl_genericShader->SetUniform_ModelViewProjectionMatrix( glState.modelViewProjectionMatrix[glState.stackIndex] );
 
 	// bind u_ColorMap
 	GL_SelectTexture( 0 );
@@ -2032,20 +2026,20 @@ static void R_CoherentHierachicalCulling()
 	QueueInit( &tr.occlusionQueryQueue );
 	ClearLink( &tr.occlusionQueryList );
 
-	//ClearLink(&traversalStack);
+	// ClearLink(&traversalStack);
 	QueueInit( &distanceQueue );
 	QueueInit( &occlusionQueryQueue );
 	QueueInit( &visibleQueue );
 	QueueInit( &invisibleQueue );
-	//QueueInit(&renderQueue);
+	// QueueInit(&renderQueue);
 
-	EnQueue( &distanceQueue, &tr.world->nodes[ 0 ] );
-	//StackPush(&traversalStack, &tr.world->nodes[0]);
+	EnQueue( &distanceQueue, &tr.world->nodes[0] );
+	// StackPush(&traversalStack, &tr.world->nodes[0]);
 
 	/*
 	ClearLink(&traversalStack);
 	traversalStack.numElements = 0;
-	
+
 	node = &tr.world->nodes[0];
 	InsertLink(&node->visChain, &traversalStack);
 	traversalStack.numElements++;
@@ -2055,7 +2049,11 @@ static void R_CoherentHierachicalCulling()
 	{
 		if( r_logFile->integer )
 		{
-			GLimp_LogComment( va( "--- (distanceQueue = %i, occlusionQueryQueue = %i, invisibleQueue = %i, visibleQueue = %i)\n", QueueSize( &distanceQueue ), QueueSize( &occlusionQueryQueue ), QueueSize( &invisibleQueue ), QueueSize( &visibleQueue ) ) );
+			GLimp_LogComment( va( "--- (distanceQueue = %i, occlusionQueryQueue = %i, invisibleQueue = %i, visibleQueue = %i)\n",
+				QueueSize( &distanceQueue ),
+				QueueSize( &occlusionQueryQueue ),
+				QueueSize( &invisibleQueue ),
+				QueueSize( &visibleQueue ) ) );
 		}
 
 		//--PART 1: process finished occlusion queries
@@ -2068,7 +2066,7 @@ static void R_CoherentHierachicalCulling()
 				// wait if result not available
 				GetOcclusionQueryResult( node );
 
-				if( node->occlusionQuerySamples[ tr.viewCount ] > r_chcVisibilityThreshold->integer )
+				if( node->occlusionQuerySamples[tr.viewCount] > r_chcVisibilityThreshold->integer )
 				{
 					// if a query of multiple previously invisible objects became visible, we need to
 					// test all the individual objects ...
@@ -2089,7 +2087,7 @@ static void R_CoherentHierachicalCulling()
 
 							// it might be possible that a leaf caused this node to be visible by a PullUpVisibility() call
 							// so avoid a further query
-							if( !( node->visible[ tr.viewCount ] && tr.frameCount == node->lastVisited[ tr.viewCount ] ) )
+							if( !( node->visible[tr.viewCount] && tr.frameCount == node->lastVisited[tr.viewCount] ) )
 							{
 								IssueOcclusionQuery( &occlusionQueryQueue, node, qtrue );
 							}
@@ -2119,7 +2117,7 @@ static void R_CoherentHierachicalCulling()
 				}
 				else
 				{
-					node->visible[ tr.viewCount ] = qfalse;
+					node->visible[tr.viewCount] = qfalse;
 
 					if( !QueueEmpty( &node->multiQuery ) )
 					{
@@ -2129,7 +2127,7 @@ static void R_CoherentHierachicalCulling()
 						{
 							node = ( bspNode_t* )DeQueue( &multiQueryNode->multiQuery );
 
-							node->visible[ tr.viewCount ] = qfalse;
+							node->visible[tr.viewCount] = qfalse;
 
 							tr.pc.c_occlusionQueriesSaved++;
 						}
@@ -2151,15 +2149,15 @@ static void R_CoherentHierachicalCulling()
 		} // end while(!QueueEmpty(&occlusionQueryQueue))
 
 		//--PART 2: hierarchical traversal
-		if( !QueueEmpty( &distanceQueue ) ) //if(!StackEmpty(&traversalStack))
+		if( !QueueEmpty( &distanceQueue ) ) // if(!StackEmpty(&traversalStack))
 		{
 			node = ( bspNode_t* )DeQueue( &distanceQueue );
-			//node = (bspNode_t *) StackPop(&traversalStack);
+			// node = (bspNode_t *) StackPop(&traversalStack);
 
 			/*
 			link_t* top = traversalStack.next;
 			RemoveLink(top);
-			
+
 			node = (bspNode_t *) top->data;
 			*/
 
@@ -2168,9 +2166,8 @@ static void R_CoherentHierachicalCulling()
 				GLimp_LogComment( va( "distance-queue --> node %i\n", ( int )( node - tr.world->nodes ) ) );
 			}
 
-			if( node->visCounts[ tr.visIndex ] == tr.visCounts[ tr.visIndex ] && // node was marked as potentially visible
-				( node->contents == -1 || ( node->contents != -1 && node->numMarkSurfaces ) ) &&
-				InsideViewFrustum( node, FRUSTUM_CLIPALL ) )
+			if( node->visCounts[tr.visIndex] == tr.visCounts[tr.visIndex] && // node was marked as potentially visible
+				( node->contents == -1 || ( node->contents != -1 && node->numMarkSurfaces ) ) && InsideViewFrustum( node, FRUSTUM_CLIPALL ) )
 			{
 				// identify previously visible nodes
 				bool wasVisible = WasVisible( node );
@@ -2178,19 +2175,19 @@ static void R_CoherentHierachicalCulling()
 				if( r_dynamicBspOcclusionCulling->integer > 1 )
 				{
 					// reset node's visibility classification
-					node->visible[ tr.viewCount ] = ( qboolean )!QueryReasonable( node );
+					node->visible[tr.viewCount] = ( qboolean )!QueryReasonable( node );
 				}
 
 				// identify nodes that we cannot skip queries for
 				bool needsQuery;
 
-				bool clipsNearPlane = ( BoxOnPlaneSide( node->mins, node->maxs, &tr.viewParms.frustums[ 0 ][ FRUSTUM_NEAR ] ) == 3 );
+				bool clipsNearPlane = ( BoxOnPlaneSide( node->mins, node->maxs, &tr.viewParms.frustums[0][FRUSTUM_NEAR] ) == 3 );
 				if( clipsNearPlane )
 				{
 					// node clips near plane so avoid the occlusion query test
-					node->occlusionQuerySamples[ tr.viewCount ] = r_chcVisibilityThreshold->integer + 1;
-					node->lastQueried[ tr.viewCount ]           = tr.frameCount;
-					node->visible[ tr.viewCount ]               = qtrue;
+					node->occlusionQuerySamples[tr.viewCount] = r_chcVisibilityThreshold->integer + 1;
+					node->lastQueried[tr.viewCount]			  = tr.frameCount;
+					node->visible[tr.viewCount]				  = qtrue;
 
 					needsQuery = false;
 				}
@@ -2202,9 +2199,9 @@ static void R_CoherentHierachicalCulling()
 					// only very few leaves are invisible if we don't traverse through all bsp nodes
 					// so testing these leaves just causes additional occlusion queries which can be avoided
 					// by setting all reached leaves to visible
-					node->occlusionQuerySamples[ tr.viewCount ] = r_chcVisibilityThreshold->integer + 1;
-					node->lastQueried[ tr.viewCount ]           = tr.frameCount;
-					node->visible[ tr.viewCount ]               = qtrue;
+					node->occlusionQuerySamples[tr.viewCount] = r_chcVisibilityThreshold->integer + 1;
+					node->lastQueried[tr.viewCount]			  = tr.frameCount;
+					node->visible[tr.viewCount]				  = qtrue;
 
 					needsQuery = false;
 				}
@@ -2216,7 +2213,7 @@ static void R_CoherentHierachicalCulling()
 				}
 
 				// update node's visited flag
-				node->lastVisited[ tr.viewCount ] = tr.frameCount;
+				node->lastVisited[tr.viewCount] = tr.frameCount;
 
 				bool leafThatNeedsQuery = node->contents != -1;
 				if( leafThatNeedsQuery )
@@ -2271,7 +2268,7 @@ static void R_CoherentHierachicalCulling()
 				{
 					// CHC default
 
-					if( needsQuery ) //!wasVisible && !clipsNearPlane)
+					if( needsQuery ) //! wasVisible && !clipsNearPlane)
 					{
 						IssueOcclusionQuery( &occlusionQueryQueue, node, qtrue );
 					}
@@ -2281,10 +2278,10 @@ static void R_CoherentHierachicalCulling()
 						// always traverse a node if it was visible
 						TraverseNode( &distanceQueue, node );
 
-						//if(clipsNearPlane)
+						// if(clipsNearPlane)
 						//{
 						//	PullUpVisibility(node);
-						//}
+						// }
 					}
 				}
 			}
@@ -2293,7 +2290,7 @@ static void R_CoherentHierachicalCulling()
 		if( r_dynamicBspOcclusionCulling->integer == 1 )
 		{
 			if( QueueEmpty( &distanceQueue ) )
-			//if(StackEmpty(&traversalStack))
+			// if(StackEmpty(&traversalStack))
 			{
 				// remaining previously visible node queries
 				if( !QueueEmpty( &invisibleQueue ) )
@@ -2313,11 +2310,11 @@ static void R_CoherentHierachicalCulling()
 			}
 		}
 
-		//ri.Printf(PRINT_ALL, "--- (%i, %i, %i)\n", !StackEmpty(&traversalStack), !QueueEmpty(&occlusionQueryQueue), !QueueEmpty(&invisibleQueue));
+		// ri.Printf(PRINT_ALL, "--- (%i, %i, %i)\n", !StackEmpty(&traversalStack), !QueueEmpty(&occlusionQueryQueue), !QueueEmpty(&invisibleQueue));
 	}
 
 	ClearLink( &tr.traversalStack );
-	BuildNodeTraversalStackPost_r( &tr.world->nodes[ 0 ] );
+	BuildNodeTraversalStackPost_r( &tr.world->nodes[0] );
 
 	R_BindNullFBO();
 
@@ -2326,12 +2323,12 @@ static void R_CoherentHierachicalCulling()
 
 	GL_CheckErrors();
 
-	//ri.Printf(PRINT_ALL, "--- R_CHC++ end ---\n");
+	// ri.Printf(PRINT_ALL, "--- R_CHC++ end ---\n");
 
 	if( r_speeds->integer )
 	{
 		glFinish();
-		endTime         = ri.Milliseconds();
+		endTime			= ri.Milliseconds();
 		tr.pc.c_CHCTime = endTime - startTime;
 	}
 }
@@ -2356,12 +2353,12 @@ void R_AddWorldSurfaces( void )
 	tr.currentEntity = &tr.worldEntity;
 
 	// clear out the visible min/max
-	ClearBounds( tr.viewParms.visBounds[ 0 ], tr.viewParms.visBounds[ 1 ] );
+	ClearBounds( tr.viewParms.visBounds[0], tr.viewParms.visBounds[1] );
 
 	// render sky or world?
 	if( tr.refdef.rdflags & RDF_SKYBOXPORTAL && tr.world->numSkyNodes > 0 )
 	{
-		int         i;
+		int			i;
 		bspNode_t** node;
 
 		for( i = 0, node = tr.world->skyNodes; i < tr.world->numSkyNodes; i++, node++ )
@@ -2396,22 +2393,22 @@ void R_AddWorldSurfaces( void )
 #if defined( USE_BSP_CLUSTERSURFACE_MERGING )
 		if( r_mergeClusterSurfaces->integer && !r_dynamicBspOcclusionCulling->integer )
 		{
-			int           j, i;
+			int			  j, i;
 			srfVBOMesh_t* srf;
-			shader_t*     shader;
-			cplane_t*     frust;
-			int           r;
+			shader_t*	  shader;
+			cplane_t*	  frust;
+			int			  r;
 
-			for( j = 0; j < tr.world->numClusterVBOSurfaces[ tr.visIndex ]; j++ )
+			for( j = 0; j < tr.world->numClusterVBOSurfaces[tr.visIndex]; j++ )
 			{
-				srf    = ( srfVBOMesh_t* )Com_GrowListElement( &tr.world->clusterVBOSurfaces[ tr.visIndex ], j );
+				srf	   = ( srfVBOMesh_t* )Com_GrowListElement( &tr.world->clusterVBOSurfaces[tr.visIndex], j );
 				shader = srf->shader;
 
 				for( i = 0; i < FRUSTUM_PLANES; i++ )
 				{
-					frust = &tr.viewParms.frustums[ 0 ][ i ];
+					frust = &tr.viewParms.frustums[0][i];
 
-					r = BoxOnPlaneSide( srf->bounds[ 0 ], srf->bounds[ 1 ], frust );
+					r = BoxOnPlaneSide( srf->bounds[0], srf->bounds[1], frust );
 
 					if( r == 2 )
 					{
@@ -2481,10 +2478,10 @@ void R_AddPrecachedWorldInteractions( trRefLight_t* light )
 	if( ( r_vboShadows->integer || r_vboLighting->integer ) ) // && light->l.rlType != RL_DIRECTIONAL)
 	{
 		interactionCache_t* iaCache;
-		interactionVBO_t*   iaVBO;
-		srfVBOMesh_t*       srf;
-		shader_t*           shader;
-		bspSurface_t*       surface;
+		interactionVBO_t*	iaVBO;
+		srfVBOMesh_t*		srf;
+		shader_t*			shader;
+		bspSurface_t*		surface;
 
 		// this can be shadow mapping or shadowless lighting
 		for( iaVBO = light->firstInteractionVBO; iaVBO; iaVBO = iaVBO->next )
@@ -2494,7 +2491,7 @@ void R_AddPrecachedWorldInteractions( trRefLight_t* light )
 				continue;
 			}
 
-			srf    = iaVBO->vboLightMesh;
+			srf	   = iaVBO->vboLightMesh;
 			shader = iaVBO->shader;
 
 			switch( light->l.rlType )
@@ -2522,7 +2519,7 @@ void R_AddPrecachedWorldInteractions( trRefLight_t* light )
 				continue;
 			}
 
-			srf    = iaVBO->vboShadowMesh;
+			srf	   = iaVBO->vboShadowMesh;
 			shader = iaVBO->shader;
 
 			R_AddLightInteraction( light, ( surfaceType_t* )srf, shader, iaVBO->cubeSideBits, IA_SHADOWONLY );
@@ -2567,7 +2564,7 @@ void R_AddPrecachedWorldInteractions( trRefLight_t* light )
 	else
 	{
 		interactionCache_t* iaCache;
-		bspSurface_t*       surface;
+		bspSurface_t*		surface;
 
 		for( iaCache = light->firstInteractionCache; iaCache; iaCache = iaCache->next )
 		{

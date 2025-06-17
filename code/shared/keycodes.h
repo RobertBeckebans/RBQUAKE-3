@@ -31,10 +31,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 typedef enum
 {
-	K_TAB    = 9,
-	K_ENTER  = 13,
+	K_TAB	 = 9,
+	K_ENTER	 = 13,
 	K_ESCAPE = 27,
-	K_SPACE  = 32,
+	K_SPACE	 = 32,
 
 	K_BACKSPACE = 127,
 
@@ -300,7 +300,7 @@ typedef enum
 // MAX_KEYS replaces K_LAST_KEY, however some mods may have used K_LAST_KEY
 // in detecting binds, so we leave it defined to the old hardcoded value
 // of maxiumum keys to prevent mods from crashing older versions of the engine
-#define K_LAST_KEY 256
+#define K_LAST_KEY	256
 
 // The menu code needs to get both key and char events, but
 // to avoid duplicating the paths, the char events are just

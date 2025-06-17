@@ -32,8 +32,8 @@ several games based on the Quake III Arena engine, in the form of "Q3Map2."
 /* dependencies */
 #include "q3map2.h"
 
-int numFogFragments;
-int numFogPatchFragments;
+int		numFogFragments;
+int		numFogPatchFragments;
 
 /*
 DrawSurfToMesh()
@@ -44,11 +44,11 @@ mesh_t* DrawSurfToMesh( mapDrawSurface_t* ds )
 {
 	mesh_t* m;
 
-	m         = safe_malloc( sizeof( *m ) );
+	m		  = safe_malloc( sizeof( *m ) );
 	m->width  = ds->patchWidth;
 	m->height = ds->patchHeight;
-	m->verts  = safe_malloc( sizeof( m->verts[ 0 ] ) * m->width * m->height );
-	memcpy( m->verts, ds->verts, sizeof( m->verts[ 0 ] ) * m->width * m->height );
+	m->verts  = safe_malloc( sizeof( m->verts[0] ) * m->width * m->height );
+	memcpy( m->verts, ds->verts, sizeof( m->verts[0] ) * m->width * m->height );
 
 	return m;
 }
@@ -60,31 +60,31 @@ chops a mesh by a plane
 
 void SplitMeshByPlane( mesh_t* in, vec3_t normal, float dist, mesh_t** front, mesh_t** back )
 {
-	int            w, h, split;
-	float          d[ MAX_PATCH_SIZE ][ MAX_PATCH_SIZE ];
+	int			   w, h, split;
+	float		   d[MAX_PATCH_SIZE][MAX_PATCH_SIZE];
 	bspDrawVert_t *dv, *v1, *v2;
-	int            c_front, c_back, c_on;
-	mesh_t *       f, *b;
-	int            i;
-	float          frac;
-	int            frontAprox, backAprox;
+	int			   c_front, c_back, c_on;
+	mesh_t *	   f, *b;
+	int			   i;
+	float		   frac;
+	int			   frontAprox, backAprox;
 
 	for( i = 0; i < 2; i++ )
 	{
-		dv      = in->verts;
+		dv		= in->verts;
 		c_front = 0;
-		c_back  = 0;
-		c_on    = 0;
+		c_back	= 0;
+		c_on	= 0;
 		for( h = 0; h < in->height; h++ )
 		{
 			for( w = 0; w < in->width; w++, dv++ )
 			{
-				d[ h ][ w ] = DotProduct( dv->xyz, normal ) - dist;
-				if( d[ h ][ w ] > ON_EPSILON )
+				d[h][w] = DotProduct( dv->xyz, normal ) - dist;
+				if( d[h][w] > ON_EPSILON )
 				{
 					c_front++;
 				}
-				else if( d[ h ][ w ] < -ON_EPSILON )
+				else if( d[h][w] < -ON_EPSILON )
 				{
 					c_back++;
 				}
@@ -113,7 +113,7 @@ void SplitMeshByPlane( mesh_t* in, vec3_t normal, float dist, mesh_t** front, me
 		split = -1;
 		for( w = 0; w < in->width - 1; w++ )
 		{
-			if( ( d[ 0 ][ w ] < 0 ) != ( d[ 0 ][ w + 1 ] < 0 ) )
+			if( ( d[0][w] < 0 ) != ( d[0][w + 1] < 0 ) )
 			{
 				if( split == -1 )
 				{
@@ -142,7 +142,7 @@ void SplitMeshByPlane( mesh_t* in, vec3_t normal, float dist, mesh_t** front, me
 		{
 			for( w = 0; w < in->width - 1; w++ )
 			{
-				if( ( d[ h ][ w ] < 0 ) != ( d[ h ][ w + 1 ] < 0 ) )
+				if( ( d[h][w] < 0 ) != ( d[h][w + 1] < 0 ) )
 				{
 					if( w != split )
 					{
@@ -152,7 +152,7 @@ void SplitMeshByPlane( mesh_t* in, vec3_t normal, float dist, mesh_t** front, me
 					}
 				}
 			}
-			if( ( d[ h ][ split ] < 0 ) == ( d[ h ][ split + 1 ] < 0 ) )
+			if( ( d[h][split] < 0 ) == ( d[h][split + 1] < 0 ) )
 			{
 				Sys_Printf( "differing crossing points for patch -- can't clip\n" );
 				*front = in;
@@ -164,7 +164,7 @@ void SplitMeshByPlane( mesh_t* in, vec3_t normal, float dist, mesh_t** front, me
 	}
 
 	// create two new meshes
-	f        = safe_malloc( sizeof( *f ) );
+	f		 = safe_malloc( sizeof( *f ) );
 	f->width = split + 2;
 	if( !( f->width & 1 ) )
 	{
@@ -180,9 +180,9 @@ void SplitMeshByPlane( mesh_t* in, vec3_t normal, float dist, mesh_t** front, me
 		Error( "MAX_PATCH_SIZE after split" );
 	}
 	f->height = in->height;
-	f->verts  = safe_malloc( sizeof( f->verts[ 0 ] ) * f->width * f->height );
+	f->verts  = safe_malloc( sizeof( f->verts[0] ) * f->width * f->height );
 
-	b        = safe_malloc( sizeof( *b ) );
+	b		 = safe_malloc( sizeof( *b ) );
 	b->width = in->width - split;
 	if( !( b->width & 1 ) )
 	{
@@ -198,9 +198,9 @@ void SplitMeshByPlane( mesh_t* in, vec3_t normal, float dist, mesh_t** front, me
 		Error( "MAX_PATCH_SIZE after split" );
 	}
 	b->height = in->height;
-	b->verts  = safe_malloc( sizeof( b->verts[ 0 ] ) * b->width * b->height );
+	b->verts  = safe_malloc( sizeof( b->verts[0] ) * b->width * b->height );
 
-	if( d[ 0 ][ 0 ] > 0 )
+	if( d[0][0] > 0 )
 	{
 		*front = f;
 		*back  = b;
@@ -218,11 +218,11 @@ void SplitMeshByPlane( mesh_t* in, vec3_t normal, float dist, mesh_t** front, me
 		{
 			if( w <= split )
 			{
-				f->verts[ h * f->width + w ] = in->verts[ h * in->width + w ];
+				f->verts[h * f->width + w] = in->verts[h * in->width + w];
 			}
 			else
 			{
-				b->verts[ h * b->width + w - split + backAprox ] = in->verts[ h * in->width + w ];
+				b->verts[h * b->width + w - split + backAprox] = in->verts[h * in->width + w];
 			}
 		}
 	}
@@ -230,11 +230,11 @@ void SplitMeshByPlane( mesh_t* in, vec3_t normal, float dist, mesh_t** front, me
 	// clip the crossing line
 	for( h = 0; h < in->height; h++ )
 	{
-		dv = &f->verts[ h * f->width + split + 1 ];
-		v1 = &in->verts[ h * in->width + split ];
-		v2 = &in->verts[ h * in->width + split + 1 ];
+		dv = &f->verts[h * f->width + split + 1];
+		v1 = &in->verts[h * in->width + split];
+		v2 = &in->verts[h * in->width + split + 1];
 
-		frac = d[ h ][ split ] / ( d[ h ][ split ] - d[ h ][ split + 1 ] );
+		frac = d[h][split] / ( d[h][split] - d[h][split + 1] );
 
 		/* interpolate */
 		//% for( i = 0; i < 10; i++ )
@@ -244,12 +244,12 @@ void SplitMeshByPlane( mesh_t* in, vec3_t normal, float dist, mesh_t** front, me
 
 		if( frontAprox )
 		{
-			f->verts[ h * f->width + split + 2 ] = *dv;
+			f->verts[h * f->width + split + 2] = *dv;
 		}
-		b->verts[ h * b->width ] = *dv;
+		b->verts[h * b->width] = *dv;
 		if( backAprox )
 		{
-			b->verts[ h * b->width + 1 ] = *dv;
+			b->verts[h * b->width + 1] = *dv;
 		}
 	}
 
@@ -272,15 +272,15 @@ chops a patch up by a fog brush
 
 qboolean ChopPatchSurfaceByBrush( entity_t* e, mapDrawSurface_t* ds, brush_t* b )
 {
-	int               i, j;
-	side_t*           s;
-	plane_t*          plane;
-	mesh_t*           outside[ MAX_BRUSH_SIDES ];
-	int               numOutside;
-	mesh_t *          m, *front, *back;
+	int				  i, j;
+	side_t*			  s;
+	plane_t*		  plane;
+	mesh_t*			  outside[MAX_BRUSH_SIDES];
+	int				  numOutside;
+	mesh_t *		  m, *front, *back;
 	mapDrawSurface_t* newds;
 
-	m          = DrawSurfToMesh( ds );
+	m		   = DrawSurfToMesh( ds );
 	numOutside = 0;
 
 	// only split by the top and bottom planes to avoid
@@ -288,8 +288,8 @@ qboolean ChopPatchSurfaceByBrush( entity_t* e, mapDrawSurface_t* ds, brush_t* b 
 
 	for( i = 4; i <= 5; i++ )
 	{
-		s     = &b->sides[ i ];
-		plane = &mapplanes[ s->planenum ];
+		s	  = &b->sides[i];
+		plane = &mapplanes[s->planenum];
 
 		SplitMeshByPlane( m, plane->normal, plane->dist, &front, &back );
 
@@ -298,7 +298,7 @@ qboolean ChopPatchSurfaceByBrush( entity_t* e, mapDrawSurface_t* ds, brush_t* b 
 			// nothing actually contained inside
 			for( j = 0; j < numOutside; j++ )
 			{
-				FreeMesh( outside[ j ] );
+				FreeMesh( outside[j] );
 			}
 			return qfalse;
 		}
@@ -310,7 +310,7 @@ qboolean ChopPatchSurfaceByBrush( entity_t* e, mapDrawSurface_t* ds, brush_t* b 
 			{
 				Error( "MAX_BRUSH_SIDES" );
 			}
-			outside[ numOutside ] = front;
+			outside[numOutside] = front;
 			numOutside++;
 		}
 	}
@@ -320,20 +320,20 @@ qboolean ChopPatchSurfaceByBrush( entity_t* e, mapDrawSurface_t* ds, brush_t* b 
 	for( i = 0; i < numOutside; i++ )
 	{
 		/* transpose and invert the chopped patch (fixes potential crash. fixme: why?) */
-		outside[ i ] = TransposeMesh( outside[ i ] );
-		InvertMesh( outside[ i ] );
+		outside[i] = TransposeMesh( outside[i] );
+		InvertMesh( outside[i] );
 
 		/* ydnar: do this the hacky right way */
 		newds = AllocDrawSurface( SURFACE_PATCH );
 		memcpy( newds, ds, sizeof( *ds ) );
-		newds->patchWidth  = outside[ i ]->width;
-		newds->patchHeight = outside[ i ]->height;
-		newds->numVerts    = outside[ i ]->width * outside[ i ]->height;
-		newds->verts       = safe_malloc( newds->numVerts * sizeof( *newds->verts ) );
-		memcpy( newds->verts, outside[ i ]->verts, newds->numVerts * sizeof( *newds->verts ) );
+		newds->patchWidth  = outside[i]->width;
+		newds->patchHeight = outside[i]->height;
+		newds->numVerts	   = outside[i]->width * outside[i]->height;
+		newds->verts	   = safe_malloc( newds->numVerts * sizeof( *newds->verts ) );
+		memcpy( newds->verts, outside[i]->verts, newds->numVerts * sizeof( *newds->verts ) );
 
 		/* free the source mesh */
-		FreeMesh( outside[ i ] );
+		FreeMesh( outside[i] );
 	}
 
 	/* only rejigger this patch if it was chopped */
@@ -345,9 +345,9 @@ qboolean ChopPatchSurfaceByBrush( entity_t* e, mapDrawSurface_t* ds, brush_t* b 
 		InvertMesh( m );
 
 		/* replace ds with m */
-		ds->patchWidth  = m->width;
+		ds->patchWidth	= m->width;
 		ds->patchHeight = m->height;
-		ds->numVerts    = m->width * m->height;
+		ds->numVerts	= m->width * m->height;
 		free( ds->verts );
 		ds->verts = safe_malloc( ds->numVerts * sizeof( *ds->verts ) );
 		memcpy( ds->verts, m->verts, ds->numVerts * sizeof( *ds->verts ) );
@@ -366,14 +366,14 @@ creates a winding from a surface's verts
 winding_t* WindingFromDrawSurf( mapDrawSurface_t* ds )
 {
 	winding_t* w;
-	int        i;
+	int		   i;
 
 	// we use the first point of the surface, maybe something more clever would be useful
 	// (actually send the whole draw surface would be cool?)
 	if( ds->numVerts >= MAX_POINTS_ON_WINDING )
 	{
-		int    max = ds->numVerts;
-		vec3_t p[ 256 ];
+		int	   max = ds->numVerts;
+		vec3_t p[256];
 
 		if( max > 256 )
 		{
@@ -382,7 +382,7 @@ winding_t* WindingFromDrawSurf( mapDrawSurface_t* ds )
 
 		for( i = 0; i < max; i++ )
 		{
-			VectorCopy( ds->verts[ i ].xyz, p[ i ] );
+			VectorCopy( ds->verts[i].xyz, p[i] );
 		}
 
 #if defined( USE_XML )
@@ -390,11 +390,11 @@ winding_t* WindingFromDrawSurf( mapDrawSurface_t* ds )
 #endif
 	}
 
-	w            = AllocWinding( ds->numVerts );
+	w			 = AllocWinding( ds->numVerts );
 	w->numpoints = ds->numVerts;
 	for( i = 0; i < ds->numVerts; i++ )
 	{
-		VectorCopy( ds->verts[ i ].xyz, w->p[ i ] );
+		VectorCopy( ds->verts[i].xyz, w->p[i] );
 	}
 	return w;
 }
@@ -406,13 +406,13 @@ chops up a face drawsurface by a fog brush, with a potential fragment left insid
 
 qboolean ChopFaceSurfaceByBrush( entity_t* e, mapDrawSurface_t* ds, brush_t* b )
 {
-	int               i, j;
-	side_t*           s;
-	plane_t*          plane;
-	winding_t*        w;
-	winding_t *       front, *back;
-	winding_t*        outside[ MAX_BRUSH_SIDES ];
-	int               numOutside;
+	int				  i, j;
+	side_t*			  s;
+	plane_t*		  plane;
+	winding_t*		  w;
+	winding_t *		  front, *back;
+	winding_t*		  outside[MAX_BRUSH_SIDES];
+	int				  numOutside;
 	mapDrawSurface_t* newds;
 
 	/* dummy check */
@@ -422,15 +422,15 @@ qboolean ChopFaceSurfaceByBrush( entity_t* e, mapDrawSurface_t* ds, brush_t* b )
 	}
 
 	/* initial setup */
-	w          = WindingFromDrawSurf( ds );
+	w		   = WindingFromDrawSurf( ds );
 	numOutside = 0;
 
 	/* chop by each brush side */
 	for( i = 0; i < b->numsides; i++ )
 	{
 		/* get brush side and plane */
-		s     = &b->sides[ i ];
-		plane = &mapplanes[ s->planenum ];
+		s	  = &b->sides[i];
+		plane = &mapplanes[s->planenum];
 
 		/* handle coplanar outfacing (don't fog) */
 		if( ds->sideRef->side->planenum == s->planenum )
@@ -453,7 +453,7 @@ qboolean ChopFaceSurfaceByBrush( entity_t* e, mapDrawSurface_t* ds, brush_t* b )
 			/* nothing actually contained inside */
 			for( j = 0; j < numOutside; j++ )
 			{
-				FreeWinding( outside[ j ] );
+				FreeWinding( outside[j] );
 			}
 			return qfalse;
 		}
@@ -464,7 +464,7 @@ qboolean ChopFaceSurfaceByBrush( entity_t* e, mapDrawSurface_t* ds, brush_t* b )
 			{
 				Error( "MAX_BRUSH_SIDES" );
 			}
-			outside[ numOutside ] = front;
+			outside[numOutside] = front;
 			numOutside++;
 		}
 
@@ -478,9 +478,9 @@ qboolean ChopFaceSurfaceByBrush( entity_t* e, mapDrawSurface_t* ds, brush_t* b )
 	s = ds->sideRef->side;
 	for( i = 0; i < numOutside; i++ )
 	{
-		newds         = DrawSurfaceForSide( e, ds->mapBrush, s, outside[ i ] );
+		newds		  = DrawSurfaceForSide( e, ds->mapBrush, s, outside[i] );
 		newds->fogNum = ds->fogNum;
-		FreeWinding( outside[ i ] );
+		FreeWinding( outside[i] );
 	}
 
 	/* ydnar: the old code neglected to snap to 0.125 for the fragment
@@ -512,32 +512,32 @@ call after the surface list has been pruned, before tjunction fixing
 
 void FogDrawSurfaces( entity_t* e )
 {
-	int               i, j, k, fogNum;
-	fog_t*            fog;
+	int				  i, j, k, fogNum;
+	fog_t*			  fog;
 	mapDrawSurface_t* ds;
-	vec3_t            mins, maxs;
-	int               fogged, numFogged;
-	int               numBaseDrawSurfs;
+	vec3_t			  mins, maxs;
+	int				  fogged, numFogged;
+	int				  numBaseDrawSurfs;
 
 	/* note it */
 	Sys_FPrintf( SYS_VRB, "----- FogDrawSurfs -----\n" );
 
 	/* reset counters */
-	numFogged       = 0;
+	numFogged		= 0;
 	numFogFragments = 0;
 
 	/* walk fog list */
 	for( fogNum = 0; fogNum < numMapFogs; fogNum++ )
 	{
 		/* get fog */
-		fog = &mapFogs[ fogNum ];
+		fog = &mapFogs[fogNum];
 
 		/* clip each surface into this, but don't clip any of the resulting fragments to the same brush */
 		numBaseDrawSurfs = numMapDrawSurfs;
 		for( i = 0; i < numBaseDrawSurfs; i++ )
 		{
 			/* get the drawsurface */
-			ds = &mapDrawSurfs[ i ];
+			ds = &mapDrawSurfs[i];
 
 			/* no fog? */
 			if( ds->shaderInfo->noFog )
@@ -561,17 +561,17 @@ void FogDrawSurfaces( entity_t* e )
 				ClearBounds( mins, maxs );
 				for( j = 0; j < ds->numVerts; j++ )
 				{
-					AddPointToBounds( ds->verts[ j ].xyz, mins, maxs );
+					AddPointToBounds( ds->verts[j].xyz, mins, maxs );
 				}
 
 				/* check against the fog brush */
 				for( k = 0; k < 3; k++ )
 				{
-					if( mins[ k ] > fog->brush->maxs[ k ] )
+					if( mins[k] > fog->brush->maxs[k] )
 					{
 						break;
 					}
-					if( maxs[ k ] < fog->brush->mins[ k ] )
+					if( maxs[k] < fog->brush->mins[k] )
 					{
 						break;
 					}
@@ -632,8 +632,8 @@ gets the fog number for a point in space
 
 int FogForPoint( vec3_t point, float epsilon )
 {
-	int      fogNum, i, j;
-	float    dot;
+	int		 fogNum, i, j;
+	float	 dot;
 	qboolean inside;
 	brush_t* brush;
 	plane_t* plane;
@@ -645,21 +645,21 @@ int FogForPoint( vec3_t point, float epsilon )
 	for( i = 0; i < numMapFogs; i++ )
 	{
 		/* sof2: global fog doesn't reference a brush */
-		if( mapFogs[ i ].brush == NULL )
+		if( mapFogs[i].brush == NULL )
 		{
 			fogNum = i;
 			continue;
 		}
 
 		/* get fog brush */
-		brush = mapFogs[ i ].brush;
+		brush = mapFogs[i].brush;
 
 		/* check point against all planes */
 		inside = qtrue;
 		for( j = 0; j < brush->numsides && inside; j++ )
 		{
-			plane = &mapplanes[ brush->sides[ j ].planenum ]; /* note usage of map planes here */
-			dot   = DotProduct( point, plane->normal );
+			plane = &mapplanes[brush->sides[j].planenum]; /* note usage of map planes here */
+			dot	  = DotProduct( point, plane->normal );
 			dot -= plane->dist;
 			if( dot > epsilon )
 			{
@@ -686,9 +686,9 @@ gets the fog number for a bounding box
 
 int FogForBounds( vec3_t mins, vec3_t maxs, float epsilon )
 {
-	int      fogNum, i, j;
-	float    highMin, lowMax, volume, bestVolume;
-	vec3_t   fogMins, fogMaxs, overlap;
+	int		 fogNum, i, j;
+	float	 highMin, lowMax, volume, bestVolume;
+	vec3_t	 fogMins, fogMaxs, overlap;
 	brush_t* brush;
 
 	/* start with bogus fog num */
@@ -701,36 +701,36 @@ int FogForBounds( vec3_t mins, vec3_t maxs, float epsilon )
 	for( i = 0; i < numMapFogs; i++ )
 	{
 		/* sof2: global fog doesn't reference a brush */
-		if( mapFogs[ i ].brush == NULL )
+		if( mapFogs[i].brush == NULL )
 		{
 			fogNum = i;
 			continue;
 		}
 
 		/* get fog brush */
-		brush = mapFogs[ i ].brush;
+		brush = mapFogs[i].brush;
 
 		/* get bounds */
-		fogMins[ 0 ] = brush->mins[ 0 ] - epsilon;
-		fogMins[ 1 ] = brush->mins[ 1 ] - epsilon;
-		fogMins[ 2 ] = brush->mins[ 2 ] - epsilon;
-		fogMaxs[ 0 ] = brush->maxs[ 0 ] + epsilon;
-		fogMaxs[ 1 ] = brush->maxs[ 1 ] + epsilon;
-		fogMaxs[ 2 ] = brush->maxs[ 2 ] + epsilon;
+		fogMins[0] = brush->mins[0] - epsilon;
+		fogMins[1] = brush->mins[1] - epsilon;
+		fogMins[2] = brush->mins[2] - epsilon;
+		fogMaxs[0] = brush->maxs[0] + epsilon;
+		fogMaxs[1] = brush->maxs[1] + epsilon;
+		fogMaxs[2] = brush->maxs[2] + epsilon;
 
 		/* check against bounds */
 		for( j = 0; j < 3; j++ )
 		{
-			if( mins[ j ] > fogMaxs[ j ] || maxs[ j ] < fogMins[ j ] )
+			if( mins[j] > fogMaxs[j] || maxs[j] < fogMins[j] )
 			{
 				break;
 			}
-			highMin      = mins[ j ] > fogMins[ j ] ? mins[ j ] : fogMins[ j ];
-			lowMax       = maxs[ j ] < fogMaxs[ j ] ? maxs[ j ] : fogMaxs[ j ];
-			overlap[ j ] = lowMax - highMin;
-			if( overlap[ j ] < 1.0f )
+			highMin	   = mins[j] > fogMins[j] ? mins[j] : fogMins[j];
+			lowMax	   = maxs[j] < fogMaxs[j] ? maxs[j] : fogMaxs[j];
+			overlap[j] = lowMax - highMin;
+			if( overlap[j] < 1.0f )
 			{
-				overlap[ j ] = 1.0f;
+				overlap[j] = 1.0f;
 			}
 		}
 
@@ -741,13 +741,13 @@ int FogForBounds( vec3_t mins, vec3_t maxs, float epsilon )
 		}
 
 		/* get volume */
-		volume = overlap[ 0 ] * overlap[ 1 ] * overlap[ 2 ];
+		volume = overlap[0] * overlap[1] * overlap[2];
 
 		/* test against best volume */
 		if( volume > bestVolume )
 		{
 			bestVolume = volume;
-			fogNum     = i;
+			fogNum	   = i;
 		}
 	}
 
@@ -762,11 +762,11 @@ generates a list of map fogs
 
 void CreateMapFogs( void )
 {
-	int         i;
-	entity_t*   entity;
-	brush_t*    brush;
-	fog_t*      fog;
-	vec3_t      invFogDir;
+	int			i;
+	entity_t*	entity;
+	brush_t*	brush;
+	fog_t*		fog;
+	vec3_t		invFogDir;
 	const char* globalFog;
 
 	/* skip? */
@@ -782,7 +782,7 @@ void CreateMapFogs( void )
 	for( i = 0; i < numEntities; i++ )
 	{
 		/* get entity */
-		entity = &entities[ i ];
+		entity = &entities[i];
 
 		/* walk entity brushes */
 		for( brush = entity->brushes; brush != NULL; brush = brush->next )
@@ -800,9 +800,9 @@ void CreateMapFogs( void )
 			}
 
 			/* set up fog */
-			fog              = &mapFogs[ numMapFogs++ ];
-			fog->si          = brush->contentShader;
-			fog->brush       = brush;
+			fog				 = &mapFogs[numMapFogs++];
+			fog->si			 = brush->contentShader;
+			fog->brush		 = brush;
 			fog->visibleSide = -1;
 
 			/* if shader specifies an explicit direction, then find a matching brush side with an opposed normal */
@@ -814,7 +814,7 @@ void CreateMapFogs( void )
 				/* find the brush side */
 				for( i = 0; i < brush->numsides; i++ )
 				{
-					if( VectorCompare( invFogDir, mapplanes[ brush->sides[ i ].planenum ].normal ) )
+					if( VectorCompare( invFogDir, mapplanes[brush->sides[i].planenum].normal ) )
 					{
 						fog->visibleSide = i;
 						//% Sys_Printf( "Brush num: %d Side num: %d\n", fog->brushNum, fog->visibleSide );
@@ -826,12 +826,12 @@ void CreateMapFogs( void )
 	}
 
 	/* ydnar: global fog */
-	globalFog = ValueForKey( &entities[ 0 ], "_fog" );
-	if( globalFog[ 0 ] == '\0' )
+	globalFog = ValueForKey( &entities[0], "_fog" );
+	if( globalFog[0] == '\0' )
 	{
-		globalFog = ValueForKey( &entities[ 0 ], "fog" );
+		globalFog = ValueForKey( &entities[0], "fog" );
 	}
-	if( globalFog[ 0 ] != '\0' )
+	if( globalFog[0] != '\0' )
 	{
 		/* test limit */
 		if( numMapFogs >= MAX_MAP_FOGS )
@@ -843,20 +843,20 @@ void CreateMapFogs( void )
 		Sys_FPrintf( SYS_VRB, "Map has global fog shader %s\n", globalFog );
 
 		/* set up fog */
-		fog     = &mapFogs[ numMapFogs++ ];
+		fog		= &mapFogs[numMapFogs++];
 		fog->si = ShaderInfoForShader( globalFog );
 		if( fog->si == NULL )
 		{
 			Error( "Invalid shader \"%s\" referenced trying to add global fog", globalFog );
 		}
-		fog->brush       = NULL;
+		fog->brush		 = NULL;
 		fog->visibleSide = -1;
 
 		/* set as default fog */
 		defaultFogNum = numMapFogs - 1;
 
 		/* mark all worldspawn brushes as fogged */
-		for( brush = entities[ 0 ].brushes; brush != NULL; brush = brush->next )
+		for( brush = entities[0].brushes; brush != NULL; brush = brush->next )
 		{
 			ApplySurfaceParm( "fog", &brush->contentFlags, NULL, &brush->compileFlags );
 		}

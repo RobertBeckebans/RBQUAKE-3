@@ -53,26 +53,26 @@ typedef unsigned char qbyte;
 typedef enum
 {
 	MSG_NOPRINT, // used by "max_msg_level" (= no printings)
-	MSG_ERROR,   // errors
+	MSG_ERROR,	 // errors
 	MSG_WARNING, // warnings
-	MSG_NORMAL,  // standard messages
-	MSG_DEBUG    // for debugging purpose
+	MSG_NORMAL,	 // standard messages
+	MSG_DEBUG	 // for debugging purpose
 } msg_level_t;
 
 // ---------- Public variables ---------- //
 
 // The master socket
-extern int inSock;
-extern int outSock;
+extern int		   inSock;
+extern int		   outSock;
 
 // The current time (updated every time we receive a packet)
-extern time_t crt_time;
+extern time_t	   crt_time;
 
 // Maximum level for a message to be printed
 extern msg_level_t max_msg_level;
 
 // Peer address. We rebuild it every time we receive a new packet
-extern char peer_address[ 128 ];
+extern char		   peer_address[128];
 
 // ---------- Public functions ---------- //
 

@@ -32,17 +32,17 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include <q_shared.h>
 #include "../sound/snd_local.h"
 
-qboolean snd_inited = qfalse;
+qboolean	snd_inited = qfalse;
 
-cvar_t* s_sdlBits;
-cvar_t* s_sdlSpeed;
-cvar_t* s_sdlChannels;
-cvar_t* s_sdlDevSamps;
-cvar_t* s_sdlMixSamps;
+cvar_t*		s_sdlBits;
+cvar_t*		s_sdlSpeed;
+cvar_t*		s_sdlChannels;
+cvar_t*		s_sdlDevSamps;
+cvar_t*		s_sdlMixSamps;
 
 /* The audio callback. All the magic happens here. */
-static int dmapos  = 0;
-static int dmasize = 0;
+static int	dmapos	= 0;
+static int	dmasize = 0;
 
 /*
 ===============
@@ -66,8 +66,8 @@ static void SNDDMA_AudioCallback( void* userdata, Uint8* stream, int len )
 	else
 	{
 		int tobufend = dmasize - pos; /* bytes to buffer's end. */
-		int len1     = len;
-		int len2     = 0;
+		int len1	 = len;
+		int len2	 = 0;
 
 		if( len1 > tobufend )
 		{
@@ -97,15 +97,10 @@ static struct
 	Uint16 enumFormat;
 	char*  stringFormat;
 } formatToStringTable[] = {
-	{ AUDIO_U8, "AUDIO_U8" },
-	{ AUDIO_S8, "AUDIO_S8" },
-	{ AUDIO_U16LSB, "AUDIO_U16LSB" },
-	{ AUDIO_S16LSB, "AUDIO_S16LSB" },
-	{ AUDIO_U16MSB, "AUDIO_U16MSB" },
-	{ AUDIO_S16MSB, "AUDIO_S16MSB" }
+	{ AUDIO_U8, "AUDIO_U8" }, { AUDIO_S8, "AUDIO_S8" }, { AUDIO_U16LSB, "AUDIO_U16LSB" }, { AUDIO_S16LSB, "AUDIO_S16LSB" }, { AUDIO_U16MSB, "AUDIO_U16MSB" }, { AUDIO_S16MSB, "AUDIO_S16MSB" }
 };
 
-static int formatToStringTableSize = sizeof( formatToStringTable ) / sizeof( formatToStringTable[ 0 ] );
+static int	formatToStringTableSize = sizeof( formatToStringTable ) / sizeof( formatToStringTable[0] );
 
 /*
 ===============
@@ -114,16 +109,16 @@ SNDDMA_PrintAudiospec
 */
 static void SNDDMA_PrintAudiospec( const char* str, const SDL_AudioSpec* spec )
 {
-	int   i;
+	int	  i;
 	char* fmt = NULL;
 
 	Com_Printf( "%s:\n", str );
 
 	for( i = 0; i < formatToStringTableSize; i++ )
 	{
-		if( spec->format == formatToStringTable[ i ].enumFormat )
+		if( spec->format == formatToStringTable[i].enumFormat )
 		{
-			fmt = formatToStringTable[ i ].stringFormat;
+			fmt = formatToStringTable[i].stringFormat;
 		}
 	}
 
@@ -150,7 +145,7 @@ qboolean SNDDMA_Init( void )
 {
 	SDL_AudioSpec desired;
 	SDL_AudioSpec obtained;
-	int           tmp;
+	int			  tmp;
 
 	if( snd_inited )
 	{
@@ -159,8 +154,8 @@ qboolean SNDDMA_Init( void )
 
 	if( !s_sdlBits )
 	{
-		s_sdlBits     = Cvar_Get( "s_sdlBits", "16", CVAR_ARCHIVE );
-		s_sdlSpeed    = Cvar_Get( "s_sdlSpeed", "0", CVAR_ARCHIVE );
+		s_sdlBits	  = Cvar_Get( "s_sdlBits", "16", CVAR_ARCHIVE );
+		s_sdlSpeed	  = Cvar_Get( "s_sdlSpeed", "0", CVAR_ARCHIVE );
 		s_sdlChannels = Cvar_Get( "s_sdlChannels", "2", CVAR_ARCHIVE );
 		s_sdlDevSamps = Cvar_Get( "s_sdlDevSamps", "0", CVAR_ARCHIVE );
 		s_sdlMixSamps = Cvar_Get( "s_sdlMixSamps", "0", CVAR_ARCHIVE );
@@ -261,14 +256,14 @@ qboolean SNDDMA_Init( void )
 		tmp = val;
 	}
 
-	dmapos               = 0;
-	dma.samplebits       = obtained.format & 0xFF; // first byte of format is bits.
-	dma.channels         = obtained.channels;
-	dma.samples          = tmp;
+	dmapos				 = 0;
+	dma.samplebits		 = obtained.format & 0xFF; // first byte of format is bits.
+	dma.channels		 = obtained.channels;
+	dma.samples			 = tmp;
 	dma.submission_chunk = 1;
-	dma.speed            = obtained.freq;
-	dmasize              = ( dma.samples * ( dma.samplebits / 8 ) );
-	dma.buffer           = calloc( 1, dmasize );
+	dma.speed			 = obtained.freq;
+	dmasize				 = ( dma.samples * ( dma.samplebits / 8 ) );
+	dma.buffer			 = calloc( 1, dmasize );
 
 	Com_Printf( "Starting SDL audio callback...\n" );
 	SDL_PauseAudio( 0 ); // start callback.
@@ -302,7 +297,7 @@ void SNDDMA_Shutdown( void )
 	free( dma.buffer );
 	dma.buffer = NULL;
 	dmapos = dmasize = 0;
-	snd_inited       = qfalse;
+	snd_inited		 = qfalse;
 	Com_Printf( "SDL audio device shut down.\n" );
 }
 

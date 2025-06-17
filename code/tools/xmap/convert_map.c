@@ -29,16 +29,16 @@ convertType_t convertType = CONVERT_NOTHING;
 WriteMapFile
 ==================
 */
-static void WriteMapFile( char* filename )
+static void	  WriteMapFile( char* filename )
 {
-	FILE*        f;
-	int          i, j, k, l;
-	entity_t*    entity;
-	epair_t*     ep;
-	bspBrush_t*  brush;
-	side_t*      side;
-	plane_t*     plane;
-	parseMesh_t* pm;
+	FILE*		  f;
+	int			  i, j, k, l;
+	entity_t*	  entity;
+	epair_t*	  ep;
+	bspBrush_t*	  brush;
+	side_t*		  side;
+	plane_t*	  plane;
+	parseMesh_t*  pm;
 
 	//  winding_t      *w;
 	shaderInfo_t* si;
@@ -54,7 +54,7 @@ static void WriteMapFile( char* filename )
 
 	for( i = 0; i < numEntities; i++ )
 	{
-		entity = &entities[ i ];
+		entity = &entities[i];
 
 		// write entity header
 		fprintf( f, "// entity %i\n", i );
@@ -76,9 +76,9 @@ static void WriteMapFile( char* filename )
 			for( k = 0, side = brush->sides; k < brush->numsides; k++, side++ )
 			{
 				// write plane equation
-				plane = &mapPlanes[ side->planenum ];
+				plane = &mapPlanes[side->planenum];
 
-				fprintf( f, "( %f %f %f %f ) ", plane->normal[ 0 ], plane->normal[ 1 ], plane->normal[ 2 ], -plane->dist );
+				fprintf( f, "( %f %f %f %f ) ", plane->normal[0], plane->normal[1], plane->normal[2], -plane->dist );
 
 				// write texture matrix
 				Write2DMatrix( f, 2, 3, ( float* )side->texMat );
@@ -123,10 +123,10 @@ static void WriteMapFile( char* filename )
 
 			// write patch dimensions
 			if( pm->patchDef3 )
-				fprintf( f, "( %i %i %i %i %i %i %i )\n", ( int )pm->info[ 0 ], ( int )pm->info[ 1 ], ( int )pm->info[ 2 ], ( int )pm->info[ 3 ], ( int )pm->info[ 4 ], ( int )pm->info[ 5 ], ( int )pm->info[ 6 ] );
+				fprintf( f, "( %i %i %i %i %i %i %i )\n", ( int )pm->info[0], ( int )pm->info[1], ( int )pm->info[2], ( int )pm->info[3], ( int )pm->info[4], ( int )pm->info[5], ( int )pm->info[6] );
 			else
 
-				fprintf( f, "( %i %i %i %i %i )\n", ( int )pm->info[ 0 ], ( int )pm->info[ 1 ], ( int )pm->info[ 2 ], ( int )pm->info[ 3 ], ( int )pm->info[ 4 ] );
+				fprintf( f, "( %i %i %i %i %i )\n", ( int )pm->info[0], ( int )pm->info[1], ( int )pm->info[2], ( int )pm->info[3], ( int )pm->info[4] );
 
 			fprintf( f, "(\n" );
 			for( k = 0; k < pm->mesh.width; k++ )
@@ -135,7 +135,7 @@ static void WriteMapFile( char* filename )
 				for( l = 0; l < pm->mesh.height; l++ )
 				{
 					// write drawVert_t::xyz + st
-					Write1DMatrix( f, 5, pm->mesh.verts[ l * pm->mesh.width + k ].xyz );
+					Write1DMatrix( f, 5, pm->mesh.verts[l * pm->mesh.width + k].xyz );
 				}
 				fprintf( f, ")\n" );
 			}
@@ -153,43 +153,43 @@ static void WriteMapFile( char* filename )
 
 int ConvertMapToMap( int argc, char** argv )
 {
-	int    i;
+	int	   i;
 	double start, end;
-	char   source[ 1024 ];
-	char   name[ 1024 ];
-	char   save[ 1024 ];
+	char   source[1024];
+	char   name[1024];
+	char   save[1024];
 
 	Sys_Printf( "---- convert map to map ----\n" );
 
 	for( i = 1; i < argc; i++ )
 	{
-		if( !strcmp( argv[ i ], "-threads" ) )
+		if( !strcmp( argv[i], "-threads" ) )
 		{
-			numthreads = atoi( argv[ i + 1 ] );
+			numthreads = atoi( argv[i + 1] );
 			i++;
 		}
-		else if( !strcmp( argv[ i ], "-v" ) )
+		else if( !strcmp( argv[i], "-v" ) )
 		{
 			Sys_Printf( "verbose = true\n" );
 			verbose = qtrue;
 		}
-		else if( !strcmp( argv[ i ], "-quake3" ) )
+		else if( !strcmp( argv[i], "-quake3" ) )
 		{
 			convertType = CONVERT_QUAKE3;
 			Sys_Printf( "converting from Quake3 to XreaL\n" );
 		}
-		else if( !strcmp( argv[ i ], "-quake4" ) )
+		else if( !strcmp( argv[i], "-quake4" ) )
 		{
 			convertType = CONVERT_QUAKE4;
 			Sys_Printf( "converting from Quake4 to XreaL\n" );
 		}
-		else if( !strcmp( argv[ i ], "-connect" ) )
+		else if( !strcmp( argv[i], "-connect" ) )
 		{
-			Broadcast_Setup( argv[ ++i ] );
+			Broadcast_Setup( argv[++i] );
 		}
-		else if( argv[ i ][ 0 ] == '-' )
+		else if( argv[i][0] == '-' )
 		{
-			Error( "Unknown option \"%s\"", argv[ i ] );
+			Error( "Unknown option \"%s\"", argv[i] );
 		}
 		else
 		{
@@ -213,12 +213,12 @@ int ConvertMapToMap( int argc, char** argv )
 
 	ThreadSetDefault();
 
-	SetQdirFromPath( argv[ i ] );
+	SetQdirFromPath( argv[i] );
 
-	strcpy( source, ExpandArg( argv[ i ] ) );
+	strcpy( source, ExpandArg( argv[i] ) );
 	StripExtension( source );
 
-	strcpy( name, ExpandArg( argv[ i ] ) );
+	strcpy( name, ExpandArg( argv[i] ) );
 	DefaultExtension( name, ".map" );
 
 	// start from scratch
@@ -227,7 +227,7 @@ int ConvertMapToMap( int argc, char** argv )
 	LoadMapFile( name );
 
 	//
-	strcpy( save, ExpandArg( argv[ i ] ) );
+	strcpy( save, ExpandArg( argv[i] ) );
 	StripExtension( save );
 	strcat( save, "_converted" );
 	DefaultExtension( save, ".map" );

@@ -29,7 +29,7 @@ EmitShader
 */
 int EmitShader( const char* shader )
 {
-	int           i;
+	int			  i;
 	shaderInfo_t* si;
 
 	if( !shader )
@@ -39,7 +39,7 @@ int EmitShader( const char* shader )
 
 	for( i = 0; i < numShaders; i++ )
 	{
-		if( !Q_stricmp( shader, dshaders[ i ].shader ) )
+		if( !Q_stricmp( shader, dshaders[i].shader ) )
 		{
 			return i;
 		}
@@ -50,11 +50,11 @@ int EmitShader( const char* shader )
 		Error( "MAX_MAP_SHADERS" );
 	}
 	numShaders++;
-	strcpy( dshaders[ i ].shader, shader );
+	strcpy( dshaders[i].shader, shader );
 
-	si                         = ShaderInfoForShader( shader );
-	dshaders[ i ].surfaceFlags = si->surfaceFlags;
-	dshaders[ i ].contentFlags = si->contents;
+	si						 = ShaderInfoForShader( shader );
+	dshaders[i].surfaceFlags = si->surfaceFlags;
+	dshaders[i].contentFlags = si->contents;
 
 	return i;
 }
@@ -69,14 +69,14 @@ brushes will be saved in the map.
 */
 void EmitPlanes( void )
 {
-	int       i;
+	int		  i;
 	dplane_t* dp;
 	plane_t*  mp;
 
 	mp = mapPlanes;
 	for( i = 0; i < numMapPlanes; i++, mp++ )
 	{
-		dp = &dplanes[ numPlanes ];
+		dp = &dplanes[numPlanes];
 		VectorCopy( mp->normal, dp->normal );
 		dp->dist = mp->dist;
 		numPlanes++;
@@ -90,8 +90,8 @@ EmitLeaf
 */
 void EmitLeaf( node_t* node )
 {
-	dleaf_t*          leaf_p;
-	bspBrush_t*       b;
+	dleaf_t*		  leaf_p;
+	bspBrush_t*		  b;
 	drawSurfaceRef_t* dsr;
 
 	// emit a leaf
@@ -100,11 +100,11 @@ void EmitLeaf( node_t* node )
 		Error( "MAX_MAP_LEAFS" );
 	}
 
-	leaf_p = &dleafs[ numLeafs ];
+	leaf_p = &dleafs[numLeafs];
 	numLeafs++;
 
 	leaf_p->cluster = node->cluster;
-	leaf_p->area    = node->area;
+	leaf_p->area	= node->area;
 
 	//
 	// write bounding box info
@@ -122,7 +122,7 @@ void EmitLeaf( node_t* node )
 		{
 			Error( "MAX_MAP_LEAFBRUSHES" );
 		}
-		dleafbrushes[ numLeafBrushes ] = b->original->outputNumber;
+		dleafbrushes[numLeafBrushes] = b->original->outputNumber;
 		numLeafBrushes++;
 	}
 	leaf_p->numLeafBrushes = numLeafBrushes - leaf_p->firstLeafBrush;
@@ -143,7 +143,7 @@ void EmitLeaf( node_t* node )
 		{
 			Error( "MAX_MAP_LEAFFACES" );
 		}
-		dleafsurfaces[ numLeafSurfaces ] = dsr->outputNumber;
+		dleafsurfaces[numLeafSurfaces] = dsr->outputNumber;
 		numLeafSurfaces++;
 	}
 
@@ -158,7 +158,7 @@ EmitDrawNode_r
 int EmitDrawNode_r( node_t* node )
 {
 	dnode_t* n;
-	int      i;
+	int		 i;
 
 	if( node->planenum == PLANENUM_LEAF )
 	{
@@ -171,7 +171,7 @@ int EmitDrawNode_r( node_t* node )
 	{
 		Error( "MAX_MAP_NODES" );
 	}
-	n = &dnodes[ numNodes ];
+	n = &dnodes[numNodes];
 	numNodes++;
 
 	VectorCopy( node->mins, n->mins );
@@ -188,15 +188,15 @@ int EmitDrawNode_r( node_t* node )
 	//
 	for( i = 0; i < 2; i++ )
 	{
-		if( node->children[ i ]->planenum == PLANENUM_LEAF )
+		if( node->children[i]->planenum == PLANENUM_LEAF )
 		{
-			n->children[ i ] = -( numLeafs + 1 );
-			EmitLeaf( node->children[ i ] );
+			n->children[i] = -( numLeafs + 1 );
+			EmitLeaf( node->children[i] );
 		}
 		else
 		{
-			n->children[ i ] = numNodes;
-			EmitDrawNode_r( node->children[ i ] );
+			n->children[i] = numNodes;
+			EmitDrawNode_r( node->children[i] );
 		}
 	}
 
@@ -212,27 +212,26 @@ SetModelNumbers
 */
 void SetModelNumbers( void )
 {
-	int         i;
-	entity_t*   ent;
-	int         models;
-	char        value[ 10 ];
+	int			i;
+	entity_t*	ent;
+	int			models;
+	char		value[10];
 	const char* classname;
 	const char* model;
 
 	models = 1;
 	for( i = 1; i < numEntities; i++ )
 	{
-		ent = &entities[ i ];
+		ent = &entities[i];
 
 		classname = ValueForKey( ent, "classname" );
-		model     = ValueForKey( ent, "model" );
+		model	  = ValueForKey( ent, "model" );
 
-		if( ent->brushes || ent->patches ||
-			( !ent->brushes && !ent->patches && model[ 0 ] != '\0' && Q_stricmp( "misc_model", classname ) ) )
+		if( ent->brushes || ent->patches || ( !ent->brushes && !ent->patches && model[0] != '\0' && Q_stricmp( "misc_model", classname ) ) )
 		{
 			sprintf( value, "*%i", models );
 			models++;
-			SetKeyValue( &entities[ i ], "model", value );
+			SetKeyValue( &entities[i], "model", value );
 		}
 	}
 }
@@ -248,11 +247,11 @@ void BeginBSPFile( void )
 {
 	// these values may actually be initialized
 	// if the file existed when loaded, so clear them explicitly
-	numModels       = 0;
-	numNodes        = 0;
-	numBrushSides   = 0;
+	numModels		= 0;
+	numNodes		= 0;
+	numBrushSides	= 0;
 	numLeafSurfaces = 0;
-	numLeafBrushes  = 0;
+	numLeafBrushes	= 0;
 
 	// leave leaf 0 as an error, because leafs are referenced as
 	// negative number nodes
@@ -266,7 +265,7 @@ EndBSPFile
 */
 void EndBSPFile( void )
 {
-	char path[ 1024 ];
+	char path[1024];
 
 	EmitPlanes();
 	UnparseEntities();
@@ -286,9 +285,9 @@ EmitBrushes
 */
 void EmitBrushes( bspBrush_t* brushes )
 {
-	int           j;
-	dbrush_t*     db;
-	bspBrush_t*   b;
+	int			  j;
+	dbrush_t*	  db;
+	bspBrush_t*	  b;
 	dbrushside_t* cp;
 
 	for( b = brushes; b; b = b->next )
@@ -298,7 +297,7 @@ void EmitBrushes( bspBrush_t* brushes )
 			Error( "MAX_MAP_BRUSHES" );
 		}
 		b->outputNumber = numBrushes;
-		db              = &dbrushes[ numBrushes ];
+		db				= &dbrushes[numBrushes];
 		numBrushes++;
 
 		db->shaderNum = EmitShader( b->contentShader->shader );
@@ -308,7 +307,7 @@ void EmitBrushes( bspBrush_t* brushes )
 		db->numSides = 0;
 		for( j = 0; j < b->numsides; j++ )
 		{
-			if( b->sides[ j ].backSide )
+			if( b->sides[j].backSide )
 			{
 				continue;
 			}
@@ -318,14 +317,14 @@ void EmitBrushes( bspBrush_t* brushes )
 				Error( "MAX_MAP_BRUSHSIDES " );
 			}
 
-			cp = &dbrushsides[ numBrushSides ];
+			cp = &dbrushsides[numBrushSides];
 			db->numSides++;
 			numBrushSides++;
-			cp->planeNum = b->sides[ j ].planenum;
+			cp->planeNum = b->sides[j].planenum;
 
-			if( b->sides[ j ].shaderInfo )
+			if( b->sides[j].shaderInfo )
 			{
-				cp->shaderNum = EmitShader( b->sides[ j ].shaderInfo->shader );
+				cp->shaderNum = EmitShader( b->sides[j].shaderInfo->shader );
 			}
 			else
 			{
@@ -350,10 +349,10 @@ void BeginModel( entity_t* e )
 	{
 		Error( "MAX_MAP_MODELS" );
 	}
-	mod = &dmodels[ numModels ];
+	mod = &dmodels[numModels];
 
 	mod->firstSurface = numDrawSurfaces;
-	mod->firstBrush   = numBrushes;
+	mod->firstBrush	  = numBrushes;
 
 	EmitBrushes( e->brushes );
 }
@@ -365,17 +364,17 @@ EndModel
 */
 void EndModel( entity_t* e, node_t* headnode )
 {
-	dmodel_t*      mod;
-	vec3_t         mins, maxs;
-	bspBrush_t*    b;
+	dmodel_t*	   mod;
+	vec3_t		   mins, maxs;
+	bspBrush_t*	   b;
 	parseMesh_t*   p;
 	drawSurface_t* ds;
-	const char*    model;
-	int            i, j;
+	const char*	   model;
+	int			   i, j;
 
 	Sys_FPrintf( SYS_VRB, "--- EndModel ---\n" );
 
-	mod = &dmodels[ numModels ];
+	mod = &dmodels[numModels];
 
 	// calculate the AABB
 	ClearBounds( mins, maxs );
@@ -393,19 +392,19 @@ void EndModel( entity_t* e, node_t* headnode )
 	{
 		for( i = 0; i < p->mesh.width * p->mesh.height; i++ )
 		{
-			AddPointToBounds( p->mesh.verts[ i ].xyz, mins, maxs );
+			AddPointToBounds( p->mesh.verts[i].xyz, mins, maxs );
 		}
 	}
 
 	model = ValueForKey( e, "model" );
-	if( !e->brushes && !e->patches && model[ 0 ] != '\0' )
+	if( !e->brushes && !e->patches && model[0] != '\0' )
 	{
-		//Sys_FPrintf(SYS_VRB, "calculating bbox from draw surfaces...\n");
+		// Sys_FPrintf(SYS_VRB, "calculating bbox from draw surfaces...\n");
 
 		qboolean noVerts = qtrue;
 		for( i = e->firstDrawSurf; i < numMapDrawSurfs; i++ )
 		{
-			ds = &mapDrawSurfs[ i ];
+			ds = &mapDrawSurfs[i];
 
 			if( !ds->numVerts )
 			{
@@ -415,7 +414,7 @@ void EndModel( entity_t* e, node_t* headnode )
 			// HACK: don't loop only through the vertices because they can contain bad data with .lwo models ...
 			for( j = 0; j < ds->numIndexes; j++ )
 			{
-				AddPointToBounds( ds->verts[ ds->indexes[ j ] ].xyz, mins, maxs );
+				AddPointToBounds( ds->verts[ds->indexes[j]].xyz, mins, maxs );
 				noVerts = qfalse;
 			}
 		}
@@ -434,7 +433,7 @@ void EndModel( entity_t* e, node_t* headnode )
 
 	EmitDrawNode_r( headnode );
 	mod->numSurfaces = numDrawSurfaces - mod->firstSurface;
-	mod->numBrushes  = numBrushes - mod->firstBrush;
+	mod->numBrushes	 = numBrushes - mod->firstBrush;
 
 	numModels++;
 }

@@ -32,13 +32,13 @@ G_RankRunFrame
 */
 void G_RankRunFrame()
 {
-	gentity_t*     ent;
-	gentity_t*     ent2;
+	gentity_t*	   ent;
+	gentity_t*	   ent2;
 	grank_status_t old_status;
 	grank_status_t status;
-	int            time;
-	int            i;
-	int            j;
+	int			   time;
+	int			   i;
+	int			   j;
 
 	if( !trap_RankCheckInit() )
 	{
@@ -51,7 +51,7 @@ void G_RankRunFrame()
 	{
 		for( i = 0; i < level.maxclients; i++ )
 		{
-			ent = &( g_entities[ i ] );
+			ent = &( g_entities[i] );
 			if( !ent->inuse )
 			{
 				continue;
@@ -68,7 +68,7 @@ void G_RankRunFrame()
 			}
 
 			old_status = ent->client->client_status;
-			status     = trap_RankUserStatus( i );
+			status	   = trap_RankUserStatus( i );
 
 			if( ent->client->client_status != status )
 			{
@@ -88,7 +88,7 @@ void G_RankRunFrame()
 				case QGR_STATUS_SPECTATOR:
 					if( ent->client->sess.sessionTeam != TEAM_SPECTATOR )
 					{
-						ent->client->sess.sessionTeam    = TEAM_SPECTATOR;
+						ent->client->sess.sessionTeam	 = TEAM_SPECTATOR;
 						ent->client->sess.spectatorState = SPECTATOR_FREE;
 						ClientSpawn( ent );
 						// make sure by now CS_GRAND rankingsGameID is ready
@@ -118,7 +118,7 @@ void G_RankRunFrame()
 						// player has just become active
 						for( j = 0; j < level.maxclients; j++ )
 						{
-							ent2 = &( g_entities[ j ] );
+							ent2 = &( g_entities[j] );
 							if( !ent2->inuse )
 							{
 								continue;
@@ -149,8 +149,7 @@ void G_RankRunFrame()
 		}
 
 		// don't let ranked games last forever
-		if( ( ( g_fraglimit.integer == 0 ) || ( g_fraglimit.integer > 100 ) ) &&
-			( ( g_timelimit.integer == 0 ) || ( g_timelimit.integer > 1000 ) ) )
+		if( ( ( g_fraglimit.integer == 0 ) || ( g_fraglimit.integer > 100 ) ) && ( ( g_timelimit.integer == 0 ) || ( g_timelimit.integer > 1000 ) ) )
 		{
 			trap_Cvar_Set( "timelimit", "1000" );
 		}
@@ -161,14 +160,14 @@ void G_RankRunFrame()
 	{
 		for( i = 0; i < level.maxclients; i++ )
 		{
-			ent = &( g_entities[ i ] );
+			ent = &( g_entities[i] );
 			if( ent->client == NULL )
 			{
 				continue;
 			}
 
-			time                                          = ( level.time - ent->client->pers.enterTime ) / 1000;
-			ent->client->ps.persistant[ PERS_MATCH_TIME ] = time;
+			time										= ( level.time - ent->client->pers.enterTime ) / 1000;
+			ent->client->ps.persistant[PERS_MATCH_TIME] = time;
 		}
 	}
 }
@@ -236,16 +235,16 @@ G_RankDamage
 void G_RankDamage( int self, int attacker, int damage, int means_of_death )
 {
 	// state information to avoid counting each shotgun pellet as a hit
-	static int last_framenum       = -1;
-	static int last_self           = -1;
-	static int last_attacker       = -1;
+	static int last_framenum	   = -1;
+	static int last_self		   = -1;
+	static int last_attacker	   = -1;
 	static int last_means_of_death = MOD_UNKNOWN;
 
-	qboolean new_hit;
-	int      splash;
-	int      key_hit;
-	int      key_damage;
-	int      key_splash;
+	qboolean   new_hit;
+	int		   splash;
+	int		   key_hit;
+	int		   key_damage;
+	int		   key_splash;
 
 	if( level.warmupTime != 0 )
 	{
@@ -253,17 +252,16 @@ void G_RankDamage( int self, int attacker, int damage, int means_of_death )
 		return;
 	}
 
-	new_hit = ( level.framenum != last_framenum ) ||
-		( self != last_self ) || ( attacker != last_attacker ) || ( means_of_death != last_means_of_death );
+	new_hit = ( level.framenum != last_framenum ) || ( self != last_self ) || ( attacker != last_attacker ) || ( means_of_death != last_means_of_death );
 
 	// update state information
-	last_framenum       = level.framenum;
-	last_self           = self;
-	last_attacker       = attacker;
+	last_framenum		= level.framenum;
+	last_self			= self;
+	last_attacker		= attacker;
 	last_means_of_death = means_of_death;
 
 	// the gauntlet only "fires" when it actually hits something
-	if( ( attacker != ENTITYNUM_WORLD ) && ( attacker != self ) && ( means_of_death == MOD_GAUNTLET ) && ( g_entities[ attacker ].client ) )
+	if( ( attacker != ENTITYNUM_WORLD ) && ( attacker != self ) && ( means_of_death == MOD_GAUNTLET ) && ( g_entities[attacker].client ) )
 	{
 		trap_RankReportInt( attacker, -1, QGR_KEY_SHOT_FIRED_GAUNTLET, 1, 1 );
 	}
@@ -294,7 +292,7 @@ void G_RankDamage( int self, int attacker, int damage, int means_of_death )
 			splash = damage;
 			break;
 		default:
-			splash     = 0;
+			splash	   = 0;
 			key_splash = -1;
 			break;
 	}
@@ -303,55 +301,55 @@ void G_RankDamage( int self, int attacker, int damage, int means_of_death )
 	switch( means_of_death )
 	{
 		case MOD_GAUNTLET:
-			key_hit    = QGR_KEY_HIT_TAKEN_GAUNTLET;
+			key_hit	   = QGR_KEY_HIT_TAKEN_GAUNTLET;
 			key_damage = QGR_KEY_DAMAGE_TAKEN_GAUNTLET;
 			break;
 		case MOD_MACHINEGUN:
-			key_hit    = QGR_KEY_HIT_TAKEN_MACHINEGUN;
+			key_hit	   = QGR_KEY_HIT_TAKEN_MACHINEGUN;
 			key_damage = QGR_KEY_DAMAGE_TAKEN_MACHINEGUN;
 			break;
 		case MOD_SHOTGUN:
-			key_hit    = QGR_KEY_HIT_TAKEN_SHOTGUN;
+			key_hit	   = QGR_KEY_HIT_TAKEN_SHOTGUN;
 			key_damage = QGR_KEY_DAMAGE_TAKEN_SHOTGUN;
 			break;
 		case MOD_GRENADE:
 		case MOD_GRENADE_SPLASH:
-			key_hit    = QGR_KEY_HIT_TAKEN_GRENADE;
+			key_hit	   = QGR_KEY_HIT_TAKEN_GRENADE;
 			key_damage = QGR_KEY_DAMAGE_TAKEN_GRENADE;
 			key_splash = QGR_KEY_SPLASH_TAKEN_GRENADE;
 			break;
 		case MOD_ROCKET:
 		case MOD_ROCKET_SPLASH:
-			key_hit    = QGR_KEY_HIT_TAKEN_ROCKET;
+			key_hit	   = QGR_KEY_HIT_TAKEN_ROCKET;
 			key_damage = QGR_KEY_DAMAGE_TAKEN_ROCKET;
 			key_splash = QGR_KEY_SPLASH_TAKEN_ROCKET;
 			break;
 		case MOD_PLASMA:
 		case MOD_PLASMA_SPLASH:
-			key_hit    = QGR_KEY_HIT_TAKEN_PLASMA;
+			key_hit	   = QGR_KEY_HIT_TAKEN_PLASMA;
 			key_damage = QGR_KEY_DAMAGE_TAKEN_PLASMA;
 			key_splash = QGR_KEY_SPLASH_TAKEN_PLASMA;
 			break;
 		case MOD_RAILGUN:
-			key_hit    = QGR_KEY_HIT_TAKEN_RAILGUN;
+			key_hit	   = QGR_KEY_HIT_TAKEN_RAILGUN;
 			key_damage = QGR_KEY_DAMAGE_TAKEN_RAILGUN;
 			break;
 		case MOD_LIGHTNING:
-			key_hit    = QGR_KEY_HIT_TAKEN_LIGHTNING;
+			key_hit	   = QGR_KEY_HIT_TAKEN_LIGHTNING;
 			key_damage = QGR_KEY_DAMAGE_TAKEN_LIGHTNING;
 			break;
 		case MOD_BFG:
 		case MOD_BFG_SPLASH:
-			key_hit    = QGR_KEY_HIT_TAKEN_BFG;
+			key_hit	   = QGR_KEY_HIT_TAKEN_BFG;
 			key_damage = QGR_KEY_DAMAGE_TAKEN_BFG;
 			key_splash = QGR_KEY_SPLASH_TAKEN_BFG;
 			break;
 		case MOD_GRAPPLE:
-			key_hit    = QGR_KEY_HIT_TAKEN_GRAPPLE;
+			key_hit	   = QGR_KEY_HIT_TAKEN_GRAPPLE;
 			key_damage = QGR_KEY_DAMAGE_TAKEN_GRAPPLE;
 			break;
 		default:
-			key_hit    = QGR_KEY_HIT_TAKEN_UNKNOWN;
+			key_hit	   = QGR_KEY_HIT_TAKEN_UNKNOWN;
 			key_damage = QGR_KEY_DAMAGE_TAKEN_UNKNOWN;
 			break;
 	}
@@ -380,55 +378,55 @@ void G_RankDamage( int self, int attacker, int damage, int means_of_death )
 		switch( means_of_death )
 		{
 			case MOD_GAUNTLET:
-				key_hit    = QGR_KEY_HIT_GIVEN_GAUNTLET;
+				key_hit	   = QGR_KEY_HIT_GIVEN_GAUNTLET;
 				key_damage = QGR_KEY_DAMAGE_GIVEN_GAUNTLET;
 				break;
 			case MOD_MACHINEGUN:
-				key_hit    = QGR_KEY_HIT_GIVEN_MACHINEGUN;
+				key_hit	   = QGR_KEY_HIT_GIVEN_MACHINEGUN;
 				key_damage = QGR_KEY_DAMAGE_GIVEN_MACHINEGUN;
 				break;
 			case MOD_SHOTGUN:
-				key_hit    = QGR_KEY_HIT_GIVEN_SHOTGUN;
+				key_hit	   = QGR_KEY_HIT_GIVEN_SHOTGUN;
 				key_damage = QGR_KEY_DAMAGE_GIVEN_SHOTGUN;
 				break;
 			case MOD_GRENADE:
 			case MOD_GRENADE_SPLASH:
-				key_hit    = QGR_KEY_HIT_GIVEN_GRENADE;
+				key_hit	   = QGR_KEY_HIT_GIVEN_GRENADE;
 				key_damage = QGR_KEY_DAMAGE_GIVEN_GRENADE;
 				key_splash = QGR_KEY_SPLASH_GIVEN_GRENADE;
 				break;
 			case MOD_ROCKET:
 			case MOD_ROCKET_SPLASH:
-				key_hit    = QGR_KEY_HIT_GIVEN_ROCKET;
+				key_hit	   = QGR_KEY_HIT_GIVEN_ROCKET;
 				key_damage = QGR_KEY_DAMAGE_GIVEN_ROCKET;
 				key_splash = QGR_KEY_SPLASH_GIVEN_ROCKET;
 				break;
 			case MOD_PLASMA:
 			case MOD_PLASMA_SPLASH:
-				key_hit    = QGR_KEY_HIT_GIVEN_PLASMA;
+				key_hit	   = QGR_KEY_HIT_GIVEN_PLASMA;
 				key_damage = QGR_KEY_DAMAGE_GIVEN_PLASMA;
 				key_splash = QGR_KEY_SPLASH_GIVEN_PLASMA;
 				break;
 			case MOD_RAILGUN:
-				key_hit    = QGR_KEY_HIT_GIVEN_RAILGUN;
+				key_hit	   = QGR_KEY_HIT_GIVEN_RAILGUN;
 				key_damage = QGR_KEY_DAMAGE_GIVEN_RAILGUN;
 				break;
 			case MOD_LIGHTNING:
-				key_hit    = QGR_KEY_HIT_GIVEN_LIGHTNING;
+				key_hit	   = QGR_KEY_HIT_GIVEN_LIGHTNING;
 				key_damage = QGR_KEY_DAMAGE_GIVEN_LIGHTNING;
 				break;
 			case MOD_BFG:
 			case MOD_BFG_SPLASH:
-				key_hit    = QGR_KEY_HIT_GIVEN_BFG;
+				key_hit	   = QGR_KEY_HIT_GIVEN_BFG;
 				key_damage = QGR_KEY_DAMAGE_GIVEN_BFG;
 				key_splash = QGR_KEY_SPLASH_GIVEN_BFG;
 				break;
 			case MOD_GRAPPLE:
-				key_hit    = QGR_KEY_HIT_GIVEN_GRAPPLE;
+				key_hit	   = QGR_KEY_HIT_GIVEN_GRAPPLE;
 				key_damage = QGR_KEY_DAMAGE_GIVEN_GRAPPLE;
 				break;
 			default:
-				key_hit    = QGR_KEY_HIT_GIVEN_UNKNOWN;
+				key_hit	   = QGR_KEY_HIT_GIVEN_UNKNOWN;
 				key_damage = QGR_KEY_DAMAGE_GIVEN_UNKNOWN;
 				break;
 		}
@@ -437,7 +435,7 @@ void G_RankDamage( int self, int attacker, int damage, int means_of_death )
 		// jwu 8/26/00
 		// had a case where attacker is 245 which is grnadeshooter attacker is
 		// g_entities index not necessarilly clientnum
-		if( g_entities[ attacker ].client )
+		if( g_entities[attacker].client )
 		{
 			if( new_hit )
 			{
@@ -459,7 +457,7 @@ void G_RankDamage( int self, int attacker, int damage, int means_of_death )
 	}
 
 	// friendly fire
-	if( ( attacker != self ) && OnSameTeam( &( g_entities[ self ] ), &( g_entities[ attacker ] ) ) && ( g_entities[ attacker ].client ) )
+	if( ( attacker != self ) && OnSameTeam( &( g_entities[self] ), &( g_entities[attacker] ) ) && ( g_entities[attacker].client ) )
 	{
 		// report teammate hit
 		if( new_hit )
@@ -641,7 +639,7 @@ G_RankWeaponTime
 void G_RankWeaponTime( int self, int weapon )
 {
 	gclient_t* client;
-	int        time;
+	int		   time;
 
 	if( level.warmupTime != 0 )
 	{
@@ -649,8 +647,8 @@ void G_RankWeaponTime( int self, int weapon )
 		return;
 	}
 
-	client                     = g_entities[ self ].client;
-	time                       = ( level.time - client->weapon_change_time ) / 1000;
+	client					   = g_entities[self].client;
+	time					   = ( level.time - client->weapon_change_time ) / 1000;
 	client->weapon_change_time = level.time;
 
 	if( time <= 0 )
@@ -1035,8 +1033,8 @@ G_RankClientDisconnect
 void G_RankClientDisconnect( int self )
 {
 	gclient_t* client;
-	int        time;
-	int        match_rating;
+	int		   time;
+	int		   match_rating;
 
 	if( level.warmupTime != 0 )
 	{
@@ -1045,7 +1043,7 @@ void G_RankClientDisconnect( int self )
 	}
 
 	// match rating
-	client = g_entities[ self ].client;
+	client = g_entities[self].client;
 	time   = ( level.time - client->pers.enterTime ) / 1000;
 	if( time < 60 )
 	{
@@ -1053,7 +1051,7 @@ void G_RankClientDisconnect( int self )
 	}
 	else
 	{
-		match_rating = client->ps.persistant[ PERS_MATCH_RATING ] / time;
+		match_rating = client->ps.persistant[PERS_MATCH_RATING] / time;
 	}
 	trap_RankReportInt( self, -1, QGR_KEY_MATCH_RATING, match_rating, 0 );
 }
@@ -1065,9 +1063,9 @@ G_RankGameOver
 */
 void G_RankGameOver( void )
 {
-	int  i;
-	char str[ MAX_INFO_VALUE ];
-	int  num;
+	int	 i;
+	char str[MAX_INFO_VALUE];
+	int	 num;
 
 	if( level.warmupTime != 0 )
 	{

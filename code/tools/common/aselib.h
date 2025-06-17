@@ -25,8 +25,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "mathlib.h"
 #include "polyset.h"
 
-qboolean    ASE_Load( const char* filename, qboolean verbose, qboolean meshanims );
-int         ASE_GetNumSurfaces( void );
-polyset_t*  ASE_GetSurfaceAnimation( int ndx, int* numFrames, int skipFrameStart, int skipFrameEnd, int maxFrames );
+qboolean	ASE_Load( const char* filename, qboolean verbose, qboolean meshanims );
+int			ASE_GetNumSurfaces( void );
+polyset_t*	ASE_GetSurfaceAnimation( int ndx, int* numFrames, int skipFrameStart, int skipFrameEnd, int maxFrames );
 const char* ASE_GetSurfaceName( int ndx );
-void        ASE_Free( void );
+void		ASE_Free( void );

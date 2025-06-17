@@ -54,47 +54,47 @@ theora:
 	#include "client.h"
 	#include "../sound/snd_local.h"
 
-	#define OGG_BUFFER_SIZE 8 * 1024 //4096
+	#define OGG_BUFFER_SIZE 8 * 1024 // 4096
 
 typedef struct
 {
-	fileHandle_t ogmFile;
+	fileHandle_t	 ogmFile;
 
-	ogg_sync_state oy; /* sync and verify incoming physical bitstream */
-	//ogg_stream_state os; /* take physical pages, weld into a logical stream of packets */
+	ogg_sync_state	 oy; /* sync and verify incoming physical bitstream */
+	// ogg_stream_state os; /* take physical pages, weld into a logical stream of packets */
 	ogg_stream_state os_audio;
 	ogg_stream_state os_video;
 
 	vorbis_dsp_state vd; /* central working state for the packet->PCM decoder */
-	vorbis_info      vi; /* struct that stores all the static vorbis bitstream settings */
-	vorbis_comment   vc; /* struct that stores all the bitstream user comments */
+	vorbis_info		 vi; /* struct that stores all the static vorbis bitstream settings */
+	vorbis_comment	 vc; /* struct that stores all the bitstream user comments */
 
-	qboolean videoStreamIsXvid; //FIXME: atm there isn't realy a check for this (all "video" streams are handelt as xvid, because xvid support more than one "subtype")
+	qboolean		 videoStreamIsXvid; // FIXME: atm there isn't realy a check for this (all "video" streams are handelt as xvid, because xvid support more than one "subtype")
 	#ifdef USE_CIN_XVID
 	xvid_dec_stats_t xvid_dec_stats;
-	void*            xvid_dec_handle;
+	void*			 xvid_dec_handle;
 	#endif
 	qboolean videoStreamIsTheora;
 	#ifdef USE_CIN_THEORA
-	theora_info    th_info;    // dump_video.c(example decoder): ti
+	theora_info	   th_info;	   // dump_video.c(example decoder): ti
 	theora_comment th_comment; // dump_video.c(example decoder): tc
 	theora_state   th_state;   // dump_video.c(example decoder): td
 
-	yuv_buffer th_yuvbuffer;
+	yuv_buffer	   th_yuvbuffer;
 	#endif
 
 	unsigned char* outputBuffer;
-	int            outputWidht;
-	int            outputHeight;
-	int            outputBufferSize; // in Pixel (so "real Bytesize" = outputBufferSize*4)
-	int            VFrameCount;      // output video-stream
-	ogg_int64_t    Vtime_unit;
-	int            currentTime; // input from Run-function
+	int			   outputWidht;
+	int			   outputHeight;
+	int			   outputBufferSize; // in Pixel (so "real Bytesize" = outputBufferSize*4)
+	int			   VFrameCount;		 // output video-stream
+	ogg_int64_t	   Vtime_unit;
+	int			   currentTime; // input from Run-function
 } cin_ogm_t;
 
 static cin_ogm_t g_ogm;
 
-int nextNeededVFrame( void );
+int				 nextNeededVFrame( void );
 
 	/* ####################### #######################
 
@@ -107,9 +107,9 @@ int nextNeededVFrame( void );
 
 static int init_xvid()
 {
-	int ret;
+	int				  ret;
 
-	xvid_gbl_init_t   xvid_gbl_init;
+	xvid_gbl_init_t	  xvid_gbl_init;
 	xvid_dec_create_t xvid_dec_create;
 
 	/* Reset the structure with zeros */
@@ -120,7 +120,7 @@ static int init_xvid()
 	xvid_gbl_init.version = XVID_VERSION;
 
 	xvid_gbl_init.cpu_flags = 0;
-	xvid_gbl_init.debug     = 0;
+	xvid_gbl_init.debug		= 0;
 
 	xvid_global( NULL, 0, &xvid_gbl_init, NULL );
 
@@ -143,7 +143,7 @@ static int init_xvid()
 
 static int dec_xvid( unsigned char* input, int input_size )
 {
-	int ret;
+	int				 ret;
 
 	xvid_dec_frame_t xvid_dec_frame;
 
@@ -152,19 +152,19 @@ static int dec_xvid( unsigned char* input, int input_size )
 	memset( &g_ogm.xvid_dec_stats, 0, sizeof( xvid_dec_stats_t ) );
 
 	/* Set version */
-	xvid_dec_frame.version       = XVID_VERSION;
+	xvid_dec_frame.version		 = XVID_VERSION;
 	g_ogm.xvid_dec_stats.version = XVID_VERSION;
 
 	/* No general flags to set */
-	xvid_dec_frame.general = XVID_LOWDELAY; //0;
+	xvid_dec_frame.general = XVID_LOWDELAY; // 0;
 
 	/* Input stream */
 	xvid_dec_frame.bitstream = input;
-	xvid_dec_frame.length    = input_size;
+	xvid_dec_frame.length	 = input_size;
 
 	/* Output frame structure */
-	xvid_dec_frame.output.plane[ 0 ]  = g_ogm.outputBuffer;
-	xvid_dec_frame.output.stride[ 0 ] = g_ogm.outputWidht * BPP;
+	xvid_dec_frame.output.plane[0]	= g_ogm.outputBuffer;
+	xvid_dec_frame.output.stride[0] = g_ogm.outputWidht * BPP;
 	if( g_ogm.outputBuffer == NULL )
 	{
 		xvid_dec_frame.output.csp = XVID_CSP_NULL;
@@ -207,9 +207,9 @@ static int shutdown_xvid()
 */
 static int loadBlockToSync( void )
 {
-	int   r = -1;
+	int	  r = -1;
 	char* buffer;
-	int   bytes;
+	int	  bytes;
 
 	if( g_ogm.ogmFile )
 	{
@@ -231,11 +231,11 @@ static int loadBlockToSync( void )
 */
 static int loadPagesToStreams( void )
 {
-	int               r          = -1;
-	int               AudioPages = 0;
-	int               VideoPages = 0;
-	ogg_stream_state* osptr      = NULL;
-	ogg_page          og;
+	int				  r			 = -1;
+	int				  AudioPages = 0;
+	int				  VideoPages = 0;
+	ogg_stream_state* osptr		 = NULL;
+	ogg_page		  og;
 
 	while( !AudioPages || !VideoPages )
 	{
@@ -270,7 +270,7 @@ static int loadPagesToStreams( void )
 }
 
 	#define SIZEOF_RAWBUFF 4 * 1024
-static byte rawBuffer[ SIZEOF_RAWBUFF ];
+static byte rawBuffer[SIZEOF_RAWBUFF];
 
 	#define MIN_AUDIO_PRELOAD 400 // in ms
 	#define MAX_AUDIO_PRELOAD 500 // in ms
@@ -281,13 +281,13 @@ static byte rawBuffer[ SIZEOF_RAWBUFF ];
 */
 static qboolean loadAudio( void )
 {
-	qboolean     anyDataTransferred = qtrue;
-	float**      pcm;
-	float *      right, *left;
-	int          samples, samplesNeeded;
-	int          i;
-	short*       ptr;
-	ogg_packet   op;
+	qboolean	 anyDataTransferred = qtrue;
+	float**		 pcm;
+	float *		 right, *left;
+	int			 samples, samplesNeeded;
+	int			 i;
+	short*		 ptr;
+	ogg_packet	 op;
 	vorbis_block vb;
 
 	memset( &op, 0, sizeof( op ) );
@@ -301,26 +301,20 @@ static qboolean loadAudio( void )
 		if( ( samples = vorbis_synthesis_pcmout( &g_ogm.vd, &pcm ) ) > 0 )
 		{
 			// vorbis -> raw
-			ptr           = ( short* )rawBuffer;
+			ptr			  = ( short* )rawBuffer;
 			samplesNeeded = ( SIZEOF_RAWBUFF ) / ( 2 * 2 ); // (width*channel)
 			if( samples < samplesNeeded )
 			{
 				samplesNeeded = samples;
 			}
 
-			left  = pcm[ 0 ];
-			right = ( g_ogm.vi.channels > 1 ) ? pcm[ 1 ] : pcm[ 0 ];
+			left  = pcm[0];
+			right = ( g_ogm.vi.channels > 1 ) ? pcm[1] : pcm[0];
 			for( i = 0; i < samplesNeeded; ++i )
 			{
-				ptr[ 0 ] = ( left[ i ] >= -1.0f &&
-							   left[ i ] <= 1.0f ) ?
-                    left[ i ] * 32767.f :
-                    32767 * ( ( left[ i ] > 0.0f ) - ( left[ i ] < 0.0f ) );
-				ptr[ 1 ] = ( right[ i ] >= -1.0f &&
-							   right[ i ] <= 1.0f ) ?
-                    right[ i ] * 32767.f :
-                    32767 * ( ( right[ i ] > 0.0f ) - ( right[ i ] < 0.0f ) );
-				ptr += 2; //numChans;
+				ptr[0] = ( left[i] >= -1.0f && left[i] <= 1.0f ) ? left[i] * 32767.f : 32767 * ( ( left[i] > 0.0f ) - ( left[i] < 0.0f ) );
+				ptr[1] = ( right[i] >= -1.0f && right[i] <= 1.0f ) ? right[i] * 32767.f : 32767 * ( ( right[i] > 0.0f ) - ( right[i] < 0.0f ) );
+				ptr += 2; // numChans;
 			}
 
 			if( i > 0 )
@@ -370,9 +364,9 @@ static qboolean loadAudio( void )
 	#ifdef USE_CIN_XVID
 static int loadVideoFrameXvid()
 {
-	int        r = 0;
+	int		   r = 0;
 	ogg_packet op;
-	int        used_bytes = 0;
+	int		   used_bytes = 0;
 
 	memset( &op, 0, sizeof( op ) );
 
@@ -381,8 +375,7 @@ static int loadVideoFrameXvid()
 		used_bytes = dec_xvid( op.packet, op.bytes );
 		if( g_ogm.xvid_dec_stats.type == XVID_TYPE_VOL )
 		{
-			if( g_ogm.outputWidht != g_ogm.xvid_dec_stats.data.vol.width ||
-				g_ogm.outputHeight != g_ogm.xvid_dec_stats.data.vol.height )
+			if( g_ogm.outputWidht != g_ogm.xvid_dec_stats.data.vol.width || g_ogm.outputHeight != g_ogm.xvid_dec_stats.data.vol.height )
 			{
 				g_ogm.outputWidht  = g_ogm.xvid_dec_stats.data.vol.width;
 				g_ogm.outputHeight = g_ogm.xvid_dec_stats.data.vol.height;
@@ -400,11 +393,11 @@ static int loadVideoFrameXvid()
 				}
 
 				/* Allocate the new buffer */
-				g_ogm.outputBuffer = ( unsigned char* )malloc( g_ogm.outputBufferSize * 4 ); //FIXME? should the 4 stay for BPP?
+				g_ogm.outputBuffer = ( unsigned char* )malloc( g_ogm.outputBufferSize * 4 ); // FIXME? should the 4 stay for BPP?
 				if( g_ogm.outputBuffer == NULL )
 				{
 					g_ogm.outputBufferSize = 0;
-					r                      = -2;
+					r					   = -2;
 					break;
 				}
 			}
@@ -458,7 +451,7 @@ static int findSizeShift( int x, int y )
 
 static int loadVideoFrameTheora( void )
 {
-	int        r = 0;
+	int		   r = 0;
 	ogg_packet op;
 
 	memset( &op, 0, sizeof( op ) );
@@ -504,14 +497,14 @@ static int loadVideoFrameTheora( void )
 				if( g_ogm.outputBuffer == NULL )
 				{
 					g_ogm.outputBufferSize = 0;
-					r                      = -2;
+					r					   = -2;
 					break;
 				}
 			}
 
-			yWShift  = findSizeShift( g_ogm.th_yuvbuffer.y_width, g_ogm.th_info.width );
+			yWShift	 = findSizeShift( g_ogm.th_yuvbuffer.y_width, g_ogm.th_info.width );
 			uvWShift = findSizeShift( g_ogm.th_yuvbuffer.uv_width, g_ogm.th_info.width );
-			yHShift  = findSizeShift( g_ogm.th_yuvbuffer.y_height, g_ogm.th_info.height );
+			yHShift	 = findSizeShift( g_ogm.th_yuvbuffer.y_height, g_ogm.th_info.height );
 			uvHShift = findSizeShift( g_ogm.th_yuvbuffer.uv_height, g_ogm.th_info.height );
 
 			if( yWShift < 0 || uvWShift < 0 || yHShift < 0 || uvHShift < 0 )
@@ -521,12 +514,23 @@ static int loadVideoFrameTheora( void )
 			}
 			else
 			{
-				Frame_yuv_to_rgb24( g_ogm.th_yuvbuffer.y, g_ogm.th_yuvbuffer.u, g_ogm.th_yuvbuffer.v, g_ogm.th_info.width, g_ogm.th_info.height, g_ogm.th_yuvbuffer.y_stride, g_ogm.th_yuvbuffer.uv_stride, yWShift, uvWShift, yHShift, uvHShift, ( unsigned int* )g_ogm.outputBuffer );
+				Frame_yuv_to_rgb24( g_ogm.th_yuvbuffer.y,
+					g_ogm.th_yuvbuffer.u,
+					g_ogm.th_yuvbuffer.v,
+					g_ogm.th_info.width,
+					g_ogm.th_info.height,
+					g_ogm.th_yuvbuffer.y_stride,
+					g_ogm.th_yuvbuffer.uv_stride,
+					yWShift,
+					uvWShift,
+					yHShift,
+					uvHShift,
+					( unsigned int* )g_ogm.outputBuffer );
 
 				/*				unsigned char*	pixelPtr = g_ogm.outputBuffer;
 								unsigned int*	pixPtr;
 								pixPtr = (unsigned int*)g_ogm.outputBuffer;
-				
+
 								//TODO: use one yuv->rgb funktion for the hole frame (the big amout of stack movement(yuv->rgb calls) couldn't be good ;) )
 								for(j=0;j<g_ogm.th_info.height;++j) {
 									for(i=0;i<g_ogm.th_info.width;++i) {
@@ -536,7 +540,7 @@ static int loadVideoFrameTheora( void )
 											pixelPtr[1] =
 											pixelPtr[2] = g_ogm.th_yuvbuffer.y[i+j*g_ogm.th_yuvbuffer.y_stride];
 										pixelPtr+=4;
-				
+
 				#else
 										// using RoQ yuv->rgb code
 										*pixPtr++ = yuv_to_rgb24( g_ogm.th_yuvbuffer.y[(i>>yWShift)+(j>>yHShift)*g_ogm.th_yuvbuffer.y_stride],
@@ -547,7 +551,7 @@ static int loadVideoFrameTheora( void )
 								}
 				*/
 
-				r                 = 1;
+				r				  = 1;
 				g_ogm.VFrameCount = th_frame;
 			}
 		}
@@ -597,12 +601,12 @@ static int loadVideoFrame( void )
 static qboolean loadFrame( void )
 {
 	qboolean anyDataTransferred = qtrue;
-	qboolean needVOutputData    = qtrue;
+	qboolean needVOutputData	= qtrue;
 
 	//  qboolean audioSDone = qfalse;
 	//  qboolean videoSDone = qfalse;
 	qboolean audioWantsMoreData = qfalse;
-	int      status;
+	int		 status;
 
 	while( anyDataTransferred && ( needVOutputData || audioWantsMoreData ) )
 	{
@@ -659,11 +663,11 @@ static qboolean loadFrame( void )
 	return !anyDataTransferred;
 }
 
-//from VLC ogg.c ( http://trac.videolan.org/vlc/browser/trunk/modules/demux/ogg.c )
+// from VLC ogg.c ( http://trac.videolan.org/vlc/browser/trunk/modules/demux/ogg.c )
 typedef struct
 {
-	char streamtype[ 8 ];
-	char subtype[ 4 ];
+	char		streamtype[8];
+	char		subtype[4];
 
 	ogg_int32_t size; /* size of the structure */
 
@@ -709,14 +713,14 @@ qboolean isPowerOf2( int x )
 
   return: 0 -> no problem
 */
-//TODO: vorbis/theora-header&init in sub-functions
-//TODO: "clean" error-returns ...
+// TODO: vorbis/theora-header&init in sub-functions
+// TODO: "clean" error-returns ...
 int Cin_OGM_Init( const char* filename )
 {
-	int        status;
+	int		   status;
 	ogg_page   og;
 	ogg_packet op;
-	int        i;
+	int		   i;
 
 	if( g_ogm.ogmFile )
 	{
@@ -735,15 +739,15 @@ int Cin_OGM_Init( const char* filename )
 
 	ogg_sync_init( &g_ogm.oy ); /* Now we can read pages */
 
-	//FIXME? can serialno be 0 in ogg? (better way to check inited?)
-	//TODO: support for more than one audio stream? / detect files with one stream(or without correct ones)
+	// FIXME? can serialno be 0 in ogg? (better way to check inited?)
+	// TODO: support for more than one audio stream? / detect files with one stream(or without correct ones)
 	while( !g_ogm.os_audio.serialno || !g_ogm.os_video.serialno )
 	{
 		if( ogg_sync_pageout( &g_ogm.oy, &og ) == 1 )
 		{
 			if( strstr( ( char* )( og.body + 1 ), "vorbis" ) )
 			{
-				//FIXME? better way to find audio stream
+				// FIXME? better way to find audio stream
 				if( g_ogm.os_audio.serialno )
 				{
 					Com_Printf( S_COLOR_YELLOW "WARNING: more than one audio stream, in ogm-file(%s) ... we will stay at the first one\n", filename );
@@ -772,7 +776,7 @@ int Cin_OGM_Init( const char* filename )
 	#ifdef USE_CIN_XVID
 			if( strstr( ( char* )( og.body + 1 ), "video" ) )
 			{
-				//FIXME? better way to find video stream
+				// FIXME? better way to find video stream
 				if( g_ogm.os_video.serialno )
 				{
 					Com_Printf( "more than one video stream, in ogm-file(%s) ... we will stay at the first one\n", filename );
@@ -784,7 +788,7 @@ int Cin_OGM_Init( const char* filename )
 					g_ogm.videoStreamIsXvid = qtrue;
 
 					sh = ( stream_header_t* )( og.body + 1 );
-					//TODO: one solution for checking xvid and theora
+					// TODO: one solution for checking xvid and theora
 					if( !isPowerOf2( sh->sh.stream_header_video.width ) )
 					{
 						Com_Printf( "VideoWidth of the ogm-file isn't a power of 2 value (%s)\n", filename );
@@ -831,7 +835,7 @@ int Cin_OGM_Init( const char* filename )
 		return -3;
 	}
 
-	//load vorbis header
+	// load vorbis header
 	vorbis_info_init( &g_ogm.vi );
 	vorbis_comment_init( &g_ogm.vc );
 	i = 0;

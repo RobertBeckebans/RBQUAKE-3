@@ -27,29 +27,29 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "q_shared.h"
 #include <float.h>
 
-int nonansicast = 0;
+int			 nonansicast = 0;
 
 // *INDENT-OFF*
-vec3_t vec3_origin      = { 0, 0, 0 };
-vec3_t axisDefault[ 3 ] = { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
+vec3_t		 vec3_origin	= { 0, 0, 0 };
+vec3_t		 axisDefault[3] = { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
 
-matrix_t matrixIdentity = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
+matrix_t	 matrixIdentity = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
 
-quat_t quatIdentity = { 0, 0, 0, 1 };
+quat_t		 quatIdentity = { 0, 0, 0, 1 };
 
-vec4_t colorBlack   = { 0, 0, 0, 1 };
-vec4_t colorRed     = { 1, 0, 0, 1 };
-vec4_t colorGreen   = { 0, 1, 0, 1 };
-vec4_t colorBlue    = { 0, 0, 1, 1 };
-vec4_t colorYellow  = { 1, 1, 0, 1 };
-vec4_t colorMagenta = { 1, 0, 1, 1 };
-vec4_t colorCyan    = { 0, 1, 1, 1 };
-vec4_t colorWhite   = { 1, 1, 1, 1 };
-vec4_t colorLtGrey  = { 0.75, 0.75, 0.75, 1 };
-vec4_t colorMdGrey  = { 0.5, 0.5, 0.5, 1 };
-vec4_t colorDkGrey  = { 0.25, 0.25, 0.25, 1 };
+vec4_t		 colorBlack	  = { 0, 0, 0, 1 };
+vec4_t		 colorRed	  = { 1, 0, 0, 1 };
+vec4_t		 colorGreen	  = { 0, 1, 0, 1 };
+vec4_t		 colorBlue	  = { 0, 0, 1, 1 };
+vec4_t		 colorYellow  = { 1, 1, 0, 1 };
+vec4_t		 colorMagenta = { 1, 0, 1, 1 };
+vec4_t		 colorCyan	  = { 0, 1, 1, 1 };
+vec4_t		 colorWhite	  = { 1, 1, 1, 1 };
+vec4_t		 colorLtGrey  = { 0.75, 0.75, 0.75, 1 };
+vec4_t		 colorMdGrey  = { 0.5, 0.5, 0.5, 1 };
+vec4_t		 colorDkGrey  = { 0.25, 0.25, 0.25, 1 };
 
-const vec4_t g_color_table[ 8 ] = {
+const vec4_t g_color_table[8] = {
 	{ 0.00000f, 0.00000f, 0.00000f, 1.00000f }, // 0 standard colors
 	{ 1.00000f, 0.00000f, 0.00000f, 1.00000f }, // 1 |
 	{ 0.00000f, 1.00000f, 0.00000f, 1.00000f }, // 2 v
@@ -60,14 +60,173 @@ const vec4_t g_color_table[ 8 ] = {
 	{ 1.00000f, 1.00000f, 1.00000f, 1.00000f }, // 7 |
 };
 
-vec3_t bytedirs[ NUMVERTEXNORMALS ] = {
-	{ -0.525731f, 0.000000f, 0.850651f }, { -0.442863f, 0.238856f, 0.864188f }, { -0.295242f, 0.000000f, 0.955423f }, { -0.309017f, 0.500000f, 0.809017f }, { -0.162460f, 0.262866f, 0.951056f }, { 0.000000f, 0.000000f, 1.000000f }, { 0.000000f, 0.850651f, 0.525731f }, { -0.147621f, 0.716567f, 0.681718f }, { 0.147621f, 0.716567f, 0.681718f }, { 0.000000f, 0.525731f, 0.850651f }, { 0.309017f, 0.500000f, 0.809017f }, { 0.525731f, 0.000000f, 0.850651f }, { 0.295242f, 0.000000f, 0.955423f }, { 0.442863f, 0.238856f, 0.864188f }, { 0.162460f, 0.262866f, 0.951056f }, { -0.681718f, 0.147621f, 0.716567f }, { -0.809017f, 0.309017f, 0.500000f }, { -0.587785f, 0.425325f, 0.688191f }, { -0.850651f, 0.525731f, 0.000000f }, { -0.864188f, 0.442863f, 0.238856f }, { -0.716567f, 0.681718f, 0.147621f }, { -0.688191f, 0.587785f, 0.425325f }, { -0.500000f, 0.809017f, 0.309017f }, { -0.238856f, 0.864188f, 0.442863f }, { -0.425325f, 0.688191f, 0.587785f }, { -0.716567f, 0.681718f, -0.147621f }, { -0.500000f, 0.809017f, -0.309017f }, { -0.525731f, 0.850651f, 0.000000f }, { 0.000000f, 0.850651f, -0.525731f }, { -0.238856f, 0.864188f, -0.442863f }, { 0.000000f, 0.955423f, -0.295242f }, { -0.262866f, 0.951056f, -0.162460f }, { 0.000000f, 1.000000f, 0.000000f }, { 0.000000f, 0.955423f, 0.295242f }, { -0.262866f, 0.951056f, 0.162460f }, { 0.238856f, 0.864188f, 0.442863f }, { 0.262866f, 0.951056f, 0.162460f }, { 0.500000f, 0.809017f, 0.309017f }, { 0.238856f, 0.864188f, -0.442863f }, { 0.262866f, 0.951056f, -0.162460f }, { 0.500000f, 0.809017f, -0.309017f }, { 0.850651f, 0.525731f, 0.000000f }, { 0.716567f, 0.681718f, 0.147621f }, { 0.716567f, 0.681718f, -0.147621f }, { 0.525731f, 0.850651f, 0.000000f }, { 0.425325f, 0.688191f, 0.587785f }, { 0.864188f, 0.442863f, 0.238856f }, { 0.688191f, 0.587785f, 0.425325f }, { 0.809017f, 0.309017f, 0.500000f }, { 0.681718f, 0.147621f, 0.716567f }, { 0.587785f, 0.425325f, 0.688191f }, { 0.955423f, 0.295242f, 0.000000f }, { 1.000000f, 0.000000f, 0.000000f }, { 0.951056f, 0.162460f, 0.262866f }, { 0.850651f, -0.525731f, 0.000000f }, { 0.955423f, -0.295242f, 0.000000f }, { 0.864188f, -0.442863f, 0.238856f }, { 0.951056f, -0.162460f, 0.262866f }, { 0.809017f, -0.309017f, 0.500000f }, { 0.681718f, -0.147621f, 0.716567f }, { 0.850651f, 0.000000f, 0.525731f }, { 0.864188f, 0.442863f, -0.238856f }, { 0.809017f, 0.309017f, -0.500000f }, { 0.951056f, 0.162460f, -0.262866f }, { 0.525731f, 0.000000f, -0.850651f }, { 0.681718f, 0.147621f, -0.716567f }, { 0.681718f, -0.147621f, -0.716567f }, { 0.850651f, 0.000000f, -0.525731f }, { 0.809017f, -0.309017f, -0.500000f }, { 0.864188f, -0.442863f, -0.238856f }, { 0.951056f, -0.162460f, -0.262866f }, { 0.147621f, 0.716567f, -0.681718f }, { 0.309017f, 0.500000f, -0.809017f }, { 0.425325f, 0.688191f, -0.587785f }, { 0.442863f, 0.238856f, -0.864188f }, { 0.587785f, 0.425325f, -0.688191f }, { 0.688191f, 0.587785f, -0.425325f }, { -0.147621f, 0.716567f, -0.681718f }, { -0.309017f, 0.500000f, -0.809017f }, { 0.000000f, 0.525731f, -0.850651f }, { -0.525731f, 0.000000f, -0.850651f }, { -0.442863f, 0.238856f, -0.864188f }, { -0.295242f, 0.000000f, -0.955423f }, { -0.162460f, 0.262866f, -0.951056f }, { 0.000000f, 0.000000f, -1.000000f }, { 0.295242f, 0.000000f, -0.955423f }, { 0.162460f, 0.262866f, -0.951056f }, { -0.442863f, -0.238856f, -0.864188f }, { -0.309017f, -0.500000f, -0.809017f }, { -0.162460f, -0.262866f, -0.951056f }, { 0.000000f, -0.850651f, -0.525731f }, { -0.147621f, -0.716567f, -0.681718f }, { 0.147621f, -0.716567f, -0.681718f }, { 0.000000f, -0.525731f, -0.850651f }, { 0.309017f, -0.500000f, -0.809017f }, { 0.442863f, -0.238856f, -0.864188f }, { 0.162460f, -0.262866f, -0.951056f }, { 0.238856f, -0.864188f, -0.442863f }, { 0.500000f, -0.809017f, -0.309017f }, { 0.425325f, -0.688191f, -0.587785f }, { 0.716567f, -0.681718f, -0.147621f }, { 0.688191f, -0.587785f, -0.425325f }, { 0.587785f, -0.425325f, -0.688191f }, { 0.000000f, -0.955423f, -0.295242f }, { 0.000000f, -1.000000f, 0.000000f }, { 0.262866f, -0.951056f, -0.162460f }, { 0.000000f, -0.850651f, 0.525731f }, { 0.000000f, -0.955423f, 0.295242f }, { 0.238856f, -0.864188f, 0.442863f }, { 0.262866f, -0.951056f, 0.162460f }, { 0.500000f, -0.809017f, 0.309017f }, { 0.716567f, -0.681718f, 0.147621f }, { 0.525731f, -0.850651f, 0.000000f }, { -0.238856f, -0.864188f, -0.442863f }, { -0.500000f, -0.809017f, -0.309017f }, { -0.262866f, -0.951056f, -0.162460f }, { -0.850651f, -0.525731f, 0.000000f }, { -0.716567f, -0.681718f, -0.147621f }, { -0.716567f, -0.681718f, 0.147621f }, { -0.525731f, -0.850651f, 0.000000f }, { -0.500000f, -0.809017f, 0.309017f }, { -0.238856f, -0.864188f, 0.442863f }, { -0.262866f, -0.951056f, 0.162460f }, { -0.864188f, -0.442863f, 0.238856f }, { -0.809017f, -0.309017f, 0.500000f }, { -0.688191f, -0.587785f, 0.425325f }, { -0.681718f, -0.147621f, 0.716567f }, { -0.442863f, -0.238856f, 0.864188f }, { -0.587785f, -0.425325f, 0.688191f }, { -0.309017f, -0.500000f, 0.809017f }, { -0.147621f, -0.716567f, 0.681718f }, { -0.425325f, -0.688191f, 0.587785f }, { -0.162460f, -0.262866f, 0.951056f }, { 0.442863f, -0.238856f, 0.864188f }, { 0.162460f, -0.262866f, 0.951056f }, { 0.309017f, -0.500000f, 0.809017f }, { 0.147621f, -0.716567f, 0.681718f }, { 0.000000f, -0.525731f, 0.850651f }, { 0.425325f, -0.688191f, 0.587785f }, { 0.587785f, -0.425325f, 0.688191f }, { 0.688191f, -0.587785f, 0.425325f }, { -0.955423f, 0.295242f, 0.000000f }, { -0.951056f, 0.162460f, 0.262866f }, { -1.000000f, 0.000000f, 0.000000f }, { -0.850651f, 0.000000f, 0.525731f }, { -0.955423f, -0.295242f, 0.000000f }, { -0.951056f, -0.162460f, 0.262866f }, { -0.864188f, 0.442863f, -0.238856f }, { -0.951056f, 0.162460f, -0.262866f }, { -0.809017f, 0.309017f, -0.500000f }, { -0.864188f, -0.442863f, -0.238856f }, { -0.951056f, -0.162460f, -0.262866f }, { -0.809017f, -0.309017f, -0.500000f }, { -0.681718f, 0.147621f, -0.716567f }, { -0.681718f, -0.147621f, -0.716567f }, { -0.850651f, 0.000000f, -0.525731f }, { -0.688191f, 0.587785f, -0.425325f }, { -0.587785f, 0.425325f, -0.688191f }, { -0.425325f, 0.688191f, -0.587785f }, { -0.425325f, -0.688191f, -0.587785f }, { -0.587785f, -0.425325f, -0.688191f }, { -0.688191f, -0.587785f, -0.425325f }
-};
+vec3_t bytedirs[NUMVERTEXNORMALS] = { { -0.525731f, 0.000000f, 0.850651f },
+	{ -0.442863f, 0.238856f, 0.864188f },
+	{ -0.295242f, 0.000000f, 0.955423f },
+	{ -0.309017f, 0.500000f, 0.809017f },
+	{ -0.162460f, 0.262866f, 0.951056f },
+	{ 0.000000f, 0.000000f, 1.000000f },
+	{ 0.000000f, 0.850651f, 0.525731f },
+	{ -0.147621f, 0.716567f, 0.681718f },
+	{ 0.147621f, 0.716567f, 0.681718f },
+	{ 0.000000f, 0.525731f, 0.850651f },
+	{ 0.309017f, 0.500000f, 0.809017f },
+	{ 0.525731f, 0.000000f, 0.850651f },
+	{ 0.295242f, 0.000000f, 0.955423f },
+	{ 0.442863f, 0.238856f, 0.864188f },
+	{ 0.162460f, 0.262866f, 0.951056f },
+	{ -0.681718f, 0.147621f, 0.716567f },
+	{ -0.809017f, 0.309017f, 0.500000f },
+	{ -0.587785f, 0.425325f, 0.688191f },
+	{ -0.850651f, 0.525731f, 0.000000f },
+	{ -0.864188f, 0.442863f, 0.238856f },
+	{ -0.716567f, 0.681718f, 0.147621f },
+	{ -0.688191f, 0.587785f, 0.425325f },
+	{ -0.500000f, 0.809017f, 0.309017f },
+	{ -0.238856f, 0.864188f, 0.442863f },
+	{ -0.425325f, 0.688191f, 0.587785f },
+	{ -0.716567f, 0.681718f, -0.147621f },
+	{ -0.500000f, 0.809017f, -0.309017f },
+	{ -0.525731f, 0.850651f, 0.000000f },
+	{ 0.000000f, 0.850651f, -0.525731f },
+	{ -0.238856f, 0.864188f, -0.442863f },
+	{ 0.000000f, 0.955423f, -0.295242f },
+	{ -0.262866f, 0.951056f, -0.162460f },
+	{ 0.000000f, 1.000000f, 0.000000f },
+	{ 0.000000f, 0.955423f, 0.295242f },
+	{ -0.262866f, 0.951056f, 0.162460f },
+	{ 0.238856f, 0.864188f, 0.442863f },
+	{ 0.262866f, 0.951056f, 0.162460f },
+	{ 0.500000f, 0.809017f, 0.309017f },
+	{ 0.238856f, 0.864188f, -0.442863f },
+	{ 0.262866f, 0.951056f, -0.162460f },
+	{ 0.500000f, 0.809017f, -0.309017f },
+	{ 0.850651f, 0.525731f, 0.000000f },
+	{ 0.716567f, 0.681718f, 0.147621f },
+	{ 0.716567f, 0.681718f, -0.147621f },
+	{ 0.525731f, 0.850651f, 0.000000f },
+	{ 0.425325f, 0.688191f, 0.587785f },
+	{ 0.864188f, 0.442863f, 0.238856f },
+	{ 0.688191f, 0.587785f, 0.425325f },
+	{ 0.809017f, 0.309017f, 0.500000f },
+	{ 0.681718f, 0.147621f, 0.716567f },
+	{ 0.587785f, 0.425325f, 0.688191f },
+	{ 0.955423f, 0.295242f, 0.000000f },
+	{ 1.000000f, 0.000000f, 0.000000f },
+	{ 0.951056f, 0.162460f, 0.262866f },
+	{ 0.850651f, -0.525731f, 0.000000f },
+	{ 0.955423f, -0.295242f, 0.000000f },
+	{ 0.864188f, -0.442863f, 0.238856f },
+	{ 0.951056f, -0.162460f, 0.262866f },
+	{ 0.809017f, -0.309017f, 0.500000f },
+	{ 0.681718f, -0.147621f, 0.716567f },
+	{ 0.850651f, 0.000000f, 0.525731f },
+	{ 0.864188f, 0.442863f, -0.238856f },
+	{ 0.809017f, 0.309017f, -0.500000f },
+	{ 0.951056f, 0.162460f, -0.262866f },
+	{ 0.525731f, 0.000000f, -0.850651f },
+	{ 0.681718f, 0.147621f, -0.716567f },
+	{ 0.681718f, -0.147621f, -0.716567f },
+	{ 0.850651f, 0.000000f, -0.525731f },
+	{ 0.809017f, -0.309017f, -0.500000f },
+	{ 0.864188f, -0.442863f, -0.238856f },
+	{ 0.951056f, -0.162460f, -0.262866f },
+	{ 0.147621f, 0.716567f, -0.681718f },
+	{ 0.309017f, 0.500000f, -0.809017f },
+	{ 0.425325f, 0.688191f, -0.587785f },
+	{ 0.442863f, 0.238856f, -0.864188f },
+	{ 0.587785f, 0.425325f, -0.688191f },
+	{ 0.688191f, 0.587785f, -0.425325f },
+	{ -0.147621f, 0.716567f, -0.681718f },
+	{ -0.309017f, 0.500000f, -0.809017f },
+	{ 0.000000f, 0.525731f, -0.850651f },
+	{ -0.525731f, 0.000000f, -0.850651f },
+	{ -0.442863f, 0.238856f, -0.864188f },
+	{ -0.295242f, 0.000000f, -0.955423f },
+	{ -0.162460f, 0.262866f, -0.951056f },
+	{ 0.000000f, 0.000000f, -1.000000f },
+	{ 0.295242f, 0.000000f, -0.955423f },
+	{ 0.162460f, 0.262866f, -0.951056f },
+	{ -0.442863f, -0.238856f, -0.864188f },
+	{ -0.309017f, -0.500000f, -0.809017f },
+	{ -0.162460f, -0.262866f, -0.951056f },
+	{ 0.000000f, -0.850651f, -0.525731f },
+	{ -0.147621f, -0.716567f, -0.681718f },
+	{ 0.147621f, -0.716567f, -0.681718f },
+	{ 0.000000f, -0.525731f, -0.850651f },
+	{ 0.309017f, -0.500000f, -0.809017f },
+	{ 0.442863f, -0.238856f, -0.864188f },
+	{ 0.162460f, -0.262866f, -0.951056f },
+	{ 0.238856f, -0.864188f, -0.442863f },
+	{ 0.500000f, -0.809017f, -0.309017f },
+	{ 0.425325f, -0.688191f, -0.587785f },
+	{ 0.716567f, -0.681718f, -0.147621f },
+	{ 0.688191f, -0.587785f, -0.425325f },
+	{ 0.587785f, -0.425325f, -0.688191f },
+	{ 0.000000f, -0.955423f, -0.295242f },
+	{ 0.000000f, -1.000000f, 0.000000f },
+	{ 0.262866f, -0.951056f, -0.162460f },
+	{ 0.000000f, -0.850651f, 0.525731f },
+	{ 0.000000f, -0.955423f, 0.295242f },
+	{ 0.238856f, -0.864188f, 0.442863f },
+	{ 0.262866f, -0.951056f, 0.162460f },
+	{ 0.500000f, -0.809017f, 0.309017f },
+	{ 0.716567f, -0.681718f, 0.147621f },
+	{ 0.525731f, -0.850651f, 0.000000f },
+	{ -0.238856f, -0.864188f, -0.442863f },
+	{ -0.500000f, -0.809017f, -0.309017f },
+	{ -0.262866f, -0.951056f, -0.162460f },
+	{ -0.850651f, -0.525731f, 0.000000f },
+	{ -0.716567f, -0.681718f, -0.147621f },
+	{ -0.716567f, -0.681718f, 0.147621f },
+	{ -0.525731f, -0.850651f, 0.000000f },
+	{ -0.500000f, -0.809017f, 0.309017f },
+	{ -0.238856f, -0.864188f, 0.442863f },
+	{ -0.262866f, -0.951056f, 0.162460f },
+	{ -0.864188f, -0.442863f, 0.238856f },
+	{ -0.809017f, -0.309017f, 0.500000f },
+	{ -0.688191f, -0.587785f, 0.425325f },
+	{ -0.681718f, -0.147621f, 0.716567f },
+	{ -0.442863f, -0.238856f, 0.864188f },
+	{ -0.587785f, -0.425325f, 0.688191f },
+	{ -0.309017f, -0.500000f, 0.809017f },
+	{ -0.147621f, -0.716567f, 0.681718f },
+	{ -0.425325f, -0.688191f, 0.587785f },
+	{ -0.162460f, -0.262866f, 0.951056f },
+	{ 0.442863f, -0.238856f, 0.864188f },
+	{ 0.162460f, -0.262866f, 0.951056f },
+	{ 0.309017f, -0.500000f, 0.809017f },
+	{ 0.147621f, -0.716567f, 0.681718f },
+	{ 0.000000f, -0.525731f, 0.850651f },
+	{ 0.425325f, -0.688191f, 0.587785f },
+	{ 0.587785f, -0.425325f, 0.688191f },
+	{ 0.688191f, -0.587785f, 0.425325f },
+	{ -0.955423f, 0.295242f, 0.000000f },
+	{ -0.951056f, 0.162460f, 0.262866f },
+	{ -1.000000f, 0.000000f, 0.000000f },
+	{ -0.850651f, 0.000000f, 0.525731f },
+	{ -0.955423f, -0.295242f, 0.000000f },
+	{ -0.951056f, -0.162460f, 0.262866f },
+	{ -0.864188f, 0.442863f, -0.238856f },
+	{ -0.951056f, 0.162460f, -0.262866f },
+	{ -0.809017f, 0.309017f, -0.500000f },
+	{ -0.864188f, -0.442863f, -0.238856f },
+	{ -0.951056f, -0.162460f, -0.262866f },
+	{ -0.809017f, -0.309017f, -0.500000f },
+	{ -0.681718f, 0.147621f, -0.716567f },
+	{ -0.681718f, -0.147621f, -0.716567f },
+	{ -0.850651f, 0.000000f, -0.525731f },
+	{ -0.688191f, 0.587785f, -0.425325f },
+	{ -0.587785f, 0.425325f, -0.688191f },
+	{ -0.425325f, 0.688191f, -0.587785f },
+	{ -0.425325f, -0.688191f, -0.587785f },
+	{ -0.587785f, -0.425325f, -0.688191f },
+	{ -0.688191f, -0.587785f, -0.425325f } };
 // *INDENT-ON*
 
 //==============================================================
 
-int Q_rand( int* seed )
+int	   Q_rand( int* seed )
 {
 	*seed = ( 69069 * *seed + 1 );
 	return *seed;
@@ -127,7 +286,7 @@ signed short ClampShort( int i )
 // this isn't a real cheap function to call!
 int DirToByte( vec3_t dir )
 {
-	int   i, best;
+	int	  i, best;
 	float d, bestd;
 
 	if( !dir )
@@ -139,7 +298,7 @@ int DirToByte( vec3_t dir )
 	best  = 0;
 	for( i = 0; i < NUMVERTEXNORMALS; i++ )
 	{
-		d = DotProduct( dir, bytedirs[ i ] );
+		d = DotProduct( dir, bytedirs[i] );
 		if( d > bestd )
 		{
 			bestd = d;
@@ -157,16 +316,16 @@ void ByteToDir( int b, vec3_t dir )
 		VectorCopy( vec3_origin, dir );
 		return;
 	}
-	VectorCopy( bytedirs[ b ], dir );
+	VectorCopy( bytedirs[b], dir );
 }
 
 unsigned ColorBytes3( float r, float g, float b )
 {
 	unsigned i;
 
-	( ( byte* )&i )[ 0 ] = r * 255;
-	( ( byte* )&i )[ 1 ] = g * 255;
-	( ( byte* )&i )[ 2 ] = b * 255;
+	( ( byte* )&i )[0] = r * 255;
+	( ( byte* )&i )[1] = g * 255;
+	( ( byte* )&i )[2] = b * 255;
 
 	return i;
 }
@@ -175,10 +334,10 @@ unsigned ColorBytes4( float r, float g, float b, float a )
 {
 	unsigned i;
 
-	( ( byte* )&i )[ 0 ] = r * 255;
-	( ( byte* )&i )[ 1 ] = g * 255;
-	( ( byte* )&i )[ 2 ] = b * 255;
-	( ( byte* )&i )[ 3 ] = a * 255;
+	( ( byte* )&i )[0] = r * 255;
+	( ( byte* )&i )[1] = g * 255;
+	( ( byte* )&i )[2] = b * 255;
+	( ( byte* )&i )[3] = a * 255;
 
 	return i;
 }
@@ -187,14 +346,14 @@ float NormalizeColor( const vec3_t in, vec3_t out )
 {
 	float max;
 
-	max = in[ 0 ];
-	if( in[ 1 ] > max )
+	max = in[0];
+	if( in[1] > max )
 	{
-		max = in[ 1 ];
+		max = in[1];
 	}
-	if( in[ 2 ] > max )
+	if( in[2] > max )
 	{
-		max = in[ 2 ];
+		max = in[2];
 	}
 
 	if( !max )
@@ -203,9 +362,9 @@ float NormalizeColor( const vec3_t in, vec3_t out )
 	}
 	else
 	{
-		out[ 0 ] = in[ 0 ] / max;
-		out[ 1 ] = in[ 1 ] / max;
-		out[ 2 ] = in[ 2 ] / max;
+		out[0] = in[0] / max;
+		out[1] = in[1] / max;
+		out[2] = in[2] / max;
 	}
 	return max;
 }
@@ -216,14 +375,14 @@ void ClampColor( vec4_t color )
 
 	for( i = 0; i < 4; i++ )
 	{
-		if( color[ i ] < 0 )
+		if( color[i] < 0 )
 		{
-			color[ i ] = 0;
+			color[i] = 0;
 		}
 
-		if( color[ i ] > 1 )
+		if( color[i] > 1 )
 		{
-			color[ i ] = 1;
+			color[i] = 1;
 		}
 	}
 }
@@ -261,18 +420,18 @@ vec_t PlaneNormalize( vec4_t plane )
 {
 	vec_t length, ilength;
 
-	length = sqrt( plane[ 0 ] * plane[ 0 ] + plane[ 1 ] * plane[ 1 ] + plane[ 2 ] * plane[ 2 ] );
+	length = sqrt( plane[0] * plane[0] + plane[1] * plane[1] + plane[2] * plane[2] );
 	if( length == 0 )
 	{
 		VectorClear( plane );
 		return 0;
 	}
 
-	ilength    = 1.0 / length;
-	plane[ 0 ] = plane[ 0 ] * ilength;
-	plane[ 1 ] = plane[ 1 ] * ilength;
-	plane[ 2 ] = plane[ 2 ] * ilength;
-	plane[ 3 ] = plane[ 3 ] * ilength;
+	ilength	 = 1.0 / length;
+	plane[0] = plane[0] * ilength;
+	plane[1] = plane[1] * ilength;
+	plane[2] = plane[2] * ilength;
+	plane[3] = plane[3] * ilength;
 
 	return length;
 }
@@ -305,7 +464,7 @@ qboolean PlaneFromPoints( vec4_t plane, const vec3_t a, const vec3_t b, const ve
 		return qfalse;
 	}
 
-	plane[ 3 ] = DotProduct( a, plane );
+	plane[3] = DotProduct( a, plane );
 	return qtrue;
 }
 
@@ -337,9 +496,9 @@ qboolean PlanesGetIntersectionPoint( const vec4_t plane1, const vec4_t plane2, c
 
 	VectorClear( out );
 
-	VectorMA( out, plane1[ 3 ], n2n3, out );
-	VectorMA( out, plane2[ 3 ], n3n1, out );
-	VectorMA( out, plane3[ 3 ], n1n2, out );
+	VectorMA( out, plane1[3], n2n3, out );
+	VectorMA( out, plane2[3], n3n1, out );
+	VectorMA( out, plane3[3], n1n2, out );
 
 	VectorScale( out, 1.0f / denom, out );
 
@@ -355,9 +514,9 @@ void PlaneIntersectRay( const vec3_t rayPos, const vec3_t rayDir, const vec4_t p
 
 	VectorNormalize2( rayDir, dir );
 
-	distToPlane = DotProduct( plane, rayPos ) - plane[ 3 ];
+	distToPlane = DotProduct( plane, rayPos ) - plane[3];
 	planeDotRay = DotProduct( plane, dir );
-	sect        = -( distToPlane ) / planeDotRay;
+	sect		= -( distToPlane ) / planeDotRay;
 
 	VectorMA( rayPos, sect, dir, res );
 }
@@ -382,37 +541,37 @@ void RotatePointAroundVector( vec3_t dst, const vec3_t dir, const vec3_t point, 
 	float a_sin;
 	float b_sin;
 	float c_sin;
-	float rot[ 3 ][ 3 ];
+	float rot[3][3];
 
 	cos_ia = DEG2RAD( degrees );
 	sin_a  = sin( cos_ia );
 	cos_a  = cos( cos_ia );
 	cos_ia = 1.0F - cos_a;
 
-	i_i_ia = dir[ 0 ] * dir[ 0 ] * cos_ia;
-	j_j_ia = dir[ 1 ] * dir[ 1 ] * cos_ia;
-	k_k_ia = dir[ 2 ] * dir[ 2 ] * cos_ia;
-	i_j_ia = dir[ 0 ] * dir[ 1 ] * cos_ia;
-	i_k_ia = dir[ 0 ] * dir[ 2 ] * cos_ia;
-	j_k_ia = dir[ 1 ] * dir[ 2 ] * cos_ia;
+	i_i_ia = dir[0] * dir[0] * cos_ia;
+	j_j_ia = dir[1] * dir[1] * cos_ia;
+	k_k_ia = dir[2] * dir[2] * cos_ia;
+	i_j_ia = dir[0] * dir[1] * cos_ia;
+	i_k_ia = dir[0] * dir[2] * cos_ia;
+	j_k_ia = dir[1] * dir[2] * cos_ia;
 
-	a_sin = dir[ 0 ] * sin_a;
-	b_sin = dir[ 1 ] * sin_a;
-	c_sin = dir[ 2 ] * sin_a;
+	a_sin = dir[0] * sin_a;
+	b_sin = dir[1] * sin_a;
+	c_sin = dir[2] * sin_a;
 
-	rot[ 0 ][ 0 ] = i_i_ia + cos_a;
-	rot[ 0 ][ 1 ] = i_j_ia - c_sin;
-	rot[ 0 ][ 2 ] = i_k_ia + b_sin;
-	rot[ 1 ][ 0 ] = i_j_ia + c_sin;
-	rot[ 1 ][ 1 ] = j_j_ia + cos_a;
-	rot[ 1 ][ 2 ] = j_k_ia - a_sin;
-	rot[ 2 ][ 0 ] = i_k_ia - b_sin;
-	rot[ 2 ][ 1 ] = j_k_ia + a_sin;
-	rot[ 2 ][ 2 ] = k_k_ia + cos_a;
+	rot[0][0] = i_i_ia + cos_a;
+	rot[0][1] = i_j_ia - c_sin;
+	rot[0][2] = i_k_ia + b_sin;
+	rot[1][0] = i_j_ia + c_sin;
+	rot[1][1] = j_j_ia + cos_a;
+	rot[1][2] = j_k_ia - a_sin;
+	rot[2][0] = i_k_ia - b_sin;
+	rot[2][1] = j_k_ia + a_sin;
+	rot[2][2] = k_k_ia + cos_a;
 
-	dst[ 0 ] = point[ 0 ] * rot[ 0 ][ 0 ] + point[ 1 ] * rot[ 0 ][ 1 ] + point[ 2 ] * rot[ 0 ][ 2 ];
-	dst[ 1 ] = point[ 0 ] * rot[ 1 ][ 0 ] + point[ 1 ] * rot[ 1 ][ 1 ] + point[ 2 ] * rot[ 1 ][ 2 ];
-	dst[ 2 ] = point[ 0 ] * rot[ 2 ][ 0 ] + point[ 1 ] * rot[ 2 ][ 1 ] + point[ 2 ] * rot[ 2 ][ 2 ];
+	dst[0] = point[0] * rot[0][0] + point[1] * rot[0][1] + point[2] * rot[0][2];
+	dst[1] = point[0] * rot[1][0] + point[1] * rot[1][1] + point[2] * rot[1][2];
+	dst[2] = point[0] * rot[2][0] + point[1] * rot[2][1] + point[2] * rot[2][2];
 }
 
 /*
@@ -420,27 +579,27 @@ void RotatePointAroundVector( vec3_t dst, const vec3_t dir, const vec3_t point, 
 RotateAroundDirection
 ===============
 */
-void RotateAroundDirection( vec3_t axis[ 3 ], vec_t angle )
+void RotateAroundDirection( vec3_t axis[3], vec_t angle )
 {
 	vec_t scale;
 
 	angle = DEG2RAD( angle );
 
 	// create an arbitrary axis[1]
-	PerpendicularVector( axis[ 1 ], axis[ 0 ] );
+	PerpendicularVector( axis[1], axis[0] );
 
 	// cross to get axis[2]
-	CrossProduct( axis[ 0 ], axis[ 1 ], axis[ 2 ] );
+	CrossProduct( axis[0], axis[1], axis[2] );
 
 	// rotate
 	scale = cos( angle );
-	VectorScale( axis[ 1 ], scale, axis[ 1 ] );
+	VectorScale( axis[1], scale, axis[1] );
 
 	scale = sin( angle );
-	VectorMA( axis[ 1 ], scale, axis[ 2 ], axis[ 1 ] );
+	VectorMA( axis[1], scale, axis[2], axis[1] );
 
 	// recalculate axis[2]
-	CrossProduct( axis[ 0 ], axis[ 1 ], axis[ 2 ] );
+	CrossProduct( axis[0], axis[1], axis[2] );
 }
 
 /*
@@ -482,7 +641,7 @@ int Q_isnan( float x )
 {
 	union
 	{
-		float        f;
+		float		 f;
 		unsigned int i;
 	} t;
 
@@ -498,10 +657,10 @@ void VectorToAngles( const vec3_t value1, vec3_t angles )
 	float forward;
 	float yaw, pitch;
 
-	if( value1[ 1 ] == 0 && value1[ 0 ] == 0 )
+	if( value1[1] == 0 && value1[0] == 0 )
 	{
 		yaw = 0;
-		if( value1[ 2 ] > 0 )
+		if( value1[2] > 0 )
 		{
 			pitch = 90;
 		}
@@ -512,11 +671,11 @@ void VectorToAngles( const vec3_t value1, vec3_t angles )
 	}
 	else
 	{
-		if( value1[ 0 ] )
+		if( value1[0] )
 		{
-			yaw = ( atan2( value1[ 1 ], value1[ 0 ] ) * 180 / M_PI );
+			yaw = ( atan2( value1[1], value1[0] ) * 180 / M_PI );
 		}
-		else if( value1[ 1 ] > 0 )
+		else if( value1[1] > 0 )
 		{
 			yaw = 90;
 		}
@@ -529,17 +688,17 @@ void VectorToAngles( const vec3_t value1, vec3_t angles )
 			yaw += 360;
 		}
 
-		forward = sqrt( value1[ 0 ] * value1[ 0 ] + value1[ 1 ] * value1[ 1 ] );
-		pitch   = ( atan2( value1[ 2 ], forward ) * 180 / M_PI );
+		forward = sqrt( value1[0] * value1[0] + value1[1] * value1[1] );
+		pitch	= ( atan2( value1[2], forward ) * 180 / M_PI );
 		if( pitch < 0 )
 		{
 			pitch += 360;
 		}
 	}
 
-	angles[ PITCH ] = -pitch;
-	angles[ YAW ]   = yaw;
-	angles[ ROLL ]  = 0;
+	angles[PITCH] = -pitch;
+	angles[YAW]	  = yaw;
+	angles[ROLL]  = 0;
 }
 
 /*
@@ -550,15 +709,15 @@ Takes an axis (forward + right + up)
 and returns angles -- including a roll
 =================
 */
-void AxisToAngles( vec3_t axis[ 3 ], vec3_t angles )
+void AxisToAngles( vec3_t axis[3], vec3_t angles )
 {
 	float length1;
 	float yaw, pitch, roll = 0.0f;
 
-	if( axis[ 0 ][ 1 ] == 0 && axis[ 0 ][ 0 ] == 0 )
+	if( axis[0][1] == 0 && axis[0][0] == 0 )
 	{
 		yaw = 0;
-		if( axis[ 0 ][ 2 ] > 0 )
+		if( axis[0][2] > 0 )
 		{
 			pitch = 90;
 		}
@@ -569,11 +728,11 @@ void AxisToAngles( vec3_t axis[ 3 ], vec3_t angles )
 	}
 	else
 	{
-		if( axis[ 0 ][ 0 ] )
+		if( axis[0][0] )
 		{
-			yaw = ( atan2( axis[ 0 ][ 1 ], axis[ 0 ][ 0 ] ) * 180 / M_PI );
+			yaw = ( atan2( axis[0][1], axis[0][0] ) * 180 / M_PI );
 		}
-		else if( axis[ 0 ][ 1 ] > 0 )
+		else if( axis[0][1] > 0 )
 		{
 			yaw = 90;
 		}
@@ -586,23 +745,23 @@ void AxisToAngles( vec3_t axis[ 3 ], vec3_t angles )
 			yaw += 360;
 		}
 
-		length1 = sqrt( axis[ 0 ][ 0 ] * axis[ 0 ][ 0 ] + axis[ 0 ][ 1 ] * axis[ 0 ][ 1 ] );
-		pitch   = ( atan2( axis[ 0 ][ 2 ], length1 ) * 180 / M_PI );
+		length1 = sqrt( axis[0][0] * axis[0][0] + axis[0][1] * axis[0][1] );
+		pitch	= ( atan2( axis[0][2], length1 ) * 180 / M_PI );
 		if( pitch < 0 )
 		{
 			pitch += 360;
 		}
 
-		roll = ( atan2( axis[ 1 ][ 2 ], axis[ 2 ][ 2 ] ) * 180 / M_PI );
+		roll = ( atan2( axis[1][2], axis[2][2] ) * 180 / M_PI );
 		if( roll < 0 )
 		{
 			roll += 360;
 		}
 	}
 
-	angles[ PITCH ] = -pitch;
-	angles[ YAW ]   = yaw;
-	angles[ ROLL ]  = roll;
+	angles[PITCH] = -pitch;
+	angles[YAW]	  = yaw;
+	angles[ROLL]  = roll;
 }
 
 /*
@@ -610,33 +769,33 @@ void AxisToAngles( vec3_t axis[ 3 ], vec3_t angles )
 AnglesToAxis
 =================
 */
-void AnglesToAxis( const vec3_t angles, vec3_t axis[ 3 ] )
+void AnglesToAxis( const vec3_t angles, vec3_t axis[3] )
 {
 	vec3_t right;
 
 	// angle vectors returns "right" instead of "y axis"
-	AngleVectors( angles, axis[ 0 ], right, axis[ 2 ] );
-	VectorSubtract( vec3_origin, right, axis[ 1 ] );
+	AngleVectors( angles, axis[0], right, axis[2] );
+	VectorSubtract( vec3_origin, right, axis[1] );
 }
 
-void AxisClear( vec3_t axis[ 3 ] )
+void AxisClear( vec3_t axis[3] )
 {
-	axis[ 0 ][ 0 ] = 1;
-	axis[ 0 ][ 1 ] = 0;
-	axis[ 0 ][ 2 ] = 0;
-	axis[ 1 ][ 0 ] = 0;
-	axis[ 1 ][ 1 ] = 1;
-	axis[ 1 ][ 2 ] = 0;
-	axis[ 2 ][ 0 ] = 0;
-	axis[ 2 ][ 1 ] = 0;
-	axis[ 2 ][ 2 ] = 1;
+	axis[0][0] = 1;
+	axis[0][1] = 0;
+	axis[0][2] = 0;
+	axis[1][0] = 0;
+	axis[1][1] = 1;
+	axis[1][2] = 0;
+	axis[2][0] = 0;
+	axis[2][1] = 0;
+	axis[2][2] = 1;
 }
 
-void AxisCopy( vec3_t in[ 3 ], vec3_t out[ 3 ] )
+void AxisCopy( vec3_t in[3], vec3_t out[3] )
 {
-	VectorCopy( in[ 0 ], out[ 0 ] );
-	VectorCopy( in[ 1 ], out[ 1 ] );
-	VectorCopy( in[ 2 ], out[ 2 ] );
+	VectorCopy( in[0], out[0] );
+	VectorCopy( in[1], out[1] );
+	VectorCopy( in[2], out[2] );
 }
 
 void ProjectPointOnPlane( vec3_t dst, const vec3_t p, const vec3_t normal )
@@ -649,13 +808,13 @@ void ProjectPointOnPlane( vec3_t dst, const vec3_t p, const vec3_t normal )
 
 	d = DotProduct( normal, p ) * inv_denom;
 
-	n[ 0 ] = normal[ 0 ] * inv_denom;
-	n[ 1 ] = normal[ 1 ] * inv_denom;
-	n[ 2 ] = normal[ 2 ] * inv_denom;
+	n[0] = normal[0] * inv_denom;
+	n[1] = normal[1] * inv_denom;
+	n[2] = normal[2] * inv_denom;
 
-	dst[ 0 ] = p[ 0 ] - d * n[ 0 ];
-	dst[ 1 ] = p[ 1 ] - d * n[ 1 ];
-	dst[ 2 ] = p[ 2 ] - d * n[ 2 ];
+	dst[0] = p[0] - d * n[0];
+	dst[1] = p[1] - d * n[1];
+	dst[2] = p[2] - d * n[2];
 }
 
 /*
@@ -672,9 +831,9 @@ void MakeNormalVectors( const vec3_t forward, vec3_t right, vec3_t up )
 
 	// this rotate and negate guarantees a vector
 	// not colinear with the original
-	right[ 1 ] = -forward[ 0 ];
-	right[ 2 ] = forward[ 1 ];
-	right[ 0 ] = forward[ 2 ];
+	right[1] = -forward[0];
+	right[2] = forward[1];
+	right[0] = forward[2];
 
 	d = DotProduct( right, forward );
 	VectorMA( right, -d, forward, right );
@@ -682,11 +841,11 @@ void MakeNormalVectors( const vec3_t forward, vec3_t right, vec3_t up )
 	CrossProduct( right, forward, up );
 }
 
-void VectorRotate( vec3_t in, vec3_t matrix[ 3 ], vec3_t out )
+void VectorRotate( vec3_t in, vec3_t matrix[3], vec3_t out )
 {
-	out[ 0 ] = DotProduct( in, matrix[ 0 ] );
-	out[ 1 ] = DotProduct( in, matrix[ 1 ] );
-	out[ 2 ] = DotProduct( in, matrix[ 2 ] );
+	out[0] = DotProduct( in, matrix[0] );
+	out[1] = DotProduct( in, matrix[1] );
+	out[2] = DotProduct( in, matrix[2] );
 }
 
 //============================================================
@@ -739,9 +898,9 @@ float AngleSubtract( float a1, float a2 )
 
 void AnglesSubtract( vec3_t v1, vec3_t v2, vec3_t v3 )
 {
-	v3[ 0 ] = AngleSubtract( v1[ 0 ], v2[ 0 ] );
-	v3[ 1 ] = AngleSubtract( v1[ 1 ], v2[ 1 ] );
-	v3[ 2 ] = AngleSubtract( v1[ 2 ], v2[ 2 ] );
+	v3[0] = AngleSubtract( v1[0], v2[0] );
+	v3[1] = AngleSubtract( v1[1], v2[1] );
+	v3[2] = AngleSubtract( v1[2], v2[2] );
 }
 
 /*
@@ -849,7 +1008,7 @@ void SetPlaneSignbits( cplane_t* out )
 	bits = 0;
 	for( j = 0; j < 3; j++ )
 	{
-		if( out->normal[ j ] < 0 )
+		if( out->normal[j] < 0 )
 		{
 			bits |= 1 << j;
 		}
@@ -905,16 +1064,16 @@ int BoxOnPlaneSide2(vec3_t mins, vec3_t maxs, vec4_t plane)
 int BoxOnPlaneSide( vec3_t emins, vec3_t emaxs, struct cplane_s* p )
 {
 	float dist1, dist2;
-	int   sides;
+	int	  sides;
 
 	// fast axial cases
 	if( p->type < 3 )
 	{
-		if( p->dist <= emins[ p->type ] )
+		if( p->dist <= emins[p->type] )
 		{
 			return 1;
 		}
-		if( p->dist >= emaxs[ p->type ] )
+		if( p->dist >= emaxs[p->type] )
 		{
 			return 2;
 		}
@@ -925,36 +1084,36 @@ int BoxOnPlaneSide( vec3_t emins, vec3_t emaxs, struct cplane_s* p )
 	switch( p->signbits )
 	{
 		case 0:
-			dist1 = p->normal[ 0 ] * emaxs[ 0 ] + p->normal[ 1 ] * emaxs[ 1 ] + p->normal[ 2 ] * emaxs[ 2 ];
-			dist2 = p->normal[ 0 ] * emins[ 0 ] + p->normal[ 1 ] * emins[ 1 ] + p->normal[ 2 ] * emins[ 2 ];
+			dist1 = p->normal[0] * emaxs[0] + p->normal[1] * emaxs[1] + p->normal[2] * emaxs[2];
+			dist2 = p->normal[0] * emins[0] + p->normal[1] * emins[1] + p->normal[2] * emins[2];
 			break;
 		case 1:
-			dist1 = p->normal[ 0 ] * emins[ 0 ] + p->normal[ 1 ] * emaxs[ 1 ] + p->normal[ 2 ] * emaxs[ 2 ];
-			dist2 = p->normal[ 0 ] * emaxs[ 0 ] + p->normal[ 1 ] * emins[ 1 ] + p->normal[ 2 ] * emins[ 2 ];
+			dist1 = p->normal[0] * emins[0] + p->normal[1] * emaxs[1] + p->normal[2] * emaxs[2];
+			dist2 = p->normal[0] * emaxs[0] + p->normal[1] * emins[1] + p->normal[2] * emins[2];
 			break;
 		case 2:
-			dist1 = p->normal[ 0 ] * emaxs[ 0 ] + p->normal[ 1 ] * emins[ 1 ] + p->normal[ 2 ] * emaxs[ 2 ];
-			dist2 = p->normal[ 0 ] * emins[ 0 ] + p->normal[ 1 ] * emaxs[ 1 ] + p->normal[ 2 ] * emins[ 2 ];
+			dist1 = p->normal[0] * emaxs[0] + p->normal[1] * emins[1] + p->normal[2] * emaxs[2];
+			dist2 = p->normal[0] * emins[0] + p->normal[1] * emaxs[1] + p->normal[2] * emins[2];
 			break;
 		case 3:
-			dist1 = p->normal[ 0 ] * emins[ 0 ] + p->normal[ 1 ] * emins[ 1 ] + p->normal[ 2 ] * emaxs[ 2 ];
-			dist2 = p->normal[ 0 ] * emaxs[ 0 ] + p->normal[ 1 ] * emaxs[ 1 ] + p->normal[ 2 ] * emins[ 2 ];
+			dist1 = p->normal[0] * emins[0] + p->normal[1] * emins[1] + p->normal[2] * emaxs[2];
+			dist2 = p->normal[0] * emaxs[0] + p->normal[1] * emaxs[1] + p->normal[2] * emins[2];
 			break;
 		case 4:
-			dist1 = p->normal[ 0 ] * emaxs[ 0 ] + p->normal[ 1 ] * emaxs[ 1 ] + p->normal[ 2 ] * emins[ 2 ];
-			dist2 = p->normal[ 0 ] * emins[ 0 ] + p->normal[ 1 ] * emins[ 1 ] + p->normal[ 2 ] * emaxs[ 2 ];
+			dist1 = p->normal[0] * emaxs[0] + p->normal[1] * emaxs[1] + p->normal[2] * emins[2];
+			dist2 = p->normal[0] * emins[0] + p->normal[1] * emins[1] + p->normal[2] * emaxs[2];
 			break;
 		case 5:
-			dist1 = p->normal[ 0 ] * emins[ 0 ] + p->normal[ 1 ] * emaxs[ 1 ] + p->normal[ 2 ] * emins[ 2 ];
-			dist2 = p->normal[ 0 ] * emaxs[ 0 ] + p->normal[ 1 ] * emins[ 1 ] + p->normal[ 2 ] * emaxs[ 2 ];
+			dist1 = p->normal[0] * emins[0] + p->normal[1] * emaxs[1] + p->normal[2] * emins[2];
+			dist2 = p->normal[0] * emaxs[0] + p->normal[1] * emins[1] + p->normal[2] * emaxs[2];
 			break;
 		case 6:
-			dist1 = p->normal[ 0 ] * emaxs[ 0 ] + p->normal[ 1 ] * emins[ 1 ] + p->normal[ 2 ] * emins[ 2 ];
-			dist2 = p->normal[ 0 ] * emins[ 0 ] + p->normal[ 1 ] * emaxs[ 1 ] + p->normal[ 2 ] * emaxs[ 2 ];
+			dist1 = p->normal[0] * emaxs[0] + p->normal[1] * emins[1] + p->normal[2] * emins[2];
+			dist2 = p->normal[0] * emins[0] + p->normal[1] * emaxs[1] + p->normal[2] * emaxs[2];
 			break;
 		case 7:
-			dist1 = p->normal[ 0 ] * emins[ 0 ] + p->normal[ 1 ] * emins[ 1 ] + p->normal[ 2 ] * emins[ 2 ];
-			dist2 = p->normal[ 0 ] * emaxs[ 0 ] + p->normal[ 1 ] * emaxs[ 1 ] + p->normal[ 2 ] * emaxs[ 2 ];
+			dist1 = p->normal[0] * emins[0] + p->normal[1] * emins[1] + p->normal[2] * emins[2];
+			dist2 = p->normal[0] * emaxs[0] + p->normal[1] * emaxs[1] + p->normal[2] * emaxs[2];
 			break;
 		default:
 			dist1 = dist2 = 0; // shut up compiler
@@ -980,7 +1139,7 @@ int BoxOnPlaneSide( vec3_t emins, vec3_t emaxs, struct cplane_s* p )
 __declspec( naked ) int BoxOnPlaneSide( vec3_t emins, vec3_t emaxs, struct cplane_s* p )
 {
 	static int bops_initialized;
-	static int Ljmptab[ 8 ];
+	static int Ljmptab[8];
 
 	__asm {
 	
@@ -1218,15 +1377,15 @@ RadiusFromBounds
 */
 float RadiusFromBounds( const vec3_t mins, const vec3_t maxs )
 {
-	int    i;
+	int	   i;
 	vec3_t corner;
 	float  a, b;
 
 	for( i = 0; i < 3; i++ )
 	{
-		a           = fabs( mins[ i ] );
-		b           = fabs( maxs[ i ] );
-		corner[ i ] = a > b ? a : b;
+		a		  = fabs( mins[i] );
+		b		  = fabs( maxs[i] );
+		corner[i] = a > b ? a : b;
 	}
 
 	return VectorLength( corner );
@@ -1234,79 +1393,78 @@ float RadiusFromBounds( const vec3_t mins, const vec3_t maxs )
 
 void ZeroBounds( vec3_t mins, vec3_t maxs )
 {
-	mins[ 0 ] = mins[ 1 ] = mins[ 2 ] = 0;
-	maxs[ 0 ] = maxs[ 1 ] = maxs[ 2 ] = 0;
+	mins[0] = mins[1] = mins[2] = 0;
+	maxs[0] = maxs[1] = maxs[2] = 0;
 }
 
 void ClearBounds( vec3_t mins, vec3_t maxs )
 {
-	mins[ 0 ] = mins[ 1 ] = mins[ 2 ] = 99999;
-	maxs[ 0 ] = maxs[ 1 ] = maxs[ 2 ] = -99999;
+	mins[0] = mins[1] = mins[2] = 99999;
+	maxs[0] = maxs[1] = maxs[2] = -99999;
 }
 
 void AddPointToBounds( const vec3_t v, vec3_t mins, vec3_t maxs )
 {
-	if( v[ 0 ] < mins[ 0 ] )
+	if( v[0] < mins[0] )
 	{
-		mins[ 0 ] = v[ 0 ];
+		mins[0] = v[0];
 	}
-	if( v[ 0 ] > maxs[ 0 ] )
+	if( v[0] > maxs[0] )
 	{
-		maxs[ 0 ] = v[ 0 ];
-	}
-
-	if( v[ 1 ] < mins[ 1 ] )
-	{
-		mins[ 1 ] = v[ 1 ];
-	}
-	if( v[ 1 ] > maxs[ 1 ] )
-	{
-		maxs[ 1 ] = v[ 1 ];
+		maxs[0] = v[0];
 	}
 
-	if( v[ 2 ] < mins[ 2 ] )
+	if( v[1] < mins[1] )
 	{
-		mins[ 2 ] = v[ 2 ];
+		mins[1] = v[1];
 	}
-	if( v[ 2 ] > maxs[ 2 ] )
+	if( v[1] > maxs[1] )
 	{
-		maxs[ 2 ] = v[ 2 ];
+		maxs[1] = v[1];
+	}
+
+	if( v[2] < mins[2] )
+	{
+		mins[2] = v[2];
+	}
+	if( v[2] > maxs[2] )
+	{
+		maxs[2] = v[2];
 	}
 }
 
 void BoundsAdd( vec3_t mins, vec3_t maxs, const vec3_t mins2, const vec3_t maxs2 )
 {
-	if( mins2[ 0 ] < mins[ 0 ] )
+	if( mins2[0] < mins[0] )
 	{
-		mins[ 0 ] = mins2[ 0 ];
+		mins[0] = mins2[0];
 	}
-	if( mins2[ 1 ] < mins[ 1 ] )
+	if( mins2[1] < mins[1] )
 	{
-		mins[ 1 ] = mins2[ 1 ];
+		mins[1] = mins2[1];
 	}
-	if( mins2[ 2 ] < mins[ 2 ] )
+	if( mins2[2] < mins[2] )
 	{
-		mins[ 2 ] = mins2[ 2 ];
+		mins[2] = mins2[2];
 	}
 
-	if( maxs2[ 0 ] > maxs[ 0 ] )
+	if( maxs2[0] > maxs[0] )
 	{
-		maxs[ 0 ] = maxs2[ 0 ];
+		maxs[0] = maxs2[0];
 	}
-	if( maxs2[ 1 ] > maxs[ 1 ] )
+	if( maxs2[1] > maxs[1] )
 	{
-		maxs[ 1 ] = maxs2[ 1 ];
+		maxs[1] = maxs2[1];
 	}
-	if( maxs2[ 2 ] > maxs[ 2 ] )
+	if( maxs2[2] > maxs[2] )
 	{
-		maxs[ 2 ] = maxs2[ 2 ];
+		maxs[2] = maxs2[2];
 	}
 }
 
 qboolean BoundsIntersect( const vec3_t mins, const vec3_t maxs, const vec3_t mins2, const vec3_t maxs2 )
 {
-	if( maxs[ 0 ] < mins2[ 0 ] ||
-		maxs[ 1 ] < mins2[ 1 ] || maxs[ 2 ] < mins2[ 2 ] || mins[ 0 ] > maxs2[ 0 ] || mins[ 1 ] > maxs2[ 1 ] || mins[ 2 ] > maxs2[ 2 ] )
+	if( maxs[0] < mins2[0] || maxs[1] < mins2[1] || maxs[2] < mins2[2] || mins[0] > maxs2[0] || mins[1] > maxs2[1] || mins[2] > maxs2[2] )
 	{
 		return qfalse;
 	}
@@ -1316,10 +1474,7 @@ qboolean BoundsIntersect( const vec3_t mins, const vec3_t maxs, const vec3_t min
 
 qboolean BoundsIntersectSphere( const vec3_t mins, const vec3_t maxs, const vec3_t origin, vec_t radius )
 {
-	if( origin[ 0 ] - radius > maxs[ 0 ] ||
-		origin[ 0 ] + radius < mins[ 0 ] ||
-		origin[ 1 ] - radius > maxs[ 1 ] ||
-		origin[ 1 ] + radius < mins[ 1 ] || origin[ 2 ] - radius > maxs[ 2 ] || origin[ 2 ] + radius < mins[ 2 ] )
+	if( origin[0] - radius > maxs[0] || origin[0] + radius < mins[0] || origin[1] - radius > maxs[1] || origin[1] + radius < mins[1] || origin[2] - radius > maxs[2] || origin[2] + radius < mins[2] )
 	{
 		return qfalse;
 	}
@@ -1329,8 +1484,7 @@ qboolean BoundsIntersectSphere( const vec3_t mins, const vec3_t maxs, const vec3
 
 qboolean BoundsIntersectPoint( const vec3_t mins, const vec3_t maxs, const vec3_t origin )
 {
-	if( origin[ 0 ] > maxs[ 0 ] ||
-		origin[ 0 ] < mins[ 0 ] || origin[ 1 ] > maxs[ 1 ] || origin[ 1 ] < mins[ 1 ] || origin[ 2 ] > maxs[ 2 ] || origin[ 2 ] < mins[ 2 ] )
+	if( origin[0] > maxs[0] || origin[0] < mins[0] || origin[1] > maxs[1] || origin[1] < mins[1] || origin[2] > maxs[2] || origin[2] < mins[2] )
 	{
 		return qfalse;
 	}
@@ -1341,7 +1495,7 @@ qboolean BoundsIntersectPoint( const vec3_t mins, const vec3_t maxs, const vec3_
 /*
 ======================
 SnapVectorTowards
- 
+
 Round a vector to integers for more efficient network
 transmission, but make sure that it rounds towards a given point
 rather than blindly truncating.  This prevents it from truncating
@@ -1354,13 +1508,13 @@ void SnapVectorTowards( vec3_t v, vec3_t to )
 
 	for( i = 0; i < 3; i++ )
 	{
-		if( to[ i ] <= v[ i ] )
+		if( to[i] <= v[i] )
 		{
-			v[ i ] = ( int )v[ i ];
+			v[i] = ( int )v[i];
 		}
 		else
 		{
-			v[ i ] = ( int )v[ i ] + 1;
+			v[i] = ( int )v[i] + 1;
 		}
 	}
 }
@@ -1369,7 +1523,7 @@ void SnapVectorTowards( vec3_t v, vec3_t to )
 vec_t VectorNormalize( vec3_t v )
 {
 #if id386_3dnow && defined __GNUC__ && 0
-	//#error VectorNormalize
+	// #error VectorNormalize
 	vec_t length;
 
 	femms();
@@ -1410,15 +1564,15 @@ vec_t VectorNormalize( vec3_t v )
 	// NOTE: TTimo - Apple G4 altivec source uses double?
 	float length, ilength;
 
-	length = v[ 0 ] * v[ 0 ] + v[ 1 ] * v[ 1 ] + v[ 2 ] * v[ 2 ];
+	length = v[0] * v[0] + v[1] * v[1] + v[2] * v[2];
 	length = sqrt( length );
 
 	if( length )
 	{
 		ilength = 1 / length;
-		v[ 0 ] *= ilength;
-		v[ 1 ] *= ilength;
-		v[ 2 ] *= ilength;
+		v[0] *= ilength;
+		v[1] *= ilength;
+		v[2] *= ilength;
 	}
 
 	return length;
@@ -1430,15 +1584,15 @@ vec_t VectorNormalize2( const vec3_t v, vec3_t out )
 {
 	float length, ilength;
 
-	length = v[ 0 ] * v[ 0 ] + v[ 1 ] * v[ 1 ] + v[ 2 ] * v[ 2 ];
+	length = v[0] * v[0] + v[1] * v[1] + v[2] * v[2];
 	length = sqrt( length );
 
 	if( length )
 	{
-		ilength  = 1 / length;
-		out[ 0 ] = v[ 0 ] * ilength;
-		out[ 1 ] = v[ 1 ] * ilength;
-		out[ 2 ] = v[ 2 ] * ilength;
+		ilength = 1 / length;
+		out[0]	= v[0] * ilength;
+		out[1]	= v[1] * ilength;
+		out[2]	= v[2] * ilength;
 	}
 	else
 	{
@@ -1476,15 +1630,15 @@ AxisMultiply
 */
 void AxisMultiply( axis_t in1, axis_t in2, axis_t out )
 {
-	out[ 0 ][ 0 ] = in1[ 0 ][ 0 ] * in2[ 0 ][ 0 ] + in1[ 0 ][ 1 ] * in2[ 1 ][ 0 ] + in1[ 0 ][ 2 ] * in2[ 2 ][ 0 ];
-	out[ 0 ][ 1 ] = in1[ 0 ][ 0 ] * in2[ 0 ][ 1 ] + in1[ 0 ][ 1 ] * in2[ 1 ][ 1 ] + in1[ 0 ][ 2 ] * in2[ 2 ][ 1 ];
-	out[ 0 ][ 2 ] = in1[ 0 ][ 0 ] * in2[ 0 ][ 2 ] + in1[ 0 ][ 1 ] * in2[ 1 ][ 2 ] + in1[ 0 ][ 2 ] * in2[ 2 ][ 2 ];
-	out[ 1 ][ 0 ] = in1[ 1 ][ 0 ] * in2[ 0 ][ 0 ] + in1[ 1 ][ 1 ] * in2[ 1 ][ 0 ] + in1[ 1 ][ 2 ] * in2[ 2 ][ 0 ];
-	out[ 1 ][ 1 ] = in1[ 1 ][ 0 ] * in2[ 0 ][ 1 ] + in1[ 1 ][ 1 ] * in2[ 1 ][ 1 ] + in1[ 1 ][ 2 ] * in2[ 2 ][ 1 ];
-	out[ 1 ][ 2 ] = in1[ 1 ][ 0 ] * in2[ 0 ][ 2 ] + in1[ 1 ][ 1 ] * in2[ 1 ][ 2 ] + in1[ 1 ][ 2 ] * in2[ 2 ][ 2 ];
-	out[ 2 ][ 0 ] = in1[ 2 ][ 0 ] * in2[ 0 ][ 0 ] + in1[ 2 ][ 1 ] * in2[ 1 ][ 0 ] + in1[ 2 ][ 2 ] * in2[ 2 ][ 0 ];
-	out[ 2 ][ 1 ] = in1[ 2 ][ 0 ] * in2[ 0 ][ 1 ] + in1[ 2 ][ 1 ] * in2[ 1 ][ 1 ] + in1[ 2 ][ 2 ] * in2[ 2 ][ 1 ];
-	out[ 2 ][ 2 ] = in1[ 2 ][ 0 ] * in2[ 0 ][ 2 ] + in1[ 2 ][ 1 ] * in2[ 1 ][ 2 ] + in1[ 2 ][ 2 ] * in2[ 2 ][ 2 ];
+	out[0][0] = in1[0][0] * in2[0][0] + in1[0][1] * in2[1][0] + in1[0][2] * in2[2][0];
+	out[0][1] = in1[0][0] * in2[0][1] + in1[0][1] * in2[1][1] + in1[0][2] * in2[2][1];
+	out[0][2] = in1[0][0] * in2[0][2] + in1[0][1] * in2[1][2] + in1[0][2] * in2[2][2];
+	out[1][0] = in1[1][0] * in2[0][0] + in1[1][1] * in2[1][0] + in1[1][2] * in2[2][0];
+	out[1][1] = in1[1][0] * in2[0][1] + in1[1][1] * in2[1][1] + in1[1][2] * in2[2][1];
+	out[1][2] = in1[1][0] * in2[0][2] + in1[1][1] * in2[1][2] + in1[1][2] * in2[2][2];
+	out[2][0] = in1[2][0] * in2[0][0] + in1[2][1] * in2[1][0] + in1[2][2] * in2[2][0];
+	out[2][1] = in1[2][0] * in2[0][1] + in1[2][1] * in2[1][1] + in1[2][2] * in2[2][1];
+	out[2][2] = in1[2][0] * in2[0][2] + in1[2][1] * in2[1][2] + in1[2][2] * in2[2][2];
 }
 
 /*
@@ -1492,49 +1646,49 @@ void AxisMultiply( axis_t in1, axis_t in2, axis_t out )
 VectorAxisMultiply
 ================
 */
-void VectorAxisMultiply( const vec3_t p, vec3_t m[ 3 ], vec3_t out )
+void VectorAxisMultiply( const vec3_t p, vec3_t m[3], vec3_t out )
 {
-	out[ 0 ] = m[ 0 ][ 0 ] * p[ 0 ] + m[ 1 ][ 0 ] * p[ 1 ] + m[ 2 ][ 0 ] * p[ 2 ];
-	out[ 1 ] = m[ 0 ][ 1 ] * p[ 0 ] + m[ 1 ][ 1 ] * p[ 1 ] + m[ 2 ][ 1 ] * p[ 2 ];
-	out[ 2 ] = m[ 0 ][ 2 ] * p[ 0 ] + m[ 1 ][ 2 ] * p[ 1 ] + m[ 2 ][ 2 ] * p[ 2 ];
+	out[0] = m[0][0] * p[0] + m[1][0] * p[1] + m[2][0] * p[2];
+	out[1] = m[0][1] * p[0] + m[1][1] * p[1] + m[2][1] * p[2];
+	out[2] = m[0][2] * p[0] + m[1][2] * p[1] + m[2][2] * p[2];
 }
 
 void AngleVectors( const vec3_t angles, vec3_t forward, vec3_t right, vec3_t up )
 {
-	float        angle;
+	float		 angle;
 	static float sr, sp, sy, cr, cp, cy;
 
 	// static to help MS compiler fp bugs
 
-	angle = angles[ YAW ] * ( M_PI * 2 / 360 );
-	sy    = sin( angle );
-	cy    = cos( angle );
+	angle = angles[YAW] * ( M_PI * 2 / 360 );
+	sy	  = sin( angle );
+	cy	  = cos( angle );
 
-	angle = angles[ PITCH ] * ( M_PI * 2 / 360 );
-	sp    = sin( angle );
-	cp    = cos( angle );
+	angle = angles[PITCH] * ( M_PI * 2 / 360 );
+	sp	  = sin( angle );
+	cp	  = cos( angle );
 
-	angle = angles[ ROLL ] * ( M_PI * 2 / 360 );
-	sr    = sin( angle );
-	cr    = cos( angle );
+	angle = angles[ROLL] * ( M_PI * 2 / 360 );
+	sr	  = sin( angle );
+	cr	  = cos( angle );
 
 	if( forward )
 	{
-		forward[ 0 ] = cp * cy;
-		forward[ 1 ] = cp * sy;
-		forward[ 2 ] = -sp;
+		forward[0] = cp * cy;
+		forward[1] = cp * sy;
+		forward[2] = -sp;
 	}
 	if( right )
 	{
-		right[ 0 ] = ( -1 * sr * sp * cy + -1 * cr * -sy );
-		right[ 1 ] = ( -1 * sr * sp * sy + -1 * cr * cy );
-		right[ 2 ] = -1 * sr * cp;
+		right[0] = ( -1 * sr * sp * cy + -1 * cr * -sy );
+		right[1] = ( -1 * sr * sp * sy + -1 * cr * cy );
+		right[2] = -1 * sr * cp;
 	}
 	if( up )
 	{
-		up[ 0 ] = ( cr * sp * cy + -sr * -sy );
-		up[ 1 ] = ( cr * sp * sy + -sr * cy );
-		up[ 2 ] = cr * cp;
+		up[0] = ( cr * sp * cy + -sr * -sy );
+		up[1] = ( cr * sp * sy + -sr * cy );
+		up[2] = cr * cp;
 	}
 }
 
@@ -1547,8 +1701,8 @@ assumes "src" is normalized
 */
 void PerpendicularVector( vec3_t dst, const vec3_t src )
 {
-	int    pos;
-	int    i;
+	int	   pos;
+	int	   i;
 	float  minelem = 1.0F;
 	vec3_t tempvec;
 
@@ -1557,14 +1711,14 @@ void PerpendicularVector( vec3_t dst, const vec3_t src )
 	 */
 	for( pos = 0, i = 0; i < 3; i++ )
 	{
-		if( fabs( src[ i ] ) < minelem )
+		if( fabs( src[i] ) < minelem )
 		{
-			pos     = i;
-			minelem = fabs( src[ i ] );
+			pos		= i;
+			minelem = fabs( src[i] );
 		}
 	}
-	tempvec[ 0 ] = tempvec[ 1 ] = tempvec[ 2 ] = 0.0F;
-	tempvec[ pos ]                             = 1.0F;
+	tempvec[0] = tempvec[1] = tempvec[2] = 0.0F;
+	tempvec[pos]						 = 1.0F;
 
 	/*
 	 ** project the point onto the plane defined by src
@@ -1652,16 +1806,16 @@ Return the biggest component of some vector
 */
 float VectorMaxComponent( vec3_t v )
 {
-	float biggest = v[ 0 ];
+	float biggest = v[0];
 
-	if( v[ 1 ] > biggest )
+	if( v[1] > biggest )
 	{
-		biggest = v[ 1 ];
+		biggest = v[1];
 	}
 
-	if( v[ 2 ] > biggest )
+	if( v[2] > biggest )
 	{
-		biggest = v[ 2 ];
+		biggest = v[2];
 	}
 
 	return biggest;
@@ -1676,16 +1830,16 @@ Return the smallest component of some vector
 */
 float VectorMinComponent( vec3_t v )
 {
-	float smallest = v[ 0 ];
+	float smallest = v[0];
 
-	if( v[ 1 ] < smallest )
+	if( v[1] < smallest )
 	{
-		smallest = v[ 1 ];
+		smallest = v[1];
 	}
 
-	if( v[ 2 ] < smallest )
+	if( v[2] < smallest )
 	{
-		smallest = v[ 2 ];
+		smallest = v[2];
 	}
 
 	return smallest;
@@ -1838,117 +1992,113 @@ vec_t VectorDistanceSquared( vec3_t v1, vec3_t v2 )
 // *INDENT-OFF*
 void MatrixIdentity( matrix_t m )
 {
-	m[ 0 ]  = 1;
-	m[ 4 ]  = 0;
-	m[ 8 ]  = 0;
-	m[ 12 ] = 0;
-	m[ 1 ]  = 0;
-	m[ 5 ]  = 1;
-	m[ 9 ]  = 0;
-	m[ 13 ] = 0;
-	m[ 2 ]  = 0;
-	m[ 6 ]  = 0;
-	m[ 10 ] = 1;
-	m[ 14 ] = 0;
-	m[ 3 ]  = 0;
-	m[ 7 ]  = 0;
-	m[ 11 ] = 0;
-	m[ 15 ] = 1;
+	m[0]  = 1;
+	m[4]  = 0;
+	m[8]  = 0;
+	m[12] = 0;
+	m[1]  = 0;
+	m[5]  = 1;
+	m[9]  = 0;
+	m[13] = 0;
+	m[2]  = 0;
+	m[6]  = 0;
+	m[10] = 1;
+	m[14] = 0;
+	m[3]  = 0;
+	m[7]  = 0;
+	m[11] = 0;
+	m[15] = 1;
 }
 
 void MatrixClear( matrix_t m )
 {
-	m[ 0 ]  = 0;
-	m[ 4 ]  = 0;
-	m[ 8 ]  = 0;
-	m[ 12 ] = 0;
-	m[ 1 ]  = 0;
-	m[ 5 ]  = 0;
-	m[ 9 ]  = 0;
-	m[ 13 ] = 0;
-	m[ 2 ]  = 0;
-	m[ 6 ]  = 0;
-	m[ 10 ] = 0;
-	m[ 14 ] = 0;
-	m[ 3 ]  = 0;
-	m[ 7 ]  = 0;
-	m[ 11 ] = 0;
-	m[ 15 ] = 0;
+	m[0]  = 0;
+	m[4]  = 0;
+	m[8]  = 0;
+	m[12] = 0;
+	m[1]  = 0;
+	m[5]  = 0;
+	m[9]  = 0;
+	m[13] = 0;
+	m[2]  = 0;
+	m[6]  = 0;
+	m[10] = 0;
+	m[14] = 0;
+	m[3]  = 0;
+	m[7]  = 0;
+	m[11] = 0;
+	m[15] = 0;
 }
 
 void MatrixCopy( const matrix_t in, matrix_t out )
 {
 #if id386_sse && defined __GNUC__ && 0
-	asm volatile(
-		"movups         (%%edx),        %%xmm0\n"
-		"movups         0x10(%%edx),    %%xmm1\n"
-		"movups         0x20(%%edx),    %%xmm2\n"
-		"movups         0x30(%%edx),    %%xmm3\n"
+	asm volatile( "movups         (%%edx),        %%xmm0\n"
+				  "movups         0x10(%%edx),    %%xmm1\n"
+				  "movups         0x20(%%edx),    %%xmm2\n"
+				  "movups         0x30(%%edx),    %%xmm3\n"
 
-		"movups         %%xmm0,         (%%eax)\n"
-		"movups         %%xmm1,         0x10(%%eax)\n"
-		"movups         %%xmm2,         0x20(%%eax)\n"
-		"movups         %%xmm3,         0x30(%%eax)\n"
-		:
-		: "a"( out ), "d"( in )
-		: "memory" );
+				  "movups         %%xmm0,         (%%eax)\n"
+				  "movups         %%xmm1,         0x10(%%eax)\n"
+				  "movups         %%xmm2,         0x20(%%eax)\n"
+				  "movups         %%xmm3,         0x30(%%eax)\n"
+				  :
+				  : "a"( out ), "d"( in )
+				  : "memory" );
 #elif id386_3dnow && defined __GNUC__
-	asm volatile(
-		"femms\n"
-		"movq           (%%edx),        %%mm0\n"
-		"movq           8(%%edx),       %%mm1\n"
-		"movq           16(%%edx),      %%mm2\n"
-		"movq           24(%%edx),      %%mm3\n"
-		"movq           32(%%edx),      %%mm4\n"
-		"movq           40(%%edx),      %%mm5\n"
-		"movq           48(%%edx),      %%mm6\n"
-		"movq           56(%%edx),      %%mm7\n"
+	asm volatile( "femms\n"
+				  "movq           (%%edx),        %%mm0\n"
+				  "movq           8(%%edx),       %%mm1\n"
+				  "movq           16(%%edx),      %%mm2\n"
+				  "movq           24(%%edx),      %%mm3\n"
+				  "movq           32(%%edx),      %%mm4\n"
+				  "movq           40(%%edx),      %%mm5\n"
+				  "movq           48(%%edx),      %%mm6\n"
+				  "movq           56(%%edx),      %%mm7\n"
 
-		"movq           %%mm0,          (%%eax)\n"
-		"movq           %%mm1,          8(%%eax)\n"
-		"movq           %%mm2,          16(%%eax)\n"
-		"movq           %%mm3,          24(%%eax)\n"
-		"movq           %%mm4,          32(%%eax)\n"
-		"movq           %%mm5,          40(%%eax)\n"
-		"movq           %%mm6,          48(%%eax)\n"
-		"movq           %%mm7,          56(%%eax)\n"
-		"femms\n"
-		:
-		: "a"( out ), "d"( in )
-		: "memory" );
+				  "movq           %%mm0,          (%%eax)\n"
+				  "movq           %%mm1,          8(%%eax)\n"
+				  "movq           %%mm2,          16(%%eax)\n"
+				  "movq           %%mm3,          24(%%eax)\n"
+				  "movq           %%mm4,          32(%%eax)\n"
+				  "movq           %%mm5,          40(%%eax)\n"
+				  "movq           %%mm6,          48(%%eax)\n"
+				  "movq           %%mm7,          56(%%eax)\n"
+				  "femms\n"
+				  :
+				  : "a"( out ), "d"( in )
+				  : "memory" );
 #else
-	out[ 0 ]  = in[ 0 ];
-	out[ 4 ]  = in[ 4 ];
-	out[ 8 ]  = in[ 8 ];
-	out[ 12 ] = in[ 12 ];
-	out[ 1 ]  = in[ 1 ];
-	out[ 5 ]  = in[ 5 ];
-	out[ 9 ]  = in[ 9 ];
-	out[ 13 ] = in[ 13 ];
-	out[ 2 ]  = in[ 2 ];
-	out[ 6 ]  = in[ 6 ];
-	out[ 10 ] = in[ 10 ];
-	out[ 14 ] = in[ 14 ];
-	out[ 3 ]  = in[ 3 ];
-	out[ 7 ]  = in[ 7 ];
-	out[ 11 ] = in[ 11 ];
-	out[ 15 ] = in[ 15 ];
+	out[0]	= in[0];
+	out[4]	= in[4];
+	out[8]	= in[8];
+	out[12] = in[12];
+	out[1]	= in[1];
+	out[5]	= in[5];
+	out[9]	= in[9];
+	out[13] = in[13];
+	out[2]	= in[2];
+	out[6]	= in[6];
+	out[10] = in[10];
+	out[14] = in[14];
+	out[3]	= in[3];
+	out[7]	= in[7];
+	out[11] = in[11];
+	out[15] = in[15];
 #endif
 }
 
 qboolean MatrixCompare( const matrix_t a, const matrix_t b )
 {
-	return ( a[ 0 ] == b[ 0 ] && a[ 4 ] == b[ 4 ] && a[ 8 ] == b[ 8 ] && a[ 12 ] == b[ 12 ] &&
-		a[ 1 ] == b[ 1 ] && a[ 5 ] == b[ 5 ] && a[ 9 ] == b[ 9 ] && a[ 13 ] == b[ 13 ] &&
-		a[ 2 ] == b[ 2 ] && a[ 6 ] == b[ 6 ] && a[ 10 ] == b[ 10 ] && a[ 14 ] == b[ 14 ] &&
-		a[ 3 ] == b[ 3 ] && a[ 7 ] == b[ 7 ] && a[ 11 ] == b[ 11 ] && a[ 15 ] == b[ 15 ] );
+	return ( a[0] == b[0] && a[4] == b[4] && a[8] == b[8] && a[12] == b[12] && a[1] == b[1] && a[5] == b[5] && a[9] == b[9] && a[13] == b[13] && a[2] == b[2] && a[6] == b[6] && a[10] == b[10] &&
+			 a[14] == b[14] && a[3] == b[3] && a[7] == b[7] && a[11] == b[11] && a[15] == b[15] );
 }
 
 void MatrixTransposeIntoXMM( const matrix_t m )
 {
 #if id386_sse && defined __GNUC__ && 0
 	asm volatile( // reg[0]                       | reg[1]                | reg[2]                | reg[3]
-		// load transpose into XMM registers
+				  // load transpose into XMM registers
 		"movlps         (%%eax),        %%xmm4\n" // m[0][0]                      | m[0][1]               | -                     | -
 		"movhps         16(%%eax),      %%xmm4\n" // m[0][0]                      | m[0][1]               | m[1][0]               | m[1][1]
 
@@ -1988,31 +2138,30 @@ void MatrixTranspose( const matrix_t in, matrix_t out )
 	// transpose the matrix into the xmm4-7
 	MatrixTransposeIntoXMM( in );
 
-	asm volatile(
-		"movups         %%xmm4,         (%%eax)\n"
-		"movups         %%xmm5,         0x10(%%eax)\n"
-		"movups         %%xmm6,         0x20(%%eax)\n"
-		"movups         %%xmm7,         0x30(%%eax)\n"
-		:
-		: "a"( out )
-		: "memory" );
+	asm volatile( "movups         %%xmm4,         (%%eax)\n"
+				  "movups         %%xmm5,         0x10(%%eax)\n"
+				  "movups         %%xmm6,         0x20(%%eax)\n"
+				  "movups         %%xmm7,         0x30(%%eax)\n"
+				  :
+				  : "a"( out )
+				  : "memory" );
 #else
-	out[ 0 ] = in[ 0 ];
-	out[ 1 ] = in[ 4 ];
-	out[ 2 ] = in[ 8 ];
-	out[ 3 ] = in[ 12 ];
-	out[ 4 ] = in[ 1 ];
-	out[ 5 ] = in[ 5 ];
-	out[ 6 ] = in[ 9 ];
-	out[ 7 ] = in[ 13 ];
-	out[ 8 ] = in[ 2 ];
-	out[ 9 ] = in[ 6 ];
-	out[ 10 ] = in[ 10 ];
-	out[ 11 ] = in[ 14 ];
-	out[ 12 ] = in[ 3 ];
-	out[ 13 ] = in[ 7 ];
-	out[ 14 ] = in[ 11 ];
-	out[ 15 ] = in[ 15 ];
+	out[0]	= in[0];
+	out[1]	= in[4];
+	out[2]	= in[8];
+	out[3]	= in[12];
+	out[4]	= in[1];
+	out[5]	= in[5];
+	out[6]	= in[9];
+	out[7]	= in[13];
+	out[8]	= in[2];
+	out[9]	= in[6];
+	out[10] = in[10];
+	out[11] = in[14];
+	out[12] = in[3];
+	out[13] = in[7];
+	out[14] = in[11];
+	out[15] = in[15];
 #endif
 }
 
@@ -2021,7 +2170,7 @@ static float m3_det( matrix3x3_t mat )
 {
 	float det;
 
-	det = mat[ 0 ] * ( mat[ 4 ] * mat[ 8 ] - mat[ 7 ] * mat[ 5 ] ) - mat[ 1 ] * ( mat[ 3 ] * mat[ 8 ] - mat[ 6 ] * mat[ 5 ] ) + mat[ 2 ] * ( mat[ 3 ] * mat[ 7 ] - mat[ 6 ] * mat[ 4 ] );
+	det = mat[0] * ( mat[4] * mat[8] - mat[7] * mat[5] ) - mat[1] * ( mat[3] * mat[8] - mat[6] * mat[5] ) + mat[2] * ( mat[3] * mat[7] - mat[6] * mat[4] );
 
 	return ( det );
 }
@@ -2029,25 +2178,25 @@ static float m3_det( matrix3x3_t mat )
 /*static int m3_inverse( matrix3x3_t mr, matrix3x3_t ma )
 {
   float det = m3_det( ma );
- 
+
   if (det == 0 )
   {
-    return 1;
+	return 1;
   }
- 
- 
+
+
   mr[0] =    ma[4]*ma[8] - ma[5]*ma[7]   / det;
   mr[1] = -( ma[1]*ma[8] - ma[7]*ma[2] ) / det;
   mr[2] =    ma[1]*ma[5] - ma[4]*ma[2]   / det;
- 
+
   mr[3] = -( ma[3]*ma[8] - ma[5]*ma[6] ) / det;
   mr[4] =    ma[0]*ma[8] - ma[6]*ma[2]   / det;
   mr[5] = -( ma[0]*ma[5] - ma[3]*ma[2] ) / det;
- 
+
   mr[6] =    ma[3]*ma[7] - ma[6]*ma[4]   / det;
   mr[7] = -( ma[0]*ma[7] - ma[6]*ma[1] ) / det;
   mr[8] =    ma[0]*ma[4] - ma[1]*ma[3]   / det;
- 
+
   return 0;
 }*/
 
@@ -2070,23 +2219,23 @@ static void m4_submat( matrix_t mr, matrix3x3_t mb, int i, int j )
 				jdst = tj - 1;
 
 			if( ti != i && tj != j )
-				mb[ idst * 3 + jdst ] = mr[ ti * 4 + tj ];
+				mb[idst * 3 + jdst] = mr[ti * 4 + tj];
 		}
 	}
 }
 
 static float m4_det( matrix_t mr )
 {
-	float       det, result = 0, i = 1;
+	float		det, result = 0, i = 1;
 	matrix3x3_t msub3;
-	int         n;
+	int			n;
 
 	for( n = 0; n < 4; n++, i *= -1 )
 	{
 		m4_submat( mr, msub3, 0, n );
 
 		det = m3_det( msub3 );
-		result += mr[ n ] * det * i;
+		result += mr[n] * det * i;
 	}
 
 	return result;
@@ -2094,10 +2243,10 @@ static float m4_det( matrix_t mr )
 
 qboolean MatrixInverse( matrix_t matrix )
 {
-	float       mdet = m4_det( matrix );
+	float		mdet = m4_det( matrix );
 	matrix3x3_t mtemp;
-	int         i, j, sign;
-	matrix_t    m4x4_temp;
+	int			i, j, sign;
+	matrix_t	m4x4_temp;
 
 #if 0
   if ( fabs( mdet ) < 0.0000000001 )
@@ -2114,7 +2263,7 @@ qboolean MatrixInverse( matrix_t matrix )
 			m4_submat( m4x4_temp, mtemp, i, j );
 
 			// FIXME: try using * inverse det and see if speed/accuracy are good enough
-			matrix[ i + j * 4 ] = ( m3_det( mtemp ) * sign ) / mdet;
+			matrix[i + j * 4] = ( m3_det( mtemp ) * sign ) / mdet;
 		}
 
 	return qfalse;
@@ -2124,181 +2273,181 @@ void MatrixSetupXRotation( matrix_t m, vec_t degrees )
 {
 	vec_t a = DEG2RAD( degrees );
 
-	m[ 0 ]  = 1;
-	m[ 4 ]  = 0;
-	m[ 8 ]  = 0;
-	m[ 12 ] = 0;
-	m[ 1 ]  = 0;
-	m[ 5 ]  = cos( a );
-	m[ 9 ]  = -sin( a );
-	m[ 13 ] = 0;
-	m[ 2 ]  = 0;
-	m[ 6 ]  = sin( a );
-	m[ 10 ] = cos( a );
-	m[ 14 ] = 0;
-	m[ 3 ]  = 0;
-	m[ 7 ]  = 0;
-	m[ 11 ] = 0;
-	m[ 15 ] = 1;
+	m[0]  = 1;
+	m[4]  = 0;
+	m[8]  = 0;
+	m[12] = 0;
+	m[1]  = 0;
+	m[5]  = cos( a );
+	m[9]  = -sin( a );
+	m[13] = 0;
+	m[2]  = 0;
+	m[6]  = sin( a );
+	m[10] = cos( a );
+	m[14] = 0;
+	m[3]  = 0;
+	m[7]  = 0;
+	m[11] = 0;
+	m[15] = 1;
 }
 
 void MatrixSetupYRotation( matrix_t m, vec_t degrees )
 {
 	vec_t a = DEG2RAD( degrees );
 
-	m[ 0 ]  = cos( a );
-	m[ 4 ]  = 0;
-	m[ 8 ]  = sin( a );
-	m[ 12 ] = 0;
-	m[ 1 ]  = 0;
-	m[ 5 ]  = 1;
-	m[ 9 ]  = 0;
-	m[ 13 ] = 0;
-	m[ 2 ]  = -sin( a );
-	m[ 6 ]  = 0;
-	m[ 10 ] = cos( a );
-	m[ 14 ] = 0;
-	m[ 3 ]  = 0;
-	m[ 7 ]  = 0;
-	m[ 11 ] = 0;
-	m[ 15 ] = 1;
+	m[0]  = cos( a );
+	m[4]  = 0;
+	m[8]  = sin( a );
+	m[12] = 0;
+	m[1]  = 0;
+	m[5]  = 1;
+	m[9]  = 0;
+	m[13] = 0;
+	m[2]  = -sin( a );
+	m[6]  = 0;
+	m[10] = cos( a );
+	m[14] = 0;
+	m[3]  = 0;
+	m[7]  = 0;
+	m[11] = 0;
+	m[15] = 1;
 }
 
 void MatrixSetupZRotation( matrix_t m, vec_t degrees )
 {
 	vec_t a = DEG2RAD( degrees );
 
-	m[ 0 ]  = cos( a );
-	m[ 4 ]  = -sin( a );
-	m[ 8 ]  = 0;
-	m[ 12 ] = 0;
-	m[ 1 ]  = sin( a );
-	m[ 5 ]  = cos( a );
-	m[ 9 ]  = 0;
-	m[ 13 ] = 0;
-	m[ 2 ]  = 0;
-	m[ 6 ]  = 0;
-	m[ 10 ] = 1;
-	m[ 14 ] = 0;
-	m[ 3 ]  = 0;
-	m[ 7 ]  = 0;
-	m[ 11 ] = 0;
-	m[ 15 ] = 1;
+	m[0]  = cos( a );
+	m[4]  = -sin( a );
+	m[8]  = 0;
+	m[12] = 0;
+	m[1]  = sin( a );
+	m[5]  = cos( a );
+	m[9]  = 0;
+	m[13] = 0;
+	m[2]  = 0;
+	m[6]  = 0;
+	m[10] = 1;
+	m[14] = 0;
+	m[3]  = 0;
+	m[7]  = 0;
+	m[11] = 0;
+	m[15] = 1;
 }
 
 void MatrixSetupTranslation( matrix_t m, vec_t x, vec_t y, vec_t z )
 {
-	m[ 0 ]  = 1;
-	m[ 4 ]  = 0;
-	m[ 8 ]  = 0;
-	m[ 12 ] = x;
-	m[ 1 ]  = 0;
-	m[ 5 ]  = 1;
-	m[ 9 ]  = 0;
-	m[ 13 ] = y;
-	m[ 2 ]  = 0;
-	m[ 6 ]  = 0;
-	m[ 10 ] = 1;
-	m[ 14 ] = z;
-	m[ 3 ]  = 0;
-	m[ 7 ]  = 0;
-	m[ 11 ] = 0;
-	m[ 15 ] = 1;
+	m[0]  = 1;
+	m[4]  = 0;
+	m[8]  = 0;
+	m[12] = x;
+	m[1]  = 0;
+	m[5]  = 1;
+	m[9]  = 0;
+	m[13] = y;
+	m[2]  = 0;
+	m[6]  = 0;
+	m[10] = 1;
+	m[14] = z;
+	m[3]  = 0;
+	m[7]  = 0;
+	m[11] = 0;
+	m[15] = 1;
 }
 
 void MatrixSetupScale( matrix_t m, vec_t x, vec_t y, vec_t z )
 {
-	m[ 0 ]  = x;
-	m[ 4 ]  = 0;
-	m[ 8 ]  = 0;
-	m[ 12 ] = 0;
-	m[ 1 ]  = 0;
-	m[ 5 ]  = y;
-	m[ 9 ]  = 0;
-	m[ 13 ] = 0;
-	m[ 2 ]  = 0;
-	m[ 6 ]  = 0;
-	m[ 10 ] = z;
-	m[ 14 ] = 0;
-	m[ 3 ]  = 0;
-	m[ 7 ]  = 0;
-	m[ 11 ] = 0;
-	m[ 15 ] = 1;
+	m[0]  = x;
+	m[4]  = 0;
+	m[8]  = 0;
+	m[12] = 0;
+	m[1]  = 0;
+	m[5]  = y;
+	m[9]  = 0;
+	m[13] = 0;
+	m[2]  = 0;
+	m[6]  = 0;
+	m[10] = z;
+	m[14] = 0;
+	m[3]  = 0;
+	m[7]  = 0;
+	m[11] = 0;
+	m[15] = 1;
 }
 
 void MatrixSetupShear( matrix_t m, vec_t x, vec_t y )
 {
-	m[ 0 ]  = 1;
-	m[ 4 ]  = x;
-	m[ 8 ]  = 0;
-	m[ 12 ] = 0;
-	m[ 1 ]  = y;
-	m[ 5 ]  = 1;
-	m[ 9 ]  = 0;
-	m[ 13 ] = 0;
-	m[ 2 ]  = 0;
-	m[ 6 ]  = 0;
-	m[ 10 ] = 1;
-	m[ 14 ] = 0;
-	m[ 3 ]  = 0;
-	m[ 7 ]  = 0;
-	m[ 11 ] = 0;
-	m[ 15 ] = 1;
+	m[0]  = 1;
+	m[4]  = x;
+	m[8]  = 0;
+	m[12] = 0;
+	m[1]  = y;
+	m[5]  = 1;
+	m[9]  = 0;
+	m[13] = 0;
+	m[2]  = 0;
+	m[6]  = 0;
+	m[10] = 1;
+	m[14] = 0;
+	m[3]  = 0;
+	m[7]  = 0;
+	m[11] = 0;
+	m[15] = 1;
 }
 
 void MatrixMultiply( const matrix_t a, const matrix_t b, matrix_t out )
 {
 #if id386_sse
-	//#error MatrixMultiply
-	int    i;
+	// #error MatrixMultiply
+	int	   i;
 	__m128 _t0, _t1, _t2, _t3, _t4, _t5, _t6, _t7;
 
-	_t4 = _mm_loadu_ps( &a[ 0 ] );
-	_t5 = _mm_loadu_ps( &a[ 4 ] );
-	_t6 = _mm_loadu_ps( &a[ 8 ] );
-	_t7 = _mm_loadu_ps( &a[ 12 ] );
+	_t4 = _mm_loadu_ps( &a[0] );
+	_t5 = _mm_loadu_ps( &a[4] );
+	_t6 = _mm_loadu_ps( &a[8] );
+	_t7 = _mm_loadu_ps( &a[12] );
 
 	for( i = 0; i < 4; i++ )
 	{
-		_t0 = _mm_load1_ps( &b[ i * 4 + 0 ] );
+		_t0 = _mm_load1_ps( &b[i * 4 + 0] );
 		_t0 = _mm_mul_ps( _t4, _t0 );
 
-		_t1 = _mm_load1_ps( &b[ i * 4 + 1 ] );
+		_t1 = _mm_load1_ps( &b[i * 4 + 1] );
 		_t1 = _mm_mul_ps( _t5, _t1 );
 
-		_t2 = _mm_load1_ps( &b[ i * 4 + 2 ] );
+		_t2 = _mm_load1_ps( &b[i * 4 + 2] );
 		_t2 = _mm_mul_ps( _t6, _t2 );
 
-		_t3 = _mm_load1_ps( &b[ i * 4 + 3 ] );
+		_t3 = _mm_load1_ps( &b[i * 4 + 3] );
 		_t3 = _mm_mul_ps( _t7, _t3 );
 
 		_t1 = _mm_add_ps( _t0, _t1 );
 		_t2 = _mm_add_ps( _t1, _t2 );
 		_t3 = _mm_add_ps( _t2, _t3 );
 
-		_mm_storeu_ps( &out[ i * 4 ], _t3 );
+		_mm_storeu_ps( &out[i * 4], _t3 );
 	}
 
 #else
-	out[ 0 ] = b[ 0 ] * a[ 0 ] + b[ 1 ] * a[ 4 ] + b[ 2 ] * a[ 8 ] + b[ 3 ] * a[ 12 ];
-	out[ 1 ] = b[ 0 ] * a[ 1 ] + b[ 1 ] * a[ 5 ] + b[ 2 ] * a[ 9 ] + b[ 3 ] * a[ 13 ];
-	out[ 2 ] = b[ 0 ] * a[ 2 ] + b[ 1 ] * a[ 6 ] + b[ 2 ] * a[ 10 ] + b[ 3 ] * a[ 14 ];
-	out[ 3 ] = b[ 0 ] * a[ 3 ] + b[ 1 ] * a[ 7 ] + b[ 2 ] * a[ 11 ] + b[ 3 ] * a[ 15 ];
+	out[0] = b[0] * a[0] + b[1] * a[4] + b[2] * a[8] + b[3] * a[12];
+	out[1] = b[0] * a[1] + b[1] * a[5] + b[2] * a[9] + b[3] * a[13];
+	out[2] = b[0] * a[2] + b[1] * a[6] + b[2] * a[10] + b[3] * a[14];
+	out[3] = b[0] * a[3] + b[1] * a[7] + b[2] * a[11] + b[3] * a[15];
 
-	out[ 4 ] = b[ 4 ] * a[ 0 ] + b[ 5 ] * a[ 4 ] + b[ 6 ] * a[ 8 ] + b[ 7 ] * a[ 12 ];
-	out[ 5 ] = b[ 4 ] * a[ 1 ] + b[ 5 ] * a[ 5 ] + b[ 6 ] * a[ 9 ] + b[ 7 ] * a[ 13 ];
-	out[ 6 ] = b[ 4 ] * a[ 2 ] + b[ 5 ] * a[ 6 ] + b[ 6 ] * a[ 10 ] + b[ 7 ] * a[ 14 ];
-	out[ 7 ] = b[ 4 ] * a[ 3 ] + b[ 5 ] * a[ 7 ] + b[ 6 ] * a[ 11 ] + b[ 7 ] * a[ 15 ];
+	out[4] = b[4] * a[0] + b[5] * a[4] + b[6] * a[8] + b[7] * a[12];
+	out[5] = b[4] * a[1] + b[5] * a[5] + b[6] * a[9] + b[7] * a[13];
+	out[6] = b[4] * a[2] + b[5] * a[6] + b[6] * a[10] + b[7] * a[14];
+	out[7] = b[4] * a[3] + b[5] * a[7] + b[6] * a[11] + b[7] * a[15];
 
-	out[ 8 ] = b[ 8 ] * a[ 0 ] + b[ 9 ] * a[ 4 ] + b[ 10 ] * a[ 8 ] + b[ 11 ] * a[ 12 ];
-	out[ 9 ] = b[ 8 ] * a[ 1 ] + b[ 9 ] * a[ 5 ] + b[ 10 ] * a[ 9 ] + b[ 11 ] * a[ 13 ];
-	out[ 10 ] = b[ 8 ] * a[ 2 ] + b[ 9 ] * a[ 6 ] + b[ 10 ] * a[ 10 ] + b[ 11 ] * a[ 14 ];
-	out[ 11 ] = b[ 8 ] * a[ 3 ] + b[ 9 ] * a[ 7 ] + b[ 10 ] * a[ 11 ] + b[ 11 ] * a[ 15 ];
+	out[8]	= b[8] * a[0] + b[9] * a[4] + b[10] * a[8] + b[11] * a[12];
+	out[9]	= b[8] * a[1] + b[9] * a[5] + b[10] * a[9] + b[11] * a[13];
+	out[10] = b[8] * a[2] + b[9] * a[6] + b[10] * a[10] + b[11] * a[14];
+	out[11] = b[8] * a[3] + b[9] * a[7] + b[10] * a[11] + b[11] * a[15];
 
-	out[ 12 ] = b[ 12 ] * a[ 0 ] + b[ 13 ] * a[ 4 ] + b[ 14 ] * a[ 8 ] + b[ 15 ] * a[ 12 ];
-	out[ 13 ] = b[ 12 ] * a[ 1 ] + b[ 13 ] * a[ 5 ] + b[ 14 ] * a[ 9 ] + b[ 15 ] * a[ 13 ];
-	out[ 14 ] = b[ 12 ] * a[ 2 ] + b[ 13 ] * a[ 6 ] + b[ 14 ] * a[ 10 ] + b[ 15 ] * a[ 14 ];
-	out[ 15 ] = b[ 12 ] * a[ 3 ] + b[ 13 ] * a[ 7 ] + b[ 14 ] * a[ 11 ] + b[ 15 ] * a[ 15 ];
+	out[12] = b[12] * a[0] + b[13] * a[4] + b[14] * a[8] + b[15] * a[12];
+	out[13] = b[12] * a[1] + b[13] * a[5] + b[14] * a[9] + b[15] * a[13];
+	out[14] = b[12] * a[2] + b[13] * a[6] + b[14] * a[10] + b[15] * a[14];
+	out[15] = b[12] * a[3] + b[13] * a[7] + b[14] * a[11] + b[15] * a[15];
 #endif
 }
 
@@ -2339,10 +2488,10 @@ void MatrixMultiplyTranslation( matrix_t m, vec_t x, vec_t y, vec_t z )
 	MatrixSetupTranslation( trans, x, y, z );
 	MatrixMultiply( tmp, trans, m );
 #else
-	m[ 12 ] += m[ 0 ] * x + m[ 4 ] * y + m[ 8 ] * z;
-	m[ 13 ] += m[ 1 ] * x + m[ 5 ] * y + m[ 9 ] * z;
-	m[ 14 ] += m[ 2 ] * x + m[ 6 ] * y + m[ 10 ] * z;
-	m[ 15 ] += m[ 3 ] * x + m[ 7 ] * y + m[ 11 ] * z;
+	m[12] += m[0] * x + m[4] * y + m[8] * z;
+	m[13] += m[1] * x + m[5] * y + m[9] * z;
+	m[14] += m[2] * x + m[6] * y + m[10] * z;
+	m[15] += m[3] * x + m[7] * y + m[11] * z;
 #endif
 }
 
@@ -2355,18 +2504,18 @@ void MatrixMultiplyScale( matrix_t m, vec_t x, vec_t y, vec_t z )
 	MatrixSetupScale(scale, x, y, z);
 	MatrixMultiply(tmp, scale, m);
 #else
-	m[ 0 ] *= x;
-	m[ 4 ] *= y;
-	m[ 8 ] *= z;
-	m[ 1 ] *= x;
-	m[ 5 ] *= y;
-	m[ 9 ] *= z;
-	m[ 2 ] *= x;
-	m[ 6 ] *= y;
-	m[ 10 ] *= z;
-	m[ 3 ] *= x;
-	m[ 7 ] *= y;
-	m[ 11 ] *= z;
+	m[0] *= x;
+	m[4] *= y;
+	m[8] *= z;
+	m[1] *= x;
+	m[5] *= y;
+	m[9] *= z;
+	m[2] *= x;
+	m[6] *= y;
+	m[10] *= z;
+	m[3] *= x;
+	m[7] *= y;
+	m[11] *= z;
 #endif
 }
 
@@ -2386,7 +2535,7 @@ void MatrixToAngles( const matrix_t m, vec3_t angles )
 	double cp;
 	double sp;
 
-	sp = m[ 2 ];
+	sp = m[2];
 
 	// cap off our sin value so that we don't get any NANs
 	if( sp > 1.0 )
@@ -2399,39 +2548,39 @@ void MatrixToAngles( const matrix_t m, vec3_t angles )
 	}
 
 	theta = -asin( sp );
-	cp    = cos( theta );
+	cp	  = cos( theta );
 
 	if( cp > 8192 * FLT_EPSILON )
 	{
-		angles[ PITCH ] = RAD2DEG( theta );
-		angles[ YAW ]   = RAD2DEG( atan2( m[ 1 ], m[ 0 ] ) );
-		angles[ ROLL ]  = RAD2DEG( atan2( m[ 6 ], m[ 10 ] ) );
+		angles[PITCH] = RAD2DEG( theta );
+		angles[YAW]	  = RAD2DEG( atan2( m[1], m[0] ) );
+		angles[ROLL]  = RAD2DEG( atan2( m[6], m[10] ) );
 	}
 	else
 	{
-		angles[ PITCH ] = RAD2DEG( theta );
-		angles[ YAW ]   = RAD2DEG( -atan2( m[ 4 ], m[ 5 ] ) );
-		angles[ ROLL ]  = 0;
+		angles[PITCH] = RAD2DEG( theta );
+		angles[YAW]	  = RAD2DEG( -atan2( m[4], m[5] ) );
+		angles[ROLL]  = 0;
 	}
 #else
 	double a;
 	double ca;
 
-	a = asin( -m[ 2 ] );
+	a  = asin( -m[2] );
 	ca = cos( a );
 
 	if( fabs( ca ) > 0.005 ) // Gimbal lock?
 	{
-		angles[ PITCH ] = RAD2DEG( atan2( m[ 6 ] / ca, m[ 10 ] / ca ) );
-		angles[ YAW ] = RAD2DEG( a );
-		angles[ ROLL ] = RAD2DEG( atan2( m[ 1 ] / ca, m[ 0 ] / ca ) );
+		angles[PITCH] = RAD2DEG( atan2( m[6] / ca, m[10] / ca ) );
+		angles[YAW]	  = RAD2DEG( a );
+		angles[ROLL]  = RAD2DEG( atan2( m[1] / ca, m[0] / ca ) );
 	}
 	else
 	{
 		// Gimbal lock has occurred
-		angles[ PITCH ] = RAD2DEG( atan2( -m[ 9 ], m[ 5 ] ) );
-		angles[ YAW ] = RAD2DEG( a );
-		angles[ ROLL ] = 0;
+		angles[PITCH] = RAD2DEG( atan2( -m[9], m[5] ) );
+		angles[YAW]	  = RAD2DEG( a );
+		angles[ROLL]  = 0;
 	}
 #endif
 }
@@ -2450,62 +2599,62 @@ void MatrixFromAngles( matrix_t m, vec_t pitch, vec_t yaw, vec_t roll )
 	sr = sin( DEG2RAD( roll ) );
 	cr = cos( DEG2RAD( roll ) );
 
-	m[ 0 ]  = cp * cy;
-	m[ 4 ]  = ( sr * sp * cy + cr * -sy );
-	m[ 8 ]  = ( cr * sp * cy + -sr * -sy );
-	m[ 12 ] = 0;
-	m[ 1 ]  = cp * sy;
-	m[ 5 ]  = ( sr * sp * sy + cr * cy );
-	m[ 9 ]  = ( cr * sp * sy + -sr * cy );
-	m[ 13 ] = 0;
-	m[ 2 ]  = -sp;
-	m[ 6 ]  = sr * cp;
-	m[ 10 ] = cr * cp;
-	m[ 14 ] = 0;
-	m[ 3 ]  = 0;
-	m[ 7 ]  = 0;
-	m[ 11 ] = 0;
-	m[ 15 ] = 1;
+	m[0]  = cp * cy;
+	m[4]  = ( sr * sp * cy + cr * -sy );
+	m[8]  = ( cr * sp * cy + -sr * -sy );
+	m[12] = 0;
+	m[1]  = cp * sy;
+	m[5]  = ( sr * sp * sy + cr * cy );
+	m[9]  = ( cr * sp * sy + -sr * cy );
+	m[13] = 0;
+	m[2]  = -sp;
+	m[6]  = sr * cp;
+	m[10] = cr * cp;
+	m[14] = 0;
+	m[3]  = 0;
+	m[7]  = 0;
+	m[11] = 0;
+	m[15] = 1;
 }
 
 void MatrixFromVectorsFLU( matrix_t m, const vec3_t forward, const vec3_t left, const vec3_t up )
 {
-	m[ 0 ]  = forward[ 0 ];
-	m[ 4 ]  = left[ 0 ];
-	m[ 8 ]  = up[ 0 ];
-	m[ 12 ] = 0;
-	m[ 1 ]  = forward[ 1 ];
-	m[ 5 ]  = left[ 1 ];
-	m[ 9 ]  = up[ 1 ];
-	m[ 13 ] = 0;
-	m[ 2 ]  = forward[ 2 ];
-	m[ 6 ]  = left[ 2 ];
-	m[ 10 ] = up[ 2 ];
-	m[ 14 ] = 0;
-	m[ 3 ]  = 0;
-	m[ 7 ]  = 0;
-	m[ 11 ] = 0;
-	m[ 15 ] = 1;
+	m[0]  = forward[0];
+	m[4]  = left[0];
+	m[8]  = up[0];
+	m[12] = 0;
+	m[1]  = forward[1];
+	m[5]  = left[1];
+	m[9]  = up[1];
+	m[13] = 0;
+	m[2]  = forward[2];
+	m[6]  = left[2];
+	m[10] = up[2];
+	m[14] = 0;
+	m[3]  = 0;
+	m[7]  = 0;
+	m[11] = 0;
+	m[15] = 1;
 }
 
 void MatrixFromVectorsFRU( matrix_t m, const vec3_t forward, const vec3_t right, const vec3_t up )
 {
-	m[ 0 ]  = forward[ 0 ];
-	m[ 4 ]  = -right[ 0 ];
-	m[ 8 ]  = up[ 0 ];
-	m[ 12 ] = 0;
-	m[ 1 ]  = forward[ 1 ];
-	m[ 5 ]  = -right[ 1 ];
-	m[ 9 ]  = up[ 1 ];
-	m[ 13 ] = 0;
-	m[ 2 ]  = forward[ 2 ];
-	m[ 6 ]  = -right[ 2 ];
-	m[ 10 ] = up[ 2 ];
-	m[ 14 ] = 0;
-	m[ 3 ]  = 0;
-	m[ 7 ]  = 0;
-	m[ 11 ] = 0;
-	m[ 15 ] = 1;
+	m[0]  = forward[0];
+	m[4]  = -right[0];
+	m[8]  = up[0];
+	m[12] = 0;
+	m[1]  = forward[1];
+	m[5]  = -right[1];
+	m[9]  = up[1];
+	m[13] = 0;
+	m[2]  = forward[2];
+	m[6]  = -right[2];
+	m[10] = up[2];
+	m[14] = 0;
+	m[3]  = 0;
+	m[7]  = 0;
+	m[11] = 0;
+	m[15] = 1;
 }
 
 void MatrixFromQuat( matrix_t m, const quat_t q )
@@ -2515,7 +2664,7 @@ void MatrixFromQuat( matrix_t m, const quat_t q )
 	From Quaternion to Matrix and Back
 	February 27th 2005
 	J.M.P. van Waveren
-	
+
 	http://www.intel.com/cd/ids/developer/asmo-na/eng/293748.htm
 	*/
 	float x2, y2, z2, w2;
@@ -2523,107 +2672,107 @@ void MatrixFromQuat( matrix_t m, const quat_t q )
 	float xz2, yz2, zz2;
 	float wz2, wy2, wx2, xx2;
 
-	x2 = q[ 0 ] + q[ 0 ];
-	y2 = q[ 1 ] + q[ 1 ];
-	z2 = q[ 2 ] + q[ 2 ];
-	w2 = q[ 3 ] + q[ 3 ];
+	x2 = q[0] + q[0];
+	y2 = q[1] + q[1];
+	z2 = q[2] + q[2];
+	w2 = q[3] + q[3];
 
-	yy2 = q[ 1 ] * y2;
-	xy2 = q[ 0 ] * y2;
+	yy2 = q[1] * y2;
+	xy2 = q[0] * y2;
 
-	xz2 = q[ 0 ] * z2;
-	yz2 = q[ 1 ] * z2;
-	zz2 = q[ 2 ] * z2;
+	xz2 = q[0] * z2;
+	yz2 = q[1] * z2;
+	zz2 = q[2] * z2;
 
-	wz2 = q[ 3 ] * z2;
-	wy2 = q[ 3 ] * y2;
-	wx2 = q[ 3 ] * x2;
-	xx2 = q[ 0 ] * x2;
+	wz2 = q[3] * z2;
+	wy2 = q[3] * y2;
+	wx2 = q[3] * x2;
+	xx2 = q[0] * x2;
 
-	m[ 0 ] = -yy2 - zz2 + 1.0f;
-	m[ 1 ] = xy2 + wz2;
-	m[ 2 ] = xz2 - wy2;
+	m[0] = -yy2 - zz2 + 1.0f;
+	m[1] = xy2 + wz2;
+	m[2] = xz2 - wy2;
 
-	m[ 4 ] = xy2 - wz2;
-	m[ 5 ] = -xx2 - zz2 + 1.0f;
-	m[ 6 ] = yz2 + wx2;
+	m[4] = xy2 - wz2;
+	m[5] = -xx2 - zz2 + 1.0f;
+	m[6] = yz2 + wx2;
 
-	m[ 8 ]  = xz2 + wy2;
-	m[ 9 ]  = yz2 - wx2;
-	m[ 10 ] = -xx2 - yy2 + 1.0f;
+	m[8]  = xz2 + wy2;
+	m[9]  = yz2 - wx2;
+	m[10] = -xx2 - yy2 + 1.0f;
 
-	m[ 3 ] = m[ 7 ] = m[ 11 ] = m[ 12 ] = m[ 13 ] = m[ 14 ] = 0;
-	m[ 15 ]                                                 = 1;
+	m[3] = m[7] = m[11] = m[12] = m[13] = m[14] = 0;
+	m[15]										= 1;
 
 #else
 	/*
 	http://www.gamedev.net/reference/articles/article1691.asp#Q54
 	Q54. How do I convert a quaternion to a rotation matrix?
-	
+
 	Assuming that a quaternion has been created in the form:
-	
-    Q = |X Y Z W|
-	
-    Then the quaternion can then be converted into a 4x4 rotation
-    matrix using the following expression (Warning: you might have to
-    transpose this matrix if you (do not) follow the OpenGL order!):
-	
-         ?        2     2                                      ?
-         ? 1 - (2Y  + 2Z )   2XY - 2ZW         2XZ + 2YW       ?
-         ?                                                     ?
-         ?                          2     2                    ?
-     M = ? 2XY + 2ZW         1 - (2X  + 2Z )   2YZ - 2XW       ?
-         ?                                                     ?
-         ?                                            2     2  ?
-         ? 2XZ - 2YW         2YZ + 2XW         1 - (2X  + 2Y ) ?
-         ?                                                     ?
+
+	Q = |X Y Z W|
+
+	Then the quaternion can then be converted into a 4x4 rotation
+	matrix using the following expression (Warning: you might have to
+	transpose this matrix if you (do not) follow the OpenGL order!):
+
+		 ?        2     2                                      ?
+		 ? 1 - (2Y  + 2Z )   2XY - 2ZW         2XZ + 2YW       ?
+		 ?                                                     ?
+		 ?                          2     2                    ?
+	 M = ? 2XY + 2ZW         1 - (2X  + 2Z )   2YZ - 2XW       ?
+		 ?                                                     ?
+		 ?                                            2     2  ?
+		 ? 2XZ - 2YW         2YZ + 2XW         1 - (2X  + 2Y ) ?
+		 ?                                                     ?
 	*/
 
 	// http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToMatrix/index.htm
 
 	float xx, xy, xz, xw, yy, yz, yw, zz, zw;
 
-	xx = q[ 0 ] * q[ 0 ];
-	xy = q[ 0 ] * q[ 1 ];
-	xz = q[ 0 ] * q[ 2 ];
-	xw = q[ 0 ] * q[ 3 ];
-	yy = q[ 1 ] * q[ 1 ];
-	yz = q[ 1 ] * q[ 2 ];
-	yw = q[ 1 ] * q[ 3 ];
-	zz = q[ 2 ] * q[ 2 ];
-	zw = q[ 2 ] * q[ 3 ];
+	xx = q[0] * q[0];
+	xy = q[0] * q[1];
+	xz = q[0] * q[2];
+	xw = q[0] * q[3];
+	yy = q[1] * q[1];
+	yz = q[1] * q[2];
+	yw = q[1] * q[3];
+	zz = q[2] * q[2];
+	zw = q[2] * q[3];
 
-	m[ 0 ] = 1 - 2 * ( yy + zz );
-	m[ 1 ] = 2 * ( xy + zw );
-	m[ 2 ] = 2 * ( xz - yw );
-	m[ 4 ] = 2 * ( xy - zw );
-	m[ 5 ] = 1 - 2 * ( xx + zz );
-	m[ 6 ] = 2 * ( yz + xw );
-	m[ 8 ] = 2 * ( xz + yw );
-	m[ 9 ] = 2 * ( yz - xw );
-	m[ 10 ] = 1 - 2 * ( xx + yy );
+	m[0]  = 1 - 2 * ( yy + zz );
+	m[1]  = 2 * ( xy + zw );
+	m[2]  = 2 * ( xz - yw );
+	m[4]  = 2 * ( xy - zw );
+	m[5]  = 1 - 2 * ( xx + zz );
+	m[6]  = 2 * ( yz + xw );
+	m[8]  = 2 * ( xz + yw );
+	m[9]  = 2 * ( yz - xw );
+	m[10] = 1 - 2 * ( xx + yy );
 
-	m[ 3 ] = m[ 7 ] = m[ 11 ] = m[ 12 ] = m[ 13 ] = m[ 14 ] = 0;
-	m[ 15 ] = 1;
+	m[3] = m[7] = m[11] = m[12] = m[13] = m[14] = 0;
+	m[15]										= 1;
 #endif
 }
 
 void MatrixFromPlanes( matrix_t m, const vec4_t left, const vec4_t right, const vec4_t bottom, const vec4_t top, const vec4_t near, const vec4_t far )
 {
-	m[ 0 ] = ( right[ 0 ] - left[ 0 ] ) / 2;
-	m[ 1 ] = ( top[ 0 ] - bottom[ 0 ] ) / 2;
-	m[ 2 ] = ( far[ 0 ] - near[ 0 ] ) / 2;
-	m[ 3 ] = right[ 0 ] - ( right[ 0 ] - left[ 0 ] ) / 2;
+	m[0] = ( right[0] - left[0] ) / 2;
+	m[1] = ( top[0] - bottom[0] ) / 2;
+	m[2] = ( far[0] - near[0] ) / 2;
+	m[3] = right[0] - ( right[0] - left[0] ) / 2;
 
-	m[ 4 ] = ( right[ 1 ] - left[ 1 ] ) / 2;
-	m[ 5 ] = ( top[ 1 ] - bottom[ 1 ] ) / 2;
-	m[ 6 ] = ( far[ 1 ] - near[ 1 ] ) / 2;
-	m[ 7 ] = right[ 1 ] - ( right[ 1 ] - left[ 1 ] ) / 2;
+	m[4] = ( right[1] - left[1] ) / 2;
+	m[5] = ( top[1] - bottom[1] ) / 2;
+	m[6] = ( far[1] - near[1] ) / 2;
+	m[7] = right[1] - ( right[1] - left[1] ) / 2;
 
-	m[ 8 ]  = ( right[ 2 ] - left[ 2 ] ) / 2;
-	m[ 9 ]  = ( top[ 2 ] - bottom[ 2 ] ) / 2;
-	m[ 10 ] = ( far[ 2 ] - near[ 2 ] ) / 2;
-	m[ 11 ] = right[ 2 ] - ( right[ 2 ] - left[ 2 ] ) / 2;
+	m[8]  = ( right[2] - left[2] ) / 2;
+	m[9]  = ( top[2] - bottom[2] ) / 2;
+	m[10] = ( far[2] - near[2] ) / 2;
+	m[11] = right[2] - ( right[2] - left[2] ) / 2;
 
 #if 0
 	m[12] = (right[3] - left[3]) / 2;
@@ -2631,10 +2780,10 @@ void MatrixFromPlanes( matrix_t m, const vec4_t left, const vec4_t right, const 
 	m[14] = (far[3] - near[3]) / 2;
 	m[15] = right[3] - (right[3] - left[3]) / 2;
 #else
-	m[ 12 ] = ( -right[ 3 ] - -left[ 3 ] ) / 2;
-	m[ 13 ] = ( -top[ 3 ] - -bottom[ 3 ] ) / 2;
-	m[ 14 ] = ( -far[ 3 ] - -near[ 3 ] ) / 2;
-	m[ 15 ] = -right[ 3 ] - ( -right[ 3 ] - -left[ 3 ] ) / 2;
+	m[12] = ( -right[3] - -left[3] ) / 2;
+	m[13] = ( -top[3] - -bottom[3] ) / 2;
+	m[14] = ( -far[3] - -near[3] ) / 2;
+	m[15] = -right[3] - ( -right[3] - -left[3] ) / 2;
 #endif
 }
 
@@ -2642,23 +2791,23 @@ void MatrixToVectorsFLU( const matrix_t m, vec3_t forward, vec3_t left, vec3_t u
 {
 	if( forward )
 	{
-		forward[ 0 ] = m[ 0 ]; // cp*cy;
-		forward[ 1 ] = m[ 1 ]; // cp*sy;
-		forward[ 2 ] = m[ 2 ]; //-sp;
+		forward[0] = m[0]; // cp*cy;
+		forward[1] = m[1]; // cp*sy;
+		forward[2] = m[2]; //-sp;
 	}
 
 	if( left )
 	{
-		left[ 0 ] = m[ 4 ]; // sr*sp*cy+cr*-sy;
-		left[ 1 ] = m[ 5 ]; // sr*sp*sy+cr*cy;
-		left[ 2 ] = m[ 6 ]; // sr*cp;
+		left[0] = m[4]; // sr*sp*cy+cr*-sy;
+		left[1] = m[5]; // sr*sp*sy+cr*cy;
+		left[2] = m[6]; // sr*cp;
 	}
 
 	if( up )
 	{
-		up[ 0 ] = m[ 8 ];  // cr*sp*cy+-sr*-sy;
-		up[ 1 ] = m[ 9 ];  // cr*sp*sy+-sr*cy;
-		up[ 2 ] = m[ 10 ]; // cr*cp;
+		up[0] = m[8];  // cr*sp*cy+-sr*-sy;
+		up[1] = m[9];  // cr*sp*sy+-sr*cy;
+		up[2] = m[10]; // cr*cp;
 	}
 }
 
@@ -2666,84 +2815,84 @@ void MatrixToVectorsFRU( const matrix_t m, vec3_t forward, vec3_t right, vec3_t 
 {
 	if( forward )
 	{
-		forward[ 0 ] = m[ 0 ];
-		forward[ 1 ] = m[ 1 ];
-		forward[ 2 ] = m[ 2 ];
+		forward[0] = m[0];
+		forward[1] = m[1];
+		forward[2] = m[2];
 	}
 
 	if( right )
 	{
-		right[ 0 ] = -m[ 4 ];
-		right[ 1 ] = -m[ 5 ];
-		right[ 2 ] = -m[ 6 ];
+		right[0] = -m[4];
+		right[1] = -m[5];
+		right[2] = -m[6];
 	}
 
 	if( up )
 	{
-		up[ 0 ] = m[ 8 ];
-		up[ 1 ] = m[ 9 ];
-		up[ 2 ] = m[ 10 ];
+		up[0] = m[8];
+		up[1] = m[9];
+		up[2] = m[10];
 	}
 }
 
 void MatrixSetupTransformFromVectorsFLU( matrix_t m, const vec3_t forward, const vec3_t left, const vec3_t up, const vec3_t origin )
 {
-	m[ 0 ]  = forward[ 0 ];
-	m[ 4 ]  = left[ 0 ];
-	m[ 8 ]  = up[ 0 ];
-	m[ 12 ] = origin[ 0 ];
-	m[ 1 ]  = forward[ 1 ];
-	m[ 5 ]  = left[ 1 ];
-	m[ 9 ]  = up[ 1 ];
-	m[ 13 ] = origin[ 1 ];
-	m[ 2 ]  = forward[ 2 ];
-	m[ 6 ]  = left[ 2 ];
-	m[ 10 ] = up[ 2 ];
-	m[ 14 ] = origin[ 2 ];
-	m[ 3 ]  = 0;
-	m[ 7 ]  = 0;
-	m[ 11 ] = 0;
-	m[ 15 ] = 1;
+	m[0]  = forward[0];
+	m[4]  = left[0];
+	m[8]  = up[0];
+	m[12] = origin[0];
+	m[1]  = forward[1];
+	m[5]  = left[1];
+	m[9]  = up[1];
+	m[13] = origin[1];
+	m[2]  = forward[2];
+	m[6]  = left[2];
+	m[10] = up[2];
+	m[14] = origin[2];
+	m[3]  = 0;
+	m[7]  = 0;
+	m[11] = 0;
+	m[15] = 1;
 }
 
 void MatrixSetupTransformFromVectorsFRU( matrix_t m, const vec3_t forward, const vec3_t right, const vec3_t up, const vec3_t origin )
 {
-	m[ 0 ]  = forward[ 0 ];
-	m[ 4 ]  = -right[ 0 ];
-	m[ 8 ]  = up[ 0 ];
-	m[ 12 ] = origin[ 0 ];
-	m[ 1 ]  = forward[ 1 ];
-	m[ 5 ]  = -right[ 1 ];
-	m[ 9 ]  = up[ 1 ];
-	m[ 13 ] = origin[ 1 ];
-	m[ 2 ]  = forward[ 2 ];
-	m[ 6 ]  = -right[ 2 ];
-	m[ 10 ] = up[ 2 ];
-	m[ 14 ] = origin[ 2 ];
-	m[ 3 ]  = 0;
-	m[ 7 ]  = 0;
-	m[ 11 ] = 0;
-	m[ 15 ] = 1;
+	m[0]  = forward[0];
+	m[4]  = -right[0];
+	m[8]  = up[0];
+	m[12] = origin[0];
+	m[1]  = forward[1];
+	m[5]  = -right[1];
+	m[9]  = up[1];
+	m[13] = origin[1];
+	m[2]  = forward[2];
+	m[6]  = -right[2];
+	m[10] = up[2];
+	m[14] = origin[2];
+	m[3]  = 0;
+	m[7]  = 0;
+	m[11] = 0;
+	m[15] = 1;
 }
 
 void MatrixSetupTransformFromRotation( matrix_t m, const matrix_t rot, const vec3_t origin )
 {
-	m[ 0 ]  = rot[ 0 ];
-	m[ 4 ]  = rot[ 4 ];
-	m[ 8 ]  = rot[ 8 ];
-	m[ 12 ] = origin[ 0 ];
-	m[ 1 ]  = rot[ 1 ];
-	m[ 5 ]  = rot[ 5 ];
-	m[ 9 ]  = rot[ 9 ];
-	m[ 13 ] = origin[ 1 ];
-	m[ 2 ]  = rot[ 2 ];
-	m[ 6 ]  = rot[ 6 ];
-	m[ 10 ] = rot[ 10 ];
-	m[ 14 ] = origin[ 2 ];
-	m[ 3 ]  = 0;
-	m[ 7 ]  = 0;
-	m[ 11 ] = 0;
-	m[ 15 ] = 1;
+	m[0]  = rot[0];
+	m[4]  = rot[4];
+	m[8]  = rot[8];
+	m[12] = origin[0];
+	m[1]  = rot[1];
+	m[5]  = rot[5];
+	m[9]  = rot[9];
+	m[13] = origin[1];
+	m[2]  = rot[2];
+	m[6]  = rot[6];
+	m[10] = rot[10];
+	m[14] = origin[2];
+	m[3]  = 0;
+	m[7]  = 0;
+	m[11] = 0;
+	m[15] = 1;
 }
 
 void MatrixSetupTransformFromQuat( matrix_t m, const quat_t quat, const vec3_t origin )
@@ -2752,22 +2901,22 @@ void MatrixSetupTransformFromQuat( matrix_t m, const quat_t quat, const vec3_t o
 
 	MatrixFromQuat( rot, quat );
 
-	m[ 0 ]  = rot[ 0 ];
-	m[ 4 ]  = rot[ 4 ];
-	m[ 8 ]  = rot[ 8 ];
-	m[ 12 ] = origin[ 0 ];
-	m[ 1 ]  = rot[ 1 ];
-	m[ 5 ]  = rot[ 5 ];
-	m[ 9 ]  = rot[ 9 ];
-	m[ 13 ] = origin[ 1 ];
-	m[ 2 ]  = rot[ 2 ];
-	m[ 6 ]  = rot[ 6 ];
-	m[ 10 ] = rot[ 10 ];
-	m[ 14 ] = origin[ 2 ];
-	m[ 3 ]  = 0;
-	m[ 7 ]  = 0;
-	m[ 11 ] = 0;
-	m[ 15 ] = 1;
+	m[0]  = rot[0];
+	m[4]  = rot[4];
+	m[8]  = rot[8];
+	m[12] = origin[0];
+	m[1]  = rot[1];
+	m[5]  = rot[5];
+	m[9]  = rot[9];
+	m[13] = origin[1];
+	m[2]  = rot[2];
+	m[6]  = rot[6];
+	m[10] = rot[10];
+	m[14] = origin[2];
+	m[3]  = 0;
+	m[7]  = 0;
+	m[11] = 0;
+	m[15] = 1;
 }
 
 void MatrixAffineInverse( const matrix_t in, matrix_t out )
@@ -2777,58 +2926,58 @@ void MatrixAffineInverse( const matrix_t in, matrix_t out )
 		MatrixInverse(out);
 #else
 	// Tr3B - cleaned up
-	out[ 0 ] = in[ 0 ];
-	out[ 4 ] = in[ 1 ];
-	out[ 8 ] = in[ 2 ];
-	out[ 1 ] = in[ 4 ];
-	out[ 5 ] = in[ 5 ];
-	out[ 9 ] = in[ 6 ];
-	out[ 2 ] = in[ 8 ];
-	out[ 6 ] = in[ 9 ];
-	out[ 10 ] = in[ 10 ];
-	out[ 3 ] = 0;
-	out[ 7 ] = 0;
-	out[ 11 ] = 0;
-	out[ 15 ] = 1;
+	out[0]	= in[0];
+	out[4]	= in[1];
+	out[8]	= in[2];
+	out[1]	= in[4];
+	out[5]	= in[5];
+	out[9]	= in[6];
+	out[2]	= in[8];
+	out[6]	= in[9];
+	out[10] = in[10];
+	out[3]	= 0;
+	out[7]	= 0;
+	out[11] = 0;
+	out[15] = 1;
 
-	out[ 12 ] = -( in[ 12 ] * out[ 0 ] + in[ 13 ] * out[ 4 ] + in[ 14 ] * out[ 8 ] );
-	out[ 13 ] = -( in[ 12 ] * out[ 1 ] + in[ 13 ] * out[ 5 ] + in[ 14 ] * out[ 9 ] );
-	out[ 14 ] = -( in[ 12 ] * out[ 2 ] + in[ 13 ] * out[ 6 ] + in[ 14 ] * out[ 10 ] );
+	out[12] = -( in[12] * out[0] + in[13] * out[4] + in[14] * out[8] );
+	out[13] = -( in[12] * out[1] + in[13] * out[5] + in[14] * out[9] );
+	out[14] = -( in[12] * out[2] + in[13] * out[6] + in[14] * out[10] );
 #endif
 }
 
 void MatrixTransformNormal( const matrix_t m, const vec3_t in, vec3_t out )
 {
-	out[ 0 ] = m[ 0 ] * in[ 0 ] + m[ 4 ] * in[ 1 ] + m[ 8 ] * in[ 2 ];
-	out[ 1 ] = m[ 1 ] * in[ 0 ] + m[ 5 ] * in[ 1 ] + m[ 9 ] * in[ 2 ];
-	out[ 2 ] = m[ 2 ] * in[ 0 ] + m[ 6 ] * in[ 1 ] + m[ 10 ] * in[ 2 ];
+	out[0] = m[0] * in[0] + m[4] * in[1] + m[8] * in[2];
+	out[1] = m[1] * in[0] + m[5] * in[1] + m[9] * in[2];
+	out[2] = m[2] * in[0] + m[6] * in[1] + m[10] * in[2];
 }
 
 void MatrixTransformNormal2( const matrix_t m, vec3_t inout )
 {
 	vec3_t tmp;
 
-	tmp[ 0 ] = m[ 0 ] * inout[ 0 ] + m[ 4 ] * inout[ 1 ] + m[ 8 ] * inout[ 2 ];
-	tmp[ 1 ] = m[ 1 ] * inout[ 0 ] + m[ 5 ] * inout[ 1 ] + m[ 9 ] * inout[ 2 ];
-	tmp[ 2 ] = m[ 2 ] * inout[ 0 ] + m[ 6 ] * inout[ 1 ] + m[ 10 ] * inout[ 2 ];
+	tmp[0] = m[0] * inout[0] + m[4] * inout[1] + m[8] * inout[2];
+	tmp[1] = m[1] * inout[0] + m[5] * inout[1] + m[9] * inout[2];
+	tmp[2] = m[2] * inout[0] + m[6] * inout[1] + m[10] * inout[2];
 
 	VectorCopy( tmp, inout );
 }
 
 void MatrixTransformPoint( const matrix_t m, const vec3_t in, vec3_t out )
 {
-	out[ 0 ] = m[ 0 ] * in[ 0 ] + m[ 4 ] * in[ 1 ] + m[ 8 ] * in[ 2 ] + m[ 12 ];
-	out[ 1 ] = m[ 1 ] * in[ 0 ] + m[ 5 ] * in[ 1 ] + m[ 9 ] * in[ 2 ] + m[ 13 ];
-	out[ 2 ] = m[ 2 ] * in[ 0 ] + m[ 6 ] * in[ 1 ] + m[ 10 ] * in[ 2 ] + m[ 14 ];
+	out[0] = m[0] * in[0] + m[4] * in[1] + m[8] * in[2] + m[12];
+	out[1] = m[1] * in[0] + m[5] * in[1] + m[9] * in[2] + m[13];
+	out[2] = m[2] * in[0] + m[6] * in[1] + m[10] * in[2] + m[14];
 }
 
 void MatrixTransformPoint2( const matrix_t m, vec3_t inout )
 {
 	vec3_t tmp;
 
-	tmp[ 0 ] = m[ 0 ] * inout[ 0 ] + m[ 4 ] * inout[ 1 ] + m[ 8 ] * inout[ 2 ] + m[ 12 ];
-	tmp[ 1 ] = m[ 1 ] * inout[ 0 ] + m[ 5 ] * inout[ 1 ] + m[ 9 ] * inout[ 2 ] + m[ 13 ];
-	tmp[ 2 ] = m[ 2 ] * inout[ 0 ] + m[ 6 ] * inout[ 1 ] + m[ 10 ] * inout[ 2 ] + m[ 14 ];
+	tmp[0] = m[0] * inout[0] + m[4] * inout[1] + m[8] * inout[2] + m[12];
+	tmp[1] = m[1] * inout[0] + m[5] * inout[1] + m[9] * inout[2] + m[13];
+	tmp[2] = m[2] * inout[0] + m[6] * inout[1] + m[10] * inout[2] + m[14];
 
 	VectorCopy( tmp, inout );
 }
@@ -2836,20 +2985,20 @@ void MatrixTransformPoint2( const matrix_t m, vec3_t inout )
 void MatrixTransform4( const matrix_t m, const vec4_t in, vec4_t out )
 {
 #if id386_sse
-	//#error MatrixTransform4
+	// #error MatrixTransform4
 
 	__m128 _t0, _t1, _t2, _x, _y, _z, _w, _m0, _m1, _m2, _m3;
 
-	_m0 = _mm_loadu_ps( &m[ 0 ] );
-	_m1 = _mm_loadu_ps( &m[ 4 ] );
-	_m2 = _mm_loadu_ps( &m[ 8 ] );
-	_m3 = _mm_loadu_ps( &m[ 12 ] );
+	_m0 = _mm_loadu_ps( &m[0] );
+	_m1 = _mm_loadu_ps( &m[4] );
+	_m2 = _mm_loadu_ps( &m[8] );
+	_m3 = _mm_loadu_ps( &m[12] );
 
 	_t0 = _mm_loadu_ps( in );
-	_x  = _mm_shuffle_ps( _t0, _t0, _MM_SHUFFLE( 0, 0, 0, 0 ) );
-	_y  = _mm_shuffle_ps( _t0, _t0, _MM_SHUFFLE( 1, 1, 1, 1 ) );
-	_z  = _mm_shuffle_ps( _t0, _t0, _MM_SHUFFLE( 2, 2, 2, 2 ) );
-	_w  = _mm_shuffle_ps( _t0, _t0, _MM_SHUFFLE( 3, 3, 3, 3 ) );
+	_x	= _mm_shuffle_ps( _t0, _t0, _MM_SHUFFLE( 0, 0, 0, 0 ) );
+	_y	= _mm_shuffle_ps( _t0, _t0, _MM_SHUFFLE( 1, 1, 1, 1 ) );
+	_z	= _mm_shuffle_ps( _t0, _t0, _MM_SHUFFLE( 2, 2, 2, 2 ) );
+	_w	= _mm_shuffle_ps( _t0, _t0, _MM_SHUFFLE( 3, 3, 3, 3 ) );
 
 	_t0 = _mm_mul_ps( _m3, _w );
 	_t1 = _mm_mul_ps( _m2, _z );
@@ -2863,10 +3012,10 @@ void MatrixTransform4( const matrix_t m, const vec4_t in, vec4_t out )
 
 	_mm_storeu_ps( out, _t0 );
 #else
-	out[ 0 ] = m[ 0 ] * in[ 0 ] + m[ 4 ] * in[ 1 ] + m[ 8 ] * in[ 2 ] + m[ 12 ] * in[ 3 ];
-	out[ 1 ] = m[ 1 ] * in[ 0 ] + m[ 5 ] * in[ 1 ] + m[ 9 ] * in[ 2 ] + m[ 13 ] * in[ 3 ];
-	out[ 2 ] = m[ 2 ] * in[ 0 ] + m[ 6 ] * in[ 1 ] + m[ 10 ] * in[ 2 ] + m[ 14 ] * in[ 3 ];
-	out[ 3 ] = m[ 3 ] * in[ 0 ] + m[ 7 ] * in[ 1 ] + m[ 11 ] * in[ 2 ] + m[ 15 ] * in[ 3 ];
+	out[0] = m[0] * in[0] + m[4] * in[1] + m[8] * in[2] + m[12] * in[3];
+	out[1] = m[1] * in[0] + m[5] * in[1] + m[9] * in[2] + m[13] * in[3];
+	out[2] = m[2] * in[0] + m[6] * in[1] + m[10] * in[2] + m[14] * in[3];
+	out[3] = m[3] * in[0] + m[7] * in[1] + m[11] * in[2] + m[15] * in[3];
 #endif
 }
 
@@ -2879,10 +3028,10 @@ void MatrixTransformPlane( const matrix_t m, const vec4_t in, vec4_t out )
 	MatrixTransformNormal( m, in, out );
 
 	// add new position to current plane position
-	VectorSet( translation, m[ 12 ], m[ 13 ], m[ 14 ] );
-	VectorMA( translation, in[ 3 ], out, planePos );
+	VectorSet( translation, m[12], m[13], m[14] );
+	VectorMA( translation, in[3], out, planePos );
 
-	out[ 3 ] = DotProduct( out, planePos );
+	out[3] = DotProduct( out, planePos );
 }
 
 void MatrixTransformPlane2( const matrix_t m, vec4_t inout )
@@ -2899,77 +3048,77 @@ see glspec30.pdf chapter 2.12 Coordinate Transformations
 */
 void MatrixPerspectiveProjection( matrix_t m, vec_t left, vec_t right, vec_t bottom, vec_t top, vec_t near, vec_t far )
 {
-	m[ 0 ]  = ( 2 * near ) / ( right - left );
-	m[ 4 ]  = 0;
-	m[ 8 ]  = ( right + left ) / ( right - left );
-	m[ 12 ] = 0;
-	m[ 1 ]  = 0;
-	m[ 5 ]  = ( 2 * near ) / ( top - bottom );
-	m[ 9 ]  = ( top + bottom ) / ( top - bottom );
-	m[ 13 ] = 0;
-	m[ 2 ]  = 0;
-	m[ 6 ]  = 0;
-	m[ 10 ] = -( far + near ) / ( far - near );
-	m[ 14 ] = -( 2 * far * near ) / ( far - near );
-	m[ 3 ]  = 0;
-	m[ 7 ]  = 0;
-	m[ 11 ] = -1;
-	m[ 15 ] = 0;
+	m[0]  = ( 2 * near ) / ( right - left );
+	m[4]  = 0;
+	m[8]  = ( right + left ) / ( right - left );
+	m[12] = 0;
+	m[1]  = 0;
+	m[5]  = ( 2 * near ) / ( top - bottom );
+	m[9]  = ( top + bottom ) / ( top - bottom );
+	m[13] = 0;
+	m[2]  = 0;
+	m[6]  = 0;
+	m[10] = -( far + near ) / ( far - near );
+	m[14] = -( 2 * far * near ) / ( far - near );
+	m[3]  = 0;
+	m[7]  = 0;
+	m[11] = -1;
+	m[15] = 0;
 }
 
 /*
 same as D3DXMatrixPerspectiveOffCenterLH
- 
+
 http://msdn.microsoft.com/en-us/library/bb205353(VS.85).aspx
 */
 void MatrixPerspectiveProjectionLH( matrix_t m, vec_t left, vec_t right, vec_t bottom, vec_t top, vec_t near, vec_t far )
 {
-	m[ 0 ]  = ( 2 * near ) / ( right - left );
-	m[ 4 ]  = 0;
-	m[ 8 ]  = ( left + right ) / ( left - right );
-	m[ 12 ] = 0;
-	m[ 1 ]  = 0;
-	m[ 5 ]  = ( 2 * near ) / ( top - bottom );
-	m[ 9 ]  = ( top + bottom ) / ( bottom - top );
-	m[ 13 ] = 0;
-	m[ 2 ]  = 0;
-	m[ 6 ]  = 0;
-	m[ 10 ] = far / ( far - near );
-	m[ 14 ] = ( near * far ) / ( near - far );
-	m[ 3 ]  = 0;
-	m[ 7 ]  = 0;
-	m[ 11 ] = 1;
-	m[ 15 ] = 0;
+	m[0]  = ( 2 * near ) / ( right - left );
+	m[4]  = 0;
+	m[8]  = ( left + right ) / ( left - right );
+	m[12] = 0;
+	m[1]  = 0;
+	m[5]  = ( 2 * near ) / ( top - bottom );
+	m[9]  = ( top + bottom ) / ( bottom - top );
+	m[13] = 0;
+	m[2]  = 0;
+	m[6]  = 0;
+	m[10] = far / ( far - near );
+	m[14] = ( near * far ) / ( near - far );
+	m[3]  = 0;
+	m[7]  = 0;
+	m[11] = 1;
+	m[15] = 0;
 }
 
 /*
 same as D3DXMatrixPerspectiveOffCenterRH
- 
+
 http://msdn.microsoft.com/en-us/library/bb205354(VS.85).aspx
 */
 void MatrixPerspectiveProjectionRH( matrix_t m, vec_t left, vec_t right, vec_t bottom, vec_t top, vec_t near, vec_t far )
 {
-	m[ 0 ]  = ( 2 * near ) / ( right - left );
-	m[ 4 ]  = 0;
-	m[ 8 ]  = ( left + right ) / ( right - left );
-	m[ 12 ] = 0;
-	m[ 1 ]  = 0;
-	m[ 5 ]  = ( 2 * near ) / ( top - bottom );
-	m[ 9 ]  = ( top + bottom ) / ( top - bottom );
-	m[ 13 ] = 0;
-	m[ 2 ]  = 0;
-	m[ 6 ]  = 0;
-	m[ 10 ] = far / ( near - far );
-	m[ 14 ] = ( near * far ) / ( near - far );
-	m[ 3 ]  = 0;
-	m[ 7 ]  = 0;
-	m[ 11 ] = -1;
-	m[ 15 ] = 0;
+	m[0]  = ( 2 * near ) / ( right - left );
+	m[4]  = 0;
+	m[8]  = ( left + right ) / ( right - left );
+	m[12] = 0;
+	m[1]  = 0;
+	m[5]  = ( 2 * near ) / ( top - bottom );
+	m[9]  = ( top + bottom ) / ( top - bottom );
+	m[13] = 0;
+	m[2]  = 0;
+	m[6]  = 0;
+	m[10] = far / ( near - far );
+	m[14] = ( near * far ) / ( near - far );
+	m[3]  = 0;
+	m[7]  = 0;
+	m[11] = -1;
+	m[15] = 0;
 }
 
 /*
 same as D3DXMatrixPerspectiveFovLH
- 
+
 http://msdn.microsoft.com/en-us/library/bb205350(VS.85).aspx
 */
 void MatrixPerspectiveProjectionFovYAspectLH( matrix_t m, vec_t fov, vec_t aspect, vec_t near, vec_t far )
@@ -2979,22 +3128,22 @@ void MatrixPerspectiveProjectionFovYAspectLH( matrix_t m, vec_t fov, vec_t aspec
 	width  = tanf( DEG2RAD( fov * 0.5f ) );
 	height = width / aspect;
 
-	m[ 0 ]  = 1 / width;
-	m[ 4 ]  = 0;
-	m[ 8 ]  = 0;
-	m[ 12 ] = 0;
-	m[ 1 ]  = 0;
-	m[ 5 ]  = 1 / height;
-	m[ 9 ]  = 0;
-	m[ 13 ] = 0;
-	m[ 2 ]  = 0;
-	m[ 6 ]  = 0;
-	m[ 10 ] = far / ( far - near );
-	m[ 14 ] = -( near * far ) / ( far - near );
-	m[ 3 ]  = 0;
-	m[ 7 ]  = 0;
-	m[ 11 ] = 1;
-	m[ 15 ] = 0;
+	m[0]  = 1 / width;
+	m[4]  = 0;
+	m[8]  = 0;
+	m[12] = 0;
+	m[1]  = 0;
+	m[5]  = 1 / height;
+	m[9]  = 0;
+	m[13] = 0;
+	m[2]  = 0;
+	m[6]  = 0;
+	m[10] = far / ( far - near );
+	m[14] = -( near * far ) / ( far - near );
+	m[3]  = 0;
+	m[7]  = 0;
+	m[11] = 1;
+	m[15] = 0;
 }
 
 void MatrixPerspectiveProjectionFovXYLH( matrix_t m, vec_t fovX, vec_t fovY, vec_t near, vec_t far )
@@ -3004,22 +3153,22 @@ void MatrixPerspectiveProjectionFovXYLH( matrix_t m, vec_t fovX, vec_t fovY, vec
 	width  = tanf( DEG2RAD( fovX * 0.5f ) );
 	height = tanf( DEG2RAD( fovY * 0.5f ) );
 
-	m[ 0 ]  = 1 / width;
-	m[ 4 ]  = 0;
-	m[ 8 ]  = 0;
-	m[ 12 ] = 0;
-	m[ 1 ]  = 0;
-	m[ 5 ]  = 1 / height;
-	m[ 9 ]  = 0;
-	m[ 13 ] = 0;
-	m[ 2 ]  = 0;
-	m[ 6 ]  = 0;
-	m[ 10 ] = far / ( far - near );
-	m[ 14 ] = -( near * far ) / ( far - near );
-	m[ 3 ]  = 0;
-	m[ 7 ]  = 0;
-	m[ 11 ] = 1;
-	m[ 15 ] = 0;
+	m[0]  = 1 / width;
+	m[4]  = 0;
+	m[8]  = 0;
+	m[12] = 0;
+	m[1]  = 0;
+	m[5]  = 1 / height;
+	m[9]  = 0;
+	m[13] = 0;
+	m[2]  = 0;
+	m[6]  = 0;
+	m[10] = far / ( far - near );
+	m[14] = -( near * far ) / ( far - near );
+	m[3]  = 0;
+	m[7]  = 0;
+	m[11] = 1;
+	m[15] = 0;
 }
 
 void MatrixPerspectiveProjectionFovXYRH( matrix_t m, vec_t fovX, vec_t fovY, vec_t near, vec_t far )
@@ -3029,22 +3178,22 @@ void MatrixPerspectiveProjectionFovXYRH( matrix_t m, vec_t fovX, vec_t fovY, vec
 	width  = tanf( DEG2RAD( fovX * 0.5f ) );
 	height = tanf( DEG2RAD( fovY * 0.5f ) );
 
-	m[ 0 ]  = 1 / width;
-	m[ 4 ]  = 0;
-	m[ 8 ]  = 0;
-	m[ 12 ] = 0;
-	m[ 1 ]  = 0;
-	m[ 5 ]  = 1 / height;
-	m[ 9 ]  = 0;
-	m[ 13 ] = 0;
-	m[ 2 ]  = 0;
-	m[ 6 ]  = 0;
-	m[ 10 ] = far / ( near - far );
-	m[ 14 ] = ( near * far ) / ( near - far );
-	m[ 3 ]  = 0;
-	m[ 7 ]  = 0;
-	m[ 11 ] = -1;
-	m[ 15 ] = 0;
+	m[0]  = 1 / width;
+	m[4]  = 0;
+	m[8]  = 0;
+	m[12] = 0;
+	m[1]  = 0;
+	m[5]  = 1 / height;
+	m[9]  = 0;
+	m[13] = 0;
+	m[2]  = 0;
+	m[6]  = 0;
+	m[10] = far / ( near - far );
+	m[14] = ( near * far ) / ( near - far );
+	m[3]  = 0;
+	m[7]  = 0;
+	m[11] = -1;
+	m[15] = 0;
 }
 
 // Tr3B: far plane at infinity, see RobustShadowVolumes.pdf by Nvidia
@@ -3055,22 +3204,22 @@ void MatrixPerspectiveProjectionFovXYInfiniteRH( matrix_t m, vec_t fovX, vec_t f
 	width  = tanf( DEG2RAD( fovX * 0.5f ) );
 	height = tanf( DEG2RAD( fovY * 0.5f ) );
 
-	m[ 0 ]  = 1 / width;
-	m[ 4 ]  = 0;
-	m[ 8 ]  = 0;
-	m[ 12 ] = 0;
-	m[ 1 ]  = 0;
-	m[ 5 ]  = 1 / height;
-	m[ 9 ]  = 0;
-	m[ 13 ] = 0;
-	m[ 2 ]  = 0;
-	m[ 6 ]  = 0;
-	m[ 10 ] = -1;
-	m[ 14 ] = -2 * near;
-	m[ 3 ]  = 0;
-	m[ 7 ]  = 0;
-	m[ 11 ] = -1;
-	m[ 15 ] = 0;
+	m[0]  = 1 / width;
+	m[4]  = 0;
+	m[8]  = 0;
+	m[12] = 0;
+	m[1]  = 0;
+	m[5]  = 1 / height;
+	m[9]  = 0;
+	m[13] = 0;
+	m[2]  = 0;
+	m[6]  = 0;
+	m[10] = -1;
+	m[14] = -2 * near;
+	m[3]  = 0;
+	m[7]  = 0;
+	m[11] = -1;
+	m[15] = 0;
 }
 
 /*
@@ -3079,77 +3228,77 @@ see glspec30.pdf chapter 2.12 Coordinate Transformations
 */
 void MatrixOrthogonalProjection( matrix_t m, vec_t left, vec_t right, vec_t bottom, vec_t top, vec_t near, vec_t far )
 {
-	m[ 0 ]  = 2 / ( right - left );
-	m[ 4 ]  = 0;
-	m[ 8 ]  = 0;
-	m[ 12 ] = -( right + left ) / ( right - left );
-	m[ 1 ]  = 0;
-	m[ 5 ]  = 2 / ( top - bottom );
-	m[ 9 ]  = 0;
-	m[ 13 ] = -( top + bottom ) / ( top - bottom );
-	m[ 2 ]  = 0;
-	m[ 6 ]  = 0;
-	m[ 10 ] = -2 / ( far - near );
-	m[ 14 ] = -( far + near ) / ( far - near );
-	m[ 3 ]  = 0;
-	m[ 7 ]  = 0;
-	m[ 11 ] = 0;
-	m[ 15 ] = 1;
+	m[0]  = 2 / ( right - left );
+	m[4]  = 0;
+	m[8]  = 0;
+	m[12] = -( right + left ) / ( right - left );
+	m[1]  = 0;
+	m[5]  = 2 / ( top - bottom );
+	m[9]  = 0;
+	m[13] = -( top + bottom ) / ( top - bottom );
+	m[2]  = 0;
+	m[6]  = 0;
+	m[10] = -2 / ( far - near );
+	m[14] = -( far + near ) / ( far - near );
+	m[3]  = 0;
+	m[7]  = 0;
+	m[11] = 0;
+	m[15] = 1;
 }
 
 /*
 same as D3DXMatrixOrthoOffCenterLH
- 
+
 http://msdn.microsoft.com/en-us/library/bb205347(VS.85).aspx
 */
 void MatrixOrthogonalProjectionLH( matrix_t m, vec_t left, vec_t right, vec_t bottom, vec_t top, vec_t near, vec_t far )
 {
-	m[ 0 ]  = 2 / ( right - left );
-	m[ 4 ]  = 0;
-	m[ 8 ]  = 0;
-	m[ 12 ] = ( left + right ) / ( left - right );
-	m[ 1 ]  = 0;
-	m[ 5 ]  = 2 / ( top - bottom );
-	m[ 9 ]  = 0;
-	m[ 13 ] = ( top + bottom ) / ( bottom - top );
-	m[ 2 ]  = 0;
-	m[ 6 ]  = 0;
-	m[ 10 ] = 1 / ( far - near );
-	m[ 14 ] = near / ( near - far );
-	m[ 3 ]  = 0;
-	m[ 7 ]  = 0;
-	m[ 11 ] = 0;
-	m[ 15 ] = 1;
+	m[0]  = 2 / ( right - left );
+	m[4]  = 0;
+	m[8]  = 0;
+	m[12] = ( left + right ) / ( left - right );
+	m[1]  = 0;
+	m[5]  = 2 / ( top - bottom );
+	m[9]  = 0;
+	m[13] = ( top + bottom ) / ( bottom - top );
+	m[2]  = 0;
+	m[6]  = 0;
+	m[10] = 1 / ( far - near );
+	m[14] = near / ( near - far );
+	m[3]  = 0;
+	m[7]  = 0;
+	m[11] = 0;
+	m[15] = 1;
 }
 
 /*
 same as D3DXMatrixOrthoOffCenterRH
- 
+
 http://msdn.microsoft.com/en-us/library/bb205348(VS.85).aspx
 */
 void MatrixOrthogonalProjectionRH( matrix_t m, vec_t left, vec_t right, vec_t bottom, vec_t top, vec_t near, vec_t far )
 {
-	m[ 0 ]  = 2 / ( right - left );
-	m[ 4 ]  = 0;
-	m[ 8 ]  = 0;
-	m[ 12 ] = ( left + right ) / ( left - right );
-	m[ 1 ]  = 0;
-	m[ 5 ]  = 2 / ( top - bottom );
-	m[ 9 ]  = 0;
-	m[ 13 ] = ( top + bottom ) / ( bottom - top );
-	m[ 2 ]  = 0;
-	m[ 6 ]  = 0;
-	m[ 10 ] = 1 / ( near - far );
-	m[ 14 ] = near / ( near - far );
-	m[ 3 ]  = 0;
-	m[ 7 ]  = 0;
-	m[ 11 ] = 0;
-	m[ 15 ] = 1;
+	m[0]  = 2 / ( right - left );
+	m[4]  = 0;
+	m[8]  = 0;
+	m[12] = ( left + right ) / ( left - right );
+	m[1]  = 0;
+	m[5]  = 2 / ( top - bottom );
+	m[9]  = 0;
+	m[13] = ( top + bottom ) / ( bottom - top );
+	m[2]  = 0;
+	m[6]  = 0;
+	m[10] = 1 / ( near - far );
+	m[14] = near / ( near - far );
+	m[3]  = 0;
+	m[7]  = 0;
+	m[11] = 0;
+	m[15] = 1;
 }
 
 /*
 same as D3DXMatrixReflect
- 
+
 http://msdn.microsoft.com/en-us/library/bb205356%28v=VS.85%29.aspx
 */
 void MatrixPlaneReflection( matrix_t m, const vec4_t plane )
@@ -3167,22 +3316,22 @@ void MatrixPlaneReflection( matrix_t m, const vec4_t plane )
 	 */
 
 	// Quake uses a different plane equation
-	m[ 0 ]  = -2 * P[ 0 ] * P[ 0 ] + 1;
-	m[ 4 ]  = -2 * P[ 0 ] * P[ 1 ];
-	m[ 8 ]  = -2 * P[ 0 ] * P[ 2 ];
-	m[ 12 ] = 2 * P[ 0 ] * P[ 3 ];
-	m[ 1 ]  = -2 * P[ 1 ] * P[ 0 ];
-	m[ 5 ]  = -2 * P[ 1 ] * P[ 1 ] + 1;
-	m[ 9 ]  = -2 * P[ 1 ] * P[ 2 ];
-	m[ 13 ] = 2 * P[ 1 ] * P[ 3 ];
-	m[ 2 ]  = -2 * P[ 2 ] * P[ 0 ];
-	m[ 6 ]  = -2 * P[ 2 ] * P[ 1 ];
-	m[ 10 ] = -2 * P[ 2 ] * P[ 2 ] + 1;
-	m[ 14 ] = 2 * P[ 2 ] * P[ 3 ];
-	m[ 3 ]  = 0;
-	m[ 7 ]  = 0;
-	m[ 11 ] = 0;
-	m[ 15 ] = 1;
+	m[0]  = -2 * P[0] * P[0] + 1;
+	m[4]  = -2 * P[0] * P[1];
+	m[8]  = -2 * P[0] * P[2];
+	m[12] = 2 * P[0] * P[3];
+	m[1]  = -2 * P[1] * P[0];
+	m[5]  = -2 * P[1] * P[1] + 1;
+	m[9]  = -2 * P[1] * P[2];
+	m[13] = 2 * P[1] * P[3];
+	m[2]  = -2 * P[2] * P[0];
+	m[6]  = -2 * P[2] * P[1];
+	m[10] = -2 * P[2] * P[2] + 1;
+	m[14] = 2 * P[2] * P[3];
+	m[3]  = 0;
+	m[7]  = 0;
+	m[11] = 0;
+	m[15] = 1;
 
 #if 0
 	matrix_t m2;
@@ -3213,22 +3362,22 @@ void MatrixLookAtLH( matrix_t m, const vec3_t eye, const vec3_t dir, const vec3_
 
 	VectorNormalize2( dir, dirN );
 
-	m[ 0 ]  = sideN[ 0 ];
-	m[ 4 ]  = sideN[ 1 ];
-	m[ 8 ]  = sideN[ 2 ];
-	m[ 12 ] = -DotProduct( sideN, eye );
-	m[ 1 ]  = upN[ 0 ];
-	m[ 5 ]  = upN[ 1 ];
-	m[ 9 ]  = upN[ 2 ];
-	m[ 13 ] = -DotProduct( upN, eye );
-	m[ 2 ]  = dirN[ 0 ];
-	m[ 6 ]  = dirN[ 1 ];
-	m[ 10 ] = dirN[ 2 ];
-	m[ 14 ] = -DotProduct( dirN, eye );
-	m[ 3 ]  = 0;
-	m[ 7 ]  = 0;
-	m[ 11 ] = 0;
-	m[ 15 ] = 1;
+	m[0]  = sideN[0];
+	m[4]  = sideN[1];
+	m[8]  = sideN[2];
+	m[12] = -DotProduct( sideN, eye );
+	m[1]  = upN[0];
+	m[5]  = upN[1];
+	m[9]  = upN[2];
+	m[13] = -DotProduct( upN, eye );
+	m[2]  = dirN[0];
+	m[6]  = dirN[1];
+	m[10] = dirN[2];
+	m[14] = -DotProduct( dirN, eye );
+	m[3]  = 0;
+	m[7]  = 0;
+	m[11] = 0;
+	m[15] = 1;
 }
 
 void MatrixLookAtRH( matrix_t m, const vec3_t eye, const vec3_t dir, const vec3_t up )
@@ -3245,45 +3394,45 @@ void MatrixLookAtRH( matrix_t m, const vec3_t eye, const vec3_t dir, const vec3_
 
 	VectorNormalize2( dir, dirN );
 
-	m[ 0 ]  = sideN[ 0 ];
-	m[ 4 ]  = sideN[ 1 ];
-	m[ 8 ]  = sideN[ 2 ];
-	m[ 12 ] = -DotProduct( sideN, eye );
-	m[ 1 ]  = upN[ 0 ];
-	m[ 5 ]  = upN[ 1 ];
-	m[ 9 ]  = upN[ 2 ];
-	m[ 13 ] = -DotProduct( upN, eye );
-	m[ 2 ]  = -dirN[ 0 ];
-	m[ 6 ]  = -dirN[ 1 ];
-	m[ 10 ] = -dirN[ 2 ];
-	m[ 14 ] = DotProduct( dirN, eye );
-	m[ 3 ]  = 0;
-	m[ 7 ]  = 0;
-	m[ 11 ] = 0;
-	m[ 15 ] = 1;
+	m[0]  = sideN[0];
+	m[4]  = sideN[1];
+	m[8]  = sideN[2];
+	m[12] = -DotProduct( sideN, eye );
+	m[1]  = upN[0];
+	m[5]  = upN[1];
+	m[9]  = upN[2];
+	m[13] = -DotProduct( upN, eye );
+	m[2]  = -dirN[0];
+	m[6]  = -dirN[1];
+	m[10] = -dirN[2];
+	m[14] = DotProduct( dirN, eye );
+	m[3]  = 0;
+	m[7]  = 0;
+	m[11] = 0;
+	m[15] = 1;
 }
 
 void MatrixScaleTranslateToUnitCube( matrix_t m, const vec3_t mins, const vec3_t maxs )
 {
-	m[ 0 ]  = 2 / ( maxs[ 0 ] - mins[ 0 ] );
-	m[ 4 ]  = 0;
-	m[ 8 ]  = 0;
-	m[ 12 ] = -( maxs[ 0 ] + mins[ 0 ] ) / ( maxs[ 0 ] - mins[ 0 ] );
+	m[0]  = 2 / ( maxs[0] - mins[0] );
+	m[4]  = 0;
+	m[8]  = 0;
+	m[12] = -( maxs[0] + mins[0] ) / ( maxs[0] - mins[0] );
 
-	m[ 1 ]  = 0;
-	m[ 5 ]  = 2 / ( maxs[ 1 ] - mins[ 1 ] );
-	m[ 9 ]  = 0;
-	m[ 13 ] = -( maxs[ 1 ] + mins[ 1 ] ) / ( maxs[ 1 ] - mins[ 1 ] );
+	m[1]  = 0;
+	m[5]  = 2 / ( maxs[1] - mins[1] );
+	m[9]  = 0;
+	m[13] = -( maxs[1] + mins[1] ) / ( maxs[1] - mins[1] );
 
-	m[ 2 ]  = 0;
-	m[ 6 ]  = 0;
-	m[ 10 ] = 2 / ( maxs[ 2 ] - mins[ 2 ] );
-	m[ 14 ] = -( maxs[ 2 ] + mins[ 2 ] ) / ( maxs[ 2 ] - mins[ 2 ] );
+	m[2]  = 0;
+	m[6]  = 0;
+	m[10] = 2 / ( maxs[2] - mins[2] );
+	m[14] = -( maxs[2] + mins[2] ) / ( maxs[2] - mins[2] );
 
-	m[ 3 ]  = 0;
-	m[ 7 ]  = 0;
-	m[ 11 ] = 0;
-	m[ 15 ] = 1;
+	m[3]  = 0;
+	m[7]  = 0;
+	m[11] = 0;
+	m[15] = 1;
 }
 
 void MatrixCrop( matrix_t m, const vec3_t mins, const vec3_t maxs )
@@ -3291,31 +3440,31 @@ void MatrixCrop( matrix_t m, const vec3_t mins, const vec3_t maxs )
 	float scaleX, scaleY, scaleZ;
 	float offsetX, offsetY, offsetZ;
 
-	scaleX = 2.0f / ( maxs[ 0 ] - mins[ 0 ] );
-	scaleY = 2.0f / ( maxs[ 1 ] - mins[ 1 ] );
+	scaleX = 2.0f / ( maxs[0] - mins[0] );
+	scaleY = 2.0f / ( maxs[1] - mins[1] );
 
-	offsetX = -0.5f * ( maxs[ 0 ] + mins[ 0 ] ) * scaleX;
-	offsetY = -0.5f * ( maxs[ 1 ] + mins[ 1 ] ) * scaleY;
+	offsetX = -0.5f * ( maxs[0] + mins[0] ) * scaleX;
+	offsetY = -0.5f * ( maxs[1] + mins[1] ) * scaleY;
 
-	scaleZ  = 1.0f / ( maxs[ 2 ] - mins[ 2 ] );
-	offsetZ = -mins[ 2 ] * scaleZ;
+	scaleZ	= 1.0f / ( maxs[2] - mins[2] );
+	offsetZ = -mins[2] * scaleZ;
 
-	m[ 0 ]  = scaleX;
-	m[ 4 ]  = 0;
-	m[ 8 ]  = 0;
-	m[ 12 ] = offsetX;
-	m[ 1 ]  = 0;
-	m[ 5 ]  = scaleY;
-	m[ 9 ]  = 0;
-	m[ 13 ] = offsetY;
-	m[ 2 ]  = 0;
-	m[ 6 ]  = 0;
-	m[ 10 ] = scaleZ;
-	m[ 14 ] = offsetZ;
-	m[ 3 ]  = 0;
-	m[ 7 ]  = 0;
-	m[ 11 ] = 0;
-	m[ 15 ] = 1;
+	m[0]  = scaleX;
+	m[4]  = 0;
+	m[8]  = 0;
+	m[12] = offsetX;
+	m[1]  = 0;
+	m[5]  = scaleY;
+	m[9]  = 0;
+	m[13] = offsetY;
+	m[2]  = 0;
+	m[6]  = 0;
+	m[10] = scaleZ;
+	m[14] = offsetZ;
+	m[3]  = 0;
+	m[7]  = 0;
+	m[11] = 0;
+	m[15] = 1;
 }
 
 //=============================================
@@ -3328,16 +3477,16 @@ vec_t QuatNormalize( quat_t q )
 {
 	float length, ilength;
 
-	length = q[ 0 ] * q[ 0 ] + q[ 1 ] * q[ 1 ] + q[ 2 ] * q[ 2 ] + q[ 3 ] * q[ 3 ];
+	length = q[0] * q[0] + q[1] * q[1] + q[2] * q[2] + q[3] * q[3];
 	length = sqrt( length );
 
 	if( length )
 	{
 		ilength = 1 / length;
-		q[ 0 ] *= ilength;
-		q[ 1 ] *= ilength;
-		q[ 2 ] *= ilength;
-		q[ 3 ] *= ilength;
+		q[0] *= ilength;
+		q[1] *= ilength;
+		q[2] *= ilength;
+		q[3] *= ilength;
 	}
 
 	return length;
@@ -3363,10 +3512,10 @@ void QuatFromAngles( quat_t q, vec_t pitch, vec_t yaw, vec_t roll )
 	sr = sin( DEG2RAD( roll ) );
 	cr = cos( DEG2RAD( roll ) );
 
-	q[ 0 ] = sr * cp * cy - cr * sp * sy; // x
-	q[ 1 ] = cr * sp * cy + sr * cp * sy; // y
-	q[ 2 ] = cr * cp * sy - sr * sp * cy; // z
-	q[ 3 ] = cr * cp * cy + sr * sp * sy; // w
+	q[0] = sr * cp * cy - cr * sp * sy; // x
+	q[1] = cr * sp * cy + sr * cp * sy; // y
+	q[2] = cr * cp * sy - sr * sp * cy; // z
+	q[3] = cr * cp * cy + sr * sp * sy; // w
 #endif
 }
 
@@ -3377,50 +3526,50 @@ void QuatFromMatrix( quat_t q, const matrix_t m )
 	   From Quaternion to Matrix and Back
 	   February 27th 2005
 	   J.M.P. van Waveren
-	
+
 	   http://www.intel.com/cd/ids/developer/asmo-na/eng/293748.htm
 	 */
 	float t, s;
 
-	if( m[ 0 ] + m[ 5 ] + m[ 10 ] > 0.0f )
+	if( m[0] + m[5] + m[10] > 0.0f )
 	{
-		t = m[ 0 ] + m[ 5 ] + m[ 10 ] + 1.0f;
+		t = m[0] + m[5] + m[10] + 1.0f;
 		s = ( 1.0f / sqrtf( t ) ) * 0.5f;
 
-		q[ 3 ] = s * t;
-		q[ 2 ] = ( m[ 1 ] - m[ 4 ] ) * s;
-		q[ 1 ] = ( m[ 8 ] - m[ 2 ] ) * s;
-		q[ 0 ] = ( m[ 6 ] - m[ 9 ] ) * s;
+		q[3] = s * t;
+		q[2] = ( m[1] - m[4] ) * s;
+		q[1] = ( m[8] - m[2] ) * s;
+		q[0] = ( m[6] - m[9] ) * s;
 	}
-	else if( m[ 0 ] > m[ 5 ] && m[ 0 ] > m[ 10 ] )
+	else if( m[0] > m[5] && m[0] > m[10] )
 	{
-		t = m[ 0 ] - m[ 5 ] - m[ 10 ] + 1.0f;
+		t = m[0] - m[5] - m[10] + 1.0f;
 		s = ( 1.0f / sqrtf( t ) ) * 0.5f;
 
-		q[ 0 ] = s * t;
-		q[ 1 ] = ( m[ 1 ] + m[ 4 ] ) * s;
-		q[ 2 ] = ( m[ 8 ] + m[ 2 ] ) * s;
-		q[ 3 ] = ( m[ 6 ] - m[ 9 ] ) * s;
+		q[0] = s * t;
+		q[1] = ( m[1] + m[4] ) * s;
+		q[2] = ( m[8] + m[2] ) * s;
+		q[3] = ( m[6] - m[9] ) * s;
 	}
-	else if( m[ 5 ] > m[ 10 ] )
+	else if( m[5] > m[10] )
 	{
-		t = -m[ 0 ] + m[ 5 ] - m[ 10 ] + 1.0f;
+		t = -m[0] + m[5] - m[10] + 1.0f;
 		s = ( 1.0f / sqrtf( t ) ) * 0.5f;
 
-		q[ 1 ] = s * t;
-		q[ 0 ] = ( m[ 1 ] + m[ 4 ] ) * s;
-		q[ 3 ] = ( m[ 8 ] - m[ 2 ] ) * s;
-		q[ 2 ] = ( m[ 6 ] + m[ 9 ] ) * s;
+		q[1] = s * t;
+		q[0] = ( m[1] + m[4] ) * s;
+		q[3] = ( m[8] - m[2] ) * s;
+		q[2] = ( m[6] + m[9] ) * s;
 	}
 	else
 	{
-		t = -m[ 0 ] - m[ 5 ] + m[ 10 ] + 1.0f;
+		t = -m[0] - m[5] + m[10] + 1.0f;
 		s = ( 1.0f / sqrtf( t ) ) * 0.5f;
 
-		q[ 2 ] = s * t;
-		q[ 3 ] = ( m[ 1 ] - m[ 4 ] ) * s;
-		q[ 0 ] = ( m[ 8 ] + m[ 2 ] ) * s;
-		q[ 1 ] = ( m[ 6 ] + m[ 9 ] ) * s;
+		q[2] = s * t;
+		q[3] = ( m[1] - m[4] ) * s;
+		q[0] = ( m[8] + m[2] ) * s;
+		q[1] = ( m[6] + m[9] ) * s;
 	}
 
 #else
@@ -3428,48 +3577,48 @@ void QuatFromMatrix( quat_t q, const matrix_t m )
 
 	// http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
 
-	trace = 1.0f + m[ 0 ] + m[ 5 ] + m[ 10 ];
+	trace = 1.0f + m[0] + m[5] + m[10];
 
 	if( trace > 0.0f )
 	{
 		vec_t s = 0.5f / sqrt( trace );
 
-		q[ 0 ] = ( m[ 6 ] - m[ 9 ] ) * s;
-		q[ 1 ] = ( m[ 8 ] - m[ 2 ] ) * s;
-		q[ 2 ] = ( m[ 1 ] - m[ 4 ] ) * s;
-		q[ 3 ] = 0.25f / s;
+		q[0] = ( m[6] - m[9] ) * s;
+		q[1] = ( m[8] - m[2] ) * s;
+		q[2] = ( m[1] - m[4] ) * s;
+		q[3] = 0.25f / s;
 	}
 	else
 	{
-		if( m[ 0 ] > m[ 5 ] && m[ 0 ] > m[ 10 ] )
+		if( m[0] > m[5] && m[0] > m[10] )
 		{
 			// column 0
-			float s = sqrt( 1.0f + m[ 0 ] - m[ 5 ] - m[ 10 ] ) * 2.0f;
+			float s = sqrt( 1.0f + m[0] - m[5] - m[10] ) * 2.0f;
 
-			q[ 0 ] = 0.25f * s;
-			q[ 1 ] = ( m[ 4 ] + m[ 1 ] ) / s;
-			q[ 2 ] = ( m[ 8 ] + m[ 2 ] ) / s;
-			q[ 3 ] = ( m[ 9 ] - m[ 6 ] ) / s;
+			q[0] = 0.25f * s;
+			q[1] = ( m[4] + m[1] ) / s;
+			q[2] = ( m[8] + m[2] ) / s;
+			q[3] = ( m[9] - m[6] ) / s;
 		}
-		else if( m[ 5 ] > m[ 10 ] )
+		else if( m[5] > m[10] )
 		{
 			// column 1
-			float s = sqrt( 1.0f + m[ 5 ] - m[ 0 ] - m[ 10 ] ) * 2.0f;
+			float s = sqrt( 1.0f + m[5] - m[0] - m[10] ) * 2.0f;
 
-			q[ 0 ] = ( m[ 4 ] + m[ 1 ] ) / s;
-			q[ 1 ] = 0.25f * s;
-			q[ 2 ] = ( m[ 9 ] + m[ 6 ] ) / s;
-			q[ 3 ] = ( m[ 8 ] - m[ 2 ] ) / s;
+			q[0] = ( m[4] + m[1] ) / s;
+			q[1] = 0.25f * s;
+			q[2] = ( m[9] + m[6] ) / s;
+			q[3] = ( m[8] - m[2] ) / s;
 		}
 		else
 		{
 			// column 2
-			float s = sqrt( 1.0f + m[ 10 ] - m[ 0 ] - m[ 5 ] ) * 2.0f;
+			float s = sqrt( 1.0f + m[10] - m[0] - m[5] ) * 2.0f;
 
-			q[ 0 ] = ( m[ 8 ] + m[ 2 ] ) / s;
-			q[ 1 ] = ( m[ 9 ] + m[ 6 ] ) / s;
-			q[ 2 ] = 0.25f * s;
-			q[ 3 ] = ( m[ 4 ] - m[ 1 ] ) / s;
+			q[0] = ( m[8] + m[2] ) / s;
+			q[1] = ( m[9] + m[6] ) / s;
+			q[2] = 0.25f * s;
+			q[3] = ( m[4] - m[1] ) / s;
 		}
 	}
 
@@ -3493,26 +3642,26 @@ void QuatToVectorsFRU( const quat_t q, vec3_t forward, vec3_t right, vec3_t up )
 	MatrixToVectorsFRU( tmp, forward, right, up );
 }
 
-void QuatToAxis( const quat_t q, vec3_t axis[ 3 ] )
+void QuatToAxis( const quat_t q, vec3_t axis[3] )
 {
 	matrix_t tmp;
 
 	MatrixFromQuat( tmp, q );
-	MatrixToVectorsFLU( tmp, axis[ 0 ], axis[ 1 ], axis[ 2 ] );
+	MatrixToVectorsFLU( tmp, axis[0], axis[1], axis[2] );
 }
 
 void QuatToAngles( const quat_t q, vec3_t angles )
 {
 	quat_t q2;
 
-	q2[ 0 ] = q[ 0 ] * q[ 0 ];
-	q2[ 1 ] = q[ 1 ] * q[ 1 ];
-	q2[ 2 ] = q[ 2 ] * q[ 2 ];
-	q2[ 3 ] = q[ 3 ] * q[ 3 ];
+	q2[0] = q[0] * q[0];
+	q2[1] = q[1] * q[1];
+	q2[2] = q[2] * q[2];
+	q2[3] = q[3] * q[3];
 
-	angles[ PITCH ] = RAD2DEG( asin( -2 * ( q[ 2 ] * q[ 0 ] - q[ 3 ] * q[ 1 ] ) ) );
-	angles[ YAW ]   = RAD2DEG( atan2( 2 * ( q[ 2 ] * q[ 3 ] + q[ 0 ] * q[ 1 ] ), ( q2[ 2 ] - q2[ 3 ] - q2[ 0 ] + q2[ 1 ] ) ) );
-	angles[ ROLL ]  = RAD2DEG( atan2( 2 * ( q[ 3 ] * q[ 0 ] + q[ 2 ] * q[ 1 ] ), ( -q2[ 2 ] - q2[ 3 ] + q2[ 0 ] + q2[ 1 ] ) ) );
+	angles[PITCH] = RAD2DEG( asin( -2 * ( q[2] * q[0] - q[3] * q[1] ) ) );
+	angles[YAW]	  = RAD2DEG( atan2( 2 * ( q[2] * q[3] + q[0] * q[1] ), ( q2[2] - q2[3] - q2[0] + q2[1] ) ) );
+	angles[ROLL]  = RAD2DEG( atan2( 2 * ( q[3] * q[0] + q[2] * q[1] ), ( -q2[2] - q2[3] + q2[0] + q2[1] ) ) );
 }
 
 void QuatMultiply0( quat_t qa, const quat_t qb )
@@ -3530,38 +3679,38 @@ void QuatMultiply1( const quat_t qa, const quat_t qb, quat_t qc )
 	   x = w1x2 + x1w2 + y1z2 - z1y2
 	   y = w1y2 + y1w2 + z1x2 - x1z2
 	   z = w1z2 + z1w2 + x1y2 - y1x2
-	
+
 	   w = w1w2 - x1x2 - y1y2 - z1z2
 	 */
 
-	qc[ 0 ] = qa[ 3 ] * qb[ 0 ] + qa[ 0 ] * qb[ 3 ] + qa[ 1 ] * qb[ 2 ] - qa[ 2 ] * qb[ 1 ];
-	qc[ 1 ] = qa[ 3 ] * qb[ 1 ] + qa[ 1 ] * qb[ 3 ] + qa[ 2 ] * qb[ 0 ] - qa[ 0 ] * qb[ 2 ];
-	qc[ 2 ] = qa[ 3 ] * qb[ 2 ] + qa[ 2 ] * qb[ 3 ] + qa[ 0 ] * qb[ 1 ] - qa[ 1 ] * qb[ 0 ];
-	qc[ 3 ] = qa[ 3 ] * qb[ 3 ] - qa[ 0 ] * qb[ 0 ] - qa[ 1 ] * qb[ 1 ] - qa[ 2 ] * qb[ 2 ];
+	qc[0] = qa[3] * qb[0] + qa[0] * qb[3] + qa[1] * qb[2] - qa[2] * qb[1];
+	qc[1] = qa[3] * qb[1] + qa[1] * qb[3] + qa[2] * qb[0] - qa[0] * qb[2];
+	qc[2] = qa[3] * qb[2] + qa[2] * qb[3] + qa[0] * qb[1] - qa[1] * qb[0];
+	qc[3] = qa[3] * qb[3] - qa[0] * qb[0] - qa[1] * qb[1] - qa[2] * qb[2];
 }
 
 void QuatMultiply2( const quat_t qa, const quat_t qb, quat_t qc )
 {
-	qc[ 0 ] = qa[ 3 ] * qb[ 0 ] + qa[ 0 ] * qb[ 3 ] + qa[ 1 ] * qb[ 2 ] + qa[ 2 ] * qb[ 1 ];
-	qc[ 1 ] = qa[ 3 ] * qb[ 1 ] - qa[ 1 ] * qb[ 3 ] - qa[ 2 ] * qb[ 0 ] + qa[ 0 ] * qb[ 2 ];
-	qc[ 2 ] = qa[ 3 ] * qb[ 2 ] - qa[ 2 ] * qb[ 3 ] - qa[ 0 ] * qb[ 1 ] + qa[ 1 ] * qb[ 0 ];
-	qc[ 3 ] = qa[ 3 ] * qb[ 3 ] - qa[ 0 ] * qb[ 0 ] - qa[ 1 ] * qb[ 1 ] + qa[ 2 ] * qb[ 2 ];
+	qc[0] = qa[3] * qb[0] + qa[0] * qb[3] + qa[1] * qb[2] + qa[2] * qb[1];
+	qc[1] = qa[3] * qb[1] - qa[1] * qb[3] - qa[2] * qb[0] + qa[0] * qb[2];
+	qc[2] = qa[3] * qb[2] - qa[2] * qb[3] - qa[0] * qb[1] + qa[1] * qb[0];
+	qc[3] = qa[3] * qb[3] - qa[0] * qb[0] - qa[1] * qb[1] + qa[2] * qb[2];
 }
 
 void QuatMultiply3( const quat_t qa, const quat_t qb, quat_t qc )
 {
-	qc[ 0 ] = qa[ 3 ] * qb[ 0 ] + qa[ 0 ] * qb[ 3 ] + qa[ 1 ] * qb[ 2 ] + qa[ 2 ] * qb[ 1 ];
-	qc[ 1 ] = -qa[ 3 ] * qb[ 1 ] + qa[ 1 ] * qb[ 3 ] - qa[ 2 ] * qb[ 0 ] + qa[ 0 ] * qb[ 2 ];
-	qc[ 2 ] = -qa[ 3 ] * qb[ 2 ] + qa[ 2 ] * qb[ 3 ] - qa[ 0 ] * qb[ 1 ] + qa[ 1 ] * qb[ 0 ];
-	qc[ 3 ] = -qa[ 3 ] * qb[ 3 ] + qa[ 0 ] * qb[ 0 ] - qa[ 1 ] * qb[ 1 ] + qa[ 2 ] * qb[ 2 ];
+	qc[0] = qa[3] * qb[0] + qa[0] * qb[3] + qa[1] * qb[2] + qa[2] * qb[1];
+	qc[1] = -qa[3] * qb[1] + qa[1] * qb[3] - qa[2] * qb[0] + qa[0] * qb[2];
+	qc[2] = -qa[3] * qb[2] + qa[2] * qb[3] - qa[0] * qb[1] + qa[1] * qb[0];
+	qc[3] = -qa[3] * qb[3] + qa[0] * qb[0] - qa[1] * qb[1] + qa[2] * qb[2];
 }
 
 void QuatMultiply4( const quat_t qa, const quat_t qb, quat_t qc )
 {
-	qc[ 0 ] = qa[ 3 ] * qb[ 0 ] - qa[ 0 ] * qb[ 3 ] - qa[ 1 ] * qb[ 2 ] - qa[ 2 ] * qb[ 1 ];
-	qc[ 1 ] = -qa[ 3 ] * qb[ 1 ] - qa[ 1 ] * qb[ 3 ] + qa[ 2 ] * qb[ 0 ] - qa[ 0 ] * qb[ 2 ];
-	qc[ 2 ] = -qa[ 3 ] * qb[ 2 ] - qa[ 2 ] * qb[ 3 ] + qa[ 0 ] * qb[ 1 ] - qa[ 1 ] * qb[ 0 ];
-	qc[ 3 ] = -qa[ 3 ] * qb[ 3 ] - qa[ 0 ] * qb[ 0 ] + qa[ 1 ] * qb[ 1 ] - qa[ 2 ] * qb[ 2 ];
+	qc[0] = qa[3] * qb[0] - qa[0] * qb[3] - qa[1] * qb[2] - qa[2] * qb[1];
+	qc[1] = -qa[3] * qb[1] - qa[1] * qb[3] + qa[2] * qb[0] - qa[0] * qb[2];
+	qc[2] = -qa[3] * qb[2] - qa[2] * qb[3] + qa[0] * qb[1] - qa[1] * qb[0];
+	qc[3] = -qa[3] * qb[3] - qa[0] * qb[0] + qa[1] * qb[1] - qa[2] * qb[2];
 }
 
 void QuatSlerp( const quat_t from, const quat_t to, float frac, quat_t out )
@@ -3606,7 +3755,7 @@ void QuatSlerp( const quat_t from, const quat_t to, float frac, quat_t out )
 	   Slerping Clock Cycles
 	   February 27th 2005
 	   J.M.P. van Waveren
-	
+
 	   http://www.intel.com/cd/ids/developer/asmo-na/eng/293747.htm
 	 */
 	float cosom, absCosom, sinom, sinSqr, omega, scale0, scale1;
@@ -3629,14 +3778,14 @@ void QuatSlerp( const quat_t from, const quat_t to, float frac, quat_t out )
 		return;
 	}
 
-	cosom = from[ 0 ] * to[ 0 ] + from[ 1 ] * to[ 1 ] + from[ 2 ] * to[ 2 ] + from[ 3 ] * to[ 3 ];
+	cosom	 = from[0] * to[0] + from[1] * to[1] + from[2] * to[2] + from[3] * to[3];
 	absCosom = fabs( cosom );
 
 	if( ( 1.0f - absCosom ) > 1e-6f )
 	{
 		sinSqr = 1.0f - absCosom * absCosom;
-		sinom = 1.0f / sqrt( sinSqr );
-		omega = atan2( sinSqr * sinom, absCosom );
+		sinom  = 1.0f / sqrt( sinSqr );
+		omega  = atan2( sinSqr * sinom, absCosom );
 
 		scale0 = sin( ( 1.0f - frac ) * omega ) * sinom;
 		scale1 = sin( frac * omega ) * sinom;
@@ -3649,10 +3798,10 @@ void QuatSlerp( const quat_t from, const quat_t to, float frac, quat_t out )
 
 	scale1 = ( cosom >= 0.0f ) ? scale1 : -scale1;
 
-	out[ 0 ] = scale0 * from[ 0 ] + scale1 * to[ 0 ];
-	out[ 1 ] = scale0 * from[ 1 ] + scale1 * to[ 1 ];
-	out[ 2 ] = scale0 * from[ 2 ] + scale1 * to[ 2 ];
-	out[ 3 ] = scale0 * from[ 3 ] + scale1 * to[ 3 ];
+	out[0] = scale0 * from[0] + scale1 * to[0];
+	out[1] = scale0 * from[1] + scale1 * to[1];
+	out[2] = scale0 * from[2] + scale1 * to[2];
+	out[3] = scale0 * from[3] + scale1 * to[3];
 #endif
 }
 

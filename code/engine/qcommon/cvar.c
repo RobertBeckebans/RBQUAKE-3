@@ -26,31 +26,31 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 cvar_t* cvar_vars = NULL;
 cvar_t* cvar_cheats;
-int     cvar_modifiedFlags;
+int		cvar_modifiedFlags;
 
 #define MAX_CVARS 2048
-cvar_t cvar_indexes[ MAX_CVARS ];
-int    cvar_numIndexes;
+cvar_t cvar_indexes[MAX_CVARS];
+int	   cvar_numIndexes;
 
 #define FILE_HASH_SIZE 256
-static cvar_t* hashTable[ FILE_HASH_SIZE ];
+static cvar_t* hashTable[FILE_HASH_SIZE];
 
 /*
 ================
 return a hash value for the filename
 ================
 */
-static long generateHashValue( const char* fname )
+static long	   generateHashValue( const char* fname )
 {
-	int  i;
+	int	 i;
 	long hash;
 	char letter;
 
 	hash = 0;
-	i    = 0;
-	while( fname[ i ] != '\0' )
+	i	 = 0;
+	while( fname[i] != '\0' )
 	{
-		letter = tolower( fname[ i ] );
+		letter = tolower( fname[i] );
 		hash += ( long )( letter ) * ( i + 119 );
 		i++;
 	}
@@ -92,11 +92,11 @@ Cvar_FindVar
 static cvar_t* Cvar_FindVar( const char* var_name )
 {
 	cvar_t* var;
-	long    hash;
+	long	hash;
 
 	hash = generateHashValue( var_name );
 
-	for( var = hashTable[ hash ]; var; var = var->hashNext )
+	for( var = hashTable[hash]; var; var = var->hashNext )
 	{
 		if( !Q_stricmp( var_name, var->name ) )
 		{
@@ -227,13 +227,11 @@ void Cvar_CommandCompletion( void ( *callback )( const char* s ) )
 Cvar_Validate
 ============
 */
-static const char* Cvar_Validate( cvar_t* var,
-	const char*                           value,
-	qboolean                              warn )
+static const char* Cvar_Validate( cvar_t* var, const char* value, qboolean warn )
 {
-	static char s[ MAX_CVAR_VALUE_STRING ];
-	float       valuef;
-	qboolean    changed = qfalse;
+	static char s[MAX_CVAR_VALUE_STRING];
+	float		valuef;
+	qboolean	changed = qfalse;
 
 	if( !var->validate )
 	{
@@ -258,7 +256,7 @@ static const char* Cvar_Validate( cvar_t* var,
 					Com_Printf( "WARNING: cvar '%s' must be integral", var->name );
 				}
 
-				valuef  = ( int )valuef;
+				valuef	= ( int )valuef;
 				changed = qtrue;
 			}
 		}
@@ -270,7 +268,7 @@ static const char* Cvar_Validate( cvar_t* var,
 			Com_Printf( "WARNING: cvar '%s' must be numeric", var->name );
 		}
 
-		valuef  = atof( var->resetString );
+		valuef	= atof( var->resetString );
 		changed = qtrue;
 	}
 
@@ -297,7 +295,7 @@ static const char* Cvar_Validate( cvar_t* var,
 			}
 		}
 
-		valuef  = var->min;
+		valuef	= var->min;
 		changed = qtrue;
 	}
 	else if( valuef > var->max )
@@ -323,7 +321,7 @@ static const char* Cvar_Validate( cvar_t* var,
 			}
 		}
 
-		valuef  = var->max;
+		valuef	= var->max;
 		changed = qtrue;
 	}
 
@@ -367,8 +365,8 @@ The flags will be or'ed in if the variable exists.
 cvar_t* Cvar_Get( const char* var_name, const char* var_value, int flags )
 {
 	cvar_t* var;
-	long    hash;
-	int     index;
+	long	hash;
+	int		index;
 
 	if( !var_name || !var_value )
 	{
@@ -452,25 +450,22 @@ cvar_t* Cvar_Get( const char* var_name, const char* var_value, int flags )
 		var->flags |= flags;
 
 		// only allow one non-empty reset string without a warning
-		if( !var->resetString[ 0 ] )
+		if( !var->resetString[0] )
 		{
 			// we don't have a reset string yet
 			Z_Free( var->resetString );
 			var->resetString = CopyString( var_value );
 		}
-		else if( var_value[ 0 ] && strcmp( var->resetString, var_value ) )
+		else if( var_value[0] && strcmp( var->resetString, var_value ) )
 		{
-			Com_DPrintf( "Warning: cvar \"%s\" given initial values: \"%s\" and \"%s\"\n",
-				var_name,
-				var->resetString,
-				var_value );
+			Com_DPrintf( "Warning: cvar \"%s\" given initial values: \"%s\" and \"%s\"\n", var_name, var->resetString, var_value );
 		}
 		// if we have a latched string, take that value now
 		if( var->latchedString )
 		{
 			char* s;
 
-			s                  = var->latchedString;
+			s				   = var->latchedString;
 			var->latchedString = NULL; // otherwise cvar_set2 would free it
 			Cvar_Set2( var_name, s, qtrue );
 			Z_Free( s );
@@ -490,7 +485,7 @@ cvar_t* Cvar_Get( const char* var_name, const char* var_value, int flags )
 	// find a free cvar
 	for( index = 0; index < MAX_CVARS; index++ )
 	{
-		if( !cvar_indexes[ index ].name )
+		if( !cvar_indexes[index].name )
 		{
 			break;
 		}
@@ -506,22 +501,22 @@ cvar_t* Cvar_Get( const char* var_name, const char* var_value, int flags )
 		return NULL;
 	}
 
-	var = &cvar_indexes[ index ];
+	var = &cvar_indexes[index];
 
 	if( index >= cvar_numIndexes )
 	{
 		cvar_numIndexes = index + 1;
 	}
 
-	var->name              = CopyString( var_name );
-	var->string            = CopyString( var_value );
-	var->modified          = qtrue;
+	var->name			   = CopyString( var_name );
+	var->string			   = CopyString( var_value );
+	var->modified		   = qtrue;
 	var->modificationCount = 1;
-	var->value             = atof( var->string );
-	var->integer           = atoi( var->string );
-	var->resetString       = CopyString( var_value );
-	var->validate          = qfalse;
-	var->description       = NULL;
+	var->value			   = atof( var->string );
+	var->integer		   = atoi( var->string );
+	var->resetString	   = CopyString( var_value );
+	var->validate		   = qfalse;
+	var->description	   = NULL;
 
 	// link the variable in
 	var->next = cvar_vars;
@@ -537,17 +532,17 @@ cvar_t* Cvar_Get( const char* var_name, const char* var_value, int flags )
 	// note what types of cvars have been modified (userinfo, archive, serverinfo, systeminfo)
 	cvar_modifiedFlags |= var->flags;
 
-	hash           = generateHashValue( var_name );
+	hash		   = generateHashValue( var_name );
 	var->hashIndex = hash;
 
-	var->hashNext = hashTable[ hash ];
-	if( hashTable[ hash ] )
+	var->hashNext = hashTable[hash];
+	if( hashTable[hash] )
 	{
-		hashTable[ hash ]->hashPrev = var;
+		hashTable[hash]->hashPrev = var;
 	}
 
-	var->hashPrev     = NULL;
-	hashTable[ hash ] = var;
+	var->hashPrev	= NULL;
+	hashTable[hash] = var;
 
 	return var;
 }
@@ -561,9 +556,7 @@ Prints the value, default, and latched string of the given variable
 */
 void Cvar_Print( cvar_t* v )
 {
-	Com_Printf( "\"%s\" is:\"%s" S_COLOR_WHITE "\"",
-		v->name,
-		v->string );
+	Com_Printf( "\"%s\" is:\"%s" S_COLOR_WHITE "\"", v->name, v->string );
 
 	if( !( v->flags & CVAR_ROM ) )
 	{
@@ -573,8 +566,7 @@ void Cvar_Print( cvar_t* v )
 		}
 		else
 		{
-			Com_Printf( " default:\"%s" S_COLOR_WHITE "\"",
-				v->resetString );
+			Com_Printf( " default:\"%s" S_COLOR_WHITE "\"", v->resetString );
 		}
 	}
 
@@ -703,7 +695,7 @@ cvar_t* Cvar_Set2( const char* var_name, const char* value, qboolean force )
 
 			Com_Printf( "%s will be changed upon restarting.\n", var_name );
 			var->latchedString = CopyString( value );
-			var->modified      = qtrue;
+			var->modified	   = qtrue;
 			var->modificationCount++;
 			return var;
 		}
@@ -727,8 +719,8 @@ cvar_t* Cvar_Set2( const char* var_name, const char* value, qboolean force )
 
 	Z_Free( var->string ); // free the old value string
 
-	var->string  = CopyString( value );
-	var->value   = atof( var->string );
+	var->string	 = CopyString( value );
+	var->value	 = atof( var->string );
 	var->integer = atoi( var->string );
 
 	return var;
@@ -756,13 +748,15 @@ void Cvar_SetSafe( const char* var_name, const char* value )
 	if( ( flags != CVAR_NONEXISTENT ) && ( flags & CVAR_PROTECTED ) )
 	{
 		if( value )
-			Com_Error( ERR_DROP, "Restricted source tried to set "
-								 "\"%s\" to \"%s\"",
+			Com_Error( ERR_DROP,
+				"Restricted source tried to set "
+				"\"%s\" to \"%s\"",
 				var_name,
 				value );
 		else
-			Com_Error( ERR_DROP, "Restricted source tried to "
-								 "modify \"%s\"",
+			Com_Error( ERR_DROP,
+				"Restricted source tried to "
+				"modify \"%s\"",
 				var_name );
 		return;
 	}
@@ -786,7 +780,7 @@ Cvar_SetValue
 */
 void Cvar_SetValue( const char* var_name, float value )
 {
-	char val[ 32 ];
+	char val[32];
 
 	if( value == ( int )value )
 	{
@@ -806,7 +800,7 @@ Cvar_SetValueSafe
 */
 void Cvar_SetValueSafe( const char* var_name, float value )
 {
-	char val[ 32 ];
+	char val[32];
 
 	if( Q_isintegral( value ) )
 	{
@@ -910,7 +904,7 @@ Prints the contents of a cvar
 */
 void Cvar_Print_f( void )
 {
-	char*   name;
+	char*	name;
 	cvar_t* cv;
 
 	if( Cmd_Argc() != 2 )
@@ -943,7 +937,7 @@ given values
 */
 void Cvar_Toggle_f( void )
 {
-	int   i, c = Cmd_Argc();
+	int	  i, c = Cmd_Argc();
 	char* curval;
 
 	if( c < 2 )
@@ -991,11 +985,11 @@ weren't declared in C code.
 */
 void Cvar_Set_f( void )
 {
-	int     c;
-	char*   cmd;
+	int		c;
+	char*	cmd;
 	cvar_t* v;
 
-	c   = Cmd_Argc();
+	c	= Cmd_Argc();
 	cmd = Cmd_Argv( 0 );
 
 	if( c < 2 )
@@ -1014,7 +1008,7 @@ void Cvar_Set_f( void )
 	{
 		return;
 	}
-	switch( cmd[ 3 ] )
+	switch( cmd[3] )
 	{
 		case 'a':
 			if( !( v->flags & CVAR_ARCHIVE ) )
@@ -1066,7 +1060,7 @@ with the archive flag set to qtrue.
 void Cvar_WriteVariables( fileHandle_t f )
 {
 	cvar_t* var;
-	char    buffer[ 1024 ];
+	char	buffer[1024];
 
 	for( var = cvar_vars; var; var = var->next )
 	{
@@ -1113,8 +1107,8 @@ Cvar_List_f
 void Cvar_List_f( void )
 {
 	cvar_t* var;
-	int     i;
-	char*   match;
+	int		i;
+	char*	match;
 
 	if( Cmd_Argc() > 1 )
 	{
@@ -1221,9 +1215,9 @@ Cvar_ListModified_f
 void Cvar_ListModified_f( void )
 {
 	cvar_t* var;
-	int     totalModified;
-	char*   value;
-	char*   match;
+	int		totalModified;
+	char*	value;
+	char*	match;
 
 	if( Cmd_Argc() > 1 )
 	{
@@ -1389,7 +1383,7 @@ cvar_t* Cvar_Unset( cvar_t* cv )
 	}
 	else
 	{
-		hashTable[ cv->hashIndex ] = cv->hashNext;
+		hashTable[cv->hashIndex] = cv->hashNext;
 	}
 	if( cv->hashNext )
 	{
@@ -1453,8 +1447,7 @@ void Cvar_Restart( qboolean unsetVM )
 
 	while( curvar )
 	{
-		if( ( curvar->flags & CVAR_USER_CREATED ) ||
-			( unsetVM && ( curvar->flags & CVAR_VM_CREATED ) ) )
+		if( ( curvar->flags & CVAR_USER_CREATED ) || ( unsetVM && ( curvar->flags & CVAR_VM_CREATED ) ) )
 		{
 			// throw out any variables the user/vm created
 			curvar = Cvar_Unset( curvar );
@@ -1490,10 +1483,10 @@ Cvar_InfoString
 */
 char* Cvar_InfoString( int bit )
 {
-	static char info[ MAX_INFO_STRING ];
-	cvar_t*     var;
+	static char info[MAX_INFO_STRING];
+	cvar_t*		var;
 
-	info[ 0 ] = 0;
+	info[0] = 0;
 
 	for( var = cvar_vars; var; var = var->next )
 	{
@@ -1515,10 +1508,10 @@ Cvar_InfoString_Big
 */
 char* Cvar_InfoString_Big( int bit )
 {
-	static char info[ BIG_INFO_STRING ];
-	cvar_t*     var;
+	static char info[BIG_INFO_STRING];
+	cvar_t*		var;
 
-	info[ 0 ] = 0;
+	info[0] = 0;
 
 	for( var = cvar_vars; var; var = var->next )
 	{
@@ -1548,8 +1541,8 @@ Cvar_CheckRange
 void Cvar_CheckRange( cvar_t* var, float min, float max, qboolean integral )
 {
 	var->validate = qtrue;
-	var->min      = min;
-	var->max      = max;
+	var->min	  = min;
+	var->max	  = max;
 	var->integral = integral;
 
 	// Force an initial range check
@@ -1563,7 +1556,7 @@ Cvar_SetDescription
 */
 void Cvar_SetDescription( cvar_t* var, const char* var_description )
 {
-	if( var_description && var_description[ 0 ] != '\0' )
+	if( var_description && var_description[0] != '\0' )
 	{
 		if( var->description != NULL )
 		{
@@ -1628,10 +1621,7 @@ void Cvar_Register( vmCvar_t* vmCvar, const char* varName, const char* defaultVa
 	// Don't modify cvar if it's protected.
 	if( cv && ( cv->flags & CVAR_PROTECTED ) )
 	{
-		Com_DPrintf( S_COLOR_YELLOW "WARNING: VM tried to register protected cvar '%s' with value '%s'%s\n",
-			varName,
-			defaultValue,
-			( flags & ~cv->flags ) != 0 ? " and new flags" : "" );
+		Com_DPrintf( S_COLOR_YELLOW "WARNING: VM tried to register protected cvar '%s' with value '%s'%s\n", varName, defaultValue, ( flags & ~cv->flags ) != 0 ? " and new flags" : "" );
 	}
 	else
 	{
@@ -1643,7 +1633,7 @@ void Cvar_Register( vmCvar_t* vmCvar, const char* varName, const char* defaultVa
 		return;
 	}
 
-	vmCvar->handle            = cv - cvar_indexes;
+	vmCvar->handle			  = cv - cvar_indexes;
 	vmCvar->modificationCount = -1;
 	Cvar_Update( vmCvar );
 }
@@ -1682,7 +1672,7 @@ void Cvar_Update( vmCvar_t* vmCvar )
 	}
 	Q_strncpyz( vmCvar->string, cv->string, MAX_CVAR_VALUE_STRING );
 
-	vmCvar->value   = cv->value;
+	vmCvar->value	= cv->value;
 	vmCvar->integer = cv->integer;
 }
 

@@ -33,10 +33,10 @@ MARK POLYS
 ===================================================================
 */
 
-markPoly_t  cg_activeMarkPolys; // double linked list
-markPoly_t* cg_freeMarkPolys;   // single linked list
-markPoly_t  cg_markPolys[ MAX_MARK_POLYS ];
-static int  markTotal;
+markPoly_t	cg_activeMarkPolys; // double linked list
+markPoly_t* cg_freeMarkPolys;	// single linked list
+markPoly_t	cg_markPolys[MAX_MARK_POLYS];
+static int	markTotal;
 
 /*
 ===================
@@ -45,7 +45,7 @@ CG_InitMarkPolys
 This is called at startup and for tournement restarts
 ===================
 */
-void CG_InitMarkPolys( void )
+void		CG_InitMarkPolys( void )
 {
 	int i;
 
@@ -53,10 +53,10 @@ void CG_InitMarkPolys( void )
 
 	cg_activeMarkPolys.nextMark = &cg_activeMarkPolys;
 	cg_activeMarkPolys.prevMark = &cg_activeMarkPolys;
-	cg_freeMarkPolys            = cg_markPolys;
+	cg_freeMarkPolys			= cg_markPolys;
 	for( i = 0; i < MAX_MARK_POLYS - 1; i++ )
 	{
-		cg_markPolys[ i ].nextMark = &cg_markPolys[ i + 1 ];
+		cg_markPolys[i].nextMark = &cg_markPolys[i + 1];
 	}
 }
 
@@ -77,7 +77,7 @@ void CG_FreeMarkPoly( markPoly_t* le )
 	le->nextMark->prevMark = le->prevMark;
 
 	// the free list is only singly linked
-	le->nextMark     = cg_freeMarkPolys;
+	le->nextMark	 = cg_freeMarkPolys;
 	cg_freeMarkPolys = le;
 }
 
@@ -91,7 +91,7 @@ Will allways succeed, even if it requires freeing an old active mark
 markPoly_t* CG_AllocMark( void )
 {
 	markPoly_t* le;
-	int         time;
+	int			time;
 
 	if( !cg_freeMarkPolys )
 	{
@@ -104,16 +104,16 @@ markPoly_t* CG_AllocMark( void )
 		}
 	}
 
-	le               = cg_freeMarkPolys;
+	le				 = cg_freeMarkPolys;
 	cg_freeMarkPolys = cg_freeMarkPolys->nextMark;
 
 	memset( le, 0, sizeof( *le ) );
 
 	// link into the active list
-	le->nextMark                          = cg_activeMarkPolys.nextMark;
-	le->prevMark                          = &cg_activeMarkPolys;
+	le->nextMark						  = cg_activeMarkPolys.nextMark;
+	le->prevMark						  = &cg_activeMarkPolys;
 	cg_activeMarkPolys.nextMark->prevMark = le;
-	cg_activeMarkPolys.nextMark           = le;
+	cg_activeMarkPolys.nextMark			  = le;
 	return le;
 }
 
@@ -129,19 +129,20 @@ passed to the renderer.
 =================
 */
 #define MAX_MARK_FRAGMENTS 128
-#define MAX_MARK_POINTS    384
+#define MAX_MARK_POINTS	   384
 
-void CG_ImpactMark( qhandle_t markShader, const vec3_t origin, const vec3_t dir, float orientation, float red, float green, float blue, float alpha, qboolean alphaFade, float radius, qboolean temporary )
+void CG_ImpactMark(
+	qhandle_t markShader, const vec3_t origin, const vec3_t dir, float orientation, float red, float green, float blue, float alpha, qboolean alphaFade, float radius, qboolean temporary )
 {
-	vec3_t         axis[ 3 ];
-	float          texCoordScale;
-	vec3_t         originalPoints[ 4 ];
-	byte           colors[ 4 ];
-	int            i, j;
-	int            numFragments;
-	markFragment_t markFragments[ MAX_MARK_FRAGMENTS ], *mf;
-	vec3_t         markPoints[ MAX_MARK_POINTS ];
-	vec3_t         projection;
+	vec3_t		   axis[3];
+	float		   texCoordScale;
+	vec3_t		   originalPoints[4];
+	byte		   colors[4];
+	int			   i, j;
+	int			   numFragments;
+	markFragment_t markFragments[MAX_MARK_FRAGMENTS], *mf;
+	vec3_t		   markPoints[MAX_MARK_POINTS];
+	vec3_t		   projection;
 
 	if( !cg_addMarks.integer )
 	{
@@ -153,40 +154,40 @@ void CG_ImpactMark( qhandle_t markShader, const vec3_t origin, const vec3_t dir,
 		CG_Error( "CG_ImpactMark called with <= 0 radius" );
 	}
 
-	//if ( markTotal >= MAX_MARK_POLYS ) {
-	//  return;
-	//}
+	// if ( markTotal >= MAX_MARK_POLYS ) {
+	//   return;
+	// }
 
 	// create the texture axis
-	VectorNormalize2( dir, axis[ 0 ] );
-	PerpendicularVector( axis[ 1 ], axis[ 0 ] );
-	RotatePointAroundVector( axis[ 2 ], axis[ 0 ], axis[ 1 ], orientation );
-	CrossProduct( axis[ 0 ], axis[ 2 ], axis[ 1 ] );
+	VectorNormalize2( dir, axis[0] );
+	PerpendicularVector( axis[1], axis[0] );
+	RotatePointAroundVector( axis[2], axis[0], axis[1], orientation );
+	CrossProduct( axis[0], axis[2], axis[1] );
 
 	texCoordScale = 0.5 * 1.0 / radius;
 
 	// create the full polygon
 	for( i = 0; i < 3; i++ )
 	{
-		originalPoints[ 0 ][ i ] = origin[ i ] - radius * axis[ 1 ][ i ] - radius * axis[ 2 ][ i ];
-		originalPoints[ 1 ][ i ] = origin[ i ] + radius * axis[ 1 ][ i ] - radius * axis[ 2 ][ i ];
-		originalPoints[ 2 ][ i ] = origin[ i ] + radius * axis[ 1 ][ i ] + radius * axis[ 2 ][ i ];
-		originalPoints[ 3 ][ i ] = origin[ i ] - radius * axis[ 1 ][ i ] + radius * axis[ 2 ][ i ];
+		originalPoints[0][i] = origin[i] - radius * axis[1][i] - radius * axis[2][i];
+		originalPoints[1][i] = origin[i] + radius * axis[1][i] - radius * axis[2][i];
+		originalPoints[2][i] = origin[i] + radius * axis[1][i] + radius * axis[2][i];
+		originalPoints[3][i] = origin[i] - radius * axis[1][i] + radius * axis[2][i];
 	}
 
 	// get the fragments
 	VectorScale( dir, -20, projection );
-	numFragments = trap_CM_MarkFragments( 4, ( void* )originalPoints, projection, MAX_MARK_POINTS, markPoints[ 0 ], MAX_MARK_FRAGMENTS, markFragments );
+	numFragments = trap_CM_MarkFragments( 4, ( void* )originalPoints, projection, MAX_MARK_POINTS, markPoints[0], MAX_MARK_FRAGMENTS, markFragments );
 
-	colors[ 0 ] = red * 255;
-	colors[ 1 ] = green * 255;
-	colors[ 2 ] = blue * 255;
-	colors[ 3 ] = alpha * 255;
+	colors[0] = red * 255;
+	colors[1] = green * 255;
+	colors[2] = blue * 255;
+	colors[3] = alpha * 255;
 
 	for( i = 0, mf = markFragments; i < numFragments; i++, mf++ )
 	{
 		polyVert_t* v;
-		polyVert_t  verts[ MAX_VERTS_ON_POLY ];
+		polyVert_t	verts[MAX_VERTS_ON_POLY];
 		markPoly_t* mark;
 
 		// we have an upper limit on the complexity of polygons
@@ -199,11 +200,11 @@ void CG_ImpactMark( qhandle_t markShader, const vec3_t origin, const vec3_t dir,
 		{
 			vec3_t delta;
 
-			VectorCopy( markPoints[ mf->firstPoint + j ], v->xyz );
+			VectorCopy( markPoints[mf->firstPoint + j], v->xyz );
 
 			VectorSubtract( v->xyz, origin, delta );
-			v->st[ 0 ]           = 0.5 + DotProduct( delta, axis[ 1 ] ) * texCoordScale;
-			v->st[ 1 ]           = 0.5 + DotProduct( delta, axis[ 2 ] ) * texCoordScale;
+			v->st[0]			 = 0.5 + DotProduct( delta, axis[1] ) * texCoordScale;
+			v->st[1]			 = 0.5 + DotProduct( delta, axis[2] ) * texCoordScale;
 			*( int* )v->modulate = *( int* )colors;
 		}
 
@@ -215,16 +216,16 @@ void CG_ImpactMark( qhandle_t markShader, const vec3_t origin, const vec3_t dir,
 		}
 
 		// otherwise save it persistantly
-		mark                = CG_AllocMark();
-		mark->time          = cg.time;
-		mark->alphaFade     = alphaFade;
-		mark->markShader    = markShader;
+		mark				= CG_AllocMark();
+		mark->time			= cg.time;
+		mark->alphaFade		= alphaFade;
+		mark->markShader	= markShader;
 		mark->poly.numVerts = mf->numPoints;
-		mark->color[ 0 ]    = red;
-		mark->color[ 1 ]    = green;
-		mark->color[ 2 ]    = blue;
-		mark->color[ 3 ]    = alpha;
-		memcpy( mark->verts, verts, mf->numPoints * sizeof( verts[ 0 ] ) );
+		mark->color[0]		= red;
+		mark->color[1]		= green;
+		mark->color[2]		= blue;
+		mark->color[3]		= alpha;
+		memcpy( mark->verts, verts, mf->numPoints * sizeof( verts[0] ) );
 		markTotal++;
 	}
 }
@@ -235,14 +236,14 @@ CG_AddMarks
 ===============
 */
 #define MARK_TOTAL_TIME 10000
-#define MARK_FADE_TIME  1000
+#define MARK_FADE_TIME	1000
 
 void CG_AddMarks( void )
 {
-	int         j;
+	int			j;
 	markPoly_t *mp, *next;
-	int         t;
-	int         fade;
+	int			t;
+	int			fade;
 
 	if( !cg_addMarks.integer )
 	{
@@ -273,13 +274,13 @@ void CG_AddMarks( void )
 				{
 					fade = 0;
 				}
-				if( mp->verts[ 0 ].modulate[ 0 ] != 0 )
+				if( mp->verts[0].modulate[0] != 0 )
 				{
 					for( j = 0; j < mp->poly.numVerts; j++ )
 					{
-						mp->verts[ j ].modulate[ 0 ] = mp->color[ 0 ] * fade;
-						mp->verts[ j ].modulate[ 1 ] = mp->color[ 1 ] * fade;
-						mp->verts[ j ].modulate[ 2 ] = mp->color[ 2 ] * fade;
+						mp->verts[j].modulate[0] = mp->color[0] * fade;
+						mp->verts[j].modulate[1] = mp->color[1] * fade;
+						mp->verts[j].modulate[2] = mp->color[2] * fade;
 					}
 				}
 			}
@@ -294,16 +295,16 @@ void CG_AddMarks( void )
 			{
 				for( j = 0; j < mp->poly.numVerts; j++ )
 				{
-					mp->verts[ j ].modulate[ 3 ] = fade;
+					mp->verts[j].modulate[3] = fade;
 				}
 			}
 			else
 			{
 				for( j = 0; j < mp->poly.numVerts; j++ )
 				{
-					mp->verts[ j ].modulate[ 0 ] = mp->color[ 0 ] * fade;
-					mp->verts[ j ].modulate[ 1 ] = mp->color[ 1 ] * fade;
-					mp->verts[ j ].modulate[ 2 ] = mp->color[ 2 ] * fade;
+					mp->verts[j].modulate[0] = mp->color[0] * fade;
+					mp->verts[j].modulate[1] = mp->color[1] * fade;
+					mp->verts[j].modulate[2] = mp->color[2] * fade;
 				}
 			}
 		}

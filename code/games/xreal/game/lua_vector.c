@@ -52,9 +52,9 @@ static int vector_Construct( lua_State* L )
 	luaL_getmetatable( L, "vector" );
 	lua_setmetatable( L, -2 );
 
-	v[ 0 ] = luaL_optnumber( L, 1, 0 );
-	v[ 1 ] = luaL_optnumber( L, 2, 0 );
-	v[ 2 ] = luaL_optnumber( L, 3, 0 );
+	v[0] = luaL_optnumber( L, 1, 0 );
+	v[1] = luaL_optnumber( L, 2, 0 );
+	v[2] = luaL_optnumber( L, 3, 0 );
 
 	return 1;
 }
@@ -65,9 +65,9 @@ static int vector_Set( lua_State* L )
 
 	v = lua_getvector( L, 1 );
 
-	v[ 0 ] = luaL_optnumber( L, 2, 0 );
-	v[ 1 ] = luaL_optnumber( L, 3, 0 );
-	v[ 2 ] = luaL_optnumber( L, 4, 0 );
+	v[0] = luaL_optnumber( L, 2, 0 );
+	v[1] = luaL_optnumber( L, 3, 0 );
+	v[2] = luaL_optnumber( L, 4, 0 );
 
 	return 1;
 }
@@ -166,9 +166,9 @@ static int vector_RotatePointAround( lua_State* L )
 	vec_t* point;
 	vec_t  degrees;
 
-	dst     = lua_getvector( L, 1 );
-	dir     = lua_getvector( L, 2 );
-	point   = lua_getvector( L, 3 );
+	dst		= lua_getvector( L, 1 );
+	dir		= lua_getvector( L, 2 );
+	point	= lua_getvector( L, 3 );
 	degrees = luaL_checknumber( L, 4 );
 
 	RotatePointAroundVector( dst, dir, point, degrees );
@@ -192,7 +192,7 @@ static int vector_Perpendicular( lua_State* L )
 // *INDENT-OFF*
 static int vector_Index( lua_State* L )
 {
-	vec_t*      v;
+	vec_t*		v;
 	const char* i;
 
 	v = lua_getvector( L, 1 );
@@ -203,22 +203,22 @@ static int vector_Index( lua_State* L )
 		case '0':
 		case 'x':
 		case 'r':
-			lua_pushnumber( L, v[ 0 ] );
+			lua_pushnumber( L, v[0] );
 			break;
 		case '1':
 		case 'y':
 		case 'g':
-			lua_pushnumber( L, v[ 1 ] );
+			lua_pushnumber( L, v[1] );
 			break;
 		case '2':
 		case 'z':
 		case 'b':
-			lua_pushnumber( L, v[ 2 ] );
+			lua_pushnumber( L, v[2] );
 			break;
 		default:
 			lua_pushnil( L );
 			break;
-			//default: lua_pushvector(L, v); break;
+			// default: lua_pushvector(L, v); break;
 	}
 
 	return 1;
@@ -226,9 +226,9 @@ static int vector_Index( lua_State* L )
 
 static int vector_NewIndex( lua_State* L )
 {
-	vec_t*      v;
+	vec_t*		v;
 	const char* i;
-	vec_t       t;
+	vec_t		t;
 
 	v = lua_getvector( L, 1 );
 	i = luaL_checkstring( L, 2 );
@@ -239,17 +239,17 @@ static int vector_NewIndex( lua_State* L )
 		case '0':
 		case 'x':
 		case 'r':
-			v[ 0 ] = t;
+			v[0] = t;
 			break;
 		case '1':
 		case 'y':
 		case 'g':
-			v[ 1 ] = t;
+			v[1] = t;
 			break;
 		case '2':
 		case 'z':
 		case 'b':
-			v[ 2 ] = t;
+			v[2] = t;
 			break;
 		default:
 			break;
@@ -361,13 +361,12 @@ static int vector_ToString( lua_State* L )
 	vec_t* vec;
 
 	vec = lua_getvector( L, 1 );
-	lua_pushstring( L, va( "(%i %i %i)", ( int )vec[ 0 ], ( int )vec[ 1 ], ( int )vec[ 2 ] ) );
+	lua_pushstring( L, va( "(%i %i %i)", ( int )vec[0], ( int )vec[1], ( int )vec[2] ) );
 
 	return 1;
 }
 
-static const luaL_reg vector_ctor[] = {
-	{ "New", vector_New },
+static const luaL_reg vector_ctor[] = { { "New", vector_New },
 	{ "Construct", vector_Construct },
 	{ "Set", vector_Set },
 	{ "Clear", vector_Clear },
@@ -379,11 +378,9 @@ static const luaL_reg vector_ctor[] = {
 	{ "NormalizeFast", vector_NormalizeFast },
 	{ "RotatePointAround", vector_RotatePointAround },
 	{ "Perpendicular", vector_Perpendicular },
-	{ NULL, NULL }
-};
+	{ NULL, NULL } };
 
-static const luaL_reg vector_meta[] = {
-	{ "__index", vector_Index },
+static const luaL_reg vector_meta[] = { { "__index", vector_Index },
 	{ "__newindex", vector_NewIndex },
 	{ "__add", vector_AddOperator },
 	{ "__sub", vector_SubOperator },
@@ -391,10 +388,9 @@ static const luaL_reg vector_meta[] = {
 	{ "__unm", vector_NegateOperator },
 	{ "__gc", vector_GC },
 	{ "__tostring", vector_ToString },
-	{ NULL, NULL }
-};
+	{ NULL, NULL } };
 
-int luaopen_vector( lua_State* L )
+int					  luaopen_vector( lua_State* L )
 {
 	luaL_newmetatable( L, "vector" );
 

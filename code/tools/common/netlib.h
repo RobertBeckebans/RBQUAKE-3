@@ -48,87 +48,87 @@ typedef unsigned char byte;
 
 typedef struct address_s
 {
-	char ip[ MAX_NETADDRESS ];
+	char ip[MAX_NETADDRESS];
 } address_t;
 
 typedef struct sockaddr_s
 {
-	short         sa_family;
-	unsigned char sa_data[ 14 ];
+	short		  sa_family;
+	unsigned char sa_data[14];
 } sockaddr_t;
 
 typedef struct netmessage_s
 {
-	unsigned char data[ MAX_NETMESSAGE ];
-	int           size;
-	int           read;
-	int           readoverflow;
+	unsigned char data[MAX_NETMESSAGE];
+	int			  size;
+	int			  read;
+	int			  readoverflow;
 } netmessage_t;
 
 typedef struct socket_s
 {
-	int              socket;      //socket number
-	sockaddr_t       addr;        //socket address
-	netmessage_t     msg;         //current message being read
-	int              remaining;   //remaining bytes to read for the current message
-	struct socket_s *prev, *next; //prev and next socket in a list
+	int				 socket;	  // socket number
+	sockaddr_t		 addr;		  // socket address
+	netmessage_t	 msg;		  // current message being read
+	int				 remaining;	  // remaining bytes to read for the current message
+	struct socket_s *prev, *next; // prev and next socket in a list
 } socket_t;
 
-//compare addresses
-int Net_AddressCompare( address_t* addr1, address_t* addr2 );
+// compare addresses
+int		  Net_AddressCompare( address_t* addr1, address_t* addr2 );
 
-//gives the address of a socket
-void Net_SocketToAddress( socket_t* sock, address_t* address );
+// gives the address of a socket
+void	  Net_SocketToAddress( socket_t* sock, address_t* address );
 
-//converts a string to an address
-void Net_StringToAddress( char* string, address_t* address );
+// converts a string to an address
+void	  Net_StringToAddress( char* string, address_t* address );
 
-//set the address ip port
-void Net_SetAddressPort( address_t* address, int port );
+// set the address ip port
+void	  Net_SetAddressPort( address_t* address, int port );
 
-//send a message to the given socket
-int Net_Send( socket_t* sock, netmessage_t* msg );
+// send a message to the given socket
+int		  Net_Send( socket_t* sock, netmessage_t* msg );
 
-//recieve a message from the given socket
-int Net_Receive( socket_t* sock, netmessage_t* msg );
+// recieve a message from the given socket
+int		  Net_Receive( socket_t* sock, netmessage_t* msg );
 
-//connect to a host
-// NOTE: port is the localhost port, usually 0
-// ex: Net_Connect( "192.168.0.1:39000", 0 )
+// connect to a host
+//  NOTE: port is the localhost port, usually 0
+//  ex: Net_Connect( "192.168.0.1:39000", 0 )
 socket_t* Net_Connect( address_t* address, int port );
 
-//disconnect from a host
-void Net_Disconnect( socket_t* sock );
+// disconnect from a host
+void	  Net_Disconnect( socket_t* sock );
 
-//returns the local address
-void Net_MyAddress( address_t* address );
+// returns the local address
+void	  Net_MyAddress( address_t* address );
 
-//listen at the given port
+// listen at the given port
 socket_t* Net_ListenSocket( int port );
 
-//accept new connections at the given socket
+// accept new connections at the given socket
 socket_t* Net_Accept( socket_t* sock );
 
-//setup networking
-int Net_Setup( void );
+// setup networking
+int		  Net_Setup( void );
 
-//shutdown networking
-void Net_Shutdown( void );
+// shutdown networking
+void	  Net_Shutdown( void );
 
-//message handling
-void  NMSG_Clear( netmessage_t* msg );
-void  NMSG_WriteChar( netmessage_t* msg, int c );
-void  NMSG_WriteByte( netmessage_t* msg, int c );
-void  NMSG_WriteShort( netmessage_t* msg, int c );
-void  NMSG_WriteLong( netmessage_t* msg, int c );
-void  NMSG_WriteFloat( netmessage_t* msg, float c );
-void  NMSG_WriteString( netmessage_t* msg, char* string );
-void  NMSG_ReadStart( netmessage_t* msg );
-int   NMSG_ReadChar( netmessage_t* msg );
-int   NMSG_ReadByte( netmessage_t* msg );
-int   NMSG_ReadShort( netmessage_t* msg );
-int   NMSG_ReadLong( netmessage_t* msg );
-float NMSG_ReadFloat( netmessage_t* msg );
-char* NMSG_ReadString( netmessage_t* msg );
+// message handling
+void	  NMSG_Clear( netmessage_t* msg );
+void	  NMSG_WriteChar( netmessage_t* msg, int c );
+void	  NMSG_WriteByte( netmessage_t* msg, int c );
+void	  NMSG_WriteShort( netmessage_t* msg, int c );
+void	  NMSG_WriteLong( netmessage_t* msg, int c );
+void	  NMSG_WriteFloat( netmessage_t* msg, float c );
+void	  NMSG_WriteString( netmessage_t* msg, char* string );
+void	  NMSG_ReadStart( netmessage_t* msg );
+int		  NMSG_ReadChar( netmessage_t* msg );
+int		  NMSG_ReadByte( netmessage_t* msg );
+int		  NMSG_ReadShort( netmessage_t* msg );
+int		  NMSG_ReadLong( netmessage_t* msg );
+float	  NMSG_ReadFloat( netmessage_t* msg );
+char*	  NMSG_ReadString( netmessage_t* msg );
 
 #endif // __NETLIB__

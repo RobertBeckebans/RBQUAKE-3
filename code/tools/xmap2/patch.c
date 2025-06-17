@@ -41,7 +41,7 @@ finds length of quadratic curve specified and determines if length is longer tha
 
 static void ExpandLongestCurve( float* longestCurve, vec3_t a, vec3_t b, vec3_t c )
 {
-	int    i;
+	int	   i;
 	float  t, len;
 	vec3_t ab, bc, ac, pt, last, delta;
 
@@ -77,9 +77,9 @@ static void ExpandLongestCurve( float* longestCurve, vec3_t a, vec3_t b, vec3_t 
 	for( i = 0, len = 0.0f, t = 0.0f; i < APPROX_SUBDIVISION; i++, t += ( 1.0f / APPROX_SUBDIVISION ) )
 	{
 		/* calculate delta */
-		delta[ 0 ] = ( ( 1.0f - t ) * ab[ 0 ] ) + ( t * bc[ 0 ] );
-		delta[ 1 ] = ( ( 1.0f - t ) * ab[ 1 ] ) + ( t * bc[ 1 ] );
-		delta[ 2 ] = ( ( 1.0f - t ) * ab[ 2 ] ) + ( t * bc[ 2 ] );
+		delta[0] = ( ( 1.0f - t ) * ab[0] ) + ( t * bc[0] );
+		delta[1] = ( ( 1.0f - t ) * ab[1] ) + ( t * bc[1] );
+		delta[2] = ( ( 1.0f - t ) * ab[2] ) + ( t * bc[2] );
 
 		/* add to first point and calculate pt-pt delta */
 		VectorAdd( a, delta, pt );
@@ -104,17 +104,17 @@ determines how many iterations a quadratic curve needs to be subdivided with to 
 
 static void ExpandMaxIterations( int* maxIterations, int maxError, vec3_t a, vec3_t b, vec3_t c )
 {
-	int    i, j;
+	int	   i, j;
 	vec3_t prev, next, mid, delta, delta2;
 	float  len, len2;
-	int    numPoints, iterations;
-	vec3_t points[ MAX_EXPANDED_AXIS ];
+	int	   numPoints, iterations;
+	vec3_t points[MAX_EXPANDED_AXIS];
 
 	/* initial setup */
 	numPoints = 3;
-	VectorCopy( a, points[ 0 ] );
-	VectorCopy( b, points[ 1 ] );
-	VectorCopy( c, points[ 2 ] );
+	VectorCopy( a, points[0] );
+	VectorCopy( b, points[1] );
+	VectorCopy( c, points[2] );
 
 	/* subdivide */
 	for( i = 0; i + 2 < numPoints; i += 2 )
@@ -128,13 +128,13 @@ static void ExpandMaxIterations( int* maxIterations, int maxError, vec3_t a, vec
 		/* calculate new curve deltas */
 		for( j = 0; j < 3; j++ )
 		{
-			prev[ j ] = points[ i + 1 ][ j ] - points[ i ][ j ];
-			next[ j ] = points[ i + 2 ][ j ] - points[ i + 1 ][ j ];
-			mid[ j ]  = ( points[ i ][ j ] + points[ i + 1 ][ j ] * 2.0f + points[ i + 2 ][ j ] ) * 0.25f;
+			prev[j] = points[i + 1][j] - points[i][j];
+			next[j] = points[i + 2][j] - points[i + 1][j];
+			mid[j]	= ( points[i][j] + points[i + 1][j] * 2.0f + points[i + 2][j] ) * 0.25f;
 		}
 
 		/* see if this midpoint is off far enough to subdivide */
-		VectorSubtract( points[ i + 1 ], mid, delta );
+		VectorSubtract( points[i + 1], mid, delta );
 		len = VectorLength( delta );
 		if( len < maxError )
 		{
@@ -147,21 +147,21 @@ static void ExpandMaxIterations( int* maxIterations, int maxError, vec3_t a, vec
 		/* create new points */
 		for( j = 0; j < 3; j++ )
 		{
-			prev[ j ] = 0.5f * ( points[ i ][ j ] + points[ i + 1 ][ j ] );
-			next[ j ] = 0.5f * ( points[ i + 1 ][ j ] + points[ i + 2 ][ j ] );
-			mid[ j ]  = 0.5f * ( prev[ j ] + next[ j ] );
+			prev[j] = 0.5f * ( points[i][j] + points[i + 1][j] );
+			next[j] = 0.5f * ( points[i + 1][j] + points[i + 2][j] );
+			mid[j]	= 0.5f * ( prev[j] + next[j] );
 		}
 
 		/* push points out */
 		for( j = numPoints - 1; j > i + 3; j-- )
 		{
-			VectorCopy( points[ j - 2 ], points[ j ] );
+			VectorCopy( points[j - 2], points[j] );
 		}
 
 		/* insert new points */
-		VectorCopy( prev, points[ i + 1 ] );
-		VectorCopy( mid, points[ i + 2 ] );
-		VectorCopy( next, points[ i + 3 ] );
+		VectorCopy( prev, points[i + 1] );
+		VectorCopy( mid, points[i + 2] );
+		VectorCopy( next, points[i + 3] );
 
 		/* back up and recheck this set again, it may need more subdivision */
 		i -= 2;
@@ -172,9 +172,9 @@ static void ExpandMaxIterations( int* maxIterations, int maxError, vec3_t a, vec
 	{
 		for( j = 0; j < 3; j++ )
 		{
-			prev[ j ]        = 0.5f * ( points[ i ][ j ] + points[ i + 1 ][ j ] );
-			next[ j ]        = 0.5f * ( points[ i ][ j ] + points[ i - 1 ][ j ] );
-			points[ i ][ j ] = 0.5f * ( prev[ j ] + next[ j ] );
+			prev[j]		 = 0.5f * ( points[i][j] + points[i + 1][j] );
+			next[j]		 = 0.5f * ( points[i][j] + points[i - 1][j] );
+			points[i][j] = 0.5f * ( prev[j] + next[j] );
 		}
 	}
 
@@ -182,9 +182,9 @@ static void ExpandMaxIterations( int* maxIterations, int maxError, vec3_t a, vec
 	for( i = 0; i + 2 < numPoints; i++ )
 	{
 		/* create vectors */
-		VectorSubtract( points[ i + 1 ], points[ i ], delta );
+		VectorSubtract( points[i + 1], points[i], delta );
 		len = VectorNormalize( delta );
-		VectorSubtract( points[ i + 2 ], points[ i + 1 ], delta2 );
+		VectorSubtract( points[i + 2], points[i + 1], delta2 );
 		len2 = VectorNormalize( delta2 );
 
 		/* if either edge is degenerate, then eliminate it */
@@ -192,7 +192,7 @@ static void ExpandMaxIterations( int* maxIterations, int maxError, vec3_t a, vec
 		{
 			for( j = i + 1; j + 1 < numPoints; j++ )
 			{
-				VectorCopy( points[ j + 1 ], points[ j ] );
+				VectorCopy( points[j + 1], points[j] );
 			}
 			numPoints--;
 			continue;
@@ -222,18 +222,18 @@ creates a mapDrawSurface_t from the patch text
 
 void ParsePatch( qboolean onlyLights, qboolean patchDef3 )
 {
-	vec_t          info[ 7 ];
-	int            i, j, k;
+	vec_t		   info[7];
+	int			   i, j, k;
 	parseMesh_t*   pm;
-	char           texture[ MAX_QPATH ];
-	char           shader[ MAX_QPATH ];
-	mesh_t         m;
+	char		   texture[MAX_QPATH];
+	char		   shader[MAX_QPATH];
+	mesh_t		   m;
 	bspDrawVert_t* verts;
-	epair_t*       ep;
-	vec4_t         delta, delta2, delta3;
-	qboolean       degenerate;
-	float          longestCurve;
-	int            maxIterations;
+	epair_t*	   ep;
+	vec4_t		   delta, delta2, delta3;
+	qboolean	   degenerate;
+	float		   longestCurve;
+	int			   maxIterations;
 
 	MatchToken( "{" );
 
@@ -250,9 +250,9 @@ void ParsePatch( qboolean onlyLights, qboolean patchDef3 )
 		Parse1DMatrix( 5, info );
 	}
 
-	m.width  = info[ 0 ];
-	m.height = info[ 1 ];
-	m.verts = verts = safe_malloc( m.width * m.height * sizeof( m.verts[ 0 ] ) );
+	m.width	 = info[0];
+	m.height = info[1];
+	m.verts = verts = safe_malloc( m.width * m.height * sizeof( m.verts[0] ) );
 
 	if( m.width < 0 || m.width > MAX_PATCH_SIZE || m.height < 0 || m.height > MAX_PATCH_SIZE )
 	{
@@ -265,20 +265,20 @@ void ParsePatch( qboolean onlyLights, qboolean patchDef3 )
 		MatchToken( "(" );
 		for( i = 0; i < m.height; i++ )
 		{
-			Parse1DMatrix( 5, verts[ i * m.width + j ].xyz );
+			Parse1DMatrix( 5, verts[i * m.width + j].xyz );
 
 			/* ydnar: fix colors */
-			verts[ i * m.width + j ].paintColor[ 0 ] = 1.0f;
-			verts[ i * m.width + j ].paintColor[ 1 ] = 1.0f;
-			verts[ i * m.width + j ].paintColor[ 2 ] = 1.0f;
-			verts[ i * m.width + j ].paintColor[ 3 ] = 1.0f;
+			verts[i * m.width + j].paintColor[0] = 1.0f;
+			verts[i * m.width + j].paintColor[1] = 1.0f;
+			verts[i * m.width + j].paintColor[2] = 1.0f;
+			verts[i * m.width + j].paintColor[3] = 1.0f;
 
 			for( k = 0; k < MAX_LIGHTMAPS; k++ )
 			{
-				verts[ i * m.width + j ].lightColor[ k ][ 0 ] = 255;
-				verts[ i * m.width + j ].lightColor[ k ][ 1 ] = 255;
-				verts[ i * m.width + j ].lightColor[ k ][ 2 ] = 255;
-				verts[ i * m.width + j ].lightColor[ k ][ 3 ] = 255;
+				verts[i * m.width + j].lightColor[k][0] = 255;
+				verts[i * m.width + j].lightColor[k][1] = 255;
+				verts[i * m.width + j].lightColor[k][2] = 255;
+				verts[i * m.width + j].lightColor[k][3] = 255;
 			}
 		}
 		MatchToken( ")" );
@@ -309,18 +309,18 @@ void ParsePatch( qboolean onlyLights, qboolean patchDef3 )
 	/* ydnar: delete and warn about degenerate patches */
 	j = ( m.width * m.height );
 	VectorClear( delta );
-	delta[ 3 ] = 0;
+	delta[3]   = 0;
 	degenerate = qtrue;
 
 	/* find first valid vector */
-	for( i = 1; i < j && delta[ 3 ] == 0; i++ )
+	for( i = 1; i < j && delta[3] == 0; i++ )
 	{
-		VectorSubtract( m.verts[ 0 ].xyz, m.verts[ i ].xyz, delta );
-		delta[ 3 ] = VectorNormalize( delta );
+		VectorSubtract( m.verts[0].xyz, m.verts[i].xyz, delta );
+		delta[3] = VectorNormalize( delta );
 	}
 
 	/* secondary degenerate test */
-	if( delta[ 3 ] == 0 )
+	if( delta[3] == 0 )
 	{
 		degenerate = qtrue;
 	}
@@ -329,13 +329,13 @@ void ParsePatch( qboolean onlyLights, qboolean patchDef3 )
 		/* if all vectors match this or are zero, then this is a degenerate patch */
 		for( i = 1; i < j && degenerate == qtrue; i++ )
 		{
-			VectorSubtract( m.verts[ 0 ].xyz, m.verts[ i ].xyz, delta2 );
-			delta2[ 3 ] = VectorNormalize( delta2 );
-			if( delta2[ 3 ] != 0 )
+			VectorSubtract( m.verts[0].xyz, m.verts[i].xyz, delta2 );
+			delta2[3] = VectorNormalize( delta2 );
+			if( delta2[3] != 0 )
 			{
 				/* create inverse vector */
 				VectorCopy( delta2, delta3 );
-				delta3[ 3 ] = delta2[ 3 ];
+				delta3[3] = delta2[3];
 				VectorInverse( delta3 );
 
 				/* compare */
@@ -366,10 +366,10 @@ void ParsePatch( qboolean onlyLights, qboolean patchDef3 )
 	{
 		for( i = 0; i + 2 < m.height; i += 2 )
 		{
-			ExpandLongestCurve( &longestCurve, verts[ i * m.width + j ].xyz, verts[ i * m.width + ( j + 1 ) ].xyz, verts[ i * m.width + ( j + 2 ) ].xyz );                      /* row */
-			ExpandLongestCurve( &longestCurve, verts[ i * m.width + j ].xyz, verts[ ( i + 1 ) * m.width + j ].xyz, verts[ ( i + 2 ) * m.width + j ].xyz );                      /* col */
-			ExpandMaxIterations( &maxIterations, patchSubdivisions, verts[ i * m.width + j ].xyz, verts[ i * m.width + ( j + 1 ) ].xyz, verts[ i * m.width + ( j + 2 ) ].xyz ); /* row */
-			ExpandMaxIterations( &maxIterations, patchSubdivisions, verts[ i * m.width + j ].xyz, verts[ ( i + 1 ) * m.width + j ].xyz, verts[ ( i + 2 ) * m.width + j ].xyz ); /* col */
+			ExpandLongestCurve( &longestCurve, verts[i * m.width + j].xyz, verts[i * m.width + ( j + 1 )].xyz, verts[i * m.width + ( j + 2 )].xyz );					  /* row */
+			ExpandLongestCurve( &longestCurve, verts[i * m.width + j].xyz, verts[( i + 1 ) * m.width + j].xyz, verts[( i + 2 ) * m.width + j].xyz );					  /* col */
+			ExpandMaxIterations( &maxIterations, patchSubdivisions, verts[i * m.width + j].xyz, verts[i * m.width + ( j + 1 )].xyz, verts[i * m.width + ( j + 2 )].xyz ); /* row */
+			ExpandMaxIterations( &maxIterations, patchSubdivisions, verts[i * m.width + j].xyz, verts[( i + 1 ) * m.width + j].xyz, verts[( i + 2 ) * m.width + j].xyz ); /* col */
 		}
 	}
 
@@ -385,14 +385,14 @@ void ParsePatch( qboolean onlyLights, qboolean patchDef3 )
 		{
 			for( j = 0; j < 7; j++ )
 			{
-				pm->info[ j ] = info[ j ];
+				pm->info[j] = info[j];
 			}
 		}
 		else
 		{
 			for( j = 0; j < 5; j++ )
 			{
-				pm->info[ j ] = info[ j ];
+				pm->info[j] = info[j];
 			}
 		}
 	}
@@ -421,7 +421,7 @@ void ParsePatch( qboolean onlyLights, qboolean patchDef3 )
 	pm->maxIterations = maxIterations;
 
 	/* link to the entity */
-	pm->next        = mapEnt->patches;
+	pm->next		= mapEnt->patches;
 	mapEnt->patches = pm;
 }
 
@@ -432,33 +432,33 @@ recursively adds patches to a lod group
 
 static void GrowGroup_r( parseMesh_t* pm, int patchNum, int patchCount, parseMesh_t** meshes, byte* bordering, byte* group )
 {
-	int         i;
+	int			i;
 	const byte* row;
 
 	/* early out check */
-	if( group[ patchNum ] )
+	if( group[patchNum] )
 	{
 		return;
 	}
 
 	/* set it */
-	group[ patchNum ] = 1;
-	row               = bordering + patchNum * patchCount;
+	group[patchNum] = 1;
+	row				= bordering + patchNum * patchCount;
 
 	/* check maximums */
-	if( meshes[ patchNum ]->longestCurve > pm->longestCurve )
+	if( meshes[patchNum]->longestCurve > pm->longestCurve )
 	{
-		pm->longestCurve = meshes[ patchNum ]->longestCurve;
+		pm->longestCurve = meshes[patchNum]->longestCurve;
 	}
-	if( meshes[ patchNum ]->maxIterations > pm->maxIterations )
+	if( meshes[patchNum]->maxIterations > pm->maxIterations )
 	{
-		pm->maxIterations = meshes[ patchNum ]->maxIterations;
+		pm->maxIterations = meshes[patchNum]->maxIterations;
 	}
 
 	/* walk other patches */
 	for( i = 0; i < patchCount; i++ )
 	{
-		if( row[ i ] )
+		if( row[i] )
 		{
 			GrowGroup_r( pm, i, patchCount, meshes, bordering, group );
 		}
@@ -474,19 +474,19 @@ pull apart.
 
 void PatchMapDrawSurfs( entity_t* e )
 {
-	int               i, j, k, l, c1, c2;
-	parseMesh_t*      pm;
-	parseMesh_t *     check, *scan;
-	mapDrawSurface_t* ds;
-	int               patchCount, groupCount;
-	bspDrawVert_t *   v1, *v2;
-	vec3_t            bounds[ 2 ];
-	byte*             bordering;
+	int					i, j, k, l, c1, c2;
+	parseMesh_t*		pm;
+	parseMesh_t *		check, *scan;
+	mapDrawSurface_t*	ds;
+	int					patchCount, groupCount;
+	bspDrawVert_t *		v1, *v2;
+	vec3_t				bounds[2];
+	byte*				bordering;
 
 	/* ydnar: mac os x fails with these if not static */
-	static parseMesh_t* meshes[ MAX_MAP_DRAW_SURFS ];
-	static qb_t         grouped[ MAX_MAP_DRAW_SURFS ];
-	static byte         group[ MAX_MAP_DRAW_SURFS ];
+	static parseMesh_t* meshes[MAX_MAP_DRAW_SURFS];
+	static qb_t			grouped[MAX_MAP_DRAW_SURFS];
+	static byte			group[MAX_MAP_DRAW_SURFS];
 
 	/* note it */
 	Sys_FPrintf( SYS_VRB, "--- PatchMapDrawSurfs ---\n" );
@@ -494,7 +494,7 @@ void PatchMapDrawSurfs( entity_t* e )
 	patchCount = 0;
 	for( pm = e->patches; pm; pm = pm->next )
 	{
-		meshes[ patchCount ] = pm;
+		meshes[patchCount] = pm;
 		patchCount++;
 	}
 
@@ -508,14 +508,14 @@ void PatchMapDrawSurfs( entity_t* e )
 	// build the bordering matrix
 	for( k = 0; k < patchCount; k++ )
 	{
-		bordering[ k * patchCount + k ] = 1;
+		bordering[k * patchCount + k] = 1;
 
 		for( l = k + 1; l < patchCount; l++ )
 		{
-			check = meshes[ k ];
-			scan  = meshes[ l ];
-			c1    = scan->mesh.width * scan->mesh.height;
-			v1    = scan->mesh.verts;
+			check = meshes[k];
+			scan  = meshes[l];
+			c1	  = scan->mesh.width * scan->mesh.height;
+			v1	  = scan->mesh.verts;
 
 			for( i = 0; i < c1; i++, v1++ )
 			{
@@ -523,7 +523,7 @@ void PatchMapDrawSurfs( entity_t* e )
 				v2 = check->mesh.verts;
 				for( j = 0; j < c2; j++, v2++ )
 				{
-					if( fabs( v1->xyz[ 0 ] - v2->xyz[ 0 ] ) < 1.0 && fabs( v1->xyz[ 1 ] - v2->xyz[ 1 ] ) < 1.0 && fabs( v1->xyz[ 2 ] - v2->xyz[ 2 ] ) < 1.0 )
+					if( fabs( v1->xyz[0] - v2->xyz[0] ) < 1.0 && fabs( v1->xyz[1] - v2->xyz[1] ) < 1.0 && fabs( v1->xyz[2] - v2->xyz[2] ) < 1.0 )
 					{
 						break;
 					}
@@ -536,12 +536,12 @@ void PatchMapDrawSurfs( entity_t* e )
 			if( i != c1 )
 			{
 				// we have a connection
-				bordering[ k * patchCount + l ] = bordering[ l * patchCount + k ] = 1;
+				bordering[k * patchCount + l] = bordering[l * patchCount + k] = 1;
 			}
 			else
 			{
 				// no connection
-				bordering[ k * patchCount + l ] = bordering[ l * patchCount + k ] = 0;
+				bordering[k * patchCount + l] = bordering[l * patchCount + k] = 0;
 			}
 		}
 	}
@@ -552,10 +552,10 @@ void PatchMapDrawSurfs( entity_t* e )
 	for( i = 0; i < patchCount; i++ )
 	{
 		/* get patch */
-		scan = meshes[ i ];
+		scan = meshes[i];
 
 		/* start a new group */
-		if( !grouped[ i ] )
+		if( !grouped[i] )
 		{
 			groupCount++;
 		}
@@ -565,18 +565,18 @@ void PatchMapDrawSurfs( entity_t* e )
 		GrowGroup_r( scan, i, patchCount, meshes, bordering, group );
 
 		/* bound them */
-		ClearBounds( bounds[ 0 ], bounds[ 1 ] );
+		ClearBounds( bounds[0], bounds[1] );
 		for( j = 0; j < patchCount; j++ )
 		{
-			if( group[ j ] )
+			if( group[j] )
 			{
-				grouped[ j ] = qtrue;
-				check        = meshes[ j ];
-				c1           = check->mesh.width * check->mesh.height;
-				v1           = check->mesh.verts;
+				grouped[j] = qtrue;
+				check	   = meshes[j];
+				c1		   = check->mesh.width * check->mesh.height;
+				v1		   = check->mesh.verts;
 				for( k = 0; k < c1; k++, v1++ )
 				{
-					AddPointToBounds( v1->xyz, bounds[ 0 ], bounds[ 1 ] );
+					AddPointToBounds( v1->xyz, bounds[0], bounds[1] );
 				}
 			}
 		}
@@ -586,9 +586,9 @@ void PatchMapDrawSurfs( entity_t* e )
 
 		/* create drawsurf */
 		scan->grouped = qtrue;
-		ds            = DrawSurfaceForMesh( e, scan, NULL ); /* ydnar */
-		VectorCopy( bounds[ 0 ], ds->bounds[ 0 ] );
-		VectorCopy( bounds[ 1 ], ds->bounds[ 1 ] );
+		ds			  = DrawSurfaceForMesh( e, scan, NULL ); /* ydnar */
+		VectorCopy( bounds[0], ds->bounds[0] );
+		VectorCopy( bounds[1], ds->bounds[1] );
 	}
 
 	/* emit some statistics */

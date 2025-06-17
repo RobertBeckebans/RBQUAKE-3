@@ -48,10 +48,10 @@ bot_input_t* botinputs;
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-void EA_Say( int client, char* str )
+void		 EA_Say( int client, char* str )
 {
 	botimport.BotClientCommand( client, va( "say %s", str ) );
-} //end of the function EA_Say
+} // end of the function EA_Say
 //===========================================================================
 //
 // Parameter:				-
@@ -61,7 +61,7 @@ void EA_Say( int client, char* str )
 void EA_SayTeam( int client, char* str )
 {
 	botimport.BotClientCommand( client, va( "say_team %s", str ) );
-} //end of the function EA_SayTeam
+} // end of the function EA_SayTeam
 //===========================================================================
 //
 // Parameter:				-
@@ -71,7 +71,7 @@ void EA_SayTeam( int client, char* str )
 void EA_Tell( int client, int clientto, char* str )
 {
 	botimport.BotClientCommand( client, va( "tell %d, %s", clientto, str ) );
-} //end of the function EA_SayTeam
+} // end of the function EA_SayTeam
 //===========================================================================
 //
 // Parameter:				-
@@ -81,7 +81,7 @@ void EA_Tell( int client, int clientto, char* str )
 void EA_UseItem( int client, char* it )
 {
 	botimport.BotClientCommand( client, va( "use %s", it ) );
-} //end of the function EA_UseItem
+} // end of the function EA_UseItem
 //===========================================================================
 //
 // Parameter:				-
@@ -91,7 +91,7 @@ void EA_UseItem( int client, char* it )
 void EA_DropItem( int client, char* it )
 {
 	botimport.BotClientCommand( client, va( "drop %s", it ) );
-} //end of the function EA_DropItem
+} // end of the function EA_DropItem
 //===========================================================================
 //
 // Parameter:				-
@@ -101,7 +101,7 @@ void EA_DropItem( int client, char* it )
 void EA_UseInv( int client, char* inv )
 {
 	botimport.BotClientCommand( client, va( "invuse %s", inv ) );
-} //end of the function EA_UseInv
+} // end of the function EA_UseInv
 //===========================================================================
 //
 // Parameter:			-
@@ -111,7 +111,7 @@ void EA_UseInv( int client, char* inv )
 void EA_DropInv( int client, char* inv )
 {
 	botimport.BotClientCommand( client, va( "invdrop %s", inv ) );
-} //end of the function EA_DropInv
+} // end of the function EA_DropInv
 //===========================================================================
 //
 // Parameter:			-
@@ -122,10 +122,10 @@ void EA_Gesture( int client )
 {
 	bot_input_t* bi;
 
-	bi = &botinputs[ client ];
+	bi = &botinputs[client];
 
 	bi->actionflags |= ACTION_GESTURE;
-} //end of the function EA_Gesture
+} // end of the function EA_Gesture
 //===========================================================================
 //
 // Parameter:				-
@@ -135,7 +135,7 @@ void EA_Gesture( int client )
 void EA_Command( int client, char* command )
 {
 	botimport.BotClientCommand( client, command );
-} //end of the function EA_Command
+} // end of the function EA_Command
 //===========================================================================
 //
 // Parameter:			-
@@ -146,10 +146,10 @@ void EA_SelectWeapon( int client, int weapon )
 {
 	bot_input_t* bi;
 
-	bi = &botinputs[ client ];
+	bi = &botinputs[client];
 
 	bi->weapon = weapon;
-} //end of the function EA_SelectWeapon
+} // end of the function EA_SelectWeapon
 //===========================================================================
 //
 // Parameter:			-
@@ -160,10 +160,10 @@ void EA_Attack( int client )
 {
 	bot_input_t* bi;
 
-	bi = &botinputs[ client ];
+	bi = &botinputs[client];
 
 	bi->actionflags |= ACTION_ATTACK;
-} //end of the function EA_Attack
+} // end of the function EA_Attack
 //===========================================================================
 //
 // Parameter:			-
@@ -174,10 +174,10 @@ void EA_Talk( int client )
 {
 	bot_input_t* bi;
 
-	bi = &botinputs[ client ];
+	bi = &botinputs[client];
 
 	bi->actionflags |= ACTION_TALK;
-} //end of the function EA_Talk
+} // end of the function EA_Talk
 //===========================================================================
 //
 // Parameter:			-
@@ -188,10 +188,10 @@ void EA_Use( int client )
 {
 	bot_input_t* bi;
 
-	bi = &botinputs[ client ];
+	bi = &botinputs[client];
 
 	bi->actionflags |= ACTION_USE;
-} //end of the function EA_Use
+} // end of the function EA_Use
 //===========================================================================
 //
 // Parameter:			-
@@ -202,10 +202,10 @@ void EA_Respawn( int client )
 {
 	bot_input_t* bi;
 
-	bi = &botinputs[ client ];
+	bi = &botinputs[client];
 
 	bi->actionflags |= ACTION_RESPAWN;
-} //end of the function EA_Respawn
+} // end of the function EA_Respawn
 //===========================================================================
 //
 // Parameter:			-
@@ -216,17 +216,17 @@ void EA_Jump( int client )
 {
 	bot_input_t* bi;
 
-	bi = &botinputs[ client ];
+	bi = &botinputs[client];
 
 	if( bi->actionflags & ACTION_JUMPEDLASTFRAME )
 	{
 		bi->actionflags &= ~ACTION_JUMP;
-	} //end if
+	} // end if
 	else
 	{
 		bi->actionflags |= ACTION_JUMP;
-	} //end if
-} //end of the function EA_Jump
+	} // end if
+} // end of the function EA_Jump
 //===========================================================================
 //
 // Parameter:			-
@@ -237,17 +237,17 @@ void EA_DelayedJump( int client )
 {
 	bot_input_t* bi;
 
-	bi = &botinputs[ client ];
+	bi = &botinputs[client];
 
 	if( bi->actionflags & ACTION_JUMPEDLASTFRAME )
 	{
 		bi->actionflags &= ~ACTION_DELAYEDJUMP;
-	} //end if
+	} // end if
 	else
 	{
 		bi->actionflags |= ACTION_DELAYEDJUMP;
-	} //end if
-} //end of the function EA_DelayedJump
+	} // end if
+} // end of the function EA_DelayedJump
 //===========================================================================
 //
 // Parameter:			-
@@ -258,10 +258,10 @@ void EA_Crouch( int client )
 {
 	bot_input_t* bi;
 
-	bi = &botinputs[ client ];
+	bi = &botinputs[client];
 
 	bi->actionflags |= ACTION_CROUCH;
-} //end of the function EA_Crouch
+} // end of the function EA_Crouch
 //===========================================================================
 //
 // Parameter:			-
@@ -272,10 +272,10 @@ void EA_Walk( int client )
 {
 	bot_input_t* bi;
 
-	bi = &botinputs[ client ];
+	bi = &botinputs[client];
 
 	bi->actionflags |= ACTION_WALK;
-} //end of the function EA_Walk
+} // end of the function EA_Walk
 //===========================================================================
 //
 // Parameter:			-
@@ -286,10 +286,10 @@ void EA_Action( int client, int action )
 {
 	bot_input_t* bi;
 
-	bi = &botinputs[ client ];
+	bi = &botinputs[client];
 
 	bi->actionflags |= action;
-} //end of function EA_Action
+} // end of function EA_Action
 //===========================================================================
 //
 // Parameter:			-
@@ -300,10 +300,10 @@ void EA_MoveUp( int client )
 {
 	bot_input_t* bi;
 
-	bi = &botinputs[ client ];
+	bi = &botinputs[client];
 
 	bi->actionflags |= ACTION_MOVEUP;
-} //end of the function EA_MoveUp
+} // end of the function EA_MoveUp
 //===========================================================================
 //
 // Parameter:			-
@@ -314,10 +314,10 @@ void EA_MoveDown( int client )
 {
 	bot_input_t* bi;
 
-	bi = &botinputs[ client ];
+	bi = &botinputs[client];
 
 	bi->actionflags |= ACTION_MOVEDOWN;
-} //end of the function EA_MoveDown
+} // end of the function EA_MoveDown
 //===========================================================================
 //
 // Parameter:			-
@@ -328,10 +328,10 @@ void EA_MoveForward( int client )
 {
 	bot_input_t* bi;
 
-	bi = &botinputs[ client ];
+	bi = &botinputs[client];
 
 	bi->actionflags |= ACTION_MOVEFORWARD;
-} //end of the function EA_MoveForward
+} // end of the function EA_MoveForward
 //===========================================================================
 //
 // Parameter:			-
@@ -342,10 +342,10 @@ void EA_MoveBack( int client )
 {
 	bot_input_t* bi;
 
-	bi = &botinputs[ client ];
+	bi = &botinputs[client];
 
 	bi->actionflags |= ACTION_MOVEBACK;
-} //end of the function EA_MoveBack
+} // end of the function EA_MoveBack
 //===========================================================================
 //
 // Parameter:			-
@@ -356,10 +356,10 @@ void EA_MoveLeft( int client )
 {
 	bot_input_t* bi;
 
-	bi = &botinputs[ client ];
+	bi = &botinputs[client];
 
 	bi->actionflags |= ACTION_MOVELEFT;
-} //end of the function EA_MoveLeft
+} // end of the function EA_MoveLeft
 //===========================================================================
 //
 // Parameter:			-
@@ -370,10 +370,10 @@ void EA_MoveRight( int client )
 {
 	bot_input_t* bi;
 
-	bi = &botinputs[ client ];
+	bi = &botinputs[client];
 
 	bi->actionflags |= ACTION_MOVERIGHT;
-} //end of the function EA_MoveRight
+} // end of the function EA_MoveRight
 //===========================================================================
 //
 // Parameter:			-
@@ -384,10 +384,10 @@ void EA_Move( int client, vec3_t dir, float speed )
 {
 	bot_input_t* bi;
 
-	bi = &botinputs[ client ];
+	bi = &botinputs[client];
 
 	VectorCopy( dir, bi->dir );
-	//cap speed
+	// cap speed
 	if( speed > MAX_USERMOVE )
 	{
 		speed = MAX_USERMOVE;
@@ -397,7 +397,7 @@ void EA_Move( int client, vec3_t dir, float speed )
 		speed = -MAX_USERMOVE;
 	}
 	bi->speed = speed;
-} //end of the function EA_Move
+} // end of the function EA_Move
 //===========================================================================
 //
 // Parameter:			-
@@ -408,10 +408,10 @@ void EA_View( int client, vec3_t viewangles )
 {
 	bot_input_t* bi;
 
-	bi = &botinputs[ client ];
+	bi = &botinputs[client];
 
 	VectorCopy( viewangles, bi->viewangles );
-} //end of the function EA_View
+} // end of the function EA_View
 //===========================================================================
 //
 // Parameter:			-
@@ -420,7 +420,7 @@ void EA_View( int client, vec3_t viewangles )
 //===========================================================================
 void EA_EndRegular( int client, float thinktime )
 {
-} //end of the function EA_EndRegular
+} // end of the function EA_EndRegular
 //===========================================================================
 //
 // Parameter:			-
@@ -431,10 +431,10 @@ void EA_GetInput( int client, float thinktime, bot_input_t* input )
 {
 	bot_input_t* bi;
 
-	bi            = &botinputs[ client ];
+	bi			  = &botinputs[client];
 	bi->thinktime = thinktime;
 	Com_Memcpy( input, bi, sizeof( bot_input_t ) );
-} //end of the function EA_GetInput
+} // end of the function EA_GetInput
 //===========================================================================
 //
 // Parameter:			-
@@ -444,20 +444,20 @@ void EA_GetInput( int client, float thinktime, bot_input_t* input )
 void EA_ResetInput( int client )
 {
 	bot_input_t* bi;
-	int          jumped = qfalse;
+	int			 jumped = qfalse;
 
-	bi = &botinputs[ client ];
+	bi = &botinputs[client];
 
 	bi->thinktime = 0;
 	VectorClear( bi->dir );
-	bi->speed       = 0;
-	jumped          = bi->actionflags & ACTION_JUMP;
+	bi->speed		= 0;
+	jumped			= bi->actionflags & ACTION_JUMP;
 	bi->actionflags = 0;
 	if( jumped )
 	{
 		bi->actionflags |= ACTION_JUMPEDLASTFRAME;
 	}
-} //end of the function EA_ResetInput
+} // end of the function EA_ResetInput
 //===========================================================================
 //
 // Parameter:			-
@@ -466,11 +466,10 @@ void EA_ResetInput( int client )
 //===========================================================================
 int EA_Setup( void )
 {
-	//initialize the bot inputs
-	botinputs = ( bot_input_t* )GetClearedHunkMemory(
-		botlibglobals.maxclients * sizeof( bot_input_t ) );
+	// initialize the bot inputs
+	botinputs = ( bot_input_t* )GetClearedHunkMemory( botlibglobals.maxclients * sizeof( bot_input_t ) );
 	return BLERR_NOERROR;
-} //end of the function EA_Setup
+} // end of the function EA_Setup
 //===========================================================================
 //
 // Parameter:			-
@@ -481,4 +480,4 @@ void EA_Shutdown( void )
 {
 	FreeMemory( botinputs );
 	botinputs = NULL;
-} //end of the function EA_Shutdown
+} // end of the function EA_Shutdown

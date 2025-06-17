@@ -27,12 +27,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 qboolean scr_initialized; // ready to draw
 
-cvar_t* cl_timegraph;
-cvar_t* cl_debuggraph;
-cvar_t* cl_graphheight;
-cvar_t* cl_graphscale;
-cvar_t* cl_graphshift;
-cvar_t* cl_keepVidAspect;
+cvar_t*	 cl_timegraph;
+cvar_t*	 cl_debuggraph;
+cvar_t*	 cl_graphheight;
+cvar_t*	 cl_graphscale;
+cvar_t*	 cl_graphshift;
+cvar_t*	 cl_keepVidAspect;
 
 /*
 ================
@@ -41,7 +41,7 @@ SCR_DrawNamedPic
 Coordinates are 640*480 virtual values
 =================
 */
-void SCR_DrawNamedPic( float x, float y, float width, float height, const char* picname )
+void	 SCR_DrawNamedPic( float x, float y, float width, float height, const char* picname )
 {
 	qhandle_t hShader;
 
@@ -139,7 +139,7 @@ void SCR_DrawPic( float x, float y, float width, float height, qhandle_t hShader
 */
 static void SCR_DrawChar( int x, int y, float size, int ch )
 {
-	int   row, col;
+	int	  row, col;
 	float frow, fcol;
 	float ax, ay, aw, ah;
 
@@ -177,7 +177,7 @@ static void SCR_DrawChar( int x, int y, float size, int ch )
 */
 void SCR_DrawSmallChar( int x, int y, int ch )
 {
-	int   row, col;
+	int	  row, col;
 	float frow, fcol;
 	float size;
 
@@ -207,17 +207,17 @@ void SCR_DrawSmallChar( int x, int y, int ch )
 
 int SCR_Text_Width( const char* text, float scale, int limit, const fontInfo_t* font )
 {
-	int                count, len;
-	float              out;
+	int				   count, len;
+	float			   out;
 	const glyphInfo_t* glyph;
-	float              useScale;
+	float			   useScale;
 
 	// FIXME: see ui_main.c, same problem
 	//  const unsigned char *s = text;
-	const char* s = text;
+	const char*		   s = text;
 
 	useScale = scale * font->glyphScale;
-	out      = 0;
+	out		 = 0;
 	if( text )
 	{
 		len = strlen( text );
@@ -235,7 +235,7 @@ int SCR_Text_Width( const char* text, float scale, int limit, const fontInfo_t* 
 			}
 			else
 			{
-				glyph = &font->glyphs[ ( int )*s ];
+				glyph = &font->glyphs[( int )*s];
 				out += glyph->xSkip;
 				s++;
 				count++;
@@ -248,17 +248,17 @@ int SCR_Text_Width( const char* text, float scale, int limit, const fontInfo_t* 
 
 int SCR_Text_Height( const char* text, float scale, int limit, const fontInfo_t* font )
 {
-	int                len, count;
-	float              max;
+	int				   len, count;
+	float			   max;
 	const glyphInfo_t* glyph;
-	float              useScale;
+	float			   useScale;
 
 	// TTimo: FIXME
 	//  const unsigned char *s = text;
-	const char* s = text;
+	const char*		   s = text;
 
 	useScale = scale * font->glyphScale;
-	max      = 0;
+	max		 = 0;
 	if( text )
 	{
 		len = strlen( text );
@@ -276,7 +276,7 @@ int SCR_Text_Height( const char* text, float scale, int limit, const fontInfo_t*
 			}
 			else
 			{
-				glyph = &font->glyphs[ ( int )*s ];
+				glyph = &font->glyphs[( int )*s];
 				if( max < glyph->height )
 				{
 					max = glyph->height;
@@ -293,8 +293,8 @@ int SCR_Text_Height( const char* text, float scale, int limit, const fontInfo_t*
 void SCR_Text_PaintSingleChar( float x, float y, float scale, const vec4_t color, int ch, float adjust, int limit, int style, const fontInfo_t* font )
 {
 	const glyphInfo_t* glyph;
-	float              useScale;
-	float              yadj;
+	float			   useScale;
+	float			   yadj;
 
 	ch &= 255;
 
@@ -305,17 +305,17 @@ void SCR_Text_PaintSingleChar( float x, float y, float scale, const vec4_t color
 
 	useScale = scale * font->glyphScale;
 
-	glyph = &font->glyphs[ ch ];
+	glyph = &font->glyphs[ch];
 	yadj  = useScale * glyph->top;
 
 	if( style & UI_DROPSHADOW ) // || style == ITEM_TEXTSTYLE_SHADOWEDMORE)
 	{
-		int ofs = 1; //style == ITEM_TEXTSTYLE_SHADOWED ? 1 : 2;
+		int ofs = 1; // style == ITEM_TEXTSTYLE_SHADOWED ? 1 : 2;
 
-		colorBlack[ 3 ] = color[ 3 ];
+		colorBlack[3] = color[3];
 		re.SetColor( colorBlack );
 		SCR_Text_PaintChar( x + ofs, y - yadj + ofs, glyph->imageWidth, glyph->imageHeight, useScale, glyph->s, glyph->t, glyph->s2, glyph->t2, glyph->glyph );
-		colorBlack[ 3 ] = 1.0;
+		colorBlack[3] = 1.0;
 	}
 
 	re.SetColor( color );
@@ -338,10 +338,10 @@ void SCR_Text_PaintChar( float x, float y, float width, float height, float scal
 
 void SCR_Text_Paint( float x, float y, float scale, const vec4_t color, const char* text, float adjust, int limit, int style, const fontInfo_t* font )
 {
-	int                len, count;
-	vec4_t             newColor;
+	int				   len, count;
+	vec4_t			   newColor;
 	const glyphInfo_t* glyph;
-	float              useScale;
+	float			   useScale;
 
 	useScale = scale * font->glyphScale;
 	if( text )
@@ -351,7 +351,7 @@ void SCR_Text_Paint( float x, float y, float scale, const vec4_t color, const ch
 		const char* s = text;
 
 		re.SetColor( color );
-		memcpy( &newColor[ 0 ], &color[ 0 ], sizeof( vec4_t ) );
+		memcpy( &newColor[0], &color[0], sizeof( vec4_t ) );
 		len = strlen( text );
 		if( limit > 0 && len > limit )
 		{
@@ -360,12 +360,12 @@ void SCR_Text_Paint( float x, float y, float scale, const vec4_t color, const ch
 		count = 0;
 		while( s && *s && count < len )
 		{
-			glyph = &font->glyphs[ ( int )*s ];
+			glyph = &font->glyphs[( int )*s];
 
 			if( Q_IsColorString( s ) )
 			{
-				memcpy( newColor, ( float* )g_color_table[ ColorIndex( *( s + 1 ) ) ], sizeof( newColor ) );
-				newColor[ 3 ] = color[ 3 ];
+				memcpy( newColor, ( float* )g_color_table[ColorIndex( *( s + 1 ) )], sizeof( newColor ) );
+				newColor[3] = color[3];
 				re.SetColor( newColor );
 				s += 2;
 				continue;
@@ -376,12 +376,12 @@ void SCR_Text_Paint( float x, float y, float scale, const vec4_t color, const ch
 
 				if( style & UI_DROPSHADOW ) // || style == ITEM_TEXTSTYLE_SHADOWEDMORE)
 				{
-					int ofs = 1; //style == ITEM_TEXTSTYLE_SHADOWED ? 1 : 2;
+					int ofs = 1; // style == ITEM_TEXTSTYLE_SHADOWED ? 1 : 2;
 
-					colorBlack[ 3 ] = newColor[ 3 ];
+					colorBlack[3] = newColor[3];
 					re.SetColor( colorBlack );
 					SCR_Text_PaintChar( x + ofs, y - yadj + ofs, glyph->imageWidth, glyph->imageHeight, useScale, glyph->s, glyph->t, glyph->s2, glyph->t2, glyph->glyph );
-					colorBlack[ 3 ] = 1.0;
+					colorBlack[3] = 1.0;
 					re.SetColor( newColor );
 				}
 				SCR_Text_PaintChar( x, y - yadj, glyph->imageWidth, glyph->imageHeight, useScale, glyph->s, glyph->t, glyph->s2, glyph->t2, glyph->glyph );
@@ -431,13 +431,13 @@ Coordinates are at 640 by 480 virtual resolution
 */
 static void SCR_DrawStringExt( int x, int y, float size, const char* string, const float* setColor, qboolean forceColor, qboolean noColorEscape )
 {
-	vec4_t      color;
+	vec4_t		color;
 	const char* s;
-	int         xx;
+	int			xx;
 
 	// draw the drop shadow
-	color[ 0 ] = color[ 1 ] = color[ 2 ] = 0;
-	color[ 3 ]                           = setColor[ 3 ];
+	color[0] = color[1] = color[2] = 0;
+	color[3]					   = setColor[3];
 	re.SetColor( color );
 	s  = string;
 	xx = x;
@@ -463,8 +463,8 @@ static void SCR_DrawStringExt( int x, int y, float size, const char* string, con
 		{
 			if( !forceColor )
 			{
-				Com_Memcpy( color, g_color_table[ ColorIndex( *( s + 1 ) ) ], sizeof( color ) );
-				color[ 3 ] = setColor[ 3 ];
+				Com_Memcpy( color, g_color_table[ColorIndex( *( s + 1 ) )], sizeof( color ) );
+				color[3] = setColor[3];
 				re.SetColor( color );
 			}
 			s += 2;
@@ -479,10 +479,10 @@ static void SCR_DrawStringExt( int x, int y, float size, const char* string, con
 
 void SCR_DrawBigString( int x, int y, const char* s, float alpha, qboolean noColorEscape )
 {
-	float color[ 4 ];
+	float color[4];
 
-	color[ 0 ] = color[ 1 ] = color[ 2 ] = 1.0;
-	color[ 3 ]                           = alpha;
+	color[0] = color[1] = color[2] = 1.0;
+	color[3]					   = alpha;
 	SCR_DrawStringExt( x, y, BIGCHAR_WIDTH, s, color, qfalse, noColorEscape );
 }
 
@@ -501,9 +501,9 @@ to a fixed color.
 */
 void SCR_DrawSmallStringExt( int x, int y, const char* string, float* setColor, qboolean forceColor, qboolean noColorEscape )
 {
-	vec4_t      color;
+	vec4_t		color;
 	const char* s;
-	int         xx;
+	int			xx;
 
 	// draw the colored text
 	s  = string;
@@ -515,8 +515,8 @@ void SCR_DrawSmallStringExt( int x, int y, const char* string, float* setColor, 
 		{
 			if( !forceColor )
 			{
-				Com_Memcpy( color, g_color_table[ ColorIndex( *( s + 1 ) ) ], sizeof( color ) );
-				color[ 3 ] = setColor[ 3 ];
+				Com_Memcpy( color, g_color_table[ColorIndex( *( s + 1 ) )], sizeof( color ) );
+				color[3] = setColor[3];
 				re.SetColor( color );
 			}
 			s += 2;
@@ -534,8 +534,8 @@ void SCR_DrawSmallStringExt( int x, int y, const char* string, float* setColor, 
 */
 static int SCR_Strlen( const char* str )
 {
-	const char* s     = str;
-	int         count = 0;
+	const char* s	  = str;
+	int			count = 0;
 
 	while( *s )
 	{
@@ -570,8 +570,8 @@ SCR_DrawDemoRecording
 */
 void SCR_DrawDemoRecording( void )
 {
-	char string[ 1024 ];
-	int  pos;
+	char string[1024];
+	int	 pos;
 
 	if( !clc.demorecording )
 	{
@@ -585,7 +585,7 @@ void SCR_DrawDemoRecording( void )
 	pos = FS_FTell( clc.demofile );
 	sprintf( string, "RECORDING %s: %ik", clc.demoName, pos / 1024 );
 
-	SCR_Text_PaintAligned( 320, 45, string, 0.2f, UI_CENTER, g_color_table[ 7 ], &cls.consoleFont );
+	SCR_Text_PaintAligned( 320, 45, string, 0.2f, UI_CENTER, g_color_table[7], &cls.consoleFont );
 }
 
 #ifdef USE_VOIP
@@ -596,9 +596,9 @@ SCR_DrawVoipMeter
 */
 void SCR_DrawVoipMeter( void )
 {
-	char buffer[ 16 ];
-	char string[ 256 ];
-	int  limit, i;
+	char buffer[16];
+	char string[256];
+	int	 limit, i;
 
 	if( !cl_voipShowMeter->integer )
 	{
@@ -633,16 +633,16 @@ void SCR_DrawVoipMeter( void )
 
 	for( i = 0; i < limit; i++ )
 	{
-		buffer[ i ] = '*';
+		buffer[i] = '*';
 	}
 	while( i < 10 )
 	{
-		buffer[ i++ ] = ' ';
+		buffer[i++] = ' ';
 	}
-	buffer[ i ] = '\0';
+	buffer[i] = '\0';
 
 	sprintf( string, "VoIP: [%s]", buffer );
-	SCR_DrawStringExt( 320 - strlen( string ) * 4, 10, 8, string, g_color_table[ 7 ], qtrue, qfalse );
+	SCR_DrawStringExt( 320 - strlen( string ) * 4, 10, 8, string, g_color_table[7], qtrue, qfalse );
 }
 #endif
 
@@ -657,21 +657,21 @@ DEBUG GRAPH
 typedef struct
 {
 	float value;
-	int   color;
+	int	  color;
 } graphsamp_t;
 
-static int         current;
-static graphsamp_t values[ 1024 ];
+static int		   current;
+static graphsamp_t values[1024];
 
 /*
 ==============
 SCR_DebugGraph
 ==============
 */
-void SCR_DebugGraph( float value, int color )
+void			   SCR_DebugGraph( float value, int color )
 {
-	values[ current & 1023 ].value = value;
-	values[ current & 1023 ].color = color;
+	values[current & 1023].value = value;
+	values[current & 1023].color = color;
 	current++;
 }
 
@@ -682,9 +682,9 @@ SCR_DrawDebugGraph
 */
 void SCR_DrawDebugGraph( void )
 {
-	int   a, x, y, w, i, h;
+	int	  a, x, y, w, i, h;
 	float v;
-	int   color;
+	int	  color;
 
 	//
 	// draw the graph
@@ -692,16 +692,16 @@ void SCR_DrawDebugGraph( void )
 	w = cls.glconfig.vidWidth;
 	x = 0;
 	y = cls.glconfig.vidHeight;
-	re.SetColor( g_color_table[ 0 ] );
+	re.SetColor( g_color_table[0] );
 	re.DrawStretchPic( x, y - cl_graphheight->integer, w, cl_graphheight->integer, 0, 0, 0, 0, cls.whiteShader );
 	re.SetColor( NULL );
 
 	for( a = 0; a < w; a++ )
 	{
-		i     = ( current - 1 - a + 1024 ) & 1023;
-		v     = values[ i ].value;
-		color = values[ i ].color;
-		v     = v * cl_graphscale->integer + cl_graphshift->integer;
+		i	  = ( current - 1 - a + 1024 ) & 1023;
+		v	  = values[i].value;
+		color = values[i].color;
+		v	  = v * cl_graphscale->integer + cl_graphshift->integer;
 
 		if( v < 0 )
 		{
@@ -721,11 +721,11 @@ SCR_Init
 */
 void SCR_Init( void )
 {
-	cl_timegraph     = Cvar_Get( "timegraph", "0", CVAR_CHEAT );
-	cl_debuggraph    = Cvar_Get( "debuggraph", "0", CVAR_CHEAT );
-	cl_graphheight   = Cvar_Get( "graphheight", "32", CVAR_CHEAT );
-	cl_graphscale    = Cvar_Get( "graphscale", "1", CVAR_CHEAT );
-	cl_graphshift    = Cvar_Get( "graphshift", "0", CVAR_CHEAT );
+	cl_timegraph	 = Cvar_Get( "timegraph", "0", CVAR_CHEAT );
+	cl_debuggraph	 = Cvar_Get( "debuggraph", "0", CVAR_CHEAT );
+	cl_graphheight	 = Cvar_Get( "graphheight", "32", CVAR_CHEAT );
+	cl_graphscale	 = Cvar_Get( "graphscale", "1", CVAR_CHEAT );
+	cl_graphshift	 = Cvar_Get( "graphshift", "0", CVAR_CHEAT );
 	cl_keepVidAspect = Cvar_Get( "cl_keepVidAspect", "0", CVAR_ARCHIVE );
 
 	scr_initialized = qtrue;
@@ -754,7 +754,7 @@ void SCR_DrawScreenField( stereoFrame_t stereoFrame )
 	{
 		if( cls.glconfig.vidWidth * 480 > cls.glconfig.vidHeight * 640 )
 		{
-			re.SetColor( g_color_table[ 0 ] );
+			re.SetColor( g_color_table[0] );
 			re.DrawStretchPic( 0, 0, cls.glconfig.vidWidth, cls.glconfig.vidHeight, 0, 0, 0, 0, cls.whiteShader );
 			re.SetColor( NULL );
 		}
