@@ -2359,19 +2359,19 @@ static ALCcontext* alContext;
 	#ifdef USE_VOIP
 static ALCdevice* alCaptureDevice;
 static cvar_t*	  s_alCapture;
-	   #endif
+	#endif
 
-	   #if defined( _WIN64 )
+	#if defined( _WIN64 )
 		   #define ALDRIVER_DEFAULT "OpenAL64.dll"
-	   #elif defined( _WIN32 )
+	#elif defined( _WIN32 )
 		   #define ALDRIVER_DEFAULT "OpenAL32.dll"
-	   #elif defined( __APPLE__ )
+	#elif defined( __APPLE__ )
 		   #define ALDRIVER_DEFAULT "/System/Library/Frameworks/OpenAL.framework/OpenAL"
-	   #elif defined( __OpenBSD__ )
+	#elif defined( __OpenBSD__ )
 		   #define ALDRIVER_DEFAULT "libopenal.so"
-	   #else
+	#else
 		   #define ALDRIVER_DEFAULT "libopenal.so.1"
-	   #endif
+	#endif
 
 /*
 =================

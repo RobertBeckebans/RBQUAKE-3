@@ -191,10 +191,10 @@ project "RBQuake3"
 	{
 		"../code/shared/*.c", "../code/shared/*.h",
 	
-		"../code/engine/client/**.c", "../code/engine/client/**.h",
-		"../code/engine/server/**.c", "../code/engine/server/**.h",
+		"../code/engine/client/*.c", "../code/engine/client/*.h",
+		"../code/engine/server/*.c", "../code/engine/server/*.h",
 		
-		"../code/engine/sound/**.c", "../code/engine/sound/**.h",
+		"../code/engine/sound/*.c", "../code/engine/sound/*.h",
 		
 		"../code/engine/qcommon/**.h", 
 		"../code/engine/qcommon/cmd.c",
@@ -210,12 +210,13 @@ project "RBQuake3"
 		"../code/engine/qcommon/unzip.c",
 		"../code/engine/qcommon/parse.c",  -- by Tremulous to avoid botlib dependency
 
-		"../code/engine/qcommon/cm_load.c",
-		"../code/engine/qcommon/cm_patch.c",
-		"../code/engine/qcommon/cm_polylib.c",
-		"../code/engine/qcommon/cm_test.c",
-		"../code/engine/qcommon/cm_trace.c",
-		"../code/engine/qcommon/cm_trisoup.c",
+		"../code/engine/collision/*.c", "../code/engine/collision/*.h",
+		--"../code/engine/qcommon/cm_load.c",
+		--"../code/engine/qcommon/cm_patch.c",
+		--"../code/engine/qcommon/cm_polylib.c",
+		--"../code/engine/qcommon/cm_test.c",
+		--"../code/engine/qcommon/cm_trace.c",
+		--"../code/engine/qcommon/cm_trisoup.c",
 		
 		"../code/engine/renderer/**.c", "../code/engine/renderer/**.cpp", "../code/engine/renderer/**.h",
 		
@@ -615,9 +616,9 @@ project "RBQuake3"
 
 -- Quake 3 game mod code based on ioq3
 if not _OPTIONS["standalone"] then
-include "../code/games/q3a/game"
-include "../code/games/q3a/cgame"
-include "../code/games/q3a/q3_ui"
+include "../code/games/default/game"
+include "../code/games/default/cgame"
+include "../code/games/default/q3_ui"
 end
 
 if _OPTIONS["standalone"] then

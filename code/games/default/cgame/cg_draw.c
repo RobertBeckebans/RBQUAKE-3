@@ -1796,8 +1796,9 @@ static void CG_DrawDisconnect()
 	// draw the phone jack if we are completely past our buffers
 	cmdNum = trap_GetCurrentCmdNumber() - CMD_BACKUP + 1;
 	trap_GetUserCmd( cmdNum, &cmd );
-	if( cmd.serverTime <= cg.snap->ps.commandTime || cmd.serverTime > cg.time ) // special check for map_restart
+	if( cmd.serverTime <= cg.snap->ps.commandTime || cmd.serverTime > cg.time )
 	{
+		// special check for map_restart
 		return;
 	}
 
