@@ -5,13 +5,12 @@
  * GOVERNED BY A BSD-STYLE SOURCE LICENSE INCLUDED WITH THIS SOURCE *
  * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.       *
  *                                                                  *
- * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2002             *
- * by the XIPHOPHORUS Company http://www.xiph.org/                  *
+ * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2009             *
+ * by the Xiph.Org Foundation http://www.xiph.org/                  *
  *                                                                  *
  ********************************************************************
 
  function: PCM data envelope analysis and manipulation
- last mod: $Id: envelope.h 7187 2004-07-20 07:24:27Z xiphmont $
 
  ********************************************************************/
 
@@ -31,51 +30,53 @@
 #define VE_MINSTRETCH 2   /* a bit less than short block */
 #define VE_MAXSTRETCH 12  /* one-third full block */
 
-typedef struct {
-  float ampbuf[VE_AMP];
-  int   ampptr;
+typedef struct
+{
+	float ampbuf[VE_AMP];
+	int   ampptr;
 
-  float nearDC[VE_NEARDC];
-  float nearDC_acc;
-  float nearDC_partialacc;
-  int   nearptr;
+	float nearDC[VE_NEARDC];
+	float nearDC_acc;
+	float nearDC_partialacc;
+	int   nearptr;
 
 } envelope_filter_state;
 
-typedef struct {
-  int begin;
-  int end;
-  float *window;
-  float total;
+typedef struct
+{
+	int begin;
+	int end;
+	float* window;
+	float total;
 } envelope_band;
 
-typedef struct {
-  int ch;
-  int winlength;
-  int searchstep;
-  float minenergy;
+typedef struct
+{
+	int ch;
+	int winlength;
+	int searchstep;
+	float minenergy;
 
-  mdct_lookup  mdct;
-  float       *mdct_win;
+	mdct_lookup  mdct;
+	float*       mdct_win;
 
-  envelope_band          band[VE_BANDS];
-  envelope_filter_state *filter;
-  int   stretch;
+	envelope_band          band[VE_BANDS];
+	envelope_filter_state* filter;
+	int   stretch;
 
-  int                   *mark;
+	int*                   mark;
 
-  long storage;
-  long current;
-  long curmark;
-  long cursor;
+	long storage;
+	long current;
+	long curmark;
+	long cursor;
 } envelope_lookup;
 
-extern void _ve_envelope_init(envelope_lookup *e,vorbis_info *vi);
-extern void _ve_envelope_clear(envelope_lookup *e);
-extern long _ve_envelope_search(vorbis_dsp_state *v);
-extern void _ve_envelope_shift(envelope_lookup *e,long shift);
-extern int  _ve_envelope_mark(vorbis_dsp_state *v);
+extern void _ve_envelope_init( envelope_lookup *e, vorbis_info *vi );
+extern void _ve_envelope_clear( envelope_lookup *e );
+extern long _ve_envelope_search( vorbis_dsp_state *v );
+extern void _ve_envelope_shift( envelope_lookup *e, long shift );
+extern int  _ve_envelope_mark( vorbis_dsp_state *v );
 
 
 #endif
-

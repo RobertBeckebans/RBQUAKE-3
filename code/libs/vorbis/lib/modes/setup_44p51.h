@@ -5,31 +5,31 @@
  * GOVERNED BY A BSD-STYLE SOURCE LICENSE INCLUDED WITH THIS SOURCE *
  * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.       *
  *                                                                  *
- * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2009             *
+ * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2010             *
  * by the Xiph.Org Foundation http://www.xiph.org/                  *
  *                                                                  *
  ********************************************************************
 
- function: toplevel settings for 44.1/48kHz uncoupled modes
+ function: toplevel settings for 44.1/48kHz 5.1 surround modes
 
  ********************************************************************/
 
-#include "modes/residue_44u.h"
+#include "modes/residue_44p51.h"
 
-static const double rate_mapping_44_un[12] =
+static const double rate_mapping_44p51[12] =
 {
-	32000., 48000., 60000., 70000., 80000., 86000.,
-	96000., 110000., 120000., 140000., 160000., 240001.
+	14000., 20000., 28000., 38000., 46000., 54000.,
+	75000., 96000., 120000., 140000., 180000., 240001.
 };
 
-static const ve_setup_data_template ve_setup_44_uncoupled =
+static const ve_setup_data_template ve_setup_44_51 =
 {
 	11,
-	rate_mapping_44_un,
+	rate_mapping_44p51,
 	quality_mapping_44,
-	-1,
+	6,
 	40000,
-	50000,
+	70000,
 
 	blocksize_short_44,
 	blocksize_long_44,
@@ -68,8 +68,8 @@ static const ve_setup_data_template ve_setup_44_uncoupled =
 
 	_floor_books,
 	_floor,
-	2,
+	3,
 	_floor_mapping_44,
 
-	_mapres_template_44_uncoupled
+	_mapres_template_44_51
 };

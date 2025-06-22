@@ -5,13 +5,12 @@
  * GOVERNED BY A BSD-STYLE SOURCE LICENSE INCLUDED WITH THIS SOURCE *
  * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.       *
  *                                                                  *
- * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2002             *
- * by the XIPHOPHORUS Company http://www.xiph.org/                  *
+ * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2007             *
+ * by the Xiph.Org Foundation http://www.xiph.org/                  *
  *                                                                  *
  ********************************************************************
 
  function: fft transform
- last mod: $Id: smallft.h 7187 2004-07-20 07:24:27Z xiphmont $
 
  ********************************************************************/
 
@@ -20,15 +19,16 @@
 
 #include "vorbis/codec.h"
 
-typedef struct {
-  int n;
-  float *trigcache;
-  int *splitcache;
+typedef struct
+{
+	int n;
+	float* trigcache;
+	int* splitcache;
 } drft_lookup;
 
-extern void drft_forward(drft_lookup *l,float *data);
-extern void drft_backward(drft_lookup *l,float *data);
-extern void drft_init(drft_lookup *l,int n);
-extern void drft_clear(drft_lookup *l);
+extern void drft_forward( drft_lookup *l, float* data );
+extern void drft_backward( drft_lookup *l, float* data );
+extern void drft_init( drft_lookup *l, int n );
+extern void drft_clear( drft_lookup *l );
 
 #endif
