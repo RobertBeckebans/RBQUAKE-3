@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2019 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2025 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -19,7 +19,7 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-/**
+/*
  *  \file SDL_test_images.h
  *
  *  Include file for SDL test framework.
@@ -44,28 +44,29 @@
 extern "C" {
 #endif
 
-/**
+/*
  *Type for test images.
  */
-typedef struct SDLTest_SurfaceImage_s {
-  int width;
-  int height;
-  unsigned int bytes_per_pixel; /* 3:RGB, 4:RGBA */
-  const char *pixel_data;
+typedef struct SDLTest_SurfaceImage_s
+{
+	int width;
+	int height;
+	unsigned int bytes_per_pixel; /* 3:RGB, 4:RGBA */
+	const char* pixel_data;
 } SDLTest_SurfaceImage_t;
 
 /* Test images */
-SDL_Surface *SDLTest_ImageBlit(void);
-SDL_Surface *SDLTest_ImageBlitColor(void);
-SDL_Surface *SDLTest_ImageBlitAlpha(void);
-SDL_Surface *SDLTest_ImageBlitBlendAdd(void);
-SDL_Surface *SDLTest_ImageBlitBlend(void);
-SDL_Surface *SDLTest_ImageBlitBlendMod(void);
-SDL_Surface *SDLTest_ImageBlitBlendNone(void);
-SDL_Surface *SDLTest_ImageBlitBlendAll(void);
-SDL_Surface *SDLTest_ImageFace(void);
-SDL_Surface *SDLTest_ImagePrimitives(void);
-SDL_Surface *SDLTest_ImagePrimitivesBlend(void);
+SDL_Surface* SDLTest_ImageBlit( void );
+SDL_Surface* SDLTest_ImageBlitColor( void );
+SDL_Surface* SDLTest_ImageBlitAlpha( void );
+SDL_Surface* SDLTest_ImageBlitBlendAdd( void );
+SDL_Surface* SDLTest_ImageBlitBlend( void );
+SDL_Surface* SDLTest_ImageBlitBlendMod( void );
+SDL_Surface* SDLTest_ImageBlitBlendNone( void );
+SDL_Surface* SDLTest_ImageBlitBlendAll( void );
+SDL_Surface* SDLTest_ImageFace( void );
+SDL_Surface* SDLTest_ImagePrimitives( void );
+SDL_Surface* SDLTest_ImagePrimitivesBlend( void );
 
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus

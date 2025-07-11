@@ -1836,11 +1836,8 @@ int QDECL Com_sprintf( char* dest, int size, const char* fmt, ... )
 	if( len >= size )
 	{
 		Com_Printf( "Com_sprintf: overflow of %i in %i\n", len, size );
-#if defined( _MSC_VER ) && defined( _DEBUG )
-		__asm
-		{
-			int             3;
-		}
+#if 0 //defined( _MSC_VER ) && defined( _DEBUG )
+		DebugBreak(); // break into the debugger if in debug mode
 #endif
 	}
 

@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2019 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2025 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -23,7 +23,7 @@
 #define SDLname_h_
 
 #if defined(__STDC__) || defined(__cplusplus)
-#define NeedFunctionPrototypes 1
+	#define NeedFunctionPrototypes 1
 #endif
 
 #define SDL_NAME(X) SDL_##X

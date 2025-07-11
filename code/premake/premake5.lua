@@ -189,106 +189,106 @@ project "RBQuake3"
 	kind        "WindowedApp"
 	files
 	{
-		"../code/shared/*.c", "../code/shared/*.h",
+		"../shared/*.c", "../shared/*.h",
 	
-		"../code/engine/client/*.c", "../code/engine/client/*.h",
-		"../code/engine/server/*.c", "../code/engine/server/*.h",
+		"../engine/client/*.c", "../engine/client/*.h",
+		"../engine/server/*.c", "../engine/server/*.h",
 		
-		"../code/engine/sound/*.c", "../code/engine/sound/*.h",
+		"../engine/sound/*.c", "../engine/sound/*.h",
 		
-		"../code/engine/qcommon/**.h", 
-		"../code/engine/qcommon/cmd.c",
-		"../code/engine/qcommon/common.c",
-		"../code/engine/qcommon/cvar.c",
-		"../code/engine/qcommon/files.c",
-		"../code/engine/qcommon/huffman.c",
-		"../code/engine/qcommon/md4.c",
-		"../code/engine/qcommon/md5.c",
-		"../code/engine/qcommon/msg.c",
-		"../code/engine/qcommon/vm.c",
-		"../code/engine/qcommon/net_*.c",
-		"../code/engine/qcommon/unzip.c",
-		"../code/engine/qcommon/parse.c",  -- by Tremulous to avoid botlib dependency
+		"../engine/qcommon/**.h", 
+		"../engine/qcommon/cmd.c",
+		"../engine/qcommon/common.c",
+		"../engine/qcommon/cvar.c",
+		"../engine/qcommon/files.c",
+		"../engine/qcommon/huffman.c",
+		"../engine/qcommon/md4.c",
+		"../engine/qcommon/md5.c",
+		"../engine/qcommon/msg.c",
+		"../engine/qcommon/vm.c",
+		"../engine/qcommon/net_*.c",
+		"../engine/qcommon/unzip.c",
+		"../engine/qcommon/parse.c",  -- by Tremulous to avoid botlib dependency
 
-		"../code/engine/collision/*.c", "../code/engine/collision/*.h",
-		--"../code/engine/qcommon/cm_load.c",
-		--"../code/engine/qcommon/cm_patch.c",
-		--"../code/engine/qcommon/cm_polylib.c",
-		--"../code/engine/qcommon/cm_test.c",
-		--"../code/engine/qcommon/cm_trace.c",
-		--"../code/engine/qcommon/cm_trisoup.c",
+		"../engine/collision/*.c", "../engine/collision/*.h",
+		--"../engine/qcommon/cm_load.c",
+		--"../engine/qcommon/cm_patch.c",
+		--"../engine/qcommon/cm_polylib.c",
+		--"../engine/qcommon/cm_test.c",
+		--"../engine/qcommon/cm_trace.c",
+		--"../engine/qcommon/cm_trisoup.c",
 		
-		"../code/engine/renderer/**.c", "../code/engine/renderer/**.cpp", "../code/engine/renderer/**.h",
+		"../engine/renderer/**.c", "../engine/renderer/**.cpp", "../engine/renderer/**.h",
 		
-		"../code/libs/gl3w/src/gl3w.c",
-		"../code/libs/gl3w/include/GL3/gl3.h",
-		"../code/libs/gl3w/include/GL3/gl3w.h",
+		"../libs/gl3w/src/gl3w.c",
+		"../libs/gl3w/include/GL3/gl3.h",
+		"../libs/gl3w/include/GL3/gl3w.h",
 		
-		"../code/libs/jpeg/**.c", "../code/../libs/jpeg/**.h",
-		"../code/libs/png/**.c", "../code/../libs/png/**.h",
-		"../code/libs/zlib/**.c", "../code/../libs/zlib/**.h",
-		"../code/libs/openexr/**.cpp", "../code/../libs/openexr/**.h",
+		"../libs/jpeg/**.c", "../../libs/jpeg/**.h",
+		"../libs/png/**.c", "../../libs/png/**.h",
+		"../libs/zlib/**.c", "../../libs/zlib/**.h",
+		"../libs/openexr/**.cpp", "../../libs/openexr/**.h",
 		
-		--"../code/libs/ft2/**.c", "../code/../libs/ft2/**.h",
+		--"../libs/ft2/**.c", "../../libs/ft2/**.h",
 		
-		"../code/libs/freetype/src/autofit/autofit.c",
-		"../code/libs/freetype/src/bdf/bdf.c",
-		"../code/libs/freetype/src/cff/cff.c",
-		"../code/libs/freetype/src/base/ftbase.c",
-		"../code/libs/freetype/src/base/ftbitmap.c",
-		"../code/libs/freetype/src/cache/ftcache.c",
-		"../code/libs/freetype/src/base/ftdebug.c",
-		"../code/libs/freetype/src/base/ftgasp.c",
-		"../code/libs/freetype/src/base/ftglyph.c",
-		"../code/libs/freetype/src/gzip/ftgzip.c",
-		"../code/libs/freetype/src/base/ftinit.c",
-		"../code/libs/freetype/src/lzw/ftlzw.c",
-		"../code/libs/freetype/src/base/ftstroke.c",
-		"../code/libs/freetype/src/base/ftsystem.c",
-		"../code/libs/freetype/src/smooth/smooth.c",
-		"../code/libs/freetype/src/base/ftbbox.c",
-		"../code/libs/freetype/src/base/ftmm.c",
-		"../code/libs/freetype/src/base/ftpfr.c",
-		"../code/libs/freetype/src/base/ftsynth.c",
-		"../code/libs/freetype/src/base/fttype1.c",
-		"../code/libs/freetype/src/base/ftwinfnt.c",
-		"../code/libs/freetype/src/pcf/pcf.c",
-		"../code/libs/freetype/src/pfr/pfr.c",
-		"../code/libs/freetype/src/psaux/psaux.c",
-		"../code/libs/freetype/src/pshinter/pshinter.c",
-		"../code/libs/freetype/src/psnames/psmodule.c",
-		"../code/libs/freetype/src/raster/raster.c",
-		"../code/libs/freetype/src/sfnt/sfnt.c",
-		"../code/libs/freetype/src/truetype/truetype.c",
-		"../code/libs/freetype/src/type1/type1.c",
-		"../code/libs/freetype/src/cid/type1cid.c",
-		"../code/libs/freetype/src/type42/type42.c",
-		"../code/libs/freetype/src/winfonts/winfnt.c",
+		"../libs/freetype/src/autofit/autofit.c",
+		"../libs/freetype/src/bdf/bdf.c",
+		"../libs/freetype/src/cff/cff.c",
+		"../libs/freetype/src/base/ftbase.c",
+		"../libs/freetype/src/base/ftbitmap.c",
+		"../libs/freetype/src/cache/ftcache.c",
+		"../libs/freetype/src/base/ftdebug.c",
+		"../libs/freetype/src/base/ftgasp.c",
+		"../libs/freetype/src/base/ftglyph.c",
+		"../libs/freetype/src/gzip/ftgzip.c",
+		"../libs/freetype/src/base/ftinit.c",
+		"../libs/freetype/src/lzw/ftlzw.c",
+		"../libs/freetype/src/base/ftstroke.c",
+		"../libs/freetype/src/base/ftsystem.c",
+		"../libs/freetype/src/smooth/smooth.c",
+		"../libs/freetype/src/base/ftbbox.c",
+		"../libs/freetype/src/base/ftmm.c",
+		"../libs/freetype/src/base/ftpfr.c",
+		"../libs/freetype/src/base/ftsynth.c",
+		"../libs/freetype/src/base/fttype1.c",
+		"../libs/freetype/src/base/ftwinfnt.c",
+		"../libs/freetype/src/pcf/pcf.c",
+		"../libs/freetype/src/pfr/pfr.c",
+		"../libs/freetype/src/psaux/psaux.c",
+		"../libs/freetype/src/pshinter/pshinter.c",
+		"../libs/freetype/src/psnames/psmodule.c",
+		"../libs/freetype/src/raster/raster.c",
+		"../libs/freetype/src/sfnt/sfnt.c",
+		"../libs/freetype/src/truetype/truetype.c",
+		"../libs/freetype/src/type1/type1.c",
+		"../libs/freetype/src/cid/type1cid.c",
+		"../libs/freetype/src/type42/type42.c",
+		"../libs/freetype/src/winfonts/winfnt.c",
 		
-		"../code/libs/ogg/src/bitwise.c",
-		"../code/libs/ogg/src/framing.c",
+		"../libs/ogg/src/bitwise.c",
+		"../libs/ogg/src/framing.c",
 		
-		"../code/libs/vorbis/lib/mdct.c",
-		"../code/libs/vorbis/lib/smallft.c",
-		"../code/libs/vorbis/lib/block.c",
-		"../code/libs/vorbis/lib/envelope.c",
-		"../code/libs/vorbis/lib/window.c",
-		"../code/libs/vorbis/lib/lsp.c",
-		"../code/libs/vorbis/lib/lpc.c",
-		"../code/libs/vorbis/lib/analysis.c",
-		"../code/libs/vorbis/lib/synthesis.c",
-		"../code/libs/vorbis/lib/psy.c",
-		"../code/libs/vorbis/lib/info.c",
-		"../code/libs/vorbis/lib/floor1.c",
-		"../code/libs/vorbis/lib/floor0.c",
-		"../code/libs/vorbis/lib/res0.c",
-		"../code/libs/vorbis/lib/mapping0.c",
-		"../code/libs/vorbis/lib/registry.c",
-		"../code/libs/vorbis/lib/codebook.c",
-		"../code/libs/vorbis/lib/sharedbook.c",
-		"../code/libs/vorbis/lib/lookup.c",
-		"../code/libs/vorbis/lib/bitrate.c",
-		"../code/libs/vorbis/lib/vorbisfile.c",
+		"../libs/vorbis/lib/mdct.c",
+		"../libs/vorbis/lib/smallft.c",
+		"../libs/vorbis/lib/block.c",
+		"../libs/vorbis/lib/envelope.c",
+		"../libs/vorbis/lib/window.c",
+		"../libs/vorbis/lib/lsp.c",
+		"../libs/vorbis/lib/lpc.c",
+		"../libs/vorbis/lib/analysis.c",
+		"../libs/vorbis/lib/synthesis.c",
+		"../libs/vorbis/lib/psy.c",
+		"../libs/vorbis/lib/info.c",
+		"../libs/vorbis/lib/floor1.c",
+		"../libs/vorbis/lib/floor0.c",
+		"../libs/vorbis/lib/res0.c",
+		"../libs/vorbis/lib/mapping0.c",
+		"../libs/vorbis/lib/registry.c",
+		"../libs/vorbis/lib/codebook.c",
+		"../libs/vorbis/lib/sharedbook.c",
+		"../libs/vorbis/lib/lookup.c",
+		"../libs/vorbis/lib/bitrate.c",
+		"../libs/vorbis/lib/vorbisfile.c",
 		
 		-- "../libs/speex/bits.c",
 		-- "../libs/speex/buffer.c",
@@ -331,30 +331,30 @@ project "RBQuake3"
 		-- "../libs/speex/stereo.c",
 		-- "../libs/speex/vq.c",
 		
-		"../code/libs/theora/lib/dec/apiwrapper.c",
-		"../code/libs/theora/lib/dec/bitpack.c",
-		"../code/libs/theora/lib/dec/decapiwrapper.c",
-		"../code/libs/theora/lib/dec/decinfo.c",
-		"../code/libs/theora/lib/dec/decode.c",
-		"../code/libs/theora/lib/dec/dequant.c",
-		"../code/libs/theora/lib/dec/fragment.c",
-		"../code/libs/theora/lib/dec/huffdec.c",
-		"../code/libs/theora/lib/dec/idct.c",
-		"../code/libs/theora/lib/dec/thinfo.c",
-		"../code/libs/theora/lib/dec/internal.c",
-		"../code/libs/theora/lib/dec/quant.c",
-		"../code/libs/theora/lib/dec/state.c",
+		"../libs/theora/lib/dec/apiwrapper.c",
+		"../libs/theora/lib/dec/bitpack.c",
+		"../libs/theora/lib/dec/decapiwrapper.c",
+		"../libs/theora/lib/dec/decinfo.c",
+		"../libs/theora/lib/dec/decode.c",
+		"../libs/theora/lib/dec/dequant.c",
+		"../libs/theora/lib/dec/fragment.c",
+		"../libs/theora/lib/dec/huffdec.c",
+		"../libs/theora/lib/dec/idct.c",
+		"../libs/theora/lib/dec/thinfo.c",
+		"../libs/theora/lib/dec/internal.c",
+		"../libs/theora/lib/dec/quant.c",
+		"../libs/theora/lib/dec/state.c",
 	}
 	includedirs
 	{
-		"../code/shared",
-		"../code/libs/zlib",
-		"../code/libs/gl3w/include",
-		"../code/libs/freetype/include",
-		"../code/libs/ogg/include",
-		"../code/libs/vorbis/include",
-		"../code/libs/theora/include",
-		"../code/libs/speex/include",
+		"../shared",
+		"../libs/zlib",
+		"../libs/gl3w/include",
+		"../libs/freetype/include",
+		"../libs/ogg/include",
+		"../libs/vorbis/include",
+		"../libs/theora/include",
+		"../libs/speex/include",
 	}
 	defines
 	{ 
@@ -375,9 +375,9 @@ project "RBQuake3"
 	}
 	excludes
 	{
-		"../code/engine/server/sv_rankings.c",
-		"../code/engine/renderer/tr_animation_mdm.c",
-		"../code/engine/renderer/tr_model_mdm.c",
+		"../engine/server/sv_rankings.c",
+		"../engine/renderer/tr_animation_mdm.c",
+		"../engine/renderer/tr_model_mdm.c",
 	}
 	
 	--
@@ -387,10 +387,10 @@ project "RBQuake3"
 		files
 		{ 
 			--"code/qcommon/vm_x86.c",
-			"../code/libs/theora/lib/dec/x86/mmxidct.c",
-			"../code/libs/theora/lib/dec/x86/mmxfrag.c",
-			"../code/libs/theora/lib/dec/x86/mmxstate.c",
-			"../code/libs/theora/lib/dec/x86/x86state.c"
+			"../libs/theora/lib/dec/x86/mmxidct.c",
+			"../libs/theora/lib/dec/x86/mmxfrag.c",
+			"../libs/theora/lib/dec/x86/mmxstate.c",
+			"../libs/theora/lib/dec/x86/x86state.c"
 		}
 	
 	configuration "x64"
@@ -399,10 +399,10 @@ project "RBQuake3"
 		{ 
 			--"qcommon/vm_x86_64.c",
 			--"qcommon/vm_x86_64_assembler.c",
-			"../code/libs/theora/lib/dec/x86/mmxidct.c",
-			"../code/libs/theora/lib/dec/x86/mmxfrag.c",
-			"../code/libs/theora/lib/dec/x86/mmxstate.c",
-			"../code/libs/theora/lib/dec/x86/x86state.c"
+			"../libs/theora/lib/dec/x86/mmxidct.c",
+			"../libs/theora/lib/dec/x86/mmxfrag.c",
+			"../libs/theora/lib/dec/x86/mmxstate.c",
+			"../libs/theora/lib/dec/x86/x86state.c"
 		}
 		
 	--
@@ -420,9 +420,14 @@ project "RBQuake3"
 			"BOTLIB",
 			"GLADIATOR",
 		}
+		includedirs
+		{
+			"../shared/botshared",
+		}
 		files
 		{
-			"../code/shared/botlib/*.c", "../code/shared/botlib/*.h",
+			"../engine/botlib/*.c", "../engine/botlib/*.h",
+			"../shared/botshared/*.c", "../shared/botshared/*.h",
 		}
 	
 	configuration "bullet"
@@ -432,17 +437,17 @@ project "RBQuake3"
 		}
 		includedirs
 		{
-			"../code/libs/bullet"
+			"../libs/bullet"
 		}
 		files
 		{
-			"../code/qcommon/cm_bullet.cpp",
+			"../qcommon/cm_bullet.cpp",
 		
-			"../code/libs/bullet/*.h",
-			"../code/libs/bullet/LinearMath/**.cpp", "../code/libs/bullet/LinearMath/**.h",
-			"../code/libs/bullet/BulletCollision/**.cpp", "../code/libs/bullet/BulletCollision/**.h",
-			"../code/libs/bullet/BulletDynamics/**.cpp", "../code/libs/bullet/BulletDynamics/**.h",
-			"../code/libs/bullet/BulletSoftBody/**.cpp", "../code/libs/bullet/BulletSoftBody/**.h",
+			"../libs/bullet/*.h",
+			"../libs/bullet/LinearMath/**.cpp", "../libs/bullet/LinearMath/**.h",
+			"../libs/bullet/BulletCollision/**.cpp", "../libs/bullet/BulletCollision/**.h",
+			"../libs/bullet/BulletDynamics/**.cpp", "../libs/bullet/BulletDynamics/**.h",
+			"../libs/bullet/BulletSoftBody/**.cpp", "../libs/bullet/BulletSoftBody/**.h",
 		}
 	
 	--configuration "with-freetype"
@@ -478,17 +483,17 @@ project "RBQuake3"
 		flags       { "WinMain" }
 		files
 		{
-			"../code/engine/sys/sys_main.c",
-			"../code/engine/sys/sys_win32.c",
-			"../code/engine/sys/con_log.c",
-			"../code/engine/sys/con_win32.c",
-			"../code/engine/sys/sdl_gamma.c",
-			"../code/engine/sys/sdl_glimp.c",
-			"../code/engine/sys/sdl_input.c",
-			"../code/engine/sys/sdl_snd.c",
+			"../engine/sys/sys_main.c",
+			"../engine/sys/sys_win32.c",
+			"../engine/sys/con_log.c",
+			"../engine/sys/con_win32.c",
+			"../engine/sys/sdl_gamma.c",
+			"../engine/sys/sdl_glimp.c",
+			"../engine/sys/sdl_input.c",
+			"../engine/sys/sdl_snd.c",
 			
-			"../code/engine/sys/qe3.ico",
-			"../code/engine/sys/win_resource.rc",
+			"../engine/sys/qe3.ico",
+			"../engine/sys/win_resource.rc",
 		}
 		defines
 		{
@@ -496,12 +501,12 @@ project "RBQuake3"
 		}
 		includedirs
 		{
-			"../code/libs/sdl2/include",
-			"../code/libs/openal/include",
+			"../libs/sdl2/include",
+			"../libs/openal/include",
 		}
 		libdirs
 		{
-			--"../code/libs/curl-7.12.2/lib"
+			--"../libs/curl-7.12.2/lib"
 		}
 		
 		links
@@ -535,11 +540,11 @@ project "RBQuake3"
 		
 		
 	configuration { "vs*", "x32" }
-		targetdir 	".."
+		targetdir 	"../.."
 		libdirs
 		{
-			"../code/libs/sdl2/lib/x86",
-			"../code/libs/openal/libs/win32",
+			"../libs/sdl2/lib/x86",
+			"../libs/openal/libs/win32",
 			--"../libs/curl-7.12.2/lib"
 		}
 		links
@@ -549,12 +554,12 @@ project "RBQuake3"
 		}
 		
 	configuration { "vs*", "x64" }
-		targetdir 	".."
+		targetdir 	"../.."
 		libdirs
 		{
-			"../code/libs/sdl2/lib/x64",
-			"../code/libs/openal/libs/win64",
-			--"../code/libs/curl-7.12.2/lib"
+			"../libs/sdl2/lib/x64",
+			"../libs/openal/libs/win64",
+			--"../libs/curl-7.12.2/lib"
 		}
 		links
 		{
@@ -592,14 +597,14 @@ project "RBQuake3"
 		targetname  "xreal"
 		files
 		{
-			"../code/engine/sys/sys_main.c",
-			"../code/engine/sys/sys_unix.c",
-			"../code/engine/sys/con_log.c",
-			"../code/engine/sys/con_passive.c",
-			"../code/engine/sys/sdl_gamma.c",
-			"../code/engine/sys/sdl_glimp.c",
-			"../code/engine/sys/sdl_input.c",
-			"../code/engine/sys/sdl_snd.c",
+			"../engine/sys/sys_main.c",
+			"../engine/sys/sys_unix.c",
+			"../engine/sys/con_log.c",
+			"../engine/sys/con_passive.c",
+			"../engine/sys/sdl_gamma.c",
+			"../engine/sys/sdl_glimp.c",
+			"../engine/sys/sdl_input.c",
+			"../engine/sys/sdl_snd.c",
 		}
 		--buildoptions
 		--{
@@ -616,15 +621,15 @@ project "RBQuake3"
 
 -- Quake 3 game mod code based on ioq3
 if not _OPTIONS["standalone"] then
-include "../code/games/default/game"
-include "../code/games/default/cgame"
-include "../code/games/default/q3_ui"
+include "../games/default/game"
+include "../games/default/cgame"
+include "../games/default/q3_ui"
 end
 
 if _OPTIONS["standalone"] then
-include "../code/games/xreal/game"
-include "../code/games/xreal/cgame"
-include "../code/games/xreal/ui"
+include "../games/xreal/game"
+include "../games/xreal/cgame"
+include "../games/xreal/ui"
 end
 
 -- tools

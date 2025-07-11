@@ -529,7 +529,7 @@ static void DrawTris()
 	}
 	else if( glState.currentVBO )
 	{
-		gl_genericShader->SetUniform_Color( colorBlue );
+		gl_genericShader->SetUniform_Color( colorCyan );
 	}
 	else
 	{
